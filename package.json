@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "name": "the-untitled-game",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moving-castles/the-untitled-game.git"
+  },
+  "scripts": {
+    "build": "pnpm recursive run build",
+    "dev": "concurrently -n contracts,client -c cyan,magenta 'cd packages/contracts && pnpm run dev' 'cd packages/client && pnpm run dev'",
+    "dev:client": "pnpm --filter 'client' run dev",
+    "dev:contracts": "pnpm --filter 'contracts' dev",
+    "dev:node": "mud devnode",
+    "initialize": "pnpm recursive run initialize",
+    "mud:up": "pnpm recursive exec mud set-version -v canary && pnpm install",
+    "prepare": "(forge --version || pnpm foundry:up)",
+    "test": "pnpm recursive run test"
+  },
+  "devDependencies": {
+    "@latticexyz/cli": "2.0.0-next.0",
+    "@typescript-eslint/eslint-plugin": "5.60.0",
+    "@typescript-eslint/parser": "5.60.0",
+    "eslint": "8.45.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": "18.x",
+    "pnpm": "8.x"
+  }
+}

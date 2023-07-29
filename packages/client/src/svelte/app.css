@@ -1,0 +1,94 @@
+/* @import url("../../public/fonts/style.css"); */
+/* @import url("tippy.js/dist/tippy.css"); */
+@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap");
+
+:root {
+  /* Colors */
+  /* --background-rgb: 255, 69, 0; */
+  --background-rgb: 0, 0, 0;
+  --background: rgb(var(--background-rgb));
+  --background-offset: rgb(40, 40, 40);
+  --foreground-rgb: 255, 255, 255;
+  --foreground: rgb(var(--foreground-rgb));
+
+  --blue: #0033eb;
+  --warning: #f89001;
+  --success: #bfff5e;
+  --failure: #d1656c;
+  --move: #92ff7c;
+  --gather: #7ce5ff;
+  --consume: #d37cff;
+  --burn: orangered;
+  --play: #ebff7c;
+  --special: #ff7ce7;
+  --gate: #7269f8;
+  --empty: lightgrey;
+  --player1: #0000ff;
+  --player2: #ff0000;
+
+  /* Sizing */
+  --padding-button: 6px 12px;
+  --col-gap: 4rem;
+  --row-gap: 2rem;
+  --taskbar-height: 30px;
+  --titlebar-height: 30px;
+  /* "DMTLLVIPWebTrial-Regular", */
+  /* Fonts */
+  --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
+    monospaced;
+  --font-family: Helvetica, Arial, sans-serif;
+  --font-size: 12px;
+  --font-size-large: 18px;
+
+  /* Deco */
+  --muted-opacity: 0.7;
+  --backdrop: blur(10px);
+  --outer-border: 1px solid rgba(var(--foreground-rgb), var(--muted-opacity));
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--foreground);
+  -webkit-font-feature-settings: "liga" on, "calt" on;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  user-select: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body,
+html {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  margin: 0;
+  padding: 0;
+}
+
+.gridLayer {
+  display: grid;
+  grid-template-rows: repeat(var(--size), var(--tilesize));
+  grid-template-columns: repeat(var(--size), var(--tilesize));
+  width: var(--width);
+  height: var(--height);
+}
+
+@supports (-webkit-text-stroke: 1px black) {
+  .text-outline {
+    -webkit-text-stroke: 2px black;
+    -webkit-text-fill-color: red;
+  }
+
+  .text-inverted-outline {
+    -webkit-text-stroke: 2px yellow;
+    -webkit-text-fill-color: black;
+  }
+}

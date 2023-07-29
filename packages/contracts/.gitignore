@@ -1,0 +1,16 @@
+out/
+/cache/
+node_modules/
+.env
+bindings/
+artifacts/
+deployments
+abi/
+types/
+broadcast/
+.DS_Store
+
+# Ignore all deploy artifacts
+deploys/**/*.json
+# Except the latest ones (so we can load these into client)
+!deploys/**/latest.json

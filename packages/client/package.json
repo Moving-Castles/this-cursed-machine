@@ -1,0 +1,57 @@
+{
+  "name": "client",
+  "license": "MIT",
+  "version": "0.2.0",
+  "private": "true",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "wait-port localhost:8545 && vite",
+    "initialize": "pnpm build",
+    "preview": "vite preview",
+    "test": "tsc --noEmit"
+  },
+  "staticFiles": {
+    "staticPath": "src/public"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/kit": "^1.22.3",
+    "@sveltejs/vite-plugin-svelte": "^2.4.3",
+    "@tsconfig/svelte": "^5.0.0",
+    "@types/howler": "^2.2.7",
+    "@types/lodash": "^4.14.195",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "sass": "^1.64.1",
+    "svelte": "^4.1.1",
+    "vite": "4.4.7",
+    "wait-port": "^1.0.4"
+  },
+  "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "@latticexyz/common": "2.0.0-next.0",
+    "@latticexyz/network": "2.0.0-next.0",
+    "@latticexyz/recs": "2.0.0-next.0",
+    "@latticexyz/schema-type": "2.0.0-next.0",
+    "@latticexyz/std-client": "2.0.0-next.0",
+    "@latticexyz/utils": "2.0.0-next.0",
+    "@latticexyz/world": "2.0.0-next.0",
+    "@sanity/block-content-to-html": "^2.0.0",
+    "@sanity/client": "^6.1.7",
+    "@sanity/image-url": "^1.0.2",
+    "@wagmi/chains": "^1.6.0",
+    "animejs": "^3.2.1",
+    "contracts": "workspace:*",
+    "ethers": "^5.7.2",
+    "gsap": "^3.12.2",
+    "howler": "^2.2.3",
+    "just-throttle": "^4.2.0",
+    "lodash": "^4.17.21",
+    "pathfinding": "^0.4.18",
+    "svelte-markdown": "^0.2.3",
+    "uuid": "^9.0.0",
+    "viem": "^1.4.2"
+  }
+}
