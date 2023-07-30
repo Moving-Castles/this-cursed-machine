@@ -64,7 +64,6 @@ library LibUtils {
   }
 
   function getRandomKey() internal view returns (bytes32 key) {
-    // return keccak256(abi.encode(block.difficulty));
     return keccak256(abi.encode(block.number, msg.sender, gasleft()));
   }
 }

@@ -25,18 +25,16 @@ struct GameConfigData {
   int32 worldWidth;
   uint32 coolDown;
   uint32 coreEnergyCap;
-  uint32 coreCrystallizedSludgeCap;
   uint32 coreInitialEnergy;
   uint32 resourceConnectionCost;
   uint32 controlConnectionCost;
-  uint32 controlSplitCost;
-  uint32 converterCost;
+  uint32 buildCost;
 }
 
 library GameConfig {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](10);
+    SchemaType[] memory _schema = new SchemaType[](8);
     _schema[0] = SchemaType.INT32;
     _schema[1] = SchemaType.INT32;
     _schema[2] = SchemaType.UINT32;
@@ -45,8 +43,6 @@ library GameConfig {
     _schema[5] = SchemaType.UINT32;
     _schema[6] = SchemaType.UINT32;
     _schema[7] = SchemaType.UINT32;
-    _schema[8] = SchemaType.UINT32;
-    _schema[9] = SchemaType.UINT32;
 
     return SchemaLib.encode(_schema);
   }
@@ -59,17 +55,15 @@ library GameConfig {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](10);
+    string[] memory _fieldNames = new string[](8);
     _fieldNames[0] = "worldHeight";
     _fieldNames[1] = "worldWidth";
     _fieldNames[2] = "coolDown";
     _fieldNames[3] = "coreEnergyCap";
-    _fieldNames[4] = "coreCrystallizedSludgeCap";
-    _fieldNames[5] = "coreInitialEnergy";
-    _fieldNames[6] = "resourceConnectionCost";
-    _fieldNames[7] = "controlConnectionCost";
-    _fieldNames[8] = "controlSplitCost";
-    _fieldNames[9] = "converterCost";
+    _fieldNames[4] = "coreInitialEnergy";
+    _fieldNames[5] = "resourceConnectionCost";
+    _fieldNames[6] = "controlConnectionCost";
+    _fieldNames[7] = "buildCost";
     return ("GameConfig", _fieldNames);
   }
 
@@ -215,41 +209,11 @@ library GameConfig {
     _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((coreEnergyCap)));
   }
 
-  /** Get coreCrystallizedSludgeCap */
-  function getCoreCrystallizedSludgeCap() internal view returns (uint32 coreCrystallizedSludgeCap) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Get coreCrystallizedSludgeCap (using the specified store) */
-  function getCoreCrystallizedSludgeCap(IStore _store) internal view returns (uint32 coreCrystallizedSludgeCap) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Set coreCrystallizedSludgeCap */
-  function setCoreCrystallizedSludgeCap(uint32 coreCrystallizedSludgeCap) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((coreCrystallizedSludgeCap)));
-  }
-
-  /** Set coreCrystallizedSludgeCap (using the specified store) */
-  function setCoreCrystallizedSludgeCap(IStore _store, uint32 coreCrystallizedSludgeCap) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((coreCrystallizedSludgeCap)));
-  }
-
   /** Get coreInitialEnergy */
   function getCoreInitialEnergy() internal view returns (uint32 coreInitialEnergy) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -257,7 +221,7 @@ library GameConfig {
   function getCoreInitialEnergy(IStore _store) internal view returns (uint32 coreInitialEnergy) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -265,21 +229,21 @@ library GameConfig {
   function setCoreInitialEnergy(uint32 coreInitialEnergy) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((coreInitialEnergy)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((coreInitialEnergy)));
   }
 
   /** Set coreInitialEnergy (using the specified store) */
   function setCoreInitialEnergy(IStore _store, uint32 coreInitialEnergy) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((coreInitialEnergy)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((coreInitialEnergy)));
   }
 
   /** Get resourceConnectionCost */
   function getResourceConnectionCost() internal view returns (uint32 resourceConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -287,7 +251,7 @@ library GameConfig {
   function getResourceConnectionCost(IStore _store) internal view returns (uint32 resourceConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -295,21 +259,21 @@ library GameConfig {
   function setResourceConnectionCost(uint32 resourceConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((resourceConnectionCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((resourceConnectionCost)));
   }
 
   /** Set resourceConnectionCost (using the specified store) */
   function setResourceConnectionCost(IStore _store, uint32 resourceConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((resourceConnectionCost)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((resourceConnectionCost)));
   }
 
   /** Get controlConnectionCost */
   function getControlConnectionCost() internal view returns (uint32 controlConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -317,7 +281,7 @@ library GameConfig {
   function getControlConnectionCost(IStore _store) internal view returns (uint32 controlConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -325,74 +289,44 @@ library GameConfig {
   function setControlConnectionCost(uint32 controlConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((controlConnectionCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((controlConnectionCost)));
   }
 
   /** Set controlConnectionCost (using the specified store) */
   function setControlConnectionCost(IStore _store, uint32 controlConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((controlConnectionCost)));
+    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((controlConnectionCost)));
   }
 
-  /** Get controlSplitCost */
-  function getControlSplitCost() internal view returns (uint32 controlSplitCost) {
+  /** Get buildCost */
+  function getBuildCost() internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 8);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Get controlSplitCost (using the specified store) */
-  function getControlSplitCost(IStore _store) internal view returns (uint32 controlSplitCost) {
+  /** Get buildCost (using the specified store) */
+  function getBuildCost(IStore _store) internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 8);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Set controlSplitCost */
-  function setControlSplitCost(uint32 controlSplitCost) internal {
+  /** Set buildCost */
+  function setBuildCost(uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 8, abi.encodePacked((controlSplitCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((buildCost)));
   }
 
-  /** Set controlSplitCost (using the specified store) */
-  function setControlSplitCost(IStore _store, uint32 controlSplitCost) internal {
+  /** Set buildCost (using the specified store) */
+  function setBuildCost(IStore _store, uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 8, abi.encodePacked((controlSplitCost)));
-  }
-
-  /** Get converterCost */
-  function getConverterCost() internal view returns (uint32 converterCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 9);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Get converterCost (using the specified store) */
-  function getConverterCost(IStore _store) internal view returns (uint32 converterCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 9);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Set converterCost */
-  function setConverterCost(uint32 converterCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setField(_tableId, _keyTuple, 9, abi.encodePacked((converterCost)));
-  }
-
-  /** Set converterCost (using the specified store) */
-  function setConverterCost(IStore _store, uint32 converterCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setField(_tableId, _keyTuple, 9, abi.encodePacked((converterCost)));
+    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((buildCost)));
   }
 
   /** Get the full data */
@@ -417,24 +351,20 @@ library GameConfig {
     int32 worldWidth,
     uint32 coolDown,
     uint32 coreEnergyCap,
-    uint32 coreCrystallizedSludgeCap,
     uint32 coreInitialEnergy,
     uint32 resourceConnectionCost,
     uint32 controlConnectionCost,
-    uint32 controlSplitCost,
-    uint32 converterCost
+    uint32 buildCost
   ) internal {
     bytes memory _data = encode(
       worldHeight,
       worldWidth,
       coolDown,
       coreEnergyCap,
-      coreCrystallizedSludgeCap,
       coreInitialEnergy,
       resourceConnectionCost,
       controlConnectionCost,
-      controlSplitCost,
-      converterCost
+      buildCost
     );
 
     bytes32[] memory _keyTuple = new bytes32[](0);
@@ -449,24 +379,20 @@ library GameConfig {
     int32 worldWidth,
     uint32 coolDown,
     uint32 coreEnergyCap,
-    uint32 coreCrystallizedSludgeCap,
     uint32 coreInitialEnergy,
     uint32 resourceConnectionCost,
     uint32 controlConnectionCost,
-    uint32 controlSplitCost,
-    uint32 converterCost
+    uint32 buildCost
   ) internal {
     bytes memory _data = encode(
       worldHeight,
       worldWidth,
       coolDown,
       coreEnergyCap,
-      coreCrystallizedSludgeCap,
       coreInitialEnergy,
       resourceConnectionCost,
       controlConnectionCost,
-      controlSplitCost,
-      converterCost
+      buildCost
     );
 
     bytes32[] memory _keyTuple = new bytes32[](0);
@@ -481,12 +407,10 @@ library GameConfig {
       _table.worldWidth,
       _table.coolDown,
       _table.coreEnergyCap,
-      _table.coreCrystallizedSludgeCap,
       _table.coreInitialEnergy,
       _table.resourceConnectionCost,
       _table.controlConnectionCost,
-      _table.controlSplitCost,
-      _table.converterCost
+      _table.buildCost
     );
   }
 
@@ -498,12 +422,10 @@ library GameConfig {
       _table.worldWidth,
       _table.coolDown,
       _table.coreEnergyCap,
-      _table.coreCrystallizedSludgeCap,
       _table.coreInitialEnergy,
       _table.resourceConnectionCost,
       _table.controlConnectionCost,
-      _table.controlSplitCost,
-      _table.converterCost
+      _table.buildCost
     );
   }
 
@@ -517,17 +439,13 @@ library GameConfig {
 
     _table.coreEnergyCap = (uint32(Bytes.slice4(_blob, 12)));
 
-    _table.coreCrystallizedSludgeCap = (uint32(Bytes.slice4(_blob, 16)));
+    _table.coreInitialEnergy = (uint32(Bytes.slice4(_blob, 16)));
 
-    _table.coreInitialEnergy = (uint32(Bytes.slice4(_blob, 20)));
+    _table.resourceConnectionCost = (uint32(Bytes.slice4(_blob, 20)));
 
-    _table.resourceConnectionCost = (uint32(Bytes.slice4(_blob, 24)));
+    _table.controlConnectionCost = (uint32(Bytes.slice4(_blob, 24)));
 
-    _table.controlConnectionCost = (uint32(Bytes.slice4(_blob, 28)));
-
-    _table.controlSplitCost = (uint32(Bytes.slice4(_blob, 32)));
-
-    _table.converterCost = (uint32(Bytes.slice4(_blob, 36)));
+    _table.buildCost = (uint32(Bytes.slice4(_blob, 28)));
   }
 
   /** Tightly pack full data using this table's schema */
@@ -536,12 +454,10 @@ library GameConfig {
     int32 worldWidth,
     uint32 coolDown,
     uint32 coreEnergyCap,
-    uint32 coreCrystallizedSludgeCap,
     uint32 coreInitialEnergy,
     uint32 resourceConnectionCost,
     uint32 controlConnectionCost,
-    uint32 controlSplitCost,
-    uint32 converterCost
+    uint32 buildCost
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
@@ -549,12 +465,10 @@ library GameConfig {
         worldWidth,
         coolDown,
         coreEnergyCap,
-        coreCrystallizedSludgeCap,
         coreInitialEnergy,
         resourceConnectionCost,
         controlConnectionCost,
-        controlSplitCost,
-        converterCost
+        buildCost
       );
   }
 

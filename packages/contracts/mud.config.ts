@@ -14,7 +14,7 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        EntityType: ["CORE", "RESOURCE", "RESOURCE_TO_ENERGY"],
+        EntityType: ["CORE", "UNTRAVERSABLE", "RESOURCE", "RESOURCE_TO_ENERGY"],
         ConnectionType: ["RESOURCE", "CONTROL"]
     },
     tables: {
@@ -23,16 +23,14 @@ export default mudConfig({
         Energy: "uint32",
         ReadyBlock: "uint256",
         BodyId: "uint32",
+        Level: "uint32",
         Position: {
             schema: {
                 x: "int32",
                 y: "int32",
             },
         },
-        Untraversable: "bool",
         ConnectionCapacity: "uint32",
-        BuildCost: "uint32",
-        // ...
         StartBlock: "uint256",
         ResourceConnection: "bytes32",
         ControlConnection: "bytes32",
@@ -46,6 +44,7 @@ export default mudConfig({
                 coreInitialEnergy: "uint32",
                 resourceConnectionCost: "uint32",
                 controlConnectionCost: "uint32",
+                buildCost: "uint32",
             },
             dataStruct: true,
         },
@@ -74,7 +73,7 @@ export default mudConfig({
         {
             name: "KeysWithValueModule",
             root: true,
-            args: [resolveTableId("RealmId")],
+            args: [resolveTableId("BodyId")],
         },
         {
             name: "KeysInTableModule",

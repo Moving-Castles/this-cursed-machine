@@ -18,24 +18,4 @@ contract DeployTest is MudV2Test {
     assertTrue(codeSize > 0);
   }
 
-  function testMoverSpawn() public {
-    setUp();
-    assertEq(Position.get(world, moverEntity).x, 3);
-    assertEq(Position.get(world, moverEntity).y, 3);
-    assertEq(uint8(Type.get(world, moverEntity)), uint8(EntityType.MOVER));
-  }
-
-  function testResourceSpawn() public {
-    setUp();
-    assertEq(Position.get(world, resourceEntity).x, 3);
-    assertEq(Position.get(world, resourceEntity).y, 0);
-    assertEq(uint8(Type.get(world, resourceEntity)), uint8(EntityType.RESOURCE));
-  }
-
-  function testPortalSpawn() public {
-    setUp();
-    assertEq(Position.get(world, portalEntity).x, 3);
-    assertEq(Position.get(world, portalEntity).y, 6);
-    assertEq(uint8(Type.get(world, portalEntity)), uint8(EntityType.PORTAL));
-  }
 }

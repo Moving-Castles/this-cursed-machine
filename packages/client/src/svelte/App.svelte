@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { setup } from "../mud/setup"
-  import { createComponentSystem, createLoadingStateSystem } from "./systems"
+  import { createComponentSystem, createLoadingStateSystem } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, playerCore } from "./modules/state"
   import { initActionSequencer } from "./modules/action/actionSequencer"
@@ -53,9 +53,9 @@
     <Loading on:next={() => (UIState = 1)} />
   {:else if !$playerCore}
     <Spawn />
-  {:else if $playerCore.realmId === 0}
+  {:else if $playerCore.bodyId === 0}
     <Game />
-  {:else if $playerCore.realmId === 1}
+  {:else if $playerCore.bodyId === 1}
     THE VOID
   {/if}
 </main>

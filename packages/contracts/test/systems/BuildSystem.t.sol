@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: Unlicense
+pragma solidity >=0.8.17;
+import { MudV2Test } from "../MudV2Test.t.sol";
+import "../../src/codegen/Tables.sol";
+import "../../src/libraries/Libraries.sol";
+import { EntityType } from "../../src/codegen/Types.sol";
+
+contract SpawnSystemTest is MudV2Test {
+    function testBuild() public {
+        setUp();
+
+        vm.startPrank(alice);
+        world.mc_SpawnSystem_spawn("Alice");
+        vm.stopPrank();
+
+        bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+        vm.roll(block.number + 5);
+
+        vm.startPrank(alice);
+        world.mc_BuildSystem_build(EntityType.RESOURCE, 0, 1);
+        vm.stopPrank();
+
+        assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
+    }
+
+    function testRevertOccupied() public {
+        setUp();
+
+        vm.startPrank(alice);
+        world.mc_SpawnSystem_spawn("Alice");
+        vm.stopPrank();
+
+        bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+        vm.roll(block.number + 5);
+
+        vm.startPrank(alice);
+        vm.expectRevert("occupied");
+        world.mc_BuildSystem_build(EntityType.RESOURCE, 0, 0);
+        vm.stopPrank();
+    }
+
+    function testRevertInvalidEntityType() public {
+        setUp();
+
+        vm.startPrank(alice);
+        world.mc_SpawnSystem_spawn("Alice");
+        vm.stopPrank();
+
+        bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+        vm.roll(block.number + 5);
+
+        vm.startPrank(alice);
+        vm.expectRevert("invalid entity type");
+        world.mc_BuildSystem_build(EntityType.CORE, 0, 1);
+        vm.stopPrank();
+    }
+}

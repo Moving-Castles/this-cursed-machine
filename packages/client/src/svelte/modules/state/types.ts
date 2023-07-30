@@ -1,10 +1,8 @@
 enum EntityType {
   CORE,
+  UNTRAVERSABLE,
   RESOURCE,
-  PORTAL,
-  MOVER,
-  CONTROL_SPLIT,
-  CONVERTER
+  RESOURCE_TO_ENERGY
 }
 
 enum ConnectionType {
@@ -18,61 +16,39 @@ declare global {
   type Entity = {
     type?: EntityType;
     name?: string;
+    energy?: number;
     readyBlock?: number;
+    bodyId?: number;
+    level?: number;
+    position?: Coord;
+    connectionCapacity?: number;
     startBlock?: number;
     resourceConnection?: string;
     controlConnection?: string;
-    energy?: number;
-    position?: Coord;
-    realmId?: number;
     gameConfig?: GameConfig;
   };
   
   type Core = {
     type: EntityType.CORE;
     name: string;
-    readyBlock: number;
-    startBlock?: number;
-    position: Coord;
-    realmId: number;
     energy: number;
+    readyBlock: number;
+    bodyId: number;
+    level?: number;
+    position: Coord;
+    startBlock?: number;
     resourceConnection?: string;
     controlConnection?: string;
-  };
-  
-  type Mover = {
-    type: EntityType.MOVER;
-    name: string;
-    energy: number;
-    position: Coord;
   };
   
   type Resource = {
     type: EntityType.RESOURCE;
-    name: string;
     position: Coord;
   };
-  
-  type Portal = {
-    type: EntityType.PORTAL;
-    name: string;
-    energy: number;
+
+  type ResourceToEnergy = {
+    type: EntityType.RESOURCE_TO_ENERGY;
     position: Coord;
-  };
-  
-  type ControlSplit = {
-    type: EntityType.CONTROL_SPLIT;
-    name: string;
-    controlConnection?: string;
-    position: Coord;
-  };
-  
-  type Converter = {
-    type: EntityType.CONVERTER;
-    name: string;
-    position: Coord;
-    resourceConnection?: string;
-    controlConnection?: string;
   };
   
   type GameConfig = {
@@ -81,18 +57,16 @@ declare global {
       worldWidth: number;
       coolDown: number;
       coreEnergyCap: number;
-      coreCrystallizedSludgeCap: number;
       coreInitialEnergy: number;
       resourceConnectionCost: number;
       controlConnectionCost: number;
-      converterCost: number;
-      controlSplitCost: number;
+      buildCost: number;
     }
   }
 
   // ---
   
-  type Organ = Mover | Resource | Portal | ControlSplit | Converter
+  type Organ = Resource | ResourceToEnergy
 
   // ---
   
@@ -107,26 +81,11 @@ declare global {
   type Organs = {
     [index: string]: Organ;
   };
-
-  type Movers = {
-    [index: string]: Mover;
-  };
   
   type Resources = {
     [index: string]: Resource;
   };
   
-  type Portals = {
-    [index: string]: Portal;
-  };
-  
-  type ControlSplits = {
-    [index: string]: ControlSplit;
-  };
-  
-  type Converters = {
-    [index: string]: Converter;
-  };
   
   // ---
   

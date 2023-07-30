@@ -19,8 +19,6 @@ const MESSAGE = "mc"
 // --- STORES -----------------------------------------------------------------
 
 export let verifiedClients = writable([] as string[])
-export let cursors = writable({} as { [key: string]: { x: number; y: number } })
-export let cheering = writable(false)
 
 let socket: any
 

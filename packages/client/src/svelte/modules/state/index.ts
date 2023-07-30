@@ -11,9 +11,6 @@ import type { Coord } from "@latticexyz/utils"
 // --- CONSTANTS --------------------------------------------------------------
 
 export const GAME_CONFIG_ID = "0x000000000000000000000000000000000000000000000000000000000000060d";
-export const MOVER_ID = "0x0000000000000000000000000000000000000000000000000000000000000aaa"
-export const RESOURCE_ID = "0x0000000000000000000000000000000000000000000000000000000000000bbb"
-export const PORTAL_ID = "0x0000000000000000000000000000000000000000000000000000000000000ccc"
 // ...
 export const NULL_COORDINATE = { x: -1, y: -1 }
 
@@ -24,30 +21,15 @@ export const NULL_COORDINATE = { x: -1, y: -1 }
 export const entities = writable({} as Entities);
 
 export const cores = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.realmId === 0)) as Cores;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
-    return entity.type === EntityType.MOVER ||
-      entity.type === EntityType.RESOURCE ||
-      entity.type === EntityType.PORTAL ||
-      entity.type === EntityType.CONTROL_SPLIT
+    return entity.type === EntityType.RESOURCE ||
+      entity.type === EntityType.RESOURCE_TO_ENERGY
   })) as Organs;
 })
-
-// return [
-//   EntityType.MOVER, 
-//   EntityType.RESOURCE, 
-//   EntityType.PORTAL, 
-//   EntityType.CONTROL_SPLIT
-// ].includes(entity.type);
-
-export const claw = derived(entities, ($entities) => $entities[MOVER_ID] as Mover);
-
-export const foodSource = derived(entities, ($entities) => $entities[RESOURCE_ID] as Resource);
-
-export const portal = derived(entities, ($entities) => $entities[PORTAL_ID] as Portal);
 
 export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID] as GameConfig);
 

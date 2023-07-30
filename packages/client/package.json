@@ -41,7 +41,6 @@
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.1.7",
     "@sanity/image-url": "^1.0.2",
-    "@wagmi/chains": "^1.6.0",
     "animejs": "^3.2.1",
     "contracts": "workspace:*",
     "ethers": "^5.7.2",

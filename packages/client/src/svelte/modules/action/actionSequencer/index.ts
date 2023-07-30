@@ -70,9 +70,6 @@ export function clearSequencer() {
 // --- SEQUENCER -----------------------------------------------------------------
 
 export function initActionSequencer() {
-
-
-
   /*
    *   The sequencer triggers on each block
    *   If the conditions are met it executes the next action

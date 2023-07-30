@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
-import { entities } from "../modules/state";
-import { network } from "../modules/network";
-import { toCamelCase } from "../utils/misc";
+import { entities } from "../state";
+import { network } from "../network";
+import { toCamelCase } from "../../utils/misc";
 
 export function createComponentSystem(componentKey: string) {
 

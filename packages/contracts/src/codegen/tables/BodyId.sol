@@ -17,10 +17,10 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("RealmId")));
-bytes32 constant RealmIdTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("BodyId")));
+bytes32 constant BodyIdTableId = _tableId;
 
-library RealmId {
+library BodyId {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
@@ -40,7 +40,7 @@ library RealmId {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](1);
     _fieldNames[0] = "value";
-    return ("RealmId", _fieldNames);
+    return ("BodyId", _fieldNames);
   }
 
   /** Register the table's schema */

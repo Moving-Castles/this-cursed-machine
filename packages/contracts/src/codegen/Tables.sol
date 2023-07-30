@@ -5,11 +5,13 @@ pragma solidity >=0.8.0;
 
 import { Type, TypeTableId } from "./tables/Type.sol";
 import { Name, NameTableId } from "./tables/Name.sol";
+import { Energy, EnergyTableId } from "./tables/Energy.sol";
 import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
+import { BodyId, BodyIdTableId } from "./tables/BodyId.sol";
+import { Level, LevelTableId } from "./tables/Level.sol";
+import { Position, PositionData, PositionTableId } from "./tables/Position.sol";
+import { ConnectionCapacity, ConnectionCapacityTableId } from "./tables/ConnectionCapacity.sol";
 import { StartBlock, StartBlockTableId } from "./tables/StartBlock.sol";
 import { ResourceConnection, ResourceConnectionTableId } from "./tables/ResourceConnection.sol";
 import { ControlConnection, ControlConnectionTableId } from "./tables/ControlConnection.sol";
-import { Energy, EnergyTableId } from "./tables/Energy.sol";
-import { RealmId, RealmIdTableId } from "./tables/RealmId.sol";
-import { Position, PositionData, PositionTableId } from "./tables/Position.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";

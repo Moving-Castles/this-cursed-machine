@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { network, ready, loadingMessage } from "../modules/network";
+import { network, ready, loadingMessage } from "../network";
 
 export function createLoadingStateSystem() {
   get(network).components.LoadingState.update$.subscribe(update => {
