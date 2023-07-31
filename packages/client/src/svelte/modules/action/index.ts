@@ -1,4 +1,4 @@
-import { EntityType } from "../state/types";
+import { EntityType, ConnectionType } from "../state/types";
 import { addToSequencer } from "./actionSequencer";
 
 export enum WorldFunctions {
