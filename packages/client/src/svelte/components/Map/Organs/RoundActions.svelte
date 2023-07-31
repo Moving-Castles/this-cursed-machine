@@ -11,7 +11,7 @@
   import { ConnectionType } from "../../../modules/state/types"
   import { EntityType } from "../../../modules/state/types"
   import { explainer } from "../../../modules/content/wiki"
-  import { connect, disconnect } from "../../../modules/action"
+  // import { connect, disconnect } from "../../../modules/action"
   export let radius = 120
   export let entity: EntityStoreEntry
 
@@ -27,19 +27,23 @@
 
   // Default actions
   function sendConnectResource() {
-    connect(ConnectionType.RESOURCE, entity.address)
+    // connect(ConnectionType.RESOURCE, entity.address)
+    console.log('function doesnt exist')
   }
 
   function sendDisconnectResource() {
-    disconnect(ConnectionType.RESOURCE)
+    // disconnect(ConnectionType.RESOURCE)
+    console.log('function doesnt exist')
   }
 
   function sendConnectControl() {
-    connect(ConnectionType.CONTROL, entity.address)
+    // connect(ConnectionType.CONTROL, entity.address)
+    console.log('function doesnt exist')
   }
 
   function sendDisconnectControl() {
-    disconnect(ConnectionType.CONTROL)
+    // disconnect(ConnectionType.CONTROL)
+    console.log('function doesnt exist')
   }
 
   const circularLayout = node => {

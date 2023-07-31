@@ -1,21 +1,23 @@
 <script lang="ts">
   export let entity: EntityStoreEntry
   import {
-    PORTAL_ID,
+    // PORTAL_ID,
     playerCore,
     calculatedEnergy,
     playerEntityId,
-    portal
+    // portal
   } from "../../../modules/state"
-  import { chargePortal, exit } from "../../../modules/action"
+  // import { chargePortal, exit } from "../../../modules/action"
 
 
   function sendChargePortal() {
-    chargePortal(PORTAL_ID)
+    // chargePortal(PORTAL_ID)
+    console.log('function doesnt exist')
   }
 
   function sendExit() {
-    exit(PORTAL_ID)
+    // exit(PORTAL_ID)
+    console.log('function doesnt exist')
   }
 </script>
 

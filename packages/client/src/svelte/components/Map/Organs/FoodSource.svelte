@@ -1,7 +1,6 @@
 <script lang="ts">
   import { dragOrigin, tileEntity, isConnectedResource, playerEntityId, playerCore } from "../../../modules/state"
   import { EntityType } from "../../../modules/state/types"
-  import { connectModifier, disconnectModifier } from "../../../modules/action"
 
   export let entity: EntityStoreEntry
 

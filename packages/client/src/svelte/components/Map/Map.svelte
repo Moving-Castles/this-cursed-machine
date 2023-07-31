@@ -102,8 +102,8 @@
       margin: 400px;
       box-sizing: border-box;
       position: relative;
-      width: 700px;
-      height: 700px;
+      width: 400px;
+      height: 400px;
     }
   }
 </style>

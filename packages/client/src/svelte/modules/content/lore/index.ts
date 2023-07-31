@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 
 export const lore = {
-  title: "Circuit game",
+  title: "THIS CURSED MACHINE",
   instructions: {
     loading: {
       ready: 'circuits ready',
