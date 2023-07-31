@@ -1,3 +1,8 @@
+enum BuildableEntityType {
+  RESOURCE,
+  RESOURCE_TO_ENERGY
+}
+
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
@@ -118,5 +123,6 @@ declare global {
 // Only explicitly export enums
 export {
   EntityType,
-  ConnectionType
+  ConnectionType,
+  BuildableEntityType
 }

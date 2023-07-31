@@ -43,6 +43,7 @@
 
   const onDragOver = e => {
     dropDestination.set(tile.coordinates)
+    console.log(tile.coordinates)
   }
 
   const entity = tileEntity(tile.coordinates)
