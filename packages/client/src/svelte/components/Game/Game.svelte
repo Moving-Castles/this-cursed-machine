@@ -21,7 +21,7 @@
 
 <MinimalExecutor />
 
-<div class="game" class:janky={$config.janky}>
+<div class="game">
   <div class="map-container">
     <Map />
   </div>
