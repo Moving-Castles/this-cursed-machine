@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { chargeClaw, move } from "../../../modules/action"
+  // import { chargeClaw, move } from "../../../modules/action"
   import { playerCore, cores, calculatedEnergy, playerEntityId, gameConfig } from "../../../modules/state"
 
   export let entity: EntityStoreEntry
@@ -11,11 +11,11 @@
   $: coresNotMe = Object.entries($cores).filter(([address, _]) => address !== $playerEntityId)
 
   function sendChargeClaw() {
-    chargeClaw(entity.address)
+    // chargeClaw(entity.address)
   }
 
   function sendTestMove() {
-    move(entity.address, targetEntity, targetX, targetY)
+    // move(entity.address, targetEntity, targetX, targetY)
   }
 </script>
 

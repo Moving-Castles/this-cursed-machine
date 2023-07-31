@@ -3,12 +3,13 @@
   import {
     playerCore,
   } from "../../../modules/state"
-  import {
-    vote,
-  } from "../../../modules/action"
+  // import {
+  //   vote,
+  // } from "../../../modules/action"
 
   function sendVote() {
-    vote()
+    // vote()
+    console.log('sending vote')
   }
 </script>
 
