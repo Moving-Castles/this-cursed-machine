@@ -6,6 +6,7 @@
   } from "../../modules/state"
   import { EntityType } from "../../modules/state/types"
   import OrganComponent from "./Organs/Organ.svelte"
+  import BuildableOrganComponent from "./Organs/BuildableOrgan.svelte"
   import FoodSource from "./Organs/FoodSource.svelte"
 
   export let tile: GridTile
@@ -13,15 +14,19 @@
   setContext("tile", tile)
 
   const onDragOver = e => {
-    dropDestination.set(tile.coordinates)
-    console.log(tile.coordinates)
+    // dropDestination.set(tile.coordinates)
+    console.log('inv drag', tile.coordinates)
   }
 
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="tile" on:dragenter={onDragOver}>
-  <span class="type">{tile.type}</span>
+    <BuildableOrganComponent background={"yellow"} type={tile.type}>
+      <svelte:fragment slot="content">
+        {tile.type}
+      </svelte:fragment>
+    </BuildableOrganComponent>
 </div>
 
 <style lang="scss">
@@ -31,6 +36,7 @@
     float: left;
     font-size: 8px;
     display: flex;
+    margin-left: 10px;
     justify-content: center;
     align-items: center;
     background-size: contain;
