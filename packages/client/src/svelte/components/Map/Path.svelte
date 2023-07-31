@@ -98,7 +98,7 @@
     class:potential
     class:planned
     style:z-index={planned ? 0 : pathIndex + 1}
-    viewBox="0 0 700 700"
+    viewBox="0 0 400 400"
   >
     {#key path}
       <!-- Actual path -->
