@@ -1,6 +1,8 @@
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
+  RESOURCE_CONNECTION,
+  CONTROL_CONNECTION,
   RESOURCE,
   RESOURCE_TO_ENERGY
 }
@@ -22,9 +24,9 @@ declare global {
     level?: number;
     position?: Coord;
     connectionCapacity?: number;
+    sourceEntity?: string;
+    targetEntity?: string;
     startBlock?: number;
-    resourceConnection?: string;
-    controlConnection?: string;
     gameConfig?: GameConfig;
   };
   
@@ -37,9 +39,13 @@ declare global {
     level?: number;
     position: Coord;
     startBlock?: number;
-    resourceConnection?: string;
-    controlConnection?: string;
   };
+
+  type Connection = {
+    type: EntityType.RESOURCE_CONNECTION | EntityType.CONTROL_CONNECTION;
+    sourceEntity: string;
+    targetEntity: string;
+  }
   
   type Resource = {
     type: EntityType.RESOURCE;
@@ -92,12 +98,6 @@ declare global {
   type Coord = {
     x: number;
     y: number;
-  };
-  
-  type Connection = {
-    type: ConnectionType;
-    start: Coord,
-    end: Coord
   };
   
   type CalculatedEnergies = {

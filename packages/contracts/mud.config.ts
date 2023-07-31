@@ -14,8 +14,7 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        EntityType: ["CORE", "UNTRAVERSABLE", "RESOURCE", "RESOURCE_TO_ENERGY"],
-        ConnectionType: ["RESOURCE", "CONTROL"]
+        EntityType: ["CORE", "UNTRAVERSABLE", "RESOURCE_CONNECTION", "CONTROL_CONNECTION", "RESOURCE", "RESOURCE_TO_ENERGY"]
     },
     tables: {
         Type: "EntityType",
@@ -31,9 +30,9 @@ export default mudConfig({
             },
         },
         ConnectionCapacity: "uint32",
+        SourceEntity: "bytes32",
+        TargetEntity: "bytes32",
         StartBlock: "uint256",
-        ResourceConnection: "bytes32",
-        ControlConnection: "bytes32",
         GameConfig: {
             keySchema: {},
             schema: {
@@ -59,16 +58,6 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("Type")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("ResourceConnection")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("ControlConnection")],
         },
         {
             name: "KeysWithValueModule",

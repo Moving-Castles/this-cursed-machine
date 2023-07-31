@@ -2,8 +2,9 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, ResourceConnection, ResourceConnectionTableId, ControlConnectionTableId, StartBlockTableId } from "../codegen/Tables.sol";
-import { EntityType, ConnectionType } from "../codegen/Types.sol";
+import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, StartBlockTableId } from "../codegen/Tables.sol";
+import { IWorld } from "../codegen/world/IWorld.sol";
+import { EntityType } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibMap {
@@ -147,24 +148,24 @@ library LibMap {
    * @param _target  Core position
    * @return nextPosition  next position
    */
-  function getNextStep(
-    PositionData memory _current,
-    PositionData memory _target
-  ) internal pure returns (PositionData memory nextPosition) {
-    if (_current.x < _target.x) {
-      _current.x++;
-    } else if (_current.x > _target.x) {
-      _current.x--;
-    }
+  // function getNextStep(
+  //   PositionData memory _current,
+  //   PositionData memory _target
+  // ) internal pure returns (PositionData memory nextPosition) {
+  //   if (_current.x < _target.x) {
+  //     _current.x++;
+  //   } else if (_current.x > _target.x) {
+  //     _current.x--;
+  //   }
 
-    if (_current.y < _target.y) {
-      _current.y++;
-    } else if (_current.y > _target.y) {
-      _current.y--;
-    }
+  //   if (_current.y < _target.y) {
+  //     _current.y++;
+  //   } else if (_current.y > _target.y) {
+  //     _current.y--;
+  //   }
 
-    return _current;
-  }
+  //   return _current;
+  // }
 
   /**
    * Get core at position
@@ -189,17 +190,17 @@ library LibMap {
    * @return entityId entityId
    */
   function getEntityAtPosition(PositionData memory _position) internal view returns (bytes32 entityId) {
-    console.log("=> getEntityAtPosition");
+    // console.log("=> getEntityAtPosition");
 
-    console.log("alice x");
-    console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).x);
-    console.log("alice y");
-    console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).y);
+    // console.log("alice x");
+    // console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).x);
+    // console.log("alice y");
+    // console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).y);
 
-    console.log("Query: _position.x");
-    console.logInt(_position.x);
-    console.log("Query: _position.y");
-    console.logInt(_position.y);
+    // console.log("Query: _position.x");
+    // console.logInt(_position.x);
+    // console.log("Query: _position.y");
+    // console.logInt(_position.y);
 
     QueryFragment[] memory fragments = new QueryFragment[](1);
     fragments[0] = QueryFragment(
@@ -208,8 +209,25 @@ library LibMap {
       Position.encode({ x: _position.x, y: _position.y })
     );
     bytes32[][] memory keyTuples = query(fragments);
-    console.log("keyTuples.length");
-    console.log(keyTuples.length);
+    // console.log("keyTuples.length");
+    // console.log(keyTuples.length);
+    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
+  }
+
+  /**
+   * Get core at position with world
+   * @param _world world
+   * @param _position position
+   * @return entityId entityId
+   */
+  function getEntityAtPosition(IWorld _world, PositionData memory _position) internal view returns (bytes32 entityId) {
+    QueryFragment[] memory fragments = new QueryFragment[](1);
+    fragments[0] = QueryFragment(
+      QueryType.HasValue,
+      PositionTableId,
+      Position.encode({ x: _position.x, y: _position.y })
+    );
+    bytes32[][] memory keyTuples = query(_world, fragments);
     return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }
 
@@ -219,16 +237,16 @@ library LibMap {
    * @param _organEntity organ entity
    * @return connections
    */
-  function getConnections(
-    ConnectionType _connectionType,
-    bytes32 _organEntity
-  ) internal view returns (bytes32[][] memory connections) {
-    bytes32 tableId = _connectionType == ConnectionType.RESOURCE ? ResourceConnectionTableId : ControlConnectionTableId;
-    QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(QueryType.HasValue, tableId, ResourceConnection.encode(_organEntity));
-    bytes32[][] memory keyTuples = query(fragments);
-    return keyTuples;
-  }
+  // function getConnections(
+  //   ConnectionType _connectionType,
+  //   bytes32 _organEntity
+  // ) internal view returns (bytes32[][] memory connections) {
+  //   bytes32 tableId = _connectionType == ConnectionType.RESOURCE ? ResourceConnectionTableId : ControlConnectionTableId;
+  //   QueryFragment[] memory fragments = new QueryFragment[](1);
+  //   fragments[0] = QueryFragment(QueryType.HasValue, tableId, ResourceConnection.encode(_organEntity));
+  //   bytes32[][] memory keyTuples = query(fragments);
+  //   return keyTuples;
+  // }
 
   /**
    * Get all connects to food source

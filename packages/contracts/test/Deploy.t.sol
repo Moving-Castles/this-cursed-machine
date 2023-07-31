@@ -4,7 +4,6 @@ import { console } from "forge-std/console.sol";
 import { MudV2Test } from "./MudV2Test.t.sol";
 import "../src/codegen/Tables.sol";
 import "../src/libraries/Libraries.sol";
-import { moverEntity, resourceEntity, portalEntity } from "../src/constants.sol";
 import { EntityType } from "../src/codegen/Types.sol";
 
 contract DeployTest is MudV2Test {
