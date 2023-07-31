@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "the-untitled-game",
+  "name": "this-cursed-machine",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moving-castles/the-untitled-game.git"
+    "url": "https://github.com/moving-castles/this-cursed-machine.git"
   },
   "scripts": {
     "build": "pnpm recursive run build",

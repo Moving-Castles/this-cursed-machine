@@ -1,4 +1,4 @@
-# THE UNTITLED GAME
+# THIS CURSED MACHINE
 
 ## Implemented (contracts)
 
