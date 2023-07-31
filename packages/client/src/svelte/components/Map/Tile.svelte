@@ -49,12 +49,14 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="tile" on:dragenter={onDragOver}>
+<div class="tile" on:dragenter={onDragOver} class:untraversable={EntityType[$entity?.entity?.type] === "UNTRAVERSABLE"}>
   <div class="coords">{tile.coordinates.x}, {tile.coordinates.y}</div>
 
   {#if $entity}
     {#if EntityType[$entity.entity.type] === "CORE"}
       <CoreComponent entity={$entity} />
+    {:else if EntityType[$entity.entity.type] === "UNTRAVERSABLE"}
+      <EmptyTile untraversable />
     {:else}
       <OrganComponent background={colorMappings[$entity.entity.type]} entity={$entity}>
         <svelte:fragment slot="content">
@@ -90,6 +92,10 @@
       top: 5px;
       right: 5px;
       color: black;
+    }
+
+    &.untraversable {
+      opacity: 0;
     }
   }
 </style>

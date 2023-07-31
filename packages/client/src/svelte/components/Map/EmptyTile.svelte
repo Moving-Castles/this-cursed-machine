@@ -1,5 +1,6 @@
 <script lang="ts">
   import { NULL_COORDINATE, dropDestination } from "../../modules/state"
+  export let untraversable = false
 
   const onDrop = (e) => {
     // console.log(e.dataTransfer.getData("text"))
@@ -14,6 +15,7 @@
   on:dragover|preventDefault
   on:drop|preventDefault={onDrop}
   on:click={onDrop}
+  class:untraversable
   class="empty-tile"
 />
 
@@ -21,5 +23,9 @@
   .empty-tile {
     width: 100%;
     height: 100%;
+  }
+
+  .untraversable {
+    // opacity: 0;
   }
 </style>
