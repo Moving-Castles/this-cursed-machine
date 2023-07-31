@@ -126,42 +126,42 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    SourceEntity: (() => {
+      const tableId = new TableId("mc", "SourceEntity");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    TargetEntity: (() => {
+      const tableId = new TableId("mc", "TargetEntity");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     StartBlock: (() => {
       const tableId = new TableId("mc", "StartBlock");
       return defineComponent(
         world,
         {
           value: RecsType.BigInt,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    ResourceConnection: (() => {
-      const tableId = new TableId("mc", "ResourceConnecti");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.String,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    ControlConnection: (() => {
-      const tableId = new TableId("mc", "ControlConnectio");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.String,
         },
         {
           metadata: {

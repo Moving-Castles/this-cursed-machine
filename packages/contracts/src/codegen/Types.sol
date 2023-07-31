@@ -5,11 +5,8 @@ pragma solidity >=0.8.0;
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
+  RESOURCE_CONNECTION,
+  CONTROL_CONNECTION,
   RESOURCE,
   RESOURCE_TO_ENERGY
-}
-
-enum ConnectionType {
-  RESOURCE,
-  CONTROL
 }

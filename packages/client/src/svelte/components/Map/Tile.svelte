@@ -47,10 +47,14 @@
   }
 
   const entity = tileEntity(tile.coordinates)
+
+  $: untraversable = EntityType[$entity?.entity?.type] === "UNTRAVERSABLE"
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="tile" on:dragenter={onDragOver} class:untraversable={EntityType[$entity?.entity?.type] === "UNTRAVERSABLE"}>
+<div
+  class="tile"
+  on:dragenter={onDragOver} class:untraversable>
   <div class="coords">{tile.coordinates.x}, {tile.coordinates.y}</div>
 
   {#if $entity}
@@ -97,6 +101,7 @@
 
     &.untraversable {
       opacity: 0;
+      pointer-events: none;
     }
   }
 </style>
