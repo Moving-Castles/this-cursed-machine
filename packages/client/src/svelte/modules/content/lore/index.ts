@@ -10,5 +10,5 @@ export const lore = {
 }
 
 export const config = writable({
-  janky: true
+  janky: false
 })

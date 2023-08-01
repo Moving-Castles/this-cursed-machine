@@ -34,6 +34,7 @@
   --row-gap: 2rem;
   --taskbar-height: 30px;
   --titlebar-height: 30px;
+  --tilesize: 100px;
   /* "DMTLLVIPWebTrial-Regular", */
   /* Fonts */
   --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
@@ -71,14 +72,6 @@ html {
   font-size: var(--font-size);
   margin: 0;
   padding: 0;
-}
-
-.gridLayer {
-  display: grid;
-  grid-template-rows: repeat(var(--size), var(--tilesize));
-  grid-template-columns: repeat(var(--size), var(--tilesize));
-  width: var(--width);
-  height: var(--height);
 }
 
 @supports (-webkit-text-stroke: 1px black) {

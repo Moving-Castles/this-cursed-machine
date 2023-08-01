@@ -6,6 +6,10 @@
     // console.log(e.dataTransfer.getData("text"))
     dropDestination.set(NULL_COORDINATE)
   }
+
+  const onClick = () => {
+    // build an organ here?
+  }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -14,7 +18,7 @@
   on:dragenter|preventDefault
   on:dragover|preventDefault
   on:drop|preventDefault={onDrop}
-  on:click={onDrop}
+  on:click={onClick}
   class:untraversable
   class="empty-tile"
 />
@@ -23,6 +27,17 @@
   .empty-tile {
     width: 100%;
     height: 100%;
+
+    &:hover::after {
+      position: absolute;
+      content: "+";
+      font-size: 5rem;
+      text-align: center;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.8;
+    }
   }
 
   .untraversable {

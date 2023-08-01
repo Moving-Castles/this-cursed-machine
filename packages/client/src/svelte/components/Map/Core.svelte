@@ -1,7 +1,11 @@
 <script lang="ts">
   import { playerEntityId, calculatedEnergy } from "../../modules/state"
   import { onDragStart } from "../../modules/ui/events"
+  import Connectable from "./Connectable.svelte"
+
   export let entity: EntityStoreEntry
+
+  $: console.log(entity)
 
   const onClick = (e) => {
     console.log('explain core')
@@ -9,18 +13,20 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  class="core"
-  class:player={entity.address === $playerEntityId}
-  draggable={entity.address === $playerEntityId}
-  on:click={onClick}
-  on:dragstart={(e) => onDragStart(e, entity.entity.position)}
->
-  <div>
-    <div class="name">{entity.entity.name} {entity.address === $playerEntityId ? "(U)" : ""}</div>
-    <div class="energy">{$calculatedEnergy[entity.address]}</div>
+<Connectable>
+  <div
+    class="core"
+    class:player={entity.address === $playerEntityId}
+    draggable={entity.address === $playerEntityId}
+    on:click={onClick}
+    on:dragstart={(e) => onDragStart(e, entity.entity.position)}
+  >
+    <div>
+      <div class="name">{entity.entity.name} {entity.address === $playerEntityId ? "(U)" : ""}</div>
+      <div class="energy">{$calculatedEnergy[entity.address]}</div>
+    </div>
   </div>
-</div>
+</Connectable>
 
 <div id="placeholder" />
 
