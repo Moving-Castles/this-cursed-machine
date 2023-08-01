@@ -22,9 +22,11 @@ export function initUI () {
 /**
  * Thin wrapper for drag events
  */
-export function onDragStart (e, coord: Coord) {
+export function onDragStart (e, coord: Coord, passive = false) {
   console.log('on drag start')
-  dragOrigin.set(coord)
+  if (!passive) {
+    dragOrigin.set(coord)
+  }
   e.dataTransfer.setData("text/plain", e.target.classList)
   e.dataTransfer.setDragImage(img, 0, 0)
 }

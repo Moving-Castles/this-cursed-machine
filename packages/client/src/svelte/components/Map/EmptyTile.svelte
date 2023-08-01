@@ -1,14 +1,15 @@
 <script lang="ts">
   import { NULL_COORDINATE, dropDestination } from "../../modules/state"
+  import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false
 
   const onDrop = (e) => {
-    // console.log(e.dataTransfer.getData("text"))
+    console.log(e.dataTransfer.getData("text"))
     dropDestination.set(NULL_COORDINATE)
   }
 
   const onClick = () => {
-    // build an organ here?
+  $showInventory = true
   }
 </script>
 

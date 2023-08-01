@@ -5,7 +5,8 @@
     organs
   } from "../../modules/state"
   import { BuildableEntityType } from "../../modules/state/types"
-  import InvTile from "./InvTile.svelte"
+  import InventoryTile from "./InventoryTile.svelte"
+  import { showInventory } from "../../modules/ui/stores"
   import Path from "./Path.svelte"
 
   let w: number
@@ -29,7 +30,6 @@
     //this is inelegant
     const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
 
-    // Loop through each row of the grid (represented by y)
     for (let i = 0; i < numOrganTypes; i++) {
         const newOrgan: GridTile = {
           id: `${BuildableEntityType[i]}`,
@@ -41,8 +41,11 @@
         inventory = [...inventory, newOrgan]
     }
 
-    // Return the fully constructed grid
     return inventory
+  }
+
+  const close = ({ key }: string) => {
+    if (key === "Escape") $showInventory = false
   }
 
   onMount(() => {
@@ -51,29 +54,31 @@
   })
 </script>
 
-<svelte:window bind:innerWidth={w} bind:innerHeight={h} />
+<svelte:window bind:innerWidth={w} bind:innerHeight={h} on:keydown={close} />
 
 <div class="inventory">
-  <div class="inv-container" bind:clientWidth={containerWidth}>
+  <div class="inventory-container" bind:clientWidth={containerWidth}>
     {#each inv as tile (tile.id)}
-      <InvTile {tile} />
+      <InventoryTile {tile} />
     {/each}
   </div>
 </div>
 
 <style lang="scss">
   .inventory {
-    height: 20%;
     width: 100%;
     overflow: auto;
     padding: 0;
+    bottom: 0;
     position: fixed;
-    bottom: 0px;
-    background-color: pink;
 
-    .inv-container {
-      margin: 20px;
+    .inventory-container {
+      height: var(--tilesize);
+      margin: var(--row-gap) var(--col-gap) ;
+      gap: var(--col-gap);
+      display: flex;
       position: relative;
+      justify-content: center;
     }
   }
 </style>
