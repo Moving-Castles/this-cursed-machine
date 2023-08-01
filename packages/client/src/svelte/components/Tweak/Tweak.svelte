@@ -2,10 +2,10 @@
   import { config } from "../../modules/content/lore"
 </script>
 
-<div class="tweak">
+<!-- <div class="tweak">
   <label>Janky</label>
   <input type="checkbox" bind:checked={$config.janky}>
-</div>
+</div> -->
 
 <style>
   .tweak {

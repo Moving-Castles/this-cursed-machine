@@ -29,3 +29,5 @@ export const delayedTweened = (resetToValue, delay) => {
     }
   };
 }
+
+export const showInventory = writable(false)
