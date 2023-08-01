@@ -11,6 +11,7 @@
   import { ConnectionType } from "../../../modules/state/types"
   import { EntityType } from "../../../modules/state/types"
   import { explainer } from "../../../modules/content/wiki"
+  import { circularLayout } from "../../../modules/ui"
   // import { connect, disconnect } from "../../../modules/action"
   export let radius = 120
   export let entity: EntityStoreEntry
@@ -45,15 +46,6 @@
     // disconnect(ConnectionType.CONTROL)
     console.log('function doesnt exist')
   }
-
-  const circularLayout = node => {
-    node.style.cssText += `
-    --child-count: ${node.children.length};
-    --angle: ${360 / node.children.length}deg;
-    --radius: ${radius}px;
-    `
-    return {}
-  }
 </script>
 
 
@@ -62,7 +54,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   transition:fade={{ duration: 100 }}
-  use:circularLayout
+  use:circularLayout={{ radius }}
   class="round-actions"
   on:mouseleave={close}
   on:dragleave={close}
@@ -113,54 +105,11 @@
 
 <style lang="scss">
   .round-actions {
-    position: absolute;
-    width: calc(var(--radius) * 2);
-    height: calc(var(--radius) * 2);
-    top: 0;
-    left: 0;
-    z-index: 999900000;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(90deg);
-
     :global(.action) {
-      display: block;
-      position: absolute;
-      left: 50%;
-      top: 50%;
       width: 80px;
       height: 80px;
       background-color: var(--background);
       border-radius: 100%;
-    }
-
-    :global(.action:nth-child(1)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 0))
-        translate(var(--radius)) rotate(calc(var(--angle) * 0)) rotate(-90deg);
-    }
-    :global(.action:nth-child(2)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 1))
-        translateX(var(--radius)) rotate(calc(var(--angle) * -1)) rotate(-90deg);
-    }
-    :global(.action:nth-child(3)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 2))
-        translate(var(--radius)) rotate(calc(var(--angle) * -2)) rotate(-90deg);
-    }
-    :global(.action:nth-child(4)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 3))
-        translate(var(--radius)) rotate(calc(var(--angle) * -3)) rotate(-90deg);
-    }
-    :global(.action:nth-child(5)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 4))
-        translate(var(--radius)) rotate(calc(var(--angle) * -4)) rotate(-90deg);
-    }
-    :global(.action:nth-child(6)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 5))
-        translate(var(--radius)) rotate(calc(var(--angle) * -5)) rotate(-90deg);
-    }
-    :global(.action:nth-child(7)) {
-      transform: translate(-50%, -50%) rotate(calc(var(--angle) * 6))
-        translate(var(--radius)) rotate(calc(var(--angle) * -6)) rotate(-90deg);
     }
   }
 </style>

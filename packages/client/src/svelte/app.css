@@ -85,3 +85,41 @@ html {
     -webkit-text-fill-color: black;
   }
 }
+
+.action {
+  z-index: 999900000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  display: block;
+  position: absolute;
+}
+
+.circularLayout .action:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 0))
+    translate(var(--radius)) rotate(calc(var(--angle) * 0));
+}
+.circularLayout .action:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 1))
+    translateX(var(--radius)) rotate(calc(var(--angle) * -1));
+}
+.circularLayout .action:nth-child(3) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 2))
+    translate(var(--radius)) rotate(calc(var(--angle) * -2));
+}
+.circularLayout .action:nth-child(4) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 3))
+    translate(var(--radius)) rotate(calc(var(--angle) * -3));
+}
+.circularLayout .action:nth-child(5) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 4))
+    translate(var(--radius)) rotate(calc(var(--angle) * -4));
+}
+.circularLayout .action:nth-child(6) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 5))
+    translate(var(--radius)) rotate(calc(var(--angle) * -5));
+}
+.circularLayout .action:nth-child(7) {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * 6))
+    translate(var(--radius)) rotate(calc(var(--angle) * -6));
+}

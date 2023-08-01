@@ -13,8 +13,8 @@ export function spawn(name: string) {
     addToSequencer(WorldFunctions.Spawn, [name])
 }
 
-export function build(entityType: EntityType, x: number, y: number) {
-    addToSequencer(WorldFunctions.Build, [entityType, {x, y}])
+export function build(entityType: EntityType, coordinates: Coord) {
+    addToSequencer(WorldFunctions.Build, [entityType, coordinates])
 }
 
 export function destroy(entity: string) {
