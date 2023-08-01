@@ -33,6 +33,7 @@
    * @return {string} A string representation of the SVG path.
    */
   const makeSvgPath = (coords: Coord[]) => {
+    console.log('making path', coords)
     localCoords = coords
     // Initialize an empty string to hold the SVG path.
     let string = ""

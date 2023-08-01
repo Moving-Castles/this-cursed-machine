@@ -5,7 +5,7 @@
 - [x] Spawn core
 - [x] Untraversable tiles
 - [x] Build `Resource` and `Resource to Energy` converters
-- [ ] Next: Connect/Disconnect functions
+- [x] Next: Basic Connect/Disconnect functions
 
 ## notes
 

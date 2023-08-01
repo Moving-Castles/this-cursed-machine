@@ -5,6 +5,7 @@
   import Presence from "../Presence/Presence.svelte"
   import LeaderBoard from "../LeaderBoard/LeaderBoard.svelte"
   import Map from "../Map/Map.svelte"
+  import Inventory from "../Map/Inventory.svelte"
   import Tweak from "../Tweak/Tweak.svelte"
   import { config } from "../../modules/content/lore"
   // import DragState from "../DragState/DragState.svelte"
@@ -25,6 +26,7 @@
   <div class="map-container">
     <Map />
   </div>
+  <Inventory />
 </div>
 
 <!-- <RawDebug /> -->

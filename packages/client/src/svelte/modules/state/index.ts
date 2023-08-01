@@ -24,6 +24,7 @@ export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
+// these are the active organs
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
     return entity.type === EntityType.RESOURCE ||
