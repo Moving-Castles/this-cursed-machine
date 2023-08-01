@@ -1,24 +1,23 @@
 <script lang="ts">
-  import { NULL_COORDINATE, dropDestination } from "../../modules/state"
+  import { NULL_COORDINATE, dropDestination, BUILDABLE_ENTITYTYPES } from "../../modules/state"
   import TileActions from "./TileActions.svelte"
   import { build } from "../../modules/action"
-  import { BuildableEntityType } from "../../modules/state/types"
+  import { BuildableEntityType, EntityType } from "../../modules/state/types"
   import { getContext} from "svelte"  
   // import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false
 
-  let timeout
+  let timeout: NodeJS.Timeout
   
   const tile = getContext("tile") as GridTile
   let active = false
 
-  const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
-  let inventory: any[] = []
+  // const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
+  let inventory: EntityType[] = []
 
-  for (let i = 0; i < numOrganTypes; i++) {
-    inventory = [...inventory, BuildableEntityType[i]]
+  for (let i = 0; i < BUILDABLE_ENTITYTYPES.length; i++) {
+    inventory = [...inventory, BUILDABLE_ENTITYTYPES[i]]
   }
-
 
   const onDrop = (e) => {
     console.log(e.dataTransfer.getData("text"))
@@ -33,10 +32,10 @@
     timeout = setTimeout(() => { active = false }, 3000)
   }
 
-  const mappings = {
-    RESOURCE_TO_ENERGY: "R2E",
-    RESOURCE: "RES",
-  }
+  const mappings: Record<EntityType, string> = {
+    [EntityType.RESOURCE]: "RES",
+    [EntityType.RESOURCE_TO_ENERGY]: "R2E",
+  };
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -52,10 +51,10 @@
 
 {#if active}
   <TileActions on:close={() => active = false}>
-    {#each inventory as id (id)}
-      <button class="action organ" on:click={() => build(id, tile.coordinates)}>
+    {#each inventory as entityType (entityType)}
+      <button class="action organ" on:click={() => build(entityType, tile.coordinates)}>
         {tile.coordinates.x} {tile.coordinates.y}
-        {mappings[id]}
+        {mappings[entityType]}
       </button>
     {/each}
   </TileActions>
