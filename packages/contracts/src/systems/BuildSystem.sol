@@ -7,28 +7,26 @@ import { LibUtils, LibMap } from "../libraries/Libraries.sol";
 
 contract BuildSystem is System {
 
-  // Build an organ
-  function build(EntityType _entityType, PositionData memory _location) public returns (bytes32 entity) {
+  function buildOrgan(EntityType _entityType, int32 _x, int32 _y) public returns (bytes32 entity) {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(BodyId.get(coreEntity) == 0, "not in body");
     require(ReadyBlock.get(coreEntity) < block.number, "in cooldown");
     require(Energy.get(coreEntity) >= gameConfig.buildCost, "not enough energy");
-    require(LibMap.getEntityAtPosition(_location) == 0, "occupied");
+    require(LibMap.getEntityAtPosition(PositionData({x: _x, y: _y})) == 0, "occupied");
     require(_entityType == EntityType.RESOURCE || _entityType == EntityType.RESOURCE_TO_ENERGY, "invalid entity type");
     // Create entity at position
-    bytes32 entity = LibUtils.getRandomKey();
-    Type.set(entity, _entityType);
-    Position.set(entity, _location);
+    bytes32 organEntity = LibUtils.getRandomKey();
+    Type.set(organEntity, _entityType);
+    Position.set(organEntity, PositionData({x: _x, y: _y}));
     // Reduce core energy
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
     // TODO: set cooldown
 
-    return entity;
+    return organEntity;
   }
 
-  // Build a connection between two entities
-  function build(EntityType connectionType, bytes32 _sourceEntity, bytes32 _targetEntity) public returns (bytes32 connectionEntity) {
+  function buildConnection(EntityType connectionType, bytes32 _sourceEntity, bytes32 _targetEntity) public returns (bytes32 entity) {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(connectionType == EntityType.RESOURCE_CONNECTION || connectionType == EntityType.CONTROL_CONNECTION, "invalid type");
