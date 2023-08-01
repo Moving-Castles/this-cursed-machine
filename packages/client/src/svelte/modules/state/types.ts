@@ -34,6 +34,12 @@ declare global {
     startBlock?: number;
     gameConfig?: GameConfig;
   };
+
+  type BuildableEntity = {
+    type: BuildableEntityType;
+    name: string;
+    cost: number;
+  }
   
   type Core = {
     type: EntityType.CORE;

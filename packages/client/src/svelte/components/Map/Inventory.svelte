@@ -2,7 +2,8 @@
   import { onMount } from "svelte"
   import {
     gameConfig,
-    organs
+    organs,
+    buildableOrgans
   } from "../../modules/state"
   import { BuildableEntityType } from "../../modules/state/types"
   import InvTile from "./InvTile.svelte"
