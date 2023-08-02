@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { initSignalNetwork } from "../../modules/signal"
+  import { showInventory } from "../../modules/ui/stores"
   import MinimalExecutor from "../Executor/MinimalExecutor.svelte"
   import Presence from "../Presence/Presence.svelte"
   import LeaderBoard from "../LeaderBoard/LeaderBoard.svelte"
   import Map from "../Map/Map.svelte"
+  import Inventory from "../Map/Inventory.svelte"
   import Tweak from "../Tweak/Tweak.svelte"
-  import { config } from "../../modules/content/lore"
   // import DragState from "../DragState/DragState.svelte"
   // import RawDebug from "./RawDebug.svelte"
 
@@ -25,6 +26,9 @@
   <div class="map-container">
     <Map />
   </div>
+  {#if $showInventory}
+    <Inventory />
+  {/if}
 </div>
 
 <!-- <RawDebug /> -->

@@ -1,3 +1,8 @@
+enum BuildableEntityType {
+  RESOURCE,
+  RESOURCE_TO_ENERGY
+}
+
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
@@ -30,6 +35,12 @@ declare global {
     startBlock?: number;
     gameConfig?: GameConfig;
   };
+
+  type BuildableEntity = {
+    type: EntityType.RESOURCE | EntityType.RESOURCE_TO_ENERGY;
+    name: string;
+    cost: number;
+  }
   
   type Core = {
     type: EntityType.CORE;
@@ -129,5 +140,6 @@ declare global {
 // Only explicitly export enums
 export {
   EntityType,
-  ConnectionType
+  ConnectionType,
+  BuildableEntityType
 }
