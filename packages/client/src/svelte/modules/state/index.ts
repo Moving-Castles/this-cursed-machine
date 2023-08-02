@@ -21,23 +21,39 @@ export const BUILDABLE_ENTITYTYPES = [
 
 // --- STORES -----------------------------------------------------------------
 
-// Mirror of the on chain state.
-// Only ever written to via the update systems in /svelte/systems
+/**
+ * Mirror of the full on chain state.
+ * 
+ * Only ever written to via the update systems in module/ssystems
+ */
 export const entities = writable({} as Entities);
 
+/**
+ * Cores are the agents of the player.
+ */
 export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
+
 export const connections = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION)) as Connections;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION).filter(([_, con]) => !!con.startBlock)) as Connections;
 });
 
-  export const claims = derived(entities, ($entities) => {
-    return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
+/**
+ * Claims represent a lazily updated change to some value on an entity.
+ * 
+ * These are settled, ie. added to the actual entity values, whenever some action is taken.
+ * 
+ * NOTE: Currently only energy is supported. Generally very WIP right now.
+ */
+export const claims = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
 });
 
-// these are the active organs
+/**
+ * These are the active organs
+ */
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
     return entity.type !== EntityType.RESOURCE &&
@@ -66,7 +82,9 @@ export const buildableOrgans: BuildableEntity[] = [
 export const playerAddress = derived(network,
   $network => $network.network?.connectedAddress.get() || "0x0");
 
-// Entity Id is a 32 byte hex string (64 characters long) of the player address
+/**
+ * Entity Id is a 32 byte hex string (64 characters long) of the player address
+ */
 export const playerEntityId = derived(network,
   $network => $network.playerEntity || "0x0");
 
@@ -79,14 +97,34 @@ export const playerInCooldown = derived([playerCore, blockNumber],
 );
 
 /**
- * Calculated energy
+ * !!! WORK IN PROGRESS !!! Calculated energy
+ * 
+ * Currently adds the lazy update energy to the core energy by going through the claims related to the core.
+ * 
+ * Will be more general later(TM)...
  */
-export const calculatedEnergy = derived([cores, blockNumber, gameConfig],
-  ([$cores, $blockNumber, $gameConfig]) => {
+export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig],
+  ([$cores, $claims, $blockNumber, $gameConfig]) => {
     let calculatedEnergy: CalculatedEnergies = {};
+
+    // Iterate over all cores
     for (const [id, core] of Object.entries($cores)) {
-      calculatedEnergy[id] = core.energy + (core.startBlock ? Number($blockNumber) - Number(core.startBlock) : 0);
-      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig.gameConfig.coreEnergyCap ? $gameConfig.gameConfig.coreEnergyCap : calculatedEnergy[id];
+
+      // Get all claims for this core
+      let claimsForCore = Object.values($claims).filter(claim => claim.sourceEntity === id)
+
+      let lazyUpdateEnergy = 0
+
+      // Iterate over claims and calculate lazy update energy
+      for (const claim of claimsForCore) {
+        lazyUpdateEnergy *= Math.floor((Number($blockNumber) - Number(claim.startBlock)))
+      }
+
+      // Calculate core energy
+      calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
+
+      // Cap core energy
+      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.gameConfig.coreEnergyCap ? $gameConfig?.gameConfig.coreEnergyCap : calculatedEnergy[id];
     }
     return calculatedEnergy;
   });
@@ -264,12 +302,13 @@ export const isDraggable = (address: string) => derived([entities], ([$entities]
  * Port is -1 if not end or start
  */
 export const connectionsWithPortInformation = derived([connections, entities, organs], ([$connections, $entities, $organs]) => {
-  function firstAvailablePortNumber (ports, address) {
+  function firstAvailablePortNumber (ports: (string | number)[], address: string) {
     // go up the array until you find a number
     // return the modified array
     let port = -1
 
     for (let i = 0; i < ports.length; i++) {
+      console.log(typeof ports)
       if (typeof ports[i] === "number") {
         port = ports[i]
         ports[i] = address
@@ -314,7 +353,7 @@ export const connectionsWithPortInformation = derived([connections, entities, or
       }
 
       if (i === 0 || i === path.length - 1) {
-        let ports = organ.ports[direction]
+        let ports = [...organ.ports[direction]]
 
         const { portNumber, updatedPorts } = firstAvailablePortNumber(ports, address)
         

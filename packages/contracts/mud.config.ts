@@ -20,6 +20,7 @@ export default mudConfig({
         Type: "EntityType",
         Name: "string",
         Energy: "uint32",
+        CreationBlock: "uint256",
         ReadyBlock: "uint256",
         BodyId: "uint32",
         Level: "uint32",
