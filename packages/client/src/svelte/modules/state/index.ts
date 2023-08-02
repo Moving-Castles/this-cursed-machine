@@ -86,9 +86,24 @@ export const destinationAddress = writable("")
 /**
  * Potential connections to draw TODO: Replace
  */
-export const potentialConnections = derived([entities], ([$entities]) => {
-  return {}
+export const potentialConnections = derived([dragOrigin, dropDestination, playerCore], ([$dragOrigin, $dropDestination, $playerCore]) => {
+  // Return one connection for resource
+  const resourcePotential = {
+    type: EntityType.RESOURCE_CONNECTION,
+    start: $dragOrigin,
+    end: $dropDestination
+  }
+  const controlPotential = {
+    type: EntityType.CONTROL_CONNECTION,
+    start: $dragOrigin,
+    end: $dropDestination
+  }
+
+  // Check if the core's control is not already connected
+
+  return [resourcePotential, controlPotential]
 })
+
 
 /**
  * Planned connections to draw TODO: replace

@@ -14,7 +14,7 @@ enum EntityType {
 
 enum ConnectionType {
   RESOURCE,
-  CONTROL,
+  CONTROL
 }
 
 declare global {

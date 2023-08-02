@@ -2,6 +2,7 @@
   import { setContext } from "svelte"
   import {
     dropDestination,
+    destinationAddress,
     tileEntity
   } from "../../modules/state"
   import { EntityType } from "../../modules/state/types"

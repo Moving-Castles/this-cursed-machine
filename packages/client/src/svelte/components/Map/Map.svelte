@@ -59,16 +59,16 @@
     {#each grid as tile (tile.id)}
       <Tile {tile} />
     {/each}
-    {#each Object.values($connections) as connection, i (connection)}
+    <!-- {#each Object.values($connections) as connection, i (connection)}
       <Path
         {connection}
         pathIndex={i}
       />
-    {/each}
-    {#each Object.values($potentialConnections) as connection, i (connection)}
+    {/each} -->
+    {#each $potentialConnections as connection, i (connection)}
       <Path
-        {connection}
-        potential
+        startCoord={connection.start}
+        endCoord={connection.end}
         pathIndex={i}
       />
     {/each}

@@ -14,13 +14,17 @@
   import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
-  export let connection: Connection
+  export let connection: Connection | boolean = false
   export let potential = false
   export let planned = false
   export let pathIndex = 1
+  export let startCoord: Coord
+  export let endCoord: Coord
 
-  const startPoint = $entities[connection.sourceEntity].position
-  const endPoint = $entities[connection.targetEntity].position
+  if (connection) {
+    startCoord = $entities[connection.sourceEntity].position
+    endCoord = $entities[connection.targetEntity].position
+  }
 
   let localCoords: Coord[] = []
   let color = connection.type === EntityType.RESOURCE_CONNECTION ? "red" : "blue"
@@ -35,7 +39,6 @@
    * @return {string} A string representation of the SVG path.
    */
   const makeSvgPath = (coords: Coord[]) => {
-    console.log('making path', coords)
     localCoords = coords
     // Initialize an empty string to hold the SVG path.
     let string = ""
@@ -76,12 +79,12 @@
     return string
   }
 
-  const path = makeSvgPath(manhattanPath(startPoint, endPoint))
+  const path = makeSvgPath(manhattanPath(startCoord, endCoord))
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =
-    !isCoordinate(startPoint, NULL_COORDINATE) &&
-    !isCoordinate(endPoint, NULL_COORDINATE)
+    !isCoordinate(startCoord, NULL_COORDINATE) &&
+    !isCoordinate(endCoord, NULL_COORDINATE)
 
   onMount(() => {
     anime({
