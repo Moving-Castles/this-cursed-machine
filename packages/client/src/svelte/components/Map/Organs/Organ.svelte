@@ -30,7 +30,6 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   draggable={$draggable}
-  on:dragenter|preventDefault={openModal}
   on:dragover|preventDefault
   on:click={openModal}
   style="--background: {background};"

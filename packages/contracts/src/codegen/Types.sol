@@ -5,6 +5,7 @@ pragma solidity >=0.8.0;
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
+  CLAIM,
   RESOURCE_CONNECTION,
   CONTROL_CONNECTION,
   RESOURCE,

@@ -8,6 +8,7 @@ enum EntityType {
   UNTRAVERSABLE,
   RESOURCE_CONNECTION,
   CONTROL_CONNECTION,
+  CLAIM,
   RESOURCE,
   RESOURCE_TO_ENERGY
 }
@@ -34,6 +35,12 @@ declare global {
     startBlock?: number;
     gameConfig?: GameConfig;
   };
+
+  type BuildableEntity = {
+    type: EntityType.RESOURCE | EntityType.RESOURCE_TO_ENERGY;
+    name: string;
+    cost: number;
+  }
   
   type Core = {
     type: EntityType.CORE;
@@ -43,8 +50,14 @@ declare global {
     bodyId: number;
     level?: number;
     position: Coord;
-    startBlock?: number;
   };
+
+  type Claim = {
+    type: EntityType.CLAIM;
+    sourceEntity: string;
+    targetEntity: string;
+    startBlock: number;
+  }
 
   type Connection = {
     type: EntityType.RESOURCE_CONNECTION | EntityType.CONTROL_CONNECTION;

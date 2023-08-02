@@ -33,6 +33,10 @@ export const connections = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION)) as Connections;
 });
 
+  export const claims = derived(entities, ($entities) => {
+    return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
+});
+
 // these are the active organs
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
@@ -42,6 +46,20 @@ export const organs = derived(entities, ($entities) => {
 })
 
 export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID] as GameConfig);
+
+export const buildableOrgans: BuildableEntity[] = [
+  {
+    type: EntityType.RESOURCE,
+    name: "food",
+    cost: 10
+  },
+  {
+    type: EntityType.RESOURCE_TO_ENERGY,
+    name: "mouth",
+    cost: 120
+  },
+  ]
+
 
 // *** PLAYER -----------------------------------------------------------------
 
@@ -116,7 +134,7 @@ export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragO
 })
 
 /**
- * Can the player afford control over this organ?
+ * Can the player afford control over this control?
  * @param coord Coordinate of the tile one tries to connect to
  * @returns derived store with boolean
  */
@@ -124,12 +142,12 @@ export const playerCanAffordControl = (coord: Coord) => derived([playerCore, pla
   // Get the distance between the coordinate and the player
   const distance = manhattanPath($playerCore.position, coord).length
   const cost = $gameConfig.gameConfig.controlConnectionCost
-  console.log('control cost: ', (distance - 2) * cost)
+  
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
 
 /**
-* Can the player afford resource for this organ?
+* Can the player afford resource for this resource?
  * @param coord Coordinate of the tile one tries to connect to
  * @returns derived store with boolean
  */
@@ -138,6 +156,17 @@ export const playerCanAffordResource = (coord: Coord) => derived([playerCore, pl
   const distance = manhattanPath($playerCore.position, coord).length
   const cost = $gameConfig.gameConfig.resourceConnectionCost
   return (distance - 2) * cost <= $playerCalculatedEnergy
+})
+
+/**
+* Can the player afford resource for this organ?
+ * @param coord Coordinate of the tile one tries to connect to
+ * @returns derived store with boolean
+ */
+export const playerCanAffordOrgan = (cost: number) => derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
+  // Get the distance between the coordinate and the player
+  
+  return cost <= $playerCalculatedEnergy
 })
 
 /**

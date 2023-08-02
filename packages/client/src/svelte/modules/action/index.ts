@@ -6,6 +6,7 @@ export enum WorldFunctions {
     BuildOrgan = "mc_BuildSystem_buildOrgan",
     BuildConnection = "mc_BuildSystem_buildConnection",
     Destroy = "mc_BuildSystem_destroy",
+    Settle = "mc_ClaimSystem_settle",
 }
 
 // --- API --------------------------------------------------------------
@@ -28,4 +29,8 @@ export function connect(entityType: EntityType, sourceEntity: string, targetEnti
 
 export function disconnect(entity: string) {
     addToSequencer(WorldFunctions.Destroy, [entity])
+}
+
+export function settle() {
+    addToSequencer(WorldFunctions.Settle, []);
 }

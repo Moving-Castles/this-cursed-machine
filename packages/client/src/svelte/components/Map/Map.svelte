@@ -47,7 +47,7 @@
     return grid
   }
 
-  $: console.log("cons", $connections)
+  $: console.log("cons", $plannedConnection)
 
   onMount(() => {
     grid = initGrid($gameConfig?.gameConfig.worldWidth)

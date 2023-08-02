@@ -88,4 +88,43 @@ contract SpawnSystemTest is MudV2Test {
         assertEq(SourceEntity.get(world, connectionEntity), coreEntity);
         assertEq(TargetEntity.get(world, connectionEntity), resourceEntity);
     }
+
+    function testSettleClaim() public {
+        setUp();
+
+        vm.startPrank(alice);
+        world.mc_SpawnSystem_spawn("Alice");
+        vm.stopPrank();
+
+        bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+        vm.roll(block.number + 5);
+
+        vm.startPrank(alice);
+        bytes32 resourceEntity = world.mc_BuildSystem_buildOrgan(EntityType.RESOURCE, 0, 1);
+        vm.stopPrank();
+
+        assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
+
+
+        vm.roll(block.number + 5);
+
+        vm.startPrank(alice);
+        bytes32 connectionEntity = world.mc_BuildSystem_buildConnection(EntityType.RESOURCE_CONNECTION, coreEntity, resourceEntity);
+        vm.stopPrank();
+
+        assertEq(uint8(Type.get(world, connectionEntity)), uint8(EntityType.RESOURCE_CONNECTION));
+        assertEq(SourceEntity.get(world, connectionEntity), coreEntity);
+        assertEq(TargetEntity.get(world, connectionEntity), resourceEntity);
+
+        uint32 energyBefore = Energy.get(world, coreEntity);
+
+        vm.roll(block.number + 50);
+
+        vm.startPrank(alice);
+        world.mc_ClaimSystem_settle();
+        vm.stopPrank();
+
+        assertEq(Energy.get(world, coreEntity), energyBefore + 50);
+    }
 }

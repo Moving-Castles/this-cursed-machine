@@ -2,10 +2,11 @@
   import { onMount } from "svelte"
   import {
     gameConfig,
-    organs
+    organs,
+    buildableOrgans
   } from "../../modules/state"
   import { BuildableEntityType } from "../../modules/state/types"
-  import InventoryTile from "./InventoryTile.svelte"
+  import InventoryItem from "./InventoryItem.svelte"
   import { showInventory } from "../../modules/ui/stores"
   import Path from "./Path.svelte"
 

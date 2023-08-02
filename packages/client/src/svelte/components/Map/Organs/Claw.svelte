@@ -18,8 +18,7 @@
     // move(entity.address, targetEntity, targetX, targetY)
   }
 </script>
-
-
+<!-- 
 {#if $playerCore.resourceConnection === entity.address}
   {#if $calculatedEnergy[$playerEntityId] >= 20}
     <button
@@ -38,7 +37,6 @@
         <option value={id}>{core.name}</option>
       {/each}
     </select>
-    <!-- INPUT: X -->
     <input
       type="number"
       bind:value={targetX}
@@ -46,7 +44,6 @@
       max={$gameConfig.gameConfig?.worldWidth - 1}
       placeholder="X"
     />
-    <!-- INPUT: Y -->
     <input
       type="number"
       bind:value={targetY}
@@ -54,7 +51,6 @@
       max={$gameConfig.gameConfig?.worldHeight - 1}
       placeholder="Y"
     />
-    <!-- SUBMIT -->
     <button disabled={$calculatedEnergy[$playerEntityId] < 20 || coresNotMe.length === 0} on:click={sendTestMove}>Move</button>
   </div>
-{/if}
+{/if} -->
