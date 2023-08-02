@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
-import { StartBlock, Energy, GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, StartBlock, StartBlockTableId, TargetEntity, SourceEntity} from "../codegen/Tables.sol";
+import { StartBlock, Energy, CreationBlock, GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, StartBlock, StartBlockTableId, TargetEntity, SourceEntity} from "../codegen/Tables.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -20,6 +20,7 @@ library LibClaim {
   function create(bytes32 _sourceEntity, bytes32 _targetEntity) internal {
     bytes32 claimEntity = LibUtils.getRandomKey();
     Type.set(claimEntity, EntityType.CLAIM);
+    CreationBlock.set(claimEntity, block.number);
     SourceEntity.set(claimEntity, _sourceEntity);
     TargetEntity.set(claimEntity, _targetEntity);
     StartBlock.set(claimEntity, block.number);

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, StartBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData, SourceEntity, TargetEntity } from "../codegen/Tables.sol";
+import { Name, ReadyBlock, StartBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData, SourceEntity, TargetEntity } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils, LibMap, LibClaim } from "../libraries/Libraries.sol";
 
@@ -21,6 +21,7 @@ contract BuildSystem is System {
     // Create entity at position
     bytes32 organEntity = LibUtils.getRandomKey();
     Type.set(organEntity, _entityType);
+    CreationBlock.set(organEntity, block.number);
     Position.set(organEntity, PositionData({x: _x, y: _y}));
     // Reduce core energy
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
@@ -46,8 +47,10 @@ contract BuildSystem is System {
 
     Energy.set(coreEntity, Energy.get(coreEntity) - cost);
 
+    // Create connection entity
     bytes32 connectionEntity = LibUtils.getRandomKey();
     Type.set(connectionEntity, connectionType);
+    CreationBlock.set(connectionEntity, block.number);
     SourceEntity.set(connectionEntity, _sourceEntity);
     TargetEntity.set(connectionEntity, _targetEntity);
 
@@ -69,6 +72,7 @@ contract BuildSystem is System {
     }
 
     Type.deleteRecord(_entity);
+    CreationBlock.deleteRecord(_entity);
 
     // TODO: settle and destroy all affected claims
   }

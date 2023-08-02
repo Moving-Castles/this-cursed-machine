@@ -24,6 +24,7 @@ contract SpawnSystemTest is MudV2Test {
         assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
 
         assertEq(uint8(Type.get(world, resourceEntity)), uint8(EntityType.RESOURCE));
+        assertEq(CreationBlock.get(world, resourceEntity), block.number);
     }
 
     function testRevertOccupied() public {
@@ -87,6 +88,7 @@ contract SpawnSystemTest is MudV2Test {
         assertEq(uint8(Type.get(world, connectionEntity)), uint8(EntityType.RESOURCE_CONNECTION));
         assertEq(SourceEntity.get(world, connectionEntity), coreEntity);
         assertEq(TargetEntity.get(world, connectionEntity), resourceEntity);
+        assertEq(CreationBlock.get(world, connectionEntity), block.number);
     }
 
     function testSettleClaim() public {
@@ -105,7 +107,6 @@ contract SpawnSystemTest is MudV2Test {
         vm.stopPrank();
 
         assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
-
 
         vm.roll(block.number + 5);
 

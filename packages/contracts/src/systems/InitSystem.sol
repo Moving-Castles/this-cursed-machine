@@ -2,7 +2,7 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Type, Position, PositionData, GameConfig, GameConfigData  } from "../codegen/Tables.sol";
+import { Type, Position, CreationBlock, PositionData, GameConfig, GameConfigData  } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils } from "../libraries/Libraries.sol";
 
@@ -34,6 +34,7 @@ contract InitSystem is System {
       bytes32 untraversableEntity = LibUtils.getRandomKey();
       Type.set(untraversableEntity, EntityType.UNTRAVERSABLE);
       Position.set(untraversableEntity, untraversableTiles[i]);
+      CreationBlock.set(untraversableEntity, block.number);
     }
 
   }

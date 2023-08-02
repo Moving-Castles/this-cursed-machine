@@ -23,6 +23,7 @@ declare global {
   // Default type with all potential properties.
   type Entity = {
     type?: EntityType;
+    creationBlock?: number;
     name?: string;
     energy?: number;
     readyBlock?: number;
@@ -44,6 +45,7 @@ declare global {
   
   type Core = {
     type: EntityType.CORE;
+    creationBlock: number;
     name: string;
     energy: number;
     readyBlock: number;
@@ -54,6 +56,7 @@ declare global {
 
   type Claim = {
     type: EntityType.CLAIM;
+    creationBlock: number;
     sourceEntity: string;
     targetEntity: string;
     startBlock: number;
@@ -61,17 +64,20 @@ declare global {
 
   type Connection = {
     type: EntityType.RESOURCE_CONNECTION | EntityType.CONTROL_CONNECTION;
+    creationBlock: number;
     sourceEntity: string;
     targetEntity: string;
   }
   
   type Resource = {
     type: EntityType.RESOURCE;
+    creationBlock: number;
     position: Coord;
   };
 
   type ResourceToEnergy = {
     type: EntityType.RESOURCE_TO_ENERGY;
+    creationBlock: number;
     position: Coord;
   };
   

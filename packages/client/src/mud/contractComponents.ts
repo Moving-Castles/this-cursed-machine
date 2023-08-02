@@ -50,6 +50,21 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    CreationBlock: (() => {
+      const tableId = new TableId("mc", "CreationBlock");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     ReadyBlock: (() => {
       const tableId = new TableId("mc", "ReadyBlock");
       return defineComponent(
