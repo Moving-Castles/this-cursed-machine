@@ -86,12 +86,4 @@
   .untraversable {
     // opacity: 0;
   }
-
-  .organ {
-    background: yellow;
-    color: black;
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-  }
 </style>
