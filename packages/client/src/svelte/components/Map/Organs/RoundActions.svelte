@@ -59,35 +59,22 @@
 >
   <!-- Direct connection to player core -->
   <slot name="resourceAction">
-    {#if $playerCore.resourceConnection === entity.address}
-      <button class="action" on:click={sendDisconnectResource}
-        >Disconnect (Resource)</button
-      >
-    {:else if !$playerCore.resourceConnection}
-      <button
-        class="action"
-        disabled={!$canAffordResource || $isResourced}
-        on:click={sendConnectResource}>
-        Connect (Resource)
-        </button
-      >
-    {/if}
+    <button
+      class="action"
+      disabled={!$canAffordResource || $isResourced}
+      on:click={sendConnectResource}>
+      Connect (Resource)
+    </button>
   </slot>
 
   <!-- Direct connection to player core -->
   <slot name="controlAction">
-    {#if $playerCore.controlConnection === entity.address}
-      <button class="action" on:click={sendDisconnectControl}>
-        Disconnect (Control)
-      </button>
-    {:else if !$playerCore.controlConnection}
-      <button
-        class="action"
-        disabled={!$canAffordControl && !$isControlled}
-        on:click={sendConnectControl}
-        >Connect (Control)
-      </button>
-    {/if}
+    <button
+      class="action"
+      disabled={!$canAffordControl && !$isControlled}
+      on:click={sendConnectControl}
+      >Connect (Control)
+    </button>
   </slot>
 
   <slot name="closeAction">

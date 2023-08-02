@@ -3,7 +3,6 @@
   export let background = "rgb(255, 244, 0)"
   import { NULL_COORDINATE, dropDestination, playerEntityId, isDraggable, isConnectedResource, isConnectedControl } from "../../../modules/state"
   import { EntityType } from "../../../modules/state/types"
-  import { onDragStart } from "../../../modules/ui/events"
   import RoundActions from "./RoundActions.svelte"
 
   export let entity: EntityStoreEntry
@@ -33,7 +32,6 @@
   draggable={$draggable}
   on:dragenter|preventDefault={openModal}
   on:dragover|preventDefault
-  on:dragstart={(e) => onDragStart(e, entity.address)}
   on:click={openModal}
   style="--background: {background};"
   class="organ-wrapper {EntityType[entity.entity.type]}"

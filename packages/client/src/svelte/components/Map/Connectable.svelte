@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { onDragStart } from "../../modules/ui/events"
+
   export let available = false
   export let active = false
+  export let entity: EntityStoreEntry
 
   let padding = "8px"
 
@@ -9,7 +12,13 @@
   const onMouseLeave = () => available = false
 </script>
 
-<div class="connectable" style="--padding: {padding}" on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
+<div
+  class="connectable"
+  style="--padding: {padding}"
+  on:dragstart={(e) => onDragStart(e, entity.address)}
+  on:mouseenter={onMouseEnter}
+  on:mouseleave={onMouseLeave}
+>
   <div class:available class:active class="port top" />
   <div class:available class:active class="port bottom" />
   <div class:available class:active class="port left" />

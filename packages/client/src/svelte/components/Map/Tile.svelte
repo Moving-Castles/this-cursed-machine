@@ -2,7 +2,6 @@
   import { setContext } from "svelte"
   import {
     dropDestination,
-    destinationAddress,
     tileEntity
   } from "../../modules/state"
   import { EntityType } from "../../modules/state/types"
@@ -16,6 +15,7 @@
   import ControlSplit from "./Organs/ControlSplit.svelte"
   import Counter from "./Organs/Counter.svelte"
   import Modifier from "./Organs/Modifier.svelte"
+  import Connectable from "./Connectable.svelte"
 
   export let tile: GridTile
 
@@ -64,14 +64,16 @@
     {:else if EntityType[$entity.entity.type] === "UNTRAVERSABLE"}
       <EmptyTile untraversable />
     {:else}
-      <OrganComponent background={colorMappings[$entity.entity.type]} entity={$entity}>
-        <svelte:fragment slot="content">
-          {EntityType[$entity.entity.type]}
-        </svelte:fragment>
-
-        <!-- Organ actions -->
-        <svelte:component slot="modal" this={mappings[$entity.entity.type]} entity={$entity} />
-      </OrganComponent>
+      <Connectable entity={$entity}>
+        <OrganComponent background={colorMappings[$entity.entity.type]} entity={$entity}>
+          <svelte:fragment slot="content">
+            {EntityType[$entity.entity.type]}
+          </svelte:fragment>
+  
+          <!-- Organ actions -->
+          <svelte:component slot="modal" this={mappings[$entity.entity.type]} entity={$entity} />
+        </OrganComponent>
+      </Connectable>
     {/if}
   {:else}
     <EmptyTile />

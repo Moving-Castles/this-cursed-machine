@@ -1,10 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte"
   export let background = "rgb(255, 244, 0)"
-  import { NULL_COORDINATE, dropDestination, playerEntityId, isDraggable, isConnectedResource, isConnectedControl } from "../../../modules/state"
-  import { EntityType } from "../../../modules/state/types"
-  import { onDragStart } from "../../../modules/ui/events"
-  import RoundActions from "./RoundActions.svelte"
+  import { NULL_COORDINATE, dropDestination } from "../../../modules/state"
 
   const tile = getContext("tile") as GridTile
   let modalActive = false

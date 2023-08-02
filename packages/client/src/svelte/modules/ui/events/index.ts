@@ -1,5 +1,5 @@
 import { writable, get } from "svelte/store"
-import { originAddress } from "../../state"
+import { originAddress, dragOrigin, entities, NULL_COORDINATE } from "../../state"
 
 const img = new Image()
 
@@ -26,6 +26,7 @@ export function onDragStart (e, address: string, passive = false) {
   console.log('on drag start')
   if (!passive) {
     originAddress.set(address)
+    dragOrigin.set(get(entities)[address]?.position || NULL_COORDINATE)
   }
   e.dataTransfer.setData("text/plain", e.target.classList)
   e.dataTransfer.setDragImage(img, 0, 0)

@@ -47,6 +47,10 @@
   on:click={onClick}
   class:untraversable
   class="empty-tile">
+
+  <div class="add">
+    +
+  </div>
 </div>
 
 {#if active}
@@ -65,7 +69,7 @@
     width: 100%;
     height: 100%;
 
-    &:hover::after {
+    .add {
       position: absolute;
       content: "+";
       font-size: 5rem;
@@ -74,7 +78,12 @@
       top: 50%;
       transform: translate(-50%, -50%);
       opacity: 0.8;
-      z-index: 0;
+      z-index: 999;
+      opacity: 0;
+    }
+
+    &:hover .add {
+      opacity: 1;
     }
   }
 

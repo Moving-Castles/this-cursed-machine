@@ -47,6 +47,8 @@
     return grid
   }
 
+  $: console.log("cons", $connections)
+
   onMount(() => {
     grid = initGrid($gameConfig?.gameConfig.worldWidth)
   })
@@ -59,28 +61,28 @@
     {#each grid as tile (tile.id)}
       <Tile {tile} />
     {/each}
-    <!-- {#each Object.values($connections) as connection, i (connection)}
+    {#each Object.values($connections) as connection, i (connection)}
       <Path
         {connection}
         pathIndex={i}
       />
-    {/each} -->
-    {#each $potentialConnections as connection, i (connection)}
+    {/each}
+    <!-- {#each $potentialConnections as { start, end }, i (i)}
       <Path
-        startCoord={connection.start}
-        endCoord={connection.end}
+        potential
+        startCoord={start}
+        endCoord={end}
         pathIndex={i}
       />
     {/each}
-    <!--
+    -->
     {#key $plannedConnection}
       <Path
-        startPoint={$plannedConnection.start}
-        endPoint={$plannedConnection.end}
-        connectionType={$plannedConnection.type}
+        startCoord={$plannedConnection.start}
+        endCoord={$plannedConnection.end}
         planned
       />
-    {/key} -->
+    {/key}
 
     {#if $explainer !== ""}
       <Explainer />

@@ -18,20 +18,30 @@
   export let potential = false
   export let planned = false
   export let pathIndex = 1
-  export let startCoord: Coord
-  export let endCoord: Coord
+
+  // OPTIONAL
+  export let startCoord: Coord = NULL_COORDINATE
+  export let endCoord: Coord = NULL_COORDINATE
+
+  let color = ""
+  let cost = 0
+
+  const colorMappings = {
+    2: "red",
+    3: "blue"
+  }
 
   if (connection) {
     startCoord = $entities[connection.sourceEntity].position
     endCoord = $entities[connection.targetEntity].position
-  }
-
-  let localCoords: Coord[] = []
-  let color = connection.type === EntityType.RESOURCE_CONNECTION ? "red" : "blue"
-  let cost =
+    color = colorMappings[connection.type]
+    cost =
     connection.type === EntityType.RESOURCE_CONNECTION
       ? $gameConfig?.gameConfig.resourceConnectionCost
       : $gameConfig?.gameConfig.controlConnectionCost
+  }
+
+  let localCoords: Coord[] = []
 
   /**
    * Function that generates a SVG path string from an array of coordinates.

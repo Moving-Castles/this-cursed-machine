@@ -109,7 +109,10 @@ export const potentialConnections = derived([dragOrigin, dropDestination, player
  * Planned connections to draw TODO: replace
  */
 export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragOrigin, $dropDestination]) => {
-  return {}
+  return {
+    start: $dragOrigin,
+    end: $dropDestination
+  }
 })
 
 /**
@@ -225,9 +228,5 @@ export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) =
 })
 
 
-export const isDraggable = (address: string) => derived([entities, playerCore], ([$entities, $playerCore]) => {
-  return $playerCore.controlConnection === address
-  // If the type is a modifier and the player's control connecction
-  // If the type is resource split and the plauer's control connection
-})
+export const isDraggable = (address: string) => derived([entities], ([$entities]) => true )
 
