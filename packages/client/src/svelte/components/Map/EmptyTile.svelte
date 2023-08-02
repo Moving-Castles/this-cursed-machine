@@ -52,7 +52,7 @@
 {#if active}
   <TileActions on:close={() => active = false}>
     {#each inventory as entityType (entityType)}
-      <button class="action organ" on:click={() => build(entityType, tile.coordinates)}>
+      <button class="action organ" on:click={() => build(entityType, tile.coordinates.x, tile.coordinates.y)}>
         {tile.coordinates.x} {tile.coordinates.y}
         {mappings[entityType]}
       </button>
