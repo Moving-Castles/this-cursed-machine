@@ -21,19 +21,34 @@ export const BUILDABLE_ENTITYTYPES = [
 
 // --- STORES -----------------------------------------------------------------
 
-// Mirror of the on chain state.
-// Only ever written to via the update systems in /svelte/systems
+/**
+ * Mirror of the full on chain state.
+ * 
+ * Only ever written to via the update systems in module/ssystems
+ */
 export const entities = writable({} as Entities);
 
+/**
+ * Cores are the agents of the player.
+ */
 export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
+/**
+ * Claims represent a lazily updated change to some value on an entity.
+ * 
+ * These are settled, ie. added to the actual entity values, whenever some action is taken.
+ * 
+ * NOTE: Currently only energy is supported. Generally very WIP right now.
+ */
 export const claims = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
 });
 
-// these are the active organs
+/**
+ * These are the active organs
+ */
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
     return entity.type === EntityType.RESOURCE ||
@@ -102,24 +117,33 @@ export const connections = derived([entities], ([$entities]) => {
   return connections;
 });
 
-export const foodSourceConnectedCores = derived([entities], ([$entities]) => {
-  // If it has startBlock, it's connected to the food source
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.startBlock)) as Entity;
-})
-
 /**
- * Calculated energy
+ * !!! WORK IN PROGRESS !!! Calculated energy
+ * 
+ * Currently adds the lazy update energy to the core energy by going through the claims related to the core.
+ * 
+ * Will be more general later(TM)...
  */
-export const calculatedEnergy = derived([cores, foodSourceConnectedCores, blockNumber, gameConfig],
-  ([$cores, $foodSourceConnectedCores, $blockNumber, $gameConfig]) => {
+export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig],
+  ([$cores, $claims, $blockNumber, $gameConfig]) => {
     let calculatedEnergy: CalculatedEnergies = {};
+
+    // Iterate over all cores
     for (const [id, core] of Object.entries($cores)) {
-      // Calculate lazy update energy, 0 if startBlock is not set
-      // 1 energy per block, divided by number of cores connected to food source
-      let lazyUpdateEnergy = core.startBlock ? Math.floor((Number($blockNumber) - Number(core.startBlock)) / Object.keys($foodSourceConnectedCores).length) : 0
+
+      // Get all claims for this core
+      let claimsForCore = Object.values($claims).filter(claim => claim.sourceEntity === id)
+
+      let lazyUpdateEnergy = 0
+
+      // Iterate over claims and calculate lazy update energy
+      for (const claim of claimsForCore) {
+        lazyUpdateEnergy *= Math.floor((Number($blockNumber) - Number(claim.startBlock)))
+      }
 
       // Calculate core energy
       calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
+
       // Cap core energy
       calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.gameConfig.coreEnergyCap ? $gameConfig?.gameConfig.coreEnergyCap : calculatedEnergy[id];
     }
