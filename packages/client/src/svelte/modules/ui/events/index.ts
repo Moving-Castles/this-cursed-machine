@@ -1,5 +1,5 @@
 import { writable, get } from "svelte/store"
-import { dragOrigin } from "../../state"
+import { originAddress } from "../../state"
 
 const img = new Image()
 
@@ -22,10 +22,10 @@ export function initUI () {
 /**
  * Thin wrapper for drag events
  */
-export function onDragStart (e, coord: Coord, passive = false) {
+export function onDragStart (e, address: string, passive = false) {
   console.log('on drag start')
   if (!passive) {
-    dragOrigin.set(coord)
+    originAddress.set(address)
   }
   e.dataTransfer.setData("text/plain", e.target.classList)
   e.dataTransfer.setDragImage(img, 0, 0)

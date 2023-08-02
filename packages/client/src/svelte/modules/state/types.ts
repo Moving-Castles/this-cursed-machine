@@ -88,6 +88,10 @@ declare global {
   type Cores = {
     [index: string]: Core;
   };
+
+  type Connections = {
+    [index: string]: Connection;
+  };
   
   type Organs = {
     [index: string]: Organ;

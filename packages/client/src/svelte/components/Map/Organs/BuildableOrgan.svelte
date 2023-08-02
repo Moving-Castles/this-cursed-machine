@@ -29,7 +29,6 @@
   draggable={draggable}
   on:dragenter|preventDefault={openModal}
   on:dragover|preventDefault
-  on:dragstart={(e) => onDragStart(e, tile.coordinates, true)}
   on:click={openModal}
   style="--background: {background};"
   class="organ-wrapper {tile.type}"
@@ -39,12 +38,6 @@
     >
     <slot name="content" />
   </div>
-<!-- 
-  {#if modalActive}
-    <RoundActions {entity} on:close={closeModal}>
-      <slot name="modal" />
-    </RoundActions>
-  {/if} -->
 </div>
 
 <style lang="scss">

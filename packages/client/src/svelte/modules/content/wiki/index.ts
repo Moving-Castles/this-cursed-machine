@@ -47,6 +47,9 @@ Triggers counter when all cores in body have voted.
 Takes a resource connection.
 Doubles incoming resources
 `,
+  RESOURCE_TO_ENERGY:`### R2E
+Converts incoming resource to energy
+`,
 })
 
 export const explainer = writable("")

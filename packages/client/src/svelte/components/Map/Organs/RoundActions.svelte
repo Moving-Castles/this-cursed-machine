@@ -9,11 +9,12 @@
     isConnectedControlAny
   } from "../../../modules/state"
   import { ConnectionType } from "../../../modules/state/types"
+  import { originAddress } from "../../../modules/state"
   import { EntityType } from "../../../modules/state/types"
   import { explainer } from "../../../modules/content/wiki"
   import { circularLayout } from "../../../modules/ui"
-  // import { connect, disconnect } from "../../../modules/action"
-  export let radius = 120
+  import { connect, disconnect } from "../../../modules/action"
+  export let radius = 100
   export let entity: EntityStoreEntry
 
   const tile = getContext("tile")
@@ -28,23 +29,20 @@
 
   // Default actions
   function sendConnectResource() {
-    // connect(ConnectionType.RESOURCE, entity.address)
-    console.log('function doesnt exist')
+    connect(EntityType.RESOURCE_CONNECTION, $originAddress, entity.address)
+    // console.log('function doesnt exist')
   }
 
   function sendDisconnectResource() {
-    // disconnect(ConnectionType.RESOURCE)
-    console.log('function doesnt exist')
+    disconnect("RESOURCE_CONNECTION")
   }
 
   function sendConnectControl() {
-    // connect(ConnectionType.CONTROL, entity.address)
-    console.log('function doesnt exist')
+    connect(EntityType.CONTROL_CONNECTION, $originAddress, entity.address)
   }
 
   function sendDisconnectControl() {
-    // disconnect(ConnectionType.CONTROL)
-    console.log('function doesnt exist')
+    disconnect("CONTROL_CONNECTION")
   }
 </script>
 
@@ -70,7 +68,7 @@
         class="action"
         disabled={!$canAffordResource || $isResourced}
         on:click={sendConnectResource}>
-        Connect (Resource): {$isResourced}
+        Connect (Resource)
         </button
       >
     {/if}

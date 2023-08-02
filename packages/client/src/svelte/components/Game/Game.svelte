@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import { initSignalNetwork } from "../../modules/signal"
   import { showInventory } from "../../modules/ui/stores"
+  import { originAddress, playerEntityId } from "../../modules/state"
   import MinimalExecutor from "../Executor/MinimalExecutor.svelte"
   import Presence from "../Presence/Presence.svelte"
   import LeaderBoard from "../LeaderBoard/LeaderBoard.svelte"
@@ -12,7 +13,10 @@
   // import RawDebug from "./RawDebug.svelte"
 
   // We have to wait until the chains state is loaded and the player is spawned
-  onMount(initSignalNetwork)
+  onMount(() => {
+    initSignalNetwork
+    originAddress.set($playerEntityId)
+  })
 </script>
 
 <!-- Off chain signaling -->

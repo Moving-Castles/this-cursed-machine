@@ -33,7 +33,7 @@
   draggable={$draggable}
   on:dragenter|preventDefault={openModal}
   on:dragover|preventDefault
-  on:dragstart={(e) => onDragStart(e, tile.coordinates)}
+  on:dragstart={(e) => onDragStart(e, entity.address)}
   on:click={openModal}
   style="--background: {background};"
   class="organ-wrapper {EntityType[entity.entity.type]}"
@@ -67,6 +67,7 @@
     position: relative;
     
     .content {
+      overflow: hidden;
       width: 80%;
       height: 80%;
       border-radius: 10%;

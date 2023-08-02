@@ -5,7 +5,7 @@
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
 import { manhattanPath, isCoordinate } from "../../utils/space"; 
-import { EntityType, ConnectionType } from "../../modules/state/types"
+import { EntityType } from "../../modules/state/types"
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -27,6 +27,10 @@ export const entities = writable({} as Entities);
 
 export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
+});
+
+export const connections = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION)) as Connections;
 });
 
 // these are the active organs
@@ -56,100 +60,41 @@ export const playerInCooldown = derived([playerCore, blockNumber],
   ([$playerCore, $blockNumber]) => $playerCore.readyBlock > $blockNumber
 );
 
-// *** GAME STATE -------------------------------------------------------------
-
-/**
- * Connections
- */
-export const connections = derived([entities], ([$entities]) => {
-  let connections: Connection[] = [];
-  for (const startEntity of Object.values($entities)) {
-    if (startEntity.resourceConnection && startEntity.position && $entities[startEntity.resourceConnection]?.position) {
-      connections.push({
-        type: ConnectionType.RESOURCE,
-        start: startEntity.position,
-        end: $entities[startEntity.resourceConnection].position || { x: 0, y: 0 }
-      });
-    }
-    if (startEntity.controlConnection && startEntity.position && $entities[startEntity.controlConnection]?.position) {
-      connections.push({
-        type: ConnectionType.CONTROL,
-        start: startEntity.position,
-        end: $entities[startEntity.controlConnection].position || { x: 0, y: 0 }
-      });
-    }
-  }
-  return connections;
-});
-
-export const foodSourceConnectedCores = derived([entities], ([$entities]) => {
-  // If it has startBlock, it's connected to the food source
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.startBlock)) as Entity;
-})
-
 /**
  * Calculated energy
  */
-export const calculatedEnergy = derived([cores, foodSourceConnectedCores, blockNumber, gameConfig],
-  ([$cores, $foodSourceConnectedCores, $blockNumber, $gameConfig]) => {
+export const calculatedEnergy = derived([cores, blockNumber, gameConfig],
+  ([$cores, $blockNumber, $gameConfig]) => {
     let calculatedEnergy: CalculatedEnergies = {};
     for (const [id, core] of Object.entries($cores)) {
-      // Calculate lazy update energy, 0 if startBlock is not set
-      // 1 energy per block, divided by number of cores connected to food source
-      let lazyUpdateEnergy = core.startBlock ? Math.floor((Number($blockNumber) - Number(core.startBlock)) / Object.keys($foodSourceConnectedCores).length) : 0
-
-      // Calculate core energy
-      calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
-      // Cap core energy
-      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.gameConfig.coreEnergyCap ? $gameConfig?.gameConfig.coreEnergyCap : calculatedEnergy[id];
+      calculatedEnergy[id] = core.energy + (core.startBlock ? Number($blockNumber) - Number(core.startBlock) : 0);
+      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig.gameConfig.coreEnergyCap ? $gameConfig.gameConfig.coreEnergyCap : calculatedEnergy[id];
     }
     return calculatedEnergy;
   });
 
 export const playerCalculatedEnergy = derived([calculatedEnergy, playerEntityId], ([$calculatedEnergy, $playerEntityId]) => $calculatedEnergy[$playerEntityId])
+
+// Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
 export const dropDestination = writable(NULL_COORDINATE as Coord)
 
+// Initially set on spawn
+export const originAddress = writable("")
+export const destinationAddress = writable("")
+
 /**
- * Potential connections to draw
+ * Potential connections to draw TODO: Replace
  */
-export const potentialConnections = derived([dragOrigin, dropDestination, playerCore], ([$dragOrigin, $dropDestination, $playerCore]) => {
-  const results = []
-  // Return one connection for resource
-  const resourcePotential = {
-    type: ConnectionType.RESOURCE,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-  const controlPotential = {
-    type: ConnectionType.CONTROL,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-
-  if (!$playerCore.resourceConnection) {
-    results.push(resourcePotential)
-  }
-
-  if (!$playerCore.controlConnection) {
-    results.push(controlPotential)
-  }
-
-  return results
+export const potentialConnections = derived([entities], ([$entities]) => {
+  return {}
 })
 
 /**
- * Planned connections to draw
+ * Planned connections to draw TODO: replace
  */
 export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragOrigin, $dropDestination]) => {
-  // Return one connection for resource
-  const planned = {
-    type: ConnectionType.RESOURCE,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-
-  return planned
+  return {}
 })
 
 /**

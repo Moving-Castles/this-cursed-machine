@@ -59,23 +59,20 @@
     {#each grid as tile (tile.id)}
       <Tile {tile} />
     {/each}
-    {#each $connections as connection, i (connection)}
+    {#each Object.values($connections) as connection, i (connection)}
       <Path
-        startPoint={connection.start}
-        endPoint={connection.end}
-        connectionType={connection.type}
+        {connection}
         pathIndex={i}
       />
     {/each}
-    {#each $potentialConnections as potential, i (potential)}
+    {#each Object.values($potentialConnections) as connection, i (connection)}
       <Path
-        startPoint={potential.start}
-        endPoint={potential.end}
-        connectionType={potential.type}
+        {connection}
         potential
         pathIndex={i}
       />
     {/each}
+    <!--
     {#key $plannedConnection}
       <Path
         startPoint={$plannedConnection.start}
@@ -83,7 +80,7 @@
         connectionType={$plannedConnection.type}
         planned
       />
-    {/key}
+    {/key} -->
 
     {#if $explainer !== ""}
       <Explainer />

@@ -19,7 +19,7 @@
     class:player={entity.address === $playerEntityId}
     draggable={entity.address === $playerEntityId}
     on:click={onClick}
-    on:dragstart={(e) => onDragStart(e, entity.entity.position)}
+    on:dragstart={(e) => onDragStart(e, entity.address)}
   >
     <div>
       <div class="name">{entity.entity.name} {entity.address === $playerEntityId ? "(U)" : ""}</div>

@@ -3,27 +3,29 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { onMount } from "svelte"
-  import { ConnectionType } from "../../modules/state/types"
+  import { EntityType } from "../../modules/state/types"
   import {
     NULL_COORDINATE,
-    playerCalculatedEnergy,
     gameConfig,
+    entities,
+    playerCalculatedEnergy
   } from "../../modules/state"
   import { isCoordinate, manhattanPath } from "../../utils/space"
   import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
-  export let startPoint: Coord
-  export let endPoint: Coord
-  export let connectionType: ConnectionType = ConnectionType.RESOURCE
+  export let connection: Connection
   export let potential = false
   export let planned = false
   export let pathIndex = 1
 
+  const startPoint = $entities[connection.sourceEntity].position
+  const endPoint = $entities[connection.targetEntity].position
+
   let localCoords: Coord[] = []
-  let color = connectionType === ConnectionType.RESOURCE ? "red" : "blue"
+  let color = connection.type === EntityType.RESOURCE_CONNECTION ? "red" : "blue"
   let cost =
-    connectionType === ConnectionType.RESOURCE
+    connection.type === EntityType.RESOURCE_CONNECTION
       ? $gameConfig?.gameConfig.resourceConnectionCost
       : $gameConfig?.gameConfig.controlConnectionCost
 
@@ -108,7 +110,7 @@
         stroke={color}
         stroke-width={planned
           ? 14
-          : connectionType === ConnectionType.RESOURCE
+          : connection.type === EntityType.RESOURCE_CONNECTION
           ? 10
           : 6}
         opacity="1"
@@ -122,7 +124,7 @@
           stroke={color}
           stroke-width={planned
             ? 14
-            : connectionType === ConnectionType.RESOURCE
+            : connection.type === EntityType.RESOURCE_CONNECTION
             ? 10
             : 6}
           opacity="1"
@@ -136,7 +138,7 @@
         </g>
       {/if}
     {/key}
-    <!-- stroke-dasharray={connectionType === ConnectionType.RESOURCE ? 2 : 1} -->
+    <!-- stroke-dasharray={connection.type === EntityType.RESOURCE_CONNECTION ? 2 : 1} -->
   </svg>
 {/if}
 
