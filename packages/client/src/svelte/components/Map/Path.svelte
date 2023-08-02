@@ -10,7 +10,7 @@
     entities,
     playerCalculatedEnergy
   } from "../../modules/state"
-  import { isCoordinate, manhattanPath } from "../../utils/space"
+  import { isCoordinate, aStarPath } from "../../utils/space"
   import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
@@ -89,7 +89,8 @@
     return string
   }
 
-  const path = makeSvgPath(manhattanPath(startCoord, endCoord))
+  console.log(startCoord, endCoord)
+  const path = makeSvgPath(aStarPath(startCoord, endCoord))
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =

@@ -1,4 +1,17 @@
 import type { Coord } from "@latticexyz/utils";
+import { AStarFinder, Grid } from 'pathfinding'
+const finder = new AStarFinder()
+
+export function directionalPathfindAStar(from: Coord, to: Coord, unavailableCoords: Coord[]) {
+
+  const grid = new Grid(4, 4)
+  
+  unavailableCoords.forEach(coord => grid.setWalkableAt(coord.x, coord.y, false))
+
+  const path = finder.findPath(from.x, from.y, to.x, to.y, grid)
+
+  return path.map(([x, y]) => ({ x, y }))
+}
 
 /**
  * @param a Coordinate A
@@ -75,4 +88,17 @@ export function manhattanPath(start: Coord, end: Coord): Coord[] {
 
   // Return the generated path.
   return path
+}
+
+export function aStarPath (start: Coord, end: Coord, ignore: Coord[] = []) {
+  return directionalPathfindAStar(start, end, ignore)
+}
+
+export const getDirection = (from: Coord, to: Coord) => {
+  if (to.x < from.x) return 'west'
+  if (to.y < from.y) return 'north'
+  if (to.x > from.x) return 'east'
+  if (to.y > from.y) return 'south'
+
+  return ''
 }
