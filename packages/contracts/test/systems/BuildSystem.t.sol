@@ -18,7 +18,7 @@ contract SpawnSystemTest is MudV2Test {
         vm.roll(block.number + 5);
 
         vm.startPrank(alice);
-        bytes32 resourceEntity = world.mc_BuildSystem_build(EntityType.RESOURCE, PositionData({x: 0, y: 1}));
+        bytes32 resourceEntity = world.mc_BuildSystem_buildOrgan(EntityType.RESOURCE, 0, 1);
         vm.stopPrank();
 
         assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
@@ -39,7 +39,7 @@ contract SpawnSystemTest is MudV2Test {
 
         vm.startPrank(alice);
         vm.expectRevert("occupied");
-        world.mc_BuildSystem_build(EntityType.RESOURCE, PositionData({x: 0, y: 0}));
+        world.mc_BuildSystem_buildOrgan(EntityType.RESOURCE, 0, 0);
         vm.stopPrank();
     }
 
@@ -56,7 +56,7 @@ contract SpawnSystemTest is MudV2Test {
 
         vm.startPrank(alice);
         vm.expectRevert("invalid entity type");
-        world.mc_BuildSystem_build(EntityType.CORE, PositionData({x: 0, y: 1}));
+        world.mc_BuildSystem_buildOrgan(EntityType.CORE, 0, 1);
         vm.stopPrank();
     }
 
@@ -72,7 +72,7 @@ contract SpawnSystemTest is MudV2Test {
         vm.roll(block.number + 5);
 
         vm.startPrank(alice);
-        bytes32 resourceEntity = world.mc_BuildSystem_build(EntityType.RESOURCE, PositionData({x: 0, y: 1}));
+        bytes32 resourceEntity = world.mc_BuildSystem_buildOrgan(EntityType.RESOURCE, 0, 1);
         vm.stopPrank();
 
         assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy - gameConfig.buildCost);
@@ -81,7 +81,7 @@ contract SpawnSystemTest is MudV2Test {
         vm.roll(block.number + 5);
 
         vm.startPrank(alice);
-        bytes32 connectionEntity = world.mc_BuildSystem_build(EntityType.RESOURCE_CONNECTION, coreEntity, resourceEntity);
+        bytes32 connectionEntity = world.mc_BuildSystem_buildConnection(EntityType.RESOURCE_CONNECTION, coreEntity, resourceEntity);
         vm.stopPrank();
 
         assertEq(uint8(Type.get(world, connectionEntity)), uint8(EntityType.RESOURCE_CONNECTION));
