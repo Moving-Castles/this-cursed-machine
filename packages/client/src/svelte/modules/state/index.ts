@@ -14,6 +14,11 @@ export const GAME_CONFIG_ID = "0x00000000000000000000000000000000000000000000000
 // ...
 export const NULL_COORDINATE = { x: -1, y: -1 }
 
+export const BUILDABLE_ENTITYTYPES = [
+  EntityType.RESOURCE,
+  EntityType.RESOURCE_TO_ENERGY
+]
+
 // --- STORES -----------------------------------------------------------------
 
 // Mirror of the on chain state.
