@@ -14,7 +14,7 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        EntityType: ["CORE", "UNTRAVERSABLE", "RESOURCE_CONNECTION", "CONTROL_CONNECTION", "RESOURCE", "RESOURCE_TO_ENERGY"]
+        EntityType: ["CORE", "UNTRAVERSABLE", "CLAIM", "RESOURCE_CONNECTION", "CONTROL_CONNECTION", "RESOURCE", "RESOURCE_TO_ENERGY"]
     },
     tables: {
         Type: "EntityType",

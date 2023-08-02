@@ -3,7 +3,7 @@
   import { setup } from "../mud/setup"
   import { createComponentSystem, createLoadingStateSystem } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { entities, playerCore } from "./modules/state"
+  import { entities, playerCore, claims } from "./modules/state"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
@@ -15,6 +15,7 @@
 
   // - - - - -
   $: console.log("$entities", $entities)
+  $: console.log("$claims", $claims)
   $: console.log("$network", $network)
   $: console.log($playerCore)
   // - - - - -

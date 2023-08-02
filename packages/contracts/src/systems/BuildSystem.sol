@@ -3,7 +3,7 @@ pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Name, ReadyBlock, StartBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData, SourceEntity, TargetEntity } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
-import { LibUtils, LibMap } from "../libraries/Libraries.sol";
+import { LibUtils, LibMap, LibClaim } from "../libraries/Libraries.sol";
 
 contract BuildSystem is System {
 
@@ -12,9 +12,12 @@ contract BuildSystem is System {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(BodyId.get(coreEntity) == 0, "not in body");
     require(ReadyBlock.get(coreEntity) < block.number, "in cooldown");
-    require(Energy.get(coreEntity) >= gameConfig.buildCost, "not enough energy");
     require(LibMap.getEntityAtPosition(PositionData({x: _x, y: _y})) == 0, "occupied");
     require(_entityType == EntityType.RESOURCE || _entityType == EntityType.RESOURCE_TO_ENERGY, "invalid entity type");
+
+    LibClaim.settleAll();
+    require(Energy.get(coreEntity) >= gameConfig.buildCost, "not enough energy");
+
     // Create entity at position
     bytes32 organEntity = LibUtils.getRandomKey();
     Type.set(organEntity, _entityType);
@@ -33,11 +36,12 @@ contract BuildSystem is System {
     // TODO: check core's sphere of influence and allow connections accordingly
     // require(_sourceEntity == coreEntity, "source not own core");
 
+    LibClaim.settleAll();
+
     uint32 distance = LibMap.manhattanDistance(Position.get(_sourceEntity), Position.get(_targetEntity));
 
     // TODO: take connection cap into account
-    // TODO: take control cost into account
-    uint32 cost = distance * gameConfig.resourceConnectionCost;
+    uint32 cost = distance * (connectionType == EntityType.RESOURCE_CONNECTION ? gameConfig.resourceConnectionCost : gameConfig.controlConnectionCost);
     require(Energy.get(coreEntity) >= cost, "not enough energy");
 
     Energy.set(coreEntity, Energy.get(coreEntity) - cost);
@@ -46,6 +50,11 @@ contract BuildSystem is System {
     Type.set(connectionEntity, connectionType);
     SourceEntity.set(connectionEntity, _sourceEntity);
     TargetEntity.set(connectionEntity, _targetEntity);
+
+    // Create energy claim if connection is between core and resource
+    if(connectionType == EntityType.RESOURCE_CONNECTION && _sourceEntity == coreEntity && Type.get(_targetEntity) == EntityType.RESOURCE) {
+      LibClaim.create(_sourceEntity, _targetEntity);
+    }
 
     return connectionEntity;
   }
@@ -60,5 +69,7 @@ contract BuildSystem is System {
     }
 
     Type.deleteRecord(_entity);
+
+    // TODO: settle and destroy all affected claims
   }
 }

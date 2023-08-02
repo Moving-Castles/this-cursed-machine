@@ -1,6 +1,7 @@
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
+  CLAIM,
   RESOURCE_CONNECTION,
   CONTROL_CONNECTION,
   RESOURCE,
@@ -38,8 +39,14 @@ declare global {
     bodyId: number;
     level?: number;
     position: Coord;
-    startBlock?: number;
   };
+
+  type Claim = {
+    type: EntityType.CLAIM;
+    sourceEntity: string;
+    targetEntity: string;
+    startBlock: number;
+  }
 
   type Connection = {
     type: EntityType.RESOURCE_CONNECTION | EntityType.CONTROL_CONNECTION;
@@ -83,7 +90,11 @@ declare global {
   type Cores = {
     [index: string]: Core;
   };
-  
+
+  type Claims = {
+    [index: string]: Claim;
+  };
+
   type Organs = {
     [index: string]: Organ;
   };

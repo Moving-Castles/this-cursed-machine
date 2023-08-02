@@ -24,6 +24,10 @@ export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
+export const claims = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
+});
+
 export const organs = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
     return entity.type === EntityType.RESOURCE ||
@@ -51,6 +55,8 @@ export const playerInCooldown = derived([playerCore, blockNumber],
 );
 
 // *** GAME STATE -------------------------------------------------------------
+
+  
 
 /**
  * Connections
