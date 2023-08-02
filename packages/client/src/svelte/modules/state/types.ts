@@ -36,7 +36,7 @@ declare global {
   };
 
   type BuildableEntity = {
-    type: BuildableEntityType;
+    type: EntityType.RESOURCE | EntityType.RESOURCE_TO_ENERGY;
     name: string;
     cost: number;
   }

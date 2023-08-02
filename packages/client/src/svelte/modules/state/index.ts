@@ -41,12 +41,12 @@ export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG
 
 export const buildableOrgans: BuildableEntity[] = [
   {
-    type: BuildableEntityType.RESOURCE,
+    type: EntityType.RESOURCE,
     name: "food",
     cost: 10
   },
   {
-    type: BuildableEntityType.RESOURCE_TO_ENERGY,
+    type: EntityType.RESOURCE_TO_ENERGY,
     name: "mouth",
     cost: 120
   },
@@ -196,9 +196,9 @@ export const playerCanAffordResource = (coord: Coord) => derived([playerCore, pl
  * @param coord Coordinate of the tile one tries to connect to
  * @returns derived store with boolean
  */
-export const playerCanAffordOrgan = (coord: Coord) => derived([playerCore, playerCalculatedEnergy, requestedOrgan, buildableOrgans], ([$playerCore, $playerCalculatedEnergy, $organCost]) => {
+export const playerCanAffordOrgan = (cost: number) => derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
   // Get the distance between the coordinate and the player
-  const cost = 10 //$organCost
+  console.log('player can afford', cost <= $playerCalculatedEnergy)
   return cost <= $playerCalculatedEnergy
 })
 

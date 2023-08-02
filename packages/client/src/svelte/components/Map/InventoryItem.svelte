@@ -1,25 +1,27 @@
 <script lang="ts">
   import { setContext } from "svelte"
   import BuildableOrganComponent from "./Organs/BuildableOrgan.svelte"
+  import { BuildableEntityType, EntityType } from "../../modules/state/types"
+  import { playerCanAffordOrgan, playerCanAffordControl } from "../../modules/state"
+  import { build } from "../../modules/action"
 
-  export let tile: GridTile
+  // export let tile: GridTile
+  // const buildableEntity = getContext("buildableEntity") as BuildableEntity
+  export let buildableEntity: buildableEntity
+  const tile = getContext("tile") as GridTile
+  console.log(buildableEntity, tile)
+  const canAffordOrgan = playerCanAffordOrgan(buildableEntity.cost)
 
-  setContext("tile", tile)
-
-  const onDragOver = e => {
-    // dropDestination.set(tile.coordinates)
-    console.log('inv drag', tile.coordinates)
-  }
+  import { getContext } from "svelte"
+  // setContext("tile", tile)
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="inventory-tile" on:dragenter={onDragOver}>
-  <BuildableOrganComponent background={"yellow"} type={tile.type}>
-    <svelte:fragment slot="content">
-      {tile.type}
-    </svelte:fragment>
-  </BuildableOrganComponent>
-</div>
+  <button class="action organ" 
+    disabled={ !$canAffordOrgan }
+    on:click={() => build(buildableEntity.type, tile.coordinates.x, tile.coordinates.y)}>
+    {buildableEntity.name}
+  </button>
 
 <style lang="scss">
   .inventory-tile {

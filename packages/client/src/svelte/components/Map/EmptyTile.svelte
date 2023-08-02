@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { NULL_COORDINATE, dropDestination, BUILDABLE_ENTITYTYPES } from "../../modules/state"
+  import { NULL_COORDINATE, dropDestination, BUILDABLE_ENTITYTYPES, buildableOrgans } from "../../modules/state"
   import TileActions from "./TileActions.svelte"
-  import { build } from "../../modules/action"
+  import InventoryItem from "./InventoryItem.svelte"
   import { BuildableEntityType, EntityType } from "../../modules/state/types"
-  import { getContext} from "svelte"  
+  import { getContext } from "svelte"  
   // import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false
 
@@ -11,12 +11,13 @@
   
   const tile = getContext("tile") as GridTile
   let active = false
+  // const canAffordOrgan = playerCanAffordOrgan()
 
   // const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
-  let inventory: EntityType[] = []
+  let inventory: BuildableEntity[] = []
 
-  for (let i = 0; i < BUILDABLE_ENTITYTYPES.length; i++) {
-    inventory = [...inventory, BUILDABLE_ENTITYTYPES[i]]
+  for (let i = 0; i < buildableOrgans.length; i++) {
+    inventory = [...inventory, buildableOrgans[i]]
   }
 
   const onDrop = (e) => {
@@ -32,10 +33,10 @@
     timeout = setTimeout(() => { active = false }, 3000)
   }
 
-  const mappings: Record<EntityType, string> = {
-    [EntityType.RESOURCE]: "RES",
-    [EntityType.RESOURCE_TO_ENERGY]: "R2E",
-  };
+  // const mappings: Record<EntityType, string> = {
+  //   [EntityType.RESOURCE]: "RES",
+  //   [EntityType.RESOURCE_TO_ENERGY]: "R2E",
+  // };
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -51,11 +52,15 @@
 
 {#if active}
   <TileActions on:close={() => active = false}>
-    {#each inventory as entityType (entityType)}
-      <button class="action organ" on:click={() => build(entityType, tile.coordinates.x, tile.coordinates.y)}>
+    {#each inventory as buildableEntity (buildableEntity)}
+<!--       <button class="action organ" 
+        disabled={!playerCanAffordOrgan(entityType.cost) }
+        on:click={() => build(entityType.type, tile.coordinates.x, tile.coordinates.y)}>
         {tile.coordinates.x} {tile.coordinates.y}
-        {mappings[entityType]}
-      </button>
+        {entityType.type}
+      </button> -->
+      <InventoryItem buildableEntity={buildableEntity} tile={tile} />
+
     {/each}
   </TileActions>
 {/if}
