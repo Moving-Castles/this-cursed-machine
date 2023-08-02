@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDragStart } from "../../modules/ui/events"
+  import { onDragStart, onDragOver } from "../../modules/ui/events"
 
   export let available = false
   export let active = false
@@ -16,6 +16,7 @@
   class="connectable"
   style="--padding: {padding}"
   on:dragstart={(e) => onDragStart(e, entity.address)}
+  on:dragover={() => onDragOver(entity.entity.position)}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >

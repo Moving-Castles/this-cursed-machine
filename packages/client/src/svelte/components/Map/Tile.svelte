@@ -42,11 +42,6 @@
     7: 'tomato'
   }
 
-  const onDragOver = e => {
-    dropDestination.set(tile.coordinates)
-    console.log(tile.coordinates)
-  }
-
   const entity = tileEntity(tile.coordinates)
 
   $: untraversable = EntityType[$entity?.entity?.type] === "UNTRAVERSABLE"
@@ -55,7 +50,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="tile"
-  on:dragenter={onDragOver} class:untraversable>
+  class:untraversable>
   <div class="coords">{tile.coordinates.x}, {tile.coordinates.y}</div>
 
   {#if $entity}
