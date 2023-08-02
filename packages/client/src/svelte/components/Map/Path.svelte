@@ -8,13 +8,16 @@
     NULL_COORDINATE,
     gameConfig,
     entities,
-    playerCalculatedEnergy
+    playerCalculatedEnergy,
+    connectionsWithPortInformation
   } from "../../modules/state"
-  import { isCoordinate, manhattanPath } from "../../utils/space"
+  import { isCoordinate, aStarPath } from "../../utils/space"
   import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
   export let connection: Connection | boolean = false
+  export let address = ""
+
   export let potential = false
   export let planned = false
   export let pathIndex = 1
@@ -49,6 +52,8 @@
    * @return {string} A string representation of the SVG path.
    */
   const makeSvgPath = (coords: Coord[]) => {
+    console.log("coords")
+    console.log(coords)
     localCoords = coords
     // Initialize an empty string to hold the SVG path.
     let string = ""
@@ -89,7 +94,7 @@
     return string
   }
 
-  const path = makeSvgPath(manhattanPath(startCoord, endCoord))
+  const path = makeSvgPath(address ? $connectionsWithPortInformation[address] : aStarPath(startCoord, endCoord))
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =
@@ -161,6 +166,7 @@
     top: 0;
     left: 0;
     pointer-events: none;
+    z-index: 99999;
 
     g {
       transition: opacity 0.2s;
