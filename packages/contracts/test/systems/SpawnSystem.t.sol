@@ -18,6 +18,7 @@ contract SpawnSystemTest is MudV2Test {
     // Check that the core was spawned correctly
     assertEq(uint8(Type.get(world, coreEntity)), uint8(EntityType.CORE));
     assertEq(Name.get(world, coreEntity), "Alice");
+    assertEq(CreationBlock.get(world, coreEntity), block.number);
     assertEq(BodyId.get(world, coreEntity), 0);
     assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy);
     assertEq(ReadyBlock.get(world, coreEntity), block.number);

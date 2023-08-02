@@ -6,6 +6,7 @@ pragma solidity >=0.8.0;
 import { Type, TypeTableId } from "./tables/Type.sol";
 import { Name, NameTableId } from "./tables/Name.sol";
 import { Energy, EnergyTableId } from "./tables/Energy.sol";
+import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";
 import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
 import { BodyId, BodyIdTableId } from "./tables/BodyId.sol";
 import { Level, LevelTableId } from "./tables/Level.sol";

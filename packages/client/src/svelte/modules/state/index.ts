@@ -77,7 +77,9 @@ export const buildableOrgans: BuildableEntity[] = [
 export const playerAddress = derived(network,
   $network => $network.network?.connectedAddress.get() || "0x0");
 
-// Entity Id is a 32 byte hex string (64 characters long) of the player address
+/**
+ * Entity Id is a 32 byte hex string (64 characters long) of the player address
+ */
 export const playerEntityId = derived(network,
   $network => $network.playerEntity || "0x0");
 

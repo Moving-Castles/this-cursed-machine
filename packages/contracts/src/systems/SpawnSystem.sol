@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, StartBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData } from "../codegen/Tables.sol";
+import { Name, ReadyBlock, StartBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils, LibMap } from "../libraries/Libraries.sol";
 
@@ -13,6 +13,7 @@ contract SpawnSystem is System {
     // ...
     Type.set(coreEntity, EntityType.CORE);
     Name.set(coreEntity, _name);
+    CreationBlock.set(coreEntity, block.number);
     BodyId.set(coreEntity, 0);
     Energy.set(coreEntity, gameConfig.coreInitialEnergy);
     ReadyBlock.set(coreEntity, block.number);
