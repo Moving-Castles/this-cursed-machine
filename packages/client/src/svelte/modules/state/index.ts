@@ -121,7 +121,7 @@ export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig]
 
       // Iterate over claims and calculate lazy update energy
       for (const claim of claimsForCore) {
-        lazyUpdateEnergy *= Math.floor((Number($blockNumber) - Number(claim.ClaimBlock)))
+        lazyUpdateEnergy += Math.floor((Number($blockNumber) - Number(claim.claimBlock)))
       }
 
       // Calculate core energy
