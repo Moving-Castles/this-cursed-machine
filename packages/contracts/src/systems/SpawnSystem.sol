@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, StartBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData } from "../codegen/Tables.sol";
+import { Name, ReadyBlock, ClaimBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils, LibMap } from "../libraries/Libraries.sol";
 

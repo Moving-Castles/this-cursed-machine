@@ -14,5 +14,5 @@ import { Position, PositionData, PositionTableId } from "./tables/Position.sol";
 import { ConnectionCapacity, ConnectionCapacityTableId } from "./tables/ConnectionCapacity.sol";
 import { SourceEntity, SourceEntityTableId } from "./tables/SourceEntity.sol";
 import { TargetEntity, TargetEntityTableId } from "./tables/TargetEntity.sol";
-import { StartBlock, StartBlockTableId } from "./tables/StartBlock.sol";
+import { ClaimBlock, ClaimBlockTableId } from "./tables/ClaimBlock.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";

@@ -35,8 +35,13 @@ export const cores = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
 });
 
+/**
+ * Connections bind cores and organs together.
+ * 
+ * Can be of type resource or control.
+ */
 export const connections = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION).filter(([_, con]) => !!con.startBlock)) as Connections;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION)) as Connections;
 });
 
 /**
@@ -116,7 +121,7 @@ export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig]
 
       // Iterate over claims and calculate lazy update energy
       for (const claim of claimsForCore) {
-        lazyUpdateEnergy *= Math.floor((Number($blockNumber) - Number(claim.startBlock)))
+        lazyUpdateEnergy *= Math.floor((Number($blockNumber) - Number(claim.ClaimBlock)))
       }
 
       // Calculate core energy

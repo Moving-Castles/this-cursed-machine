@@ -171,8 +171,8 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    StartBlock: (() => {
-      const tableId = new TableId("mc", "StartBlock");
+    ClaimBlock: (() => {
+      const tableId = new TableId("mc", "ClaimBlock");
       return defineComponent(
         world,
         {

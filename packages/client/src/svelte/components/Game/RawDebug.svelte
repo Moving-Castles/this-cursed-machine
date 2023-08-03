@@ -20,7 +20,7 @@
         <hr />
         {core.name}: (x: {core?.position?.x}, y: {core?.position?.y}), calc.
         energy: {$calculatedEnergy[entityId]}, act. energy: {core.energy},
-        startblock: {core.startBlock}, resourceConnection: {core.resourceConnection?.slice(
+        claimBlock: {core.claimBlock}, resourceConnection: {core.resourceConnection?.slice(
           -8
         )}, controlConnection: {core.controlConnection?.slice(-8)}
       </div>

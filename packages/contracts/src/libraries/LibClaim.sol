@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
-import { StartBlock, Energy, CreationBlock, GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, StartBlock, StartBlockTableId, TargetEntity, SourceEntity} from "../codegen/Tables.sol";
+import { ClaimBlock, Energy, CreationBlock, GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, ClaimBlock, ClaimBlockTableId, TargetEntity, SourceEntity} from "../codegen/Tables.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -10,9 +10,9 @@ import { LibMap } from "./LibMap.sol";
 library LibClaim {
 
   function getAllClaims() internal view returns (bytes32[][] memory claims) {
-    // TODO: possible use EntityType == EntityType.CLAIM instead of StartBlockTableId
+    // TODO: possible use EntityType == EntityType.CLAIM instead of ClaimBlockTableId
     QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(QueryType.Has, StartBlockTableId, new bytes(0));
+    fragments[0] = QueryFragment(QueryType.Has, ClaimBlockTableId, new bytes(0));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
@@ -23,7 +23,7 @@ library LibClaim {
     CreationBlock.set(claimEntity, block.number);
     SourceEntity.set(claimEntity, _sourceEntity);
     TargetEntity.set(claimEntity, _targetEntity);
-    StartBlock.set(claimEntity, block.number);
+    ClaimBlock.set(claimEntity, block.number);
   }
 
   function settleAll() internal {
@@ -34,7 +34,7 @@ library LibClaim {
 
     for (uint i = 0; i < claims.length; i++) {
       bytes32 claimId = claims[i][0];
-      uint32 blocksSinceSettlement = uint32(block.number - StartBlock.get(claimId));
+      uint32 blocksSinceSettlement = uint32(block.number - ClaimBlock.get(claimId));
       // TODO: take into account number of connections to resource
       uint32 earnedEnergy = blocksSinceSettlement;
 
@@ -45,7 +45,7 @@ library LibClaim {
       );
 
       // Set start block to current block
-      StartBlock.set(claimId, block.number);
+      ClaimBlock.set(claimId, block.number);
     }
   }
   

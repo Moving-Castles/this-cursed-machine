@@ -22,7 +22,7 @@ contract SpawnSystemTest is MudV2Test {
     assertEq(BodyId.get(world, coreEntity), 0);
     assertEq(Energy.get(world, coreEntity), gameConfig.coreInitialEnergy);
     assertEq(ReadyBlock.get(world, coreEntity), block.number);
-    assertEq(StartBlock.get(world, coreEntity), 0);
+    assertEq(ClaimBlock.get(world, coreEntity), 0);
 
     PositionData memory spawnPosition = Position.get(world, coreEntity);
     assertEq(spawnPosition.x, 2);

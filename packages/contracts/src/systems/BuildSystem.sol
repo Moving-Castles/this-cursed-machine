@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, StartBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData, SourceEntity, TargetEntity } from "../codegen/Tables.sol";
+import { Name, ReadyBlock, ClaimBlock, CreationBlock, Type, Energy, Position, PositionData, BodyId, GameConfig, GameConfigData, SourceEntity, TargetEntity } from "../codegen/Tables.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils, LibMap, LibClaim } from "../libraries/Libraries.sol";
 
@@ -54,9 +54,23 @@ contract BuildSystem is System {
     SourceEntity.set(connectionEntity, _sourceEntity);
     TargetEntity.set(connectionEntity, _targetEntity);
 
-    // Create energy claim if connection is between core and resource
-    if(connectionType == EntityType.RESOURCE_CONNECTION && _sourceEntity == coreEntity && Type.get(_targetEntity) == EntityType.RESOURCE) {
-      LibClaim.create(_sourceEntity, _targetEntity);
+    if(connectionType == EntityType.RESOURCE_CONNECTION) {
+      /* 
+       * __ Source: Core
+       * __ Target: Resource
+       * => Create energy claim
+       */
+      if(_sourceEntity == coreEntity && Type.get(_targetEntity) == EntityType.RESOURCE) {
+        LibClaim.create(_sourceEntity, _targetEntity);
+      }
+      /* 
+       * __ Source: Resource-to-energy
+       * __ Target: Resource
+       * => Create energy claim
+       */      
+      if(Type.get(_sourceEntity) == EntityType.RESOURCE_TO_ENERGY && Type.get(_targetEntity) == EntityType.RESOURCE) {
+        LibClaim.create(_sourceEntity, _targetEntity);
+      }
     }
 
     return connectionEntity;

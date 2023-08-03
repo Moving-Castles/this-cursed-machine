@@ -33,7 +33,7 @@ declare global {
     connectionCapacity?: number;
     sourceEntity?: string;
     targetEntity?: string;
-    startBlock?: number;
+    claimBlock?: number;
     gameConfig?: GameConfig;
   };
 
@@ -59,7 +59,7 @@ declare global {
     creationBlock: number;
     sourceEntity: string;
     targetEntity: string;
-    startBlock: number;
+    claimBlock: number;
   }
 
   type Connection = {
@@ -79,6 +79,7 @@ declare global {
     type: EntityType.RESOURCE_TO_ENERGY;
     creationBlock: number;
     position: Coord;
+    energy?: number;
   };
   
   type GameConfig = {
@@ -110,6 +111,10 @@ declare global {
 
   type Connections = {
     [index: string]: Connection;
+  };
+
+  type Claims = {
+    [index: string]: Claim;
   };
   
   type Organs = {

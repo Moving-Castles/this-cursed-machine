@@ -2,7 +2,7 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, StartBlockTableId } from "../codegen/Tables.sol";
+import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, ClaimBlockTableId } from "../codegen/Tables.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { EntityType } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -255,7 +255,7 @@ library LibMap {
    */
   function getFoodConnections() internal view returns (bytes32[][] memory connections) {
     QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(QueryType.Has, StartBlockTableId, new bytes(0));
+    fragments[0] = QueryFragment(QueryType.Has, ClaimBlockTableId, new bytes(0));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }

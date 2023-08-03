@@ -33,7 +33,7 @@ export default mudConfig({
         ConnectionCapacity: "uint32",
         SourceEntity: "bytes32",
         TargetEntity: "bytes32",
-        StartBlock: "uint256",
+        ClaimBlock: "uint256",
         GameConfig: {
             keySchema: {},
             schema: {
@@ -68,7 +68,7 @@ export default mudConfig({
         {
             name: "KeysInTableModule",
             root: true,
-            args: [resolveTableId("StartBlock")],
+            args: [resolveTableId("ClaimBlock")],
         }
     ],
 });
