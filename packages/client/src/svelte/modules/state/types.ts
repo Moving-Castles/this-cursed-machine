@@ -6,9 +6,9 @@ enum BuildableEntityType {
 enum EntityType {
   CORE,
   UNTRAVERSABLE,
+  CLAIM,
   RESOURCE_CONNECTION,
   CONTROL_CONNECTION,
-  CLAIM,
   RESOURCE,
   RESOURCE_TO_ENERGY
 }
