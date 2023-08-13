@@ -17,14 +17,17 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("SourceEntity")));
-bytes32 constant SourceEntityTableId = _tableId;
+// Import user types
+import { ENTITY_TYPE } from "./../Types.sol";
 
-library SourceEntity {
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("EntityType")));
+bytes32 constant EntityTypeTableId = _tableId;
+
+library EntityType {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.BYTES32;
+    _schema[0] = SchemaType.UINT8;
 
     return SchemaLib.encode(_schema);
   }
@@ -40,7 +43,7 @@ library SourceEntity {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](1);
     _fieldNames[0] = "value";
-    return ("SourceEntity", _fieldNames);
+    return ("EntityType", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -66,41 +69,41 @@ library SourceEntity {
   }
 
   /** Get value */
-  function get(bytes32 key) internal view returns (bytes32 value) {
+  function get(bytes32 key) internal view returns (ENTITY_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
-    return (Bytes.slice32(_blob, 0));
+    return ENTITY_TYPE(uint8(Bytes.slice1(_blob, 0)));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (bytes32 value) {
+  function get(IStore _store, bytes32 key) internal view returns (ENTITY_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
-    return (Bytes.slice32(_blob, 0));
+    return ENTITY_TYPE(uint8(Bytes.slice1(_blob, 0)));
   }
 
   /** Set value */
-  function set(bytes32 key, bytes32 value) internal {
+  function set(bytes32 key, ENTITY_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)));
   }
 
   /** Set value (using the specified store) */
-  function set(IStore _store, bytes32 key, bytes32 value) internal {
+  function set(IStore _store, bytes32 key, ENTITY_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(bytes32 value) internal pure returns (bytes memory) {
+  function encode(ENTITY_TYPE value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 

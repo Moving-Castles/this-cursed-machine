@@ -2,9 +2,9 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, Type, TypeTableId, ClaimBlockTableId } from "../codegen/Tables.sol";
+import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, EntityType, EntityTypeTableId, ClaimBlockTableId } from "../codegen/Tables.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { EntityType } from "../codegen/Types.sol";
+import { ENTITY_TYPE } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibMap {
@@ -61,54 +61,54 @@ library LibMap {
    * @param _coordinates position
    * @return withinBounds bool
    */
-  function isWithinBounds(PositionData memory _coordinates) internal view returns (bool withinBounds) {
-    GameConfigData memory gameConfig = GameConfig.get();
-    if (_coordinates.x < 0) return false;
-    if (_coordinates.x > gameConfig.worldWidth - 1) return false;
-    if (_coordinates.y < 0) return false;
-    if (_coordinates.y > gameConfig.worldHeight - 1) return false;
-    return true;
-  }
+  // function isWithinBounds(PositionData memory _coordinates) internal view returns (bool withinBounds) {
+  //   GameConfigData memory gameConfig = GameConfig.get();
+  //   if (_coordinates.x < 0) return false;
+  //   if (_coordinates.x > gameConfig.worldWidth - 1) return false;
+  //   if (_coordinates.y < 0) return false;
+  //   if (_coordinates.y > gameConfig.worldHeight - 1) return false;
+  //   return true;
+  // }
 
   /**
    * Generates random coordinates, within the bounds of the world
    *
    * @return position random coordinates
    */
-  function randomCoordinates() internal view returns (PositionData memory position) {
-    GameConfigData memory gameConfig = GameConfig.get();
+  // function randomCoordinates() internal view returns (PositionData memory position) {
+  //   GameConfigData memory gameConfig = GameConfig.get();
 
-    int32 x = int32(int256(LibUtils.random(666, block.timestamp)) % gameConfig.worldWidth);
-    int32 y = int32(int256(LibUtils.random(block.timestamp, block.number)) % gameConfig.worldHeight);
+  //   int32 x = int32(int256(LibUtils.random(666, block.timestamp)) % gameConfig.worldWidth);
+  //   int32 y = int32(int256(LibUtils.random(block.timestamp, block.number)) % gameConfig.worldHeight);
 
-    // Make sure the values are positive
-    if (x < 0) x *= -1;
-    if (y < 0) y *= -1;
+  //   // Make sure the values are positive
+  //   if (x < 0) x *= -1;
+  //   if (y < 0) y *= -1;
 
-    return PositionData(x, y);
-  }
+  //   return PositionData(x, y);
+  // }
 
   /**
    * Find a valid spawn location
    *
    * @return position spawn position
    */
-  function getSpawnPosition() internal view returns (PositionData memory position) {
-    // We try max 20 times...
-    uint256 i;
-    do {
-      PositionData memory spawnPosition = randomCoordinates();
-      // Has to be traversable
-      if (getCoreAtPosition(spawnPosition) == 0) {
-        return spawnPosition;
-      }
-      unchecked {
-        i++;
-      }
-    } while (i < 20);
-    // @hack: should check conclusively if there is an open spawn position above, and deny spawn if not
-    return PositionData(2, 4);
-  }
+  // function getSpawnPosition() internal view returns (PositionData memory position) {
+  //   // We try max 20 times...
+  //   uint256 i;
+  //   do {
+  //     PositionData memory spawnPosition = randomCoordinates();
+  //     // Has to be traversable
+  //     if (getCoreAtPosition(spawnPosition) == 0) {
+  //       return spawnPosition;
+  //     }
+  //     unchecked {
+  //       i++;
+  //     }
+  //   } while (i < 20);
+  //   // @hack: should check conclusively if there is an open spawn position above, and deny spawn if not
+  //   return PositionData(2, 4);
+  // }
 
   /**
    * Find a valid spawn location from list
@@ -179,7 +179,7 @@ library LibMap {
       PositionTableId,
       Position.encode({ x: _position.x, y: _position.y })
     );
-    fragments[0] = QueryFragment(QueryType.HasValue, TypeTableId, Type.encode(EntityType.CORE));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.CORE));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }

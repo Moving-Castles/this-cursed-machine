@@ -5,8 +5,68 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Type: (() => {
-      const tableId = new TableId("mc", "Type");
+    EntityType: (() => {
+      const tableId = new TableId("mc", "EntityType");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    MachineType: (() => {
+      const tableId = new TableId("mc", "MachineType");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ResourceType: (() => {
+      const tableId = new TableId("mc", "ResourceType");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ConnectionType: (() => {
+      const tableId = new TableId("mc", "ConnectionType");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    PortType: (() => {
+      const tableId = new TableId("mc", "PortType");
       return defineComponent(
         world,
         {
@@ -35,12 +95,87 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Energy: (() => {
-      const tableId = new TableId("mc", "Energy");
+    CarriedBy: (() => {
+      const tableId = new TableId("mc", "CarriedBy");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    IsPrototype: (() => {
+      const tableId = new TableId("mc", "IsPrototype");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Width: (() => {
+      const tableId = new TableId("mc", "Width");
       return defineComponent(
         world,
         {
           value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Height: (() => {
+      const tableId = new TableId("mc", "Height");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    SourcePort: (() => {
+      const tableId = new TableId("mc", "SourcePort");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    TargetPort: (() => {
+      const tableId = new TableId("mc", "TargetPort");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.String,
         },
         {
           metadata: {
@@ -80,8 +215,38 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    BodyId: (() => {
-      const tableId = new TableId("mc", "BodyId");
+    ClaimBlock: (() => {
+      const tableId = new TableId("mc", "ClaimBlock");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    MinCores: (() => {
+      const tableId = new TableId("mc", "MinCores");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    MaxCores: (() => {
+      const tableId = new TableId("mc", "MaxCores");
       return defineComponent(
         world,
         {
@@ -110,6 +275,21 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Active: (() => {
+      const tableId = new TableId("mc", "Active");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     Position: (() => {
       const tableId = new TableId("mc", "Position");
       return defineComponent(
@@ -126,73 +306,11 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    ConnectionCapacity: (() => {
-      const tableId = new TableId("mc", "ConnectionCapaci");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.Number,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    SourceEntity: (() => {
-      const tableId = new TableId("mc", "SourceEntity");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.String,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    TargetEntity: (() => {
-      const tableId = new TableId("mc", "TargetEntity");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.String,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    ClaimBlock: (() => {
-      const tableId = new TableId("mc", "ClaimBlock");
-      return defineComponent(
-        world,
-        {
-          value: RecsType.BigInt,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHex(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
     GameConfig: (() => {
       const tableId = new TableId("mc", "GameConfig");
       return defineComponent(
         world,
         {
-          worldHeight: RecsType.Number,
-          worldWidth: RecsType.Number,
           coolDown: RecsType.Number,
           coreEnergyCap: RecsType.Number,
           coreInitialEnergy: RecsType.Number,

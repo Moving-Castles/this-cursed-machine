@@ -14,31 +14,48 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        EntityType: ["CORE", "UNTRAVERSABLE", "CLAIM", "RESOURCE_CONNECTION", "CONTROL_CONNECTION", "RESOURCE", "RESOURCE_TO_ENERGY"]
+        ENTITY_TYPE: ["BOX", "CORE", "MACHINE", "CONNECTION", "RESOURCE", "PORT", "CLAIM"],
+        MACHINE_TYPE: ["BLOCKER", "SPLITTER", "COMBINATOR", "MIXER", "FILTER", "SHOWER", "DRYER", "HEATER", "FREEZER", "GRINDER"],
+        RESOURCE_TYPE: ["PELLET", "DIRT", "PISS", "BLOOD"],
+        CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
+        PORT_TYPE: ["INPUT", "OUTPUT"]
     },
     tables: {
-        Type: "EntityType",
+        EntityType: "ENTITY_TYPE",
+        MachineType: "MACHINE_TYPE",
+        ResourceType: "RESOURCE_TYPE",
+        ConnectionType: "CONNECTION_TYPE",
+        PortType: "PORT_TYPE",
+        // ...
         Name: "string",
-        Energy: "uint32",
+        CarriedBy: "bytes32",
+        IsPrototype: "bool",
+        // ...
+        Width: "int32",
+        Height: "int32",
+        // ...
+        SourcePort: "bytes32",
+        TargetPort: "bytes32",
+        // ...
         CreationBlock: "uint256",
         ReadyBlock: "uint256",
-        BodyId: "uint32",
+        ClaimBlock: "uint256",
+        // ...
+        MinCores: "uint32",
+        MaxCores: "uint32",
         Level: "uint32",
+        Active: "bool",
+        // ...
         Position: {
             schema: {
                 x: "int32",
                 y: "int32",
             },
         },
-        ConnectionCapacity: "uint32",
-        SourceEntity: "bytes32",
-        TargetEntity: "bytes32",
-        ClaimBlock: "uint256",
+        // ...
         GameConfig: {
             keySchema: {},
             schema: {
-                worldHeight: "int32",
-                worldWidth: "int32",
                 coolDown: "uint32",
                 coreEnergyCap: "uint32",
                 coreInitialEnergy: "uint32",
@@ -53,22 +70,27 @@ export default mudConfig({
         {
             name: "KeysWithValueModule",
             root: true,
-            args: [resolveTableId("Position")],
+            args: [resolveTableId("EntityType")],
         },
         {
             name: "KeysWithValueModule",
             root: true,
-            args: [resolveTableId("Type")],
+            args: [resolveTableId("Level")],
         },
         {
             name: "KeysWithValueModule",
             root: true,
-            args: [resolveTableId("BodyId")],
+            args: [resolveTableId("Active")],
         },
-        {
-            name: "KeysInTableModule",
-            root: true,
-            args: [resolveTableId("ClaimBlock")],
-        }
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("Position")],
+        // },
+        // {
+        //     name: "KeysInTableModule",
+        //     root: true,
+        //     args: [resolveTableId("ClaimBlock")],
+        // }
     ],
 });

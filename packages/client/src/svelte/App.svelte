@@ -3,21 +3,25 @@
   import { setup } from "../mud/setup"
   import { createComponentSystem, createLoadingStateSystem } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { entities, playerCore, claims } from "./modules/state"
+  import { entities, playerCore, claims, cores, playerEntityId } from "./modules/state"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  import Game from "./components/Game/Game.svelte"
+  import Box from "./components/Box/Box.svelte"
+  import End from "./components/End/End.svelte"
+  // import Game from "./components/Game/Game.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
 
   // - - - - -
   $: console.log("$entities", $entities)
   $: console.log("$claims", $claims)
+  $: console.log("$cores", $cores);
   $: console.log("$network", $network)
-  $: console.log($playerCore)
+  $: console.log('$playerCore', $playerCore)
+  $: console.log('$playerEntityId', $playerEntityId)
   // - - - - -
 
   let UIState = 0
@@ -50,14 +54,16 @@
 </script>
 
 <main>
+  <!-- <svelte:component this={selected.component} /> -->
+
   {#if !$ready || UIState === 0}
     <Loading on:next={() => (UIState = 1)} />
   {:else if !$playerCore}
     <Spawn />
-  {:else if $playerCore.bodyId === 0}
-    <Game />
-  {:else if $playerCore.bodyId === 1}
-    THE VOID
+  {:else if $playerCore.level === 6}
+    <End/> 
+  {:else}
+    <Box />
   {/if}
 </main>
 

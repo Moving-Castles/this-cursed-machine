@@ -17,14 +17,14 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("BodyId")));
-bytes32 constant BodyIdTableId = _tableId;
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16("mc"), bytes16("IsPrototype")));
+bytes32 constant IsPrototypeTableId = _tableId;
 
-library BodyId {
+library IsPrototype {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.UINT32;
+    _schema[0] = SchemaType.BOOL;
 
     return SchemaLib.encode(_schema);
   }
@@ -40,7 +40,7 @@ library BodyId {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](1);
     _fieldNames[0] = "value";
-    return ("BodyId", _fieldNames);
+    return ("IsPrototype", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -66,25 +66,25 @@ library BodyId {
   }
 
   /** Get value */
-  function get(bytes32 key) internal view returns (uint32 value) {
+  function get(bytes32 key) internal view returns (bool value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
-    return (uint32(Bytes.slice4(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (uint32 value) {
+  function get(IStore _store, bytes32 key) internal view returns (bool value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
-    return (uint32(Bytes.slice4(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Set value */
-  function set(bytes32 key, uint32 value) internal {
+  function set(bytes32 key, bool value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -92,7 +92,7 @@ library BodyId {
   }
 
   /** Set value (using the specified store) */
-  function set(IStore _store, bytes32 key, uint32 value) internal {
+  function set(IStore _store, bytes32 key, bool value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -100,7 +100,7 @@ library BodyId {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint32 value) internal pure returns (bytes memory) {
+  function encode(bool value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -124,5 +124,11 @@ library BodyId {
     _keyTuple[0] = key;
 
     _store.deleteRecord(_tableId, _keyTuple);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

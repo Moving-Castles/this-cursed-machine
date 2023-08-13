@@ -4,13 +4,38 @@ enum BuildableEntityType {
 }
 
 enum EntityType {
-  CORE,
-  UNTRAVERSABLE,
-  CLAIM,
-  RESOURCE_CONNECTION,
-  CONTROL_CONNECTION,
-  RESOURCE,
-  RESOURCE_TO_ENERGY
+  BOX, 
+  CORE, 
+  MACHINE, 
+  CONNECTION, 
+  RESOURCE, 
+  PORT, 
+  CLAIM
+}
+
+enum MachineType {
+  BLOCKER,
+  SPLITTER,
+  COMBINATOR,
+  MIXER,
+  FILTER,
+  SHOWER,
+  DRYER,
+  HEATER,
+  FREEZER,
+  GRINDER
+}
+
+enum ResourceType {
+  PELLET, 
+  DIRT, 
+  PISS, 
+  BLOOD
+}
+
+enum PortType {
+  INPUT,
+  OUTPUT
 }
 
 enum ConnectionType {
@@ -23,14 +48,23 @@ declare global {
   // Default type with all potential properties.
   type Entity = {
     type?: EntityType;
+    machineType?: MachineType;
+    resourceType?: ResourceType;
+    connectionType?: ConnectionType;
+    portType?: PortType;
+    // ...
     creationBlock?: number;
     name?: string;
-    energy?: number;
     readyBlock?: number;
-    bodyId?: number;
     level?: number;
+    height?: number;
+    width?: number;
+    active?: boolean;
+    minCores?: number;
+    maxCores?: number;
+    isPrototype?: boolean;
+    carriedBy?: string;
     position?: Coord;
-    connectionCapacity?: number;
     sourceEntity?: string;
     targetEntity?: string;
     claimBlock?: number;
@@ -38,19 +72,29 @@ declare global {
   };
 
   type BuildableEntity = {
-    type: EntityType.RESOURCE | EntityType.RESOURCE_TO_ENERGY;
+    type: EntityType.MACHINE;
     name: string;
     cost: number;
   }
-  
+
+  type Box = {
+    type: EntityType.BOX;
+    creationBlock: number;
+    level: number;
+    width: number;
+    height: number;
+    minCores: number;
+    maxCores: number;
+    active: boolean;
+  }
+
   type Core = {
     type: EntityType.CORE;
-    creationBlock: number;
     name: string;
-    energy: number;
+    creationBlock: number;
     readyBlock: number;
-    bodyId: number;
-    level?: number;
+    level: number;
+    carriedBy: string;
     position: Coord;
   };
 
@@ -63,7 +107,7 @@ declare global {
   }
 
   type Connection = {
-    type: EntityType.RESOURCE_CONNECTION | EntityType.CONTROL_CONNECTION;
+    type: EntityType.CONNECTION;
     creationBlock: number;
     sourceEntity: string;
     targetEntity: string;
@@ -76,7 +120,7 @@ declare global {
   };
 
   type ResourceToEnergy = {
-    type: EntityType.RESOURCE_TO_ENERGY;
+    type: EntityType.MACHINE;
     creationBlock: number;
     position: Coord;
     energy?: number;
@@ -84,8 +128,6 @@ declare global {
   
   type GameConfig = {
     gameConfig: {
-      worldHeight: number;
-      worldWidth: number;
       coolDown: number;
       coreEnergyCap: number;
       coreInitialEnergy: number;
@@ -152,5 +194,8 @@ declare global {
 export {
   EntityType,
   ConnectionType,
+  PortType,
+  MachineType,
+  ResourceType,
   BuildableEntityType
 }

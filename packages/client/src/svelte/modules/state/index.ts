@@ -29,10 +29,15 @@ export const BUILDABLE_ENTITYTYPES = [
 export const entities = writable({} as Entities);
 
 /**
+ * Global config entity
+ */
+export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID] as GameConfig);
+
+/**
  * Cores are the agents of the player.
  */
 export const cores = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE && entity.bodyId === 0)) as Cores;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE)) as Cores;
 });
 
 /**
@@ -65,7 +70,11 @@ export const organs = derived(entities, ($entities) => {
   })) as Organs;
 })
 
-export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID] as GameConfig);
+// export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCore) => {
+//   return Object.fromEntries(Object.entries($cores).filter(([, core]) => {
+//     return core.carriedBy == $playerCore.carriedBy
+//   })) as Cores;
+// })
 
 export const buildableOrgans: BuildableEntity[] = [
   {
@@ -92,13 +101,26 @@ export const playerAddress = derived(network,
 export const playerEntityId = derived(network,
   $network => $network.playerEntity || "0x0");
 
-export const playerCore = derived([cores, playerEntityId],
-  ([$cores, $playerEntityId]) => $cores[$playerEntityId] as Core
+// TODO: bring back $cores
+export const playerCore = derived([entities, playerEntityId],
+  ([$entities, $playerEntityId]) => $entities[$playerEntityId] as Core
 );
 
 export const playerInCooldown = derived([playerCore, blockNumber],
   ([$playerCore, $blockNumber]) => $playerCore.readyBlock > $blockNumber
 );
+
+export const playerBox = derived([entities, playerCore],
+  ([$entities, $playerCore]) => $entities[$playerCore.carriedBy] as Box
+);
+
+// TODO: bring back $cores
+export const coresInPlayerBox = derived([entities, playerCore], ([$entities, $playerCore]) => {
+  return Object.values($entities).filter((core) => {
+    console.log('___ core', core)
+    return core.carriedBy == $playerCore.carriedBy
+  }) as Core[];
+})
 
 /**
  * !!! WORK IN PROGRESS !!! Calculated energy
