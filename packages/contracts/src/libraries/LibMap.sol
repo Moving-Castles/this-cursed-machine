@@ -2,7 +2,7 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, EntityType, EntityTypeTableId, ClaimBlockTableId } from "../codegen/Tables.sol";
+import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, EntityType, EntityTypeTableId, ClaimBlockTableId, Width, Height } from "../codegen/Tables.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { ENTITY_TYPE } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -16,17 +16,7 @@ library LibMap {
    * @param _B Coordinate B
    * @return distance
    */
-
   function manhattanDistance(PositionData memory _A, PositionData memory _B) internal pure returns (uint32 distance) {
-    // // Calculating the absolute difference in x coordinates
-    // int32 xDifference = _A.x > _B.x ? _A.x - _B.x : _B.x - _A.x;
-
-    // // Calculating the absolute difference in y coordinates
-    // int32 yDifference = _A.y > _B.y ? _A.y - _B.y : _B.y - _A.y;
-
-    // // Returning the sum of the differences
-    // return xDifference + yDifference;
-
     return LibUtils.absDif(_A.x, _B.x) + LibUtils.absDif(_A.y, _B.y);
   }
 
@@ -56,207 +46,54 @@ library LibMap {
   }
 
   /**
-   * Check if within the bounds of the world
+   * @dev Checks if the provided coordinates are within the boundaries of the specified box entity.
    *
-   * @param _coordinates position
-   * @return withinBounds bool
-   */
-  // function isWithinBounds(PositionData memory _coordinates) internal view returns (bool withinBounds) {
-  //   GameConfigData memory gameConfig = GameConfig.get();
-  //   if (_coordinates.x < 0) return false;
-  //   if (_coordinates.x > gameConfig.worldWidth - 1) return false;
-  //   if (_coordinates.y < 0) return false;
-  //   if (_coordinates.y > gameConfig.worldHeight - 1) return false;
-  //   return true;
-  // }
-
-  /**
-   * Generates random coordinates, within the bounds of the world
+   * The function checks each dimension (x and y) of the provided coordinates against the width and height
+   * of the box entity. The coordinates are considered to be within bounds if they are non-negative and
+   * less than the respective dimensions of the box entity.
    *
-   * @return position random coordinates
-   */
-  // function randomCoordinates() internal view returns (PositionData memory position) {
-  //   GameConfigData memory gameConfig = GameConfig.get();
-
-  //   int32 x = int32(int256(LibUtils.random(666, block.timestamp)) % gameConfig.worldWidth);
-  //   int32 y = int32(int256(LibUtils.random(block.timestamp, block.number)) % gameConfig.worldHeight);
-
-  //   // Make sure the values are positive
-  //   if (x < 0) x *= -1;
-  //   if (y < 0) y *= -1;
-
-  //   return PositionData(x, y);
-  // }
-
-  /**
-   * Find a valid spawn location
+   * @param _coordinates The position data containing x and y values to be checked.
+   * @param _boxEntity The bytes32 key associated with the box entity against which the bounds check will be performed.
    *
-   * @return position spawn position
+   * @return withinBounds Returns `true` if the coordinates are within the bounds of the box entity, and `false` otherwise.
    */
-  // function getSpawnPosition() internal view returns (PositionData memory position) {
-  //   // We try max 20 times...
-  //   uint256 i;
-  //   do {
-  //     PositionData memory spawnPosition = randomCoordinates();
-  //     // Has to be traversable
-  //     if (getCoreAtPosition(spawnPosition) == 0) {
-  //       return spawnPosition;
-  //     }
-  //     unchecked {
-  //       i++;
-  //     }
-  //   } while (i < 20);
-  //   // @hack: should check conclusively if there is an open spawn position above, and deny spawn if not
-  //   return PositionData(2, 4);
-  // }
-
-  /**
-   * Find a valid spawn location from list
-   *
-   * @return position spawn position
-   */
-  function selectSpawnPosition() internal view returns (PositionData memory position) {
-    PositionData[4] memory spawnPositions = [
-      PositionData(0, 0),
-      PositionData(6, 0),
-      PositionData(0, 6),
-      PositionData(6, 6)
-    ];
-    for (uint256 i = 0; i < spawnPositions.length; i++) {
-      if (getEntityAtPosition(spawnPositions[i]) == 0) {
-        return spawnPositions[i];
-      }
-    }
-    // TODO: deny spawn if body is full, but for now...
-    return PositionData(1, 1);
+  function isWithinBounds(
+    PositionData memory _coordinates,
+    bytes32 _boxEntity
+  ) internal view returns (bool withinBounds) {
+    GameConfigData memory gameConfig = GameConfig.get();
+    if (_coordinates.x < 0) return false;
+    if (_coordinates.x > Width.get(_boxEntity) - 1) return false;
+    if (_coordinates.y < 0) return false;
+    if (_coordinates.y > Height.get(_boxEntity) - 1) return false;
+    return true;
   }
 
   /**
-   * Check if position is untraversable
+   * @dev Generates pseudo-random coordinates within the boundaries of the specified box entity.
    *
-   * @param _coordinates position
-   * @return untraversable  is untraversable?
-   */
-  function isUntraversable(PositionData memory _coordinates) internal view returns (bool untraversable) {
-    return false;
-  }
-
-  /**
-   * Get next step for game master
+   * This function uses the `LibUtils.random` function with varying seeds, such as `block.timestamp` and `block.number`,
+   * to produce pseudo-random x and y coordinates. The generated coordinates are then constrained to lie within the
+   * width and height of the specified box entity. Additionally, the function ensures that the generated coordinates
+   * are non-negative.
    *
-   * @param _current Game master position
-   * @param _target  Core position
-   * @return nextPosition  next position
-   */
-  // function getNextStep(
-  //   PositionData memory _current,
-  //   PositionData memory _target
-  // ) internal pure returns (PositionData memory nextPosition) {
-  //   if (_current.x < _target.x) {
-  //     _current.x++;
-  //   } else if (_current.x > _target.x) {
-  //     _current.x--;
-  //   }
-
-  //   if (_current.y < _target.y) {
-  //     _current.y++;
-  //   } else if (_current.y > _target.y) {
-  //     _current.y--;
-  //   }
-
-  //   return _current;
-  // }
-
-  /**
-   * Get core at position
-   * @param _position position
-   * @return coreId coreId
-   */
-  function getCoreAtPosition(PositionData memory _position) internal view returns (bytes32 coreId) {
-    QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(
-      QueryType.HasValue,
-      PositionTableId,
-      Position.encode({ x: _position.x, y: _position.y })
-    );
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.CORE));
-    bytes32[][] memory keyTuples = query(fragments);
-    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
-  }
-
-  /**
-   * Get core at position
-   * @param _position position
-   * @return entityId entityId
-   */
-  function getEntityAtPosition(PositionData memory _position) internal view returns (bytes32 entityId) {
-    // console.log("=> getEntityAtPosition");
-
-    // console.log("alice x");
-    // console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).x);
-    // console.log("alice y");
-    // console.logInt(Position.get(LibUtils.addressToEntityKey(address(111))).y);
-
-    // console.log("Query: _position.x");
-    // console.logInt(_position.x);
-    // console.log("Query: _position.y");
-    // console.logInt(_position.y);
-
-    QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(
-      QueryType.HasValue,
-      PositionTableId,
-      Position.encode({ x: _position.x, y: _position.y })
-    );
-    bytes32[][] memory keyTuples = query(fragments);
-    // console.log("keyTuples.length");
-    // console.log(keyTuples.length);
-    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
-  }
-
-  /**
-   * Get core at position with world
-   * @param _world world
-   * @param _position position
-   * @return entityId entityId
-   */
-  function getEntityAtPosition(IWorld _world, PositionData memory _position) internal view returns (bytes32 entityId) {
-    QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(
-      QueryType.HasValue,
-      PositionTableId,
-      Position.encode({ x: _position.x, y: _position.y })
-    );
-    bytes32[][] memory keyTuples = query(_world, fragments);
-    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
-  }
-
-  /**
-   * Get all connections for an organ
+   * It's important to note that while the generated coordinates may seem random, they can be deterministically
+   * recreated with the same seeds and are not suitable for strong cryptographic purposes.
    *
-   * @param _organEntity organ entity
-   * @return connections
-   */
-  // function getConnections(
-  //   ConnectionType _connectionType,
-  //   bytes32 _organEntity
-  // ) internal view returns (bytes32[][] memory connections) {
-  //   bytes32 tableId = _connectionType == ConnectionType.RESOURCE ? ResourceConnectionTableId : ControlConnectionTableId;
-  //   QueryFragment[] memory fragments = new QueryFragment[](1);
-  //   fragments[0] = QueryFragment(QueryType.HasValue, tableId, ResourceConnection.encode(_organEntity));
-  //   bytes32[][] memory keyTuples = query(fragments);
-  //   return keyTuples;
-  // }
-
-  /**
-   * Get all connects to food source
+   * @param _boxEntity The bytes32 key associated with the box entity within whose bounds the random coordinates will be generated.
    *
-   * @return connections
+   * @return position A pseudo-randomly generated position data containing x and y coordinates within the bounds of the box entity.
    */
-  function getFoodConnections() internal view returns (bytes32[][] memory connections) {
-    QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(QueryType.Has, ClaimBlockTableId, new bytes(0));
-    bytes32[][] memory keyTuples = query(fragments);
-    return keyTuples;
+  function randomCoordinates(bytes32 _boxEntity) internal view returns (PositionData memory position) {
+    GameConfigData memory gameConfig = GameConfig.get();
+
+    int32 x = int32(int256(LibUtils.random(666, block.timestamp)) % Width.get(_boxEntity));
+    int32 y = int32(int256(LibUtils.random(block.timestamp, block.number)) % Height.get(_boxEntity));
+
+    // Make sure the values are positive
+    if (x < 0) x *= -1;
+    if (y < 0) y *= -1;
+
+    return PositionData(x, y);
   }
 }

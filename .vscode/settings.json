@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "solidity.monoRepoSupport": true,
   "eslint.validate": [
     "javascript",

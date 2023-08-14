@@ -18,6 +18,7 @@ contract SpawnSystemTest is MudV2Test {
     // Check that the core was spawned correctly
     assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.CORE));
     assertEq(Name.get(world, coreEntity), "Alice");
+    assertEq(Level.get(world, coreEntity), 0);
     assertEq(CreationBlock.get(world, coreEntity), block.number);
     assertEq(ReadyBlock.get(world, coreEntity), block.number);
     assertEq(CarriedBy.get(world, coreEntity), boxEntity);
@@ -25,6 +26,10 @@ contract SpawnSystemTest is MudV2Test {
     PositionData memory spawnPosition = Position.get(world, coreEntity);
     assertEq(spawnPosition.x, 2);
     assertEq(spawnPosition.y, 1);
+
+    // Check box
+    assertEq(Active.get(world, boxEntity), true);
+    assertEq(Level.get(world, boxEntity), 0);
   }
 
   // function testRevertRespawn() public {
@@ -35,5 +40,4 @@ contract SpawnSystemTest is MudV2Test {
   //   world.mc_SpawnSystem_spawn("Alice");
   //   vm.stopPrank();
   // }
-
 }
