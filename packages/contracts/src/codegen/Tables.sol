@@ -16,6 +16,7 @@ import { Height, HeightTableId } from "./tables/Height.sol";
 import { PortPlacement, PortPlacementTableId } from "./tables/PortPlacement.sol";
 import { SourcePort, SourcePortTableId } from "./tables/SourcePort.sol";
 import { TargetPort, TargetPortTableId } from "./tables/TargetPort.sol";
+import { Rotation, RotationTableId } from "./tables/Rotation.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";
 import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
 import { ClaimBlock, ClaimBlockTableId } from "./tables/ClaimBlock.sol";

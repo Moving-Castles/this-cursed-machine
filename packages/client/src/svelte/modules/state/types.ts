@@ -50,6 +50,13 @@ enum PortPlacement {
   LEFT
 }
 
+enum Rotation {
+  DEG0,
+  DEG90,
+  DEG180,
+  DEG270
+}
+
 declare global {
 
   // Default type with all potential properties.
@@ -77,6 +84,7 @@ declare global {
     targetPort?: string;
     claimBlock?: number;
     portPlacement?: PortPlacement;
+    rotation?: Rotation;
   };
 
   type BuildableEntity = {
@@ -104,6 +112,7 @@ declare global {
     level: number;
     carriedBy: string;
     position: Coord;
+    rotation: Rotation;
   };
 
   type Claim = {

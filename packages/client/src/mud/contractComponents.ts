@@ -200,6 +200,21 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Rotation: (() => {
+      const tableId = new TableId("mc", "Rotation");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     CreationBlock: (() => {
       const tableId = new TableId("mc", "CreationBlock");
       return defineComponent(

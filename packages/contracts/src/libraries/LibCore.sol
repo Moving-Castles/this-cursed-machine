@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
-import { GameConfig, GameConfigData, Level, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId } from "../codegen/Tables.sol";
-import { ENTITY_TYPE } from "../codegen/Types.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation } from "../codegen/Tables.sol";
+import { ENTITY_TYPE, ROTATION } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibCore {
@@ -20,6 +20,7 @@ library LibCore {
     CreationBlock.set(_coreEntity, block.number);
     Name.set(_coreEntity, _name);
     Level.set(_coreEntity, _level);
+    Rotation.set(_coreEntity, ROTATION.DEG0);
     ReadyBlock.set(_coreEntity, block.number);
   }
 }

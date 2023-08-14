@@ -48,3 +48,10 @@ enum PORT_PLACEMENT {
   BOTTOM,
   LEFT
 }
+
+enum ROTATION {
+  DEG0,
+  DEG90,
+  DEG180,
+  DEG270
+}

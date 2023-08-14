@@ -19,7 +19,8 @@ export default mudConfig({
         RESOURCE_TYPE: ["PELLET", "DIRT", "PISS", "BLOOD"],
         CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
         PORT_TYPE: ["INPUT", "OUTPUT"],
-        PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"]
+        PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
+        ROTATION: ["DEG0", "DEG90", "DEG180", "DEG270"]
     },
     tables: {
         EntityType: "ENTITY_TYPE",
@@ -39,6 +40,8 @@ export default mudConfig({
         // ...
         SourcePort: "bytes32",
         TargetPort: "bytes32",
+        // ...
+        Rotation: "ROTATION",
         // ...
         CreationBlock: "uint256",
         ReadyBlock: "uint256",
