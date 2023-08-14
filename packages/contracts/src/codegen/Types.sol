@@ -41,3 +41,10 @@ enum PORT_TYPE {
   INPUT,
   OUTPUT
 }
+
+enum PORT_PLACEMENT {
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT
+}

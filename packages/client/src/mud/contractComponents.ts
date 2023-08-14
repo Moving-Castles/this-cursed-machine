@@ -155,6 +155,21 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    PortPlacement: (() => {
+      const tableId = new TableId("mc", "PortPlacement");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHex(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     SourcePort: (() => {
       const tableId = new TableId("mc", "SourcePort");
       return defineComponent(

@@ -32,12 +32,12 @@ library LibBox {
   ) internal returns (bytes32) {
     bytes32 boxEntity = LibUtils.getRandomKey();
     EntityType.set(boxEntity, ENTITY_TYPE.BOX);
+    CreationBlock.set(boxEntity, block.number);
     Level.set(boxEntity, _level);
     Width.set(boxEntity, _width);
     Height.set(boxEntity, _height);
     MinCores.set(boxEntity, _minCores);
     MaxCores.set(boxEntity, _maxCores);
-    CreationBlock.set(boxEntity, block.number);
     Active.set(boxEntity, _active);
     return boxEntity;
   }

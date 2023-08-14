@@ -17,9 +17,9 @@ library LibCore {
    */
   function spawn(bytes32 _coreEntity, uint32 _level, string memory _name) internal {
     EntityType.set(_coreEntity, ENTITY_TYPE.CORE);
+    CreationBlock.set(_coreEntity, block.number);
     Name.set(_coreEntity, _name);
     Level.set(_coreEntity, _level);
-    CreationBlock.set(_coreEntity, block.number);
     ReadyBlock.set(_coreEntity, block.number);
   }
 }

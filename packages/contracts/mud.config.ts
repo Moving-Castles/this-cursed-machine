@@ -18,7 +18,8 @@ export default mudConfig({
         MACHINE_TYPE: ["BLOCKER", "SPLITTER", "COMBINATOR", "MIXER", "FILTER", "SHOWER", "DRYER", "HEATER", "FREEZER", "GRINDER"],
         RESOURCE_TYPE: ["PELLET", "DIRT", "PISS", "BLOOD"],
         CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
-        PORT_TYPE: ["INPUT", "OUTPUT"]
+        PORT_TYPE: ["INPUT", "OUTPUT"],
+        PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"]
     },
     tables: {
         EntityType: "ENTITY_TYPE",
@@ -33,6 +34,8 @@ export default mudConfig({
         // ...
         Width: "int32",
         Height: "int32",
+        // ...
+        PortPlacement: "PORT_PLACEMENT",
         // ...
         SourcePort: "bytes32",
         TargetPort: "bytes32",

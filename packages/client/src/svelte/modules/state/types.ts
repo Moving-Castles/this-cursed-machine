@@ -4,12 +4,12 @@ enum BuildableEntityType {
 }
 
 enum EntityType {
-  BOX, 
-  CORE, 
-  MACHINE, 
-  CONNECTION, 
-  RESOURCE, 
-  PORT, 
+  BOX,
+  CORE,
+  MACHINE,
+  CONNECTION,
+  RESOURCE,
+  PORT,
   CLAIM
 }
 
@@ -27,9 +27,9 @@ enum MachineType {
 }
 
 enum ResourceType {
-  PELLET, 
-  DIRT, 
-  PISS, 
+  PELLET,
+  DIRT,
+  PISS,
   BLOOD
 }
 
@@ -43,10 +43,18 @@ enum ConnectionType {
   CONTROL
 }
 
+enum PortPlacement {
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT
+}
+
 declare global {
-  
+
   // Default type with all potential properties.
   type Entity = {
+    gameConfig?: GameConfig;
     type?: EntityType;
     machineType?: MachineType;
     resourceType?: ResourceType;
@@ -65,10 +73,10 @@ declare global {
     isPrototype?: boolean;
     carriedBy?: string;
     position?: Coord;
-    sourceEntity?: string;
-    targetEntity?: string;
+    sourcePort?: string;
+    targetPort?: string;
     claimBlock?: number;
-    gameConfig?: GameConfig;
+    portPlacement?: PortPlacement;
   };
 
   type BuildableEntity = {
@@ -101,18 +109,24 @@ declare global {
   type Claim = {
     type: EntityType.CLAIM;
     creationBlock: number;
-    sourceEntity: string;
-    targetEntity: string;
     claimBlock: number;
   }
 
   type Connection = {
     type: EntityType.CONNECTION;
     creationBlock: number;
-    sourceEntity: string;
-    targetEntity: string;
+    sourcePort: string;
+    targetPort: string;
   }
-  
+
+  type Port = {
+    type: EntityType.PORT;
+    creationBlock: number;
+    portType: PortType;
+    portPlacement: PortPlacement;
+    carriedBy: string;
+  }
+
   type Resource = {
     type: EntityType.RESOURCE;
     creationBlock: number;
@@ -125,7 +139,7 @@ declare global {
     position: Coord;
     energy?: number;
   };
-  
+
   type GameConfig = {
     gameConfig: {
       coolDown: number;
@@ -138,15 +152,15 @@ declare global {
   }
 
   // ---
-  
+
   type Organ = Resource | ResourceToEnergy
 
   // ---
-  
+
   type Entities = {
     [index: string]: Entity;
   };
-  
+
   type Cores = {
     [index: string]: Core;
   };
@@ -155,26 +169,30 @@ declare global {
     [index: string]: Connection;
   };
 
+  type Ports = {
+    [index: string]: Port;
+  };
+
   type Claims = {
     [index: string]: Claim;
   };
-  
+
   type Organs = {
     [index: string]: Organ;
   };
-  
+
   type Resources = {
     [index: string]: Resource;
   };
-  
-  
+
+
   // ---
-  
+
   type Coord = {
     x: number;
     y: number;
   };
-  
+
   type CalculatedEnergies = {
     [index: string]: number;
   };
@@ -197,5 +215,6 @@ export {
   PortType,
   MachineType,
   ResourceType,
-  BuildableEntityType
+  BuildableEntityType,
+  PortPlacement
 }

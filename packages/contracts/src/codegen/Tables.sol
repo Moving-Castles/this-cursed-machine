@@ -13,6 +13,7 @@ import { CarriedBy, CarriedByTableId } from "./tables/CarriedBy.sol";
 import { IsPrototype, IsPrototypeTableId } from "./tables/IsPrototype.sol";
 import { Width, WidthTableId } from "./tables/Width.sol";
 import { Height, HeightTableId } from "./tables/Height.sol";
+import { PortPlacement, PortPlacementTableId } from "./tables/PortPlacement.sol";
 import { SourcePort, SourcePortTableId } from "./tables/SourcePort.sol";
 import { TargetPort, TargetPortTableId } from "./tables/TargetPort.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";

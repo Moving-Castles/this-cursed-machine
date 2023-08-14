@@ -1,9 +1,20 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { setup } from "../mud/setup"
-  import { createComponentSystem, createLoadingStateSystem } from "./modules/systems"
+  import {
+    createComponentSystem,
+    createLoadingStateSystem,
+  } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { entities, playerCore, claims, cores, playerEntityId } from "./modules/state"
+  import {
+    entities,
+    playerCore,
+    claims,
+    cores,
+    playerEntityId,
+    ports,
+    playerCorePorts,
+  } from "./modules/state"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
@@ -18,10 +29,12 @@
   // - - - - -
   $: console.log("$entities", $entities)
   $: console.log("$claims", $claims)
-  $: console.log("$cores", $cores);
+  $: console.log("$cores", $cores)
   $: console.log("$network", $network)
-  $: console.log('$playerCore', $playerCore)
-  $: console.log('$playerEntityId', $playerEntityId)
+  $: console.log("$playerCore", $playerCore)
+  $: console.log("$playerEntityId", $playerEntityId)
+  $: console.log("$ports", $ports)
+  $: console.log("$playerCorePorts", $playerCorePorts)
   // - - - - -
 
   let UIState = 0
@@ -50,7 +63,6 @@
     // Listen to changes to the LoadingState component
     createLoadingStateSystem()
   })
-    
 </script>
 
 <main>
@@ -61,7 +73,7 @@
   {:else if !$playerCore}
     <Spawn />
   {:else if $playerCore.level === 6}
-    <End/> 
+    <End />
   {:else}
     <Box />
   {/if}

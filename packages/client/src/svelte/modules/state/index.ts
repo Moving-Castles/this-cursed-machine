@@ -4,7 +4,7 @@
  */
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, isCoordinate, getDirection } from "../../utils/space"; 
+import { aStarPath, isCoordinate, getDirection } from "../../utils/space";
 import { EntityType } from "../../modules/state/types"
 import type { Coord } from "@latticexyz/utils"
 
@@ -42,11 +42,16 @@ export const cores = derived(entities, ($entities) => {
 
 /**
  * Connections bind cores and organs together.
- * 
- * Can be of type resource or control.
  */
 export const connections = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.RESOURCE_CONNECTION || entity.type === EntityType.CONTROL_CONNECTION)) as Connections;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CONNECTION)) as Connections;
+});
+
+/**
+ * Ports are the entry and exit points
+ */
+export const ports = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.PORT)) as Ports;
 });
 
 /**
@@ -87,7 +92,7 @@ export const buildableOrgans: BuildableEntity[] = [
     name: "mouth",
     cost: 120
   },
-  ]
+]
 
 
 // *** PLAYER -----------------------------------------------------------------
@@ -112,6 +117,12 @@ export const playerInCooldown = derived([playerCore, blockNumber],
 
 export const playerBox = derived([entities, playerCore],
   ([$entities, $playerCore]) => $entities[$playerCore.carriedBy] as Box
+);
+
+export const playerCorePorts = derived([entities, playerEntityId],
+  ([$entities, $playerEntityId]) => {
+    return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.PORT && entity.carriedBy === $playerEntityId)) as Ports;
+  }
 );
 
 // TODO: bring back $cores
@@ -206,7 +217,7 @@ export const playerCanAffordControl = (coord: Coord) => derived([playerCore, pla
   // Get the distance between the coordinate and the player
   const distance = aStarPath($playerCore.position, coord).length
   const cost = $gameConfig.gameConfig.controlConnectionCost
-  
+
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
 
@@ -229,7 +240,7 @@ export const playerCanAffordResource = (coord: Coord) => derived([playerCore, pl
  */
 export const playerCanAffordOrgan = (cost: number) => derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
   // Get the distance between the coordinate and the player
-  
+
   return cost <= $playerCalculatedEnergy
 })
 
@@ -282,7 +293,7 @@ export const isConnectedResourceAny = (target: string) => derived(entities, ($en
   // true if the player's resource
   return connectedEntities.some(([add, ent]) => { return ent.resourceConnection === target })
 })
-  
+
 
 /**
  * Check if there is a control connection down the line to anyone
@@ -321,14 +332,14 @@ export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) =
 })
 
 
-export const isDraggable = (address: string) => derived([entities], ([$entities]) => true )
+export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
 
 /**
  * An object with the connection's address mapped to a path with start port and end port
  * Port is -1 if not end or start
  */
 export const connectionsWithPortInformation = derived([connections, entities, organs], ([$connections, $entities, $organs]) => {
-  function firstAvailablePortNumber (ports: (string | number)[], address: string) {
+  function firstAvailablePortNumber(ports: (string | number)[], address: string) {
     // go up the array until you find a number
     // return the modified array
     let port = -1
@@ -357,19 +368,19 @@ export const connectionsWithPortInformation = derived([connections, entities, or
   const organsWithPorts = Object.fromEntries(temp)
 
   const result = Object.entries($connections).map(([address, connection]) => {
-    const startCoord = $entities[connection.sourceEntity].position
-    const endCoord = $entities[connection.targetEntity].position
+    const startCoord = $entities[connection.sourcePort].position
+    const endCoord = $entities[connection.targetPort].position
 
     let path = aStarPath(startCoord, endCoord)
 
     // get the organ
     const organ = organsWithPorts[address]
-    
+
     // Edge case: right next???
     for (let i = 0; i < path.length; i++) {
       let port = -1
       let direction = ""
-      
+
       if (i === path.length - 1) {
         direction = getDirection(path[i], path[i - 1])
         // compare end and second to last for entry direction
@@ -382,7 +393,7 @@ export const connectionsWithPortInformation = derived([connections, entities, or
         let ports = [...organ.ports[direction]]
 
         const { portNumber, updatedPorts } = firstAvailablePortNumber(ports, address)
-        
+
         port = portNumber
 
         // Update ports with 
