@@ -5,6 +5,7 @@ pragma solidity >=0.8.0;
 
 import { IBaseWorld } from "@latticexyz/world/src/interfaces/IBaseWorld.sol";
 
+import { IConnectionSystem } from "./IConnectionSystem.sol";
 import { IDevSystem } from "./IDevSystem.sol";
 import { IInitSystem } from "./IInitSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
@@ -14,6 +15,6 @@ import { ITransferSystem } from "./ITransferSystem.sol";
  * The IWorld interface includes all systems dynamically added to the World
  * during the deploy process.
  */
-interface IWorld is IBaseWorld, IDevSystem, IInitSystem, ISpawnSystem, ITransferSystem {
+interface IWorld is IBaseWorld, IConnectionSystem, IDevSystem, IInitSystem, ISpawnSystem, ITransferSystem {
 
 }

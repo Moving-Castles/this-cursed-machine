@@ -7,8 +7,8 @@ import { ENTITY_TYPE } from "../codegen/Types.sol";
 import { LibUtils, LibMap, LibBox } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
-  function transfer() public {
-    GameConfigData memory gameConfig = GameConfig.get();
+  function transfer() public returns (bytes32) {
+    // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
 
     uint32 newLevel = Level.get(coreEntity) + 1;
@@ -38,5 +38,7 @@ contract TransferSystem is System {
     // TODO: create ports on core entity
     // TODO: destroy old box
     // ...
+
+    return boxEntity;
   }
 }

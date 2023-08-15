@@ -7,7 +7,7 @@ import { LibUtils, LibBox, LibCore, LibPort } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
   function spawn(string memory _name) public returns (bytes32) {
-    GameConfigData memory gameConfig = GameConfig.get();
+    // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // TODO: check if already spawned
 
