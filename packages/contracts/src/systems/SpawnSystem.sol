@@ -2,8 +2,8 @@
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Name, ReadyBlock, ClaimBlock, CreationBlock, Active, Width, Height, Level, MinCores, MaxCores, EntityType, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../codegen/Types.sol";
-import { LibUtils, LibBox, LibCore, LibPort } from "../libraries/Libraries.sol";
+import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE } from "../codegen/Types.sol";
+import { LibUtils, LibBox, LibCore, LibPort, LibEntity } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
   function spawn(string memory _name) public returns (bytes32) {
@@ -24,6 +24,15 @@ contract SpawnSystem is System {
     // Create ports on core
     LibPort.create(coreEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+
+    // Create test machine entity
+    bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.MIXER);
+    CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
+    Position.set(machineEntity, PositionData(1, 2));
+
+    // Create ports on test machine
+    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
+    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
 
     return boxEntity;
   }

@@ -6,11 +6,11 @@ import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibEntity {
-  function create() internal returns (bytes32) {
+  function create(MACHINE_TYPE _machineType) internal returns (bytes32) {
     bytes32 entity = LibUtils.getRandomKey();
     // For now..
     EntityType.set(entity, ENTITY_TYPE.MACHINE);
-    MachineType.set(entity, MACHINE_TYPE.MIXER);
+    MachineType.set(entity, _machineType);
     CreationBlock.set(entity, block.number);
     return entity;
   }

@@ -16,14 +16,12 @@ contract ConnectionSystemTest is MudV2Test {
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
-    bytes32 newEntity = LibUtils.getRandomKey();
-    world.mc_DevSystem_set(EntityTypeTableId, newEntity, abi.encodePacked(ENTITY_TYPE.MACHINE));
-    world.mc_DevSystem_set(MachineTypeTableId, newEntity, abi.encodePacked(MACHINE_TYPE.MIXER));
-    world.mc_DevSystem_set(CreationBlockTableId, newEntity, abi.encodePacked(block.number));
-    world.mc_DevSystem_set(CarriedByTableId, newEntity, abi.encodePacked(boxEntity));
-    world.mc_DevSystem_set(PositionTableId, newEntity, 1, 2);
+    vm.startPrank(alice);
+    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2);
+    vm.stopPrank();
 
     // Add input port to new entity
+    // TODO: This should be done by the build system, and function should be added to get ports connected to entity
     bytes32 inputPort = LibUtils.getRandomKey();
     world.mc_DevSystem_set(EntityTypeTableId, inputPort, abi.encodePacked(ENTITY_TYPE.PORT));
     world.mc_DevSystem_set(CreationBlockTableId, inputPort, abi.encodePacked(block.number));
