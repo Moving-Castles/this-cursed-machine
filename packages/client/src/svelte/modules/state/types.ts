@@ -225,5 +225,6 @@ export {
   MachineType,
   ResourceType,
   BuildableEntityType,
-  PortPlacement
+  PortPlacement,
+  Rotation
 }

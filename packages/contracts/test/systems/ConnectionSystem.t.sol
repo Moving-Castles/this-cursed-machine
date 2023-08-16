@@ -3,7 +3,7 @@ pragma solidity >=0.8.17;
 import { MudV2Test } from "../MudV2Test.t.sol";
 import "../../src/codegen/Tables.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/Types.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE, ROTATION } from "../../src/codegen/Types.sol";
 
 contract ConnectionSystemTest is MudV2Test {
   function testConnect() public {
@@ -17,7 +17,7 @@ contract ConnectionSystemTest is MudV2Test {
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2);
+    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2, ROTATION.DEG0);
     vm.stopPrank();
 
     // Add input port to new entity

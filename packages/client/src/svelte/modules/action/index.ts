@@ -1,4 +1,4 @@
-import { ConnectionType, MachineType } from "../state/types";
+import { ConnectionType, MachineType, Rotation } from "../state/types";
 import { addToSequencer } from "./actionSequencer";
 
 export enum WorldFunctions {
@@ -6,7 +6,8 @@ export enum WorldFunctions {
     Transfer = "mc_TransferSystem_transfer",
     Connect = "mc_ConnectionSystem_connect",
     Disconnect = "mc_ConnectionSystem_disconnect",
-    Build = "mc_BuildSystem_build"
+    Build = "mc_BuildSystem_build",
+    Rotate = "mc_RotationSystem_rotate",
 }
 
 // --- API --------------------------------------------------------------
@@ -27,6 +28,10 @@ export function disconnect(connectionEntity: string) {
     addToSequencer(WorldFunctions.Disconnect, [connectionEntity])
 }
 
-export function build(machineType: MachineType, x: number, y: number) {
-    addToSequencer(WorldFunctions.Build, [machineType, x, y])
+export function build(machineType: MachineType, x: number, y: number, rotation: Rotation) {
+    addToSequencer(WorldFunctions.Build, [machineType, x, y, rotation])
+}
+
+export function rotate(entity: string, rotation: Rotation) {
+    addToSequencer(WorldFunctions.Rotate, [entity, rotation])
 }

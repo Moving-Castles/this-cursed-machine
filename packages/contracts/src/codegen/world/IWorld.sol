@@ -9,6 +9,7 @@ import { IBuildSystem } from "./IBuildSystem.sol";
 import { IConnectionSystem } from "./IConnectionSystem.sol";
 import { IDevSystem } from "./IDevSystem.sol";
 import { IInitSystem } from "./IInitSystem.sol";
+import { IRotateSystem } from "./IRotateSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { ITransferSystem } from "./ITransferSystem.sol";
 
@@ -22,6 +23,7 @@ interface IWorld is
   IConnectionSystem,
   IDevSystem,
   IInitSystem,
+  IRotateSystem,
   ISpawnSystem,
   ITransferSystem
 {

@@ -3,10 +3,10 @@ pragma solidity >=0.8.17;
 import { MudV2Test } from "../MudV2Test.t.sol";
 import "../../src/codegen/Tables.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE, ROTATION } from "../../src/codegen/Types.sol";
+import { MACHINE_TYPE, ROTATION } from "../../src/codegen/Types.sol";
 
-contract BuildSystemTest is MudV2Test {
-  function testBuild() public {
+contract RotationSystemTest is MudV2Test {
+  function testRotate() public {
     setUp();
 
     vm.startPrank(alice);
@@ -20,10 +20,11 @@ contract BuildSystemTest is MudV2Test {
     bytes32 machineEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2, ROTATION.DEG0);
     vm.stopPrank();
 
-    // Check that the machine was created
-    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
-    assertEq(Position.get(world, machineEntity).x, 1);
-    assertEq(Position.get(world, machineEntity).y, 2);
+    // Rotate entity
+    vm.startPrank(alice);
+    world.mc_RotateSystem_rotate(machineEntity, ROTATION.DEG270);
+    vm.stopPrank();
+
+    assertEq(uint8(Rotation.get(world, machineEntity)), uint8(ROTATION.DEG270));
   }
 }
