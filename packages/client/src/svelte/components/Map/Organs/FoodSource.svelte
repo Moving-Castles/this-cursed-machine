@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { originAddress, entities, isConnectedResource, playerEntityId, playerCore } from "../../../modules/state"
+  import {
+    originAddress,
+    entities,
+    isConnectedResource,
+    playerEntityId,
+    playerCore,
+  } from "../../../modules/state"
   import { connect, disconnect } from "../../../modules/action"
-  import { EntityType } from "../../../modules/state/types"
+  import { EntityType } from "../../../modules/state/enums"
 
   export let entity: EntityStoreEntry
 
@@ -10,8 +16,12 @@
   const originEntity = $entities[$originAddress]
 
   // Drag incoming from specific organs
-  $: showConnectModifier = originEntity ? EntityType[originEntity.type] === "MODIFIER" : false
-  $: showConnectResourceSplit = originEntity ? EntityType[originEntity.type] === "RESOURCE_SPLIT" : false
+  $: showConnectModifier = originEntity
+    ? EntityType[originEntity.type] === "MODIFIER"
+    : false
+  $: showConnectResourceSplit = originEntity
+    ? EntityType[originEntity.type] === "RESOURCE_SPLIT"
+    : false
   // It's a direct connection to resource
   // TODO: Find out what the connection path is if multiple things are connected
   // $: directConnectionResource = $playerCore.resourceConnection === entity.address
@@ -28,7 +38,9 @@
   {:else if originEntity && showConnectModifier}
     <button
       class="action"
-      on:click={() => connect(entity.entity.type, $originAddress, entity.address)}>Connect modifier (Resource)</button
+      on:click={() =>
+        connect(entity.entity.type, $originAddress, entity.address)}
+      >Connect modifier (Resource)</button
     >
   {/if}
 
@@ -40,7 +52,9 @@
   {:else if originEntity && showConnectResourceSplit}
     <button
       class="action"
-      on:click={() => connect(entity.entity.type, $originAddress, entity.address)}>Connect Resource Split (Resource)</button
+      on:click={() =>
+        connect(entity.entity.type, $originAddress, entity.address)}
+      >Connect Resource Split (Resource)</button
     >
   {/if}
 {/if}

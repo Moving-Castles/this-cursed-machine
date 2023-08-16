@@ -6,12 +6,12 @@ let blockTimeout: NodeJS.Timeout;
 const TIMEOUT = 10000;
 
 export function initBlockListener() {
-    get(network).network.blockNumber$.subscribe((x: number) => {
+    get(network).latestBlock$.subscribe((block) => {
         // Show a error message if we haven't received a block in a while
         clearTimeout(blockTimeout);
         blockTimeout = setTimeout(handleBlockTimeout, TIMEOUT);
         // For convenience, we store the block number in a svelte store
-        blockNumber.set(x)
+        blockNumber.set(Number(block.number))
     })
 }
 

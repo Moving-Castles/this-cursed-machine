@@ -6,7 +6,7 @@
     coresInPlayerBox,
   } from "../../modules/state"
   import { transfer } from "../../modules/action"
-  import { addressToColor } from "../../utils/misc"
+  import { addressToColor } from "../../modules/utils/misc"
 </script>
 
 <div class="box">

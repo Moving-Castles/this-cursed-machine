@@ -61,7 +61,7 @@ library LibMap {
     PositionData memory _coordinates,
     bytes32 _boxEntity
   ) internal view returns (bool withinBounds) {
-    GameConfigData memory gameConfig = GameConfig.get();
+    // GameConfigData memory gameConfig = GameConfig.get();
     if (_coordinates.x < 0) return false;
     if (_coordinates.x > Width.get(_boxEntity) - 1) return false;
     if (_coordinates.y < 0) return false;
@@ -85,7 +85,7 @@ library LibMap {
    * @return position A pseudo-randomly generated position data containing x and y coordinates within the bounds of the box entity.
    */
   function randomCoordinates(bytes32 _boxEntity) internal view returns (PositionData memory position) {
-    GameConfigData memory gameConfig = GameConfig.get();
+    // GameConfigData memory gameConfig = GameConfig.get();
 
     int32 x = int32(int256(LibUtils.random(666, block.timestamp)) % Width.get(_boxEntity));
     int32 y = int32(int256(LibUtils.random(block.timestamp, block.number)) % Height.get(_boxEntity));

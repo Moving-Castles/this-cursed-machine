@@ -4,8 +4,8 @@
  */
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, isCoordinate, getDirection } from "../../utils/space";
-import { EntityType } from "../../modules/state/types"
+import { aStarPath, isCoordinate, getDirection } from "../utils/space";
+import { EntityType } from "../../modules/state/enums"
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -31,27 +31,34 @@ export const entities = writable({} as Entities);
 /**
  * Global config entity
  */
-export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID] as GameConfig);
+export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID].gameconfig as GameConfig);
+
+/**
+ * Boxes
+ */
+export const boxes = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.BOX)) as Boxes;
+});
 
 /**
  * Cores are the agents of the player.
  */
 export const cores = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CORE)) as Cores;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.CORE)) as Cores;
 });
 
 /**
  * Connections bind cores and organs together.
  */
 export const connections = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CONNECTION)) as Connections;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.CONNECTION)) as Connections;
 });
 
 /**
  * Ports are the entry and exit points
  */
 export const ports = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.PORT)) as Ports;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.PORT)) as Ports;
 });
 
 /**
@@ -62,7 +69,7 @@ export const ports = derived(entities, ($entities) => {
  * NOTE: Currently only energy is supported. Generally very WIP right now.
  */
 export const claims = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.type === EntityType.CLAIM)) as Claims;
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.CLAIM)) as Claims;
 });
 
 /**
@@ -98,7 +105,7 @@ export const buildableOrgans: BuildableEntity[] = [
 // *** PLAYER -----------------------------------------------------------------
 
 export const playerAddress = derived(network,
-  $network => $network.network?.connectedAddress.get() || "0x0");
+  $network => $network.walletClient?.account.address || "0x0");
 
 /**
  * Entity Id is a 32 byte hex string (64 characters long) of the player address
@@ -106,9 +113,8 @@ export const playerAddress = derived(network,
 export const playerEntityId = derived(network,
   $network => $network.playerEntity || "0x0");
 
-// TODO: bring back $cores
-export const playerCore = derived([entities, playerEntityId],
-  ([$entities, $playerEntityId]) => $entities[$playerEntityId] as Core
+export const playerCore = derived([cores, playerEntityId],
+  ([$cores, $playerEntityId]) => $cores[$playerEntityId] as Core
 );
 
 export const playerInCooldown = derived([playerCore, blockNumber],
@@ -125,10 +131,8 @@ export const playerCorePorts = derived([entities, playerEntityId],
   }
 );
 
-// TODO: bring back $cores
-export const coresInPlayerBox = derived([entities, playerCore], ([$entities, $playerCore]) => {
-  return Object.values($entities).filter((core) => {
-    console.log('___ core', core)
+export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCore]) => {
+  return Object.values($cores).filter((core) => {
     return core.carriedBy == $playerCore.carriedBy
   }) as Core[];
 })
@@ -161,7 +165,7 @@ export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig]
       calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
 
       // Cap core energy
-      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.gameConfig.coreEnergyCap ? $gameConfig?.gameConfig.coreEnergyCap : calculatedEnergy[id];
+      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.coreEnergyCap ? $gameConfig?.coreEnergyCap : calculatedEnergy[id];
     }
     return calculatedEnergy;
   });
@@ -216,7 +220,7 @@ export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragO
 export const playerCanAffordControl = (coord: Coord) => derived([playerCore, playerCalculatedEnergy, gameConfig], ([$playerCore, $playerCalculatedEnergy, $gameConfig]) => {
   // Get the distance between the coordinate and the player
   const distance = aStarPath($playerCore.position, coord).length
-  const cost = $gameConfig.gameConfig.controlConnectionCost
+  const cost = $gameConfig.controlConnectionCost
 
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
@@ -229,7 +233,7 @@ export const playerCanAffordControl = (coord: Coord) => derived([playerCore, pla
 export const playerCanAffordResource = (coord: Coord) => derived([playerCore, playerCalculatedEnergy, gameConfig], ([$playerCore, $playerCalculatedEnergy, $gameConfig]) => {
   // Get the distance between the coordinate and the player
   const distance = aStarPath($playerCore.position, coord).length
-  const cost = $gameConfig.gameConfig.resourceConnectionCost
+  const cost = $gameConfig.resourceConnectionCost
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
 

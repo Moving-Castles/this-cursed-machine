@@ -1,13 +1,9 @@
 import { get } from "svelte/store";
 import { entities } from "../state";
 import { network } from "../network";
-import { toCamelCase } from "../../utils/misc";
+import { toCamelCase } from "../utils/misc";
 
 export function createComponentSystem(componentKey: string) {
-
-  // const components = get(network).components
-  // components[componentKey as keyof typeof components]
-  // ...
 
   get(network).components[componentKey].update$.subscribe(update => {
     console.log("==>", componentKey, update);
@@ -26,7 +22,7 @@ export function createComponentSystem(componentKey: string) {
       // Create an empty entity if it does not exist
       if (value[entityID] === undefined) value[entityID] = {};
 
-      // @todo: fix types
+      // Set or delete
       if (newValue === undefined) {
         delete value[entityID][propertyName];
       } else {
@@ -35,6 +31,5 @@ export function createComponentSystem(componentKey: string) {
 
       return value;
     });
-
   })
 }

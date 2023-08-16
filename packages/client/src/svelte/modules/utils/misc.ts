@@ -56,3 +56,27 @@ export function pickByIndex<T>(array: T[], index: number): T {
   console.log(array, index, array.length % (index + 1))
   return array[array.length % (index + 1)];
 }
+
+/**
+ * Filters an object to return only those key/value pairs where the value's 
+ * `metadata.tableName` starts with the specified namespace.
+ * 
+ * @template T - Type of the value that should have an optional metadata property with an optional tableName string.
+ * 
+ * @param {Record<string, T>} data - The data object to filter.
+ * @param {string} namespace - The namespace to filter by.
+ * @returns {Record<string, T>} - An object containing only the key/value pairs that match the filter condition.
+ */
+export function filterByNamespace<T extends { metadata?: { tableName?: string } }>(
+  data: Record<string, T>,
+  namespace: string
+): Record<string, T> {
+  return Object.entries(data)
+    .filter(([_, value]) => {
+      const tableName = value.metadata?.tableName;
+      if (!tableName) return false; // Case: tableName doesn't exist
+      const parts = tableName.split(":");
+      return parts.length === 2 && parts[0] === namespace; // Ensures format is "namespace:something"
+    })
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value as T }), {});
+}

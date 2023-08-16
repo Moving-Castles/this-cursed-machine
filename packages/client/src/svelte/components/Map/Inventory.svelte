@@ -1,11 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import {
-    gameConfig,
-    organs,
-    buildableOrgans
-  } from "../../modules/state"
-  import { BuildableEntityType } from "../../modules/state/types"
+  import { gameConfig, organs, buildableOrgans } from "../../modules/state"
+  import { BuildableEntityType } from "../../modules/state/enums"
   import InventoryItem from "./InventoryItem.svelte"
   import { showInventory } from "../../modules/ui/stores"
   import Path from "./Path.svelte"
@@ -26,20 +22,20 @@
     // Create an empty array to hold the grid
     let inventory = [] as GridTile[]
 
-    console.log('static content', BuildableEntityType)
+    console.log("static content", BuildableEntityType)
 
     //this is inelegant
-    const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
+    const numOrganTypes = Object.keys(BuildableEntityType).length / 2
 
     for (let i = 0; i < numOrganTypes; i++) {
-        const newOrgan: GridTile = {
-          id: `${BuildableEntityType[i]}`,
-          type: `${BuildableEntityType[i]}`,
-          coordinates: { x: i, y: 0 },
-        }
-        console.log('adding tile to inv', newOrgan)
-        // Add the new GridTile to the end of the grid array
-        inventory = [...inventory, newOrgan]
+      const newOrgan: GridTile = {
+        id: `${BuildableEntityType[i]}`,
+        type: `${BuildableEntityType[i]}`,
+        coordinates: { x: i, y: 0 },
+      }
+      console.log("adding tile to inv", newOrgan)
+      // Add the new GridTile to the end of the grid array
+      inventory = [...inventory, newOrgan]
     }
 
     return inventory
@@ -50,8 +46,8 @@
   }
 
   onMount(() => {
-    console.log('mounting')
-    inv = initInventory($gameConfig?.gameConfig.worldWidth)
+    console.log("mounting")
+    inv = initInventory($gameConfig?.worldWidth)
   })
 </script>
 
@@ -75,7 +71,7 @@
 
     .inventory-container {
       height: var(--tilesize);
-      margin: var(--row-gap) var(--col-gap) ;
+      margin: var(--row-gap) var(--col-gap);
       gap: var(--col-gap);
       display: flex;
       position: relative;

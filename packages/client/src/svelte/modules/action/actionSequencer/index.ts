@@ -4,7 +4,6 @@
  *
  */
 
-import type { IWorld } from "contracts/types/ethers-contracts/IWorld";
 import { writable, get } from "svelte/store";
 import { network, blockNumber } from "../../network";
 import { toastMessage } from "../../ui/toast"
@@ -20,10 +19,10 @@ export enum SequencerState {
 
 export type Action = {
   actionId: string;
-  systemId: keyof IWorld
+  systemId: string;
+  params: string[];
   tx?: string;
   timestamp?: number;
-  params?: string[];
 };
 
 // --- STORES -----------------------------------------------------------------
@@ -42,11 +41,12 @@ export const failedActions = writable([] as Action[]);
  * @param params 
  * @returns action
  */
-export function addToSequencer(systemId: keyof IWorld, params: any[] = []) {
-  const newAction = {
+export function addToSequencer(systemId: string, params: any[] = []) {
+
+  const newAction: Action = {
     actionId: uuid(),
     systemId: systemId,
-    params: params
+    params: params || [],
   };
 
   queuedActions.update((queuedActions) => {
@@ -92,20 +92,6 @@ export function initActionSequencer() {
       execute();
     }
   });
-
-  // Listen to ECS system calls to determine when an action has been executed
-  get(network).ecsEvent$.subscribe(event => {
-    if (event.type === "NetworkComponentUpdate") {
-      const action = get(activeActions).find((a) => a.tx === event.txHash);
-      if (!action) return;
-      // Remove action from active list
-      activeActions.update((activeActions) => activeActions.filter((a) => a.tx !== action?.tx));
-      // Add action to completed list
-      completedActions.update((completedActions) => [action, ...completedActions]);
-      // Clear action timeout
-      clearActionTimeout();
-    }
-  })
 }
 
 async function execute() {
@@ -113,26 +99,41 @@ async function execute() {
   try {
     // Remove action from queue list
     queuedActions.update((queuedActions) => queuedActions.slice(1));
-    // TODO: Check if player can do action
     // Add action to active list
     activeActions.update((activeActions) => [action, ...activeActions]);
-    // @todo: fix types
-    const tx = await get(network).worldSend(action.systemId, [...action.params]);
+    // Make the call
+    const tx = await get(network).worldContract.write[action.systemId]([...action.params]);
     // Transaction sent. Add tx hash and timestamp to action.
     activeActions.update((activeActions) => {
-      activeActions[0].tx = tx.hash;
+      activeActions[0].tx = tx;
       activeActions[0].timestamp = Date.now();
       return activeActions;
     });
+    // Wait for transaction to be executed
+    let result = await get(network).waitForTransaction(tx);
+    if (result.receipt.status == "success") {
+      // Add action to completed list
+      completedActions.update((completedActions) => [action, ...completedActions]);
+      // Clear active list
+      activeActions.update(() => []);
+      // Clear action timeout
+      clearActionTimeout();
+    } else {
+      handleError(result.receipt, action);
+    }
   } catch (e) {
-    // @todo: handle error better
-    console.error(e)
-    toastMessage("Something went wrong", { type: "error" })
-    // Clear active list
-    activeActions.update(() => []);
-    // Add action to failed list
-    failedActions.update((failedActions) => [action, ...failedActions]);
-    // Clear action timeout
-    clearActionTimeout();
+    handleError(e, action);
   }
+}
+
+function handleError(error: any, action: Action) {
+  // @todo: handle error better
+  console.error(error)
+  toastMessage("Something went wrong", { type: "error" })
+  // Add action to failed list
+  failedActions.update((failedActions) => [action, ...failedActions]);
+  // Clear active list
+  activeActions.update(() => []);
+  // Clear action timeout
+  clearActionTimeout();
 }

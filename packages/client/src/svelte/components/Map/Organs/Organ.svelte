@@ -2,7 +2,7 @@
   import { getContext } from "svelte"
   export let background = "rgb(255, 244, 0)"
   import { NULL_COORDINATE, dropDestination, playerEntityId, isDraggable, isConnectedResource, isConnectedControl } from "../../../modules/state"
-  import { EntityType } from "../../../modules/state/types"
+  import { EntityType } from "../../../modules/state/enums"
   import RoundActions from "./RoundActions.svelte"
 
   export let entity: EntityStoreEntry

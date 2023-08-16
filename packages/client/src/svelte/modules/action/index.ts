@@ -1,4 +1,4 @@
-import { ConnectionType, MachineType, Rotation } from "../state/types";
+import { ConnectionType, MachineType, Rotation } from "../state/enums";
 import { addToSequencer } from "./actionSequencer";
 
 export enum WorldFunctions {

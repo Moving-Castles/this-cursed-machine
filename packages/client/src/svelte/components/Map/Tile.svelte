@@ -4,7 +4,7 @@
     dropDestination,
     tileEntity
   } from "../../modules/state"
-  import { EntityType } from "../../modules/state/types"
+  import { EntityType } from "../../modules/state/enums"
   import CoreComponent from "./Core.svelte"
   import OrganComponent from "./Organs/Organ.svelte"
   import EmptyTile from "./EmptyTile.svelte"

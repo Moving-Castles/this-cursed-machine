@@ -1,6 +1,12 @@
 <script lang="ts">
   // import { chargeClaw, move } from "../../../modules/action"
-  import { playerCore, cores, calculatedEnergy, playerEntityId, gameConfig } from "../../../modules/state"
+  import {
+    playerCore,
+    cores,
+    calculatedEnergy,
+    playerEntityId,
+    gameConfig,
+  } from "../../../modules/state"
 
   export let entity: EntityStoreEntry
 
@@ -8,7 +14,9 @@
   let targetX: number
   let targetY: number
 
-  $: coresNotMe = Object.entries($cores).filter(([address, _]) => address !== $playerEntityId)
+  $: coresNotMe = Object.entries($cores).filter(
+    ([address, _]) => address !== $playerEntityId
+  )
 
   function sendChargeClaw() {
     // chargeClaw(entity.address)
@@ -18,6 +26,7 @@
     // move(entity.address, targetEntity, targetX, targetY)
   }
 </script>
+
 <!-- 
 {#if $playerCore.resourceConnection === entity.address}
   {#if $calculatedEnergy[$playerEntityId] >= 20}
@@ -41,14 +50,14 @@
       type="number"
       bind:value={targetX}
       min="0"
-      max={$gameConfig.gameConfig?.worldWidth - 1}
+      max={$gameConfig?.worldWidth - 1}
       placeholder="X"
     />
     <input
       type="number"
       bind:value={targetY}
       min="0"
-      max={$gameConfig.gameConfig?.worldHeight - 1}
+      max={$gameConfig?.worldHeight - 1}
       placeholder="Y"
     />
     <button disabled={$calculatedEnergy[$playerEntityId] < 20 || coresNotMe.length === 0} on:click={sendTestMove}>Move</button>

@@ -1,26 +1,23 @@
 {
-  "private": true,
   "name": "this-cursed-machine",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/moving-castles/this-cursed-machine.git"
   },
   "scripts": {
     "build": "pnpm recursive run build",
-    "dev": "concurrently -n contracts,client -c cyan,magenta 'cd packages/contracts && pnpm run dev' 'cd packages/client && pnpm run dev'",
+    "clean": "pnpm recursive run clean",
+    "dev": "concurrently -n contracts,client -c cyan,magenta 'pnpm run dev:contracts' 'pnpm run dev:client'",
     "dev:client": "pnpm --filter 'client' run dev",
-    "dev:contracts": "pnpm --filter 'contracts' dev",
-    "dev:node": "mud devnode",
-    "initialize": "pnpm recursive run initialize",
-    "mud:up": "pnpm recursive exec mud set-version -v canary && pnpm install",
-    "prepare": "(forge --version || pnpm foundry:up)",
+    "dev:contracts": "pnpm --filter 'contracts' run dev",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-next.0",
+    "@latticexyz/cli": "2.0.0-next.2",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
-    "eslint": "8.45.0",
+    "eslint": "8.47.0",
     "rimraf": "^5.0.1",
     "typescript": "^5.1.6"
   },

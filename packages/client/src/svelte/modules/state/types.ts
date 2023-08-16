@@ -1,66 +1,17 @@
-enum BuildableEntityType {
-  RESOURCE,
-  RESOURCE_TO_ENERGY
-}
-
-enum EntityType {
-  BOX,
-  CORE,
-  MACHINE,
-  CONNECTION,
-  RESOURCE,
-  PORT,
-  CLAIM
-}
-
-enum MachineType {
-  BLOCKER,
-  SPLITTER,
-  COMBINATOR,
-  MIXER,
-  FILTER,
-  SHOWER,
-  DRYER,
-  HEATER,
-  FREEZER,
-  GRINDER
-}
-
-enum ResourceType {
-  PELLET,
-  DIRT,
-  PISS,
-  BLOOD
-}
-
-enum PortType {
-  INPUT,
-  OUTPUT
-}
-
-enum ConnectionType {
-  RESOURCE,
-  CONTROL
-}
-
-enum PortPlacement {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT
-}
-
-enum Rotation {
-  DEG0,
-  DEG90,
-  DEG180,
-  DEG270
-}
+import {
+  EntityType,
+  ConnectionType,
+  PortType,
+  MachineType,
+  ResourceType,
+  PortPlacement,
+  Rotation
+} from './enums'
 
 declare global {
-
   // Default type with all potential properties.
   type Entity = {
+    [key: string]: any;
     gameConfig?: GameConfig;
     type?: EntityType;
     machineType?: MachineType;
@@ -150,14 +101,12 @@ declare global {
   };
 
   type GameConfig = {
-    gameConfig: {
-      coolDown: number;
-      coreEnergyCap: number;
-      coreInitialEnergy: number;
-      resourceConnectionCost: number;
-      controlConnectionCost: number;
-      buildCost: number;
-    }
+    coolDown: number;
+    coreEnergyCap: number;
+    coreInitialEnergy: number;
+    resourceConnectionCost: number;
+    controlConnectionCost: number;
+    buildCost: number;
   }
 
   // ---
@@ -194,6 +143,9 @@ declare global {
     [index: string]: Resource;
   };
 
+  type Boxes = {
+    [index: string]: Box;
+  };
 
   // ---
 
@@ -215,16 +167,4 @@ declare global {
     address: string
     entity: Entity
   }
-}
-
-// Only explicitly export enums
-export {
-  EntityType,
-  ConnectionType,
-  PortType,
-  MachineType,
-  ResourceType,
-  BuildableEntityType,
-  PortPlacement,
-  Rotation
 }

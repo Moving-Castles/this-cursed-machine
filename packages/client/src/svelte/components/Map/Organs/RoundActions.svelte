@@ -6,11 +6,11 @@
     playerCanAffordControl,
     playerCanAffordResource,
     isConnectedResourceAny,
-    isConnectedControlAny
+    isConnectedControlAny,
   } from "../../../modules/state"
   import { ConnectionType } from "../../../modules/state/types"
   import { originAddress } from "../../../modules/state"
-  import { EntityType } from "../../../modules/state/types"
+  import { EntityType } from "../../../modules/state/enums"
   import { explainer } from "../../../modules/content/wiki"
   import { circularLayout } from "../../../modules/ui"
   import { connect, disconnect } from "../../../modules/action"
@@ -46,7 +46,6 @@
   }
 </script>
 
-
 <!-- Actions should show up if there is a connection and should use disabled prop for validating if player can afford them -->
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -62,7 +61,8 @@
     <button
       class="action"
       disabled={!$canAffordResource || $isResourced}
-      on:click={sendConnectResource}>
+      on:click={sendConnectResource}
+    >
       Connect (Resource)
     </button>
   </slot>

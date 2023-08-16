@@ -1,2 +1,2 @@
-export { createLoadingStateSystem } from "./createLoadingStateSystem";
+export { createSyncProgressSystem } from "./createSyncProgressSystem";
 export { createComponentSystem } from "./createComponentSystem";
