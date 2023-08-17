@@ -10,7 +10,7 @@ contract ConnectionSystem is System {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // ...
-    require(ReadyBlock.get(coreEntity) >= block.number, "core in cooldown");
+    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(EntityType.get(_sourcePort) == ENTITY_TYPE.PORT, "source not port");
     require(EntityType.get(_targetPort) == ENTITY_TYPE.PORT, "target not port");
     require(_sourcePort != _targetPort, "source and target same");
@@ -29,7 +29,7 @@ contract ConnectionSystem is System {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // ...
-    require(ReadyBlock.get(coreEntity) >= block.number, "core in cooldown");
+    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(EntityType.get(_connectionEntity) == ENTITY_TYPE.CONNECTION, "not connection");
     // TODO: check core is allowed to disconnect (?)
     // ...

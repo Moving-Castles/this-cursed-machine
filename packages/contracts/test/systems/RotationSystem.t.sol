@@ -20,7 +20,7 @@ contract RotationSystemTest is MudV2Test {
 
     // Rotate entity
     vm.startPrank(alice);
-    world.mc_RotateSystem_rotate(machineEntity, ROTATION.DEG270);
+    world.mc_RotationSystem_rotate(machineEntity, ROTATION.DEG270);
     vm.stopPrank();
 
     assertEq(uint8(Rotation.get(world, machineEntity)), uint8(ROTATION.DEG270));

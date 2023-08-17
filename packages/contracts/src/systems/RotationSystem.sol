@@ -5,11 +5,11 @@ import { ReadyBlock, EntityType, GameConfig, GameConfigData, Rotation } from "..
 import { ROTATION } from "../codegen/Types.sol";
 import { LibUtils } from "../libraries/Libraries.sol";
 
-contract RotateSystem is System {
+contract RotationSystem is System {
   function rotate(bytes32 _entity, ROTATION _rotation) public {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(ReadyBlock.get(coreEntity) >= block.number, "core in cooldown");
+    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
 
     Rotation.set(_entity, _rotation);
   }

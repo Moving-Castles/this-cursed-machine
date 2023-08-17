@@ -5,6 +5,6 @@ pragma solidity >=0.8.0;
 
 import { ROTATION } from "./../Types.sol";
 
-interface IRotateSystem {
-  function mc_RotateSystem_rotate(bytes32 _entity, ROTATION _rotation) external;
+interface IRotationSystem {
+  function mc_RotationSystem_rotate(bytes32 _entity, ROTATION _rotation) external;
 }

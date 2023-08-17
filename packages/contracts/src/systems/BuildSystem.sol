@@ -10,7 +10,7 @@ contract BuildSystem is System {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // ...
-    require(ReadyBlock.get(coreEntity) >= block.number, "core in cooldown");
+    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     // TOOD: Check that position is valid and unoccupied
     // TODO: Cost
     // ...
