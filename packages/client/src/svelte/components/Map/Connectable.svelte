@@ -4,6 +4,8 @@
   export let available = false
   export let active = false
   export let entity: EntityStoreEntry
+  export let inputs = [] as Port[]
+  export let outputs = [] as Port[]
 
   let padding = "8px"
 
@@ -22,8 +24,10 @@
 >
   <!-- <div class:available class:active class="port top" /> -->
   <!-- <div class:available class:active class="port bottom" /> -->
-  <div class:available class:active class="port left" />
-  <div class:available class:active class="port right" />
+  <!-- <div class:available class:active class="port left" />
+  <div class:available class:active class="port right" /> -->
+  {#each inputs as i}{/each}
+  {#each outputs as o}{/each}
   <slot />
 </div>
 

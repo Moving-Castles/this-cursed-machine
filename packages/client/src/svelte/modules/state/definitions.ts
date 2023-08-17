@@ -9,7 +9,7 @@ export const machineDefinitions: BuildableMachine[] = [
   {
     type: MachineType.INLET,
     name: "INLET",
-    cost: 0 // frontend only
+    cost: 200 // frontend only
   },
   {
     type: MachineType.OUTLET,

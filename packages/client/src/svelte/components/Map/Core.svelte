@@ -4,10 +4,12 @@
 
   export let entity: EntityStoreEntry
 
+  // What are the inputs and outputs for this entity
+
   $: console.log(entity)
 </script>
 
-<Connectable {entity}>
+<Connectable inputs={[]} outputs={[]} {entity}>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
