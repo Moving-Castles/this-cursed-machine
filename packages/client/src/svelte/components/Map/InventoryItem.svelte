@@ -22,7 +22,7 @@
   class="action"
   disabled={!$canAffordMachine}
   on:click={() =>
-    build(buildableMachine.type, tile.coordinates.x, tile.coordinates.y, 1)}
+    build(buildableMachine.type, tile.coordinates.x, tile.coordinates.y, 0)}
 >
   {buildableMachine.name}
 </button>
