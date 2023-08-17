@@ -26,7 +26,7 @@ contract SpawnSystem is System {
     LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
 
     // Create test machine entity
-    bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.MIXER);
+    bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
     CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
     Position.set(machineEntity, PositionData(1, 2));
     Rotation.set(machineEntity, ROTATION.DEG0);

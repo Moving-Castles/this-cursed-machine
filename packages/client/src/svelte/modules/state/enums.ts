@@ -1,36 +1,27 @@
-export enum BuildableEntityType {
-    RESOURCE,
-    RESOURCE_TO_ENERGY
-}
-
 export enum EntityType {
     BOX,
     CORE,
     MACHINE,
     CONNECTION,
-    RESOURCE,
-    PORT,
-    CLAIM
+    MATERIAL,
+    PORT
 }
-
 export enum MachineType {
     BLOCKER,
+    INLET,
+    OUTLET,
+    BLENDER,
     SPLITTER,
-    COMBINATOR,
-    MIXER,
-    FILTER,
-    SHOWER,
-    DRYER,
-    HEATER,
-    FREEZER,
-    GRINDER
+    SCORCHER
 }
 
-export enum ResourceType {
+export enum MaterialType {
     PELLET,
-    DIRT,
+    BLOOD,
     PISS,
-    BLOOD
+    DIRT,
+    SAND,
+    FLESH
 }
 
 export enum PortType {

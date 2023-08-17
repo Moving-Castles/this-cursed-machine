@@ -6,15 +6,7 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import {
-    entities,
-    playerCore,
-    claims,
-    cores,
-    playerEntityId,
-    ports,
-    playerCorePorts,
-  } from "./modules/state"
+  import { entities, playerCore, cores, ports } from "./modules/state"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI } from "./modules/ui/events"
@@ -29,13 +21,10 @@
 
   // - - - - -
   $: console.log("$entities", $entities)
-  $: console.log("$claims", $claims)
   $: console.log("$cores", $cores)
   $: console.log("$network", $network)
   $: console.log("$playerCore", $playerCore)
-  $: console.log("$playerEntityId", $playerEntityId)
   $: console.log("$ports", $ports)
-  $: console.log("$playerCorePorts", $playerCorePorts)
   // - - - - -
 
   let UIState = 0

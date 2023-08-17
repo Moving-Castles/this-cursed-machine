@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { gameConfig, organs, buildableOrgans } from "../../modules/state"
-  import { BuildableEntityType } from "../../modules/state/enums"
   import InventoryItem from "./InventoryItem.svelte"
   import { showInventory } from "../../modules/ui/stores"
   import Path from "./Path.svelte"

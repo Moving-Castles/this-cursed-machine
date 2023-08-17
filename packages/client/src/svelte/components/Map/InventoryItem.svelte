@@ -1,7 +1,6 @@
 <script lang="ts">
   import { setContext } from "svelte"
-  import BuildableOrganComponent from "./Organs/BuildableOrgan.svelte"
-  import { BuildableEntityType, EntityType } from "../../modules/state/enums"
+  import { EntityType } from "../../modules/state/enums"
   import {
     playerCanAffordOrgan,
     playerCanAffordControl,
