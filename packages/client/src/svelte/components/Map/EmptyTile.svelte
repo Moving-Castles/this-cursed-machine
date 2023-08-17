@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { machineDefinitions } from "../../modules/state"
+  import { machineDefinitions } from "../../modules/state/definitions.ts"
   import TileActions from "./TileActions.svelte"
   import InventoryItem from "./InventoryItem.svelte"
   import { onDragOver } from "../../modules/ui/events"
@@ -11,20 +11,11 @@
 
   const tile = getContext("tile") as GridTile
   let active = false
-  // const canAffordOrgan = playerCanAffordOrgan()
-
-  // const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
-  let inventory: BuildableEntity[] = []
+  let inventory: BuildableMachine[] = []
 
   for (let i = 0; i < machineDefinitions.length; i++) {
     inventory = [...inventory, machineDefinitions[i]]
   }
-
-  // const onDrop = (e) => {
-  //   console.log(e.dataTransfer.getData("text"))
-  //   dropDestination.set(NULL_COORDINATE)
-  //   onClick()
-  // }
 
   const onClick = () => {
     clearTimeout(timeout)
@@ -34,11 +25,6 @@
       active = false
     }, 3000)
   }
-
-  // const mappings: Record<EntityType, string> = {
-  //   [EntityType.RESOURCE]: "RES",
-  //   [EntityType.RESOURCE_TO_ENERGY]: "R2E",
-  // };
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -55,14 +41,8 @@
 
 {#if active}
   <TileActions on:close={() => (active = false)}>
-    {#each inventory as buildableEntity (buildableEntity)}
-      <!--       <button class="action organ" 
-        disabled={!playerCanAffordOrgan(entityType.cost) }
-        on:click={() => build(entityType.type, tile.coordinates.x, tile.coordinates.y)}>
-        {tile.coordinates.x} {tile.coordinates.y}
-        {entityType.type}
-      </button> -->
-      <InventoryItem {buildableEntity} {tile} />
+    {#each inventory as buildableMachine (buildableMachine)}
+      <InventoryItem {buildableMachine} />
     {/each}
   </TileActions>
 {/if}

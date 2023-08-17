@@ -53,6 +53,12 @@ declare global {
     cost: number;
   }
 
+  type BuildableMachine = {
+    type: MachineType;
+    name: string;
+    cost: number;
+  }
+
   type Box = {
     type: EntityType.BOX;
     creationBlock: number;

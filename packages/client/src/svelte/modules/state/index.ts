@@ -71,25 +71,6 @@ export const organs = derived(entities, ($entities) => {
   })) as Organs;
 })
 
-// export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCore) => {
-//   return Object.fromEntries(Object.entries($cores).filter(([, core]) => {
-//     return core.carriedBy == $playerCore.carriedBy
-//   })) as Cores;
-// })
-
-export const machineDefinitions: BuildableEntity[] = [
-  {
-    type: EntityType.RESOURCE,
-    name: "food",
-    cost: 10
-  },
-  {
-    type: EntityType.RESOURCE_TO_ENERGY,
-    name: "mouth",
-    cost: 120
-  },
-]
-
 
 // *** PLAYER -----------------------------------------------------------------
 
@@ -239,7 +220,7 @@ export const playerCanAffordResource = (coord: Coord) => derived([playerCore, pl
  * @param coord Coordinate of the tile one tries to connect to
  * @returns derived store with boolean
  */
-export const playerCanAffordOrgan = (cost: number) => derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
+export const playerCanAffordMachine = (cost: number) => derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
   // Get the distance between the coordinate and the player
 
   return cost <= $playerCalculatedEnergy

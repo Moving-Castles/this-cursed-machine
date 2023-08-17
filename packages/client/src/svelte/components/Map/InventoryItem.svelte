@@ -2,17 +2,16 @@
   import { setContext } from "svelte"
   import { EntityType } from "../../modules/state/enums"
   import {
-    playerCanAffordOrgan,
+    playerCanAffordMachine,
     playerCanAffordControl,
   } from "../../modules/state"
   import { build } from "../../modules/action"
 
-  // export let tile: GridTile
-  // const buildableEntity = getContext("buildableEntity") as BuildableEntity
-  export let buildableEntity: buildableEntity
+  export let buildableMachine: BuildableMachine
+
   const tile = getContext("tile") as GridTile
-  console.log(buildableEntity, tile)
-  const canAffordOrgan = playerCanAffordOrgan(buildableEntity.cost)
+
+  const canAffordMachine = playerCanAffordMachine(buildableMachine.cost)
 
   import { getContext } from "svelte"
   // setContext("tile", tile)
@@ -21,9 +20,9 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <button
   class="action"
-  disabled={!$canAffordOrgan}
+  disabled={!$canAffordMachine}
   on:click={() =>
-    build(buildableEntity.type, tile.coordinates.x, tile.coordinates.y)}
+    build(buildableMachine.type, tile.coordinates.x, tile.coordinates.y, 1)}
 >
-  {buildableEntity.name}
+  {buildableMachine.name}
 </button>
