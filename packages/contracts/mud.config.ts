@@ -5,9 +5,9 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        ENTITY_TYPE: ["BOX", "CORE", "MACHINE", "CONNECTION", "RESOURCE", "PORT", "CLAIM"],
-        MACHINE_TYPE: ["BLOCKER", "SPLITTER", "COMBINATOR", "MIXER", "FILTER", "SHOWER", "DRYER", "HEATER", "FREEZER", "GRINDER"],
-        RESOURCE_TYPE: ["PELLET", "DIRT", "PISS", "BLOOD"],
+        ENTITY_TYPE: ["BOX", "CORE", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
+        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "BLENDER", "SPLITTER", "SCORCHER"],
+        MATERIAL_TYPE: ["PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
         CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
         PORT_TYPE: ["INPUT", "OUTPUT"],
         PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
@@ -16,7 +16,7 @@ export default mudConfig({
     tables: {
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
-        ResourceType: "RESOURCE_TYPE",
+        MaterialType: "MATERIAL_TYPE",
         ConnectionType: "CONNECTION_TYPE",
         PortType: "PORT_TYPE",
         // ...

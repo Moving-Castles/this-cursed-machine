@@ -1,8 +1,11 @@
 <script lang="ts">
   import { setContext } from "svelte"
   import BuildableOrganComponent from "./Organs/BuildableOrgan.svelte"
-  import { BuildableEntityType, EntityType } from "../../modules/state/enums"
-  import { playerCanAffordOrgan, playerCanAffordControl } from "../../modules/state"
+  import { EntityType } from "../../modules/state/enums"
+  import {
+    playerCanAffordOrgan,
+    playerCanAffordControl,
+  } from "../../modules/state"
   import { build } from "../../modules/action"
 
   // export let tile: GridTile
@@ -17,8 +20,11 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <button class="action" 
-    disabled={ !$canAffordOrgan }
-    on:click={() => build(buildableEntity.type, tile.coordinates.x, tile.coordinates.y)}>
-    {buildableEntity.name}
-  </button>
+<button
+  class="action"
+  disabled={!$canAffordOrgan}
+  on:click={() =>
+    build(buildableEntity.type, tile.coordinates.x, tile.coordinates.y)}
+>
+  {buildableEntity.name}
+</button>

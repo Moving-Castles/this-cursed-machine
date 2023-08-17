@@ -31,13 +31,4 @@ contract SpawnSystemTest is MudV2Test {
     assertEq(Active.get(world, boxEntity), true);
     assertEq(Level.get(world, boxEntity), 0);
   }
-
-  // function testRevertRespawn() public {
-  //   setUp();
-  //   vm.startPrank(alice);
-  //   world.mc_SpawnSystem_spawn("Alice");
-  //   vm.expectRevert(bytes("already spawned"));
-  //   world.mc_SpawnSystem_spawn("Alice");
-  //   vm.stopPrank();
-  // }
 }

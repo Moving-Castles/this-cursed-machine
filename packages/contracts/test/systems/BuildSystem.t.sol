@@ -17,7 +17,7 @@ contract BuildSystemTest is MudV2Test {
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 machineEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2, ROTATION.DEG0);
+    bytes32 machineEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2, ROTATION.DEG0);
     vm.stopPrank();
 
     // Check that the machine was created

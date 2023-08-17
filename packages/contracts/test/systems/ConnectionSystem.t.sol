@@ -17,7 +17,7 @@ contract ConnectionSystemTest is MudV2Test {
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.MIXER, 1, 2, ROTATION.DEG0);
+    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2, ROTATION.DEG0);
     vm.stopPrank();
 
     // Add input port to new entity

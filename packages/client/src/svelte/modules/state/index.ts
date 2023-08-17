@@ -62,17 +62,6 @@ export const ports = derived(entities, ($entities) => {
 });
 
 /**
- * Claims represent a lazily updated change to some value on an entity.
- * 
- * These are settled, ie. added to the actual entity values, whenever some action is taken.
- * 
- * NOTE: Currently only energy is supported. Generally very WIP right now.
- */
-export const claims = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.CLAIM)) as Claims;
-});
-
-/**
  * These are the active organs
  */
 export const organs = derived(entities, ($entities) => {
@@ -88,19 +77,18 @@ export const organs = derived(entities, ($entities) => {
 //   })) as Cores;
 // })
 
-export const buildableOrgans: BuildableEntity[] = [
-  {
-    type: EntityType.RESOURCE,
-    name: "food",
-    cost: 10
-  },
-  {
-    type: EntityType.RESOURCE_TO_ENERGY,
-    name: "mouth",
-    cost: 120
-  },
-]
-
+// export const buildableOrgans: BuildableEntity[] = [
+//   {
+//     type: EntityType.RESOURCE,
+//     name: "food",
+//     cost: 10
+//   },
+//   {
+//     type: EntityType.RESOURCE_TO_ENERGY,
+//     name: "mouth",
+//     cost: 120
+//   },
+// ]
 
 // *** PLAYER -----------------------------------------------------------------
 
@@ -144,33 +132,33 @@ export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCo
  * 
  * Will be more general later(TM)...
  */
-export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig],
-  ([$cores, $claims, $blockNumber, $gameConfig]) => {
-    let calculatedEnergy: CalculatedEnergies = {};
+// export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig],
+//   ([$cores, $claims, $blockNumber, $gameConfig]) => {
+//     let calculatedEnergy: CalculatedEnergies = {};
 
-    // Iterate over all cores
-    for (const [id, core] of Object.entries($cores)) {
+//     // Iterate over all cores
+//     for (const [id, core] of Object.entries($cores)) {
 
-      // Get all claims for this core
-      let claimsForCore = Object.values($claims).filter(claim => claim.sourceEntity === id)
+//       // Get all claims for this core
+//       let claimsForCore = Object.values($claims).filter(claim => claim.sourceEntity === id)
 
-      let lazyUpdateEnergy = 0
+//       let lazyUpdateEnergy = 0
 
-      // Iterate over claims and calculate lazy update energy
-      for (const claim of claimsForCore) {
-        lazyUpdateEnergy += Math.floor((Number($blockNumber) - Number(claim.claimBlock)))
-      }
+//       // Iterate over claims and calculate lazy update energy
+//       for (const claim of claimsForCore) {
+//         lazyUpdateEnergy += Math.floor((Number($blockNumber) - Number(claim.claimBlock)))
+//       }
 
-      // Calculate core energy
-      calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
+//       // Calculate core energy
+//       calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
 
-      // Cap core energy
-      calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.coreEnergyCap ? $gameConfig?.coreEnergyCap : calculatedEnergy[id];
-    }
-    return calculatedEnergy;
-  });
+//       // Cap core energy
+//       calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.coreEnergyCap ? $gameConfig?.coreEnergyCap : calculatedEnergy[id];
+//     }
+//     return calculatedEnergy;
+//   });
 
-export const playerCalculatedEnergy = derived([calculatedEnergy, playerEntityId], ([$calculatedEnergy, $playerEntityId]) => $calculatedEnergy[$playerEntityId])
+// export const playerCalculatedEnergy = derived([calculatedEnergy, playerEntityId], ([$calculatedEnergy, $playerEntityId]) => $calculatedEnergy[$playerEntityId])
 
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
