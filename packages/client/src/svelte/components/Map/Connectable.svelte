@@ -10,8 +10,6 @@
   const inputs = inputsForEntity(entity.address)
   const outputs = outputsForEntity(entity.address)
 
-  $: console.log($inputs)
-
   let padding = "8px"
 
   const onMouseEnter = () => (available = true)
@@ -28,14 +26,14 @@
   on:mouseleave={onMouseLeave}
 >
   <div class="ports-left">
-    {#each Object.entries($inputs) as [_, i] (i)}
-      <Port port={i} />
+    {#each Object.entries($inputs) as [address, i] (i)}
+      <Port {address} port={i} />
     {/each}
   </div>
 
   <div class="ports-right">
-    {#each Object.entries($outputs) as [_, o] (o)}
-      <Port port={o} />
+    {#each Object.entries($outputs) as [address, o] (o)}
+      <Port {address} port={o} />
     {/each}
   </div>
   <slot />
@@ -62,6 +60,7 @@
     justify-content: center;
     align-items: end;
     gap: 4px;
+    z-index: 999;
   }
   .ports-right {
     position: absolute;
@@ -73,6 +72,7 @@
     justify-content: center;
     align-items: start;
     gap: 4px;
+    z-index: 999;
   }
 
   @mixin portInActiveTransform($deg) {

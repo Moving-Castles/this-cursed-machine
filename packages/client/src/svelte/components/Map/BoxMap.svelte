@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
+  import { connections } from "../../modules/state"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
@@ -60,7 +61,19 @@
   </div>
 </div>
 
+<div class="ui-connections debug">
+  {#each Object.entries($connections) as [address, connection], i (connection)}
+    {address}: {connection}
+  {/each}
+</div>
+
 <style lang="scss">
+  .ui-connections {
+    position: fixed;
+    bottom: 0;
+    background: black;
+    z-index: 999;
+  }
   .ui-map {
     height: 100dvh;
     width: 100dvw;

@@ -40,12 +40,12 @@
   <div
     draggable={$draggable}
     on:dragover|preventDefault
-    on:click={openModal}
     style="--background: {background};"
     class="machine-wrapper {MachineType[entity.entity?.machineType]}"
   >
     <div
       class="content"
+      on:click={openModal}
       class:resource={$isResourced}
       class:control={$isControlled}
     >
@@ -103,11 +103,6 @@
       }
 
       .ports {
-        position: absolute;
-        pointer-events: none;
-        width: 100%;
-        height: 100%;
-
         .connected-resource {
           background: red;
         }
@@ -148,7 +143,6 @@
   }
 
   .modal {
-    pointer-events: none;
     position: fixed;
     top: 50%;
     left: 50%;

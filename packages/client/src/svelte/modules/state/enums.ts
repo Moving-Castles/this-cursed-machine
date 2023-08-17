@@ -30,8 +30,8 @@ export enum PortType {
 }
 
 export enum ConnectionType {
-    RESOURCE,
-    CONTROL
+    CONTROL,
+    RESOURCE
 }
 
 export enum PortPlacement {

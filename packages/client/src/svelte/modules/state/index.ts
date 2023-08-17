@@ -150,37 +150,6 @@ export const dropDestination = writable(NULL_COORDINATE as Coord)
 export const originAddress = writable("")
 export const destinationAddress = writable("")
 
-/**
- * Potential connections to draw TODO: Replace
- */
-export const potentialConnections = derived([dragOrigin, dropDestination, playerCore], ([$dragOrigin, $dropDestination, $playerCore]) => {
-  // Return one connection for resource
-  const resourcePotential = {
-    type: EntityType.RESOURCE_CONNECTION,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-  const controlPotential = {
-    type: EntityType.CONTROL_CONNECTION,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-
-  // Check if the core's control is not already connected
-
-  return [resourcePotential, controlPotential]
-})
-
-
-/**
- * Planned connections to draw TODO: replace
- */
-export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragOrigin, $dropDestination]) => {
-  return {
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-})
 
 /**
  * Can the player afford control over this control?
@@ -329,5 +298,7 @@ export const outputsForEntity = (address: string) => derived([entities], ([$enti
   )) as Ports;
 })
 
-
 export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
+
+
+export const portSelection = writable([])

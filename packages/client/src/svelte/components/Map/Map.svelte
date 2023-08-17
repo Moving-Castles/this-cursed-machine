@@ -61,9 +61,10 @@
       <Tile {tile} />
     {/each}
     {#each Object.entries($connections) as [address, connection], i (connection)}
+      {console.log($connections)}
       <!-- <Path {address} {connection} pathIndex={i} /> -->
     {/each}
-    <!-- {#each $potentialConnections as { start, end }, i (i)}
+    <!-- {#each $portSelection as { start, end }, i (i)}
       <Path
         potential
         startCoord={start}
@@ -86,6 +87,12 @@
       <Explainer />
     {/if}
   </div>
+</div>
+
+<div class="ui-connections debug">
+  {#each Object.entries($connections) as [address, connection], i (connection)}
+    {address}: {JSON.stringify(connection)}
+  {/each}
 </div>
 
 <style lang="scss">

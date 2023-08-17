@@ -1,5 +1,14 @@
 import { writable, get } from "svelte/store"
-import { originAddress, dragOrigin, dropDestination, entities, NULL_COORDINATE } from "../../state"
+import {
+  originAddress,
+  dragOrigin,
+  dropDestination,
+  entities,
+  NULL_COORDINATE,
+  portSelection
+} from "../../state"
+import { connect } from "../../action"
+import { ConnectionType } from "../../state/enums"
 
 const img = new Image()
 
@@ -34,4 +43,29 @@ export function onDragStart (e, address: string, passive = false) {
 
 export function onDragOver (coordinates: Coord) {
   dropDestination.set(coordinates)
+}
+
+/**
+ * 
+ * @param address 
+ * @param port 
+ */
+export function onPortClick (address: string, port: Port) {
+  const selection = get(portSelection)
+
+  // If the 
+  if (selection.length === 1 && selection[0].portType === port.portType) {
+    selection[0] = port
+  }
+    
+  selection.push(address)
+
+  portSelection.set(selection)
+
+  // Tally the ports
+  if (selection.length === 2) {
+    connect(ConnectionType.RESOURCE, selection[0], selection[1])
+
+    portSelection.set([])
+  }
 }
