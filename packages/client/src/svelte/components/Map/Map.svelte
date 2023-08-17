@@ -3,9 +3,7 @@
   import {
     gameConfig,
     connections,
-    potentialConnections,
     plannedConnection,
-    connectionsWithPortInformation,
     NULL_COORDINATE,
   } from "../../modules/state"
   import { isCoordinate } from "../../modules/utils/space"
@@ -49,9 +47,6 @@
     // Return the fully constructed grid
     return grid
   }
-
-  $: console.log("connections", $connections)
-  $: console.log("cons", $connectionsWithPortInformation)
 
   onMount(() => {
     grid = initGrid($gameConfig?.worldWidth)

@@ -7,15 +7,11 @@
   import EmptyTile from "./EmptyTile.svelte"
   import Machine from "./Machines/Machine.svelte"
   import Blocker from "./Machines/Blocker.svelte"
+  import Inlet from "./Machines/Inlet.svelte"
+  import Outlet from "./Machines/Outlet.svelte"
+  import Blender from "./Machines/Blender.svelte"
   import Splitter from "./Machines/Splitter.svelte"
-  import Combinator from "./Machines/Combinator.svelte"
-  import Mixer from "./Machines/Mixer.svelte"
-  import Filter from "./Machines/Filter.svelte"
-  import Shower from "./Machines/Shower.svelte"
-  import Dryer from "./Machines/Dryer.svelte"
-  import Heater from "./Machines/Heater.svelte"
-  import Freezer from "./Machines/Freezer.svelte"
-  import Grinder from "./Machines/Grinder.svelte"
+  import Scorcher from "./Machines/Scorcher.svelte"
 
   export let tile: GridTile
 
@@ -23,15 +19,11 @@
 
   const mappings = {
     0: Blocker,
-    1: Splitter,
-    2: Combinator,
-    3: Mixer,
-    4: Filter,
-    5: Shower,
-    6: Dryer,
-    7: Heater,
-    8: Freezer,
-    9: Grinder,
+    1: Inlet,
+    2: Outlet,
+    3: Blender,
+    4: Splitter,
+    5: Scorcher,
   }
 
   const entity = tileEntity(tile.coordinates)
@@ -47,20 +39,18 @@
     {#if EntityType[$entity.entity.entityType] === "CORE"}
       <Core entity={$entity} />
     {:else if EntityType[$entity.entity.entityType] === "MACHINE"}
-      <Connectable entity={$entity}>
-        <Machine background={"yellow"} entity={$entity}>
-          <svelte:fragment slot="content">
-            {MachineType[$entity.entity.machineType]}
-          </svelte:fragment>
+      <Machine background={"yellow"} entity={$entity}>
+        <svelte:fragment slot="content">
+          {MachineType[$entity.entity.machineType]}
+        </svelte:fragment>
 
-          <!-- Organ actions -->
-          <svelte:component
-            this={mappings[$entity.entity.machineType]}
-            slot="modal"
-            entity={$entity}
-          />
-        </Machine>
-      </Connectable>
+        <!-- Organ actions -->
+        <svelte:component
+          this={mappings[$entity.entity.machineType]}
+          slot="modal"
+          entity={$entity}
+        />
+      </Machine>
     {:else if EntityType[$entity.entity.entityType] === "UNTRAVERSABLE"}
       <EmptyTile untraversable />
     {/if}

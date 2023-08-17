@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from "svelte"
-  export let background = "rgb(255, 244, 0)"
   import {
     NULL_COORDINATE,
     dropDestination,
@@ -10,8 +9,10 @@
     isConnectedControl,
   } from "../../../modules/state"
   import { MachineType } from "../../../modules/state/types"
+  import Connectable from "../Connectable.svelte"
   import Actions from "./Actions.svelte"
 
+  export let background = "rgb(255, 244, 0)"
   export let entity: EntityStoreEntry
 
   const tile = getContext("tile") as GridTile
@@ -35,27 +36,29 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  draggable={$draggable}
-  on:dragover|preventDefault
-  on:click={openModal}
-  style="--background: {background};"
-  class="machine-wrapper {MachineType[entity.entity?.machineType]}"
->
+<Connectable {entity}>
   <div
-    class="content rotate-{entity.entity?.rotation}"
-    class:resource={$isResourced}
-    class:control={$isControlled}
+    draggable={$draggable}
+    on:dragover|preventDefault
+    on:click={openModal}
+    style="--background: {background};"
+    class="machine-wrapper {MachineType[entity.entity?.machineType]}"
   >
-    <slot name="content" />
+    <div
+      class="content"
+      class:resource={$isResourced}
+      class:control={$isControlled}
+    >
+      <slot name="content" />
+    </div>
   </div>
+</Connectable>
 
-  {#if modalActive}
-    <Actions {entity} on:close={closeModal}>
-      <slot name="modal" />
-    </Actions>
-  {/if}
-</div>
+{#if modalActive}
+  <Actions {entity} {background} on:close={closeModal}>
+    <slot name="modal" />
+  </Actions>
+{/if}
 
 <style lang="scss">
   .modal {
@@ -171,18 +174,5 @@
       margin-bottom: 10px;
       width: 200px;
     }
-  }
-
-  .rotate-0 {
-    transform: rotate(0deg);
-  }
-  .rotate-90 {
-    transform: rotate(90deg);
-  }
-  .rotate-180 {
-    transform: rotate(180deg);
-  }
-  .rotate-270 {
-    transform: rotate(270deg);
   }
 </style>

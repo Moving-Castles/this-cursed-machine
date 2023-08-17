@@ -2,10 +2,10 @@
  *  Central store for all entities in the game.
  * 
  */
+import { EntityType, PortType } from "./enums"
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
 import { aStarPath, isCoordinate, getDirection } from "../utils/space";
-import { EntityType } from "../../modules/state/enums"
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -313,84 +313,21 @@ export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) =
   return false
 })
 
+export const inputsForEntity = (address: string) => derived([entities], ([$entities]) => {
+  return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
+    entity.entityType === EntityType.PORT &&
+    entity.carriedBy === address &&
+    entity?.portType === PortType.INPUT
+  )) as Ports;
+})
+
+export const outputsForEntity = (address: string) => derived([entities], ([$entities]) => {
+  return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
+    entity.entityType === EntityType.PORT &&
+    entity.carriedBy === address &&
+    entity?.portType === PortType.OUTPUT
+  )) as Ports;
+})
+
 
 export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
-
-/**
- * An object with the connection's address mapped to a path with start port and end port
- * Port is -1 if not end or start
- */
-export const connectionsWithPortInformation = derived([connections, entities, organs], ([$connections, $entities, $organs]) => {
-  function firstAvailablePortNumber(ports: (string | number)[], address: string) {
-    // go up the array until you find a number
-    // return the modified array
-    let port = -1
-
-    for (let i = 0; i < ports.length; i++) {
-      console.log(typeof ports)
-      if (typeof ports[i] === "number") {
-        port = ports[i]
-        ports[i] = address
-        break
-      }
-    }
-
-    return {
-      portNumber: port,
-      updatedPorts: ports
-    }
-  }
-  const north = [0, 1, 2, 3]
-  const east = [4, 5, 6, 7]
-  const south = [8, 9, 10, 11]
-  const west = [12, 13, 14, 15]
-  const ports = { north, east, south, west }
-
-  let temp = Object.entries($organs).map(([_, organ]) => ([_, { ...organ, ports: { ...ports } }]))
-  const organsWithPorts = Object.fromEntries(temp)
-
-  const result = Object.entries($connections).map(([address, connection]) => {
-    const startCoord = $entities[connection.sourcePort].position
-    const endCoord = $entities[connection.targetPort].position
-
-    let path = aStarPath(startCoord, endCoord)
-
-    // get the organ
-    const organ = organsWithPorts[address]
-
-    // Edge case: right next???
-    for (let i = 0; i < path.length; i++) {
-      let port = -1
-      let direction = ""
-
-      if (i === path.length - 1) {
-        direction = getDirection(path[i], path[i - 1])
-        // compare end and second to last for entry direction
-      } else {
-        direction = getDirection(path[i], path[i + 1])
-        // compare 0 and 1 for leave direction
-      }
-
-      if (i === 0 || i === path.length - 1) {
-        let ports = [...organ.ports[direction]]
-
-        const { portNumber, updatedPorts } = firstAvailablePortNumber(ports, address)
-
-        port = portNumber
-
-        // Update ports with 
-        organ.ports[direction] = updatedPorts
-      }
-
-      path[i] = {
-        ...path[i],
-        direction,
-        port
-      }
-    }
-
-    return [address, path]
-  })
-
-  return Object.fromEntries(result)
-})

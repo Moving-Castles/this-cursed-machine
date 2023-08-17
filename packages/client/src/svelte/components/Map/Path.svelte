@@ -9,7 +9,6 @@
     gameConfig,
     entities,
     playerCalculatedEnergy,
-    connectionsWithPortInformation,
   } from "../../modules/state"
   import { isCoordinate, aStarPath } from "../../modules/utils/space"
   import { config } from "../../modules/content/lore"
@@ -95,11 +94,7 @@
     return string
   }
 
-  const path = makeSvgPath(
-    address
-      ? $connectionsWithPortInformation[address]
-      : aStarPath(startCoord, endCoord)
-  )
+  const path = makeSvgPath(aStarPath(startCoord, endCoord))
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =

@@ -1,11 +1,16 @@
 <script lang="ts">
   import { onDragStart, onDragOver } from "../../modules/ui/events"
+  import { inputsForEntity, outputsForEntity } from "../../modules/state"
+  import Port from "./Port.svelte"
 
   export let available = false
   export let active = false
   export let entity: EntityStoreEntry
-  export let inputs = [] as Port[]
-  export let outputs = [] as Port[]
+
+  const inputs = inputsForEntity(entity.address)
+  const outputs = outputsForEntity(entity.address)
+
+  $: console.log($inputs)
 
   let padding = "8px"
 
@@ -15,19 +20,24 @@
 </script>
 
 <div
-  class="connectable"
+  class="connectable rotate-{entity.entity?.rotation}"
   style="--padding: {padding}"
   on:dragstart={e => onDragStart(e, entity.address)}
   on:dragover={() => onDragOver(entity.entity.position)}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
-  <!-- <div class:available class:active class="port top" /> -->
-  <!-- <div class:available class:active class="port bottom" /> -->
-  <!-- <div class:available class:active class="port left" />
-  <div class:available class:active class="port right" /> -->
-  {#each inputs as i}{/each}
-  {#each outputs as o}{/each}
+  <div class="ports-left">
+    {#each Object.entries($inputs) as [_, i] (i)}
+      <Port port={i} />
+    {/each}
+  </div>
+
+  <div class="ports-right">
+    {#each Object.entries($outputs) as [_, o] (o)}
+      <Port port={o} />
+    {/each}
+  </div>
   <slot />
 </div>
 
@@ -42,16 +52,27 @@
     position: relative;
   }
 
-  .port {
+  .ports-left {
     position: absolute;
-    width: 20px;
-    height: 8px;
-    z-index: 9;
-    background: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
+    left: 0;
+    height: 100%;
+    width: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: end;
+    gap: 4px;
+  }
+  .ports-right {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: start;
+    gap: 4px;
   }
 
   @mixin portInActiveTransform($deg) {
