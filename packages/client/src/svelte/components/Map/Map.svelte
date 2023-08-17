@@ -66,7 +66,7 @@
       <Tile {tile} />
     {/each}
     {#each Object.entries($connections) as [address, connection], i (connection)}
-      <Path {address} {connection} pathIndex={i} />
+      <!-- <Path {address} {connection} pathIndex={i} /> -->
     {/each}
     <!-- {#each $potentialConnections as { start, end }, i (i)}
       <Path

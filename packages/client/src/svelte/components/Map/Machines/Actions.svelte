@@ -27,7 +27,6 @@
   const close = () => dispatch("close")
 
   const sendRotate = () => {
-    console.log(entity.entity)
     if (!isNaN(entity.entity.rotation)) {
       rotate(entity.address, ++entity.entity.rotation % 4)
     } else {

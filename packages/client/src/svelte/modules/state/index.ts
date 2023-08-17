@@ -10,7 +10,7 @@ import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
 
-export const GAME_CONFIG_ID = "0x000000000000000000000000000000000000000000000000000000000000060d";
+export const GAME_CONFIG_ID = "0x";
 // ...
 export const NULL_COORDINATE = { x: -1, y: -1 }
 
@@ -159,7 +159,7 @@ export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCo
 //     return calculatedEnergy;
 //   });
 
-// export const playerCalculatedEnergy = derived([calculatedEnergy, playerEntityId], ([$calculatedEnergy, $playerEntityId]) => $calculatedEnergy[$playerEntityId])
+export const playerCalculatedEnergy = derived([], () => 0)
 
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
@@ -207,9 +207,12 @@ export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragO
  * @returns derived store with boolean
  */
 export const playerCanAffordControl = (coord: Coord) => derived([playerCore, playerCalculatedEnergy, gameConfig], ([$playerCore, $playerCalculatedEnergy, $gameConfig]) => {
+  let cost = 0
   // Get the distance between the coordinate and the player
   const distance = aStarPath($playerCore.position, coord).length
-  const cost = $gameConfig.controlConnectionCost
+  if ($gameConfig) {
+    cost = $gameConfig.controlConnectionCost
+  }
 
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
@@ -220,9 +223,14 @@ export const playerCanAffordControl = (coord: Coord) => derived([playerCore, pla
  * @returns derived store with boolean
  */
 export const playerCanAffordResource = (coord: Coord) => derived([playerCore, playerCalculatedEnergy, gameConfig], ([$playerCore, $playerCalculatedEnergy, $gameConfig]) => {
+  let cost = 0
+
   // Get the distance between the coordinate and the player
   const distance = aStarPath($playerCore.position, coord).length
-  const cost = $gameConfig.resourceConnectionCost
+
+  if ($gameConfig) {
+    cost = $gameConfig.resourceConnectionCost
+  }
   return (distance - 2) * cost <= $playerCalculatedEnergy
 })
 

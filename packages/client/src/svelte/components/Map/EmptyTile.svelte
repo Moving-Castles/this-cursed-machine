@@ -1,14 +1,8 @@
 <script lang="ts">
-  import {
-    NULL_COORDINATE,
-    dropDestination,
-    BUILDABLE_ENTITYTYPES,
-    machineDefinitions,
-  } from "../../modules/state"
+  import { machineDefinitions } from "../../modules/state"
   import TileActions from "./TileActions.svelte"
   import InventoryItem from "./InventoryItem.svelte"
   import { onDragOver } from "../../modules/ui/events"
-  import { BuildableEntityType, EntityType } from "../../modules/state/enums"
   import { getContext } from "svelte"
   // import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false

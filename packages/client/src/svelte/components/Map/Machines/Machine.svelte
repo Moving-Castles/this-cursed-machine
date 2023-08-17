@@ -43,10 +43,9 @@
   class="machine-wrapper {MachineType[entity.entity?.machineType]}"
 >
   <div
-    class="content"
+    class="content rotate-{entity.entity?.rotation}"
     class:resource={$isResourced}
     class:control={$isControlled}
-    style:transform="rotate({entity.entity?.rotation}deg)"
   >
     <slot name="content" />
   </div>
@@ -172,5 +171,18 @@
       margin-bottom: 10px;
       width: 200px;
     }
+  }
+
+  .rotate-0 {
+    transform: rotate(0deg);
+  }
+  .rotate-90 {
+    transform: rotate(90deg);
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+  .rotate-270 {
+    transform: rotate(270deg);
   }
 </style>

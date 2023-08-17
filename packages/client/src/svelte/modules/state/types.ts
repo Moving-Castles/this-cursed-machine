@@ -1,18 +1,18 @@
 import {
   EntityType,
   ConnectionType,
+  MaterialType,
   PortType,
   MachineType,
-  ResourceType,
   PortPlacement,
   Rotation
 } from './enums'
 export {
   EntityType,
   ConnectionType,
+  MaterialType,
   PortType,
   MachineType,
-  ResourceType,
   PortPlacement,
   Rotation
 } from './enums'
@@ -24,7 +24,7 @@ declare global {
     gameConfig?: GameConfig;
     type?: EntityType;
     machineType?: MachineType;
-    resourceType?: ResourceType;
+    materialType?: MaterialType;
     connectionType?: ConnectionType;
     portType?: PortType;
     // ...

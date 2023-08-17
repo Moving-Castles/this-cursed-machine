@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playerEntityId, calculatedEnergy } from "../../modules/state"
+  import { playerEntityId } from "../../modules/state"
   import Connectable from "./Connectable.svelte"
 
   export let entity: EntityStoreEntry
