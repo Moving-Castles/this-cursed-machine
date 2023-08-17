@@ -1,8 +1,8 @@
 import { get, writable } from "svelte/store"
 import { network } from "../network"
 import { cores } from "../state"
-import { getUniqueValues } from "../../utils/misc"
-import { padAddress } from "../../utils/misc"
+import { getUniqueValues } from "../utils/misc"
+import { padAddress } from "../utils/misc"
 
 // --- TYPES -------------------------------------------------------------------
 

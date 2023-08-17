@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { gameConfig, machineDefinitions } from "../../modules/state"
-  import { BuildableEntityType } from "../../modules/state/types"
+  import { gameConfig, organs, buildableOrgans } from "../../modules/state"
+  import { BuildableEntityType } from "../../modules/state/enums"
   import InventoryItem from "./InventoryItem.svelte"
   import { showInventory } from "../../modules/ui/stores"
   import Path from "./Path.svelte"
@@ -47,7 +47,7 @@
 
   onMount(() => {
     console.log("mounting")
-    inv = initInventory($gameConfig?.gameConfig.worldWidth)
+    inv = initInventory($gameConfig?.worldWidth)
   })
 </script>
 

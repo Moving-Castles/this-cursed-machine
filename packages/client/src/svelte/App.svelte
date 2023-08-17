@@ -3,7 +3,7 @@
   import { setup } from "../mud/setup"
   import {
     createComponentSystem,
-    createLoadingStateSystem,
+    createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import {
@@ -15,6 +15,7 @@
     ports,
     playerCorePorts,
   } from "./modules/state"
+  import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
@@ -23,8 +24,8 @@
   import Spawn from "./components/Spawn/Spawn.svelte"
   import Box from "./components/Box/Box.svelte"
   import End from "./components/End/End.svelte"
-  import Game from "./components/Game/Game.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
+  // import Game from "./components/Game/Game.svelte"
 
   // - - - - -
   $: console.log("$entities", $entities)
@@ -55,13 +56,15 @@
     // Write block numbers to svelte store and alert on lost connection
     initBlockListener()
 
-    // Create systems to listen to changes to defined component
-    for (const componentKey of Object.keys($network.contractComponents)) {
+    // Create systems to listen to changes to components in our own namespace
+    for (const componentKey of Object.keys(
+      filterByNamespace($network.components, "mc")
+    )) {
       createComponentSystem(componentKey)
     }
 
-    // Listen to changes to the LoadingState component
-    createLoadingStateSystem()
+    // Listen to changes to the SyncProgresscomponent
+    createSyncProgressSystem()
   })
 </script>
 

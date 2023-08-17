@@ -3,15 +3,15 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { onMount } from "svelte"
-  import { EntityType } from "../../modules/state/types"
+  import { EntityType } from "../../modules/state/enums"
   import {
     NULL_COORDINATE,
     gameConfig,
     entities,
     playerCalculatedEnergy,
-    connectionsWithPortInformation
+    connectionsWithPortInformation,
   } from "../../modules/state"
-  import { isCoordinate, aStarPath } from "../../utils/space"
+  import { isCoordinate, aStarPath } from "../../modules/utils/space"
   import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
@@ -31,7 +31,7 @@
 
   const colorMappings = {
     2: "red",
-    3: "blue"
+    3: "blue",
   }
 
   if (connection) {
@@ -39,9 +39,9 @@
     endCoord = $entities[connection.targetEntity].position
     color = colorMappings[connection.type]
     cost =
-    connection.type === EntityType.RESOURCE_CONNECTION
-      ? $gameConfig?.gameConfig.resourceConnectionCost
-      : $gameConfig?.gameConfig.controlConnectionCost
+      connection.type === EntityType.RESOURCE_CONNECTION
+        ? $gameConfig?.resourceConnectionCost
+        : $gameConfig?.controlConnectionCost
   }
 
   let localCoords: Coord[] = []
@@ -58,7 +58,8 @@
     // Initialize an empty string to hold the SVG path.
     let string = ""
 
-    const canAfford = (i: number) => $playerCalculatedEnergy !== 0 && (i - 1) * cost <= $playerCalculatedEnergy
+    const canAfford = (i: number) =>
+      $playerCalculatedEnergy !== 0 && (i - 1) * cost <= $playerCalculatedEnergy
     const makePart = (i: number) => {
       let offsetX = $config.janky ? Math.floor(Math.random() * 10) - 5 : 0
       let offsetY = $config.janky ? Math.floor(Math.random() * 10) - 5 : 0
@@ -94,7 +95,11 @@
     return string
   }
 
-  const path = makeSvgPath(address ? $connectionsWithPortInformation[address] : aStarPath(startCoord, endCoord))
+  const path = makeSvgPath(
+    address
+      ? $connectionsWithPortInformation[address]
+      : aStarPath(startCoord, endCoord)
+  )
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =

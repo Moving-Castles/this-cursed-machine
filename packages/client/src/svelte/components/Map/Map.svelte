@@ -6,9 +6,9 @@
     potentialConnections,
     plannedConnection,
     connectionsWithPortInformation,
-    NULL_COORDINATE
+    NULL_COORDINATE,
   } from "../../modules/state"
-  import { isCoordinate } from "../../utils/space"
+  import { isCoordinate } from "../../modules/utils/space"
   import { explainer } from "../../modules/content/wiki"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
@@ -54,7 +54,7 @@
   $: console.log("cons", $connectionsWithPortInformation)
 
   onMount(() => {
-    grid = initGrid($gameConfig?.gameConfig.worldWidth)
+    grid = initGrid($gameConfig?.worldWidth)
   })
 </script>
 
@@ -66,11 +66,7 @@
       <Tile {tile} />
     {/each}
     {#each Object.entries($connections) as [address, connection], i (connection)}
-      <Path
-        {address}
-        {connection}
-        pathIndex={i}
-      />
+      <Path {address} {connection} pathIndex={i} />
     {/each}
     <!-- {#each $potentialConnections as { start, end }, i (i)}
       <Path
@@ -82,7 +78,7 @@
     {/each}
     -->
     {#key $plannedConnection}
-      {#if !isCoordinate($plannedConnection.start, NULL_COORDINATE) && !isCoordinate($plannedConnection.end, NULL_COORDINATE) }
+      {#if !isCoordinate($plannedConnection.start, NULL_COORDINATE) && !isCoordinate($plannedConnection.end, NULL_COORDINATE)}
         <Path
           startCoord={$plannedConnection.start}
           endCoord={$plannedConnection.end}

@@ -10,10 +10,8 @@ contract RotationSystemTest is MudV2Test {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 boxEntity = world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn("Alice");
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
     vm.startPrank(alice);

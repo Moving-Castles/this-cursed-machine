@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, ClaimBlock, CreationBlock, Active, Width, Height, Level, MinCores, MaxCores, EntityType, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE } from "../codegen/Types.sol";
+import { Name, ReadyBlock, Rotation, ClaimBlock, CreationBlock, Active, Width, Height, Level, MinCores, MaxCores, EntityType, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
+import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE, ROTATION } from "../codegen/Types.sol";
 import { LibUtils, LibBox, LibCore, LibPort, LibEntity } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
@@ -29,6 +29,7 @@ contract SpawnSystem is System {
     bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.MIXER);
     CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
     Position.set(machineEntity, PositionData(1, 2));
+    Rotation.set(machineEntity, ROTATION.DEG0);
 
     // Create ports on test machine
     LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
