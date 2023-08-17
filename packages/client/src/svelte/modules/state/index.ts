@@ -81,7 +81,7 @@ export const organs = derived(entities, ($entities) => {
 //   })) as Cores;
 // })
 
-export const buildableOrgans: BuildableEntity[] = [
+export const machineDefinitions: BuildableEntity[] = [
   {
     type: EntityType.RESOURCE,
     name: "food",

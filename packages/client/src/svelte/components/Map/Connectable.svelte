@@ -7,21 +7,21 @@
 
   let padding = "8px"
 
-  const onMouseEnter = () => available = true
+  const onMouseEnter = () => (available = true)
 
-  const onMouseLeave = () => available = false
+  const onMouseLeave = () => (available = false)
 </script>
 
 <div
   class="connectable"
   style="--padding: {padding}"
-  on:dragstart={(e) => onDragStart(e, entity.address)}
+  on:dragstart={e => onDragStart(e, entity.address)}
   on:dragover={() => onDragOver(entity.entity.position)}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
-  <div class:available class:active class="port top" />
-  <div class:available class:active class="port bottom" />
+  <!-- <div class:available class:active class="port top" /> -->
+  <!-- <div class:available class:active class="port bottom" /> -->
   <div class:available class:active class="port left" />
   <div class:available class:active class="port right" />
   <slot />
@@ -42,22 +42,23 @@
     position: absolute;
     width: 20px;
     height: 8px;
-    z-index: 9;;
+    z-index: 9;
     background: white;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transition: transform 0.1s ease;
   }
-  
-  @mixin portInActiveTransform ($deg) {
+
+  @mixin portInActiveTransform($deg) {
     transform: translate(-50%, -50%) rotate($deg);
   }
-  
-  @mixin portAvailableTransform ($deg) {
-    transform: translate(-50%, -50%) rotate($deg) translate(0, calc(var(--tilesize) / 2)) translateY(calc(var(--padding) * -1));
-  }
 
+  @mixin portAvailableTransform($deg) {
+    transform: translate(-50%, -50%) rotate($deg)
+      translate(0, calc(var(--tilesize) / 2))
+      translateY(calc(var(--padding) * -1));
+  }
 
   /* States:          */
   /* Inactive:        */
@@ -94,5 +95,4 @@
       @include portAvailableTransform(270deg);
     }
   }
-
 </style>

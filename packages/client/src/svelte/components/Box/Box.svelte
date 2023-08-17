@@ -1,4 +1,5 @@
 <script lang="ts">
+  import BoxMap from "../Map/BoxMap.svelte"
   import {
     playerAddress,
     playerCore,
@@ -9,7 +10,9 @@
   import { addressToColor } from "../../utils/misc"
 </script>
 
-<div class="box">
+<BoxMap width={$playerBox.width} height={$playerBox.height} />
+
+<!-- <div class="box">
   <div
     class="icon"
     style={"background: " + addressToColor($playerAddress) + ";"}
@@ -45,7 +48,7 @@
   {:else}
     <div><strong>WAITING........</strong></div>
   {/if}
-</div>
+</div> -->
 
 <style>
   .box {

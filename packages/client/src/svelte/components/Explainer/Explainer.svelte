@@ -1,11 +1,11 @@
 <script>
   import SvelteMarkdown from "svelte-markdown"
   import { fade } from "svelte/transition"
-  import { explainer, explanation } from "../../modules/content/wiki"
+  import { explainer, machineExplanation } from "../../modules/content/wiki"
 </script>
 
 <div in:fade={{ duration: 100 }} class="explainer">
-  <SvelteMarkdown source={$explanation} />
+  <SvelteMarkdown source={$machineExplanation} />
 
   <button on:click={() => ($explainer = "")}>Close</button>
 </div>

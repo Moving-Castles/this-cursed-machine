@@ -23,16 +23,14 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  draggable={draggable}
+  {draggable}
   on:dragenter|preventDefault={openModal}
   on:dragover|preventDefault
   on:click={openModal}
   style="--background: {background};"
   class="organ-wrapper {tile.type}"
 >
-  <div
-    class="content"
-    >
+  <div class="content">
     <slot name="content" />
   </div>
 </div>
@@ -49,7 +47,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    
+
     .content {
       overflow: hidden;
       width: 80%;
@@ -65,7 +63,7 @@
       cursor: pointer;
       position: relative;
       background: var(--background);
-  
+
       &.control {
         border: 3px solid blue;
       }

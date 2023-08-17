@@ -5,10 +5,6 @@
   export let entity: EntityStoreEntry
 
   $: console.log(entity)
-
-  const onClick = (e) => {
-    console.log('explain core')
-  }
 </script>
 
 <Connectable {entity}>
@@ -18,11 +14,13 @@
     class="core"
     class:player={entity.address === $playerEntityId}
     draggable={entity.address === $playerEntityId}
-    on:click={onClick}
   >
     <div>
-      <div class="name">{entity.entity.name} {entity.address === $playerEntityId ? "(U)" : ""}</div>
-      <div class="energy">{$calculatedEnergy[entity.address]}</div>
+      <div class="name">
+        {entity.entity.name}
+        {entity.address === $playerEntityId ? "(U)" : ""}
+      </div>
+      <!-- <div class="energy">{$calculatedEnergy[entity.address]}</div> -->
     </div>
   </div>
 </Connectable>

@@ -23,7 +23,7 @@
   import Spawn from "./components/Spawn/Spawn.svelte"
   import Box from "./components/Box/Box.svelte"
   import End from "./components/End/End.svelte"
-  // import Game from "./components/Game/Game.svelte"
+  import Game from "./components/Game/Game.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
 
   // - - - - -

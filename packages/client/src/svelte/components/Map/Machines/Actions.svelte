@@ -6,14 +6,14 @@
     playerCanAffordControl,
     playerCanAffordResource,
     isConnectedResourceAny,
-    isConnectedControlAny
+    isConnectedControlAny,
   } from "../../../modules/state"
   import { ConnectionType } from "../../../modules/state/types"
   import { originAddress } from "../../../modules/state"
-  import { EntityType } from "../../../modules/state/types"
+  import { EntityType, MachineType } from "../../../modules/state/types"
   import { explainer } from "../../../modules/content/wiki"
   import { circularLayout } from "../../../modules/ui"
-  import { connect, disconnect } from "../../../modules/action"
+  import { connect, disconnect, rotate } from "../../../modules/action"
   export let radius = 100
   export let entity: EntityStoreEntry
 
@@ -25,7 +25,17 @@
   const isControlled = isConnectedControlAny(entity.address)
 
   const close = () => dispatch("close")
-  const openExplainer = () => ($explainer = EntityType[entity.entity.type])
+
+  const sendRotate = () => {
+    console.log(entity.entity)
+    if (!isNaN(entity.entity.rotation)) {
+      rotate(entity.address, ++entity.entity.rotation % 4)
+    } else {
+      rotate(entity.address, 1)
+    }
+  }
+  const openExplainer = () =>
+    ($explainer = MachineType[entity.entity.machineType])
 
   // Default actions
   function sendConnectResource() {
@@ -46,7 +56,6 @@
   }
 </script>
 
-
 <!-- Actions should show up if there is a connection and should use disabled prop for validating if player can afford them -->
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -62,7 +71,8 @@
     <button
       class="action"
       disabled={!$canAffordResource || $isResourced}
-      on:click={sendConnectResource}>
+      on:click={sendConnectResource}
+    >
       Connect (Resource)
     </button>
   </slot>
@@ -75,6 +85,10 @@
       on:click={sendConnectControl}
       >Connect (Control)
     </button>
+  </slot>
+
+  <slot name="rotateAction">
+    <button class="action" on:click|stopPropagation={sendRotate}>⤵️</button>
   </slot>
 
   <slot name="closeAction">

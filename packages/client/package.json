@@ -48,6 +48,8 @@
     "howler": "^2.2.3",
     "just-throttle": "^4.2.0",
     "lodash": "^4.17.21",
+    "matter": "^0.2.0",
+    "matter-dom-plugin": "^1.0.0",
     "pathfinding": "^0.4.18",
     "svelte-markdown": "^0.2.3",
     "uuid": "^9.0.0",

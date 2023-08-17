@@ -1,45 +1,37 @@
 <script lang="ts">
   import { setContext } from "svelte"
-  import {
-    dropDestination,
-    tileEntity
-  } from "../../modules/state"
-  import { EntityType } from "../../modules/state/types"
-  import CoreComponent from "./Core.svelte"
-  import OrganComponent from "./Organs/Organ.svelte"
-  import EmptyTile from "./EmptyTile.svelte"
-  import Claw from "./Organs/Claw.svelte"
-  import FoodSource from "./Organs/FoodSource.svelte"
-  import Portal from "./Organs/Portal.svelte"
-  import ResourceSplit from "./Organs/ResourceSplit.svelte"
-  import ControlSplit from "./Organs/ControlSplit.svelte"
-  import Counter from "./Organs/Counter.svelte"
-  import Modifier from "./Organs/Modifier.svelte"
+  import { dropDestination, tileEntity } from "../../modules/state"
+  import { EntityType, MachineType } from "../../modules/state/types"
   import Connectable from "./Connectable.svelte"
+  import Core from "./Core.svelte"
+  import EmptyTile from "./EmptyTile.svelte"
+  import Machine from "./Machines/Machine.svelte"
+  import Blocker from "./Machines/Blocker.svelte"
+  import Splitter from "./Machines/Splitter.svelte"
+  import Combinator from "./Machines/Combinator.svelte"
+  import Mixer from "./Machines/Mixer.svelte"
+  import Filter from "./Machines/Filter.svelte"
+  import Shower from "./Machines/Shower.svelte"
+  import Dryer from "./Machines/Dryer.svelte"
+  import Heater from "./Machines/Heater.svelte"
+  import Freezer from "./Machines/Freezer.svelte"
+  import Grinder from "./Machines/Grinder.svelte"
 
   export let tile: GridTile
 
   setContext("tile", tile)
 
   const mappings = {
-    // 0: Core,
-    1: Claw,
-    2: FoodSource,
-    3: Portal,
-    4: ResourceSplit,
-    5: ControlSplit,
-    6: Counter,
-    7: Modifier
-  }
-  const colorMappings = {
-    // 0: Core,
-    1: 'blue',
-    2: 'pink',
-    3: 'yellow',
-    4: 'darkorange',
-    5: 'deepskyblue',
-    6: 'darkviolet',
-    7: 'tomato'
+    0: Blocker,
+    1: Splitter,
+    2: Combinator,
+    3: Mixer,
+    4: Filter,
+    5: Shower,
+    6: Dryer,
+    7: Heater,
+    8: Freezer,
+    9: Grinder,
   }
 
   const entity = tileEntity(tile.coordinates)
@@ -48,27 +40,29 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  class="tile"
-  class:untraversable>
+<div class="tile" class:untraversable>
   <div class="coords">{tile.coordinates.x}, {tile.coordinates.y}</div>
 
   {#if $entity}
-    {#if EntityType[$entity.entity.type] === "CORE"}
-      <CoreComponent entity={$entity} />
-    {:else if EntityType[$entity.entity.type] === "UNTRAVERSABLE"}
-      <EmptyTile untraversable />
-    {:else}
+    {#if EntityType[$entity.entity.entityType] === "CORE"}
+      <Core entity={$entity} />
+    {:else if EntityType[$entity.entity.entityType] === "MACHINE"}
       <Connectable entity={$entity}>
-        <OrganComponent background={colorMappings[$entity.entity.type]} entity={$entity}>
+        <Machine background={"yellow"} entity={$entity}>
           <svelte:fragment slot="content">
-            {EntityType[$entity.entity.type]}
+            {MachineType[$entity.entity.machineType]}
           </svelte:fragment>
-  
+
           <!-- Organ actions -->
-          <svelte:component slot="modal" this={mappings[$entity.entity.type]} entity={$entity} />
-        </OrganComponent>
+          <svelte:component
+            this={mappings[$entity.entity.machineType]}
+            slot="modal"
+            entity={$entity}
+          />
+        </Machine>
       </Connectable>
+    {:else if EntityType[$entity.entity.entityType] === "UNTRAVERSABLE"}
+      <EmptyTile untraversable />
     {/if}
   {:else}
     <EmptyTile />

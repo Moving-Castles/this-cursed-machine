@@ -1,9 +1,16 @@
 <script lang="ts">
   import { getContext } from "svelte"
   export let background = "rgb(255, 244, 0)"
-  import { NULL_COORDINATE, dropDestination, playerEntityId, isDraggable, isConnectedResource, isConnectedControl } from "../../../modules/state"
-  import { EntityType } from "../../../modules/state/types"
-  import RoundActions from "./RoundActions.svelte"
+  import {
+    NULL_COORDINATE,
+    dropDestination,
+    playerEntityId,
+    isDraggable,
+    isConnectedResource,
+    isConnectedControl,
+  } from "../../../modules/state"
+  import { MachineType } from "../../../modules/state/types"
+  import Actions from "./Actions.svelte"
 
   export let entity: EntityStoreEntry
 
@@ -33,20 +40,21 @@
   on:dragover|preventDefault
   on:click={openModal}
   style="--background: {background};"
-  class="organ-wrapper {EntityType[entity.entity.type]}"
+  class="machine-wrapper {MachineType[entity.entity?.machineType]}"
 >
   <div
     class="content"
     class:resource={$isResourced}
     class:control={$isControlled}
-    >
+    style:transform="rotate({entity.entity?.rotation}deg)"
+  >
     <slot name="content" />
   </div>
 
   {#if modalActive}
-    <RoundActions {entity} on:close={closeModal}>
+    <Actions {entity} on:close={closeModal}>
       <slot name="modal" />
-    </RoundActions>
+    </Actions>
   {/if}
 </div>
 
@@ -55,14 +63,14 @@
     position: fixed;
     inset: 0;
   }
-  .organ-wrapper {
+  .machine-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    
+
     .content {
       overflow: hidden;
       width: 80%;
@@ -78,7 +86,7 @@
       cursor: pointer;
       position: relative;
       background: var(--background);
-  
+
       &.control {
         border: 3px solid blue;
       }

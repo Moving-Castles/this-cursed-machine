@@ -1,15 +1,20 @@
 <script lang="ts">
-  import { NULL_COORDINATE, dropDestination, BUILDABLE_ENTITYTYPES, buildableOrgans } from "../../modules/state"
+  import {
+    NULL_COORDINATE,
+    dropDestination,
+    BUILDABLE_ENTITYTYPES,
+    machineDefinitions,
+  } from "../../modules/state"
   import TileActions from "./TileActions.svelte"
   import InventoryItem from "./InventoryItem.svelte"
   import { onDragOver } from "../../modules/ui/events"
   import { BuildableEntityType, EntityType } from "../../modules/state/types"
-  import { getContext } from "svelte"  
+  import { getContext } from "svelte"
   // import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false
 
   let timeout: NodeJS.Timeout
-  
+
   const tile = getContext("tile") as GridTile
   let active = false
   // const canAffordOrgan = playerCanAffordOrgan()
@@ -17,8 +22,8 @@
   // const numOrganTypes = Object.keys(BuildableEntityType).length / 2;
   let inventory: BuildableEntity[] = []
 
-  for (let i = 0; i < buildableOrgans.length; i++) {
-    inventory = [...inventory, buildableOrgans[i]]
+  for (let i = 0; i < machineDefinitions.length; i++) {
+    inventory = [...inventory, machineDefinitions[i]]
   }
 
   // const onDrop = (e) => {
@@ -31,7 +36,9 @@
     clearTimeout(timeout)
     active = true
 
-    timeout = setTimeout(() => { active = false }, 3000)
+    timeout = setTimeout(() => {
+      active = false
+    }, 3000)
   }
 
   // const mappings: Record<EntityType, string> = {
@@ -47,24 +54,21 @@
   on:dragover|preventDefault={() => onDragOver(tile.coordinates)}
   on:click={onClick}
   class:untraversable
-  class="empty-tile">
-
-  <div class="add">
-    +
-  </div>
+  class="empty-tile"
+>
+  <div class="add">+</div>
 </div>
 
 {#if active}
-  <TileActions on:close={() => active = false}>
+  <TileActions on:close={() => (active = false)}>
     {#each inventory as buildableEntity (buildableEntity)}
-<!--       <button class="action organ" 
+      <!--       <button class="action organ" 
         disabled={!playerCanAffordOrgan(entityType.cost) }
         on:click={() => build(entityType.type, tile.coordinates.x, tile.coordinates.y)}>
         {tile.coordinates.x} {tile.coordinates.y}
         {entityType.type}
       </button> -->
-      <InventoryItem buildableEntity={buildableEntity} tile={tile} />
-
+      <InventoryItem {buildableEntity} {tile} />
     {/each}
   </TileActions>
 {/if}

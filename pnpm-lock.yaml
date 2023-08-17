@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -83,6 +83,12 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      matter:
+        specifier: ^0.2.0
+        version: 0.2.0
+      matter-dom-plugin:
+        specifier: ^1.0.0
+        version: 1.0.0
       pathfinding:
         specifier: ^0.4.18
         version: 0.4.18
@@ -1958,6 +1964,13 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
+  /argparse@0.1.16:
+    resolution: {integrity: sha512-LjmC2dNpdn2L4UzyoaIr11ELYoLn37ZFy9zObrQFHsSuOepeUEMKnM8w5KL4Tnrp2gy88rRuQt6Ky8Bjml+Baw==}
+    dependencies:
+      underscore: 1.7.0
+      underscore.string: 2.4.0
+    dev: false
+
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
@@ -2455,6 +2468,12 @@ packages:
       acorn-jsx: 5.3.2(acorn@8.9.0)
       eslint-visitor-keys: 3.4.1
     dev: true
+
+  /esprima@1.0.4:
+    resolution: {integrity: sha512-rp5dMKN8zEs9dfi9g0X1ClLmV//WRyk/R15mppFNICIFRG5P92VP7Z04p8pk++gABo9W2tY+kHyu6P1mEHgmTA==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+    dev: false
 
   /esquery@1.5.0:
     resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
@@ -3017,6 +3036,15 @@ packages:
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
+  /js-yaml@2.1.3:
+    resolution: {integrity: sha512-2ElQ5tUBsI5GIjddfYGdudelD5+9JM9FfJXlrn+Mj3k72t4XrqBr3vf3+1sky0WKC3dSVhF0ZqIUpX9QFBmmfQ==}
+    engines: {node: '>= 0.6.0'}
+    hasBin: true
+    dependencies:
+      argparse: 0.1.16
+      esprima: 1.0.4
+    dev: false
+
   /js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
@@ -3140,6 +3168,18 @@ packages:
     resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
     hasBin: true
+    dev: false
+
+  /matter-dom-plugin@1.0.0:
+    resolution: {integrity: sha512-Dhgk7bLcRLYyV3fC3vQ6iMg8x54ZojpQyJbz/mbHRQvUGF4j+QTZPN29Fwdy+xIgUAB9o3b1WmRStkf3aKwUlA==}
+    dev: false
+
+  /matter@0.2.0:
+    resolution: {integrity: sha512-0U1pi3ysBdf8iDpIY0eOi80e0xo1mvYTEm5CzRnJNve/hIZLEPT/9823FJj4UKM6gmYQ1vSOQukVTEICYxSsSg==}
+    deprecated: 'For now, this project is deprecated. I no longer use or work on it, and doubt others are using it. If by any chance you were using this, and would like to see more of it in some form, let me know: justnvdm@gmail.com'
+    dependencies:
+      js-yaml: 2.1.3
+      underscore: 1.5.2
     dev: false
 
   /md5@2.3.0:
@@ -4019,6 +4059,18 @@ packages:
   /typical@5.2.0:
     resolution: {integrity: sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==}
     engines: {node: '>=8'}
+
+  /underscore.string@2.4.0:
+    resolution: {integrity: sha512-yxkabuCaIBnzfIvX3kBxQqCs0ar/bfJwDnFEHJUm/ZrRVhT3IItdRF5cZjARLzEnyQYtIUhsZ2LG2j3HidFOFQ==}
+    dev: false
+
+  /underscore@1.5.2:
+    resolution: {integrity: sha512-yejOFsRnTJs0N9CK5Apzf6maDO2djxGoLLrlZlvGs2o9ZQuhIhDL18rtFyy4FBIbOkzA6+4hDgXbgz5EvDQCXQ==}
+    dev: false
+
+  /underscore@1.7.0:
+    resolution: {integrity: sha512-cp0oQQyZhUM1kpJDLdGO1jPZHgS/MpzoWYfe9+CM2h/QGDZlqwT2T3YGukuBdaNJ/CAPoeyAZRRHz8JFo176vA==}
+    dev: false
 
   /undici@5.22.1:
     resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
