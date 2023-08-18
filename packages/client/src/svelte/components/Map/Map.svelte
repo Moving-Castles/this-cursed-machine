@@ -61,7 +61,6 @@
       <Tile {tile} />
     {/each}
     {#each Object.entries($connections) as [address, connection], i (connection)}
-      {console.log($connections)}
       <!-- <Path {address} {connection} pathIndex={i} /> -->
     {/each}
     <!-- {#each $portSelection as { start, end }, i (i)}

@@ -9,7 +9,7 @@
   import { entities, playerCore, cores, ports } from "./modules/state"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { initUI } from "./modules/ui/events"
+  import { initUI, onKeyDown } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
 
   import Loading from "./components/Loading/Loading.svelte"
@@ -56,6 +56,8 @@
     createSyncProgressSystem()
   })
 </script>
+
+<svelte:window on:keydown={onKeyDown} />
 
 <main>
   <!-- <svelte:component this={selected.component} /> -->

@@ -20,7 +20,6 @@
     end = document.querySelector(`.port-${connection.targetPort}`)
     if (start && end) {
       line = new LeaderLine(start, end, options)
-      console.log(line)
     }
   })
 

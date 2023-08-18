@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
-  import { connections, paths } from "../../modules/state"
+  import { connections, paths, plannedPath } from "../../modules/state"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
@@ -59,6 +59,10 @@
       <BoxPath coords={path} />
     {/each}
 
+    {#key $plannedPath}
+      <BoxPath coords={$plannedPath} />
+    {/key}
+
     <!-- Explainers will go here -->
     {#if $explainer !== ""}
       <Explainer />
@@ -79,6 +83,7 @@
     bottom: 0;
     background: black;
     z-index: 999;
+    color: white;
   }
   .ui-map {
     height: 100dvh;

@@ -22,7 +22,7 @@
   >
     {#key path}
       <!-- Actual path -->
-      <g fill="none" stroke={"red"} stroke-width={12} opacity="1">
+      <g fill="none" stroke={"grey"} stroke-width={12} opacity="1">
         <path marker-end="url(#arrow-outline)" d={path} />
       </g>
     {/key}

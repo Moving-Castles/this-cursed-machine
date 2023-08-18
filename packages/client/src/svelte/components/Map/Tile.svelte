@@ -1,8 +1,8 @@
 <script lang="ts">
   import { setContext } from "svelte"
-  import { dropDestination, tileEntity } from "../../modules/state"
+  import { hoverDestination, tileEntity } from "../../modules/state"
   import { EntityType, MachineType } from "../../modules/state/types"
-  import Connectable from "./Connectable.svelte"
+  // import Connectable from "./Connectable.svelte"
   import Core from "./Core.svelte"
   import EmptyTile from "./EmptyTile.svelte"
   import Machine from "./Machines/Machine.svelte"

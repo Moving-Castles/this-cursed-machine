@@ -145,6 +145,7 @@ export const playerCalculatedEnergy = derived([], () => 0)
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
 export const dropDestination = writable(NULL_COORDINATE as Coord)
+export const hoverDestination = writable(NULL_COORDINATE as Coord)
 
 // Initially set on spawn
 export const originAddress = writable("")
@@ -308,14 +309,33 @@ export const portSelection = writable([])
 export const paths = derived([connections, entities], ([$connections, $entities]) => Object.values($connections).map((conn) => {
   const sourcePort = $entities[conn?.sourcePort]
   const targetPort = $entities[conn?.targetPort]
+  const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
 
   if (sourcePort && targetPort && sourcePort.carriedBy && targetPort.carriedBy) {
     const startEntity = $entities[sourcePort.carriedBy]
     const endEntity = $entities[targetPort.carriedBy]
     if (startEntity?.position && endEntity?.position) {
-      return aStarPath(startEntity.position, endEntity.position)
+      return aStarPath(startEntity.position, endEntity.position, ignore)
     }
   }
 
   return NULL_COORDINATE
 }))
+
+export const plannedPath = derived([portSelection, entities, hoverDestination], ([$portSelection, $entities, $hoverDestination]) => {
+  const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
+
+  console.log($portSelection)
+
+  if ($portSelection.length === 1) {
+    // Get the entity the port refers to
+    const port = $entities[$portSelection[0]]
+    const entity = $entities[port?.carriedBy]
+    if (entity.position) {
+      console.log(entity.position, $hoverDestination)
+      return aStarPath(entity.position, $hoverDestination, ignore)
+    }
+  }
+
+  return NULL_COORDINATE
+})

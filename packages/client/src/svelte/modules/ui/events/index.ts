@@ -69,3 +69,9 @@ export function onPortClick (address: string, port: Port) {
     portSelection.set([])
   }
 }
+
+export function onKeyDown ({ key }) {
+  if (key === "Escape") {
+    portSelection.set([])
+  }
+}
