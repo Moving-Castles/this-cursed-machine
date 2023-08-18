@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "leader-line"
   import { PortType } from "../../modules/state/enums"
   import { onPortClick } from "../../modules/ui/events"
   export let address: string

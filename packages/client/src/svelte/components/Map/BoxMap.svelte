@@ -5,6 +5,7 @@
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
+  import Connection from "./Connection.svelte"
 
   export let width: number
   export let height: number
@@ -62,8 +63,9 @@
 </div>
 
 <div class="ui-connections debug">
-  {#each Object.entries($connections) as [address, connection], i (connection)}
-    {address}: {connection}
+  {#each Object.entries($connections) as [_, connection], i (connection)}
+    <!-- {address}: {connection} -->
+    <Connection {connection} />
   {/each}
 </div>
 
