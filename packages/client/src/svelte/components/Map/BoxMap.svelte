@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
-  import { connections } from "../../modules/state"
+  import { connections, paths } from "../../modules/state"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
-  import Connection from "./Connection.svelte"
+  // import Connection from "./Connection.svelte"
+  import BoxPath from "./BoxPath.svelte"
 
   export let width: number
   export let height: number
@@ -54,6 +55,9 @@
       <Tile {tile} />
     {/each}
     <!-- Paths will go here -->
+    {#each Object.entries($paths) as [_, path], i (path)}
+      <BoxPath coords={path} />
+    {/each}
 
     <!-- Explainers will go here -->
     {#if $explainer !== ""}
@@ -65,7 +69,7 @@
 <div class="ui-connections debug">
   {#each Object.entries($connections) as [_, connection], i (connection)}
     <!-- {address}: {connection} -->
-    <Connection {connection} />
+    <!-- <Connection {connection} /> -->
   {/each}
 </div>
 

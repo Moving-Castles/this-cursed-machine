@@ -10,8 +10,9 @@
     entities,
     playerCalculatedEnergy,
   } from "../../modules/state"
-  import { isCoordinate, aStarPath } from "../../modules/utils/space"
-  import { config } from "../../modules/content/lore"
+  import { sameCoordinate, aStarPath } from "../../modules/utils/space"
+  import { makeSvgPath } from "../../modules/ui/paths"
+  // import { config } from "../../modules/content/lore"
   import anime from "animejs/lib/anime.es.js"
 
   export let connection: Connection | boolean = false
@@ -27,6 +28,8 @@
 
   let color = ""
   let cost = 0
+  let localCoords: Coord[] = []
+  let path: string
 
   const colorMappings = {
     2: "red",
@@ -43,63 +46,18 @@
         : $gameConfig?.controlConnectionCost
   }
 
-  let localCoords: Coord[] = []
-
-  /**
-   * Function that generates a SVG path string from an array of coordinates.
-   * @param {Coord[]} coords - An array of coordinate objects. Each object should have 'x' and 'y' properties.
-   * @return {string} A string representation of the SVG path.
-   */
-  const makeSvgPath = (coords: Coord[]) => {
-    console.log("coords")
-    console.log(coords)
+  const makePath = () => {
+    const coords = aStarPath(startCoord, endCoord)
     localCoords = coords
-    // Initialize an empty string to hold the SVG path.
-    let string = ""
-
-    const canAfford = (i: number) =>
-      $playerCalculatedEnergy !== 0 && (i - 1) * cost <= $playerCalculatedEnergy
-    const makePart = (i: number) => {
-      let offsetX = $config.janky ? Math.floor(Math.random() * 10) - 5 : 0
-      let offsetY = $config.janky ? Math.floor(Math.random() * 10) - 5 : 0
-      // If it's the first coordinate, it is where the path starts.
-      // We use 'M' (move to) followed by the coordinate to define the start point of the path.
-      // We add 0.5 to center the path in the middle of the coordinate grid cell.
-      if (i === 0) {
-        string += `M${coords[i].x * 100 + 50 + offsetX} ${
-          coords[i].y * 100 + 50 + offsetY
-        }`
-      } else {
-        // For all other coordinates, we use 'L' (line to) followed by the coordinate to define a line from the current point to this coordinate.
-        // We add 0.5 to center the path in the middle of the coordinate grid cell.
-        string += `L${coords[i].x * 100 + 50 + offsetX} ${
-          coords[i].y * 100 + 50 + offsetY
-        }`
-      }
-    }
-
-    // Check if the array of coordinates is not empty.
-    if (coords.length > 0) {
-      if (potential) {
-        for (let i = 0; i < coords.length; i++) {
-          if (canAfford(i)) makePart(i)
-        }
-      } else {
-        for (let i = 0; i < coords.length; i++) {
-          makePart(i)
-        }
-      }
-    }
-    // Return the SVG path string.
-    return string
+    path = makeSvgPath(coords)
   }
 
-  const path = makeSvgPath(aStarPath(startCoord, endCoord))
+  makePath()
 
   // If the path contains null coordinate do not draw them
   $: shouldDraw =
-    !isCoordinate(startCoord, NULL_COORDINATE) &&
-    !isCoordinate(endCoord, NULL_COORDINATE)
+    !sameCoordinate(startCoord, NULL_COORDINATE) &&
+    !sameCoordinate(endCoord, NULL_COORDINATE)
 
   onMount(() => {
     anime({

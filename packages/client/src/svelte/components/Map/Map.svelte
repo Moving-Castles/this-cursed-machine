@@ -6,7 +6,7 @@
     plannedConnection,
     NULL_COORDINATE,
   } from "../../modules/state"
-  import { isCoordinate } from "../../modules/utils/space"
+  import { sameCoordinate } from "../../modules/utils/space"
   import { explainer } from "../../modules/content/wiki"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
@@ -74,7 +74,7 @@
     {/each}
     -->
     {#key $plannedConnection}
-      {#if !isCoordinate($plannedConnection.start, NULL_COORDINATE) && !isCoordinate($plannedConnection.end, NULL_COORDINATE)}
+      {#if !sameCoordinate($plannedConnection.start, NULL_COORDINATE) && !sameCoordinate($plannedConnection.end, NULL_COORDINATE)}
         <Path
           startCoord={$plannedConnection.start}
           endCoord={$plannedConnection.end}

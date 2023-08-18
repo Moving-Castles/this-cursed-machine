@@ -56,7 +56,7 @@ export function onPortClick (address: string, port: Port) {
   // Override 0 if the port type clicked is the same as the first
   if (selection.length === 1 && selection[0].portType === port.portType) {
     selection[0] = port
-  } else {
+  } else if (selection[0] !== address) {
     selection.push(address)
   }
 

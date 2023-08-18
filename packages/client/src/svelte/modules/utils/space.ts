@@ -54,7 +54,8 @@ export function directionalPathfind(from: Coord, to: Coord) {
 
 export const isAdjacent = (from: Coord, to: Coord) => chebyshev(from, to) === 1;
 
-export const isCoordinate = (a: Coord, b: Coord) => a.x === b.x && a.y === b.y
+export const isCoordinate = (a: any) => a.x && a.y
+export const sameCoordinate = (a: Coord, b: Coord) => a.x === b.x && a.y === b.y
 
 /**
  * Function to compute the shortest Manhattan path between two points in a grid, starting along the y-axis.

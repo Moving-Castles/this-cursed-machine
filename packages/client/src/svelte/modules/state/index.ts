@@ -5,7 +5,7 @@
 import { EntityType, PortType } from "./enums"
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, isCoordinate, getDirection } from "../utils/space";
+import { aStarPath, isCoordinate, sameCoordinate, getDirection } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -266,7 +266,7 @@ export const isConnectedControlAny = (target: string) => derived(entities, ($ent
 export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) => {
   const entity = Object.entries($entities).find(([_, ent]) => {
     if (ent.position) {
-      return isCoordinate(ent.position, coordinate)
+      return sameCoordinate(ent.position, coordinate)
     }
 
     return false
@@ -300,5 +300,22 @@ export const outputsForEntity = (address: string) => derived([entities], ([$enti
 
 export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
 
-
 export const portSelection = writable([])
+
+/**
+ * Paths that are path-found
+ */
+export const paths = derived([connections, entities], ([$connections, $entities]) => Object.values($connections).map((conn) => {
+  const sourcePort = $entities[conn?.sourcePort]
+  const targetPort = $entities[conn?.targetPort]
+
+  if (sourcePort && targetPort && sourcePort.carriedBy && targetPort.carriedBy) {
+    const startEntity = $entities[sourcePort.carriedBy]
+    const endEntity = $entities[targetPort.carriedBy]
+    if (startEntity?.position && endEntity?.position) {
+      return aStarPath(startEntity.position, endEntity.position)
+    }
+  }
+
+  return NULL_COORDINATE
+}))
