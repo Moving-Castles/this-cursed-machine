@@ -5,7 +5,7 @@
 import { EntityType, PortType } from "./enums"
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, withinBounds, sameCoordinate, getDirection } from "../utils/space";
+import { aStarPath, withinBounds, sameCoordinate } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -304,18 +304,63 @@ export const isDraggable = (address: string) => derived([entities], ([$entities]
 export const portSelection = writable([])
 
 /**
+ * Port corrected coordinates
+ * @param coord 
+ * @param port 
+ * @param entity 
+ * @returns 
+ */
+const portCorrectedCoordinate = (coord: Coord, port: Port, entity: Entity) => {
+  const rotationMapping = {
+    0: { x: 0, y: -1 },
+    1: { x: 1, y: 0 },
+    2: { x: 0, y: 1 },
+    3: { x: -1, y: 0 }
+  }
+
+  // Port direction is port side corrected by rotation
+  const portDirection = port.portPlacement
+  const entityRotation = entity.rotation || 0
+
+  console.log(portDirection, entityRotation)
+
+  const totalRotation = (portDirection + entityRotation) % 4
+
+  console.log(totalRotation)
+
+
+  // Get the next coordinate in the correct direction
+  return {
+    x: coord.x + rotationMapping[totalRotation].x,
+    y: coord.y + rotationMapping[totalRotation].y
+  }
+}
+
+
+/**
  * Paths that are path-found
  */
 export const paths = derived([connections, entities], ([$connections, $entities]) => Object.values($connections).map((conn) => {
-  const sourcePort = $entities[conn?.sourcePort]
-  const targetPort = $entities[conn?.targetPort]
-  const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
+  const sourcePort = $entities[conn?.sourcePort] as Port
+  const targetPort = $entities[conn?.targetPort] as Port
+  let ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
 
   if (sourcePort && targetPort && sourcePort.carriedBy && targetPort.carriedBy) {
     const startEntity = $entities[sourcePort.carriedBy]
     const endEntity = $entities[targetPort.carriedBy]
     if (startEntity?.position && endEntity?.position) {
-      return aStarPath(startEntity.position, endEntity.position, ignore)
+      // ignore = [...ignore].filter((coord) => !sameCoordinate(coord, startEntity.position) && !sameCoordinate(coord, endEntity.position))
+
+      // Consider start and end paths
+      return [
+        startEntity.position,
+        ...aStarPath(
+          portCorrectedCoordinate(startEntity.position, sourcePort, startEntity),
+          portCorrectedCoordinate(endEntity.position, targetPort, endEntity.position),
+          ignore
+        ),
+        endEntity.position
+    ]
     }
   }
 
@@ -326,37 +371,20 @@ export const paths = derived([connections, entities], ([$connections, $entities]
  * Planned path
  */
 export const makePlannedPath = (width: number, height: number) => derived([portSelection, entities, hoverDestination], ([$portSelection, $entities, $hoverDestination]) => {
-  console.log("planning a path")
-
   const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
 
-  // Include the port direction in this!
+  // We only wanna plan a path when the port selection is 1.
   if ($portSelection.length === 1) {
-    // Get the entity the port refers to
     const port = $entities[$portSelection[0]]
-
-    // Port direction is port side corrected by rotation
-    const portDirection = port.portPlacement
     const entity = $entities[port?.carriedBy]  
-    const entityRotation = entity.rotation
-  
-    const totalRotation = (portDirection + entityRotation) % 4
 
-    const rotationMapping = {
-      0: { x: 0, y: -1 },
-      1: { x: 1, y: 0 },
-      2: { x: 0, y: 1 },
-      3: { x: -1, y: 0 }
-    }
-
-    // Get the next coordinate in the correct direction
-    const startCoord = {
-      x: entity.position.x + rotationMapping[totalRotation].x,
-      y: entity.position.y + rotationMapping[totalRotation].y
-    }
+    const startCoord = portCorrectedCoordinate(entity.position, port as Port, entity)
 
     if (withinBounds(startCoord, width, height)) {
-      return aStarPath(startCoord, $hoverDestination, ignore)
+      return [
+        startCoord,
+        ...aStarPath(startCoord, $hoverDestination, ignore)
+      ]
     }
   }
 

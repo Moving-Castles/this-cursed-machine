@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
+  import { initGrid } from "../../modules/utils/space"
   import { connections, paths, makePlannedPath } from "../../modules/state"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
-  // import Connection from "./Connection.svelte"
   import BoxPath from "./BoxPath.svelte"
+  // import Connection from "./Connection.svelte"
 
   export let width: number
   export let height: number
@@ -16,29 +17,6 @@
   let w: number
   let h: number
   let grid: GridTile[] = []
-
-  function initGrid(width: number, height: number) {
-    // Create an empty array to hold the grid
-    let grid = [] as GridTile[]
-
-    // Loop through each row of the grid (represented by y)
-    for (let y = 0; y < height; y++) {
-      // Within each row, loop through each cell (represented by x)
-      for (let x = 0; x < width; x++) {
-        // Create a new GridTile object with a unique id and coordinates corresponding to its position
-        const newGridTile: GridTile = {
-          id: `${x}-${y}`,
-          coordinates: { x: x, y: y },
-        }
-
-        // Add the new GridTile to the end of the grid array
-        grid = [...grid, newGridTile]
-      }
-    }
-
-    // Return the fully constructed grid
-    return grid
-  }
 
   onMount(() => {
     grid = initGrid(width, height)
@@ -56,16 +34,13 @@
     {#each grid as tile (tile.id)}
       <Tile {tile} />
     {/each}
-    <!-- Paths will go here -->
-    {#each Object.entries($paths) as [_, path], i (path)}
-      <BoxPath coords={path} />
+
+    {#each $paths as path, i}
+      <BoxPath coords={path} {i} />
     {/each}
 
-    {#key $plannedPath}
-      <BoxPath coords={$plannedPath} />
-    {/key}
+    <BoxPath potential coords={$plannedPath} i={0} />
 
-    <!-- Explainers will go here -->
     {#if $explainer !== ""}
       <Explainer />
     {/if}

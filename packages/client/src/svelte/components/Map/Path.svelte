@@ -49,7 +49,7 @@
   const makePath = () => {
     const coords = aStarPath(startCoord, endCoord)
     localCoords = coords
-    path = makeSvgPath(coords)
+    path = makeSvgPath(coords, 0)
   }
 
   makePath()

@@ -92,6 +92,7 @@ export function manhattanPath(start: Coord, end: Coord): Coord[] {
 }
 
 export function aStarPath (start: Coord, end: Coord, ignore: Coord[] = []) {
+  console.log(start, end, ignore)
   return directionalPathfindAStar(start, end, ignore)
 }
 
@@ -103,6 +104,29 @@ export const getDirection = (from: Coord, to: Coord) => {
 
   return ''
 }
+
+export function initGrid (width: number, height: number) {
+    // Create an empty array to hold the grid
+    let grid = [] as GridTile[]
+
+    // Loop through each row of the grid (represented by y)
+    for (let y = 0; y < height; y++) {
+      // Within each row, loop through each cell (represented by x)
+      for (let x = 0; x < width; x++) {
+        // Create a new GridTile object with a unique id and coordinates corresponding to its position
+        const newGridTile: GridTile = {
+          id: `${x}-${y}`,
+          coordinates: { x: x, y: y },
+        }
+
+        // Add the new GridTile to the end of the grid array
+        grid = [...grid, newGridTile]
+      }
+    }
+
+    // Return the fully constructed grid
+    return grid
+  }
 
 export const withinBounds = (coord: Coord, width: number, height: number) =>
   coord.x >= 0 &&
