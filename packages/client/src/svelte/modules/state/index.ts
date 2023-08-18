@@ -5,7 +5,7 @@
 import { EntityType, PortType } from "./enums"
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, isCoordinate, sameCoordinate, getDirection } from "../utils/space";
+import { aStarPath, withinBounds, sameCoordinate, getDirection } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -322,18 +322,41 @@ export const paths = derived([connections, entities], ([$connections, $entities]
   return NULL_COORDINATE
 }))
 
-export const plannedPath = derived([portSelection, entities, hoverDestination], ([$portSelection, $entities, $hoverDestination]) => {
+/**
+ * Planned path
+ */
+export const makePlannedPath = (width: number, height: number) => derived([portSelection, entities, hoverDestination], ([$portSelection, $entities, $hoverDestination]) => {
+  console.log("planning a path")
+
   const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
 
-  console.log($portSelection)
-
+  // Include the port direction in this!
   if ($portSelection.length === 1) {
     // Get the entity the port refers to
     const port = $entities[$portSelection[0]]
-    const entity = $entities[port?.carriedBy]
-    if (entity.position) {
-      console.log(entity.position, $hoverDestination)
-      return aStarPath(entity.position, $hoverDestination, ignore)
+
+    // Port direction is port side corrected by rotation
+    const portDirection = port.portPlacement
+    const entity = $entities[port?.carriedBy]  
+    const entityRotation = entity.rotation
+  
+    const totalRotation = (portDirection + entityRotation) % 4
+
+    const rotationMapping = {
+      0: { x: 0, y: -1 },
+      1: { x: 1, y: 0 },
+      2: { x: 0, y: 1 },
+      3: { x: -1, y: 0 }
+    }
+
+    // Get the next coordinate in the correct direction
+    const startCoord = {
+      x: entity.position.x + rotationMapping[totalRotation].x,
+      y: entity.position.y + rotationMapping[totalRotation].y
+    }
+
+    if (withinBounds(startCoord, width, height)) {
+      return aStarPath(startCoord, $hoverDestination, ignore)
     }
   }
 

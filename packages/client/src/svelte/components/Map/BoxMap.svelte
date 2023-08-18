@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
-  import { connections, paths, plannedPath } from "../../modules/state"
+  import { connections, paths, makePlannedPath } from "../../modules/state"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
@@ -10,6 +10,8 @@
 
   export let width: number
   export let height: number
+
+  const plannedPath = makePlannedPath(width, height)
 
   let w: number
   let h: number

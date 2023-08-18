@@ -103,3 +103,9 @@ export const getDirection = (from: Coord, to: Coord) => {
 
   return ''
 }
+
+export const withinBounds = (coord: Coord, width: number, height: number) =>
+  coord.x >= 0 &&
+  coord.x < width &&
+  coord.y >= 0 &&
+  coord.y < height
