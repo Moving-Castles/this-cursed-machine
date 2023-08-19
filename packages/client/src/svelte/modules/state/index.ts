@@ -379,22 +379,31 @@ export const makePlannedPath = (width: number, height: number) => derived([portS
   const ignore = Object.values($entities)
     .filter(ent => ent.position)
     .map(({ position }) => position)
-    .filter(a => !$pathfindingExceptions.some(b => sameCoordinate(b, a))) // remove the exceptionsas Coord[]
-  console.log(ignore)
+    // .filter(a => !$pathfindingExceptions.some(b => sameCoordinate(b, a))) // remove the exceptionsas Coord[]
 
   // We only wanna plan a path when the port selection is 1.
   if ($portSelection.length === 1) {
     const port = $entities[$portSelection[0]]
-    const entity = $entities[port?.carriedBy]  
-
+    const entity = $entities[port?.carriedBy]
+    
     const startCoord = portCorrectedCoordinate(entity.position, port as Port, entity)
+    let endCoord = $hoverDestination
+    const endEntity = Object.entries($entities).filter(([address, ent]) => !!ent.position).find(([address, ent]) => sameCoordinate($hoverDestination, ent.position))
+
+    if (endEntity) {
+      const [address, entity] = endEntity
+      // Figure out if the end entity has ports
+      const ports = Object.values($entities).filter(ent => ent.carriedBy === address)
+      const endPorts = ports.filter(p => p.portType !== port.portType)
+      endCoord = portCorrectedCoordinate(entity.position, endPorts[0], endEntity)
+    }
 
     if (withinBounds(startCoord, width, height)) {
-      
       return [
         entity.position,
-        ...aStarPath(startCoord, $hoverDestination, ignore)
-      ]
+        ...aStarPath(startCoord, endCoord, ignore),
+        endEntity ? endEntity[1].position : null
+      ].filter(coord => !!coord)
     }
   }
 
