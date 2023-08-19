@@ -34,7 +34,8 @@
   --row-gap: 2rem;
   --taskbar-height: 30px;
   --titlebar-height: 30px;
-  --tilesize: 100px;
+  --tileunit: 150;
+  --tilesize: calc(var(--tileunit) * 1px);
   /* "DMTLLVIPWebTrial-Regular", */
   /* Fonts */
   --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,

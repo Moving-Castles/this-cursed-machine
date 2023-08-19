@@ -68,6 +68,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 999;
     transition: transform 0.2s ease;
   }
 

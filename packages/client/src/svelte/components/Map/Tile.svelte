@@ -62,8 +62,8 @@
 
 <style lang="scss">
   .tile {
-    width: 100px;
-    height: 100px;
+    width: var(--tilesize);
+    height: var(--tilesize);
     float: left;
     font-size: 8px;
     display: flex;

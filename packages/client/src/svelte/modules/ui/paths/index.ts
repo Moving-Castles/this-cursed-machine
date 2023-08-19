@@ -5,7 +5,7 @@ import {
   playerBox,
   connections
 } from "../../state"
-import { aStarPath, sameCoordinate } from "../../utils/space"
+import { aStarPath, sameCoordinate, withinBounds } from "../../utils/space"
 
 /**
 * Function that generates a SVG path string from an array of coordinates.
@@ -188,6 +188,7 @@ export const plannedPath = derived([portSelection, entities, hoverDestination, p
 
     if (withinBounds(startCoord, $playerBox.width, $playerBox.height) && withinBounds(endCoord, $playerBox.width, $playerBox.height)) {
       return {
+        potential: true,
         startEntity: entity,
         sourcePort: port,
         endEntity: endEntity ? endEntity[1] : false,
@@ -207,7 +208,7 @@ export const plannedPath = derived([portSelection, entities, hoverDestination, p
 /**
  * Paths that are path-found
  */
-export const paths = derived([connections, entities], ([$connections, $entities]) => Object.values($connections).map((conn) => {
+export const paths = derived([connections, entities, plannedPath], ([$connections, $entities, $plannedPath]) => [...Object.values($connections).map((conn) => {
   const sourcePort = $entities[conn?.sourcePort] as Port
   const targetPort = $entities[conn?.targetPort] as Port
   let ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
@@ -239,6 +240,8 @@ export const paths = derived([connections, entities], ([$connections, $entities]
   }
 
   return { coords: [] }
-}))
+}),
+  $plannedPath
+])
 
 

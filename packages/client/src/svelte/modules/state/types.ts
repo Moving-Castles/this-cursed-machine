@@ -179,6 +179,7 @@ declare global {
     endEntity?: Entity
     sourcePort?: Port
     targetPort?: Port
+    potential?: Boolean
   }
 
   interface GridTile {
