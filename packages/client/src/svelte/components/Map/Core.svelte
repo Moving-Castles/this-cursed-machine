@@ -6,7 +6,7 @@
 
   // What are the inputs and outputs for this entity
 
-  $: console.log(entity)
+  // $: console.log(entity)
 </script>
 
 <Connectable {entity}>

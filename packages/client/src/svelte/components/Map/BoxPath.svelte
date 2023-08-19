@@ -18,29 +18,29 @@
 
   $: {
     if (coords) {
-      updateLine()
+      updateLine(true)
     }
   }
 
-  const updateLine = () => {
+  const updateLine = (initial = false) => {
     newLine = makePolyline(coords, i)
     anime({
       targets: `.polyline-${i}`,
       points: [{ value: line }, { value: newLine }],
       easing: "easeOutQuad",
-      duration: 200,
+      duration: initial ? 0 : 200,
       loop: false,
       begin: () => {
-        console.log("beginngin the line")
+        // console.log("beginngin the line")
       },
       complete: () => {
         line = newLine
-        console.log("animated to: ", line)
+        // console.log("animated to: ", line)
       },
     })
   }
 
-  onMount(updateLine)
+  onMount(() => updateLine(true))
 </script>
 
 <!-- Reconstruct the Base map for SVG representation -->

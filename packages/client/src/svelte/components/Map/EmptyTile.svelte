@@ -33,10 +33,10 @@
 <div
   on:dragenter|preventDefault
   on:dragover|preventDefault={() => onDragOver(tile.coordinates)}
-  on:click={onClick}
   on:mouseenter={() => {
     hoverDestination.set(tile.coordinates)
   }}
+  on:click={onClick}
   class:untraversable
   class="empty-tile"
 >

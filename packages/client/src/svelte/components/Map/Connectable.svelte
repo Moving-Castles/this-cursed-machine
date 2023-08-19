@@ -1,6 +1,13 @@
 <script lang="ts">
   import { onDragStart, onDragOver } from "../../modules/ui/events"
-  import { inputsForEntity, outputsForEntity } from "../../modules/state"
+  import {
+    inputsForEntity,
+    outputsForEntity,
+    hoverDestination,
+    pathfindingExceptions,
+  } from "../../modules/state"
+  import { sameCoordinate } from "../../modules/utils/space"
+  import { getContext } from "svelte"
   import Port from "./Port.svelte"
 
   export let available = false
@@ -9,12 +16,25 @@
 
   const inputs = inputsForEntity(entity.address)
   const outputs = outputsForEntity(entity.address)
+  const tile = getContext("tile")
 
   let padding = "8px"
 
-  const onMouseEnter = () => (available = true)
+  const onMouseEnter = () => {
+    available = true
+    console.log("on mouse enter")
+    pathfindingExceptions.set([...$pathfindingExceptions, tile.coordinates])
+    hoverDestination.set(tile.coordinates)
+  }
 
-  const onMouseLeave = () => (available = false)
+  const onMouseLeave = () => {
+    available = false
+    pathfindingExceptions.set([
+      ...$pathfindingExceptions.filter(
+        coord => !sameCoordinate(coord, tile.coordinates)
+      ),
+    ])
+  }
 </script>
 
 <div

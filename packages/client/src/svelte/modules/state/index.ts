@@ -322,11 +322,11 @@ const portCorrectedCoordinate = (coord: Coord, port: Port, entity: Entity) => {
   const portDirection = port.portPlacement
   const entityRotation = entity.rotation || 0
 
-  console.log(portDirection, entityRotation)
+  
 
   const totalRotation = (portDirection + entityRotation) % 4
 
-  console.log(totalRotation)
+  
 
 
   // Get the next coordinate in the correct direction
@@ -335,6 +335,11 @@ const portCorrectedCoordinate = (coord: Coord, port: Port, entity: Entity) => {
     y: coord.y + rotationMapping[totalRotation].y
   }
 }
+
+/**
+ * Exceptions for the pathfinding
+ */
+export const pathfindingExceptions = writable([] as Coord[])
 
 
 /**
@@ -370,8 +375,12 @@ export const paths = derived([connections, entities], ([$connections, $entities]
 /**
  * Planned path
  */
-export const makePlannedPath = (width: number, height: number) => derived([portSelection, entities, hoverDestination], ([$portSelection, $entities, $hoverDestination]) => {
-  const ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
+export const makePlannedPath = (width: number, height: number) => derived([portSelection, entities, hoverDestination, pathfindingExceptions], ([$portSelection, $entities, $hoverDestination, $pathfindingExceptions]) => {
+  const ignore = Object.values($entities)
+    .filter(ent => ent.position)
+    .map(({ position }) => position)
+    .filter(a => !$pathfindingExceptions.some(b => sameCoordinate(b, a))) // remove the exceptionsas Coord[]
+  console.log(ignore)
 
   // We only wanna plan a path when the port selection is 1.
   if ($portSelection.length === 1) {
@@ -381,8 +390,9 @@ export const makePlannedPath = (width: number, height: number) => derived([portS
     const startCoord = portCorrectedCoordinate(entity.position, port as Port, entity)
 
     if (withinBounds(startCoord, width, height)) {
+      
       return [
-        startCoord,
+        entity.position,
         ...aStarPath(startCoord, $hoverDestination, ignore)
       ]
     }

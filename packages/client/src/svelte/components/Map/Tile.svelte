@@ -2,6 +2,7 @@
   import { setContext } from "svelte"
   import { hoverDestination, tileEntity } from "../../modules/state"
   import { EntityType, MachineType } from "../../modules/state/types"
+
   // import Connectable from "./Connectable.svelte"
   import Core from "./Core.svelte"
   import EmptyTile from "./EmptyTile.svelte"
