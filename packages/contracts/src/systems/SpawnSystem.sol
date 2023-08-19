@@ -12,7 +12,7 @@ contract SpawnSystem is System {
     // TODO: check if already spawned
 
     // Create box entity
-    bytes32 boxEntity = LibBox.create(0, 4, 4, 1, 1, true);
+    bytes32 boxEntity = LibBox.create(0, 6, 6, 1, 1, true);
 
     // Create core entity
     LibCore.spawn(coreEntity, 0, _name);
@@ -31,9 +31,21 @@ contract SpawnSystem is System {
     Position.set(machineEntity, PositionData(1, 2));
     Rotation.set(machineEntity, ROTATION.DEG0);
 
+    // Create Outlet
+    bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
+    Position.set(outletEntity, PositionData(1, 0));
+    Rotation.set(outletEntity, ROTATION.DEG0);
+
+    // Create Outlet
+    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
+    Position.set(inletEntity, PositionData(3, 5));
+    Rotation.set(inletEntity, ROTATION.DEG0);
+
     // Create ports on test machine
     LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    LibPort.create(outletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
+    LibPort.create(inletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
 
     return boxEntity;
   }

@@ -3,7 +3,8 @@ import {
   entities,
   hoverDestination,
   playerBox,
-  connections
+  connections,
+  untraversables
 } from "../../state"
 import { aStarPath, sameCoordinate, withinBounds } from "../../utils/space"
 
@@ -62,6 +63,7 @@ export const makeSvgPath = (coords: Coord[], offset: number) => {
 export const makePolyline = (coords: Coord[], offset: number, startEntity?: Entity, endEntity?: Entity, sourcePort?: Port, targetPort?: Port) => {
   let string = ""
   let length = 20
+  let unit = 100
 
   const makePart = (i: number) => {
     const totalPaths = get(paths)?.length
@@ -79,11 +81,11 @@ export const makePolyline = (coords: Coord[], offset: number, startEntity?: Enti
         offsetX = offsetMapping[totalRotation].x * 40
         offsetY = offsetMapping[totalRotation].y * 40
       }
-      string += `${coords[i].x * 100 + 50 + offsetX},${coords[i].y * 100 + 50 + offsetY} `
+      string += `${coords[i].x * unit + (unit / 2) + offsetX},${coords[i].y * unit + (unit / 2) + offsetY} `
     } else if (i < coords.length) {
-      if (i !== coords.length - 1) {
+      if (i !== coords.length - 1 && coords.length > 3) {
         // HACKY: cut one coord
-        string += `${coords[i].x * 100 + 50 + offsetX},${coords[i].y * 100 + 50 + offsetY} `
+        string += `${coords[i].x * unit + (unit / 2) + offsetX},${coords[i].y * unit + (unit / 2) + offsetY} `
       }
     } else {
       if (endEntity && targetPort) {
@@ -97,7 +99,7 @@ export const makePolyline = (coords: Coord[], offset: number, startEntity?: Enti
         offsetX = offsetMapping[totalRotation].x * 40
         offsetY = offsetMapping[totalRotation].y * 40
       }
-      string += `${coords[coords.length - 1].x * 100 + 50 + offsetX},${coords[coords.length - 1].y * 100 + 50 + offsetY} `
+      string += `${coords[coords.length - 1].x * unit + (unit / 2) + offsetX},${coords[coords.length - 1].y * unit + (unit / 2) + offsetY} `
     }
   }
 
@@ -126,6 +128,8 @@ export const portTotalRotation = (port: Port, entity: Entity) => {
   const portDirection = port.portPlacement
   const entityRotation = entity.rotation || 0
   const totalRotation = (portDirection + entityRotation) % 4
+
+  console.log("HAS PORT AND ENTITY: ", !!port, !!entity)
 
   return totalRotation
 }
@@ -161,10 +165,13 @@ export const pathfindingExceptions = writable([] as Coord[])
 /**
  * Planned path
  */
-export const plannedPath = derived([portSelection, entities, hoverDestination, pathfindingExceptions, playerBox], ([$portSelection, $entities, $hoverDestination, $pathfindingExceptions, $playerBox]) => {
-  const ignore = Object.values($entities)
-    .filter(ent => ent.position)
-    .map(({ position }) => position)
+export const plannedPath = derived([portSelection, entities, hoverDestination, pathfindingExceptions, playerBox, untraversables], ([$portSelection, $entities, $hoverDestination, $pathfindingExceptions, $playerBox, $untraversables]) => {
+  const ignore = [
+    ...Object.values($entities)
+      .filter(ent => ent.position)
+      .map(({ position }) => position),
+      ...$untraversables
+    ]
     // .filter(a => !$pathfindingExceptions.some(b => sameCoordinate(b, a))) // remove the exceptionsas Coord[]
 
   // We only want to plan a path when the port selection is 1.
@@ -181,7 +188,12 @@ export const plannedPath = derived([portSelection, entities, hoverDestination, p
       const [address, e] = endEntity
       // Figure out if the end entity has ports
       const ports = Object.values($entities).filter(ent => ent.carriedBy === address)
-      const endPorts = ports.filter(p => p.portType !== port.portType)
+      let endPorts = []
+      if (ports.length > 1) {
+        endPorts = [...ports].filter(p => p.portType !== port.portType)
+      } else {
+        endPorts = [...ports]
+      }
       targetPort = endPorts[0] as Port
       endCoord = portCorrectedCoordinate(e.position, targetPort, e)
     }
@@ -208,10 +220,13 @@ export const plannedPath = derived([portSelection, entities, hoverDestination, p
 /**
  * Paths that are path-found
  */
-export const paths = derived([connections, entities, plannedPath], ([$connections, $entities, $plannedPath]) => [...Object.values($connections).map((conn) => {
+export const paths = derived([connections, entities, plannedPath, untraversables], ([$connections, $entities, $plannedPath, $untraversables]) => [...Object.values($connections).map((conn) => {
   const sourcePort = $entities[conn?.sourcePort] as Port
   const targetPort = $entities[conn?.targetPort] as Port
-  let ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
+  let ignore = [
+    ...Object.values($entities).filter(ent => ent.position).map(({ position }) => position),
+    ...$untraversables
+  ] as Coord[]
 
   if (sourcePort && targetPort && sourcePort.carriedBy && targetPort.carriedBy) {
     const startEntity = $entities[sourcePort.carriedBy]

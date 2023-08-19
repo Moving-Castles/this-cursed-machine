@@ -53,6 +53,8 @@ export function onDragOver (coordinates: Coord) {
 export function onPortClick (address: string, port: Port) {
   const selection = get(portSelection)
 
+  console.log(address, port)
+
   // Override 0 if the port type clicked is the same as the first
   if (selection.length === 1 && selection[0].portType === port.portType) {
     selection[0] = port
@@ -68,8 +70,14 @@ export function onPortClick (address: string, port: Port) {
 
     portSelection.set([])
   }
+
+  console.log(get(portSelection))
 }
 
+/**
+ * Key down 
+ * @param event MouseEvent
+ */
 export function onKeyDown ({ key }) {
   if (key === "Escape") {
     portSelection.set([])

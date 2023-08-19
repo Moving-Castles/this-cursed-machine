@@ -3,7 +3,7 @@
  * 
  */
 import { EntityType, PortType } from "./enums"
-import { writable, derived } from "svelte/store";
+import { readable, writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
 import { NULL_COORDINATE, aStarPath, withinBounds, sameCoordinate } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
@@ -143,6 +143,16 @@ export const hoverDestination = writable(NULL_COORDINATE as Coord)
 // Initially set on spawn
 export const originAddress = writable("")
 export const destinationAddress = writable("")
+
+let u = []
+  for (let x = 0; x < 6; x++) {
+    for (let y = 0; y < 6; y++) {
+      if (x === 0 || x === 5 || y === 0 || y === 5) {
+        u.push({ x, y })
+      }
+    }
+  }
+export const untraversables  = readable(u)
 
 
 /**

@@ -1,13 +1,13 @@
 <script lang="ts">
   import "leader-line"
-  import { PortType } from "../../modules/state/enums"
+  import { PortType, PortPlacement } from "../../modules/state/enums"
   import { onPortClick } from "../../modules/ui/events"
   export let address: string
   export let port: Port
 </script>
 
 <div
-  class="port port-{address}"
+  class="port port-{address} {PortPlacement[port.portPlacement]}"
   on:click={() => onPortClick(address, port)}
   class:in={port.portType === PortType.INPUT}
   class:out={port.portType === PortType.OUTPUT}
@@ -18,6 +18,12 @@
     width: 8px;
     height: 20px;
     background: white;
+
+    &.BOTTOM,
+    &.TOP {
+      width: 20px;
+      height: 8px;
+    }
 
     &:hover {
       transform: scale(2);

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { setContext } from "svelte"
-  import { hoverDestination, tileEntity } from "../../modules/state"
+  import { tileEntity, untraversables } from "../../modules/state"
+  import { sameCoordinate } from "../../modules/utils/space"
   import { EntityType, MachineType } from "../../modules/state/types"
 
   // import Connectable from "./Connectable.svelte"
@@ -29,7 +30,9 @@
 
   const entity = tileEntity(tile.coordinates)
 
-  $: untraversable = EntityType[$entity?.entity?.type] === "UNTRAVERSABLE"
+  $: untraversable = $untraversables.some(coord =>
+    sameCoordinate(coord, tile.coordinates)
+  )
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -83,8 +86,11 @@
     }
 
     &.untraversable {
-      opacity: 0;
-      pointer-events: none;
+      background: black;
+
+      &:global(.add) {
+        opacity: 0;
+      }
     }
   }
 </style>

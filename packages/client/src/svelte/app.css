@@ -34,7 +34,7 @@
   --row-gap: 2rem;
   --taskbar-height: 30px;
   --titlebar-height: 30px;
-  --tileunit: 150;
+  --tileunit: 100;
   --tilesize: calc(var(--tileunit) * 1px);
   /* "DMTLLVIPWebTrial-Regular", */
   /* Fonts */

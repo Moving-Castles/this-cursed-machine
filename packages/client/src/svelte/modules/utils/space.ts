@@ -15,8 +15,9 @@ export const NULL_COORDINATE = { x: -1, y: -1 }
  * @returns 
  */
 export function aStarPath(from: Coord, to: Coord, unavailableCoords: Coord[]) {
+  console.log(unavailableCoords)
 
-  const grid = new Grid(4, 4)
+  const grid = new Grid(6, 6)
 
   unavailableCoords.forEach(coord => grid.setWalkableAt(coord.x, coord.y, false))
 

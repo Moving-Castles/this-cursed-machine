@@ -5,6 +5,7 @@
     outputsForEntity,
     hoverDestination,
   } from "../../modules/state"
+  import { PortPlacement } from "../../modules/state/enums"
   import { sameCoordinate } from "../../modules/utils/space"
   import { pathfindingExceptions } from "../../modules/ui/paths"
   import { getContext } from "svelte"
@@ -35,6 +36,8 @@
       ),
     ])
   }
+
+  $: allPorts = [...Object.entries($inputs), ...Object.entries($outputs)]
 </script>
 
 <div
@@ -45,14 +48,26 @@
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
+  <div class="ports-top">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.TOP) as [address, i] (i)}
+      <Port {address} port={i} />
+    {/each}
+  </div>
+
   <div class="ports-left">
-    {#each Object.entries($inputs) as [address, i] (i)}
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.LEFT) as [address, i] (i)}
+      <Port {address} port={i} />
+    {/each}
+  </div>
+
+  <div class="ports-bottom">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.BOTTOM) as [address, i] (i)}
       <Port {address} port={i} />
     {/each}
   </div>
 
   <div class="ports-right">
-    {#each Object.entries($outputs) as [address, o] (o)}
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.RIGHT) as [address, o] (o)}
       <Port {address} port={o} />
     {/each}
   </div>
@@ -93,6 +108,32 @@
     flex-flow: column nowrap;
     justify-content: center;
     align-items: start;
+    gap: 4px;
+    z-index: 999;
+  }
+
+  .ports-top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: start;
+    gap: 4px;
+    z-index: 999;
+  }
+
+  .ports-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: end;
     gap: 4px;
     z-index: 999;
   }
