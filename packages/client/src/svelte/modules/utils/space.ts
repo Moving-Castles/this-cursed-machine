@@ -2,10 +2,22 @@ import type { Coord } from "@latticexyz/utils";
 import { AStarFinder, Grid } from 'pathfinding'
 const finder = new AStarFinder()
 
-export function directionalPathfindAStar(from: Coord, to: Coord, unavailableCoords: Coord[]) {
+/**
+ * Null coordinate for checking purposes
+ */
+export const NULL_COORDINATE = { x: -1, y: -1 }
+
+/**
+ * AStar pathfinding from coord to coord
+ * @param from Coord
+ * @param to Coord
+ * @param unavailableCoords Coord[]
+ * @returns 
+ */
+export function aStarPath(from: Coord, to: Coord, unavailableCoords: Coord[]) {
 
   const grid = new Grid(4, 4)
-  
+
   unavailableCoords.forEach(coord => grid.setWalkableAt(coord.x, coord.y, false))
 
   const path = finder.findPath(from.x, from.y, to.x, to.y, grid)
@@ -52,9 +64,27 @@ export function directionalPathfind(from: Coord, to: Coord) {
   return path;
 }
 
+/**
+ * Find if a coordinate is adjacent to the other
+ * @param from Coord
+ * @param to Coord
+ * @returns Boolean
+ */
 export const isAdjacent = (from: Coord, to: Coord) => chebyshev(from, to) === 1;
 
+/**
+ * Checks if given variable is a Coordinate
+ * @param a any variable
+ * @returns Boolean
+ */
 export const isCoordinate = (a: any) => a.x && a.y
+
+/**
+ * Checks if two coordinates are the same
+ * @param a Coord
+ * @param b Coord
+ * @returns Boolean
+ */
 export const sameCoordinate = (a: Coord, b: Coord) => a.x === b.x && a.y === b.y
 
 /**
@@ -91,11 +121,12 @@ export function manhattanPath(start: Coord, end: Coord): Coord[] {
   return path
 }
 
-export function aStarPath (start: Coord, end: Coord, ignore: Coord[] = []) {
-  console.log(start, end, ignore)
-  return directionalPathfindAStar(start, end, ignore)
-}
-
+/**
+ * Checks what the direction between two coordinates is
+ * @param from Coord
+ * @param to Coord
+ * @returns string
+ */
 export const getDirection = (from: Coord, to: Coord) => {
   if (to.x < from.x) return 'west'
   if (to.y < from.y) return 'north'
@@ -105,6 +136,12 @@ export const getDirection = (from: Coord, to: Coord) => {
   return ''
 }
 
+/**
+ * Create a grid of width and height
+ * @param width number
+ * @param height number
+ * @returns GridTile[]
+ */
 export function initGrid (width: number, height: number) {
     // Create an empty array to hold the grid
     let grid = [] as GridTile[]
@@ -128,6 +165,13 @@ export function initGrid (width: number, height: number) {
     return grid
   }
 
+/**
+ * Checks if the given coordinate falls within the given bounds
+ * @param coord Coord
+ * @param width number
+ * @param height number
+ * @returns Boolean
+ */
 export const withinBounds = (coord: Coord, width: number, height: number) =>
   coord.x >= 0 &&
   coord.x < width &&

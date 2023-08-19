@@ -2,17 +2,15 @@
   import { onMount } from "svelte"
   import { explainer } from "../../modules/content/wiki"
   import { initGrid } from "../../modules/utils/space"
-  import { connections, paths, makePlannedPath } from "../../modules/state"
+  import { connections } from "../../modules/state"
+  import { paths, plannedPath } from "../../modules/ui/paths"
   import type { GridTile } from "./index"
   import Tile from "./Tile.svelte"
   import Explainer from "../Explainer/Explainer.svelte"
   import BoxPath from "./BoxPath.svelte"
-  // import Connection from "./Connection.svelte"
 
   export let width: number
   export let height: number
-
-  const plannedPath = makePlannedPath(width, height)
 
   let w: number
   let h: number
@@ -25,7 +23,10 @@
 
 <svelte:window bind:innerWidth={w} bind:innerHeight={h} />
 
-<div class="ui-map">
+<div
+  class="ui-map"
+  style="--map-width: {width * 100}px; --map-height: {height * 100}px;"
+>
   <div
     class="map-container"
     style:width="{width * 100}px"
@@ -35,11 +36,16 @@
       <Tile {tile} />
     {/each}
 
-    {#each $paths as path, i}
-      <BoxPath coords={path} {i} />
-    {/each}
+    <!-- SVG Layer -->
+    <svg viewBox="0 0 {width * 100} {width * 100}">
+      {#each $paths as path, i}
+        <BoxPath {path} {i} />
+      {/each}
 
-    <BoxPath potential coords={$plannedPath} i={0} />
+      {#if $plannedPath}
+        <BoxPath potential path={$plannedPath} i={0} />
+      {/if}
+    </svg>
 
     {#if $explainer !== ""}
       <Explainer />
@@ -76,5 +82,13 @@
       top: 50%;
       transform: translate(-50%, -50%);
     }
+  }
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99999;
   }
 </style>

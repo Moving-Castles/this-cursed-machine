@@ -1,13 +1,6 @@
 <script lang="ts">
   import BoxMap from "../Map/BoxMap.svelte"
-  import {
-    playerAddress,
-    playerCore,
-    playerBox,
-    coresInPlayerBox,
-  } from "../../modules/state"
-  import { transfer } from "../../modules/action"
-  import { addressToColor } from "../../modules/utils/misc"
+  import { playerBox } from "../../modules/state"
 </script>
 
 <BoxMap width={$playerBox.width} height={$playerBox.height} />

@@ -4,9 +4,9 @@
     inputsForEntity,
     outputsForEntity,
     hoverDestination,
-    pathfindingExceptions,
   } from "../../modules/state"
   import { sameCoordinate } from "../../modules/utils/space"
+  import { pathfindingExceptions } from "../../modules/ui/paths"
   import { getContext } from "svelte"
   import Port from "./Port.svelte"
 
@@ -22,7 +22,7 @@
 
   const onMouseEnter = () => {
     available = true
-    console.log("on mouse enter")
+    // console.log("on mouse enter")
     pathfindingExceptions.set([...$pathfindingExceptions, tile.coordinates])
     hoverDestination.set(tile.coordinates)
   }
@@ -68,6 +68,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    transition: transform 0.2s ease;
   }
 
   .ports-left {

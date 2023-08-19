@@ -3,10 +3,10 @@ import {
   originAddress,
   dragOrigin,
   dropDestination,
-  entities,
-  NULL_COORDINATE,
-  portSelection
+  entities
 } from "../../state"
+import { portSelection } from "../../ui/paths"
+import { NULL_COORDINATE } from "../../utils/space"
 import { connect } from "../../action"
 import { ConnectionType } from "../../state/enums"
 

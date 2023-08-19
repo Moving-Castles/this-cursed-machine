@@ -65,7 +65,7 @@
       top: 50%;
       transform: translate(-50%, -50%);
       opacity: 0.8;
-      z-index: 999;
+      z-index: 1;
       opacity: 0;
     }
 

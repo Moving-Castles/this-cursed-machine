@@ -5,29 +5,41 @@
   import anime from "animejs/lib/anime.es.js"
 
   export let i: number
-  export let coords: Coord[]
+  export let path: PathDefinition
   export let potential = false
   export let planned = false
   export let mode: "path" | "polyline" = "polyline"
 
   let shouldDraw = true
-  let path = makeSvgPath(coords, i)
-  let line = makePolyline(coords, i)
+  let svgPath = makeSvgPath(path.coords, i)
+  let line = makePolyline(path.coords, i)
   let newPath: string
-  let newLine: path = makeSvgPath(coords, i)
+  let newLine: path = makeSvgPath(path.coords, i)
 
   $: {
-    if (coords) {
-      updateLine(true)
+    if (path.coords) {
+      updateLine()
     }
   }
 
   const updateLine = (initial = false) => {
-    newLine = makePolyline(coords, i)
+    const { startEntity, endEntity, sourcePort, targetPort } = path
+    if (startEntity && endEntity && sourcePort && targetPort) {
+      newLine = makePolyline(
+        path.coords,
+        i,
+        startEntity,
+        endEntity,
+        sourcePort,
+        targetPort
+      )
+    } else {
+      newLine = makePolyline(path.coords, i)
+    }
     anime({
       targets: `.polyline-${i}`,
       points: [{ value: line }, { value: newLine }],
-      easing: "easeOutQuad",
+      easing: "easeInOutCubic",
       duration: initial ? 0 : 200,
       loop: false,
       begin: () => {
@@ -45,46 +57,37 @@
 
 <!-- Reconstruct the Base map for SVG representation -->
 {#if shouldDraw}
-  <svg
-    transition:fade
-    class:potential
-    class:planned
-    style:z-index={planned ? 0 : 1}
-    viewBox="0 0 400 400"
-  >
-    {#if mode === "path"}
-      {#key path}
-        <!-- Actual path -->
-        <g
-          fill="none"
-          stroke={potential ? "grey" : "red"}
-          stroke-width={6}
-          opacity="1"
-        >
-          <path marker-end="url(#arrow-outline)" d={path} />
-        </g>
-      {/key}
-    {:else}
-      <polyline
-        class="polyline-{i}"
+  {#if mode === "path"}
+    {#key svgPath}
+      <!-- Actual path -->
+      <g
+        class:potential
+        class:planned
         fill="none"
         stroke={potential ? "grey" : "red"}
         stroke-width={6}
-      />
-    {/if}
-  </svg>
+        opacity="1"
+      >
+        <path marker-end="url(#arrow-outline)" d={svgPath} />
+      </g>
+    {/key}
+  {:else}
+    <polyline
+      class="polyline polyline-{i}"
+      class:potential
+      class:planned
+      fill="none"
+      stroke={potential ? "grey" : "red"}
+      stroke-width={6}
+    />
+  {/if}
 {/if}
 
 <style lang="scss">
-  svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 99999;
-
-    g {
-      transition: opacity 0.2s;
+  .polyline {
+    pointer-events: auto !important;
+    &:hover {
+      stroke: blue !important;
     }
   }
 
@@ -94,6 +97,6 @@
 
   path,
   :global(path) {
-    transition: all 0.2s ease;
+    transition: all 0.2s easeInOutCubic;
   }
 </style>

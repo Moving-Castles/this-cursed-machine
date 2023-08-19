@@ -5,19 +5,12 @@
 import { EntityType, PortType } from "./enums"
 import { writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, withinBounds, sameCoordinate } from "../utils/space";
+import { NULL_COORDINATE, aStarPath, withinBounds, sameCoordinate } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
 
 export const GAME_CONFIG_ID = "0x";
-// ...
-export const NULL_COORDINATE = { x: -1, y: -1 }
-
-export const BUILDABLE_ENTITYTYPES = [
-  EntityType.RESOURCE,
-  EntityType.RESOURCE_TO_ENERGY
-]
 
 // --- STORES -----------------------------------------------------------------
 
@@ -283,6 +276,11 @@ export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) =
   return false
 })
 
+/**
+ * Get the inputs on given entity's address
+ * @param address string
+ * @returns Port[]
+ */
 export const inputsForEntity = (address: string) => derived([entities], ([$entities]) => {
   return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
     entity.entityType === EntityType.PORT &&
@@ -291,121 +289,15 @@ export const inputsForEntity = (address: string) => derived([entities], ([$entit
   )) as Ports;
 })
 
+/**
+ * Get the outputs on given entity's address
+ * @param address string
+ * @returns Port[]
+ */
 export const outputsForEntity = (address: string) => derived([entities], ([$entities]) => {
   return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
     entity.entityType === EntityType.PORT &&
     entity.carriedBy === address &&
     entity?.portType === PortType.OUTPUT
   )) as Ports;
-})
-
-export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
-
-export const portSelection = writable([])
-
-/**
- * Port corrected coordinates
- * @param coord 
- * @param port 
- * @param entity 
- * @returns 
- */
-const portCorrectedCoordinate = (coord: Coord, port: Port, entity: Entity) => {
-  const rotationMapping = {
-    0: { x: 0, y: -1 },
-    1: { x: 1, y: 0 },
-    2: { x: 0, y: 1 },
-    3: { x: -1, y: 0 }
-  }
-
-  // Port direction is port side corrected by rotation
-  const portDirection = port.portPlacement
-  const entityRotation = entity.rotation || 0
-
-  
-
-  const totalRotation = (portDirection + entityRotation) % 4
-
-  
-
-
-  // Get the next coordinate in the correct direction
-  return {
-    x: coord.x + rotationMapping[totalRotation].x,
-    y: coord.y + rotationMapping[totalRotation].y
-  }
-}
-
-/**
- * Exceptions for the pathfinding
- */
-export const pathfindingExceptions = writable([] as Coord[])
-
-
-/**
- * Paths that are path-found
- */
-export const paths = derived([connections, entities], ([$connections, $entities]) => Object.values($connections).map((conn) => {
-  const sourcePort = $entities[conn?.sourcePort] as Port
-  const targetPort = $entities[conn?.targetPort] as Port
-  let ignore = Object.values($entities).filter(ent => ent.position).map(({ position }) => position) as Coord[]
-
-  if (sourcePort && targetPort && sourcePort.carriedBy && targetPort.carriedBy) {
-    const startEntity = $entities[sourcePort.carriedBy]
-    const endEntity = $entities[targetPort.carriedBy]
-    if (startEntity?.position && endEntity?.position) {
-      // ignore = [...ignore].filter((coord) => !sameCoordinate(coord, startEntity.position) && !sameCoordinate(coord, endEntity.position))
-
-      // Consider start and end paths
-      return [
-        startEntity.position,
-        ...aStarPath(
-          portCorrectedCoordinate(startEntity.position, sourcePort, startEntity),
-          portCorrectedCoordinate(endEntity.position, targetPort, endEntity.position),
-          ignore
-        ),
-        endEntity.position
-    ]
-    }
-  }
-
-  return NULL_COORDINATE
-}))
-
-/**
- * Planned path
- */
-export const makePlannedPath = (width: number, height: number) => derived([portSelection, entities, hoverDestination, pathfindingExceptions], ([$portSelection, $entities, $hoverDestination, $pathfindingExceptions]) => {
-  const ignore = Object.values($entities)
-    .filter(ent => ent.position)
-    .map(({ position }) => position)
-    // .filter(a => !$pathfindingExceptions.some(b => sameCoordinate(b, a))) // remove the exceptionsas Coord[]
-
-  // We only wanna plan a path when the port selection is 1.
-  if ($portSelection.length === 1) {
-    const port = $entities[$portSelection[0]]
-    const entity = $entities[port?.carriedBy]
-    
-    const startCoord = portCorrectedCoordinate(entity.position, port as Port, entity)
-    let endCoord = $hoverDestination
-    const endEntity = Object.entries($entities).filter(([address, ent]) => !!ent.position).find(([address, ent]) => sameCoordinate($hoverDestination, ent.position))
-
-    if (endEntity) {
-      const [address, entity] = endEntity
-      // Figure out if the end entity has ports
-      const ports = Object.values($entities).filter(ent => ent.carriedBy === address)
-      const endPorts = ports.filter(p => p.portType !== port.portType)
-      endCoord = portCorrectedCoordinate(entity.position, endPorts[0], endEntity)
-    }
-
-    if (withinBounds(startCoord, width, height)) {
-      return [
-        entity.position,
-        ...aStarPath(startCoord, endCoord, ignore),
-        endEntity ? endEntity[1].position : null
-      ].filter(coord => !!coord)
-    }
-  }
-
-  return NULL_COORDINATE
 })

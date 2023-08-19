@@ -29,8 +29,6 @@ export async function initStaticContent() {
         tiles: [],
     }
 
-    console.log(tilesDoc, tilesDoc.tiles)
-
     // CORES
     for (let i = 0; i < coresDoc.cores.length; i++) {
         tempStaticContent.cores.push(

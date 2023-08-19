@@ -1,13 +1,12 @@
 <script lang="ts">
   import { getContext } from "svelte"
   import {
-    NULL_COORDINATE,
     dropDestination,
     playerEntityId,
-    isDraggable,
     isConnectedResource,
     isConnectedControl,
   } from "../../../modules/state"
+  import { NULL_COORDINATE } from "../../../modules/utils/space"
   import { MachineType } from "../../../modules/state/types"
   import Connectable from "../Connectable.svelte"
   import Actions from "./Actions.svelte"
@@ -18,7 +17,7 @@
   const tile = getContext("tile") as GridTile
   let modalActive = false
 
-  const draggable = isDraggable(entity.address)
+  // const draggable = isDraggable(entity.address)
   const isResourced = isConnectedResource($playerEntityId, [entity.address])
   const isControlled = isConnectedControl($playerEntityId, [entity.address])
 
@@ -38,7 +37,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <Connectable {entity}>
   <div
-    draggable={$draggable}
+    draggable={true}
     on:dragover|preventDefault
     style="--background: {background};"
     class="machine-wrapper {MachineType[entity.entity?.machineType]}"
@@ -148,8 +147,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    width: 400px;
-    height: 300px;
+    width: var(--map-width);
+    height: var(--map-height);
     background: inherit;
     color: black;
     z-index: 100000;

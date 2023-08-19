@@ -21,7 +21,7 @@
     // Create an empty array to hold the grid
     let inventory = [] as GridTile[]
 
-    console.log("static content", BuildableEntityType)
+    // console.log("static content", BuildableEntityType)
 
     //this is inelegant
     const numOrganTypes = Object.keys(BuildableEntityType).length / 2
@@ -32,7 +32,7 @@
         type: `${BuildableEntityType[i]}`,
         coordinates: { x: i, y: 0 },
       }
-      console.log("adding tile to inv", newOrgan)
+      // console.log("adding tile to inv", newOrgan)
       // Add the new GridTile to the end of the grid array
       inventory = [...inventory, newOrgan]
     }
@@ -45,7 +45,7 @@
   }
 
   onMount(() => {
-    console.log("mounting")
+    // console.log("mounting")
     inv = initInventory($gameConfig?.worldWidth)
   })
 </script>
