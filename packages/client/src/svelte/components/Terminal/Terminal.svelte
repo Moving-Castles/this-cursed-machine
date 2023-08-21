@@ -1,24 +1,48 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, createEventDispatcher, tick } from "svelte"
   import { typewriter } from "../../modules/ui/transitions"
   export let sequence: string[]
   export let speed = 80
 
   let index = -1
+  let energy = 100
   let userInput = ""
   let currentText = ""
+  let skip = false
+  let complete = false
 
   onMount(() => (index = 0))
 
-  const next = () => {
-    if (index < sequence.length - 1) {
-      index = ++index
+  const dispatch = createEventDispatcher()
+
+  const next = (override = false) => {
+    console.log("next,", complete)
+    // First skip, then increment
+    if (index < sequence.length) {
+      if ((complete && index < sequence.length - 1) || override) {
+        index = ++index
+        skip = false
+      } else {
+        skip = true
+      }
     }
+
+    if (index === sequence.length - 1) dispatch("done")
   }
 
-  const onSubmit = e => {
-    console.log("e!!!!!!!!!")
-    currentText += `\n${userInput}`
+  const introStart = () => {
+    complete = false
+  }
+  const introEnd = () => {
+    complete = true
+  }
+
+  const onSubmit = async () => {
+    if (userInput === "n") {
+      next(true)
+    } else {
+      currentText += `\n${userInput}`
+    }
     userInput = ""
   }
 
@@ -27,20 +51,25 @@
   }
 </script>
 
-<div class="terminal" on:click={next}>
-  {#key index}
-    <div class="terminal-output" in:typewriter={{ speed }}>
-      <p class="output-content">
+<div class="terminal">
+  {#key index + (skip ? "-skip" : "")}
+    <div class="terminal-output" on:click={next}>
+      <p
+        in:typewriter={{ speed: skip ? 0 : speed }}
+        on:introstart={introStart}
+        on:introend={introEnd}
+        class="output-content"
+      >
         {currentText}
       </p>
     </div>
   {/key}
   <form on:submit|preventDefault={onSubmit}>
-    e: 100
+    e: {energy}
     <input
       type="text"
       class="terminal-input"
-      placeholder="Start typing"
+      placeholder="Start typing ([n] for next)"
       bind:value={userInput}
     />
   </form>

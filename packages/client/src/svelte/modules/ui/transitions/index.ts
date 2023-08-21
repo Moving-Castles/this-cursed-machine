@@ -24,6 +24,10 @@ export function typewriter(node, { delay = 0, speed = 50 }) {
   }
   const duration = totalLength * speed;
 
+  node.addEventListener("click", function () {
+
+  })
+
   return {
       delay,
       duration,

@@ -9,9 +9,17 @@
   import { transfer } from "../../modules/action"
   import { narrative } from "../../modules/content/lore"
   import Terminal from "../Terminal/Terminal.svelte"
+
+  let done = false
+
+  const onDone = () => {
+    done = true
+  }
 </script>
 
-<Terminal sequence={$narrative.intro} />
+{#if !done}
+  <Terminal on:done={onDone} sequence={$narrative.intro} />
+{/if}
 
 <!-- <div class="box">
   <div

@@ -21,9 +21,6 @@ export const narrative = readable({
 Allow me to introduce myself:
 
 I'm Puppitywink, your new manager`,
-`Bllow me to introduce myself:
-
-get ready for an experience...
-`
+`Type [n] to continue`
 ]
 })
