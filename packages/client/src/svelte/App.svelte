@@ -14,7 +14,8 @@
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  import Box from "./components/Box/Box.svelte"
+  // import Box from "./components/Box/Box.svelte"
+  import TerminalBox from "./components/Box/TerminalBox.svelte"
   import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
   // import Game from "./components/Game/Game.svelte"
@@ -69,7 +70,7 @@
   {:else if $playerCore.level === 6}
     <End />
   {:else}
-    <Box />
+    <TerminalBox />
   {/if}
 </main>
 
