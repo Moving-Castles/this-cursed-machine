@@ -3,7 +3,7 @@ import type { SoundAssets } from "../types.ts";
 export const ui: SoundAssets = {
   cursor: {
     src: "./sounds/ui/cursor.mp3",
-    volume: 1,
+    volume: 0.2,
   },
   error: {
     src: "./sounds/ui/error.mp3",

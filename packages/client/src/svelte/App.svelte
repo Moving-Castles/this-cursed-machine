@@ -33,6 +33,7 @@
   initUI()
 
   onMount(async () => {
+    document.querySelector(".preloader")?.remove()
     // Get static content from CMS
     // initStaticContent()
 

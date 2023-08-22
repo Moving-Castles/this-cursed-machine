@@ -42,8 +42,10 @@ contract SpawnSystem is System {
     Rotation.set(inletEntity, ROTATION.DEG0);
 
     // Create ports on test machine
-    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
-    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
+    // LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
+    // LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
     LibPort.create(outletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
     LibPort.create(inletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
 

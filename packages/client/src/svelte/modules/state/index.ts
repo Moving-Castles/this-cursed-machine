@@ -50,6 +50,7 @@ export const connections = derived(entities, ($entities) => {
  * Ports are the entry and exit points
  */
 export const ports = derived(entities, ($entities) => {
+  console.log("ents ", $entities)
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.PORT)) as Ports;
 });
 
