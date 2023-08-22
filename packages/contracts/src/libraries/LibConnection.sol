@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
+import { console } from "forge-std/console.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { GameConfig, GameConfigData, CreationBlock, EntityType, ConnectionType, SourcePort, TargetPort } from "../codegen/Tables.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
+import { GameConfig, GameConfigData, CreationBlock, EntityType, ConnectionType, SourcePort, TargetPort, SourcePort, SourcePortTableId } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, CONNECTION_TYPE } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -39,5 +41,12 @@ library LibConnection {
     ConnectionType.deleteRecord(_connectionEntity);
     SourcePort.deleteRecord(_connectionEntity);
     TargetPort.deleteRecord(_connectionEntity);
+  }
+
+  function getOutgoing(bytes32 _portEntity) internal view returns (bytes32 connection) {
+    QueryFragment[] memory fragments = new QueryFragment[](1);
+    fragments[0] = QueryFragment(QueryType.HasValue, SourcePortTableId, SourcePort.encode(_portEntity));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }
 }

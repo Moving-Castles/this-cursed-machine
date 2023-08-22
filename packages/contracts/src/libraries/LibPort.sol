@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { PortType, CarriedBy, EntityType, PortPlacement, CreationBlock } from "../codegen/Tables.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
+import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, PortPlacement, CreationBlock } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -39,5 +40,28 @@ library LibPort {
     PortType.deleteRecord(_portEntity);
     PortPlacement.deleteRecord(_portEntity);
     CarriedBy.deleteRecord(_portEntity);
+  }
+
+  function getPorts(bytes32 _entity, PORT_TYPE _portType) internal view returns (bytes32[][] memory ports) {
+    QueryFragment[] memory fragments = new QueryFragment[](3);
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.PORT));
+    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encode(_portType));
+    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_entity));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples;
+  }
+
+  // Overload
+  function getPorts(
+    IWorld _world,
+    bytes32 _entity,
+    PORT_TYPE _portType
+  ) internal view returns (bytes32[][] memory ports) {
+    QueryFragment[] memory fragments = new QueryFragment[](3);
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.PORT));
+    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encode(_portType));
+    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_entity));
+    bytes32[][] memory keyTuples = query(_world, fragments);
+    return keyTuples;
   }
 }

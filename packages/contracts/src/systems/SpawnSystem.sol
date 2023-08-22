@@ -26,14 +26,14 @@ contract SpawnSystem is System {
     LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
 
     // Create test machine entity
-    bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
-    CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
-    Position.set(machineEntity, PositionData(1, 2));
-    Rotation.set(machineEntity, ROTATION.DEG0);
+    // bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
+    // CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
+    // Position.set(machineEntity, PositionData(1, 2));
+    // Rotation.set(machineEntity, ROTATION.DEG0);
 
     // Create ports on test machine
-    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
-    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
+    // LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
 
     return boxEntity;
   }

@@ -5,9 +5,9 @@ export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
     enums: {
-        ENTITY_TYPE: ["BOX", "CORE", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
-        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "BLENDER", "SPLITTER", "SCORCHER"],
-        MATERIAL_TYPE: ["PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
+        ENTITY_TYPE: ["BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
+        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER"],
+        MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
         CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
         PORT_TYPE: ["INPUT", "OUTPUT"],
         PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
@@ -23,6 +23,7 @@ export default mudConfig({
         Name: "string",
         CarriedBy: "bytes32",
         IsPrototype: "bool",
+        Amount: "uint32",
         // ...
         Width: "int32",
         Height: "int32",
@@ -42,6 +43,7 @@ export default mudConfig({
         MaxCores: "uint32",
         Level: "uint32",
         Active: "bool",
+        LastResolved: "uint256",
         // ...
         Position: {
             schema: {
@@ -78,6 +80,21 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("Active")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("CarriedBy")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("PortType")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("SourcePort")],
         },
         // {
         //     name: "KeysWithValueModule",

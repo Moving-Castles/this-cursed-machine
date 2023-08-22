@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData } from "../codegen/Tables.sol";
+import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, CarriedBy } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE } from "../codegen/Types.sol";
-import { LibUtils, LibConnection } from "../libraries/Libraries.sol";
+import { LibUtils, LibConnection, LibNetwork } from "../libraries/Libraries.sol";
 
 contract ConnectionSystem is System {
   function connect(CONNECTION_TYPE _connectionType, bytes32 _sourcePort, bytes32 _targetPort) public returns (bytes32) {
@@ -19,6 +19,8 @@ contract ConnectionSystem is System {
     // TODO: check core is allowed to connect to ports (?)
     // ...
 
+    LibNetwork.resolve(CarriedBy.get(coreEntity));
+
     // Create connection entity
     bytes32 connectionEntity = LibConnection.create(_sourcePort, _targetPort, _connectionType);
 
@@ -33,6 +35,8 @@ contract ConnectionSystem is System {
     require(EntityType.get(_connectionEntity) == ENTITY_TYPE.CONNECTION, "not connection");
     // TODO: check core is allowed to disconnect (?)
     // ...
+
+    LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     // Destroy connection entity
     LibConnection.destroy(_connectionEntity);
