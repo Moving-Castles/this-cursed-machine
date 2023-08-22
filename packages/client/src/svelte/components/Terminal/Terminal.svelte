@@ -3,6 +3,9 @@
   import { typewriter } from "../../modules/ui/transitions"
   export let sequence: string[]
   export let speed = 80
+  export let theme = "dark"
+
+  const themeOptions = ["dark", "light"]
 
   let index = -1
   let energy = 100
@@ -38,9 +41,14 @@
   }
 
   const onSubmit = async () => {
-    if (userInput === "n") {
+    if (userInput === "") {
       next(true)
+    } else if (userInput.includes("theme")) {
+      // Check for one of the options in the string
+      const t = themeOptions.find(tt => userInput.includes(tt))
+      if (t) theme = t
     } else {
+      if (!complete) next()
       currentText += `\n${userInput}`
     }
     userInput = ""
@@ -51,7 +59,7 @@
   }
 </script>
 
-<div class="terminal">
+<div class="terminal {theme}">
   {#key index + (skip ? "-skip" : "")}
     <div class="terminal-output" on:click={next}>
       <p
@@ -69,7 +77,7 @@
     <input
       type="text"
       class="terminal-input"
-      placeholder="Start typing ([n] for next)"
+      placeholder="Start typing ([ENTER] for next)"
       bind:value={userInput}
     />
   </form>
@@ -78,15 +86,29 @@
 <style lang="scss">
   .terminal {
     font-family: monospace;
-    border: 1px dashed yellow;
     padding: 0 1.5rem;
-    color: yellow;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: black;
     overflow: hidden;
+
+    &.dark {
+      border: 1px dashed yellow;
+      color: yellow;
+      background: black;
+
+      .terminal-input {
+        background: #000;
+        color: yellow;
+      }
+    }
+
+    &.light {
+      border: 1px dashed black;
+      color: black;
+      background: white;
+    }
 
     * {
       &::selection {
@@ -94,32 +116,29 @@
         color: black;
       }
     }
-  }
 
-  .terminal-output {
-    height: 24rem;
-    width: 60ch;
-    white-space: pre-wrap;
-    vertical-align: text-bottom;
-    display: flex;
-    flex-flow: column nowrap;
-    line-height: 1.5rem;
-    justify-content: end;
-    overflow-y: scroll;
-    overflow-x: hidden;
-  }
-
-  .terminal-input {
-    font-family: monospace;
-    background: #000;
-    color: yellow;
-    height: 3rem;
-    padding: 0;
-    line-height: 2rem;
-    font-size: 1rem;
-    border: none;
-    outline: none;
-    width: 60ch;
+    .terminal-output {
+      height: 24rem;
+      width: 60ch;
+      white-space: pre-wrap;
+      vertical-align: text-bottom;
+      display: flex;
+      flex-flow: column nowrap;
+      line-height: 1.5rem;
+      justify-content: end;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+    .terminal-input {
+      font-family: monospace;
+      height: 3rem;
+      padding: 0;
+      line-height: 2rem;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+      width: 60ch;
+    }
   }
 
   .output-content {
