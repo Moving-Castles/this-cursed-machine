@@ -42,7 +42,10 @@ I'm Puppitywink, your new manager`,
 "All you know now is pipes, machines, and piss. Get salivating!",
 "[START]",
 ],
-gameLoop: [
-  "(Add machine) [m] – (Add pipe) [p] - (Help) [h] - (Call puppitywink) [wink]"
-]
+help: `Commands:
+(Add machine)       [m]
+(Add pipe)          [p]
+(Help)              [h]
+(Call puppitywink)  [wink]
+`
 })

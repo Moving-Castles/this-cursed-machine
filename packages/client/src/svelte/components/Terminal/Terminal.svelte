@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import { typewriter } from "../../modules/ui/transitions"
+  import { narrative } from "../../modules/content/lore"
+  import { playSound } from "../../modules/sound"
   import {
     advance,
     output,
@@ -31,9 +33,13 @@
   let userInput = ""
   let skip = false
   let complete = false
+  let interval = false
 
   /** Transition callbacks */
   const introStart = () => {
+    interval = setInterval(() => {
+      playSound("ui", "cursor")
+    }, speed * 0.666)
     const actions = document.querySelectorAll(".inline-action")
 
     for (let action of actions) {
@@ -43,6 +49,7 @@
   }
   const introEnd = () => {
     complete = true
+    clearInterval(interval)
   }
 
   /** Next! */
@@ -54,6 +61,7 @@
         skip = false
       } else {
         skip = true
+        clearInterval(interval)
       }
     }
 
@@ -68,6 +76,8 @@
 
   /** The submit function */
   const onSubmit = async () => {
+    skip = false
+
     const args = userInput.match(argsTest)
 
     if (input) dispatch("done", userInput)
@@ -103,23 +113,41 @@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@**(@@@@
 `)
     } else if (userInput === "h") {
-      advance("Help message")
+      advance($narrative.help)
     } else if (userInput.toLowerCase().includes("new")) {
       if (args) {
         handleAction("New", args)
+      } else {
+        advance(
+          "! Make sure to include arguments between brackets: [LIKE THIS]"
+        )
+      }
+    } else if (userInput.toLowerCase().includes("from")) {
+      if (args) {
+        handleAction("From", args)
+      } else {
+        advance(
+          "! Make sure to include arguments between brackets: [LIKE THIS]"
+        )
+      }
+    } else if (userInput.toLowerCase().includes("to")) {
+      if (args) {
+        handleAction("To", args)
+      } else {
+        advance(
+          "! Make sure to include arguments between brackets: [LIKE THIS]"
+        )
       }
     } else {
-      if (!complete) {
-        next()
-      } else {
-        advance(userInput)
-      }
+      advance(userInput)
     }
     userInput = ""
   }
 
   /** Reactive statements */
+  // Key for transitions
   $: key = $index + (skip ? "-skip" : "")
+  // Set output
   $: {
     let t = $seq[$index]
     if (t) $output = t
@@ -136,7 +164,7 @@
 
 <div class="terminal {theme}">
   <p class="track">
-    {$index}/{$seq.length}
+    {$index} / {$seq.length}
   </p>
   {#key key}
     <div class="terminal-output">

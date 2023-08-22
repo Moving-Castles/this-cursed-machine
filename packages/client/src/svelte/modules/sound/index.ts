@@ -1,9 +1,9 @@
 import { Howl } from "howler";
 import { soundLibrary } from "./sound-library";
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 
 export const music = writable(new Howl({ src: [""] }));
-export const fx = writable(new Howl({ src: [""] }));
+export const fx = writable([new Howl({ src: [""] })]);
 
 export function playSound(category: string, id: string, loop = false, fade = false) {
 
@@ -12,7 +12,12 @@ export function playSound(category: string, id: string, loop = false, fade = fal
     volume: soundLibrary[category][id].volume,
     preload: true,
     loop: loop,
-  });
+  })
+
+  const sounds = get(fx)
+
+  fx.set([...sounds, sound]);
+
   if (fade) {
     // Fade on begin and end
     const FADE_TIME = 2000;
@@ -29,5 +34,4 @@ export function playSound(category: string, id: string, loop = false, fade = fal
   } else {
     sound.play();
   }
-  return sound;
 }

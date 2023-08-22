@@ -1,7 +1,9 @@
 import { MachineType, ConnectionType } from "../../modules/state/enums"
+import { ports } from "../../modules/state"
 import { portSelection } from "../../modules/ui/paths"
 import { writable, get } from "svelte/store"
 import { build, connect } from "../../modules/action"
+import { isNumeric } from "../../modules/utils/misc"
 
 const machines = Object.entries(MachineType).slice(0, Math.floor(Object.values(MachineType).length / 2))
 
@@ -43,7 +45,7 @@ const outputs = [
  */
 export const parsed = (string: string) => {
   // Replace all actions
-  const parsed = string.replaceAll(/(?<=\().+?(?=\))/g, (match) => `<span class="inline-action" data-action="${match.split(" ")[0]}" data-args="${argsTest.exec(match) || match.split(" ")[1]}">${match}</span>`)
+  const parsed = string.replaceAll(/(?<=\().+?(?=\))/g, (match) => `<span class="inline-action" data-action="${match.split(" ")[0]}" data-args="${argsTest.exec(string) || match.split(" ")[1]}">${match}</span>`)
   return parsed
 }
 
@@ -67,17 +69,18 @@ export const handleClick = (e) => handleAction(e.currentTarget.dataset.action, e
  * @param e Click event
  */
 export const handleAction = (action: string, args: string[]) => {
-  console.log("handle action")
+  console.log(get(ports))
   switch (action) {
     case ("Add"):
       if (args[0] === "machine") {
-        advance(`Build a ${args[0]}:\n${machines.map(([index, mach]) => `(New ${mach} [${index}])`).join("\n")}`)
+        advance(`Build a ${args[0]}:\n${machines.map(([index, mach]) => `(New ${mach}) [${index}] `).join("\n")}`)
       } else {
-        advance(inputs.map((port) => `(From [${port}])`).join("\n"))
+        advance(inputs.map((port) => `(From Port) [${port}]`).join("\n"))
       }
       break
     case ("New"):
-      const arg = args[0]
+      let arg = args[0]
+      if (isNumeric(arg)) arg = Number(arg)
       if (Object.values(MachineType).includes(arg)) {
         const numArg = isNaN(arg) ? MachineType[arg] : arg
         const textArg = !isNaN(arg) ? MachineType[arg] : arg
@@ -85,17 +88,17 @@ export const handleAction = (action: string, args: string[]) => {
         advance("Building a " + textArg)
       }
       break
-    // From is for pipes 
+    // From Port is for pipes 
     case ("From"):
       portSelection.set([args[0]])
-      advance(outputs.map((port) => `(To [${port}])`).join("\n"))
+      advance(outputs.map((port) => `(To Port) [${port}]`).join("\n"))
       break
     case ("To"):
       let selection = get(portSelection)
       portSelection.set([...selection, args[0]])
       selection = get(portSelection)
       connect(ConnectionType.RESOURCE, selection[0], selection[1])
-      advance(`Building a pipe from: ${selection[0]} to ${selection[1]}`)
+      advance(`Building a pipe from ${selection[0]} to ${selection[1]}`)
       break
     default:
       break

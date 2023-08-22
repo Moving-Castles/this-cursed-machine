@@ -1,3 +1,5 @@
+import { playSound } from "../../sound"
+
 export function typewriter(node, { delay = 0, speed = 50 }) {
   const textNodes = getAllTextNodes(node);
   if (!textNodes.length) {
@@ -23,10 +25,6 @@ export function typewriter(node, { delay = 0, speed = 50 }) {
       return ranges[currentRangeIndex];
   }
   const duration = totalLength * speed;
-
-  node.addEventListener("click", function () {
-
-  })
 
   return {
       delay,
