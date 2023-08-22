@@ -3,7 +3,7 @@ pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, CarriedBy, Position, PositionData, Rotation } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE, MACHINE_TYPE, PORT_PLACEMENT, ROTATION } from "../codegen/Types.sol";
-import { LibUtils, LibConnection, LibEntity, LibPort } from "../libraries/Libraries.sol";
+import { LibUtils, LibConnection, LibEntity, LibPort, LibNetwork } from "../libraries/Libraries.sol";
 
 contract BuildSystem is System {
   function build(MACHINE_TYPE _machineType, int32 _x, int32 _y, ROTATION _rotation) public returns (bytes32) {
@@ -14,6 +14,8 @@ contract BuildSystem is System {
     // TOOD: Check that position is valid and unoccupied
     // TODO: Cost
     // ...
+
+    LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);

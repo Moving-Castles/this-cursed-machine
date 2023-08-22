@@ -1,0 +1,16 @@
+        // For each output of the machine
+        // for i, rx in enumerate(node.outputs):
+        // for (uint j; j < node.outputs.length; j++) {
+        //   // ...
+        //   if (node.outputs[j] != false) {
+        //     // !!!Find the machine that is supposed to receive this output
+        //     // !! rx_node = next((x for x in machines if x.machine_id == rx), None)
+        //     if (rx_node != "None") {
+        //       // Find the first available input on the receiving machine
+        //       // uint32 in_idx = rx_node.inputs.index(False);
+        //       // Fill that input with the current output
+        //       // rx_node.inputs[in_idx] = outputs[i]
+        //       // except: If no available input is found on the receiving machine, print an error
+        //     }
+        //   }
+        // }

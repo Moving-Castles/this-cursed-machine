@@ -4,12 +4,14 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { Name, ReadyBlock, ClaimBlock, CreationBlock, Level, Active, MinCores, MaxCores, EntityType, Height, Width, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
 import { ENTITY_TYPE } from "../codegen/Types.sol";
-import { LibUtils, LibMap, LibBox } from "../libraries/Libraries.sol";
+import { LibUtils, LibMap, LibBox, LibNetwork } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
   function transfer() public returns (bytes32) {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+
+    LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     uint32 newLevel = Level.get(coreEntity) + 1;
     bytes32 boxEntity;

@@ -45,6 +45,8 @@ declare global {
     claimBlock?: number;
     portPlacement?: PortPlacement;
     rotation?: Rotation;
+    amount?: number;
+    lastResolved?: number;
   };
 
   type BuildableEntity = {
@@ -68,6 +70,7 @@ declare global {
     minCores: number;
     maxCores: number;
     active: boolean;
+    lastResolved: number;
   }
 
   type Core = {
@@ -80,12 +83,6 @@ declare global {
     position: Coord;
     rotation: Rotation;
   };
-
-  type Claim = {
-    type: EntityType.CLAIM;
-    creationBlock: number;
-    claimBlock: number;
-  }
 
   type Connection = {
     type: EntityType.CONNECTION;
@@ -102,10 +99,10 @@ declare global {
     carriedBy: string;
   }
 
-  type Resource = {
-    type: EntityType.RESOURCE;
+  type Material = {
+    type: EntityType.MATERIAL;
     creationBlock: number;
-    position: Coord;
+    amount: number;
   };
 
   type ResourceToEnergy = {

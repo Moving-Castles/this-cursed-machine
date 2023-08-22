@@ -3,7 +3,7 @@ pragma solidity >=0.8.17;
 import { MudV2Test } from "../MudV2Test.t.sol";
 import "../../src/codegen/Tables.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE } from "../../src/codegen/Types.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../../src/codegen/Types.sol";
 
 contract SpawnSystemTest is MudV2Test {
   function testSpawn() public {
@@ -16,7 +16,8 @@ contract SpawnSystemTest is MudV2Test {
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Check that the core was spawned correctly
-    assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.CORE));
+    assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(uint8(MachineType.get(world, coreEntity)), uint8(MACHINE_TYPE.CORE));
     assertEq(Name.get(world, coreEntity), "Alice");
     assertEq(Level.get(world, coreEntity), 0);
     assertEq(CreationBlock.get(world, coreEntity), block.number);

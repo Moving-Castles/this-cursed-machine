@@ -8,6 +8,7 @@ export enum WorldFunctions {
     Disconnect = "mc_ConnectionSystem_disconnect",
     Build = "mc_BuildSystem_build",
     Rotate = "mc_RotationSystem_rotate",
+    Resolve = "mc_ResolveSystem_resolve",
 }
 
 // --- API --------------------------------------------------------------
@@ -34,4 +35,8 @@ export function build(machineType: MachineType, x: number, y: number, rotation: 
 
 export function rotate(entity: string, rotation: Rotation) {
     addToSequencer(WorldFunctions.Rotate, [entity, rotation])
+}
+
+export function resolve() {
+    addToSequencer(WorldFunctions.Resolve, [])
 }

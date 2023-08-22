@@ -8,3 +8,5 @@ import { LibCore } from "./LibCore.sol";
 import { LibPort } from "./LibPort.sol";
 import { LibConnection } from "./LibConnection.sol";
 import { LibEntity } from "./LibEntity.sol";
+import { LibNetwork } from "./LibNetwork.sol";
+import { LibArray } from "./LibArray.sol";
