@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { readable, writable } from "svelte/store"
 
 export const lore = {
   title: "THIS CURSED MACHINE",
@@ -11,4 +11,16 @@ export const lore = {
 
 export const config = writable({
   janky: false
+})
+
+export const narrative = readable({
+  intro: [
+"ahhhh, you're awake",
+"such a pleasure to meet our newest flesh tribute",
+"no, don't try moving -- you can't do that any more", `
+Allow me to introduce myself:
+
+I'm Puppitywink, your new manager`,
+`Type [n] to continue`
+]
 })

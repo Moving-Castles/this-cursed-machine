@@ -10,6 +10,10 @@ export default defineConfig({
     fs: {
       strict: false,
     },
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
   },
   optimizeDeps: {
     esbuildOptions: {

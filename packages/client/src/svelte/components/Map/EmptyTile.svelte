@@ -4,6 +4,7 @@
   import InventoryItem from "./InventoryItem.svelte"
   import { onDragOver } from "../../modules/ui/events"
   import { getContext } from "svelte"
+  import { hoverDestination } from "../../modules/state"
   // import { showInventory } from "../../modules/ui/stores"
   export let untraversable = false
 
@@ -32,6 +33,9 @@
 <div
   on:dragenter|preventDefault
   on:dragover|preventDefault={() => onDragOver(tile.coordinates)}
+  on:mouseenter={() => {
+    hoverDestination.set(tile.coordinates)
+  }}
   on:click={onClick}
   class:untraversable
   class="empty-tile"
@@ -61,7 +65,7 @@
       top: 50%;
       transform: translate(-50%, -50%);
       opacity: 0.8;
-      z-index: 999;
+      z-index: 1;
       opacity: 0;
     }
 

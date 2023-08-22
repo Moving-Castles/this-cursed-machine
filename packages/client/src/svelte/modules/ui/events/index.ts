@@ -1,5 +1,14 @@
 import { writable, get } from "svelte/store"
-import { originAddress, dragOrigin, dropDestination, entities, NULL_COORDINATE } from "../../state"
+import {
+  originAddress,
+  dragOrigin,
+  dropDestination,
+  entities
+} from "../../state"
+import { portSelection } from "../../ui/paths"
+import { NULL_COORDINATE } from "../../utils/space"
+import { connect } from "../../action"
+import { ConnectionType } from "../../state/enums"
 
 const img = new Image()
 
@@ -34,4 +43,43 @@ export function onDragStart (e, address: string, passive = false) {
 
 export function onDragOver (coordinates: Coord) {
   dropDestination.set(coordinates)
+}
+
+/**
+ * 
+ * @param address 
+ * @param port 
+ */
+export function onPortClick (address: string, port: Port) {
+  const selection = get(portSelection)
+
+  console.log(address, port)
+
+  // Override 0 if the port type clicked is the same as the first
+  if (selection.length === 1 && selection[0].portType === port.portType) {
+    selection[0] = port
+  } else if (selection[0] !== address) {
+    selection.push(address)
+  }
+
+  portSelection.set(selection)
+
+  // Tally the ports
+  if (selection.length === 2) {
+    connect(ConnectionType.RESOURCE, selection[0], selection[1])
+
+    portSelection.set([])
+  }
+
+  console.log(get(portSelection))
+}
+
+/**
+ * Key down 
+ * @param event MouseEvent
+ */
+export function onKeyDown ({ key }) {
+  if (key === "Escape") {
+    portSelection.set([])
+  }
 }

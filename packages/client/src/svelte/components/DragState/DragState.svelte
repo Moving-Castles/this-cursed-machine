@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dropDestination, potentialConnections } from "../../modules/state"
+  import { dropDestination } from "../../modules/state"
 </script>
 
 <div class="drag-state">

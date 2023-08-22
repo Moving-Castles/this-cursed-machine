@@ -1,33 +1,76 @@
 <script lang="ts">
   import { onDragStart, onDragOver } from "../../modules/ui/events"
+  import {
+    inputsForEntity,
+    outputsForEntity,
+    hoverDestination,
+  } from "../../modules/state"
+  import { PortPlacement } from "../../modules/state/enums"
+  import { sameCoordinate } from "../../modules/utils/space"
+  import { pathfindingExceptions } from "../../modules/ui/paths"
+  import { getContext } from "svelte"
+  import Port from "./Port.svelte"
 
   export let available = false
   export let active = false
   export let entity: EntityStoreEntry
-  export let inputs = [] as Port[]
-  export let outputs = [] as Port[]
+
+  const inputs = inputsForEntity(entity.address)
+  const outputs = outputsForEntity(entity.address)
+  const tile = getContext("tile")
 
   let padding = "8px"
 
-  const onMouseEnter = () => (available = true)
+  const onMouseEnter = () => {
+    available = true
+    // console.log("on mouse enter")
+    pathfindingExceptions.set([...$pathfindingExceptions, tile.coordinates])
+    hoverDestination.set(tile.coordinates)
+  }
 
-  const onMouseLeave = () => (available = false)
+  const onMouseLeave = () => {
+    available = false
+    pathfindingExceptions.set([
+      ...$pathfindingExceptions.filter(
+        coord => !sameCoordinate(coord, tile.coordinates)
+      ),
+    ])
+  }
+
+  $: allPorts = [...Object.entries($inputs), ...Object.entries($outputs)]
 </script>
 
 <div
-  class="connectable"
+  class="connectable rotate-{entity.entity?.rotation}"
   style="--padding: {padding}"
   on:dragstart={e => onDragStart(e, entity.address)}
   on:dragover={() => onDragOver(entity.entity.position)}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
-  <!-- <div class:available class:active class="port top" /> -->
-  <!-- <div class:available class:active class="port bottom" /> -->
-  <!-- <div class:available class:active class="port left" />
-  <div class:available class:active class="port right" /> -->
-  {#each inputs as i}{/each}
-  {#each outputs as o}{/each}
+  <div class="ports-top">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.TOP) as [address, i] (i)}
+      <Port {address} port={i} />
+    {/each}
+  </div>
+
+  <div class="ports-left">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.LEFT) as [address, i] (i)}
+      <Port {address} port={i} />
+    {/each}
+  </div>
+
+  <div class="ports-bottom">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.BOTTOM) as [address, i] (i)}
+      <Port {address} port={i} />
+    {/each}
+  </div>
+
+  <div class="ports-right">
+    {#each allPorts.filter(([_, p]) => p.portPlacement === PortPlacement.RIGHT) as [address, o] (o)}
+      <Port {address} port={o} />
+    {/each}
+  </div>
   <slot />
 </div>
 
@@ -40,18 +83,59 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 999;
+    transition: transform 0.2s ease;
   }
 
-  .port {
+  .ports-left {
     position: absolute;
-    width: 20px;
-    height: 8px;
-    z-index: 9;
-    background: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
+    left: 0;
+    height: 100%;
+    width: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: end;
+    gap: 4px;
+    z-index: 999;
+  }
+  .ports-right {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: start;
+    gap: 4px;
+    z-index: 999;
+  }
+
+  .ports-top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: start;
+    gap: 4px;
+    z-index: 999;
+  }
+
+  .ports-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: end;
+    gap: 4px;
+    z-index: 999;
   }
 
   @mixin portInActiveTransform($deg) {

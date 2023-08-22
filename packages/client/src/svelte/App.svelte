@@ -9,12 +9,13 @@
   import { entities, playerCore, cores, ports } from "./modules/state"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { initUI } from "./modules/ui/events"
+  import { initUI, onKeyDown } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  import Box from "./components/Box/Box.svelte"
+  // import Box from "./components/Box/Box.svelte"
+  import TerminalBox from "./components/Box/TerminalBox.svelte"
   import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
   // import Game from "./components/Game/Game.svelte"
@@ -57,6 +58,8 @@
   })
 </script>
 
+<svelte:window on:keydown={onKeyDown} />
+
 <main>
   <!-- <svelte:component this={selected.component} /> -->
 
@@ -67,7 +70,7 @@
   {:else if $playerCore.level === 6}
     <End />
   {:else}
-    <Box />
+    <TerminalBox />
   {/if}
 </main>
 

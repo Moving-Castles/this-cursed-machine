@@ -1,9 +1,25 @@
 <script lang="ts">
-  import BoxMap from "../Map/BoxMap.svelte"
-  import { playerBox } from "../../modules/state"
+  import {
+    playerBox,
+    playerAddress,
+    playerCore,
+    coresInPlayerBox,
+  } from "../../modules/state"
+  import { addressToColor } from "../../modules/utils/misc"
+  import { transfer } from "../../modules/action"
+  import { narrative } from "../../modules/content/lore"
+  import Terminal from "../Terminal/Terminal.svelte"
+
+  let done = false
+
+  const onDone = () => {
+    done = true
+  }
 </script>
 
-<BoxMap width={$playerBox.width} height={$playerBox.height} />
+{#if !done}
+  <Terminal on:done={onDone} sequence={$narrative.intro} />
+{/if}
 
 <!-- <div class="box">
   <div

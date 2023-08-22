@@ -170,6 +170,15 @@ declare global {
     [index: string]: number;
   };
 
+  type PathDefinition = {
+    coords: Coord[]
+    startEntity?: Entity
+    endEntity?: Entity
+    sourcePort?: Port
+    targetPort?: Port
+    potential?: Boolean
+  }
+
   interface GridTile {
     id: string
     coordinates: Coord;

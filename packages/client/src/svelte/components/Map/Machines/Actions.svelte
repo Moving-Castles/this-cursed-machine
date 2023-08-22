@@ -8,14 +8,15 @@
     isConnectedResourceAny,
     isConnectedControlAny,
   } from "../../../modules/state"
-  import { ConnectionType } from "../../../modules/state/types"
   import { originAddress } from "../../../modules/state"
   import { EntityType, MachineType } from "../../../modules/state/types"
   import { explainer } from "../../../modules/content/wiki"
   import { circularLayout } from "../../../modules/ui"
   import { connect, disconnect, rotate } from "../../../modules/action"
+
   export let radius = 100
   export let entity: EntityStoreEntry
+  export let background: string
 
   const tile = getContext("tile")
   const dispatch = createEventDispatcher()
@@ -62,11 +63,12 @@
   transition:fade={{ duration: 100 }}
   use:circularLayout={{ radius }}
   class="round-actions"
+  style="--background: {background}"
   on:mouseleave={close}
   on:dragleave={close}
 >
   <!-- Direct connection to player core -->
-  <slot name="resourceAction">
+  <!-- <slot name="resourceAction">
     <button
       class="action"
       disabled={!$canAffordResource || $isResourced}
@@ -74,17 +76,17 @@
     >
       Connect (Resource)
     </button>
-  </slot>
+  </slot> -->
 
   <!-- Direct connection to player core -->
-  <slot name="controlAction">
+  <!-- <slot name="controlAction">
     <button
       class="action"
       disabled={!$canAffordControl && !$isControlled}
       on:click={sendConnectControl}
       >Connect (Control)
     </button>
-  </slot>
+  </slot> -->
 
   <slot name="rotateAction">
     <button class="action" on:click|stopPropagation={sendRotate}>⤵️</button>

@@ -46,6 +46,7 @@
     "gsap": "^3.12.2",
     "howler": "^2.2.3",
     "just-throttle": "^4.2.0",
+    "leader-line": "^1.0.7",
     "lodash": "^4.17.21",
     "matter": "^0.2.0",
     "matter-dom-plugin": "^1.0.0",

@@ -34,7 +34,8 @@
   --row-gap: 2rem;
   --taskbar-height: 30px;
   --titlebar-height: 30px;
-  --tilesize: 100px;
+  --tileunit: 100;
+  --tilesize: calc(var(--tileunit) * 1px);
   /* "DMTLLVIPWebTrial-Regular", */
   /* Fonts */
   --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
@@ -52,12 +53,14 @@
 * {
   box-sizing: border-box;
   border-color: var(--foreground);
-  -webkit-font-feature-settings: "liga" on, "calt" on;
+  -webkit-font-feature-settings:
+    "liga" on,
+    "calt" on;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  user-select: none;
+  /* user-select: none; */
 }
 
 *::-webkit-scrollbar {
@@ -122,4 +125,17 @@ html {
 .circularLayout .action:nth-child(7) {
   transform: translate(-50%, -50%) rotate(calc(var(--angle) * 6))
     translate(var(--radius)) rotate(calc(var(--angle) * -6));
+}
+
+.rotate-0 {
+  transform: rotate(0deg);
+}
+.rotate-1 {
+  transform: rotate(90deg);
+}
+.rotate-2 {
+  transform: rotate(180deg);
+}
+.rotate-3 {
+  transform: rotate(270deg);
 }

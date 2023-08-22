@@ -2,22 +2,15 @@
  *  Central store for all entities in the game.
  * 
  */
-import { writable, derived } from "svelte/store";
+import { EntityType, PortType } from "./enums"
+import { readable, writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { aStarPath, isCoordinate, getDirection } from "../utils/space";
-import { EntityType } from "../../modules/state/enums"
+import { NULL_COORDINATE, aStarPath, withinBounds, sameCoordinate } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
 
 export const GAME_CONFIG_ID = "0x";
-// ...
-export const NULL_COORDINATE = { x: -1, y: -1 }
-
-export const BUILDABLE_ENTITYTYPES = [
-  EntityType.RESOURCE,
-  EntityType.RESOURCE_TO_ENERGY
-]
 
 // --- STORES -----------------------------------------------------------------
 
@@ -145,42 +138,22 @@ export const playerCalculatedEnergy = derived([], () => 0)
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
 export const dropDestination = writable(NULL_COORDINATE as Coord)
+export const hoverDestination = writable(NULL_COORDINATE as Coord)
 
 // Initially set on spawn
 export const originAddress = writable("")
 export const destinationAddress = writable("")
 
-/**
- * Potential connections to draw TODO: Replace
- */
-export const potentialConnections = derived([dragOrigin, dropDestination, playerCore], ([$dragOrigin, $dropDestination, $playerCore]) => {
-  // Return one connection for resource
-  const resourcePotential = {
-    type: EntityType.RESOURCE_CONNECTION,
-    start: $dragOrigin,
-    end: $dropDestination
+let u = []
+  for (let x = 0; x < 6; x++) {
+    for (let y = 0; y < 6; y++) {
+      if (x === 0 || x === 5 || y === 0 || y === 5) {
+        u.push({ x, y })
+      }
+    }
   }
-  const controlPotential = {
-    type: EntityType.CONTROL_CONNECTION,
-    start: $dragOrigin,
-    end: $dropDestination
-  }
+export const untraversables  = readable(u)
 
-  // Check if the core's control is not already connected
-
-  return [resourcePotential, controlPotential]
-})
-
-
-/**
- * Planned connections to draw TODO: replace
- */
-export const plannedConnection = derived([dragOrigin, dropDestination], ([$dragOrigin, $dropDestination]) => {
-  return {
-    start: $dragOrigin,
-    end: $dropDestination
-  }
-})
 
 /**
  * Can the player afford control over this control?
@@ -297,7 +270,7 @@ export const isConnectedControlAny = (target: string) => derived(entities, ($ent
 export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) => {
   const entity = Object.entries($entities).find(([_, ent]) => {
     if (ent.position) {
-      return isCoordinate(ent.position, coordinate)
+      return sameCoordinate(ent.position, coordinate)
     }
 
     return false
@@ -313,84 +286,28 @@ export const tileEntity = (coordinate: Coord) => derived(entities, ($entities) =
   return false
 })
 
-
-export const isDraggable = (address: string) => derived([entities], ([$entities]) => true)
+/**
+ * Get the inputs on given entity's address
+ * @param address string
+ * @returns Port[]
+ */
+export const inputsForEntity = (address: string) => derived([entities], ([$entities]) => {
+  return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
+    entity.entityType === EntityType.PORT &&
+    entity.carriedBy === address &&
+    entity?.portType === PortType.INPUT
+  )) as Ports;
+})
 
 /**
- * An object with the connection's address mapped to a path with start port and end port
- * Port is -1 if not end or start
+ * Get the outputs on given entity's address
+ * @param address string
+ * @returns Port[]
  */
-export const connectionsWithPortInformation = derived([connections, entities, organs], ([$connections, $entities, $organs]) => {
-  function firstAvailablePortNumber(ports: (string | number)[], address: string) {
-    // go up the array until you find a number
-    // return the modified array
-    let port = -1
-
-    for (let i = 0; i < ports.length; i++) {
-      console.log(typeof ports)
-      if (typeof ports[i] === "number") {
-        port = ports[i]
-        ports[i] = address
-        break
-      }
-    }
-
-    return {
-      portNumber: port,
-      updatedPorts: ports
-    }
-  }
-  const north = [0, 1, 2, 3]
-  const east = [4, 5, 6, 7]
-  const south = [8, 9, 10, 11]
-  const west = [12, 13, 14, 15]
-  const ports = { north, east, south, west }
-
-  let temp = Object.entries($organs).map(([_, organ]) => ([_, { ...organ, ports: { ...ports } }]))
-  const organsWithPorts = Object.fromEntries(temp)
-
-  const result = Object.entries($connections).map(([address, connection]) => {
-    const startCoord = $entities[connection.sourcePort].position
-    const endCoord = $entities[connection.targetPort].position
-
-    let path = aStarPath(startCoord, endCoord)
-
-    // get the organ
-    const organ = organsWithPorts[address]
-
-    // Edge case: right next???
-    for (let i = 0; i < path.length; i++) {
-      let port = -1
-      let direction = ""
-
-      if (i === path.length - 1) {
-        direction = getDirection(path[i], path[i - 1])
-        // compare end and second to last for entry direction
-      } else {
-        direction = getDirection(path[i], path[i + 1])
-        // compare 0 and 1 for leave direction
-      }
-
-      if (i === 0 || i === path.length - 1) {
-        let ports = [...organ.ports[direction]]
-
-        const { portNumber, updatedPorts } = firstAvailablePortNumber(ports, address)
-
-        port = portNumber
-
-        // Update ports with 
-        organ.ports[direction] = updatedPorts
-      }
-
-      path[i] = {
-        ...path[i],
-        direction,
-        port
-      }
-    }
-
-    return [address, path]
-  })
-
-  return Object.fromEntries(result)
+export const outputsForEntity = (address: string) => derived([entities], ([$entities]) => {
+  return Object.fromEntries(Object.entries($entities).filter(([_, entity]) =>
+    entity.entityType === EntityType.PORT &&
+    entity.carriedBy === address &&
+    entity?.portType === PortType.OUTPUT
+  )) as Ports;
 })

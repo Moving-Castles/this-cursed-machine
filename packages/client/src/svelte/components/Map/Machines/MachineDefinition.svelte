@@ -1,7 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte"
   export let background = "rgb(255, 244, 0)"
-  import { NULL_COORDINATE, dropDestination } from "../../../modules/state"
+  import { dropDestination } from "../../../modules/state"
+  import { NULL_COORDINATE } from "../../../modules/utils/space"
 
   const tile = getContext("tile") as GridTile
   let modalActive = false
@@ -129,8 +130,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    width: 400px;
-    height: 300px;
+    width: var(--map-width);
+    height: var(--map-height);
     background: inherit;
     color: black;
     z-index: 100000;
