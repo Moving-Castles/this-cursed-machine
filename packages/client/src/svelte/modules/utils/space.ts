@@ -1,4 +1,3 @@
-import type { Coord } from "@latticexyz/utils";
 import { AStarFinder, Grid } from 'pathfinding'
 const finder = new AStarFinder()
 
@@ -143,28 +142,28 @@ export const getDirection = (from: Coord, to: Coord) => {
  * @param height number
  * @returns GridTile[]
  */
-export function initGrid (width: number, height: number) {
-    // Create an empty array to hold the grid
-    let grid = [] as GridTile[]
+export function initGrid(width: number, height: number) {
+  // Create an empty array to hold the grid
+  let grid = [] as GridTile[]
 
-    // Loop through each row of the grid (represented by y)
-    for (let y = 0; y < height; y++) {
-      // Within each row, loop through each cell (represented by x)
-      for (let x = 0; x < width; x++) {
-        // Create a new GridTile object with a unique id and coordinates corresponding to its position
-        const newGridTile: GridTile = {
-          id: `${x}-${y}`,
-          coordinates: { x: x, y: y },
-        }
-
-        // Add the new GridTile to the end of the grid array
-        grid = [...grid, newGridTile]
+  // Loop through each row of the grid (represented by y)
+  for (let y = 0; y < height; y++) {
+    // Within each row, loop through each cell (represented by x)
+    for (let x = 0; x < width; x++) {
+      // Create a new GridTile object with a unique id and coordinates corresponding to its position
+      const newGridTile: GridTile = {
+        id: `${x}-${y}`,
+        coordinates: { x: x, y: y },
       }
-    }
 
-    // Return the fully constructed grid
-    return grid
+      // Add the new GridTile to the end of the grid array
+      grid = [...grid, newGridTile]
+    }
   }
+
+  // Return the fully constructed grid
+  return grid
+}
 
 /**
  * Checks if the given coordinate falls within the given bounds
