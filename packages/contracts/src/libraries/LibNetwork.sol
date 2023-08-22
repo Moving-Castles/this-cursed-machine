@@ -162,6 +162,7 @@ library LibNetwork {
             bytes32 materialEntity = LibUtils.getRandomKey();
             EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
             CreationBlock.set(materialEntity, block.number);
+            CarriedBy.set(materialEntity, _boxEntity);
             MaterialType.set(materialEntity, outputs[k].materialType);
             // Scale by number of blocks since last resolution
             Amount.set(materialEntity, outputs[k].amount * uint32(blocksSinceLastResolution));
