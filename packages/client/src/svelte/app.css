@@ -53,9 +53,7 @@
 * {
   box-sizing: border-box;
   border-color: var(--foreground);
-  -webkit-font-feature-settings:
-    "liga" on,
-    "calt" on;
+  -webkit-font-feature-settings: "liga" on, "calt" on;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
@@ -138,4 +136,9 @@ html {
 }
 .rotate-3 {
   transform: rotate(270deg);
+}
+
+.inline-action {
+  cursor: pointer;
+  text-decoration: underline;
 }

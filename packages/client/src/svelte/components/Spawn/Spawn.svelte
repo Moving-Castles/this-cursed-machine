@@ -1,13 +1,14 @@
 <script lang="ts">
   import { toastMessage } from "../../modules/ui/toast"
-  import { onMount } from "svelte"
+  // import { onMount } from "svelte"
   import { playSound } from "../../modules/sound"
   import { spawn } from "../../modules/action"
+  import Terminal from "../Terminal/Terminal.svelte"
 
-  import Ellipse from "../Game/Ellipse.svelte"
+  // import Ellipse from "../Game/Ellipse.svelte"
 
-  let inputEl: HTMLInputElement
   let name = ""
+
   let spawnInProgress = false
   function sendSpawn() {
     if (spawnInProgress) return
@@ -18,16 +19,26 @@
     }
     spawnInProgress = true
     playSound("tekken", "click")
+    console.log(name.toUpperCase())
     spawn(name.toUpperCase())
   }
 
-  onMount(() => {
-    inputEl.focus()
-  })
+  const onDone = e => {
+    console.log("ONE DONE", e.detail)
+    name = e.detail
+    sendSpawn()
+  }
 </script>
 
 <div class="spawn">
-  <div class="spawn-dialog">
+  <Terminal
+    input
+    theme="transparent"
+    placeholder="Who are you? (5 char min)"
+    sequence={[""]}
+    on:done={onDone}
+  />
+  <!-- <div class="spawn-dialog">
     Who are you?<br />
     <input
       class="name-input"
@@ -45,11 +56,11 @@
         <Ellipse />
       {:else}
         SPAWN{/if}
-    </button>
-  </div>
+    </button> -->
+  <!-- </div> -->
 </div>
 
-<style lang="scss">
+<!-- <style lang="scss">
   .spawn {
     font-family: var(--font-family-special);
     position: fixed;
@@ -104,5 +115,17 @@
     &:hover {
       background: white;
     }
+  }
+</style> -->
+
+<style>
+  .spawn {
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    background: url("/bg.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
   }
 </style>

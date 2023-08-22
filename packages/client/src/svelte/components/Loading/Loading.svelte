@@ -19,7 +19,8 @@
       {#if !$ready}
         {$loadingMessage}
       {:else}
-        {lore.title}
+        <img src="/GM.png" alt={lore.title} class="gm headshake" />
+        <!-- {lore.title} -->
       {/if}
     </div>
   </div>
@@ -55,6 +56,55 @@
       margin-left: auto;
       margin-right: auto;
       font-family: var(--font-family-special);
+    }
+
+    .gm {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      filter: contrast(2);
+    }
+    .headshake {
+      animation: 10s infinite linear headshake;
+    }
+  }
+
+  @keyframes headshake {
+    0% {
+      transform: translate(-50%, -50%) translateX(0);
+    }
+
+    6.5% {
+      transform: translate(-50%, -50%) translateX(-6px) rotateY(-9deg);
+    }
+
+    18.1% {
+      transform: translate(-50%, -50%) translateX(5px) rotateY(7deg);
+      filter: contrast(2) invert(0);
+    }
+    18.7% {
+      transform: translate(-50%, -50%) skew(80deg, 80deg) scale(-5)
+        translateX(5px) rotateY(7deg);
+      filter: contrast(2) invert(1);
+    }
+    19.8% {
+      transform: translate(-50%, -50%) translateX(5px) rotateY(7deg);
+      filter: contrast(2) invert(0);
+    }
+
+    31.5% {
+      transform: translate(-50%, -50%) translateX(-3px) rotateY(-5deg);
+    }
+
+    43.5% {
+      transform: translate(-50%, -50%) translateX(2px) rotateY(3deg);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) translateX(0);
+    }
+    100% {
+      transform: translate(-50%, -50%);
     }
   }
 </style>
