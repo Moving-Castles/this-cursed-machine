@@ -1,6 +1,8 @@
 <script lang="ts">
   import { narrative } from "../../modules/content/lore"
+  import { showFlowChart } from "../../modules/ui/stores"
   import Terminal from "../Terminal/Terminal.svelte"
+  import FlowChart from "../FlowChart/FlowChart.svelte"
 
   let done = false
 
@@ -23,13 +25,22 @@
   let theme = "dark"
 </script>
 
-<div class="bg {theme}">
+{#if $showFlowChart}
+  <div class="esc" on:click={() => ($showFlowChart = false)}>(esc)</div>
+
+  <div class="flowchart-container">
+    <FlowChart />
+  </div>
+{/if}
+
+<div class="bg">
   {#if !done}
     <Terminal on:done={onDone} sequence={$narrative.intro} />
   {:else}
     <Terminal
-      placeholder={randomTerm}
       bind:theme
+      track={false}
+      placeholder={"[h] for help. " + randomTerm}
       sequence={[$narrative.help]}
     />
   {/if}
@@ -57,9 +68,36 @@
     position: fixed;
     inset: 0;
     transition: background 2s ease, border 2s ease, color 2s ease;
+    background: var(--terminal-background);
+  }
 
-    &.light {
-      background: white;
-    }
+  .flowchart-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 2rem;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--terminal-background);
+  }
+
+  .inline-flowchart {
+    padding: 100px;
+  }
+
+  .esc {
+    position: fixed;
+    z-index: 9999;
+    margin: 2rem;
+    top: 0;
+    right: 0;
+    font-family: monospace;
+    cursor: pointer;
+    color: var(--terminal-color);
   }
 </style>

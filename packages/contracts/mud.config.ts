@@ -1,18 +1,20 @@
 import { mudConfig } from "@latticexyz/world/register";
 import { resolveTableId } from "@latticexyz/config";
 
+export const enums = {
+  ENTITY_TYPE: ["BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
+  MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER"],
+  MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
+  CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
+  PORT_TYPE: ["INPUT", "OUTPUT"],
+  PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
+  ROTATION: ["DEG0", "DEG90", "DEG180", "DEG270"]
+}
+
 export default mudConfig({
     deploysDirectory: "./deploys",
     namespace: "mc",
-    enums: {
-        ENTITY_TYPE: ["BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
-        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER"],
-        MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
-        CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
-        PORT_TYPE: ["INPUT", "OUTPUT"],
-        PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
-        ROTATION: ["DEG0", "DEG90", "DEG180", "DEG270"]
-    },
+    enums,
     tables: {
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",

@@ -2,10 +2,10 @@
  *  Central store for all entities in the game.
  * 
  */
-import { EntityType, PortType } from "./enums"
+import { EntityType, MachineType, PortType } from "./enums"
 import { readable, writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { NULL_COORDINATE, aStarPath, withinBounds, sameCoordinate } from "../utils/space";
+import { NULL_COORDINATE, aStarPath, sameCoordinate } from "../utils/space";
 import type { Coord } from "@latticexyz/utils"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -33,11 +33,19 @@ export const boxes = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.BOX)) as Boxes;
 });
 
+
+/**
+ * Machines are in the box and convert their inputs to outputs.
+*/
+export const machines = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MACHINE))
+});
+
 /**
  * Cores are the agents of the player.
  */
-export const cores = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.CORE)) as Cores;
+export const cores = derived(machines, ($machines) => {
+  return Object.fromEntries(Object.entries($machines).filter(([, machine]) => machine.machineType === MachineType.CORE)) as Cores;
 });
 
 /**
@@ -51,19 +59,18 @@ export const connections = derived(entities, ($entities) => {
  * Ports are the entry and exit points
  */
 export const ports = derived(entities, ($entities) => {
-  console.log("ents ", $entities)
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.PORT)) as Ports;
 });
 
-/**
- * These are the active organs
- */
-export const organs = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => {
-    return entity.type !== EntityType.RESOURCE &&
-      entity.type !== EntityType.RESOURCE_TO_ENERGY
-  })) as Organs;
-})
+// Port inputs
+export const inputs = derived(ports, ($ports) => {
+  return Object.fromEntries(Object.entries($ports).filter(([, port]) => port.portType === PortType.INPUT)) as Ports;
+});
+// Port outputs
+export const outputs = derived(ports, ($ports) => {
+  return Object.fromEntries(Object.entries($ports).filter(([, port]) => port.portType === PortType.OUTPUT)) as Ports;
+});
+
 
 
 // *** PLAYER -----------------------------------------------------------------
@@ -78,7 +85,7 @@ export const playerEntityId = derived(network,
   $network => $network.playerEntity || "0x0");
 
 export const playerCore = derived([cores, playerEntityId],
-  ([$cores, $playerEntityId]) => $cores[$playerEntityId] as Core
+  ([$cores, $playerEntityId]) => $cores[$playerEntityId]
 );
 
 export const playerInCooldown = derived([playerCore, blockNumber],
