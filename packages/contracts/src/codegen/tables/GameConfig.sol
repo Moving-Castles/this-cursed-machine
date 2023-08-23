@@ -30,8 +30,15 @@ struct GameConfigData {
 }
 
 library GameConfig {
-  /** Get the table's schema */
-  function getSchema() internal pure returns (Schema) {
+  /** Get the table's key schema */
+  function getKeySchema() internal pure returns (Schema) {
+    SchemaType[] memory _schema = new SchemaType[](0);
+
+    return SchemaLib.encode(_schema);
+  }
+
+  /** Get the table's value schema */
+  function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](6);
     _schema[0] = SchemaType.UINT32;
     _schema[1] = SchemaType.UINT32;
@@ -43,51 +50,37 @@ library GameConfig {
     return SchemaLib.encode(_schema);
   }
 
-  function getKeySchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](0);
-
-    return SchemaLib.encode(_schema);
+  /** Get the table's key names */
+  function getKeyNames() internal pure returns (string[] memory keyNames) {
+    keyNames = new string[](0);
   }
 
-  /** Get the table's metadata */
-  function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](6);
-    _fieldNames[0] = "coolDown";
-    _fieldNames[1] = "coreEnergyCap";
-    _fieldNames[2] = "coreInitialEnergy";
-    _fieldNames[3] = "resourceConnectionCost";
-    _fieldNames[4] = "controlConnectionCost";
-    _fieldNames[5] = "buildCost";
-    return ("GameConfig", _fieldNames);
+  /** Get the table's field names */
+  function getFieldNames() internal pure returns (string[] memory fieldNames) {
+    fieldNames = new string[](6);
+    fieldNames[0] = "coolDown";
+    fieldNames[1] = "coreEnergyCap";
+    fieldNames[2] = "coreInitialEnergy";
+    fieldNames[3] = "resourceConnectionCost";
+    fieldNames[4] = "controlConnectionCost";
+    fieldNames[5] = "buildCost";
   }
 
-  /** Register the table's schema */
-  function registerSchema() internal {
-    StoreSwitch.registerSchema(_tableId, getSchema(), getKeySchema());
+  /** Register the table's key schema, value schema, key names and value names */
+  function register() internal {
+    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
-  /** Register the table's schema (using the specified store) */
-  function registerSchema(IStore _store) internal {
-    _store.registerSchema(_tableId, getSchema(), getKeySchema());
-  }
-
-  /** Set the table's metadata */
-  function setMetadata() internal {
-    (string memory _tableName, string[] memory _fieldNames) = getMetadata();
-    StoreSwitch.setMetadata(_tableId, _tableName, _fieldNames);
-  }
-
-  /** Set the table's metadata (using the specified store) */
-  function setMetadata(IStore _store) internal {
-    (string memory _tableName, string[] memory _fieldNames) = getMetadata();
-    _store.setMetadata(_tableId, _tableName, _fieldNames);
+  /** Register the table's key schema, value schema, key names and value names (using the specified store) */
+  function register(IStore _store) internal {
+    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Get coolDown */
   function getCoolDown() internal view returns (uint32 coolDown) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -95,7 +88,7 @@ library GameConfig {
   function getCoolDown(IStore _store) internal view returns (uint32 coolDown) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -103,21 +96,21 @@ library GameConfig {
   function setCoolDown(uint32 coolDown) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)), getValueSchema());
   }
 
   /** Set coolDown (using the specified store) */
   function setCoolDown(IStore _store, uint32 coolDown) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)), getValueSchema());
   }
 
   /** Get coreEnergyCap */
   function getCoreEnergyCap() internal view returns (uint32 coreEnergyCap) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -125,7 +118,7 @@ library GameConfig {
   function getCoreEnergyCap(IStore _store) internal view returns (uint32 coreEnergyCap) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -133,21 +126,21 @@ library GameConfig {
   function setCoreEnergyCap(uint32 coreEnergyCap) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)), getValueSchema());
   }
 
   /** Set coreEnergyCap (using the specified store) */
   function setCoreEnergyCap(IStore _store, uint32 coreEnergyCap) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)), getValueSchema());
   }
 
   /** Get coreInitialEnergy */
   function getCoreInitialEnergy() internal view returns (uint32 coreInitialEnergy) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -155,7 +148,7 @@ library GameConfig {
   function getCoreInitialEnergy(IStore _store) internal view returns (uint32 coreInitialEnergy) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -163,21 +156,21 @@ library GameConfig {
   function setCoreInitialEnergy(uint32 coreInitialEnergy) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)), getValueSchema());
   }
 
   /** Set coreInitialEnergy (using the specified store) */
   function setCoreInitialEnergy(IStore _store, uint32 coreInitialEnergy) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)), getValueSchema());
   }
 
   /** Get resourceConnectionCost */
   function getResourceConnectionCost() internal view returns (uint32 resourceConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -185,7 +178,7 @@ library GameConfig {
   function getResourceConnectionCost(IStore _store) internal view returns (uint32 resourceConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -193,21 +186,21 @@ library GameConfig {
   function setResourceConnectionCost(uint32 resourceConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)), getValueSchema());
   }
 
   /** Set resourceConnectionCost (using the specified store) */
   function setResourceConnectionCost(IStore _store, uint32 resourceConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)), getValueSchema());
   }
 
   /** Get controlConnectionCost */
   function getControlConnectionCost() internal view returns (uint32 controlConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -215,7 +208,7 @@ library GameConfig {
   function getControlConnectionCost(IStore _store) internal view returns (uint32 controlConnectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -223,21 +216,21 @@ library GameConfig {
   function setControlConnectionCost(uint32 controlConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)), getValueSchema());
   }
 
   /** Set controlConnectionCost (using the specified store) */
   function setControlConnectionCost(IStore _store, uint32 controlConnectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)), getValueSchema());
   }
 
   /** Get buildCost */
   function getBuildCost() internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -245,7 +238,7 @@ library GameConfig {
   function getBuildCost(IStore _store) internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -253,21 +246,21 @@ library GameConfig {
   function setBuildCost(uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)), getValueSchema());
   }
 
   /** Set buildCost (using the specified store) */
   function setBuildCost(IStore _store, uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)), getValueSchema());
   }
 
   /** Get the full data */
   function get() internal view returns (GameConfigData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getSchema());
+    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -275,7 +268,7 @@ library GameConfig {
   function get(IStore _store) internal view returns (GameConfigData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getSchema());
+    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -299,7 +292,7 @@ library GameConfig {
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setRecord(_tableId, _keyTuple, _data);
+    StoreSwitch.setRecord(_tableId, _keyTuple, _data, getValueSchema());
   }
 
   /** Set the full data using individual values (using the specified store) */
@@ -323,7 +316,7 @@ library GameConfig {
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setRecord(_tableId, _keyTuple, _data);
+    _store.setRecord(_tableId, _keyTuple, _data, getValueSchema());
   }
 
   /** Set the full data using the data struct */
@@ -387,21 +380,23 @@ library GameConfig {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple() internal pure returns (bytes32[] memory _keyTuple) {
-    _keyTuple = new bytes32[](0);
+  function encodeKeyTuple() internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    return _keyTuple;
   }
 
   /* Delete all data for given keys */
   function deleteRecord() internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.deleteRecord(_tableId, _keyTuple);
+    StoreSwitch.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
 
   /* Delete all data for given keys (using the specified store) */
   function deleteRecord(IStore _store) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.deleteRecord(_tableId, _keyTuple);
+    _store.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
 }

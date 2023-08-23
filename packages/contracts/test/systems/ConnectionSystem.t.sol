@@ -20,31 +20,24 @@ contract ConnectionSystemTest is MudV2Test {
     bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2, ROTATION.DEG0);
     vm.stopPrank();
 
-    // Add input port to new entity
-    // TODO: This should be done by the build system, and function should be added to get ports connected to entity
-    bytes32 inputPort = LibUtils.getRandomKey();
-    world.mc_DevSystem_set(EntityTypeTableId, inputPort, abi.encodePacked(ENTITY_TYPE.PORT));
-    world.mc_DevSystem_set(CreationBlockTableId, inputPort, abi.encodePacked(block.number));
-    world.mc_DevSystem_set(PortTypeTableId, inputPort, abi.encodePacked(PORT_TYPE.INPUT));
-    world.mc_DevSystem_set(PortPlacementTableId, inputPort, abi.encodePacked(PORT_PLACEMENT.RIGHT));
-    world.mc_DevSystem_set(CarriedByTableId, inputPort, abi.encodePacked(newEntity));
+    // Get input ports for new entity
+    bytes32[][] memory newEntityInputPorts = LibPort.getPorts(world, newEntity, PORT_TYPE.INPUT);
 
-    // Add out port to core
-    bytes32 outputPort = LibUtils.getRandomKey();
-    world.mc_DevSystem_set(EntityTypeTableId, outputPort, abi.encodePacked(ENTITY_TYPE.PORT));
-    world.mc_DevSystem_set(CreationBlockTableId, outputPort, abi.encodePacked(block.number));
-    world.mc_DevSystem_set(PortTypeTableId, outputPort, abi.encodePacked(PORT_TYPE.OUTPUT));
-    world.mc_DevSystem_set(PortPlacementTableId, outputPort, abi.encodePacked(PORT_PLACEMENT.LEFT));
-    world.mc_DevSystem_set(CarriedByTableId, outputPort, abi.encodePacked(coreEntity));
+    // Get output port for core
+    bytes32[][] memory coreEntityOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
 
     // Connect
     vm.startPrank(alice);
-    bytes32 connection = world.mc_ConnectionSystem_connect(CONNECTION_TYPE.RESOURCE, outputPort, inputPort);
+    bytes32 connection = world.mc_ConnectionSystem_connect(
+      CONNECTION_TYPE.RESOURCE,
+      coreEntityOutputPorts[0][0],
+      newEntityInputPorts[0][0]
+    );
     vm.stopPrank();
 
     // Check that the connection was created
     assertEq(uint8(EntityType.get(world, connection)), uint8(ENTITY_TYPE.CONNECTION));
-    assertEq(SourcePort.get(world, connection), outputPort);
-    assertEq(TargetPort.get(world, connection), inputPort);
+    assertEq(SourcePort.get(world, connection), coreEntityOutputPorts[0][0]);
+    assertEq(TargetPort.get(world, connection), newEntityInputPorts[0][0]);
   }
 }

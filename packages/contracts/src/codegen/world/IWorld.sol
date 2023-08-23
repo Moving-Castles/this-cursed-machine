@@ -7,7 +7,6 @@ import { IBaseWorld } from "@latticexyz/world/src/interfaces/IBaseWorld.sol";
 
 import { IBuildSystem } from "./IBuildSystem.sol";
 import { IConnectionSystem } from "./IConnectionSystem.sol";
-import { IDevSystem } from "./IDevSystem.sol";
 import { IInitSystem } from "./IInitSystem.sol";
 import { IResolutionSystem } from "./IResolutionSystem.sol";
 import { IRotationSystem } from "./IRotationSystem.sol";
@@ -22,7 +21,6 @@ interface IWorld is
   IBaseWorld,
   IBuildSystem,
   IConnectionSystem,
-  IDevSystem,
   IInitSystem,
   IResolutionSystem,
   IRotationSystem,

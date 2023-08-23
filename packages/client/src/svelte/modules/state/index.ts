@@ -5,8 +5,7 @@
 import { EntityType, MachineType, PortType } from "./enums"
 import { readable, writable, derived } from "svelte/store";
 import { network, blockNumber } from "../network";
-import { NULL_COORDINATE, aStarPath, sameCoordinate } from "../utils/space";
-import type { Coord } from "@latticexyz/utils"
+import { NULL_COORDINATE, aStarPath, withinBounds, sameCoordinate } from "../utils/space";
 
 // --- CONSTANTS --------------------------------------------------------------
 
@@ -153,14 +152,14 @@ export const originAddress = writable("")
 export const destinationAddress = writable("")
 
 let u = []
-  for (let x = 0; x < 6; x++) {
-    for (let y = 0; y < 6; y++) {
-      if (x === 0 || x === 5 || y === 0 || y === 5) {
-        u.push({ x, y })
-      }
+for (let x = 0; x < 6; x++) {
+  for (let y = 0; y < 6; y++) {
+    if (x === 0 || x === 5 || y === 0 || y === 5) {
+      u.push({ x, y })
     }
   }
-export const untraversables  = readable(u)
+}
+export const untraversables = readable(u)
 
 
 /**
