@@ -18,20 +18,5 @@ contract InitSystem is System {
         buildCost: 20
       })
     );
-
-    // // Place untraversables
-    //  PositionData[4] memory untraversableTiles = [
-    //   PositionData(0, 0),
-    //   PositionData(3, 0),
-    //   PositionData(3, 3),
-    //   PositionData(0, 3)
-    // ];
-
-    // for (uint256 i = 0; i < untraversableTiles.length; ++i) {
-    //   bytes32 untraversableEntity = LibUtils.getRandomKey();
-    //   Type.set(untraversableEntity, EntityType.UNTRAVERSABLE);
-    //   Position.set(untraversableEntity, untraversableTiles[i]);
-    //   CreationBlock.set(untraversableEntity, block.number);
-    // }
   }
 }

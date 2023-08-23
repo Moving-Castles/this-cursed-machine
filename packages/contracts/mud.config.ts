@@ -23,6 +23,7 @@ export default mudConfig({
         PortType: "PORT_TYPE",
         // ...
         Name: "string",
+        Energy: "uint32",
         CarriedBy: "bytes32",
         IsPrototype: "bool",
         Amount: "uint32",

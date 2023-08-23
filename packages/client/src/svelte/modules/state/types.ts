@@ -30,6 +30,7 @@ declare global {
     // ...
     creationBlock?: number;
     name?: string;
+    energy: number;
     readyBlock?: number;
     level?: number;
     height?: number;
@@ -72,6 +73,16 @@ declare global {
     maxCores: number;
     active: boolean;
     lastResolved: number;
+  }
+
+  type Core = {
+    type: EntityType.MACHINE;
+    machineType: MachineType.CORE;
+    name: string;
+    creationBlock: number;
+    energy: number;
+    readyBlock: number;
+    level: number;
   }
 
   type Connection = {
