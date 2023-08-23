@@ -1,6 +1,5 @@
 export enum EntityType {
     BOX,
-    CORE,
     MACHINE,
     CONNECTION,
     MATERIAL,
@@ -10,6 +9,7 @@ export enum MachineType {
     BLOCKER,
     INLET,
     OUTLET,
+    CORE,
     BLENDER,
     SPLITTER,
     SCORCHER

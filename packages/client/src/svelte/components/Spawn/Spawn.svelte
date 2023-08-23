@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toastMessage } from "../../modules/ui/toast"
-  import { playerCore } from "../../modules/state"
+  import { playerCore, machines } from "../../modules/state"
   import { playSound } from "../../modules/sound"
   import { spawn } from "../../modules/action"
   import Terminal from "../Terminal/Terminal.svelte"
@@ -25,7 +25,11 @@
 
   const onDone = e => {
     name = e.detail
+    console.log("SPAWNY")
     sendSpawn()
+    setTimeout(() => {
+      console.log($playerCore, $machines)
+    }, 5000)
   }
 </script>
 
@@ -35,7 +39,6 @@
       input
       theme="transparent"
       placeholder="Who are you? (5 char min)"
-      sequence={["", ""]}
       on:done={onDone}
     />
   {/if}

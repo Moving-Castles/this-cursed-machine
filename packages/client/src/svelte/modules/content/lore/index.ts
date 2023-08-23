@@ -45,7 +45,8 @@ I'm Puppitywink, your new manager`,
 help: `Commands:
 (Add machine)       [m]
 (Add pipe)          [p]
-(Help)              [h]
+(Flowchart)         [f]
 (Call puppitywink)  [wink]
+(Help )             [h]      <- You are here
 `
 })

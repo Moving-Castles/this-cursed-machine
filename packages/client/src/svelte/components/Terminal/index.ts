@@ -1,11 +1,17 @@
 import { MachineType, ConnectionType } from "../../modules/state/enums"
-import { ports } from "../../modules/state"
+import {
+  ports,
+  inputs as inputsStore,
+  outputs as outputsStore,
+  machines as machinesStore
+} from "../../modules/state"
+import { showFlowChart } from "../../modules/ui/stores"
 import { portSelection } from "../../modules/ui/paths"
 import { writable, get } from "svelte/store"
 import { build, connect } from "../../modules/action"
 import { isNumeric } from "../../modules/utils/misc"
 
-const machines = Object.entries(MachineType).slice(0, Math.floor(Object.values(MachineType).length / 2))
+const machinesNames = Object.entries(MachineType).slice(0, Math.floor(Object.values(MachineType).length / 2))
 
 /**
  * Core >::)
@@ -19,23 +25,6 @@ export const output = writable("")
  */
 export const argsTest = /(?<=\[).+?(?=\])/g
 
-// FAKE
-const inputs = [
-  0,
-  1,
-  2,
-  3,
-  4
-]
-const outputs = [
-  5,
-  6,
-  7,
-  8,
-  9
-]
-
-
 /**
  * Returns a parsed string. 
  * 
@@ -44,8 +33,11 @@ const outputs = [
  * @returns 
  */
 export const parsed = (string: string) => {
+  console.log('parse: ', string)
   // Replace all actions
-  const parsed = string.replaceAll(/(?<=\().+?(?=\))/g, (match) => `<span class="inline-action" data-action="${match.split(" ")[0]}" data-args="${argsTest.exec(string) || match.split(" ")[1]}">${match}</span>`)
+  const parsed = string.split('\n').map(s => {
+    return s.replaceAll(/(?<=\().+?(?=\))/g, (match) => `<span class="inline-action" data-action="${match.split(" ")[0]}" data-args="${argsTest.exec(string) || match.split(" ")[1]}">${match}</span>`)
+  }).join("\n")
   return parsed
 }
 
@@ -69,36 +61,61 @@ export const handleClick = (e) => handleAction(e.currentTarget.dataset.action, e
  * @param e Click event
  */
 export const handleAction = (action: string, args: string[]) => {
-  console.log(get(ports))
+  const machines = get(machinesStore)
+  const inputs = Object.entries(get(inputsStore))
+  const outputs = Object.entries(get(outputsStore))
+
+
   switch (action) {
     case ("Add"):
       if (args[0] === "machine") {
-        advance(`Build a ${args[0]}:\n${machines.map(([index, mach]) => `(New ${mach}) [${index}] `).join("\n")}`)
+        advance(`Build a ${args[0]}:\n${machinesNames.map(([index, mach]) => `(New ${mach}) [${index}] `).join("\n")}`)
       } else {
-        advance(inputs.map((port) => `(From Port) [${port}]`).join("\n"))
+        advance(outputs.map(([add, port]) => {
+          const fromMachine = machines[port.carriedBy]
+          return `(From ${MachineType[fromMachine.machineType]}) [${add}]`
+        }).join("\n"))
       }
       break
+
     case ("New"):
       let arg = args[0]
+
       if (isNumeric(arg)) arg = Number(arg)
+
       if (Object.values(MachineType).includes(arg)) {
         const numArg = isNaN(arg) ? MachineType[arg] : arg
         const textArg = !isNaN(arg) ? MachineType[arg] : arg
+
         build(numArg, 0, 0, 0)
         advance("Building a " + textArg)
       }
       break
-    // From Port is for pipes 
+
+    case ("Flowchart"):
+      showFlowChart.set(true)
+      break
+
     case ("From"):
       portSelection.set([args[0]])
-      advance(outputs.map((port) => `(To Port) [${port}]`).join("\n"))
+      advance(inputs.map(([add, port]) => {
+        const toMachine = machines[port.carriedBy]
+        return `(To ${MachineType[toMachine.machineType]}) [${add}]`
+      }).join("\n"))
       break
     case ("To"):
+      console.log(args[0])
       let selection = get(portSelection)
       portSelection.set([...selection, args[0]])
       selection = get(portSelection)
+
       connect(ConnectionType.RESOURCE, selection[0], selection[1])
       advance(`Building a pipe from ${selection[0]} to ${selection[1]}`)
+
+      setTimeout(() => {
+        advance("Type [f] to see your box")
+      }, 1000)
+
       break
     default:
       break

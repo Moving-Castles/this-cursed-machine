@@ -138,6 +138,10 @@ html {
   transform: rotate(270deg);
 }
 
+.leader-line {
+  z-index: 9999;
+}
+
 .inline-action {
   cursor: pointer;
   text-decoration: underline;

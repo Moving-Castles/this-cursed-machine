@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import { typewriter } from "../../modules/ui/transitions"
+  import { showFlowChart } from "../../modules/ui/stores"
   import { narrative } from "../../modules/content/lore"
   import { playSound } from "../../modules/sound"
   import {
@@ -13,15 +14,16 @@
     handleAction,
     argsTest,
   } from "./index"
-  export let sequence: string[]
+  export let sequence: string[] = []
   export let speed = 80
   export let theme = "dark"
   export let placeholder = "Start typing ([ENTER] for next, [s] to skip intro)"
   export let loop = false
+  export let track = true
   export let input = false
 
   /** Init */
-  seq.set(sequence)
+  if (!input) seq.set(sequence)
 
   /** Constants */
   const themeOptions = ["dark", "light", "transparent"]
@@ -80,7 +82,10 @@
 
     const args = userInput.match(argsTest)
 
-    if (input) dispatch("done", userInput)
+    if (input) {
+      dispatch("done", userInput)
+      placeholder = "loading..."
+    }
 
     if (userInput === "") {
       next()
@@ -94,6 +99,8 @@
       handleAction("Add", ["machine"])
     } else if (userInput === "p") {
       handleAction("Add", ["pipe"])
+    } else if (userInput === "f") {
+      $showFlowChart = true
     } else if (userInput === "wink") {
       advance(`
 @@@@@@@@@@@@@@@%&&&@@@@@@@@@@@@@@@@@@@@@
@@ -152,6 +159,30 @@
     let t = $seq[$index]
     if (t) $output = t
   }
+  $: {
+    if (theme === "dark") {
+      document.documentElement.style.setProperty(
+        "--terminal-background",
+        "black"
+      )
+      document.documentElement.style.setProperty("--terminal-color", "yellow")
+      document.documentElement.style.setProperty(
+        "--terminal-border",
+        "1px dashed yellow"
+      )
+    }
+    if (theme === "light") {
+      document.documentElement.style.setProperty(
+        "--terminal-background",
+        "white"
+      )
+      document.documentElement.style.setProperty("--terminal-color", "black")
+      document.documentElement.style.setProperty(
+        "--terminal-border",
+        "1px dashed black"
+      )
+    }
+  }
 
   /** Lifecycle hooks */
   onMount(() => {
@@ -162,24 +193,30 @@
   onDestroy(() => index.set(-1))
 </script>
 
-<div class="terminal {theme}">
-  <p class="track">
-    {$index} / {$seq.length}
-  </p>
-  {#key key}
-    <div class="terminal-output">
-      <p
-        in:typewriter={{ speed: skip ? 0 : speed }}
-        on:introstart={introStart}
-        on:introend={introEnd}
-        class="output-content"
-      >
-        {@html parsed($output)}
+<div class="terminal">
+  {#if !input}
+    {#if track}
+      <p class="track">
+        {$index} / {$seq.length}
       </p>
-    </div>
-  {/key}
+    {/if}
+    {#key key}
+      <div class="terminal-output">
+        <p
+          in:typewriter={{ speed: skip ? 0 : speed }}
+          on:introstart={introStart}
+          on:introend={introEnd}
+          class="output-content"
+        >
+          {@html parsed($output)}
+        </p>
+      </div>
+    {/key}
+  {/if}
   <form on:submit|preventDefault={onSubmit}>
-    e: {energy}
+    {#if !input}
+      <span>e: {energy}</span>
+    {/if}
     <input
       type="text"
       class="terminal-input"
@@ -200,6 +237,9 @@
     transform: translate(-50%, -50%);
     overflow: hidden;
     transition: background 2s ease, color 2s ease;
+    border: var(--terminal-border);
+    color: var(--terminal-color);
+    background: var(--terminal-background);
 
     .track {
       position: absolute;
@@ -207,38 +247,15 @@
       pointer-events: none;
     }
 
-    &.dark {
-      border: 1px dashed yellow;
-      color: yellow;
-      background: black;
-
-      .terminal-input {
-        background: #000;
-        color: yellow;
-      }
-    }
-
-    &.transparent {
-      border: 1px dashed red;
-      background: transparent;
-      color: red;
-
-      .terminal-input {
-        background: transparent;
-        color: red;
-      }
-    }
-
-    &.light {
-      border: 1px dashed black;
-      color: black;
-      background: white;
+    .terminal-input {
+      background: var(--terminal-background);
+      color: var(--terminal-color);
     }
 
     * {
       &::selection {
-        background: yellow;
-        color: black;
+        background: var(--terminal-color);
+        color: var(--terminal-background);
       }
     }
 

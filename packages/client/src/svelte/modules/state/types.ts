@@ -74,17 +74,6 @@ declare global {
     lastResolved: number;
   }
 
-  type Core = {
-    type: EntityType.CORE;
-    name: string;
-    creationBlock: number;
-    readyBlock: number;
-    level: number;
-    carriedBy: string;
-    position: Coord;
-    rotation: Rotation;
-  };
-
   type Connection = {
     type: EntityType.CONNECTION;
     creationBlock: number;
@@ -125,10 +114,6 @@ declare global {
 
   // ---
 
-  type Organ = Resource | ResourceToEnergy
-
-  // ---
-
   type Entities = {
     [index: string]: Entity;
   };
@@ -149,8 +134,8 @@ declare global {
     [index: string]: Claim;
   };
 
-  type Organs = {
-    [index: string]: Organ;
+  type Machines = {
+    [index: string]: Machine;
   };
 
   type Resources = {
