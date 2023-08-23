@@ -4,7 +4,7 @@ import { resolveTableId } from "@latticexyz/config";
 export const enums = {
     ENTITY_TYPE: ["BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
     MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER", "COMBI_GATE"],
-    MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
+    MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH", "TEETH"],
     CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
     PORT_TYPE: ["INPUT", "OUTPUT"],
     PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],

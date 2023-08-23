@@ -116,18 +116,22 @@ library LibMachine {
     return outputs;
   }
 
-  /**
-   * @notice NOT DONE
-   */
   function blender(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    //@todo: NOT DONE
     Product[] memory outputs = new Product[](2);
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
-      materialType: _inputs[0].materialType,
+      materialType: MATERIAL_TYPE.DIRT,
       amount: _inputs[0].amount,
-      temperature: _inputs[0].temperature + 30
+      temperature: _inputs[0].temperature
     });
+
+    // 1: BLOOD + PISS = TEETH
+    if (
+      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.BLOOD)
+    ) {
+      outputs[0].materialType = MATERIAL_TYPE.TEETH;
+    }
     return outputs;
   }
 
@@ -141,7 +145,7 @@ library LibMachine {
       machineId: _inputs[0].machineId,
       materialType: _inputs[0].materialType,
       amount: _inputs[0].amount,
-      temperature: _inputs[0].temperature + 30
+      temperature: _inputs[0].temperature
     });
     return outputs;
   }

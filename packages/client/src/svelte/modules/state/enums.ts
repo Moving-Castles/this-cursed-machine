@@ -12,7 +12,6 @@ export enum MachineType {
     CORE,
     BLENDER,
     SPLITTER,
-    SCORCHER
 }
 
 export enum MaterialType {
@@ -21,7 +20,8 @@ export enum MaterialType {
     PISS,
     DIRT,
     SAND,
-    FLESH
+    FLESH,
+    TEETH
 }
 
 export enum PortType {
