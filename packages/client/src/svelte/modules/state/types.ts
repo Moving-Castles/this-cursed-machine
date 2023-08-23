@@ -47,6 +47,7 @@ declare global {
     rotation?: Rotation;
     amount?: number;
     lastResolved?: number;
+    temperature?: number;
   };
 
   type BuildableEntity = {
@@ -103,6 +104,7 @@ declare global {
     type: EntityType.MATERIAL;
     creationBlock: number;
     amount: number;
+    temperature: number;
   };
 
   type ResourceToEnergy = {

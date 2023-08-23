@@ -2,8 +2,9 @@
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, Active, ActiveTableId, MinCores, MaxCores, Width, Height, CreationBlock, CarriedBy, CarriedByTableId } from "../codegen/Tables.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, Active, ActiveTableId, MinCores, MaxCores, Width, Height, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount } from "../codegen/Tables.sol";
 import { ENTITY_TYPE } from "../codegen/Types.sol";
+import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibBox {
@@ -85,5 +86,21 @@ library LibBox {
     fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_boxEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
+  }
+
+  function writeOutput(bytes32 _boxEntity, uint256 _blocksSinceLastResolution, Product memory _output) internal {
+    // Write final output(s) to components
+    bytes32 materialEntity = LibUtils.getRandomKey();
+    EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
+    CreationBlock.set(materialEntity, block.number);
+    CarriedBy.set(materialEntity, _boxEntity);
+    MaterialType.set(materialEntity, _output.materialType);
+    Temperature.set(materialEntity, _output.temperature);
+    // Scale by number of blocks since last resolution
+    Amount.set(materialEntity, _output.amount * uint32(_blocksSinceLastResolution));
+    // ...
+    console.log("=!=!=!=!= output");
+    console.log(uint256(_output.materialType));
+    console.log(uint256(_output.amount * uint32(_blocksSinceLastResolution)));
   }
 }

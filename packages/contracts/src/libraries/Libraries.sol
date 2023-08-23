@@ -10,3 +10,5 @@ import { LibConnection } from "./LibConnection.sol";
 import { LibEntity } from "./LibEntity.sol";
 import { LibNetwork } from "./LibNetwork.sol";
 import { LibArray } from "./LibArray.sol";
+import { LibMachine } from "./LibMachine.sol";
+import { LibMaterial } from "./LibMaterial.sol";

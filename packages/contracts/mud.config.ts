@@ -6,7 +6,7 @@ export default mudConfig({
     namespace: "mc",
     enums: {
         ENTITY_TYPE: ["BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
-        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER"],
+        MACHINE_TYPE: ["BLOCKER", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER", "COMBI_GATE"],
         MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH"],
         CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
         PORT_TYPE: ["INPUT", "OUTPUT"],
@@ -24,6 +24,7 @@ export default mudConfig({
         CarriedBy: "bytes32",
         IsPrototype: "bool",
         Amount: "uint32",
+        Temperature: "uint32",
         // ...
         Width: "int32",
         Height: "int32",

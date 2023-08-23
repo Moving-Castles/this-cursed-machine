@@ -4,16 +4,18 @@ import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
 import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation, MachineType, LastResolved, MaterialType, Amount } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, ROTATION, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/Types.sol";
-import { LibUtils, LibArray, LibBox, LibPort, LibConnection } from "./Libraries.sol";
+import { LibUtils, LibArray, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
 library LibNetwork {
   function resolve(bytes32 _boxEntity) internal {
-    // Abort if box is already resolved
-    if (LastResolved.get(_boxEntity) >= block.number) {
-      return;
-    }
     // @todo: check core energy
+
+    // Blocks since last resolution
+    uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
+
+    // Abort if box is already resolved
+    if (blocksSinceLastResolution == 0) return;
 
     // Counter for the number of iterations over the network
     uint32 counter;
@@ -32,16 +34,10 @@ library LibNetwork {
     uint32 resolvedCount;
 
     // Inputs for each machine
-    Product[] memory inputs = new Product[](machines.length);
+    Product[] memory inputs = new Product[](machines.length * 2);
 
     // Counter for the number of stored inputs
     uint32 inputsCount;
-
-    // Outputs for each machine
-    Product[] memory outputs = new Product[](machines.length);
-
-    // Counter for the number of stored outputs
-    uint32 outputsCount;
 
     // Iterate until all machines in the network are resolved
     while (resolvedCount < machines.length) {
@@ -52,9 +48,6 @@ library LibNetwork {
 
         // Current node
         bytes32 node = machines[i][0];
-
-        console.log("&&& index");
-        console.log(i);
 
         console.log("$$$ node");
         console.log(uint256(node));
@@ -67,23 +60,30 @@ library LibNetwork {
 
         // Give inlet an input of pellets...
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          inputs[inputsCount] = Product({ machineId: node, materialType: MATERIAL_TYPE.PELLET, amount: 1 });
+          inputs[inputsCount] = Product({
+            machineId: node,
+            materialType: MATERIAL_TYPE.PELLET,
+            amount: 100,
+            temperature: 0
+          });
           inputsCount++;
           console.log("inlet");
           console.log(uint256(inputs[i].machineId));
         }
 
-        // Find input for current node
-        Product memory input;
+        // There are never more than 2 inputs...
+        uint currentInputsCount;
+        Product[] memory currentInputs = new Product[](2);
+        // Find all inputs for current node
         for (uint k; k < inputsCount; k++) {
           if (inputs[k].machineId == node) {
-            input = inputs[k];
-            break;
+            currentInputs[currentInputsCount] = inputs[k];
+            currentInputsCount++;
           }
         }
 
         // Skip if node has no input
-        if (input.materialType == MATERIAL_TYPE.NONE) continue;
+        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
 
         console.log("__ processing node:");
         console.log(uint256(node));
@@ -96,11 +96,19 @@ library LibNetwork {
         console.log(resolvedCount);
 
         // Process the inputs of the machine to get the outputs
-        // - For now, just double the amount of the input
-        outputs[outputsCount] = Product({ machineId: node, materialType: input.materialType, amount: input.amount });
-        outputsCount++;
+        Product[] memory currentOutputs = new Product[](2);
+        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
 
-        // 1. Find the machine that is supposed to receive this output
+        console.log("%%% currentOutputs.length");
+        console.log(currentOutputs.length);
+
+        // If the machine is an outlet, write to chain
+        if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
+          for (uint k; k < currentOutputs.length; k++) {
+            if (currentOutputs[k].materialType == MATERIAL_TYPE.NONE) continue;
+            LibBox.writeOutput(_boxEntity, blocksSinceLastResolution, currentOutputs[k]);
+          }
+        }
 
         //  - find the output ports on the current machine
         bytes32[][] memory ports = LibPort.getPorts(node, PORT_TYPE.OUTPUT);
@@ -108,66 +116,46 @@ library LibNetwork {
         console.log("... ports.length");
         console.log(ports.length);
 
-        // Only deal with one port for now...
-        bytes32 outputPort = ports[0][0];
+        // No output ports were found
+        if (ports.length == 0) continue;
 
-        console.log("... outputPort");
-        console.log(uint256(outputPort));
+        // Fill outputs
+        for (uint k; k < ports.length; k++) {
+          console.log("... ports[k][0]");
+          console.log(uint256(ports[k][0]));
 
-        // No output port found
-        if (outputPort == bytes32(0)) continue;
+          //  - find connections going from that port
+          bytes32 outgoingConnection = LibConnection.getOutgoing(ports[k][0]);
 
-        //  - find connections going from that port
-        bytes32 outgoingConnection = LibConnection.getOutgoing(outputPort);
+          console.log("... outgoingConnection");
+          console.log(uint256(outgoingConnection));
 
-        console.log("... outgoingConnection");
-        console.log(uint256(outgoingConnection));
+          // No connection
+          if (outgoingConnection == bytes32(0)) continue;
 
-        // No connection
-        if (outgoingConnection == bytes32(0)) continue;
+          //  - get the port on the other end of the connection
+          bytes32 inputPort = TargetPort.get(outgoingConnection);
 
-        //  - get the port on the other end of the connection
-        bytes32 inputPort = TargetPort.get(outgoingConnection);
+          //  - get the machine that the port is on
+          bytes32 targetEntity = CarriedBy.get(inputPort);
+          console.log("targetEntity");
+          console.log(uint256(targetEntity));
 
-        //  - get the machine that the port is on
-        bytes32 targetEntity = CarriedBy.get(inputPort);
-        console.log("targetEntity");
-        console.log(uint256(targetEntity));
-
-        // 2. Fill the input for that machine with the current output
-        inputs[inputsCount] = Product({ machineId: targetEntity, materialType: MATERIAL_TYPE.PELLET, amount: 1 });
-        inputsCount++;
+          // Fill output
+          if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
+            inputs[inputsCount] = currentOutputs[k];
+            // !!! Set the machineId to the target machine
+            inputs[inputsCount].machineId = targetEntity;
+            inputsCount++;
+          }
+        }
       }
+      // ...
       counter += 1;
       console.log("== iteration");
       console.log(counter);
       if (counter == machines.length * 2) {
         return;
-      }
-    }
-
-    // Get blocks since last resolution
-    uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
-
-    for (uint i; i < machines.length; i++) {
-      if (MachineType.get(machines[i][0]) == MACHINE_TYPE.OUTLET) {
-        console.log("outlet");
-        console.log(uint256(machines[i][0]));
-        for (uint k; k < outputsCount; k++) {
-          if (outputs[k].machineId == machines[i][0]) {
-            console.log("=!=!=!=!= output");
-            console.log(uint256(outputs[k].materialType));
-            console.log(uint256(outputs[k].amount));
-            // Write final output(s) to components
-            bytes32 materialEntity = LibUtils.getRandomKey();
-            EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
-            CreationBlock.set(materialEntity, block.number);
-            CarriedBy.set(materialEntity, _boxEntity);
-            MaterialType.set(materialEntity, outputs[k].materialType);
-            // Scale by number of blocks since last resolution
-            Amount.set(materialEntity, outputs[k].amount * uint32(blocksSinceLastResolution));
-          }
-        }
       }
     }
 

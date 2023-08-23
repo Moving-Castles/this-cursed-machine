@@ -24,8 +24,10 @@ contract BuildSystem is System {
     Rotation.set(machineEntity, _rotation);
 
     // Create ports on machine
+    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
     LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
 
     return machineEntity;
   }

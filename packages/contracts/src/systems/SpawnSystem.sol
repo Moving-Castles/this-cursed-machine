@@ -24,30 +24,31 @@ contract SpawnSystem is System {
     // Create ports on core
     LibPort.create(coreEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
+    LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
 
     // Create test machine entity
-    bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
-    CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
-    Position.set(machineEntity, PositionData(1, 2));
-    Rotation.set(machineEntity, ROTATION.DEG0);
+    // bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
+    // CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
+    // Position.set(machineEntity, PositionData(1, 2));
+    // Rotation.set(machineEntity, ROTATION.DEG0);
 
     // Create Outlet
-    bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
-    Position.set(outletEntity, PositionData(1, 0));
-    Rotation.set(outletEntity, ROTATION.DEG0);
+    // bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
+    // Position.set(outletEntity, PositionData(1, 0));
+    // Rotation.set(outletEntity, ROTATION.DEG0);
 
     // Create Inlet
-    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
-    Position.set(inletEntity, PositionData(3, 5));
-    Rotation.set(inletEntity, ROTATION.DEG0);
+    // bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
+    // Position.set(inletEntity, PositionData(3, 5));
+    // Rotation.set(inletEntity, ROTATION.DEG0);
 
     // Create ports on test machine
     // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     // LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
     // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     // LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
-    LibPort.create(outletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
-    LibPort.create(inletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
+    // LibPort.create(outletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
+    // LibPort.create(inletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
 
     return boxEntity;
   }
