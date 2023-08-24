@@ -92,7 +92,13 @@ export const playerInCooldown = derived([playerCore, blockNumber],
 );
 
 export const playerBox = derived([entities, playerCore],
-  ([$entities, $playerCore]) => $entities[$playerCore.carriedBy] as Box
+  ([$entities, $playerCore]) => {
+    if ($playerCore && $playerCore.carriedBy) {
+      return $entities[$playerCore.carriedBy] as Box
+    } else {
+      return {} as Box
+    }
+  }
 );
 
 export const playerCorePorts = derived([entities, playerEntityId],
@@ -107,38 +113,9 @@ export const coresInPlayerBox = derived([cores, playerCore], ([$cores, $playerCo
   }) as Core[];
 })
 
-/**
- * !!! WORK IN PROGRESS !!! Calculated energy
- * 
- * Currently adds the lazy update energy to the core energy by going through the claims related to the core.
- * 
- * Will be more general later(TM)...
- */
-// export const calculatedEnergy = derived([cores, claims, blockNumber, gameConfig],
-//   ([$cores, $claims, $blockNumber, $gameConfig]) => {
-//     let calculatedEnergy: CalculatedEnergies = {};
-
-//     // Iterate over all cores
-//     for (const [id, core] of Object.entries($cores)) {
-
-//       // Get all claims for this core
-//       let claimsForCore = Object.values($claims).filter(claim => claim.sourceEntity === id)
-
-//       let lazyUpdateEnergy = 0
-
-//       // Iterate over claims and calculate lazy update energy
-//       for (const claim of claimsForCore) {
-//         lazyUpdateEnergy += Math.floor((Number($blockNumber) - Number(claim.claimBlock)))
-//       }
-
-//       // Calculate core energy
-//       calculatedEnergy[id] = core.energy + lazyUpdateEnergy;
-
-//       // Cap core energy
-//       calculatedEnergy[id] = calculatedEnergy[id] > $gameConfig?.coreEnergyCap ? $gameConfig?.coreEnergyCap : calculatedEnergy[id];
-//     }
-//     return calculatedEnergy;
-//   });
+export const machinesInPlayerBox = derived([machines, playerCore], ([$machines, $playerCore]) => {
+  return Object.fromEntries(Object.entries($machines).filter(([, entity]) => entity.carriedBy === $playerCore.carriedBy)) as Machines;
+})
 
 export const playerCalculatedEnergy = derived([], () => 0)
 

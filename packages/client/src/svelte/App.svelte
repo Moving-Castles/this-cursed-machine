@@ -7,10 +7,12 @@
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, playerCore, cores, ports } from "./modules/state"
+  import { simulatedState } from "./modules/simulator"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
   // import { initStaticContent } from "./modules/staticContent"
+  import { initStateSimulator } from "./modules/simulator/networkResolver"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -26,6 +28,7 @@
   $: console.log("$network", $network)
   $: console.log("$playerCore", $playerCore)
   $: console.log("$ports", $ports)
+  $: console.log("$simulatedState", $simulatedState)
   // - - - - -
 
   let UIState = 0
@@ -56,6 +59,9 @@
 
     // Listen to changes to the SyncProgresscomponent
     createSyncProgressSystem()
+
+    // Simulate state changes
+    initStateSimulator()
   })
 </script>
 

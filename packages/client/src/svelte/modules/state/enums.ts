@@ -12,9 +12,11 @@ export enum MachineType {
     CORE,
     BLENDER,
     SPLITTER,
+    SCORCHER,
 }
 
 export enum MaterialType {
+    NONE,
     PELLET,
     BLOOD,
     PISS,

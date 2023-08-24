@@ -83,6 +83,18 @@ declare global {
     energy: number;
     readyBlock: number;
     level: number;
+    carriedBy: string;
+  }
+
+  type Machine = {
+    type: EntityType.MACHINE;
+    machineType: MachineType;
+    creationBlock: number;
+    carriedBy: string;
+    name?: string;
+    energy?: number;
+    readyBlock?: number;
+    level?: number;
   }
 
   type Connection = {
