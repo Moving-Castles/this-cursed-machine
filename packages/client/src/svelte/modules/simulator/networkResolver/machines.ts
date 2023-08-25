@@ -1,7 +1,5 @@
 import { MachineType, MaterialType } from "../../state/enums";
 import type { Product } from "..";
-import { addOutput } from "..";
-
 
 /**
  * Processes the given products based on machine type.
@@ -62,11 +60,6 @@ function core(inputs: Product[]): Product[] {
  * @returns {Product[]} - Original list of products, unmodified.
  */
 function outlet(inputs: Product[]): Product[] {
-    for (let k = 0; k < inputs.length; k++) {
-        if (inputs[k].materialType && inputs[k].materialType !== MaterialType.NONE) {
-            addOutput(inputs[k]);
-        }
-    }
     return inputs;
 }
 

@@ -7,7 +7,11 @@
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, playerCore, cores, ports } from "./modules/state"
-  import { simulatedState } from "./modules/simulator"
+  import {
+    currentOutput,
+    simulatedState,
+    blocksSinceLastResolution,
+  } from "./modules/simulator"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
@@ -16,11 +20,11 @@
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  // import Box from "./components/Box/Box.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
   // import Game from "./components/Game/Game.svelte"
+  // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
   $: console.log("$entities", $entities)
@@ -29,6 +33,8 @@
   $: console.log("$playerCore", $playerCore)
   $: console.log("$ports", $ports)
   $: console.log("$simulatedState", $simulatedState)
+  $: console.log("$currentOutput", $currentOutput)
+  $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
   let UIState = 0
