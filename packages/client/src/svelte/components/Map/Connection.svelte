@@ -43,6 +43,7 @@
     start = document.querySelector(`.port-${connection.sourcePort}`)
     end = document.querySelector(`.port-${connection.targetPort}`)
     if (start && end && !line) {
+      console.log("make line", start, end)
       line = new LeaderLine(start, end, finalOptions)
     }
   }

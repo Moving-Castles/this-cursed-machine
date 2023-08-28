@@ -1,8 +1,9 @@
 <script lang="ts">
   import { narrative } from "../../modules/content/lore"
-  import { showFlowChart } from "../../modules/ui/stores"
+  import { showFlowChart, showPipeChart } from "../../modules/ui/stores"
   import Terminal from "../Terminal/Terminal.svelte"
   import FlowChart from "../FlowChart/FlowChart.svelte"
+  import PipeChart from "../PipeChart/PipeChart.svelte"
 
   let done = false
 
@@ -25,25 +26,38 @@
   let theme = "dark"
 </script>
 
-{#if $showFlowChart}
-  <div class="esc" on:click={() => ($showFlowChart = false)}>(esc)</div>
-
-  <div class="flowchart-container">
-    <FlowChart />
-  </div>
-{/if}
-
 <div class="bg">
-  {#if !done}
-    <Terminal on:done={onDone} sequence={$narrative.intro} />
-  {:else}
-    <Terminal
-      bind:theme
-      track={false}
-      placeholder={"[h] for help. " + randomTerm}
-      sequence={[$narrative.help]}
-    />
-  {/if}
+  <div class="split-screen">
+    {#if !done}
+      <div>
+        <Terminal
+          on:done={onDone}
+          animated={false}
+          sequence={$narrative.intro}
+          stage={false}
+        />
+      </div>
+    {:else}
+      <div>
+        <Terminal
+          bind:theme
+          stage={false}
+          track={false}
+          animated={false}
+          placeholder={"[h] for help. " + randomTerm}
+          sequence={[$narrative.help]}
+        />
+      </div>
+      <div>
+        {#if $showFlowChart}
+          <FlowChart controls={false} vertical />
+        {/if}
+        {#if $showPipeChart}
+          <PipeChart controls={false} vertical />
+        {/if}
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
@@ -57,6 +71,18 @@
     background-color: #444;
     font-size: 18px;
     z-index: 1000;
+  }
+
+  .split-screen {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: 100dvh;
+
+    > * {
+      height: 100%;
+      max-height: 100dvh;
+      padding: 1rem;
+    }
   }
 
   .icon {

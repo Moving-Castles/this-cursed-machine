@@ -33,3 +33,4 @@ export const delayedTweened = (resetToValue, delay) => {
 export const showInventory = writable(false)
 
 export const showFlowChart = writable(false)
+export const showPipeChart = writable(false)

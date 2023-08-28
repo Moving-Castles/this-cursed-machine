@@ -37,14 +37,14 @@ export const boxes = derived(entities, ($entities) => {
  * Machines are in the box and convert their inputs to outputs.
 */
 export const machines = derived(entities, ($entities) => {
-  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MACHINE))
+  return Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MACHINE)
 });
 
 /**
  * Cores are the agents of the player.
  */
 export const cores = derived(machines, ($machines) => {
-  return Object.fromEntries(Object.entries($machines).filter(([, machine]) => machine.machineType === MachineType.CORE)) as Cores;
+  return Object.fromEntries($machines.filter(([, machine]) => machine.machineType === MachineType.CORE)) as Cores;
 });
 
 /**
@@ -117,7 +117,14 @@ export const machinesInPlayerBox = derived([machines, playerCore], ([$machines, 
   return Object.fromEntries(Object.entries($machines).filter(([, entity]) => entity.carriedBy === $playerCore.carriedBy)) as Machines;
 })
 
-export const playerCalculatedEnergy = derived([], () => 0)
+export const playerCalculatedEnergy = derived([blockNumber, playerCore], ([$blockNumber, $playerCore]) => {
+  if ($playerCore) {
+    return $playerCore.energy
+    // return Number($playerCore.readyBlock) - Number($blockNumber)
+  } else {
+    return "n/a"
+  }
+})
 
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)
