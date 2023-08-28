@@ -1,9 +1,16 @@
 <script lang="ts">
   import { narrative } from "../../modules/content/lore"
-  import { showFlowChart, showPipeChart } from "../../modules/ui/stores"
+  import {
+    showFlowChart,
+    showPipeChart,
+    showCores,
+  } from "../../modules/ui/stores"
+  import { playerBox } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import FlowChart from "../FlowChart/FlowChart.svelte"
   import PipeChart from "../PipeChart/PipeChart.svelte"
+  import CoresChart from "../CoresChart/CoresChart.svelte"
+  import BoxStats from "../Box/BoxStats.svelte"
 
   let done = false
 
@@ -55,6 +62,11 @@
         {#if $showPipeChart}
           <PipeChart controls={false} vertical />
         {/if}
+        {#if $showCores}
+          <CoresChart controls={false} vertical />
+        {/if}
+
+        <BoxStats box={$playerBox} />
       </div>
     {/if}
   </div>

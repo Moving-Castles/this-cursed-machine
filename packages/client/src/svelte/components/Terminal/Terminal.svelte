@@ -1,10 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import { typewriter } from "../../modules/ui/transitions"
-  import { showFlowChart, showPipeChart } from "../../modules/ui/stores"
+  import {
+    showFlowChart,
+    showPipeChart,
+    showCores,
+  } from "../../modules/ui/stores"
   import { narrative } from "../../modules/content/lore"
   import { playSound } from "../../modules/sound"
-  import { playerCore, playerCalculatedEnergy } from "../../modules/state"
+  import { playerCalculatedEnergy } from "../../modules/state"
   import {
     advance,
     output,
@@ -106,6 +110,8 @@
       $showFlowChart = true
     } else if (userInput === "pp") {
       $showPipeChart = true
+    } else if (userInput === "cc") {
+      $showCores = true
     } else if (userInput === "wink") {
       advance(`
 @@@@@@@@@@@@@@@%&&&@@@@@@@@@@@@@@@@@@@@@
@@ -251,6 +257,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 400px;
+      height: 3rem;
     }
 
     .track {

@@ -73,12 +73,16 @@
 
 body,
 html {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--terminal-background);
+  color: var(--terminal-color);
   font-family: var(--font-family);
   font-size: var(--font-size);
   margin: 0;
   padding: 0;
+}
+
+[role="button"] {
+  text-decoration: underline;
 }
 
 @supports (-webkit-text-stroke: 1px black) {

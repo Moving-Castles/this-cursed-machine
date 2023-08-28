@@ -86,3 +86,27 @@ export function isNumeric(str: any) {
   return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
          !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
+
+export function hexToString(hex) {
+  hex = hex.substring(2) // remove the '0x' part
+  var string = ""
+
+  while (hex.length % 4 != 0) { // we need it to be multiple of 4
+    hex =  "0" + hex;
+  }
+
+  for (var i = 0; i < hex.length; i+= 4){
+    string += String.fromCharCode(parseInt(hex.substring(i,i + 4), 16)) // get char from ascii code which goes from 0 to 65536
+  }
+
+  return string;
+}
+
+export function stringToHex(string) {
+  var hex = ""
+  for (var i=0; i < string.length; i++) {
+    hex += ( (i == 0 ? "" : "000") + string.charCodeAt(i).toString(16)).slice(-4) // get character ascii code and convert to hexa string, adding necessary 0s
+  }
+
+  return '0x' + hex.toUpperCase();
+}  

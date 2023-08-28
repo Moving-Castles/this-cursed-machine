@@ -32,6 +32,7 @@
 <div class="spawn">
   {#if !$playerCore}
     <Terminal
+      stage
       input
       theme="transparent"
       placeholder="Who are you? (5 char min)"

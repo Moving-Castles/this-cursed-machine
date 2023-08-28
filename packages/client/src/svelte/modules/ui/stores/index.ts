@@ -34,3 +34,4 @@ export const showInventory = writable(false)
 
 export const showFlowChart = writable(false)
 export const showPipeChart = writable(false)
+export const showCores = writable(false)
