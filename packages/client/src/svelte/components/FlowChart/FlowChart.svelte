@@ -20,7 +20,7 @@
   const randomizePos = ({ key }) => {
     if (key === "c") {
       transforms = Object.fromEntries(
-        $machines.map(([_, __]) => [
+        Object.entries($machines).map(([_, __]) => [
           _,
           {
             x: Math.floor(Math.random() * (w - 120)) - (w - 120) / 2,
@@ -55,7 +55,7 @@
 {/if}
 
 <div class="chart" class:vertical>
-  {#each $machines as [address, machine] (address)}
+  {#each Object.entries($machines) as [address, machine] (address)}
     <Machine {address} {machine} absolute={randomised} />
   {/each}
 </div>

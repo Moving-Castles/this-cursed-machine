@@ -25,11 +25,7 @@
 
   const onDone = e => {
     name = e.detail
-    console.log("SPAWNY")
     sendSpawn()
-    setTimeout(() => {
-      console.log($playerCore, $machines)
-    }, 5000)
   }
 </script>
 

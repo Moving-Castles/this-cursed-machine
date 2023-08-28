@@ -4,12 +4,7 @@
     PortPlacement,
     PortType,
   } from "../../modules/state/enums"
-  import {
-    playerEntityId,
-    machines,
-    ports,
-    connections,
-  } from "../../modules/state"
+  import { machines, ports, connections } from "../../modules/state"
   import { flip } from "svelte/animate"
   import Connection from "../Map/Connection.svelte"
   import "leader-line"
@@ -28,9 +23,23 @@
 </script>
 
 <div class="chart" class:vertical>
-  {#each Object.entries($connections) as [_, connection], i (`${_}-${$machines.length}-${j}`)}
-    {connection.sourcePort} : {connection.targetPort}
-  {/each}
+  <p>PIPES</p>
+  <p class="pipes">
+    {#each Object.entries($connections) as [_, connection], i (`${_}-${$machines.length}-${j}`)}
+      <div class="pipe">
+        <div class="pipe-from port-{connection.sourcePort}">
+          {MachineType[
+            $machines[$ports[connection.sourcePort].carriedBy].machineType
+          ]}
+        </div>
+        <div class="pipe-to port-{connection.targetPort}">
+          {MachineType[
+            $machines[$ports[connection.targetPort].carriedBy].machineType
+          ]}
+        </div>
+      </div>
+    {/each}
+  </p>
 </div>
 
 {#each Object.entries($connections) as [_, connection], i (`${_}-${$machines.length}-${j}`)}
@@ -54,6 +63,18 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+
+    .pipes {
+      width: 100%;
+      word-wrap: break-word;
+
+      .pipe {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+    }
 
     &.vertical {
       flex-flow: column nowrap;

@@ -37,14 +37,14 @@ export const boxes = derived(entities, ($entities) => {
  * Machines are in the box and convert their inputs to outputs.
 */
 export const machines = derived(entities, ($entities) => {
-  return Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MACHINE)
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MACHINE))
 });
 
 /**
  * Cores are the agents of the player.
  */
 export const cores = derived(machines, ($machines) => {
-  return Object.fromEntries($machines.filter(([, machine]) => machine.machineType === MachineType.CORE)) as Cores;
+  return Object.fromEntries(Object.entries($machines).filter(([, machine]) => machine.machineType === MachineType.CORE)) as Cores;
 });
 
 /**
