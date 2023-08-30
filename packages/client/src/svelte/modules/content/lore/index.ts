@@ -46,6 +46,7 @@ help: `Commands:
 (Add machine)       [m]
 (Add pipe)          [p]
 (Flowchart)         [f]
+(Pipechart)         [pp]
 (Call puppitywink)  [wink]
 (Help )             [h]      <- You are here
 `

@@ -1,19 +1,11 @@
 <script lang="ts">
-  import {
-    MachineType,
-    PortPlacement,
-    PortType,
-  } from "../../modules/state/enums"
-  import {
-    playerEntityId,
-    machines,
-    ports,
-    connections,
-  } from "../../modules/state"
   import { flip } from "svelte/animate"
+  import { machines, connections } from "../../modules/state"
   import Connection from "../Map/Connection.svelte"
-
+  import Machine from "../Machines/Machine.svelte"
   import "leader-line"
+  export let vertical = false
+  export let controls = false
 
   let pathOptions = ["straight", "arc", "fluid", "magnet", "grid"]
 
@@ -45,10 +37,7 @@
     }
   }
 
-  const machinePorts = address =>
-    Object.entries($ports).filter(([add, port]) => port.carriedBy === address)
-
-  let transforms = Object.fromEntries(
+  $: transforms = Object.fromEntries(
     Object.entries($machines).map(([_, __]) => [_, { x: 0, y: 0 }])
   )
 </script>
@@ -59,77 +48,19 @@
   on:keypress={randomizePos}
 />
 
-<div class="controls">(c) Change perspective (t) [{leaderLineConnection}]</div>
+{#if controls}
+  <div class="controls">
+    (c) Change perspective (t) [{leaderLineConnection}]
+  </div>
+{/if}
 
-<div class="chart">
-  {#each Object.entries($machines) as [address, machine], i (address)}
-    <div
-      class="machine"
-      class:absolute={randomised}
-      animate:flip
-      style:transform={`translate(${transforms[address].x}px, ${transforms[address].y}px)`}
-    >
-      <span>
-        {MachineType[machine.machineType]}<br />
-        {$playerEntityId === address ? "-YOU" : ""}
-      </span>
-
-      <div class="ports-top">
-        {#each machinePorts(address).filter(([_, p]) => p.portPlacement === PortPlacement.TOP) as [address, p] (p)}
-          <div
-            class="port port-{address} {MachineType[
-              machine.machineType
-            ]} {PortType[p.portType]}"
-          >
-            {PortType[p.portType][0]}
-            <!--: {address[2]}{address[3]}{address[4]} -->
-          </div>
-        {/each}
-      </div>
-
-      <div class="ports-left">
-        {#each machinePorts(address).filter(([_, p]) => p.portPlacement === PortPlacement.LEFT) as [address, p] (p)}
-          <div
-            class="port port-{address} {MachineType[
-              machine.machineType
-            ]} {PortType[p.portType]}"
-          >
-            {PortType[p.portType][0]}
-            <!--: {address[2]}{address[3]}{address[4]} -->
-          </div>
-        {/each}
-      </div>
-
-      <div class="ports-bottom">
-        {#each machinePorts(address).filter(([_, p]) => p.portPlacement === PortPlacement.BOTTOM) as [address, p] (p)}
-          <div
-            class="port port-{address} {MachineType[
-              machine.machineType
-            ]} {PortType[p.portType]}"
-          >
-            {PortType[p.portType][0]}
-            <!--: {address[2]}{address[3]}{address[4]} -->
-          </div>
-        {/each}
-      </div>
-
-      <div class="ports-right">
-        {#each machinePorts(address).filter(([_, p]) => p.portPlacement === PortPlacement.RIGHT) as [address, p] (p)}
-          <div
-            class="port port-{address} {MachineType[
-              machine.machineType
-            ]} {PortType[p.portType]}"
-          >
-            {PortType[p.portType][0]}
-            <!--: {address[2]}{address[3]}{address[4]} -->
-          </div>
-        {/each}
-      </div>
-    </div>
+<div class="chart" class:vertical>
+  {#each Object.entries($machines) as [address, machine] (address)}
+    <Machine {address} {machine} absolute={randomised} />
   {/each}
 </div>
 
-{#each Object.entries($connections) as [_, connection], i (`${_}-${Object.keys($machines).length}-${j}`)}
+{#each Object.entries($connections) as [_, connection], i (`${_}-${$machines.length}-${j}`)}
   <Connection {connection} options={{ path: leaderLineConnection }} />
 {/each}
 
@@ -148,70 +79,13 @@
     font-family: monospace;
     color: var(--terminal-color);
     overflow: hidden;
-  }
-  .machine {
-    width: 120px;
-    height: 120px;
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background: transparent;
+    height: 100%;
+    width: 100%;
 
-    &.absolute {
-      position: absolute;
+    &.vertical {
+      flex-flow: column wrap;
+      justify-content: start;
+      align-items: center;
     }
-  }
-
-  .ports-left {
-    position: absolute;
-    left: 0;
-    height: 100%;
-    width: 10px;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: end;
-    gap: 4px;
-    z-index: 999;
-  }
-  .ports-right {
-    position: absolute;
-    right: 0;
-    height: 100%;
-    width: 10px;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: start;
-    gap: 4px;
-    z-index: 999;
-  }
-
-  .ports-top {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 10px;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: start;
-    gap: 4px;
-    z-index: 999;
-  }
-
-  .ports-bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 10px;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: end;
-    gap: 4px;
-    z-index: 999;
   }
 </style>

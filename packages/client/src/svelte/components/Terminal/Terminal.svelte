@@ -1,9 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from "svelte"
   import { typewriter } from "../../modules/ui/transitions"
-  import { showFlowChart } from "../../modules/ui/stores"
+  import {
+    showFlowChart,
+    showPipeChart,
+    showCores,
+  } from "../../modules/ui/stores"
   import { narrative } from "../../modules/content/lore"
   import { playSound } from "../../modules/sound"
+  import { playerCalculatedEnergy } from "../../modules/state"
   import {
     advance,
     output,
@@ -21,6 +26,8 @@
   export let loop = false
   export let track = true
   export let input = false
+  export let stage = true // display the terminal centered and front stage
+  export let animated = false
 
   /** Init */
   if (!input) seq.set(sequence)
@@ -31,7 +38,7 @@
 
   /** Variables */
   let inputElement: HTMLElement
-  let energy = "n/a"
+  let energy = -1
   let userInput = ""
   let skip = false
   let complete = false
@@ -101,6 +108,10 @@
       handleAction("Add", ["pipe"])
     } else if (userInput === "f") {
       $showFlowChart = true
+    } else if (userInput === "pp") {
+      $showPipeChart = true
+    } else if (userInput === "cc") {
+      $showCores = true
     } else if (userInput === "wink") {
       advance(`
 @@@@@@@@@@@@@@@%&&&@@@@@@@@@@@@@@@@@@@@@
@@ -193,7 +204,7 @@
   onDestroy(() => index.set(-1))
 </script>
 
-<div class="terminal">
+<div class="terminal" class:stage>
   {#if !input}
     {#if track}
       <p class="track">
@@ -203,7 +214,7 @@
     {#key key}
       <div class="terminal-output">
         <p
-          in:typewriter={{ speed: skip ? 0 : speed }}
+          in:typewriter={{ speed: skip || !animated ? 0 : speed }}
           on:introstart={introStart}
           on:introend={introEnd}
           class="output-content"
@@ -213,13 +224,14 @@
       </div>
     {/key}
   {/if}
-  <form on:submit|preventDefault={onSubmit}>
+  <form class="terminal-input" on:submit|preventDefault={onSubmit}>
     {#if !input}
-      <span>e: {energy}</span>
+      <span class="player-stats">
+        e: {$playerCalculatedEnergy}
+      </span>
     {/if}
     <input
       type="text"
-      class="terminal-input"
       {placeholder}
       bind:this={inputElement}
       bind:value={userInput}
@@ -231,25 +243,28 @@
   .terminal {
     font-family: monospace;
     padding: 0 1.5rem;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     overflow: hidden;
     transition: background 2s ease, color 2s ease;
     border: var(--terminal-border);
     color: var(--terminal-color);
     background: var(--terminal-background);
+    width: 100%;
+    position: relative;
+    height: 100%;
+
+    &.stage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 3rem;
+    }
 
     .track {
       position: absolute;
       right: 1rem;
       pointer-events: none;
-    }
-
-    .terminal-input {
-      background: var(--terminal-background);
-      color: var(--terminal-color);
     }
 
     * {
@@ -260,7 +275,7 @@
     }
 
     .terminal-output {
-      height: 24rem;
+      height: calc(100% - 3rem);
       width: 60ch;
       white-space: pre-wrap;
       vertical-align: text-bottom;
@@ -272,6 +287,8 @@
       overflow-x: hidden;
     }
     .terminal-input {
+      background: var(--terminal-background);
+      color: var(--terminal-color);
       font-family: monospace;
       height: 3rem;
       padding: 0;
@@ -279,8 +296,35 @@
       font-size: 1rem;
       border: none;
       outline: none;
-      width: 60ch;
+      position: absolute;
+      bottom: 0;
+      left: 1.5rem;
       transition: background 2s ease, color 2s ease;
+      display: flex;
+      z-index: 999;
+
+      .player-stats {
+        white-space: nowrap;
+        vertical-align: middle;
+        line-height: 3rem;
+      }
+
+      input {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        line-height: inherit;
+        width: 60ch;
+        max-width: 100%;
+        background-color: inherit;
+        border: none;
+        padding-left: 1rem;
+
+        &:focus {
+          border: none;
+          outline: none;
+        }
+      }
     }
   }
 

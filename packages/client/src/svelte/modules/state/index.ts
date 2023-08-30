@@ -117,7 +117,14 @@ export const machinesInPlayerBox = derived([machines, playerCore], ([$machines, 
   return Object.fromEntries(Object.entries($machines).filter(([, entity]) => entity.carriedBy === $playerCore.carriedBy)) as Machines;
 })
 
-export const playerCalculatedEnergy = derived([], () => 0)
+export const playerCalculatedEnergy = derived([blockNumber, playerCore], ([$blockNumber, $playerCore]) => {
+  if ($playerCore) {
+    return $playerCore.energy
+    // return Number($playerCore.readyBlock) - Number($blockNumber)
+  } else {
+    return "n/a"
+  }
+})
 
 // Will be deprecated
 export const dragOrigin = writable(NULL_COORDINATE as Coord)

@@ -25,17 +25,14 @@
 
   const onDone = e => {
     name = e.detail
-    console.log("SPAWNY")
     sendSpawn()
-    setTimeout(() => {
-      console.log($playerCore, $machines)
-    }, 5000)
   }
 </script>
 
 <div class="spawn">
   {#if !$playerCore}
     <Terminal
+      stage
       input
       theme="transparent"
       placeholder="Who are you? (5 char min)"

@@ -27,14 +27,14 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  $: console.log("$entities", $entities)
-  $: console.log("$cores", $cores)
-  $: console.log("$network", $network)
-  $: console.log("$playerCore", $playerCore)
-  $: console.log("$ports", $ports)
-  $: console.log("$simulatedState", $simulatedState)
-  $: console.log("$currentOutput", $currentOutput)
-  $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
+  // $: console.log("$entities", $entities)
+  // $: console.log("$cores", $cores)
+  // $: console.log("$network", $network)
+  // $: console.log("$playerCore", $playerCore)
+  // $: console.log("$ports", $ports)
+  // $: console.log("$simulatedState", $simulatedState)
+  // $: console.log("$currentOutput", $currentOutput)
+  // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
   let UIState = 0
@@ -76,6 +76,14 @@
 <main>
   <!-- <svelte:component this={selected.component} /> -->
 
+  <div class="warning">
+    <div class="warning-message">
+      ### THIS CURSED MACHINE ###<br /><br />This machine has cursed all mobile
+      devices.<br />
+      Come back with a real computer.
+    </div>
+  </div>
+
   {#if !$ready || UIState === 0}
     <Loading on:next={() => (UIState = 1)} />
   {:else if !$playerCore}
@@ -88,3 +96,28 @@
 </main>
 
 <Toasts />
+
+<style>
+  .warning {
+    position: fixed;
+    inset: 0;
+    color: var(--terminal-color);
+    background: var(--terminal-background);
+    z-index: 99999999;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .warning-message {
+    padding: 1rem;
+    border: var(--terminal-border);
+  }
+
+  @media screen and (min-width: 768px) {
+    .warning {
+      display: none;
+    }
+  }
+</style>
