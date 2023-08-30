@@ -11,6 +11,7 @@ contract TransferSystem is System {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
 
+    // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     uint32 newLevel = Level.get(coreEntity) + 1;

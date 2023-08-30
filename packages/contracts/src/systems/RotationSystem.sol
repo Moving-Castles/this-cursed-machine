@@ -11,6 +11,7 @@ contract RotationSystem is System {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
 
+    // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     Rotation.set(_entity, _rotation);

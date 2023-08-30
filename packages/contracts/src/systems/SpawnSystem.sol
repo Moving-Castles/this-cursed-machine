@@ -14,6 +14,13 @@ contract SpawnSystem is System {
     // Create box entity
     bytes32 boxEntity = LibBox.create(0, 6, 6, 1, 1, true);
 
+    // Create Inlet
+    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
+    Position.set(inletEntity, PositionData(3, 5));
+    Rotation.set(inletEntity, ROTATION.DEG0);
+    CarriedBy.set(inletEntity, boxEntity);
+    bytes32 inletOutput = LibPort.create(inletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.TOP);
+
     // Create core entity
     LibCore.spawn(coreEntity, 0, _name);
 
@@ -25,13 +32,6 @@ contract SpawnSystem is System {
     bytes32 coreInput = LibPort.create(coreEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
     bytes32 coreOutputPiss = LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
     bytes32 coreOutputBlood = LibPort.create(coreEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
-
-    // Create Inlet
-    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
-    Position.set(inletEntity, PositionData(3, 5));
-    Rotation.set(inletEntity, ROTATION.DEG0);
-    CarriedBy.set(inletEntity, boxEntity);
-    bytes32 inletOutput = LibPort.create(inletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.TOP);
 
     // Create Outlet
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);

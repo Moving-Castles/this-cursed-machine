@@ -15,6 +15,7 @@ contract BuildSystem is System {
     // TOOD: Check that position is valid and unoccupied
     // ...
 
+    // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     // Create machine entity

@@ -19,6 +19,7 @@ contract ConnectionSystem is System {
     // TODO: check core is allowed to connect to ports (?)
     // ...
 
+    // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
 
     // Create connection entity
