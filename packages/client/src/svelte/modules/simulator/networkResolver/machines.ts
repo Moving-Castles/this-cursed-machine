@@ -1,5 +1,5 @@
 import { MachineType, MaterialType } from "../../state/enums";
-import type { Product } from "..";
+import type { Product } from "../types";
 
 /**
  * Processes the given products based on machine type.
@@ -38,14 +38,14 @@ function core(inputs: Product[]): Product[] {
     outputs[0] = {
         machineId: inputs[0].machineId,
         materialType: MaterialType.PISS,
-        amount: inputs[0].amount / 2,
+        amount: Number(inputs[0].amount) / 2,
         temperature: inputs[0].temperature
     };
 
     outputs[1] = {
         machineId: inputs[0].machineId,
         materialType: MaterialType.BLOOD,
-        amount: inputs[0].amount / 2,
+        amount: Number(inputs[0].amount) / 2,
         temperature: inputs[0].temperature
     };
 
@@ -73,7 +73,7 @@ function scorcher(inputs: Product[]): Product[] {
     return [{
         machineId: inputs[0].machineId,
         materialType: inputs[0].materialType,
-        amount: inputs[0].amount,
+        amount: Number(inputs[0].amount),
         temperature: inputs[0].temperature + 30
     }];
 }
@@ -85,7 +85,7 @@ function scorcher(inputs: Product[]): Product[] {
  * @returns {Product[]} - Processed list of products.
  */
 function splitter(inputs: Product[]): Product[] {
-    const halfAmount = inputs[0].amount / 2;
+    const halfAmount = Number(inputs[0].amount) / 2;
 
     return [
         {
@@ -120,7 +120,7 @@ function blender(inputs: Product[]): Product[] {
     return [{
         machineId: inputs[0].machineId,
         materialType: materialType,
-        amount: inputs[0].amount,
+        amount: Number(inputs[0].amount),
         temperature: inputs[0].temperature
     }];
 }

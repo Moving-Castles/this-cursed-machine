@@ -30,7 +30,7 @@ declare global {
     // ...
     creationBlock?: number;
     name?: string;
-    energy: number;
+    energy?: number;
     readyBlock?: number;
     level?: number;
     height?: number;

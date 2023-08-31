@@ -8,15 +8,15 @@
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, playerCore, cores, ports } from "./modules/state"
   import {
-    currentOutput,
-    simulatedState,
+    patches,
+    simulated,
     blocksSinceLastResolution,
   } from "./modules/simulator"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
-  // import { initStaticContent } from "./modules/staticContent"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
+  // import { initStaticContent } from "./modules/staticContent"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -27,14 +27,14 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  // $: console.log("$entities", $entities)
-  // $: console.log("$cores", $cores)
-  // $: console.log("$network", $network)
-  // $: console.log("$playerCore", $playerCore)
-  // $: console.log("$ports", $ports)
-  // $: console.log("$simulatedState", $simulatedState)
-  // $: console.log("$currentOutput", $currentOutput)
-  // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
+  $: console.log("$entities", $entities)
+  $: console.log("$cores", $cores)
+  $: console.log("$network", $network)
+  $: console.log("$playerCore", $playerCore)
+  $: console.log("$ports", $ports)
+  $: console.log("$simulated", $simulated)
+  $: console.log("$patches", $patches)
+  $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
   let UIState = 0

@@ -1,16 +1,16 @@
 /*
- *  Resolve network each block
+ *  Resolve network
  * 
  */
 
 import { get } from "svelte/store";
-import type { Product } from "..";
 import { playerBox } from "../../state";
-import { localResolved, currentOutput } from "..";
+import { localResolved, patches } from "..";
 import { blockNumber } from "../../network";
 import { MachineType, MaterialType, PortType } from "../../state/enums";
 import { playerCore, machinesInPlayerBox, ports, connections } from "../../state";
 import { process } from "./machines";
+import type { Product, SimulatedEntities } from "../types";
 
 // --- API -----------------------------------------------------------------
 
@@ -20,14 +20,14 @@ export function initStateSimulator() {
         // Player is not spawned yet
         if (!get(playerCore)) return
 
-        console.log('get(localResolved)', get(localResolved))
-        console.log('get(playerBox).lastResolved', get(playerBox).lastResolved)
+        // console.log('get(localResolved)', get(localResolved))
+        // console.log('get(playerBox).lastResolved', get(playerBox).lastResolved)
 
         // Network was resolved onchain
         if (get(playerBox).lastResolved !== get(localResolved)) {
             console.log('!!!! Network was resolved onchain')
             // Resolve output
-            currentOutput.set(resolve(get(playerCore).carriedBy));
+            patches.set(resolve(get(playerCore).carriedBy));
             // Update localResolved
             localResolved.set(get(playerBox).lastResolved)
         }
@@ -55,14 +55,7 @@ function resolve(_boxEntity: string) {
     // Array to hold the inputs
     const inputs: Product[] = []
 
-    let outputs: Product[] = [
-        {
-            machineId: _boxEntity,
-            materialType: MaterialType.TEETH,
-            amount: 666,
-            temperature: 100
-        }
-    ]
+    let outputs: Product[] = []
 
     // Loop until all machines are resolved.
     while (resolvedNodes.length < Object.keys(machines).length) {
@@ -88,7 +81,7 @@ function resolve(_boxEntity: string) {
             }
 
             // Gather all the inputs for the current machine.
-            const currentInputs: Product[] = inputs.filter(input => input.machineId === machineKey);
+            const currentInputs = inputs.filter(input => input.machineId === machineKey);
 
             // Skip if the machine has no inputs.
             if (currentInputs.length === 0) return;
@@ -98,13 +91,12 @@ function resolve(_boxEntity: string) {
             // Process the machine's inputs to produce outputs.
             const currentOutputs = process(machine.machineType, currentInputs);
 
-            // Push outlet products to the output array
+            // Push all products to the output array
             // @todo: refactor
-            if (machine.machineType == MachineType.OUTLET) {
-                for (let k = 0; k < currentOutputs.length; k++) {
-                    if (currentOutputs[k].materialType && currentOutputs[k].materialType !== MaterialType.NONE) {
-                        outputs.push(currentOutputs[k]);
-                    }
+            for (let k = 0; k < currentOutputs.length; k++) {
+                if (currentOutputs[k].materialType && currentOutputs[k].materialType !== MaterialType.NONE) {
+                    outputs.push(currentOutputs[k]);
+                    console.log(currentOutputs[k])
                 }
             }
 
@@ -154,8 +146,29 @@ function resolve(_boxEntity: string) {
         // Increment the counter.
         iterationCounter++;
         // Break out of the loop if it seems like an infinite loop is occurring.
-        if (iterationCounter === Object.values(machines).length * 2) return outputs;
+        if (iterationCounter === Object.values(machines).length * 2) break;
     }
 
-    return outputs;
+    let patches = {} as SimulatedEntities;
+
+    console.log('outputs', outputs);
+
+    // @todo: improve and generalize
+    for (let i = 0; i < outputs.length; i++) {
+        if (!patches[outputs[i].machineId]) {
+            patches[outputs[i].machineId] = {
+                intermediaryProducts: []
+            }
+        }
+
+        if (!patches[outputs[i].machineId].intermediaryProducts) {
+            patches[outputs[i].machineId].intermediaryProducts = []
+        }
+
+        patches[outputs[i].machineId].intermediaryProducts.push(outputs[i])
+    }
+
+    console.log('$$$$$$ patches', patches)
+
+    return patches;
 }

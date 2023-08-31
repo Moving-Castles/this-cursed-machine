@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { simulatedState } from "../../modules/simulator"
+  import { simulated } from "../../modules/simulator"
   import { MachineType, MaterialType } from "../../modules/state/enums"
   import { machines, playerBox, playerCore } from "../../modules/state"
   import { hexToString, stringToHex } from "../../modules/utils/misc"
@@ -12,12 +12,9 @@
     else if (degrees > 0) return "COLD"
     else return "FROZEN"
   }
-
-  $: {
-    console.log($simulatedState)
-  }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats">
   <p>
     *** XXXXXXXXXXXXXXXX ***<br />XXX YOUR SKINNER BOX XXX
@@ -28,7 +25,7 @@
   </p>
 
   <p>Contents:</p>
-  {#each $simulatedState as machine (machine.machineId)}
+  <!-- {#each Object.entries$simulated as machine (machine.machineId)}
     ---
     <div>
       {#if $machines[machine.machineId]}
@@ -41,8 +38,9 @@
       {MaterialType[machine.materialType]}
     </div>
     ---<br />
-  {/each}
+  {/each} -->
 
+  <!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
   <p
     role="button"
     class="agreement"
