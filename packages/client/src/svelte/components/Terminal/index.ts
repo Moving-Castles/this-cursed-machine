@@ -33,7 +33,7 @@ export const argsTest = /(?<=\[).+?(?=\])/g
  * @returns 
  */
 export const parsed = (string: string) => {
-  console.log('parse: ', string)
+  // console.log('parse: ', string)
   // Replace all actions
   const parsed = string.split('\n').map(s => {
     return s.replaceAll(/(?<=\().+?(?=\))/g, (match) => `<span class="inline-action" data-action="${match.split(" ")[0]}" data-args="${argsTest.exec(string) || match.split(" ")[1]}">${match}</span>`)
@@ -104,7 +104,7 @@ export const handleAction = (action: string, args: string[]) => {
       }).join("\n"))
       break
     case ("To"):
-      console.log(args[0])
+      // console.log(args[0])
       let selection = get(portSelection)
       portSelection.set([...selection, args[0]])
       selection = get(portSelection)

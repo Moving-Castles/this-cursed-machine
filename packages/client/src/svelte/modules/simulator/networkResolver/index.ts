@@ -11,6 +11,7 @@ import { MachineType, MaterialType, PortType } from "../../state/enums";
 import { playerCore, machinesInPlayerBox, ports, connections } from "../../state";
 import { process } from "./machines";
 import type { Product, SimulatedEntities } from "../types";
+import { shortenAddress, deepClone } from "../../utils/misc";
 
 // --- API -----------------------------------------------------------------
 
@@ -42,7 +43,7 @@ export function initStateSimulator() {
  * @param _boxEntity - Identifier for the box entity to be resolved.
  */
 function resolve(_boxEntity: string) {
-    // console.log('____ Resolving at block', get(blockNumber));
+    console.log('____ Resolving at block', get(blockNumber));
 
     let iterationCounter = 0;
 
@@ -53,14 +54,16 @@ function resolve(_boxEntity: string) {
     const resolvedNodes: string[] = []
 
     // Array to hold the inputs
-    const inputs: Product[] = []
+    let inputs: Product[] = []
 
-    let outputs: Product[] = []
+    // Store the products for intermediary state
+    let patchOutputs: Product[] = []
+    let patchInputs: Product[] = []
 
     // Loop until all machines are resolved.
     while (resolvedNodes.length < Object.keys(machines).length) {
 
-        // console.log('__ Iteration', iterationCounter)
+        console.log('__ Iteration', iterationCounter)
 
         // Process each machine.
         Object.entries(machines).forEach(([machineKey, machine]) => {
@@ -68,7 +71,9 @@ function resolve(_boxEntity: string) {
             // Skip if the machine has already been resolved.
             if (resolvedNodes.includes(machineKey)) return;
 
-            // console.log('** Processing machine_', machineKey, 'type:', machine.machineType)
+            console.log('**********************')
+            console.log('**********************')
+            console.log('** Processing machine_', shortenAddress(machineKey), 'type:', MachineType[machine.machineType])
 
             // If the machine is an inlet, provide it with pellets as input.
             if (machine.machineType === MachineType.INLET) {
@@ -83,27 +88,34 @@ function resolve(_boxEntity: string) {
             // Gather all the inputs for the current machine.
             const currentInputs = inputs.filter(input => input.machineId === machineKey);
 
+            // Save to patchInputs
+            for (let k = 0; k < currentInputs.length; k++) {
+                console.log('&& Input', k);
+                console.log('&& machineId', shortenAddress(currentInputs[k].machineId));
+                console.log('&& materialType', MaterialType[currentInputs[k].materialType]);
+                console.log('&& amount', currentInputs[k].amount);
+                console.log('&&&&&&&&&&')
+                patchInputs.push(deepClone(currentInputs[k]))
+            }
+
             // Skip if the machine has no inputs.
             if (currentInputs.length === 0) return;
-
-            // console.log('currentInputs', currentInputs)
 
             // Process the machine's inputs to produce outputs.
             const currentOutputs = process(machine.machineType, currentInputs);
 
-            // Push all products to the output array
-            // @todo: refactor
+            // Save to patchInputs
             for (let k = 0; k < currentOutputs.length; k++) {
-                if (currentOutputs[k].materialType && currentOutputs[k].materialType !== MaterialType.NONE) {
-                    outputs.push(currentOutputs[k]);
-                    console.log(currentOutputs[k])
-                }
+                console.log('%% Output', k);
+                console.log('%% machineId', shortenAddress(currentOutputs[k].machineId));
+                console.log('%% materialType', MaterialType[currentOutputs[k].materialType]);
+                console.log('%% amount', currentOutputs[k].amount);
+                console.log('%%%%%%%%%%')
+                patchOutputs.push(deepClone(currentOutputs[k]))
             }
 
             // Mark the machine as resolved.
             resolvedNodes.push(machineKey);
-
-            // console.log('currentOutputs', currentOutputs)
 
             // Find the machine's output ports.
             let machinePorts: string[] = []
@@ -141,6 +153,9 @@ function resolve(_boxEntity: string) {
                     inputs.push(output);
                 }
             }
+
+            console.log('**********************')
+            console.log('**********************')
         })
 
         // Increment the counter.
@@ -151,21 +166,36 @@ function resolve(_boxEntity: string) {
 
     let patches = {} as SimulatedEntities;
 
-    console.log('outputs', outputs);
+    console.log('patchOutputs', patchOutputs);
 
-    // @todo: improve and generalize
-    for (let i = 0; i < outputs.length; i++) {
-        if (!patches[outputs[i].machineId]) {
-            patches[outputs[i].machineId] = {
-                intermediaryProducts: []
+    for (let i = 0; i < patchOutputs.length; i++) {
+        if (!patches[patchOutputs[i].machineId]) {
+            patches[patchOutputs[i].machineId] = {
+                outputs: []
             }
         }
 
-        if (!patches[outputs[i].machineId].intermediaryProducts) {
-            patches[outputs[i].machineId].intermediaryProducts = []
+        if (!patches[patchOutputs[i].machineId].outputs) {
+            patches[patchOutputs[i].machineId].outputs = []
         }
 
-        patches[outputs[i].machineId].intermediaryProducts.push(outputs[i])
+        patches[patchOutputs[i].machineId].outputs.push(patchOutputs[i])
+    }
+
+    console.log('patchInputs', patchInputs);
+
+    for (let i = 0; i < patchInputs.length; i++) {
+        if (!patches[patchInputs[i].machineId]) {
+            patches[patchInputs[i].machineId] = {
+                inputs: []
+            }
+        }
+
+        if (!patches[patchInputs[i].machineId].inputs) {
+            patches[patchInputs[i].machineId].inputs = []
+        }
+
+        patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
     }
 
     console.log('$$$$$$ patches', patches)

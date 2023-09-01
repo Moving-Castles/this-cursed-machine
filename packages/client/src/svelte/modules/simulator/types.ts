@@ -9,7 +9,8 @@ export type Product = {
 }
 
 type IntermediaryState = {
-    intermediaryProducts?: Product[];
+    inputs?: Product[];
+    outputs?: Product[];
 }
 
 export type SimulatedEntity = Entity & IntermediaryState;

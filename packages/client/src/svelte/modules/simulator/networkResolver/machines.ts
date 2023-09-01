@@ -1,5 +1,13 @@
 import { MachineType, MaterialType } from "../../state/enums";
 import type { Product } from "../types";
+import { deepClone } from "../../utils/misc";
+
+const EMPTY_PRODUCT: Product = {
+    machineId: "",
+    materialType: MaterialType.NONE,
+    amount: 0,
+    temperature: 0
+};
 
 /**
  * Processes the given products based on machine type.
@@ -13,6 +21,8 @@ export function process(machineType: MachineType, inputs: Product[]) {
             return core(inputs);
         case MachineType.OUTLET:
             return outlet(inputs);
+        case MachineType.INLET:
+            return inlet(inputs);
         case MachineType.SCORCHER:
             return scorcher(inputs);
         case MachineType.SPLITTER:
@@ -20,7 +30,7 @@ export function process(machineType: MachineType, inputs: Product[]) {
         case MachineType.BLENDER:
             return blender(inputs);
         default:
-            return inputs;
+            return [EMPTY_PRODUCT];
     }
 }
 
@@ -60,7 +70,18 @@ function core(inputs: Product[]): Product[] {
  * @returns {Product[]} - Original list of products, unmodified.
  */
 function outlet(inputs: Product[]): Product[] {
-    return inputs;
+    return deepClone(inputs);
+}
+
+/**
+ * Processes the given products and forwards valid ones to the output.
+ * Products with a materialType of NONE are skipped.
+ * 
+ * @param {Product[]} inputs - Array of products to process.
+ * @returns {Product[]} - Original list of products, unmodified.
+ */
+function inlet(inputs: Product[]): Product[] {
+    return deepClone(inputs);
 }
 
 /**

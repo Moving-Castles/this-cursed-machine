@@ -27,14 +27,14 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  $: console.log("$entities", $entities)
-  $: console.log("$cores", $cores)
-  $: console.log("$network", $network)
-  $: console.log("$playerCore", $playerCore)
-  $: console.log("$ports", $ports)
-  $: console.log("$simulated", $simulated)
-  $: console.log("$patches", $patches)
-  $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
+  // $: console.log("$entities", $entities)
+  // $: console.log("$cores", $cores)
+  // $: console.log("$network", $network)
+  // $: console.log("$playerCore", $playerCore)
+  // $: console.log("$ports", $ports)
+  // $: console.log("$simulated", $simulated)
+  // $: console.log("$patches", $patches)
+  // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
   let UIState = 0

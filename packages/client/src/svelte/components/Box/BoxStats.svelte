@@ -1,17 +1,25 @@
 <script lang="ts">
-  import { simulated } from "../../modules/simulator"
-  import { MachineType, MaterialType } from "../../modules/state/enums"
+  import { blocksSinceLastResolution, simulated } from "../../modules/simulator"
+  import {
+    MachineType,
+    EntityType,
+    MaterialType,
+    ProductDirection,
+  } from "../../modules/state/enums"
   import { machines, playerBox, playerCore } from "../../modules/state"
   import { hexToString, stringToHex } from "../../modules/utils/misc"
+  import { shortenAddress } from "../../modules/utils/misc"
   export let box: Box
 
-  const getAdjective = (degrees: number) => {
-    if (degrees >= 100) return "BOILING"
-    else if (degrees >= 50) return "HOT"
-    else if (degrees >= 20) return "WARM"
-    else if (degrees > 0) return "COLD"
-    else return "FROZEN"
-  }
+  // const getAdjective = (degrees: number) => {
+  //   if (degrees >= 100) return "BOILING"
+  //   else if (degrees >= 50) return "HOT"
+  //   else if (degrees >= 20) return "WARM"
+  //   else if (degrees > 0) return "COLD"
+  //   else return "FROZEN"
+  // }
+
+  // console.log("$simulated", $simulated)
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -24,22 +32,6 @@
     {hexToString($playerCore.carriedBy)}
   </p>
 
-  <p>Contents:</p>
-  <!-- {#each Object.entries$simulated as machine (machine.machineId)}
-    ---
-    <div>
-      {#if $machines[machine.machineId]}
-        <p>
-          {MachineType[$machines[machine.machineId].machineType]}
-        </p>
-      {/if}
-      {machine.amount}
-      {getAdjective(machine.temperature)}
-      {MaterialType[machine.materialType]}
-    </div>
-    ---<br />
-  {/each} -->
-
   <!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
   <p
     role="button"
@@ -51,6 +43,52 @@
     ************************<br />*** READ &nbsp;&nbsp;AGREEMENT ***<br
     />************************
   </p>
+
+  <p>Contents:</p>
+  {#each Object.entries($simulated) as [key, entity] (key)}
+    <div>
+      {#if entity.entityType === EntityType.MACHINE}
+        ---<br />
+        <p>
+          <strong>{MachineType[entity.machineType]}</strong> ({shortenAddress(
+            key
+          )})
+        </p>
+        {#if entity.machineType == MachineType.CORE}
+          <p>
+            ENERGY {entity.energy + $blocksSinceLastResolution}
+          </p>
+        {/if}
+        <!-- INPUTS -->
+
+        {#if entity.machineType !== MachineType.INLET && entity.inputs && entity.inputs.length > 0}
+          {#each entity.inputs as product}
+            <p>
+              [IN]
+              {MaterialType[product.materialType]}
+              {product.amount}/block
+              <!-- {getAdjective(product.temperature)} -->
+            </p>
+          {/each}
+        {/if}
+        <!-- OUTPUTS -->
+        {#if entity.outputs && entity.outputs.length > 0}
+          {#each entity.outputs as product}
+            <p>
+              [OUT]
+              {MaterialType[product.materialType]}
+              {#if entity.machineType == MachineType.OUTLET}
+                <strong>{product.amount * $blocksSinceLastResolution}</strong>
+              {:else}
+                {product.amount}/block
+              {/if}
+              <!-- {getAdjective(product.temperature)} -->
+            </p>
+          {/each}
+        {/if}
+      {/if}
+    </div>
+  {/each}
 </div>
 
 <style>

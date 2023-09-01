@@ -84,7 +84,7 @@ export function filterByNamespace<T extends { metadata?: { tableName?: string } 
 export function isNumeric(str: any) {
   if (typeof str != "string") return false // we only process strings!  
   return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+    !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
 export function hexToString(hex) {
@@ -92,11 +92,11 @@ export function hexToString(hex) {
   var string = ""
 
   while (hex.length % 4 != 0) { // we need it to be multiple of 4
-    hex =  "0" + hex;
+    hex = "0" + hex;
   }
 
-  for (var i = 0; i < hex.length; i+= 4){
-    string += String.fromCharCode(parseInt(hex.substring(i,i + 4), 16)) // get char from ascii code which goes from 0 to 65536
+  for (var i = 0; i < hex.length; i += 4) {
+    string += String.fromCharCode(parseInt(hex.substring(i, i + 4), 16)) // get char from ascii code which goes from 0 to 65536
   }
 
   return string;
@@ -104,9 +104,41 @@ export function hexToString(hex) {
 
 export function stringToHex(string) {
   var hex = ""
-  for (var i=0; i < string.length; i++) {
-    hex += ( (i == 0 ? "" : "000") + string.charCodeAt(i).toString(16)).slice(-4) // get character ascii code and convert to hexa string, adding necessary 0s
+  for (var i = 0; i < string.length; i++) {
+    hex += ((i == 0 ? "" : "000") + string.charCodeAt(i).toString(16)).slice(-4) // get character ascii code and convert to hexa string, adding necessary 0s
   }
 
   return '0x' + hex.toUpperCase();
-}  
+}
+
+/**
+ * Deeply clones a given object or array, creating a new instance without shared references.
+ *
+ * @param {T} obj - The object or array to be cloned.
+ * @returns {T} A deeply cloned copy of the input.
+ * @template T
+ */
+export function deepClone<T>(obj: T): T {
+  // Handle primitives and null values directly.
+  if (obj === null) return obj as any;
+  if (typeof obj !== 'object') return obj;
+
+  // If the object is an array, create a new array and recursively clone each element.
+  if (Array.isArray(obj)) {
+    const copy: any[] = [];
+    for (let i = 0; i < (obj as any[]).length; i++) {
+      copy[i] = deepClone((obj as any[])[i]);
+    }
+    return copy as any;
+  }
+
+  // If the object is a plain object, create a new object and recursively clone each property.
+  const copy: { [key: string]: any } = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      copy[key] = deepClone((obj as { [key: string]: any })[key]);
+    }
+  }
+  return copy as T;
+}
+

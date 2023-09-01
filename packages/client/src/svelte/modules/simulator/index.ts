@@ -37,12 +37,15 @@ export const simulated = derived([entities, patches, blocksSinceLastResolution],
     let simulated: SimulatedEntities = $entities;
 
     for (const [key, patch] of Object.entries($patches)) {
-        if (patch.intermediaryProducts) {
-            simulated[key].intermediaryProducts = patch.intermediaryProducts;
-            // @todo: scaling the products by block since resolution is causing wrong values
-            // for (let k = 0; k < simulated[key].intermediaryProducts.length; k++) {
-            //     simulated[key].intermediaryProducts[k].amount = patch.intermediaryProducts[k].amount * $blocksSinceLastResolution
-            // }
+        // @todo: scaling the products by block since resolution is causing wrong values
+        // for (let k = 0; k < simulated[key].intermediaryProducts.length; k++) {
+        //     simulated[key].intermediaryProducts[k].amount = patch.intermediaryProducts[k].amount * $blocksSinceLastResolution
+        // }
+        if (patch.inputs) {
+            simulated[key].inputs = patch.inputs;
+        }
+        if (patch.outputs) {
+            simulated[key].outputs = patch.outputs;
         }
     }
 
