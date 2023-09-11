@@ -76,7 +76,7 @@ library LibNetwork {
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
-        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
+        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
 
         // If the machine is an outlet, write to chain
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
