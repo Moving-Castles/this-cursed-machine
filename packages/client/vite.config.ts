@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { defineConfig } from "vite"
+import { svelte } from "@sveltejs/vite-plugin-svelte"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,11 +11,12 @@ export default defineConfig({
       strict: false,
     },
     headers: {
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-      'Cross-Origin-Opener-Policy': 'same-origin',
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
   optimizeDeps: {
+    // exclude: ["lodash"],
     esbuildOptions: {
       target: "es2022",
     },
@@ -28,4 +29,4 @@ export default defineConfig({
   define: {
     "process.env": {},
   },
-});
+})

@@ -40,7 +40,7 @@
   /* Fonts */
   --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
     monospaced;
-  --font-family: monospace, Arial, sans-serif;
+  --font-family: "Fake Receipt", monospace, Arial, sans-serif;
   --font-size: 12px;
   --font-size-large: 18px;
 
@@ -50,8 +50,8 @@
   --outer-border: 1px solid rgba(var(--foreground-rgb), var(--muted-opacity));
 
   --terminal-background: black;
-  --terminal-color: yellow;
-  --terminal-border: 1px dashed yellow;
+  --terminal-color: white;
+  --terminal-border: 1px solid white;
 }
 
 * {
@@ -69,6 +69,39 @@
 
 *::-webkit-scrollbar {
   display: none;
+}
+
+.flash {
+  animation: strobe 200ms steps(1, end) infinite;
+}
+
+.race > span:nth-child(3n) {
+  animation: strobe-slow 200ms steps(1, end) infinite;
+  animation-delay: 100ms;
+}
+.race > span:nth-child(3n + 1) {
+  animation: strobe-slow 200ms steps(1, end) infinite;
+  animation-delay: 200ms;
+}
+.race > span:nth-child(3n + 2) {
+  animation: strobe-slow 200ms steps(1, end) infinite;
+  animation-delay: 300ms;
+}
+.race > span:nth-child(3n + 3) {
+  animation: strobe-slow 200ms steps(1, end) infinite;
+  animation-delay: 400ms;
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes strobe-slow {
+  20% {
+    opacity: 0;
+  }
 }
 
 body,

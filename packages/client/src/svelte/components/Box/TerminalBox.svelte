@@ -7,9 +7,6 @@
   } from "../../modules/ui/stores"
   import { playerBox } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
-  import FlowChart from "../FlowChart/FlowChart.svelte"
-  import PipeChart from "../PipeChart/PipeChart.svelte"
-  import CoresChart from "../CoresChart/CoresChart.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
 
   let done = false
@@ -56,16 +53,6 @@
         />
       </div>
       <div>
-        {#if $showFlowChart}
-          <FlowChart controls={false} vertical />
-        {/if}
-        {#if $showPipeChart}
-          <PipeChart controls={false} vertical />
-        {/if}
-        {#if $showCores}
-          <CoresChart controls={false} vertical />
-        {/if}
-
         <BoxStats box={$playerBox} />
       </div>
     {/if}
@@ -134,7 +121,7 @@
     margin: 2rem;
     top: 0;
     right: 0;
-    font-family: monospace;
+    font-family: var(--font-family);
     cursor: pointer;
     color: var(--terminal-color);
   }

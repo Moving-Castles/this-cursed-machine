@@ -4,7 +4,7 @@
     MachineType,
     EntityType,
     MaterialType,
-    ProductDirection,
+    // ProductDirection,
   } from "../../modules/state/enums"
   import { machines, playerBox, playerCore } from "../../modules/state"
   import { hexToString, stringToHex } from "../../modules/utils/misc"
