@@ -97,7 +97,7 @@ library LibNetwork {
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
-        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
+        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
 
         console.log("%%% currentOutputs.length");
         console.log(currentOutputs.length);

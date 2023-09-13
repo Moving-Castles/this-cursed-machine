@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { console } from "forge-std/console.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation, MachineType, MaterialType } from "../codegen/Tables.sol";
+import { GameConfig, GameConfigData, Level, Energy, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation, MachineType, MaterialType } from "../codegen/Tables.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, ROTATION, MATERIAL_TYPE } from "../codegen/Types.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { Product } from "../constants.sol";
@@ -9,11 +9,13 @@ import { Product } from "../constants.sol";
 library LibMachine {
   function process(
     MACHINE_TYPE _machineType,
-    Product[] memory _inputs
-  ) internal pure returns (Product[] memory _output) {
+    Product[] memory _inputs,
+    bytes32 _entity,
+    uint256 blocksSinceLastResolution
+  ) internal returns (Product[] memory _output) {
     // Core
     if (_machineType == MACHINE_TYPE.CORE) {
-      return core(_inputs);
+      return core(_inputs, _entity, blocksSinceLastResolution);
     }
     // Scorcher
     if (_machineType == MACHINE_TYPE.SCORCHER) {
@@ -45,12 +47,16 @@ library LibMachine {
    * @param _inputs Array of Product structs, each containing machineId, materialType, amount, and temperature.
    * @return _outputs Array of modified Product structs with types "PISS" and "BLOOD".
    */
-  function core(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
+  function core(
+    Product[] memory _inputs,
+    bytes32 _coreEntity,
+    uint256 blocksSinceLastResolution
+  ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
     // Abort if not pellet
     if (_inputs[0].materialType != MATERIAL_TYPE.PELLET) return outputs;
-    // @todo: update core energy (factor: 0.2)
-    // ...
+    // Update core energy (factor: 0.2)
+    Energy.set(_coreEntity, Energy.get(_coreEntity) + uint32(blocksSinceLastResolution));
     // Output Piss
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
