@@ -5,15 +5,26 @@
     createComponentSystem,
     createSyncProgressSystem,
   } from "./modules/systems"
-  import { network, initBlockListener } from "./modules/network"
-  import { playerCore } from "./modules/state"
+  import { network, ready, initBlockListener } from "./modules/network"
+  import { entities, playerCore, cores, ports } from "./modules/state"
+  import {
+    patches,
+    simulated,
+    blocksSinceLastResolution,
+  } from "./modules/simulator"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { onKeyDown } from "./modules/ui/events"
+  import { initUI, onKeyDown } from "./modules/ui/events"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
+  // import { initStaticContent } from "./modules/staticContent"
 
-  import Terminal from "./components/Terminal/Terminal.svelte"
-  import Graph from "./components/Graph/Graph.svelte"
+  // import Loading from "./components/Loading/Loading.svelte"
+  import Spawn from "./components/Spawn/Spawn.svelte"
+  import TerminalBox from "./components/Box/TerminalBox.svelte"
+  import End from "./components/End/End.svelte"
+  import Toasts from "./components/Toast/Toasts.svelte"
+  // import Game from "./components/Game/Game.svelte"
+  // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
   // $: console.log("$entities", $entities)
@@ -26,25 +37,35 @@
   // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
+  let UIState = 0
+
+  initUI()
+
   onMount(async () => {
     document.querySelector(".preloader")?.remove()
     // Get static content from CMS
     // initStaticContent()
+
     // Write mud layer to svelte store
     const mudLayer = await setup()
     network.set(mudLayer)
+
     // Modules responsible for sending transactions
     initActionSequencer()
+
     // Write block numbers to svelte store and alert on lost connection
     initBlockListener()
+
     // Create systems to listen to changes to components in our own namespace
     for (const componentKey of Object.keys(
       filterByNamespace($network.components, "mc")
     )) {
       createComponentSystem(componentKey)
     }
+
     // Listen to changes to the SyncProgresscomponent
     createSyncProgressSystem()
+
     // Simulate state changes
     initStateSimulator()
   })
@@ -63,28 +84,18 @@
     </div>
   </div>
 
-  {#if $playerCore}
-    <div class="graph-container">
-      <Graph id="machines" />
-    </div>
+  {#if !$ready || UIState === 0}
+    <!-- <Loading on:next={() => (UIState = 1)} /> -->
+  {:else if !$playerCore}
+    <Spawn />
+  {:else if $playerCore.level === 6}
+    <End />
+  {:else}
+    <TerminalBox />
   {/if}
-
-  <div class="terminal-container">
-    <Terminal
-      sequence={[
-        `‡ can you hear me?
-‡ ???
-‡ I think you should be able to hear me…
->>>....
-      `,
-        "Welcome to your new body",
-      ]}
-      stage={false}
-    />
-  </div>
 </main>
 
-<!-- <Toasts /> -->
+<Toasts />
 
 <style>
   .warning {
@@ -97,21 +108,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .terminal-container {
-    height: 100dvh;
-  }
-
-  .graph-container {
-    height: 100dvh;
-    width: 100dvw;
-    background: black;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10000;
-    overflow: hidden;
   }
 
   .warning-message {
