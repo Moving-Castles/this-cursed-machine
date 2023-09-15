@@ -27,7 +27,7 @@
 
   {#if $showGraph}
     <div class="graph-container">
-      <Graph id="machines" />
+      <Graph id="machines-svg" />
     </div>
   {/if}
 </main>
