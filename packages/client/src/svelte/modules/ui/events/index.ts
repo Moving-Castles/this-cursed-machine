@@ -5,7 +5,7 @@ import {
   dropDestination,
   entities,
 } from "../../state"
-import { showFlowChart } from "../../ui/stores"
+import { showFlowChart, showGraph } from "../../ui/stores"
 import { portSelection } from "../../ui/paths"
 import { NULL_COORDINATE } from "../../utils/space"
 import { connect } from "../../action"
@@ -84,5 +84,6 @@ export function onKeyDown({ key }) {
   if (key === "Escape") {
     portSelection.set([])
     showFlowChart.set(false)
+    showGraph.set(false)
   }
 }

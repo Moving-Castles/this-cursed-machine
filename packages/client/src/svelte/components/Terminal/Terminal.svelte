@@ -99,6 +99,8 @@
     if (userInput === "") {
       // next()
       // advance("A")
+    } else if (userInput === "show") {
+      dispatch("show")
     } else {
       send(`${symbols[2]} ${userInput}`)
       playSound("ui", "selectFour")
@@ -189,9 +191,8 @@
 
     &.stage {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      top: 0;
       width: 400px;
     }
 
