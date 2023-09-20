@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, Energy, CarriedBy, Position, PositionData, Rotation } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE, MACHINE_TYPE, PORT_PLACEMENT, ROTATION } from "../codegen/Types.sol";
+import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, Energy, CarriedBy, Position, PositionData } from "../codegen/Tables.sol";
+import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE, MACHINE_TYPE, PORT_PLACEMENT } from "../codegen/Types.sol";
 import { LibUtils, LibConnection, LibEntity, LibPort, LibNetwork } from "../libraries/Libraries.sol";
 
 contract BuildSystem is System {
-  function build(MACHINE_TYPE _machineType, int32 _x, int32 _y, ROTATION _rotation) public returns (bytes32) {
+  function build(MACHINE_TYPE _machineType, int32 _x, int32 _y) public returns (bytes32) {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // ...
@@ -22,7 +22,6 @@ contract BuildSystem is System {
     bytes32 machineEntity = LibEntity.create(_machineType);
     CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
     Position.set(machineEntity, PositionData(_x, _y));
-    Rotation.set(machineEntity, _rotation);
 
     // Create ports on machine
     LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
