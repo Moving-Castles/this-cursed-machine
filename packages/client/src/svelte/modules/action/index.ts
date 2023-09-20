@@ -29,8 +29,8 @@ export function disconnect(connectionEntity: string) {
     addToSequencer(WorldFunctions.Disconnect, [connectionEntity])
 }
 
-export function build(machineType: MachineType, x: number, y: number, rotation: Rotation) {
-    addToSequencer(WorldFunctions.Build, [machineType, x, y, rotation])
+export function build(machineType: MachineType, x: number, y: number) {
+    addToSequencer(WorldFunctions.Build, [machineType, x, y])
 }
 
 export function rotate(entity: string, rotation: Rotation) {

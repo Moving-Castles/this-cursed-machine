@@ -125,7 +125,7 @@ export const handleAction = (action: string, args: string[]) => {
         const numArg = isNaN(arg) ? MachineType[arg] : arg
         const textArg = !isNaN(arg) ? MachineType[arg] : arg
 
-        build(numArg, 0, 0, 0)
+        build(numArg, 0, 0)
         advance("Building a " + textArg)
       }
       break

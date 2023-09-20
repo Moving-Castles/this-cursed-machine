@@ -23,7 +23,7 @@
     spawn(name.toUpperCase())
   }
 
-  const onDone = e => {
+  const onSend = e => {
     name = e.detail
     sendSpawn()
   }
@@ -36,7 +36,7 @@
       input
       theme="transparent"
       placeholder="Who are you? (5 char min)"
-      on:done={onDone}
+      on:send={onSend}
     />
   {/if}
 </div>

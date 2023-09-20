@@ -1,8 +1,4 @@
-/* @import url("../../public/fonts/style.css"); */
-/* @import url("tippy.js/dist/tippy.css"); */
-@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap");
+@import url("./public/fonts/index.css");
 
 :root {
   /* Colors */
@@ -40,7 +36,7 @@
   /* Fonts */
   --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
     monospaced;
-  --font-family: "Fake Receipt", monospace, Arial, sans-serif;
+  --font-family: "Fake Receipt", monospace;
   --font-size: 12px;
   --font-size-large: 18px;
 

@@ -31,17 +31,17 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2, ROTATION.DEG0);
+    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2, ROTATION.DEG0);
+    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2);
     vm.stopPrank();
 
     // 3. Create a blender entity
     vm.startPrank(alice);
-    bytes32 blenderEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 3, 3, ROTATION.DEG0);
+    bytes32 blenderEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 3, 3);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -60,11 +60,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    bytes32 connectionOneEntity = world.mc_ConnectionSystem_connect(
-      CONNECTION_TYPE.RESOURCE,
-      inletOutputPorts[0][0],
-      coreInputPorts[0][0]
-    );
+    world.mc_ConnectionSystem_connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output to blender input
@@ -104,12 +100,12 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2, ROTATION.DEG0);
+    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2, ROTATION.DEG0);
+    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -124,11 +120,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    bytes32 connectionOneEntity = world.mc_ConnectionSystem_connect(
-      CONNECTION_TYPE.RESOURCE,
-      inletOutputPorts[0][0],
-      coreInputPorts[0][0]
-    );
+    world.mc_ConnectionSystem_connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output to outlet input
@@ -163,12 +155,12 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2, ROTATION.DEG0);
+    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2, ROTATION.DEG0);
+    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -186,11 +178,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    bytes32 connectionOneEntity = world.mc_ConnectionSystem_connect(
-      CONNECTION_TYPE.RESOURCE,
-      inletOutputPorts[0][0],
-      coreInputPorts[0][0]
-    );
+    world.mc_ConnectionSystem_connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output 1 to outlet input 1
@@ -230,17 +218,17 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2, ROTATION.DEG0);
+    bytes32 inletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.INLET, 1, 2);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2, ROTATION.DEG0);
+    bytes32 outletEntity = world.mc_BuildSystem_build(MACHINE_TYPE.OUTLET, 3, 2);
     vm.stopPrank();
 
     // 3. Create a blender entity
     vm.startPrank(alice);
-    bytes32 blenderEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 3, 3, ROTATION.DEG0);
+    bytes32 blenderEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 3, 3);
     vm.stopPrank();
 
     // ... Get inlet output ports

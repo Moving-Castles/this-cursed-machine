@@ -55,17 +55,23 @@
   let interval = false
 
   const onWheel = throttle(e => {
-    const step = 18
-    const pos = outputElement.scrollTop
-    const nextPos = pos + step * -Math.sign(e.deltaY)
-    console.log(e.deltaY)
-    outputElement.scrollTop = nextPos
+    if (outputElement) {
+      const step = 18
+      const pos = outputElement.scrollTop
+      const nextPos = pos + step * -Math.sign(e.deltaY)
+      console.log(e.deltaY)
+      outputElement.scrollTop = nextPos
+    }
   }, 40)
 
   const send = async (string: string) => {
     output.set([...$output, string])
+    console.log($output)
     await tick()
-    outputElement.scrollTop = outputElement.scrollTop + 10000
+    if (outputElement) {
+      outputElement.scrollTop = outputElement.scrollTop + 10000
+    }
+    dispatch("send", string)
   }
 
   /** Next! */
@@ -219,6 +225,7 @@
       background: var(--terminal-background);
       color: var(--terminal-color);
       font-family: var(--font-family);
+      height: 3rem;
       padding: 0;
       line-height: 2rem;
       font-size: 1rem;
