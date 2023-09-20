@@ -241,7 +241,7 @@
 
 <style lang="scss">
   .terminal {
-    font-family: monospace;
+    font-family: var(--font-family);
     padding: 0 1.5rem;
     overflow: hidden;
     transition: background 2s ease, color 2s ease;
@@ -289,7 +289,7 @@
     .terminal-input {
       background: var(--terminal-background);
       color: var(--terminal-color);
-      font-family: monospace;
+      font-family: var(--font-family);
       height: 3rem;
       padding: 0;
       line-height: 2rem;

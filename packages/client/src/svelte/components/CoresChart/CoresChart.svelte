@@ -52,13 +52,13 @@
     bottom: 0;
     padding: 2rem;
     z-index: 9999;
-    font-family: monospace;
+    font-family: var(--font-family);
     color: var(--terminal-color);
   }
   .chart {
     display: flex;
     gap: 2rem;
-    font-family: monospace;
+    font-family: var(--font-family);
     color: var(--terminal-color);
     overflow: hidden;
     height: 100%;

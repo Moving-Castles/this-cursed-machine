@@ -134,7 +134,7 @@
     margin: 2rem;
     top: 0;
     right: 0;
-    font-family: monospace;
+    font-family: var(--font-family);
     cursor: pointer;
     color: var(--terminal-color);
   }
