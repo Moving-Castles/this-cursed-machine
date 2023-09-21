@@ -1,11 +1,20 @@
 <script>
   import * as d3 from "d3"
-  import { EntityType } from "../../../modules/state/enums"
+  import { EntityType, MachineType } from "../../../modules/state/enums"
   import { onMount } from "svelte"
   import { simulated } from "../../../modules/simulator"
 
   const MACHINE_SIZE = 100
-  const PORT_SIZE = 20
+  const PORT_SIZE = 0
+
+  let element // the parent container
+  let interval // the interval used for animation
+
+  // Specify the dimensions of the chart.
+  let width = 0
+  let height = 0
+
+  let selection = []
 
   $: data = {
     nodes: [
@@ -49,17 +58,6 @@
     ],
   }
 
-  $: console.log(data)
-
-  let element // the parent container
-  let interval // the interval used for animation
-
-  // Specify the dimensions of the chart.
-  let width = 928
-  let height = 680
-
-  let selection = []
-
   $: {
     if (selection.length === 2) {
       data.links.push({
@@ -74,7 +72,7 @@
 
   const init = () => {
     // Specify the color scale.
-    const color = d3.scaleOrdinal(["rgba(0,0,0,0.8)"])
+    const color = d3.scaleOrdinal(["rgba(0,0,0,1)"])
 
     // The force simulation mutates links and nodes, so create a copy
     // so that re-evaluating this cell produces the same result.
@@ -92,7 +90,7 @@
           .distance(d =>
             d.source.group === EntityType.MACHINE ? 0 : MACHINE_SIZE * 2
           )
-          .strength(d => (d.source.group === EntityType.MACHINE ? 2 : 0.1))
+          .strength(d => (d.source.group === EntityType.MACHINE ? 1 : 1))
       )
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("x", d3.forceX())
@@ -106,12 +104,12 @@
       .attr("viewBox", [-width / 2, -height / 2, width, height])
       .attr("style", "max-width: 100%; height: auto;")
 
-    // Add a line for each link, and a rectangle for each node.
+    // Links
     const link = svg
       .append("g")
       .attr("stroke", "#fff")
-      .attr("stroke-opacity", 1)
-      .attr("stroke-dasharray", 30)
+      .attr("stroke-dasharray", 40)
+      .attr("stroke-opacity", 0)
       .selectAll("line")
       .data(links)
       .join("line")
@@ -119,11 +117,11 @@
 
     const node = svg
       .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1)
-      .selectAll("rect")
+      .attr("class", "node")
+      .selectAll("g")
       .data(nodes)
-      .join("rect")
+      .enter()
+      .append("g")
       .attr("id", d => d.id)
       .attr("x", d =>
         d.group === EntityType.MACHINE
@@ -135,10 +133,15 @@
           ? d.y - MACHINE_SIZE / 2
           : d.y - MACHINE_SIZE / 2
       )
-      // .attr("transform-origin", "50 50")
       .attr("transform", d =>
         d.group === EntityType.MACHINE ? "rotate(0)" : "rotate(0)"
       )
+
+    const rect = node
+      .attr("fill", "#000")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1)
+      .append("rect")
       .attr("width", d =>
         d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
       )
@@ -147,8 +150,45 @@
       )
       .attr("fill", d => color(d.group))
 
+    const labels = node
+      .filter(d => d.group !== EntityType.PORT)
+      .append("text")
+      .attr("font-size", "4rem")
+      .attr("fill", "#fff")
+      .attr("stroke", "none")
+      .text(function (d) {
+        // const portInformation = ``
+        const connections = Object.values($simulated).filter(
+          ent => ent.entityType === EntityType.CONNECTION
+        )
+        const ports = Object.entries($simulated).filter(
+          ([id, ent]) => ent.carriedBy === d.id
+        )
+        const occupiedPorts = ports.filter(([id, port]) => {
+          // if a connection exists with this as source OR target, list as occupied
+          const connectionsUsingPort = connections.filter(
+            connection =>
+              connection.sourcePort === id || connection.targetPort === id
+          )
+          console.log(connectionsUsingPort)
+          return connectionsUsingPort.length > 0
+        })
+
+        const occupied = occupiedPorts.length
+        const free = ports.length - occupied
+
+        if (d.entry.entityType === EntityType.MACHINE) {
+          return `${MachineType[d.entry.machineType][0]}`
+        }
+
+        return EntityType[d.entry.entityType][0]
+      })
+
     node.append("title").text(d => EntityType[d.entry.entityType])
 
+    // Events
+    // Events
+    // Events
     node.on("mouseover", function (d) {
       if (!selection.includes(d.target.id)) {
         d3.select(this).transition().attr("fill", "#ff0000")
@@ -157,13 +197,13 @@
 
     node.on("mouseout", function (d) {
       if (!selection.includes(d.target.id)) {
-        d3.select(this).transition().attr("fill", "rgba(0,0,0,0.8)")
+        d3.select(this).transition().attr("fill", "rgba(0,0,0,1)")
       }
     })
 
     node.on("click", function (d) {
       selection = [...new Set([...selection, d.target.id])]
-      d3.select(this).transition().attr("fill", "rgba(0,255,0,0.8)")
+      d3.select(this).transition().attr("fill", "rgba(0,255,0,1)")
     })
 
     // Add a drag behavior.
@@ -201,11 +241,16 @@
             ? 0
             : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
         )
+        .attr("z-index", 9999)
+        .attr("stroke-opacity", d => {
+          return d.source.group === EntityType.MACHINE ? 0 : 1
+        })
 
       // Used for positioning nodes
-      node
+      rect
         .attr("x", d => d.x - MACHINE_SIZE / 2)
         .attr("y", d => d.y - MACHINE_SIZE / 2)
+      labels.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
     })
 
     // Reheat the simulation when drag starts, and fix the subject position.
@@ -253,9 +298,9 @@
   })
 </script>
 
-<svelte:window bind:innerWidth={width} bind:innerHeight={height} />
+<svelte:window on:resize={init} />
 
-<div bind:this={element} />
+<div bind:this={element} bind:clientWidth={width} bind:clientHeight={height} />
 
 <style>
   :global(rect:hover) {

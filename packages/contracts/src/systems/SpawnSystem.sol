@@ -41,10 +41,10 @@ contract SpawnSystem is System {
     bytes32 outletInput = LibPort.create(outletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.BOTTOM);
 
     // Connect inlet output to core input
-    LibConnection.create(inletOutput, coreInput, CONNECTION_TYPE.RESOURCE);
+    // LibConnection.create(inletOutput, coreInput, CONNECTION_TYPE.RESOURCE);
 
     // Connect core output to outlet input
-    LibConnection.create(coreOutputPiss, outletInput, CONNECTION_TYPE.RESOURCE);
+    // LibConnection.create(coreOutputPiss, outletInput, CONNECTION_TYPE.RESOURCE);
 
     // Create test machine entity
     // bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
