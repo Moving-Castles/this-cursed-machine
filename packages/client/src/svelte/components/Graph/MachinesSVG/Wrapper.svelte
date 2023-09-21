@@ -92,9 +92,9 @@
           .distance(d =>
             d.source.group === EntityType.MACHINE ? 0 : MACHINE_SIZE * 2
           )
-          .strength(2)
+          .strength(d => (d.source.group === EntityType.MACHINE ? 2 : 0.1))
       )
-      .force("charge", d3.forceManyBody().strength(-500))
+      .force("charge", d3.forceManyBody().strength(-1000))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
 
@@ -111,7 +111,7 @@
       .append("g")
       .attr("stroke", "#fff")
       .attr("stroke-opacity", 1)
-      .attr("stroke-dasharray", 1.5)
+      .attr("stroke-dasharray", 30)
       .selectAll("line")
       .data(links)
       .join("line")

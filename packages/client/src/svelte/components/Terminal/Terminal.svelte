@@ -42,31 +42,25 @@
   if (!input) seq.set(sequence)
 
   /** Constants */
-  const themeOptions = ["dark", "light", "transparent"]
   const dispatch = createEventDispatcher()
 
   /** Variables */
   let inputElement: HTMLElement
   let outputElement: HTMLElement
-  let energy = -1
   let userInput = ""
   let skip = false
-  let complete = false
-  let interval = false
 
   const onWheel = throttle(e => {
     if (outputElement) {
       const step = 18
       const pos = outputElement.scrollTop
       const nextPos = pos + step * -Math.sign(e.deltaY)
-      console.log(e.deltaY)
       outputElement.scrollTop = nextPos
     }
   }, 40)
 
   const send = async (string: string) => {
     output.set([...$output, string])
-    console.log($output)
     await tick()
     if (outputElement) {
       outputElement.scrollTop = outputElement.scrollTop + 10000
@@ -74,76 +68,24 @@
     dispatch("send", string)
   }
 
-  /** Next! */
-  const next = (override = false) => {
-    // First skip, then increment
-    if ($index < $seq.length) {
-      if ((complete && $index < $seq.length - 1) || override) {
-        $index = ++$index
-        skip = false
-      } else {
-        skip = true
-        clearInterval(interval)
-      }
-    }
-
-    if ($index === $seq.length - 1) {
-      if (loop) {
-        $index = 0
-      } else {
-        dispatch("done", userInput)
-      }
-    }
-  }
-
   /** The submit function */
   const onSubmit = async () => {
-    skip = false
+    if (userInput === "") return
+    send(`${symbols[2]} ${userInput}`)
+    playSound("ui", "selectFour")
 
-    const args = userInput.match(betweenSquareBrackets)
-
-    if (userInput === "") {
-      // next()
-      // advance("A")
-    } else if (userInput === "show") {
-      dispatch("show")
-    } else {
-      send(`${symbols[2]} ${userInput}`)
-      playSound("ui", "selectFour")
-    }
+    if (userInput === "show") dispatch("show")
     userInput = ""
   }
 
   /** Reactive statements */
   // Key for transitions
   $: key = $index + (skip ? "-skip" : "")
-  // Set output
-  $: {
-    // let t = $seq[$index]
-    // if (t) $output = [...$output, t]
-  }
-  $: {
-    if (theme === "dark") {
-      // document.documentElement.style.setProperty(
-      //   "--terminal-background",
-      //   "black"
-      // )
-      // document.documentElement.style.setProperty("--terminal-color", "yellow")
-      // document.documentElement.style.setProperty(
-      //   "--terminal-border",
-      //   ""
-      // )
-    }
-  }
 
   /** Lifecycle hooks */
   onMount(() => {
     inputElement.focus()
     $index = 0
-
-    // setInterval(() => {
-    //   send(`${symbols[7]} system messgae`)
-    // }, 2000)
   })
 
   onDestroy(() => index.set(-1))

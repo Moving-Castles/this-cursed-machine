@@ -38,15 +38,13 @@
       sequence={[$narrative.help]}
       on:show={() => ($showGraph = true)}
     />
-    <BoxStats box={$playerBox} />
+    {#if $showGraph}
+      <Graph />
+    {:else}
+      <BoxStats box={$playerBox} />
+    {/if}
   </div>
 </div>
-
-{#if $showGraph}
-  <div class="graph-container">
-    <Graph />
-  </div>
-{/if}
 
 <style lang="scss">
   .box {
