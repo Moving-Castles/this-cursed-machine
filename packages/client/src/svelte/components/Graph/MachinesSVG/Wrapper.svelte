@@ -1,29 +1,55 @@
 <script>
   import * as d3 from "d3"
+  import { EntityType } from "../../../modules/state/enums"
   import { onMount } from "svelte"
+  import { simulated } from "../../../modules/simulator"
+
+  const MACHINE_SIZE = 100
+  const PORT_SIZE = 20
 
   $: data = {
     nodes: [
-      { id: "1", group: 1 },
-      { id: "2", group: 1 },
-      { id: "3", group: 2 },
-      { id: "4", group: 3 },
-      { id: "5", group: 3 },
-      { id: "6", group: 3 },
-      { id: "7", group: 3 },
-      { id: "8", group: 3 },
-      { id: "9", group: 3 },
-      { id: "10", group: 3 },
-      { id: "11", group: 3 },
-      { id: "12", group: 3 },
-      { id: "13", group: 3 },
-      { id: "14", group: 3 },
-      { id: "15", group: 3 },
-      { id: "16", group: 3 },
-      { id: "17", group: 3 },
+      ...Object.entries($simulated)
+        .map(([key, entry]) => ({
+          id: key,
+          entry,
+          group: EntityType.MACHINE,
+        }))
+        .filter(({ entry }) => entry.entityType === EntityType.MACHINE),
+      ...Object.entries($simulated)
+        .map(([key, entry]) => ({
+          id: key,
+          entry,
+          group: EntityType.PORT,
+        }))
+        .filter(({ entry }) => entry.entityType === EntityType.PORT),
     ],
-    links: [],
+    links: [
+      // Connect ports to each other
+      ...Object.entries($simulated)
+        .map(([key, entry]) => ({
+          id: key,
+          entry,
+          source: entry.sourcePort,
+          target: entry.targetPort,
+        }))
+        .filter(({ entry }) => entry.entityType === EntityType.CONNECTION),
+      // ... and attach ports to their machines
+      ...Object.entries($simulated)
+        .map(([key, entry]) => ({
+          id: key,
+          entry,
+        }))
+        .filter(({ entry }) => entry.entityType === EntityType.PORT)
+        .map(obj => ({
+          source: obj.entry.carriedBy,
+          target: obj.id,
+          entry: obj.entry,
+        })),
+    ],
   }
+
+  $: console.log(data)
 
   let element // the parent container
   let interval // the interval used for animation
@@ -36,7 +62,6 @@
 
   $: {
     if (selection.length === 2) {
-      console.log(selection)
       data.links.push({
         source: selection[0],
         target: selection[1],
@@ -64,10 +89,9 @@
         d3
           .forceLink(links)
           .id(d => d.id)
-          .distance(function (d) {
-            // return d.distance
-            return 500
-          })
+          .distance(d =>
+            d.source.group === EntityType.MACHINE ? 0 : MACHINE_SIZE * 2
+          )
           .strength(2)
       )
       .force("charge", d3.forceManyBody().strength(-500))
@@ -101,13 +125,29 @@
       .data(nodes)
       .join("rect")
       .attr("id", d => d.id)
-      .attr("x", d => d.x - 50)
-      .attr("y", d => d.y - 50)
-      .attr("width", 100)
-      .attr("height", 100)
+      .attr("x", d =>
+        d.group === EntityType.MACHINE
+          ? d.x - MACHINE_SIZE / 2
+          : d.x - MACHINE_SIZE / 2
+      )
+      .attr("y", d =>
+        d.group === EntityType.MACHINE
+          ? d.y - MACHINE_SIZE / 2
+          : d.y - MACHINE_SIZE / 2
+      )
+      // .attr("transform-origin", "50 50")
+      .attr("transform", d =>
+        d.group === EntityType.MACHINE ? "rotate(0)" : "rotate(0)"
+      )
+      .attr("width", d =>
+        d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
+      )
+      .attr("height", d =>
+        d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
+      )
       .attr("fill", d => color(d.group))
 
-    node.append("title").text(d => d.id)
+    node.append("title").text(d => EntityType[d.entry.entityType])
 
     node.on("mouseover", function (d) {
       if (!selection.includes(d.target.id)) {
@@ -137,16 +177,35 @@
 
     // Set the position attributes of links and nodes each time the simulation ticks.
     simulation.on("tick", () => {
-      // Not used, is for circles
+      // Used for position links
       link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y)
+        .attr("x1", d =>
+          d.source.group === EntityType.PORT &&
+          d.target.group === EntityType.PORT
+            ? d.source.x - MACHINE_SIZE / 2
+            : d.source.x
+        )
+        .attr("y1", d =>
+          d.source.group === EntityType.PORT &&
+          d.target.group === EntityType.PORT
+            ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2
+            : d.source.y
+        )
+        .attr("x2", d =>
+          d.target.group === EntityType.MACHINE
+            ? 0
+            : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
+        )
+        .attr("y2", d =>
+          d.target.group === EntityType.MACHINE
+            ? 0
+            : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
+        )
 
-      node.attr("cx", d => d.x).attr("cy", d => d.y)
-
-      node.attr("x", d => d.x - 50).attr("y", d => d.y - 50)
+      // Used for positioning nodes
+      node
+        .attr("x", d => d.x - MACHINE_SIZE / 2)
+        .attr("y", d => d.y - MACHINE_SIZE / 2)
     })
 
     // Reheat the simulation when drag starts, and fix the subject position.
