@@ -10,7 +10,7 @@ contract SpawnSystemTest is MudV2Test {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 boxEntity = world.mc_SpawnSystem_spawn("Alice");
+    bytes32 boxEntity = world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
@@ -18,7 +18,6 @@ contract SpawnSystemTest is MudV2Test {
     // Check that the core was spawned correctly
     assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.MACHINE));
     assertEq(uint8(MachineType.get(world, coreEntity)), uint8(MACHINE_TYPE.CORE));
-    assertEq(Name.get(world, coreEntity), "Alice");
     assertEq(Level.get(world, coreEntity), 0);
     assertEq(CreationBlock.get(world, coreEntity), block.number);
     assertEq(ReadyBlock.get(world, coreEntity), block.number);

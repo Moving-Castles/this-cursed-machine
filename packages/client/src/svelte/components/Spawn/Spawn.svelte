@@ -21,7 +21,7 @@
   //   spawnInProgress = true
   //   playSound("tekken", "click")
   //   console.log(name.toUpperCase())
-  //   spawn(name.toUpperCase())
+  //   spawn()
   // }
 
   // const onSend = e => {

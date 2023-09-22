@@ -10,7 +10,7 @@ contract BuildSystemTest is MudV2Test {
     setUp();
 
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
