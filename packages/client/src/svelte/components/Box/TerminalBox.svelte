@@ -1,16 +1,10 @@
 <script lang="ts">
   import { narrative } from "../../modules/content/lore"
-  import {
-    showFlowChart,
-    showPipeChart,
-    showCores,
-  } from "../../modules/ui/stores"
+  import { showGraph } from "../../modules/ui/stores"
   import { playerBox } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
-  import FlowChart from "../FlowChart/FlowChart.svelte"
-  import PipeChart from "../PipeChart/PipeChart.svelte"
-  import CoresChart from "../CoresChart/CoresChart.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
+  import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
 
   let done = false
 
@@ -35,39 +29,19 @@
 
 <div class="bg">
   <div class="split-screen">
-    {#if !done}
-      <div>
-        <Terminal
-          on:done={onDone}
-          animated={false}
-          sequence={$narrative.intro}
-          stage={false}
-        />
-      </div>
+    <Terminal
+      bind:theme
+      stage={false}
+      track={false}
+      animated={false}
+      placeholder={"[h] for help. " + randomTerm}
+      sequence={[$narrative.help]}
+      on:show={() => ($showGraph = true)}
+    />
+    {#if $showGraph}
+      <Graph />
     {:else}
-      <div>
-        <Terminal
-          bind:theme
-          stage={false}
-          track={false}
-          animated={false}
-          placeholder={"[h] for help. " + randomTerm}
-          sequence={[$narrative.help]}
-        />
-      </div>
-      <div>
-        {#if $showFlowChart}
-          <FlowChart controls={false} vertical />
-        {/if}
-        {#if $showPipeChart}
-          <PipeChart controls={false} vertical />
-        {/if}
-        {#if $showCores}
-          <CoresChart controls={false} vertical />
-        {/if}
-
-        <BoxStats box={$playerBox} />
-      </div>
+      <BoxStats box={$playerBox} />
     {/if}
   </div>
 </div>
@@ -87,7 +61,7 @@
 
   .split-screen {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 400px 1fr;
     height: 100dvh;
 
     > * {
@@ -122,6 +96,14 @@
     justify-content: center;
     align-items: center;
     background: var(--terminal-background);
+  }
+
+  .graph-container {
+    position: fixed;
+    /* background: red; */
+    inset: 0;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.8);
   }
 
   .inline-flowchart {

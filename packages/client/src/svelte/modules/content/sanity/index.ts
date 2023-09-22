@@ -1,6 +1,6 @@
 /*
  *  Functions to fetch data from Sanity
- * 
+ *
  */
 
 import { createClient } from "@sanity/client"
@@ -13,7 +13,7 @@ const SANITY_PROJECT_ID = "70kzkeor"
 export const client = createClient({
     projectId: SANITY_PROJECT_ID,
     dataset: "production",
-    apiVersion: '2023-03-21', // use a UTC date string
+    apiVersion: "2023-03-21", // use a UTC date string
     useCdn: true,
 })
 
@@ -122,6 +122,19 @@ const serializers = {
             ])
         },
     },
+    image: props => {
+        return h("figure", { className: "image" }, [
+            h("img", {
+                src: urlFor(get(props, "node.asset", ""))
+                    .width(1200)
+                    .quality(100)
+                    .auto("format")
+                    .url(),
+            }),
+            ...prepareTextElements(props),
+        ])
+    },
+},
 }
 
 export const loadData = async (query, params) => {

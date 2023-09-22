@@ -23,7 +23,7 @@
     spawn(name.toUpperCase())
   }
 
-  const onDone = e => {
+  const onSend = e => {
     name = e.detail
     sendSpawn()
   }

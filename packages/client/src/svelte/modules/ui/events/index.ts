@@ -3,9 +3,9 @@ import {
   originAddress,
   dragOrigin,
   dropDestination,
-  entities
+  entities,
 } from "../../state"
-import { showFlowChart } from "../../ui/stores"
+import { showFlowChart, showGraph } from "../../ui/stores"
 import { portSelection } from "../../ui/paths"
 import { NULL_COORDINATE } from "../../utils/space"
 import { connect } from "../../action"
@@ -18,13 +18,14 @@ const placeholder = writable(img)
 /**
  * Initialize UI to make dragging seamless
  */
-export function initUI () {
+export function initUI() {
   // Add an empty image when dragged to prevent image missing icon
   const img = new Image()
 
-  img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+  img.src =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
 
-  img.addEventListener('load', () => {
+  img.addEventListener("load", () => {
     placeholder.set(img)
   })
 }
@@ -32,8 +33,8 @@ export function initUI () {
 /**
  * Thin wrapper for drag events
  */
-export function onDragStart (e, address: string, passive = false) {
-  console.log('on drag start')
+export function onDragStart(e, address: string, passive = false) {
+  console.log("on drag start")
   if (!passive) {
     originAddress.set(address)
     dragOrigin.set(get(entities)[address]?.position || NULL_COORDINATE)
@@ -42,16 +43,16 @@ export function onDragStart (e, address: string, passive = false) {
   e.dataTransfer.setDragImage(img, 0, 0)
 }
 
-export function onDragOver (coordinates: Coord) {
+export function onDragOver(coordinates: Coord) {
   dropDestination.set(coordinates)
 }
 
 /**
- * 
- * @param address 
- * @param port 
+ *
+ * @param address
+ * @param port
  */
-export function onPortClick (address: string, port: Port) {
+export function onPortClick(address: string, port: Port) {
   const selection = get(portSelection)
 
   console.log(address, port)
@@ -76,12 +77,13 @@ export function onPortClick (address: string, port: Port) {
 }
 
 /**
- * Key down 
+ * Key down
  * @param event MouseEvent
  */
-export function onKeyDown ({ key }) {
+export function onKeyDown({ key }) {
   if (key === "Escape") {
     portSelection.set([])
     showFlowChart.set(false)
+    showGraph.set(false)
   }
 }

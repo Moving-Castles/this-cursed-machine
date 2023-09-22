@@ -3,22 +3,12 @@
   import {
     MachineType,
     EntityType,
-    MaterialType
+    MaterialType,
   } from "../../modules/state/enums"
   import { machines, playerBox, playerCore } from "../../modules/state"
   import { hexToString, stringToHex } from "../../modules/utils/misc"
   import { shortenAddress } from "../../modules/utils/misc"
   export let box: Box
-
-  // const getAdjective = (degrees: number) => {
-  //   if (degrees >= 100) return "BOILING"
-  //   else if (degrees >= 50) return "HOT"
-  //   else if (degrees >= 20) return "WARM"
-  //   else if (degrees > 0) return "COLD"
-  //   else return "FROZEN"
-  // }
-
-  // console.log("$simulated", $simulated)
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -96,6 +86,7 @@
     height: 100%;
     position: relative;
     display: block;
+    margin: 0;
   }
   .agreement-button {
     position: absolute;

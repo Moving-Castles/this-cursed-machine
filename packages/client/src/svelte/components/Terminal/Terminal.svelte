@@ -1,14 +1,8 @@
 <script lang="ts">
-  import { onMount, onDestroy, createEventDispatcher } from "svelte"
-  import { typewriter } from "../../modules/ui/transitions"
-  import {
-    showFlowChart,
-    showPipeChart,
-    showCores,
-  } from "../../modules/ui/stores"
-  import { narrative } from "../../modules/content/lore"
+  import { onMount, onDestroy, createEventDispatcher, tick } from "svelte"
+  import lodash from "lodash"
+  const { throttle } = lodash
   import { playSound } from "../../modules/sound"
-  import { playerCalculatedEnergy } from "../../modules/state"
   import {
     advance,
     output,
@@ -17,183 +11,76 @@
     parsed,
     handleClick,
     handleAction,
-    argsTest,
+    betweenSquareBrackets,
   } from "./index"
   export let sequence: string[] = []
   export let speed = 80
   export let theme = "dark"
-  export let placeholder = "Start typing ([ENTER] for next, [s] to skip intro)"
+  export let placeholder = "Start typing"
   export let loop = false
   export let track = true
   export let input = false
   export let stage = true // display the terminal centered and front stage
   export let animated = false
+  const symbols = [
+    "›",
+    "»",
+    "*",
+    "+",
+    "‡",
+    "†",
+    "+",
+    "◊",
+    "”",
+    "%",
+    "#",
+    "«",
+    "¥",
+  ]
 
   /** Init */
   if (!input) seq.set(sequence)
 
   /** Constants */
-  const themeOptions = ["dark", "light", "transparent"]
   const dispatch = createEventDispatcher()
 
   /** Variables */
   let inputElement: HTMLElement
-  let energy = -1
+  let outputElement: HTMLElement
   let userInput = ""
   let skip = false
-  let complete = false
-  let interval = false
 
-  /** Transition callbacks */
-  const introStart = () => {
-    interval = setInterval(() => {
-      playSound("ui", "cursor")
-    }, speed * 0.666)
-    const actions = document.querySelectorAll(".inline-action")
-
-    for (let action of actions) {
-      action.addEventListener("click", handleClick)
+  const onWheel = throttle(e => {
+    if (outputElement) {
+      const step = 18
+      const pos = outputElement.scrollTop
+      const nextPos = pos + step * -Math.sign(e.deltaY)
+      outputElement.scrollTop = nextPos
     }
-    complete = false
-  }
-  const introEnd = () => {
-    complete = true
-    clearInterval(interval)
-  }
+  }, 40)
 
-  /** Next! */
-  const next = (override = false) => {
-    // First skip, then increment
-    if ($index < $seq.length) {
-      if ((complete && $index < $seq.length - 1) || override) {
-        $index = ++$index
-        skip = false
-      } else {
-        skip = true
-        clearInterval(interval)
-      }
+  const send = async (string: string) => {
+    output.set([...$output, string])
+    await tick()
+    if (outputElement) {
+      outputElement.scrollTop = outputElement.scrollTop + 10000
     }
-
-    if ($index === $seq.length - 1) {
-      if (loop) {
-        $index = 0
-      } else {
-        dispatch("done", userInput)
-      }
-    }
+    dispatch("send", string)
   }
 
   /** The submit function */
   const onSubmit = async () => {
-    skip = false
+    if (userInput === "") return
+    send(`${symbols[2]} ${userInput}`)
+    playSound("ui", "selectFour")
 
-    const args = userInput.match(argsTest)
-
-    if (input) {
-      dispatch("done", userInput)
-      placeholder = "loading..."
-    }
-
-    if (userInput === "") {
-      next()
-    } else if (userInput.includes("theme")) {
-      // Check for one of the options in the string
-      const t = themeOptions.find(tt => userInput.includes(tt))
-      if (t) theme = t
-    } else if (userInput === "s") {
-      dispatch("done")
-    } else if (userInput === "m") {
-      handleAction("Add", ["machine"])
-    } else if (userInput === "p") {
-      handleAction("Add", ["pipe"])
-    } else if (userInput === "f") {
-      $showFlowChart = true
-    } else if (userInput === "pp") {
-      $showPipeChart = true
-    } else if (userInput === "cc") {
-      $showCores = true
-    } else if (userInput === "wink") {
-      advance(`
-@@@@@@@@@@@@@@@%&&&@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@%%(%%%#(%%#%%&%@@@@@@@@@@@@
-@@@@@@@@@@@@@#%@@@@@##%&#%##@@@@@@@@@@@@
-@@@@@@@@@@@@@&&@@@@%#((&##%#@@@@@@@@@@@@
-@@@@@@@@@@@@@&&%&//((/ ./# @@@@@@@@@@@@@
-@@@@@&%&&&&&&&*/#..%*.(#,*./@@@@@@@@@@@@
-@@@@@%%&&&*,((*&(//&(/#&//%#&%%%@@@@@@@@
-@@@@@@@@@/((%##%#(.,*/((/,,,/&&%#%@@@@@@
-@@@@@@,..@/*((/((/(*,*#&&%#(%%%@@@@@@@@@
-@@@@@*,*#@&@@@&&&&@@@&&&&&@/#&@@@@@@@@@@
-@@@@@, (.,(/%@&&&&@#/@&&&@(#/@@@@@@@@@@@
-@@@@/ ,@@@(&//***/((#(###%%&(@@@,,@@@@@@
-@@@@@@@@@@##%#(*...,.*,%&(@@@@@@/.  @@@@
-@@@@@@@@@@@@@@@@@%@@%&%@@@@@@@@/#*  *@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@**(@@@@
-`)
-    } else if (userInput === "h") {
-      advance($narrative.help)
-    } else if (userInput.toLowerCase().includes("new")) {
-      if (args) {
-        handleAction("New", args)
-      } else {
-        advance(
-          "! Make sure to include arguments between brackets: [LIKE THIS]"
-        )
-      }
-    } else if (userInput.toLowerCase().includes("from")) {
-      if (args) {
-        handleAction("From", args)
-      } else {
-        advance(
-          "! Make sure to include arguments between brackets: [LIKE THIS]"
-        )
-      }
-    } else if (userInput.toLowerCase().includes("to")) {
-      if (args) {
-        handleAction("To", args)
-      } else {
-        advance(
-          "! Make sure to include arguments between brackets: [LIKE THIS]"
-        )
-      }
-    } else {
-      advance(userInput)
-    }
+    if (userInput === "show") dispatch("show")
     userInput = ""
   }
 
   /** Reactive statements */
   // Key for transitions
   $: key = $index + (skip ? "-skip" : "")
-  // Set output
-  $: {
-    let t = $seq[$index]
-    if (t) $output = t
-  }
-  $: {
-    if (theme === "dark") {
-      document.documentElement.style.setProperty(
-        "--terminal-background",
-        "black"
-      )
-      document.documentElement.style.setProperty("--terminal-color", "white")
-      document.documentElement.style.setProperty(
-        "--terminal-border",
-        "1px dashed white"
-      )
-    }
-    if (theme === "light") {
-      document.documentElement.style.setProperty(
-        "--terminal-background",
-        "white"
-      )
-      document.documentElement.style.setProperty("--terminal-color", "black")
-      document.documentElement.style.setProperty(
-        "--terminal-border",
-        "1px dashed black"
-      )
-    }
-  }
 
   /** Lifecycle hooks */
   onMount(() => {
@@ -212,22 +99,20 @@
       </p>
     {/if}
     {#key key}
-      <div class="terminal-output">
-        <p
-          in:typewriter={{ speed: skip || !animated ? 0 : speed }}
-          on:introstart={introStart}
-          on:introend={introEnd}
-          class="output-content"
-        >
-          {@html parsed($output)}
-        </p>
+      <div bind:this={outputElement} class="terminal-output" on:wheel={onWheel}>
+        {#each $output as o, i (i)}
+          <p class="output-content">
+            {@html parsed(o)}
+          </p>
+        {/each}
       </div>
     {/key}
   {/if}
+
   <form class="terminal-input" on:submit|preventDefault={onSubmit}>
     {#if !input}
       <span class="player-stats">
-        e: {$playerCalculatedEnergy}
+        {symbols[0]}
       </span>
     {/if}
     <input
@@ -254,11 +139,9 @@
 
     &.stage {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      top: 0;
       width: 400px;
-      height: 3rem;
     }
 
     .track {
@@ -275,16 +158,10 @@
     }
 
     .terminal-output {
-      height: calc(100% - 3rem);
-      width: 60ch;
+      height: calc(100% - 1.5rem);
       white-space: pre-wrap;
-      vertical-align: text-bottom;
-      display: flex;
-      flex-flow: column nowrap;
+      overflow: hidden;
       line-height: 1.5rem;
-      justify-content: end;
-      overflow-y: scroll;
-      overflow-x: hidden;
     }
     .terminal-input {
       background: var(--terminal-background);
@@ -299,6 +176,7 @@
       position: absolute;
       bottom: 0;
       left: 1.5rem;
+      height: 1.5rem;
       transition: background 2s ease, color 2s ease;
       display: flex;
       z-index: 999;
@@ -306,7 +184,7 @@
       .player-stats {
         white-space: nowrap;
         vertical-align: middle;
-        line-height: 3rem;
+        line-height: 1.5rem;
       }
 
       input {
@@ -318,7 +196,7 @@
         max-width: 100%;
         background-color: inherit;
         border: none;
-        padding-left: 1rem;
+        padding: 0 1ch;
 
         &:focus {
           border: none;
