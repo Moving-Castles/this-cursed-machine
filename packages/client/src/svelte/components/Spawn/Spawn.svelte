@@ -35,7 +35,7 @@
       stage
       input
       theme="transparent"
-      placeholder="Who are you? (5 char min)"
+      placeholder="Blink"
       on:done={onDone}
     />
   {/if}
@@ -46,7 +46,6 @@
     position: fixed;
     inset: 0;
     background-color: black;
-    background: url("/bg.png");
     background-size: cover;
     background-position: center;
     z-index: 1;

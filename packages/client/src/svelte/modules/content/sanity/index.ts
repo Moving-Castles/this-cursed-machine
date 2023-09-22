@@ -8,7 +8,7 @@ import blocksToHtml from "@sanity/block-content-to-html"
 import { get, has } from "lodash"
 import imageUrlBuilder from "@sanity/image-url"
 
-const SANITY_PROJECT_ID = "wy55ouyo"
+const SANITY_PROJECT_ID = "70kzkeor"
 
 export const client = createClient({
     projectId: SANITY_PROJECT_ID,
@@ -19,7 +19,7 @@ export const client = createClient({
 
 const h = blocksToHtml.h
 
-const prepareTextElements = props => {
+const prepareTextElements = (props: any) => {
     let textElements = []
     if (has(props, "node.caption.content"))
         textElements.push(
@@ -57,30 +57,59 @@ export const toPlainText = (blocks = []) => {
 
 const builder = imageUrlBuilder(client)
 
-export const urlFor = source => builder.image(source)
+export const urlFor = (source: any) => builder.image(source)
 
 const serializers = {
     marks: {
-        link: props => {
-            const external = get(props, 'mark.href', '').includes('http')
-            let linkOptions = external ? { target: "_blank", rel: "noreferrer", href: props.mark.href } : { href: props.mark.href }
+        norm: (props: any) => {
             return h(
-                "a",
-                linkOptions,
+                "span",
+                { className: "norm" },
+                props.children
+            )
+        },
+        info: (props: any) => {
+            return h(
+                "span",
+                { className: "info" },
+                props.children
+            )
+        },
+        alert: (props: any) => {
+            return h(
+                "span",
+                { className: "alert" },
+                props.children
+            )
+        },
+        failure: (props: any) => {
+            return h(
+                "span",
+                { className: "failure" },
+                props.children
+            )
+        },
+        success: (props: any) => {
+            return h(
+                "span",
+                { className: "success" },
+                props.children
+            )
+        },
+        quote: (props: any) => {
+            return h(
+                "span",
+                { className: "quote" },
                 props.children
             )
         },
     },
     types: {
-        block: props => {
+        block: (props: any) => {
             const style = props.node.style || "normal"
-            if (style === "blockquote") return h("blockquote", {}, props.children)
-            if (style === "h2") return h("h2", {}, props.children)
-            if (style === "h3") return h("h3", {}, props.children)
-            if (style === "h4") return h("h4", {}, props.children)
             return h("p", { className: style }, props.children)
         },
-        image: props => {
+        image: (props: any) => {
             return h("figure", { className: "image" }, [
                 h("img", {
                     src: urlFor(get(props, "node.asset", ""))

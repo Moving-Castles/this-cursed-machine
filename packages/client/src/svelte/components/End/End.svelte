@@ -26,7 +26,7 @@
     height: 100vh;
     width: 100vw;
     background-color: #4bff6c;
-    font-size: 18px;
+    font-size: var(--font-size-normal);
     z-index: 1000;
     color: black;
   }

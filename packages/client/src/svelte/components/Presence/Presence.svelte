@@ -80,7 +80,7 @@
     text-align: center;
     line-height: 38px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: var(--font-size-normal);
 
     &.expanded {
       background: rgba(211, 211, 211, 1);

@@ -176,10 +176,10 @@
         "--terminal-background",
         "black"
       )
-      document.documentElement.style.setProperty("--terminal-color", "yellow")
+      document.documentElement.style.setProperty("--terminal-color", "white")
       document.documentElement.style.setProperty(
         "--terminal-border",
-        "1px dashed yellow"
+        "1px dashed white"
       )
     }
     if (theme === "light") {

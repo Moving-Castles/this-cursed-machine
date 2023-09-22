@@ -49,7 +49,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: 18px;
+    font-size: var(--font-size-normal);
     gap: 20px;
     z-index: 1000;
 
