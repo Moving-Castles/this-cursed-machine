@@ -7,15 +7,20 @@
 
   const next = () => dispatch("next")
 
+  // Run intro sequence when content is loaded
   $: if ($staticContent.loading) {
-    animateContent($staticContent.loading.content.content, 3, 300)
+    runIntroSequence()
+  }
+
+  async function runIntroSequence() {
+    await animateContent($staticContent.loading.content.content, 2, 300)
+    await new Promise(res => setTimeout(res, 300))
+    next()
   }
 </script>
 
 <div>
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="loading" on:click={next}>
+  <div class="loading">
     <div id="root" class="loading-message" />
   </div>
 </div>
@@ -33,7 +38,6 @@
     font-size: var(--font-size-normal);
     color: inherit;
     user-select: none;
-    cursor: pointer;
 
     .loading-message {
       width: 80%;

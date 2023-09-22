@@ -10,22 +10,27 @@
   let name = ""
 
   let spawnInProgress = false
-  function sendSpawn() {
-    if (spawnInProgress) return
-    if (name.length < 5) {
-      playSound("tekken", "error")
-      toastMessage("Name must be at least 5 characters long")
-      return
-    }
-    spawnInProgress = true
-    playSound("tekken", "click")
-    console.log(name.toUpperCase())
-    spawn(name.toUpperCase())
-  }
 
-  const onSend = e => {
-    name = e.detail
-    sendSpawn()
+  // function sendSpawn() {
+  //   if (spawnInProgress) return
+  //   if (name.length < 5) {
+  //     playSound("tekken", "error")
+  //     toastMessage("Name must be at least 5 characters long")
+  //     return
+  //   }
+  //   spawnInProgress = true
+  //   playSound("tekken", "click")
+  //   console.log(name.toUpperCase())
+  //   spawn(name.toUpperCase())
+  // }
+
+  // const onSend = e => {
+  //   name = e.detail
+  //   sendSpawn()
+  // }
+
+  const onDone = e => {
+    console.log("done")
   }
 </script>
 
