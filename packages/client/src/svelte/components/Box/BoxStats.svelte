@@ -1,5 +1,6 @@
 <script lang="ts">
   import { blocksSinceLastResolution, simulated } from "../../modules/simulator"
+  import { onWheel } from "../../modules/ui/events"
   import {
     MachineType,
     EntityType,
@@ -12,7 +13,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="box-stats">
+<div class="box-stats" use:onWheel>
   <p>
     *** XXXXXXXXXXXXXXXX ***<br />XXX YOUR SKINNER BOX XXX
     <br />*** XXXXXXXXXXXXXXXX ***<br /><br />
@@ -41,11 +42,11 @@
         <p>
           <strong>{MachineType[entity.machineType]}</strong> ({shortenAddress(
             key
-          )})
+          )}) ({entity.numericalID})
         </p>
         {#if entity.machineType == MachineType.CORE}
           <p>
-            ENERGY {entity.energy + $blocksSinceLastResolution}
+            ENERGY {entity.energy}
           </p>
         {/if}
         <!-- INPUTS -->
@@ -56,7 +57,6 @@
               [IN]
               {MaterialType[product.materialType]}
               {product.amount}/block
-              <!-- {getAdjective(product.temperature)} -->
             </p>
           {/each}
         {/if}
@@ -71,7 +71,6 @@
               {:else}
                 {product.amount}/block
               {/if}
-              <!-- {getAdjective(product.temperature)} -->
             </p>
           {/each}
         {/if}
@@ -87,6 +86,7 @@
     position: relative;
     display: block;
     margin: 0;
+    overflow: scroll;
   }
   .agreement-button {
     position: absolute;

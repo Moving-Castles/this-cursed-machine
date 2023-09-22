@@ -1,4 +1,6 @@
 import { writable, get } from "svelte/store"
+import lodash from "lodash"
+const { throttle } = lodash
 import {
   originAddress,
   dragOrigin,
@@ -85,5 +87,24 @@ export function onKeyDown({ key }) {
     portSelection.set([])
     showFlowChart.set(false)
     showGraph.set(false)
+  }
+}
+
+export const onWheel = (node: HTMLElement, { step = 15 } = {}) => {
+  node.style.overflow = "hidden"
+  const handler = throttle(e => {
+    console.log(e)
+    e.preventDefault()
+    const pos = node.scrollTop
+    const nextPos = pos + step * -Math.sign(e.deltaY)
+    node.scrollTop = nextPos
+  }, 40)
+
+  node.addEventListener("wheel", handler)
+
+  return {
+    destroy() {
+      node.removeEventListener("wheel", handler)
+    },
   }
 }

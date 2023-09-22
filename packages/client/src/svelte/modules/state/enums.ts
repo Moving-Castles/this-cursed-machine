@@ -1,51 +1,52 @@
 export enum EntityType {
-    BOX,
-    MACHINE,
-    CONNECTION,
-    MATERIAL,
-    PORT
+  BOX,
+  MACHINE,
+  CONNECTION,
+  MATERIAL,
+  PORT,
 }
 export enum MachineType {
-    BLOCKER,
-    INLET,
-    OUTLET,
-    CORE,
-    BLENDER,
-    SPLITTER,
-    SCORCHER,
+  BLOCKER,
+  INLET,
+  OUTLET,
+  CORE,
+  BLENDER,
+  SPLITTER,
+  SCORCHER,
+  COMBI_GATE,
 }
 
 export enum MaterialType {
-    NONE,
-    PELLET,
-    BLOOD,
-    PISS,
-    DIRT,
-    SAND,
-    FLESH,
-    TEETH
+  NONE,
+  PELLET,
+  BLOOD,
+  PISS,
+  DIRT,
+  SAND,
+  FLESH,
+  TEETH,
 }
 
 export enum PortType {
-    INPUT,
-    OUTPUT
+  INPUT,
+  OUTPUT,
 }
 
 export enum ConnectionType {
-    CONTROL,
-    RESOURCE
+  CONTROL,
+  RESOURCE,
 }
 
 export enum PortPlacement {
-    TOP,
-    RIGHT,
-    BOTTOM,
-    LEFT
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT,
 }
 
 export enum Rotation {
-    DEG0,
-    DEG90,
-    DEG180,
-    DEG270
+  DEG0,
+  DEG90,
+  DEG180,
+  DEG270,
 }

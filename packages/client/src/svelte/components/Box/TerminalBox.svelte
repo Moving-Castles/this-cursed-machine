@@ -6,24 +6,6 @@
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
 
-  let done = false
-
-  $: randomTerm = [
-    "Everything is hard before it is easy.",
-    "Nothing is more frightful than to see ignorance in action.",
-    "Nothing is more damaging to a new truth than an old error.",
-    "At night, that’s when you mess up. So if you go to bed at 9.30, you’re good.",
-    "Being famous is just a job",
-    "I think it’s an okay thing to express yourself",
-  ][Math.floor(Math.random() * 6)]
-
-  const onDone = () => {
-    done = true
-    setTimeout(() => {
-      theme = "light"
-    }, 1000)
-  }
-
   let theme = "dark"
 </script>
 
@@ -34,15 +16,20 @@
       stage={false}
       track={false}
       animated={false}
-      placeholder={"[h] for help. " + randomTerm}
+      placeholder={"[h] for help."}
       sequence={[$narrative.help]}
       on:show={() => ($showGraph = true)}
     />
-    {#if $showGraph}
-      <Graph />
-    {:else}
-      <BoxStats box={$playerBox} />
-    {/if}
+    <div class="right-col">
+      <div class="stats">
+        <BoxStats box={$playerBox} />
+      </div>
+      <div class="goal">FGolad</div>
+
+      <div class="graph">
+        <Graph />
+      </div>
+    </div>
   </div>
 </div>
 
@@ -66,8 +53,23 @@
 
     > * {
       height: 100%;
-      max-height: 100dvh;
-      padding: 1rem;
+      height: 100%;
+    }
+
+    .right-col {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-rows: 300px 1fr;
+
+      .stats {
+        grid-column: 1 / 5;
+        border: var(--terminal-border);
+      }
+
+      .goal {
+        grid-column: 5 / 7;
+        border: var(--terminal-border);
+      }
     }
   }
 
@@ -96,6 +98,10 @@
     justify-content: center;
     align-items: center;
     background: var(--terminal-background);
+  }
+
+  .graph {
+    grid-column: 1 / 7;
   }
 
   .graph-container {

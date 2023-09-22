@@ -2,10 +2,17 @@
   import * as d3 from "d3"
   import { EntityType, MachineType } from "../../../modules/state/enums"
   import { onMount } from "svelte"
-  import { simulated } from "../../../modules/simulator"
+  import {
+    simulated,
+    simulatedPorts,
+    simulatedConnections,
+  } from "../../../modules/simulator"
+  import _ from "lodash"
+  import { ports } from "../../../modules/state"
+  const { isEqual } = _
 
   const MACHINE_SIZE = 100
-  const PORT_SIZE = 0
+  const PORT_SIZE = 100
 
   let element // the parent container
   let interval // the interval used for animation
@@ -14,61 +21,84 @@
   let width = 0
   let height = 0
 
-  let selection = []
-
-  $: data = {
-    nodes: [
-      ...Object.entries($simulated)
-        .map(([key, entry]) => ({
-          id: key,
-          entry,
-          group: EntityType.MACHINE,
-        }))
-        .filter(({ entry }) => entry.entityType === EntityType.MACHINE),
-      ...Object.entries($simulated)
-        .map(([key, entry]) => ({
-          id: key,
-          entry,
-          group: EntityType.PORT,
-        }))
-        .filter(({ entry }) => entry.entityType === EntityType.PORT),
-    ],
-    links: [
-      // Connect ports to each other
-      ...Object.entries($simulated)
-        .map(([key, entry]) => ({
-          id: key,
-          entry,
-          source: entry.sourcePort,
-          target: entry.targetPort,
-        }))
-        .filter(({ entry }) => entry.entityType === EntityType.CONNECTION),
-      // ... and attach ports to their machines
-      ...Object.entries($simulated)
-        .map(([key, entry]) => ({
-          id: key,
-          entry,
-        }))
-        .filter(({ entry }) => entry.entityType === EntityType.PORT)
-        .map(obj => ({
-          source: obj.entry.carriedBy,
-          target: obj.id,
-          entry: obj.entry,
-        })),
-    ],
-  }
+  let data = {}
+  let previousData = {}
 
   $: {
-    if (selection.length === 2) {
-      data.links.push({
-        source: selection[0],
-        target: selection[1],
-        value: 200,
-      })
-      init()
-      selection = []
+    data = {
+      nodes: [
+        ...Object.entries($simulated)
+          .map(([key, entry]) => ({
+            id: key,
+            entry,
+            group: EntityType.MACHINE,
+          }))
+          .filter(({ entry }) => entry.entityType === EntityType.MACHINE),
+      ],
+      links: [
+        // Connect ports to each other
+        ...Object.entries($simulated)
+          .map(([key, entry]) => ({
+            id: key,
+            entry,
+          }))
+          .filter(({ entry }) => entry.entityType === EntityType.CONNECTION)
+          .map(({ id, entry }) => {
+            // Connect the source machine to the target machine
+            const sP = $simulatedPorts[entry.sourcePort]
+            const tP = $simulatedPorts[entry.targetPort]
+
+            return {
+              id,
+              entry,
+              group: EntityType.CONNECTION,
+              source: sP.carriedBy,
+              target: tP.carriedBy,
+            }
+          }),
+      ],
     }
+
+    if (element && isEqual(data, previousData) === false) init() // update
+    previousData = { ...data }
   }
+
+  // Utilities
+  const isConnected = d => {
+    // If the connections contain ports that are connected to this machine, that means they are connected
+    const machinePorts = Object.entries($simulatedPorts)
+      .filter(([_, port]) => port.carriedBy === d.id)
+      .map(([id, _]) => id)
+
+    const connectionPorts = Object.values($simulatedConnections)
+      .map(entry => [entry.sourcePort, entry.targetPort])
+      .flat()
+
+    return connectionPorts.some(item => machinePorts.includes(item))
+  }
+
+  // BROKEN CODE
+  // const getAvailablePorts = d => {
+  //   const connections = Object.entries($simulatedConnections)
+  //   const ports = Object.entries($simulatedPorts)
+
+  //   const occupiedPorts = ports.filter(([id, port]) => {
+  //     // if a connection exists with this as source OR target, list as occupied
+  //     const connectionsUsingPort = connections.filter(
+  //       connection =>
+  //         connection.sourcePort === id || connection.targetPort === id
+  //     )
+  //     return connectionsUsingPort.length > 0
+  //   })
+
+  //   const occupied = occupiedPorts.length
+  //   const free = ports.length - occupied
+
+  //   return {
+  //     occupied,
+  //     free
+  //   }
+  // }
 
   const init = () => {
     // Specify the color scale.
@@ -88,7 +118,9 @@
           .forceLink(links)
           .id(d => d.id)
           .distance(d =>
-            d.source.group === EntityType.MACHINE ? 0 : MACHINE_SIZE * 2
+            d.source.group === EntityType.MACHINE
+              ? MACHINE_SIZE * 2
+              : MACHINE_SIZE * 2
           )
           .strength(d => (d.source.group === EntityType.MACHINE ? 1 : 1))
       )
@@ -107,12 +139,14 @@
     // Links
     const link = svg
       .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-dasharray", 40)
-      .attr("stroke-opacity", 0)
       .selectAll("line")
       .data(links)
       .join("line")
+      .attr("stroke", "#fff")
+      .attr("stroke-dashoffset", 0)
+      .attr("stroke-dasharray", 20)
+      .attr("stroke-opacity", 0)
+      .attr("id", d => `link-${d.id}`)
       .attr("stroke-width", d => Math.sqrt(d.value))
 
     const node = svg
@@ -151,32 +185,12 @@
       .attr("fill", d => color(d.group))
 
     const labels = node
-      .filter(d => d.group !== EntityType.PORT)
+      .filter(d => d.group === EntityType.MACHINE)
       .append("text")
       .attr("font-size", "4rem")
       .attr("fill", "#fff")
       .attr("stroke", "none")
       .text(function (d) {
-        // const portInformation = ``
-        const connections = Object.values($simulated).filter(
-          ent => ent.entityType === EntityType.CONNECTION
-        )
-        const ports = Object.entries($simulated).filter(
-          ([id, ent]) => ent.carriedBy === d.id
-        )
-        const occupiedPorts = ports.filter(([id, port]) => {
-          // if a connection exists with this as source OR target, list as occupied
-          const connectionsUsingPort = connections.filter(
-            connection =>
-              connection.sourcePort === id || connection.targetPort === id
-          )
-          console.log(connectionsUsingPort)
-          return connectionsUsingPort.length > 0
-        })
-
-        const occupied = occupiedPorts.length
-        const free = ports.length - occupied
-
         if (d.entry.entityType === EntityType.MACHINE) {
           return `${MachineType[d.entry.machineType][0]}`
         }
@@ -184,27 +198,17 @@
         return EntityType[d.entry.entityType][0]
       })
 
+    // Top right numbers
+    const numbers = node
+      .filter(d => d.group !== EntityType.PORT)
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("font-size", "0.8rem")
+      .attr("fill", "#fff")
+      .attr("stroke", "none")
+      .text(d => $simulated[d.id]?.numericalID)
+
     node.append("title").text(d => EntityType[d.entry.entityType])
-
-    // Events
-    // Events
-    // Events
-    node.on("mouseover", function (d) {
-      if (!selection.includes(d.target.id)) {
-        d3.select(this).transition().attr("fill", "#ff0000")
-      }
-    })
-
-    node.on("mouseout", function (d) {
-      if (!selection.includes(d.target.id)) {
-        d3.select(this).transition().attr("fill", "rgba(0,0,0,1)")
-      }
-    })
-
-    node.on("click", function (d) {
-      selection = [...new Set([...selection, d.target.id])]
-      d3.select(this).transition().attr("fill", "rgba(0,255,0,1)")
-    })
 
     // Add a drag behavior.
     node.call(
@@ -233,24 +237,34 @@
         )
         .attr("x2", d =>
           d.target.group === EntityType.MACHINE
-            ? 0
+            ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
             : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
         )
         .attr("y2", d =>
           d.target.group === EntityType.MACHINE
-            ? 0
+            ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
             : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
         )
         .attr("z-index", 9999)
         .attr("stroke-opacity", d => {
-          return d.source.group === EntityType.MACHINE ? 0 : 1
+          return d.source.group === EntityType.MACHINE ? 1 : 1
         })
 
       // Used for positioning nodes
       rect
         .attr("x", d => d.x - MACHINE_SIZE / 2)
         .attr("y", d => d.y - MACHINE_SIZE / 2)
+      // Labels
       labels.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
+      // Numbers
+      numbers.attr("x", d => d.x + 46).attr("y", d => d.y - 36)
+      // Dash or no dash
+      node
+        .attr("stroke", d => {
+          return isConnected(d) ? "#fff" : "#222"
+        })
+        .attr("stroke-dasharray", d => (isConnected(d) ? 20 : 0))
+        .attr("stroke-opacity", d => 1)
     })
 
     // Reheat the simulation when drag starts, and fix the subject position.
@@ -288,7 +302,20 @@
     let offset = 1
     setInterval(function () {
       // Link is all the links
-      link.style("stroke-dashoffset", offset)
+      link.attr("stroke-dashoffset", d => {
+        // const linkElement = d3.select(`#link-${d.id}`)
+        const linkElement = document.querySelector(`#link-${d.id}`)
+        // Determine direction
+        if (linkElement) {
+          let dashOffset = Number(linkElement.getAttribute("stroke-dashoffset"))
+          dashOffset -= 4
+          return dashOffset
+        }
+
+        return 0
+      })
+      node.style("stroke-dashoffset", d => offset)
+
       offset += 4
     }, 120)
   }
@@ -300,10 +327,20 @@
 
 <svelte:window on:resize={init} />
 
-<div bind:this={element} bind:clientWidth={width} bind:clientHeight={height} />
+<div
+  class="wrapper"
+  bind:this={element}
+  bind:clientWidth={width}
+  bind:clientHeight={height}
+/>
 
 <style>
   :global(rect:hover) {
     stroke: 4px solid blue;
+  }
+
+  .wrapper {
+    width: 100%;
+    height: 100%;
   }
 </style>
