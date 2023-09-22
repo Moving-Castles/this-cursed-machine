@@ -134,7 +134,6 @@ const serializers = {
             ...prepareTextElements(props),
         ])
     },
-},
 }
 
 export const loadData = async (query, params) => {
