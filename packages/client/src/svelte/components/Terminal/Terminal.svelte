@@ -4,6 +4,7 @@
   import { onWheel } from "../../modules/ui/events"
   import { lastSentTime } from "../../modules/ui/stores"
   import { output, sequence as seq, index, parsed } from "./index"
+  import { v4 as uuid } from "uuid"
   import AsciiTextGenerator from "ascii-text-generator"
   import Select from "./Select.svelte"
   import MultiSelect from "./MultiSelect.svelte"
@@ -14,6 +15,7 @@
   } from "../../modules/state/enums"
   import { playerEntityId, playerCore, playerBox } from "../../modules/state"
   import {
+    potential,
     simulated,
     simulatedMachines,
     simulatedPorts,
@@ -70,6 +72,7 @@
    */
   // Build
   const buildMachine = machineType => {
+    // First add the potential transaction
     build(MachineType[machineType], 0, 0)
     send(`Building a ${machineType}`)
   }
@@ -407,6 +410,22 @@ Calculate the answer of life to get more help ya dumwit
     }
   }
 
+  const clearPotential = () => {
+    building = false
+    userInput = ""
+    potential.set({})
+  }
+
+  const displayPotential = ({ detail }) => {
+    potential.set({
+      [uuid()]: {
+        machineType: detail,
+        entityType: EntityType.MACHINE,
+        potential: true,
+      },
+    })
+  }
+
   const onBuildConfirm = ({ detail }) => {
     building = false
     buildMachine(detail)
@@ -497,6 +516,8 @@ Calculate the answer of life to get more help ya dumwit
         options={AVAILABLE_MACHINES}
         bind:value={userInput}
         on:confirm={onBuildConfirm}
+        on:change={displayPotential}
+        on:cancel={clearPotential}
       />
     {:else if connecting}
       <MultiSelect

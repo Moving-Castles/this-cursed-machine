@@ -1,6 +1,6 @@
 <script lang="ts">
   export let options: string[] = []
-  import { createEventDispatcher } from "svelte"
+  import { onMount, createEventDispatcher } from "svelte"
 
   const dispatch = createEventDispatcher()
 
@@ -9,10 +9,11 @@
 
   $: {
     value = options[index]
-    console.log(value)
+    dispatch("change", value)
   }
 
   // enter / return = 13
+  // escape = 27
   // left = 37
   // up = 38
   // right = 39
@@ -26,7 +27,13 @@
     }
 
     if (keyCode === 13) dispatch("confirm", value)
+
+    if (keyCode === 27) dispatch("cancel")
   }
+
+  onMount(() => {
+    dispatch("change", value)
+  })
 </script>
 
 <svelte:window on:keydown={onKeyDown} />

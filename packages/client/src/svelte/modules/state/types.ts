@@ -49,6 +49,7 @@ declare global {
     amount?: number
     lastResolved?: number
     temperature?: number
+    potential?: boolean
   }
 
   type BuildableEntity = {

@@ -4,6 +4,7 @@
   import { onMount } from "svelte"
   import {
     simulated,
+    potential,
     simulatedPorts,
     simulatedConnections,
   } from "../../../modules/simulator"
@@ -76,29 +77,6 @@
 
     return connectionPorts.some(item => machinePorts.includes(item))
   }
-
-  // BROKEN CODE
-  // const getAvailablePorts = d => {
-  //   const connections = Object.entries($simulatedConnections)
-  //   const ports = Object.entries($simulatedPorts)
-
-  //   const occupiedPorts = ports.filter(([id, port]) => {
-  //     // if a connection exists with this as source OR target, list as occupied
-  //     const connectionsUsingPort = connections.filter(
-  //       connection =>
-  //         connection.sourcePort === id || connection.targetPort === id
-  //     )
-  //     return connectionsUsingPort.length > 0
-  //   })
-
-  //   const occupied = occupiedPorts.length
-  //   const free = ports.length - occupied
-
-  //   return {
-  //     occupied,
-  //     free
-  //   }
-  // }
 
   const init = () => {
     // Specify the color scale.
