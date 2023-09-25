@@ -4,6 +4,13 @@
         url('FakeReceipt/FakeReceipt-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Baleze';
+    src: url('Baleze/BalezeV01Trial-One.woff2') format('woff2'),
+        url('Baleze/BalezeV01Trial-One.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 

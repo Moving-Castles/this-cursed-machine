@@ -13,8 +13,8 @@ export enum WorldFunctions {
 
 // --- API --------------------------------------------------------------
 
-export function spawn(name: string) {
-    addToSequencer(WorldFunctions.Spawn, [name])
+export function spawn() {
+    addToSequencer(WorldFunctions.Spawn, [])
 }
 
 export function transfer() {

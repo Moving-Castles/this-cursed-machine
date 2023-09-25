@@ -10,22 +10,29 @@
   let name = ""
 
   let spawnInProgress = false
-  function sendSpawn() {
-    if (spawnInProgress) return
-    if (name.length < 5) {
-      playSound("tekken", "error")
-      toastMessage("Name must be at least 5 characters long")
-      return
-    }
-    spawnInProgress = true
-    playSound("tekken", "click")
-    console.log(name.toUpperCase())
-    spawn(name.toUpperCase())
-  }
 
-  const onSend = e => {
-    name = e.detail
-    sendSpawn()
+  // function sendSpawn() {
+  //   if (spawnInProgress) return
+  //   if (name.length < 5) {
+  //     playSound("tekken", "error")
+  //     toastMessage("Name must be at least 5 characters long")
+  //     return
+  //   }
+  //   spawnInProgress = true
+  //   playSound("tekken", "click")
+  //   console.log(name.toUpperCase())
+  //   spawn()
+  // }
+
+  // const onSend = e => {
+  //   name = e.detail
+  //   sendSpawn()
+  // }
+
+  const onDone = e => {
+    if (spawnInProgress) return
+    spawnInProgress = true
+    spawn()
   }
 </script>
 
@@ -35,8 +42,8 @@
       stage
       input
       theme="transparent"
-      placeholder="Who are you? (5 char min)"
-      on:send={onSend}
+      placeholder="Blink"
+      on:done={onDone}
     />
   {/if}
 </div>
@@ -46,7 +53,6 @@
     position: fixed;
     inset: 0;
     background-color: black;
-    background: url("/bg.png");
     background-size: cover;
     background-position: center;
     z-index: 1;

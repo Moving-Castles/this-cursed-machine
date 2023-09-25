@@ -6,14 +6,20 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { playerCore } from "./modules/state"
+  import { entities, playerCore, cores, ports } from "./modules/state"
+  // import {
+  //   patches,
+  //   simulated,
+  //   blocksSinceLastResolution,
+  // } from "./modules/simulator"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
-  // import { initStaticContent } from "./modules/staticContent"
+  import { initStaticContent } from "./modules/content"
 
   import Loading from "./components/Loading/Loading.svelte"
+  import Flash from "./components/Flash/Flash.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import End from "./components/End/End.svelte"
@@ -38,9 +44,11 @@
   initUI()
 
   onMount(async () => {
+    // Remove preloader
     document.querySelector(".preloader")?.remove()
+
     // Get static content from CMS
-    // initStaticContent()
+    await initStaticContent()
 
     // Write mud layer to svelte store
     const mudLayer = await setup()
@@ -52,7 +60,7 @@
     // Write block numbers to svelte store and alert on lost connection
     initBlockListener()
 
-    // Create systems to listen to changes to components in our own namespace
+    // Create systems to listen to changes to components in our namespace
     for (const componentKey of Object.keys(
       filterByNamespace($network.components, "mc")
     )) {
@@ -82,6 +90,8 @@
 
   {#if !$ready || UIState === 0}
     <Loading on:next={() => (UIState = 1)} />
+  {:else if UIState === 1}
+    <Flash on:next={() => (UIState = 2)} />
   {:else if !$playerCore}
     <Spawn />
   {:else if $playerCore.level === 6}

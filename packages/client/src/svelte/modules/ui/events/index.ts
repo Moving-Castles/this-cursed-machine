@@ -93,7 +93,6 @@ export function onKeyDown({ key }) {
 export const onWheel = (node: HTMLElement, { step = 15 } = {}) => {
   node.style.overflow = "hidden"
   const handler = throttle(e => {
-    console.log(e)
     e.preventDefault()
     const pos = node.scrollTop
     const nextPos = pos + step * -Math.sign(e.deltaY)

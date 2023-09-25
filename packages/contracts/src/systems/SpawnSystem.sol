@@ -6,7 +6,7 @@ import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE, ROTATION, CONNECT
 import { LibUtils, LibBox, LibCore, LibPort, LibEntity, LibConnection } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
-  function spawn(string memory _name) public returns (bytes32) {
+  function spawn() public returns (bytes32) {
     // GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // TODO: check if already spawned
@@ -22,7 +22,7 @@ contract SpawnSystem is System {
     bytes32 inletOutput = LibPort.create(inletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.TOP);
 
     // Create core entity
-    LibCore.spawn(coreEntity, 0, _name);
+    LibCore.spawn(coreEntity, 0);
 
     // Place core in box
     CarriedBy.set(coreEntity, boxEntity);

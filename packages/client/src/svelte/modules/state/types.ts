@@ -5,8 +5,8 @@ import {
   PortType,
   MachineType,
   PortPlacement,
-  Rotation
-} from './enums'
+  Rotation,
+} from "./enums"
 export {
   EntityType,
   ConnectionType,
@@ -14,171 +14,171 @@ export {
   PortType,
   MachineType,
   PortPlacement,
-  Rotation
-} from './enums'
+  Rotation,
+} from "./enums"
 
 declare global {
   // Default type with all potential properties.
   type Entity = {
-    [key: string]: any;
-    gameConfig?: GameConfig;
-    type?: EntityType;
-    machineType?: MachineType;
-    materialType?: MaterialType;
-    connectionType?: ConnectionType;
-    portType?: PortType;
+    [key: string]: any
+    gameConfig?: GameConfig
+    type?: EntityType
+    machineType?: MachineType
+    materialType?: MaterialType
+    connectionType?: ConnectionType
+    portType?: PortType
     // ...
-    creationBlock?: number;
-    name?: string;
-    energy?: number;
-    readyBlock?: number;
-    level?: number;
-    height?: number;
-    width?: number;
-    active?: boolean;
-    minCores?: number;
-    maxCores?: number;
-    isPrototype?: boolean;
-    carriedBy?: string;
-    position?: Coord;
-    sourcePort?: string;
-    targetPort?: string;
-    claimBlock?: number;
-    portPlacement?: PortPlacement;
-    rotation?: Rotation;
-    amount?: number;
-    lastResolved?: number;
-    temperature?: number;
-  };
+    creationBlock?: number
+    name?: string
+    energy?: number
+    readyBlock?: number
+    level?: number
+    height?: number
+    width?: number
+    active?: boolean
+    minCores?: number
+    maxCores?: number
+    isPrototype?: boolean
+    carriedBy?: string
+    position?: Coord
+    sourcePort?: string
+    targetPort?: string
+    claimBlock?: number
+    portPlacement?: PortPlacement
+    rotation?: Rotation
+    amount?: number
+    lastResolved?: number
+    temperature?: number
+  }
 
   type BuildableEntity = {
-    type: EntityType.MACHINE;
-    name: string;
-    cost: number;
+    type: EntityType.MACHINE
+    name: string
+    cost: number
   }
 
   type BuildableMachine = {
-    type: MachineType;
-    name: string;
-    cost: number;
+    type: MachineType
+    name: string
+    cost: number
   }
 
   type Box = {
-    type: EntityType.BOX;
-    creationBlock: number;
-    level: number;
-    width: number;
-    height: number;
-    minCores: number;
-    maxCores: number;
-    active: boolean;
-    lastResolved: number;
+    type: EntityType.BOX
+    creationBlock: number
+    level: number
+    width: number
+    height: number
+    minCores: number
+    maxCores: number
+    active: boolean
+    lastResolved: number
   }
 
   type Core = {
-    type: EntityType.MACHINE;
-    machineType: MachineType.CORE;
-    name: string;
-    creationBlock: number;
-    energy: number;
-    readyBlock: number;
-    level: number;
-    carriedBy: string;
-  }
-
-  type Machine = {
-    type: EntityType.MACHINE;
-    machineType: MachineType;
-    creationBlock: number;
-    carriedBy: string;
-    name?: string;
-    energy?: number;
-    readyBlock?: number;
-    level?: number;
+    type: EntityType.MACHINE
+    machineType: MachineType.CORE
+    name: string
+    creationBlock: number
+    energy: number
+    readyBlock: number
+    level: number
+    carriedBy: string
   }
 
   type Connection = {
-    type: EntityType.CONNECTION;
-    creationBlock: number;
-    sourcePort: string;
-    targetPort: string;
+    type: EntityType.CONNECTION
+    creationBlock: number
+    sourcePort: string
+    targetPort: string
+  }
+
+  type Machine = {
+    type: EntityType.MACHINE
+    machineType: MachineType
+    creationBlock: number
+    carriedBy: string
+    name?: string
+    energy?: number
+    readyBlock?: number
+    level?: number
   }
 
   type Port = {
-    type: EntityType.PORT;
-    creationBlock: number;
-    portType: PortType;
-    portPlacement: PortPlacement;
-    carriedBy: string;
+    type: EntityType.PORT
+    creationBlock: number
+    portType: PortType
+    portPlacement: PortPlacement
+    carriedBy: string
   }
 
   type Material = {
-    type: EntityType.MATERIAL;
-    creationBlock: number;
-    amount: number;
-    temperature: number;
-  };
+    type: EntityType.MATERIAL
+    creationBlock: number
+    amount: number
+    temperature: number
+  }
 
   type ResourceToEnergy = {
-    type: EntityType.MACHINE;
-    creationBlock: number;
-    position: Coord;
-    energy?: number;
-  };
+    type: EntityType.MACHINE
+    creationBlock: number
+    position: Coord
+    energy?: number
+  }
 
   type GameConfig = {
-    coolDown: number;
-    coreEnergyCap: number;
-    coreInitialEnergy: number;
-    resourceConnectionCost: number;
-    controlConnectionCost: number;
-    buildCost: number;
+    coolDown: number
+    coreEnergyCap: number
+    coreInitialEnergy: number
+    resourceConnectionCost: number
+    controlConnectionCost: number
+    buildCost: number
   }
 
   // ---
 
   type Entities = {
-    [index: string]: Entity;
-  };
+    [index: string]: Entity
+  }
 
   type Cores = {
-    [index: string]: Core;
-  };
+    [index: string]: Core
+  }
 
   type Connections = {
-    [index: string]: Connection;
-  };
+    [index: string]: Connection
+  }
 
   type Ports = {
-    [index: string]: Port;
-  };
+    [index: string]: Port
+  }
 
   type Claims = {
-    [index: string]: Claim;
-  };
+    [index: string]: Claim
+  }
 
   type Machines = {
-    [index: string]: Machine;
-  };
+    [index: string]: Machine
+  }
 
   type Resources = {
-    [index: string]: Resource;
-  };
+    [index: string]: Resource
+  }
 
   type Boxes = {
-    [index: string]: Box;
-  };
+    [index: string]: Box
+  }
 
   // ---
 
   type Coord = {
-    x: number;
-    y: number;
-  };
+    x: number
+    y: number
+  }
 
   type CalculatedEnergies = {
-    [index: string]: number;
-  };
+    [index: string]: number
+  }
 
   type PathDefinition = {
     coords: Coord[]
@@ -191,7 +191,7 @@ declare global {
 
   interface GridTile {
     id: string
-    coordinates: Coord;
+    coordinates: Coord
   }
 
   type EntityStoreEntry = {

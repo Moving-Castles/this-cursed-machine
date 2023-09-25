@@ -2,27 +2,17 @@
 
 :root {
   /* Colors */
-  /* --background-rgb: 255, 69, 0; */
-  --background-rgb: 0, 0, 0;
-  --background: rgb(var(--background-rgb));
+  --black: #000000;
+  --white: #ffffff;
+  --background: rgb(var(--black));
   --background-offset: rgb(40, 40, 40);
-  --foreground-rgb: 255, 255, 255;
-  --foreground: rgb(var(--foreground-rgb));
-
-  --blue: #0033eb;
-  --warning: #f89001;
-  --success: #bfff5e;
-  --failure: #d1656c;
-  --move: #92ff7c;
-  --gather: #7ce5ff;
-  --consume: #d37cff;
-  --burn: orangered;
-  --play: #ebff7c;
-  --special: #ff7ce7;
-  --gate: #7269f8;
-  --empty: lightgrey;
-  --player1: #0000ff;
-  --player2: #ff0000;
+  --foreground: rgb(var(--white));
+  --terminal-background: black;
+  --terminal-color: var(--white);
+  --color-info: #0707cc;
+  --color-alert: #effb04;
+  --color-success: #3bb13b;
+  --color-failure: #ff4000;
 
   /* Sizing */
   --padding-button: 6px 12px;
@@ -32,30 +22,25 @@
   --titlebar-height: 30px;
   --tileunit: 100;
   --tilesize: calc(var(--tileunit) * 1px);
-  /* "DMTLLVIPWebTrial-Regular", */
+
   /* Fonts */
-  --font-family-special: "Covered By Your Grace", "Rock Salt", Courier,
-    monospaced;
+  --font-family-special: "Fake Receipt", monospace;
+  --font-family-quote: "Baleze", monospace;
   --font-family: "Fake Receipt", monospace;
-  --font-size: 12px;
+  --font-size: 18px;
+  --font-size-normal: 20px;
   --font-size-large: 18px;
 
   /* Deco */
   --muted-opacity: 0.7;
   --backdrop: blur(10px);
-  --outer-border: 1px solid rgba(var(--foreground-rgb), var(--muted-opacity));
-
-  --terminal-background: black;
-  --terminal-color: white;
-  --terminal-border: 1px solid white;
+  --outer-border: 1px solid rgba(var(--foreground), var(--muted-opacity));
+  --terminal-border: 1px dashed var(--foreground);
 }
 
 * {
   box-sizing: border-box;
   border-color: var(--foreground);
-  -webkit-font-feature-settings:
-    "liga" on,
-    "calt" on;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
@@ -104,10 +89,10 @@
 
 body,
 html {
-  background: var(--terminal-background);
-  color: var(--terminal-color);
+  background: var(--black);
+  color: var(--white);
   font-family: var(--font-family);
-  font-size: var(--font-size);
+  font-size: var(--font-size-normal);
   margin: 0;
   padding: 0;
 }
@@ -186,4 +171,44 @@ html {
 .inline-action {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.loading-message p:first-child {
+  margin-top: 0;
+}
+
+.loading-message .info {
+  background: var(--color-info);
+}
+
+.loading-message .alert {
+  color: var(--color-alert);
+}
+
+.loading-message .success {
+  color: var(--color-success);
+}
+
+.loading-message .failure {
+  color: var(--color-failure);
+}
+
+.loading-message .quote {
+  letter-spacing: 5px;
+}
+
+/* .loading-message span {
+  display: block;
+} */
+
+pre {
+  display: block;
+  white-space-collapse: preserve;
+  text-wrap: nowrap;
+  margin: 0;
+  text-indent: 0;
+}
+
+.loading-message div {
+  margin-bottom: 1em;
 }

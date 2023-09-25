@@ -24,7 +24,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
@@ -89,7 +89,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
@@ -144,7 +144,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
@@ -211,7 +211,7 @@ contract ResolutionSystemTest is MudV2Test {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn("Alice");
+    world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);

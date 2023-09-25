@@ -5,13 +5,20 @@
   import { lastSentTime } from "../../modules/ui/stores"
   import { output, sequence as seq, index, parsed } from "./index"
   import AsciiTextGenerator from "ascii-text-generator"
+  import Select from "./Select.svelte"
+  import MultiSelect from "./MultiSelect.svelte"
   import {
     EntityType,
     MachineType,
     ConnectionType,
   } from "../../modules/state/enums"
   import { playerEntityId, playerCore, playerBox } from "../../modules/state"
-  import { simulated, simulatedMachines } from "../../modules/simulator"
+  import {
+    simulated,
+    simulatedMachines,
+    simulatedPorts,
+    simulatedConnections,
+  } from "../../modules/simulator"
   import { build, connect } from "../../modules/action"
   export let sequence: string[] = []
   export let speed = 80
@@ -22,6 +29,7 @@
   export let input = false
   export let stage = true // display the terminal centered and front stage
   export let animated = false
+  let machinesToConnect = {}
 
   const symbols = [
     "›",
@@ -53,7 +61,78 @@
   let inputElement: HTMLElement
   let outputElement: HTMLElement
   let userInput = ""
+  let building = false
+  let connecting = false
   let skip = false
+
+  /**
+   * Build, connect and inspect functions
+   */
+  // Build
+  const buildMachine = machineType => {
+    build(MachineType[machineType], 0, 0)
+    send(`Building a ${machineType}`)
+  }
+
+  // Connect
+  const connectMachines = (source, target) => {
+    const sourceMachine = Object.entries($simulated).find(
+      ([_, ent]) => ent.numericalID === source
+    )
+    const targetMachine = Object.entries($simulated).find(
+      ([_, ent]) => ent.numericalID === target
+    )
+    if (sourceMachine && targetMachine) {
+      if (
+        sourceMachine[1].entityType !== EntityType.MACHINE ||
+        targetMachine[1].entityType !== EntityType.MACHINE
+      ) {
+        send("Please, only connect machines")
+      } else {
+        const connections = Object.values($simulated).filter(
+          ent => ent.entityType === EntityType.CONNECTION
+        )
+        // Make sure there are ports we can connect
+        const sourcePorts = Object.entries($simulated).filter(
+          ([_, ent]) => ent?.carriedBy === sourceMachine[0]
+        )
+        const targetPorts = Object.entries($simulated).filter(
+          ([_, ent]) => ent?.carriedBy === targetMachine[0]
+        )
+
+        const occupiedSourcePorts = sourcePorts.filter(([id, _]) => {
+          // if a connection exists with this as source OR target, list as occupied
+          const connectionsUsingPort = connections.filter(
+            connection =>
+              connection.sourcePort === id || connection.targetPort === id
+          )
+          return connectionsUsingPort.length > 0
+        })
+        const totalOccupiedSourcePorts = occupiedSourcePorts.length
+        const totalAvailableSourcePorts =
+          sourcePorts.length - totalOccupiedSourcePorts
+
+        const occupiedTargetPorts = targetPorts.filter(([id, _]) => {
+          // if a connection exists with this as source OR target, list as occupied
+          const connectionsUsingPort = connections.filter(
+            connection =>
+              connection.sourcePort === id || connection.targetPort === id
+          )
+          return connectionsUsingPort.length > 0
+        })
+        const totalOccupiedTargetPorts = occupiedTargetPorts.length
+        const totalAvailableTargetPorts =
+          targetPorts.length - totalOccupiedTargetPorts
+
+        if (totalAvailableSourcePorts > 0 && totalAvailableTargetPorts > 0) {
+          // Connect the first available port
+          connect(ConnectionType.RESOURCE, sourcePorts[0][0], targetPorts[0][0])
+        } else {
+          send("Ports occupied. Sawry")
+        }
+      }
+    }
+  }
 
   /**
    * Send stuff to the terminal
@@ -73,17 +152,32 @@
     evaluate(string)
   }
 
+  /**
+   * Evaluate string output
+   * @param string
+   */
   const evaluate = (string: string) => {
     const args = string.split(" ").splice(1)
 
     string = string.toLowerCase()
 
-    // Clear console
+    /**
+     * Enter
+     */
+    if (string === "blink") {
+      dispatch("done")
+    }
+
+    /**
+     * Clear console
+     */
     if (string === "clear") {
       output.set([])
     }
 
-    // Find out your identity
+    /**
+     * Highlight core in the graph
+     */
     if (string === "whoami") {
       const rect = document.getElementById($playerEntityId)
       if (rect) {
@@ -92,6 +186,9 @@
       }
     }
 
+    /**
+     * Thanks for those who know the answer to life's secrets
+     */
     if (string === "42") {
       const commandList = `
 Commands:
@@ -105,6 +202,9 @@ p [from] [to]     Connect machines
       send(commandList.replaceAll(" ", "&nbsp;"))
     }
 
+    /**
+     * Be very helpful
+     */
     if (string === "pretty please") {
       send("OK.... ")
       setTimeout(() => {
@@ -123,11 +223,16 @@ Calculate the answer of life to get more help ya dumwit
       }, 18000)
     }
 
+    /**
+     * Say please!
+     */
     if (string === "please") {
       send("Now say pretty please")
     }
 
-    // Show help
+    /**
+     * Display help
+     */
     if (string === "h" || string === "help")
       if ($output.join("").includes("help")) {
         send("Say please")
@@ -135,7 +240,9 @@ Calculate the answer of life to get more help ya dumwit
         send("GHAghahahahahahahaa ur on ur own")
       }
 
-    // Show the agreement
+    /**
+     * Show agreement
+     */
     if (string === "read") {
       const agreement = `
       +_______________________________________+
@@ -164,7 +271,25 @@ Calculate the answer of life to get more help ya dumwit
       send(agreement.replaceAll(" ", "&nbsp;"))
     }
 
-    // Show the contents of your box
+    /**
+     * Show build interface
+     */
+    if (string === "build") {
+      // show an input
+      building = true
+    }
+
+    /**
+     * Show connect interface
+     */
+    if (string === "connect") {
+      // show an input
+      connecting = true
+    }
+
+    /**
+     * List box contents
+     */
     if (string === "contents" || string === "c") {
       send(
         `\nContents: \n ${Object.entries($simulatedMachines)
@@ -181,8 +306,14 @@ Calculate the answer of life to get more help ya dumwit
       )
     }
 
+    /**
+     * List user energy
+     */
     if (string === "energy" || string === "nrg") send(`${energy}`)
 
+    /**
+     * Show user a reward
+     */
     if (string.startsWith("reward ")) {
       let art = `[${AsciiTextGenerator(args[0], "2").replaceAll(
         " ",
@@ -191,6 +322,9 @@ Calculate the answer of life to get more help ya dumwit
       send(art)
     }
 
+    /**
+     * Inspect machines
+     */
     if (string.startsWith("inspect ")) {
       if (args.length === 0) {
         send("What would you like to inspect?")
@@ -208,6 +342,9 @@ Calculate the answer of life to get more help ya dumwit
       }
     }
 
+    /**
+     * Create pipes
+     */
     if (string.startsWith("p ")) {
       // Add pipe
       if (args.length !== 2) {
@@ -220,73 +357,13 @@ Calculate the answer of life to get more help ya dumwit
         const source = Number(args[0])
         const target = Number(args[1])
 
-        const sourceMachine = Object.entries($simulated).find(
-          ([_, ent]) => ent.numericalID === source
-        )
-        const targetMachine = Object.entries($simulated).find(
-          ([_, ent]) => ent.numericalID === target
-        )
-        if (sourceMachine && targetMachine) {
-          if (
-            sourceMachine[1].entityType !== EntityType.MACHINE ||
-            targetMachine[1].entityType !== EntityType.MACHINE
-          ) {
-            send("Please, only connect machines")
-          } else {
-            const connections = Object.values($simulated).filter(
-              ent => ent.entityType === EntityType.CONNECTION
-            )
-            // Make sure there are ports we can connect
-            const sourcePorts = Object.entries($simulated).filter(
-              ([_, ent]) => ent?.carriedBy === sourceMachine[0]
-            )
-            const targetPorts = Object.entries($simulated).filter(
-              ([_, ent]) => ent?.carriedBy === targetMachine[0]
-            )
-
-            const occupiedSourcePorts = sourcePorts.filter(([id, _]) => {
-              // if a connection exists with this as source OR target, list as occupied
-              const connectionsUsingPort = connections.filter(
-                connection =>
-                  connection.sourcePort === id || connection.targetPort === id
-              )
-              return connectionsUsingPort.length > 0
-            })
-            const totalOccupiedSourcePorts = occupiedSourcePorts.length
-            const totalAvailableSourcePorts =
-              sourcePorts.length - totalOccupiedSourcePorts
-
-            const occupiedTargetPorts = targetPorts.filter(([id, _]) => {
-              // if a connection exists with this as source OR target, list as occupied
-              const connectionsUsingPort = connections.filter(
-                connection =>
-                  connection.sourcePort === id || connection.targetPort === id
-              )
-              return connectionsUsingPort.length > 0
-            })
-            const totalOccupiedTargetPorts = occupiedTargetPorts.length
-            const totalAvailableTargetPorts =
-              targetPorts.length - totalOccupiedTargetPorts
-
-            console.log(totalAvailableSourcePorts, totalAvailableTargetPorts)
-
-            if (
-              totalAvailableSourcePorts > 0 &&
-              totalAvailableTargetPorts > 0
-            ) {
-              // Connect the first available port
-              connect(
-                ConnectionType.RESOURCE,
-                sourcePorts[0][0],
-                targetPorts[0][0]
-              )
-            } else {
-              send("Ports occupied. Sawry")
-            }
-          }
-        }
+        connectMachines(source, target)
       }
     }
+
+    /**
+     * Create machines
+     */
     if (string.startsWith("m ")) {
       // Add machine
       if (args.length !== 1) {
@@ -308,19 +385,43 @@ Calculate the answer of life to get more help ya dumwit
             }`
           )
         } else {
-          build(MachineType[machineToBuild], 0, 0)
-          send(`Building a ${machineToBuild}`)
+          buildMachine(MachineType[machineToBuild])
         }
       }
     }
+
+    /**
+     * Remove pipes
+     */
     if (string.startsWith("rp ")) {
       // Remove pipe
       send("We can't remove pipes yet. Come back later")
     }
+
+    /**
+     * Remove machines
+     */
     if (string.startsWith("rm ")) {
       // Remove machine
       send("We can't remove machines yet. Come back later")
     }
+  }
+
+  const onBuildConfirm = ({ detail }) => {
+    building = false
+    buildMachine(detail)
+    userInput = ""
+  }
+
+  const onConnectConfirm = ({ detail }) => {
+    console.log(detail)
+    connectMachines(detail[0], detail[1])
+    connecting = false
+    userInput = ""
+  }
+
+  const onAdvance = ({ detail }) => {
+    send("Connecting: " + detail)
   }
 
   /** The submit function */
@@ -331,10 +432,31 @@ Calculate the answer of life to get more help ya dumwit
     userInput = ""
   }
 
+  const filterByAvailablePorts = ([machineId, _]) => {
+    // Get machine associated ports
+    const machinePorts = Object.entries($simulatedPorts).filter(
+      ([_, port]) => port.carriedBy === machineId
+    )
+
+    const occupiedPorts = machinePorts.filter(([id, _]) => {
+      return Object.values($simulatedConnections).find(
+        connection =>
+          connection.sourcePort === id || connection.targetPort === id
+      )
+    })
+
+    return machinePorts.length - occupiedPorts.length > 0
+  }
+
   /** Reactive statements */
   // Key for transitions
   $: key = $index + (skip ? "-skip" : "")
   $: energy = $simulated[$playerEntityId]?.energy
+  $: {
+    machinesToConnect = Object.fromEntries(
+      Object.entries($simulatedMachines).filter(filterByAvailablePorts)
+    )
+  }
 
   /** Lifecycle hooks */
   onMount(() => {
@@ -370,17 +492,40 @@ Calculate the answer of life to get more help ya dumwit
   {/if}
 
   <form class="terminal-input" on:submit|preventDefault={onSubmit}>
-    {#if !input}
-      <span class="player-stats">
-        {symbols[0]}
-      </span>
+    {#if building}
+      <Select
+        options={AVAILABLE_MACHINES}
+        bind:value={userInput}
+        on:confirm={onBuildConfirm}
+      />
+    {:else if connecting}
+      <MultiSelect
+        options={[
+          Object.values(machinesToConnect).map(
+            machine =>
+              `${MachineType[machine.machineType]}: ${machine.numericalID}`
+          ),
+          Object.values(machinesToConnect).map(
+            machine =>
+              `${MachineType[machine.machineType]}: ${machine.numericalID}`
+          ),
+        ]}
+        on:advance={onAdvance}
+        on:confirm={onConnectConfirm}
+      />
+    {:else}
+      {#if !input}
+        <span class="player-stats">
+          {symbols[0]}
+        </span>
+      {/if}
+      <input
+        type="text"
+        {placeholder}
+        bind:this={inputElement}
+        bind:value={userInput}
+      />
     {/if}
-    <input
-      type="text"
-      {placeholder}
-      bind:this={inputElement}
-      bind:value={userInput}
-    />
   </form>
 </div>
 
@@ -411,7 +556,7 @@ Calculate the answer of life to get more help ya dumwit
       pointer-events: none;
     }
 
-    * {
+    :global(*) {
       &::selection {
         background: var(--terminal-color);
         color: var(--terminal-background);

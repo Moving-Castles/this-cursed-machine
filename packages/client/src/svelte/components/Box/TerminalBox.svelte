@@ -70,7 +70,7 @@
     height: 100vh;
     width: 100vw;
     background-color: #444;
-    font-size: 18px;
+    font-size: var(--font-size-normal);
     z-index: 1000;
   }
 
