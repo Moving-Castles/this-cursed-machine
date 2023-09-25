@@ -2,14 +2,16 @@
   import { onMount, onDestroy, createEventDispatcher, tick } from "svelte"
   import { playSound } from "../../modules/sound"
   import { onWheel } from "../../modules/ui/events"
+  import { lastSentTime } from "../../modules/ui/stores"
   import { output, sequence as seq, index, parsed } from "./index"
+  import AsciiTextGenerator from "ascii-text-generator"
   import {
     EntityType,
     MachineType,
     ConnectionType,
   } from "../../modules/state/enums"
-  import { playerEntityId } from "../../modules/state"
-  import { simulated } from "../../modules/simulator"
+  import { playerEntityId, playerCore, playerBox } from "../../modules/state"
+  import { simulated, simulatedMachines } from "../../modules/simulator"
   import { build, connect } from "../../modules/action"
   export let sequence: string[] = []
   export let speed = 80
@@ -20,6 +22,7 @@
   export let input = false
   export let stage = true // display the terminal centered and front stage
   export let animated = false
+
   const symbols = [
     "›",
     "»",
@@ -52,27 +55,160 @@
   let userInput = ""
   let skip = false
 
-  const send = async (string: string) => {
-    output.set([...$output, string])
+  /**
+   * Send stuff to the terminal
+   */
+  export const send = async (string: string, user = false) => {
+    output.set([...$output, `${user ? `${symbols[2]} ` : ""}${string}`])
+    lastSentTime.set(performance.now())
+
     await tick()
+
     dispatch("send", string)
+
     if (outputElement) {
       outputElement.scrollTop = outputElement.scrollTop + 10000
     }
+
+    evaluate(string)
   }
 
-  const evaluate = () => {
-    const { energy } = $simulated[$playerEntityId]
-    const args = userInput.split(" ").splice(1)
+  const evaluate = (string: string) => {
+    const args = string.split(" ").splice(1)
+
+    string = string.toLowerCase()
+
+    // Clear console
+    if (string === "clear") {
+      output.set([])
+    }
+
+    // Find out your identity
+    if (string === "whoami") {
+      const rect = document.getElementById($playerEntityId)
+      if (rect) {
+        rect.classList.add("flash")
+        setTimeout(() => rect.classList.remove("flash"), 7000)
+      }
+    }
+
+    if (string === "42") {
+      const commandList = `
+Commands:
+Please ->         talk to Puppitywink
+Pretty Please     get a favor
+Inspect [id]      Inspect a machine
+m [name]          Create a machine
+p [from] [to]     Connect machines
+      `
+      // List all available commands
+      send(commandList.replaceAll(" ", "&nbsp;"))
+    }
+
+    if (string === "pretty please") {
+      send("OK.... ")
+      setTimeout(() => {
+        const helpMessage = `
+Your machines are off to the right.
+
+Did that help you?
+`
+        send(helpMessage.replaceAll(" ", "&nbsp;"))
+      }, 10000)
+      setTimeout(() => {
+        const helpMessage = `
+Calculate the answer of life to get more help ya dumwit
+`
+        send(helpMessage.replaceAll(" ", "&nbsp;"))
+      }, 18000)
+    }
+
+    if (string === "please") {
+      send("Now say pretty please")
+    }
 
     // Show help
-    if (userInput === "h" || userInput === "help")
-      send("GHAghahahahahahahaa ur on ur own")
-    // Show the graph
-    if (userInput === "show" || userInput === "graph") dispatch("show")
+    if (string === "h" || string === "help")
+      if ($output.join("").includes("help")) {
+        send("Say please")
+      } else {
+        send("GHAghahahahahahahaa ur on ur own")
+      }
 
-    if (userInput === "energy" || userInput === "nrg") send(`${energy}`)
-    if (userInput.startsWith("p ")) {
+    // Show the agreement
+    if (string === "read") {
+      const agreement = `
+      +_______________________________________+
+      | Agreement between ${$playerCore.name} |
+      | and Puppitywink.                      |
+      |                                       |
+      | All of your rights r belong to me.    |
+      |                                       |
+      | -- xoxo puppitywink                   |
+      |                                       |
+      | SIGNED                                |
+      |                                       |
+      |                                       |
+      | Date: ${Date.now()}                   |
+      |                                       |
+      | Location: Box nr. 69                  |
+      |                                       |
+      |    Ur signature       puppitywink     |
+      |                                       |
+      |     akjddaskjakjh       PxP           |
+      |       kdskjd            PWP           |
+      |                         PXP           |
+      +_______________________________________+
+
+      `
+      send(agreement.replaceAll(" ", "&nbsp;"))
+    }
+
+    // Show the contents of your box
+    if (string === "contents" || string === "c") {
+      send(
+        `\nContents: \n ${Object.entries($simulatedMachines)
+          .map(
+            ([id, machine]) =>
+              `${symbols[1]} ${MachineType[machine.machineType]} ${
+                machine.machineType == MachineType.CORE
+                  ? `E: ${machine.energy}`
+                  : ""
+              }`
+          )
+          .join("\n")}\n
+        `
+      )
+    }
+
+    if (string === "energy" || string === "nrg") send(`${energy}`)
+
+    if (string.startsWith("reward ")) {
+      let art = `[${AsciiTextGenerator(args[0], "2").replaceAll(
+        " ",
+        "&nbsp;"
+      )}]`
+      send(art)
+    }
+
+    if (string.startsWith("inspect ")) {
+      if (args.length === 0) {
+        send("What would you like to inspect?")
+      } else {
+        const numID = Number(args[0])
+        const machine = Object.values($simulatedMachines).find(
+          m => m.numericalID === numID
+        )
+
+        if (!machine) {
+          send("Could not find that machine")
+        } else {
+          send(`${machine}`)
+        }
+      }
+    }
+
+    if (string.startsWith("p ")) {
       // Add pipe
       if (args.length !== 2) {
         send(`! e: ${energy} Provide at least two arguments to add a pipe`)
@@ -151,7 +287,7 @@
         }
       }
     }
-    if (userInput.startsWith("m ")) {
+    if (string.startsWith("m ")) {
       // Add machine
       if (args.length !== 1) {
         send(
@@ -177,11 +313,11 @@
         }
       }
     }
-    if (userInput.startsWith("rp ")) {
+    if (string.startsWith("rp ")) {
       // Remove pipe
       send("We can't remove pipes yet. Come back later")
     }
-    if (userInput.startsWith("rm ")) {
+    if (string.startsWith("rm ")) {
       // Remove machine
       send("We can't remove machines yet. Come back later")
     }
@@ -190,8 +326,7 @@
   /** The submit function */
   const onSubmit = async () => {
     if (userInput === "") return
-    send(`${symbols[2]} ${userInput}`)
-    evaluate()
+    send(userInput, true)
     playSound("ui", "selectFour")
     userInput = ""
   }
@@ -199,6 +334,7 @@
   /** Reactive statements */
   // Key for transitions
   $: key = $index + (skip ? "-skip" : "")
+  $: energy = $simulated[$playerEntityId]?.energy
 
   /** Lifecycle hooks */
   onMount(() => {
@@ -259,7 +395,8 @@
     background: var(--terminal-background);
     width: 100%;
     position: relative;
-    height: 100%;
+    height: 100vh;
+    white-space: pre-line;
 
     &.stage {
       position: fixed;

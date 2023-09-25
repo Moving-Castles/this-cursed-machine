@@ -220,7 +220,7 @@
     )
 
     // Set the position attributes of links and nodes each time the simulation ticks.
-    simulation.on("tick", () => {
+    simulation.on("tick", e => {
       // Used for position links
       link
         .attr("x1", d =>

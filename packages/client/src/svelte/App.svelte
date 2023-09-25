@@ -6,26 +6,19 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { entities, playerCore, cores, ports } from "./modules/state"
-  import {
-    patches,
-    simulated,
-    blocksSinceLastResolution,
-  } from "./modules/simulator"
+  import { playerCore } from "./modules/state"
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
-  import { showGraph } from "./modules/ui/stores"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   // import { initStaticContent } from "./modules/staticContent"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
-  import Terminal from "./components/Terminal/Terminal.svelte"
   import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
-  import Graph from "./components/Graph/Graph.svelte"
+
   // import Game from "./components/Game/Game.svelte"
   // import Box from "./components/Box/Box.svelte"
 

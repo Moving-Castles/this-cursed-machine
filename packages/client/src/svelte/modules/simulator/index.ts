@@ -3,7 +3,7 @@
  *
  */
 import { writable, derived } from "svelte/store"
-import { entities, playerBox } from "../state"
+import { entities, playerBox, playerEntityId } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
@@ -65,6 +65,12 @@ export const simulated = derived(
 )
 
 /** Convenience methods for easy access */
+
+/** Core */
+export const simulatedPlayerCore = derived(
+  [simulated, playerEntityId],
+  ([$simulated, $playerEntityId]) => $simulated[$playerEntityId]
+)
 
 /** Boxes */
 export const simulatedBoxes = derived(simulated, $simulated => {
