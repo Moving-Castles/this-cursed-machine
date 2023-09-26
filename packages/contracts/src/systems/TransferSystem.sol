@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, ClaimBlock, CreationBlock, Level, Active, MinCores, MaxCores, EntityType, Height, Width, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
-import { ENTITY_TYPE } from "../codegen/Types.sol";
+import { Name, ReadyBlock, ClaimBlock, CreationBlock, Level, Active, MinCores, MaxCores, EntityType, Height, Width, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/index.sol";
+import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibMap, LibBox, LibNetwork } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {

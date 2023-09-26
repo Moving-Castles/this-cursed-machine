@@ -5,16 +5,15 @@ import {
   PortType,
   MachineType,
   PortPlacement,
-  Rotation,
 } from "./enums"
+
 export {
   EntityType,
   ConnectionType,
   MaterialType,
   PortType,
   MachineType,
-  PortPlacement,
-  Rotation,
+  PortPlacement
 } from "./enums"
 
 declare global {
@@ -45,7 +44,6 @@ declare global {
     targetPort?: string
     claimBlock?: number
     portPlacement?: PortPlacement
-    rotation?: Rotation
     amount?: number
     lastResolved?: number
     temperature?: number

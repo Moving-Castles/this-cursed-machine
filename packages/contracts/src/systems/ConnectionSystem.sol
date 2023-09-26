@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, CarriedBy } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE } from "../codegen/Types.sol";
+import { Name, ReadyBlock, EntityType, GameConfig, GameConfigData, CarriedBy } from "../codegen/index.sol";
+import { ENTITY_TYPE, CONNECTION_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibConnection, LibNetwork } from "../libraries/Libraries.sol";
 
 contract ConnectionSystem is System {

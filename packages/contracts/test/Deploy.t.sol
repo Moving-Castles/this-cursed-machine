@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { MudV2Test } from "./MudV2Test.t.sol";
-import "../src/codegen/Tables.sol";
+import { IWorld } from "../src/codegen/world/IWorld.sol";
+import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import "../src/codegen/index.sol";
 import "../src/libraries/Libraries.sol";
 
-contract DeployTest is MudV2Test {
+contract DeployTest is MudTest {
+  IWorld world;
+
+  function setUp() public override {
+    super.setUp();
+    console.log(worldAddress);
+    world = IWorld(worldAddress);
+  }
+
   function testWorldExists() public {
     setUp();
     uint256 codeSize;
@@ -15,5 +24,4 @@ contract DeployTest is MudV2Test {
     }
     assertTrue(codeSize > 0);
   }
-
 }
