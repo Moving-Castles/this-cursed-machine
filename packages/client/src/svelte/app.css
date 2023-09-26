@@ -14,7 +14,6 @@
   --color-success: #3bb13b;
   --color-failure: #ff4000;
 
-
   /* Sizing */
   --padding-button: 6px 12px;
   --col-gap: 1rem;
@@ -25,9 +24,9 @@
   --tilesize: calc(var(--tileunit) * 1px);
 
   /* Fonts */
-  --font-family-special: 'Fake Receipt', monospace;
-  --font-family-quote: 'Baleze', monospace;
-  --font-family: 'Fake Receipt', monospace;
+  --font-family-special: "Fake Receipt", monospace;
+  --font-family-quote: "Baleze", monospace;
+  --font-family: "Fake Receipt", monospace;
   --font-size: 18px;
   --font-size-normal: 20px;
   --font-size-large: 18px;
@@ -46,6 +45,9 @@
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+  /* user-select: none; */
+  margin: 0;
+  padding: 0;
 }
 
 *::-webkit-scrollbar {

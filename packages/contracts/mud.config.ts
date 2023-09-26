@@ -7,8 +7,7 @@ export const enums = {
     MATERIAL_TYPE: ["NONE", "PELLET", "BLOOD", "PISS", "DIRT", "SAND", "FLESH", "TEETH"],
     CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
     PORT_TYPE: ["INPUT", "OUTPUT"],
-    PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"],
-    ROTATION: ["DEG0", "DEG90", "DEG180", "DEG270"]
+    PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"]
 }
 
 export default mudConfig({
@@ -37,8 +36,6 @@ export default mudConfig({
         SourcePort: "bytes32",
         TargetPort: "bytes32",
         // ...
-        Rotation: "ROTATION",
-        // ...
         CreationBlock: "uint256",
         ReadyBlock: "uint256",
         ClaimBlock: "uint256",
@@ -50,7 +47,7 @@ export default mudConfig({
         LastResolved: "uint256",
         // ...
         Position: {
-            schema: {
+            valueSchema: {
                 x: "int32",
                 y: "int32",
             },
@@ -58,7 +55,7 @@ export default mudConfig({
         // ...
         GameConfig: {
             keySchema: {},
-            schema: {
+            valueSchema: {
                 coolDown: "uint32",
                 coreEnergyCap: "uint32",
                 coreInitialEnergy: "uint32",
@@ -100,15 +97,5 @@ export default mudConfig({
             root: true,
             args: [resolveTableId("SourcePort")],
         },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("Position")],
-        // },
-        // {
-        //     name: "KeysInTableModule",
-        //     root: true,
-        //     args: [resolveTableId("ClaimBlock")],
-        // }
     ],
 });

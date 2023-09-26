@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, EntityType, EntityTypeTableId, ClaimBlockTableId, Width, Height } from "../codegen/Tables.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
+import { GameConfig, GameConfigData, Position, PositionTableId, PositionData, EntityType, EntityTypeTableId, ClaimBlockTableId, Width, Height } from "../codegen/index.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { ENTITY_TYPE } from "../codegen/Types.sol";
+import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibMap {

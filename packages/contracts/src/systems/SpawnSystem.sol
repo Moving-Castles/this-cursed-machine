@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Name, ReadyBlock, Rotation, ClaimBlock, CreationBlock, Active, Width, Height, Level, MinCores, MaxCores, EntityType, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE, ROTATION, CONNECTION_TYPE } from "../codegen/Types.sol";
+import { Name, ReadyBlock, ClaimBlock, CreationBlock, Active, Width, Height, Level, MinCores, MaxCores, EntityType, Position, PositionData, CarriedBy, GameConfig, GameConfigData } from "../codegen/index.sol";
+import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, MACHINE_TYPE, CONNECTION_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibBox, LibCore, LibPort, LibEntity, LibConnection } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
@@ -17,7 +17,6 @@ contract SpawnSystem is System {
     // Create Inlet
     bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
     Position.set(inletEntity, PositionData(3, 5));
-    Rotation.set(inletEntity, ROTATION.DEG0);
     CarriedBy.set(inletEntity, boxEntity);
     bytes32 inletOutput = LibPort.create(inletEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.TOP);
 
@@ -36,7 +35,6 @@ contract SpawnSystem is System {
     // Create Outlet
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
     Position.set(outletEntity, PositionData(1, 0));
-    Rotation.set(outletEntity, ROTATION.DEG0);
     CarriedBy.set(outletEntity, boxEntity);
     bytes32 outletInput = LibPort.create(outletEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.BOTTOM);
 
@@ -50,7 +48,6 @@ contract SpawnSystem is System {
     // bytes32 machineEntity = LibEntity.create(MACHINE_TYPE.BLENDER);
     // CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
     // Position.set(machineEntity, PositionData(1, 2));
-    // Rotation.set(machineEntity, ROTATION.DEG0);
 
     // Create ports on test machine
     // LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);

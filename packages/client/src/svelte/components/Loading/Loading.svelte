@@ -19,7 +19,7 @@
   }
 </script>
 
-<div>
+<div on:click={next}>
   <div class="loading">
     <div id="root" class="loading-message" />
   </div>

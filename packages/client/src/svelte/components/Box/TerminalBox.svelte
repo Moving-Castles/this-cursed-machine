@@ -1,48 +1,63 @@
 <script lang="ts">
   import { narrative } from "../../modules/content/lore"
-  import { showGraph } from "../../modules/ui/stores"
+  import { showGraph, lastSentTime } from "../../modules/ui/stores"
+  import { blockNumber } from "../../modules/network"
   import { playerBox } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
+  import Goal from "../Goal/Goal.svelte"
 
-  let done = false
+  let now = performance.now()
 
-  $: randomTerm = [
-    "Everything is hard before it is easy.",
-    "Nothing is more frightful than to see ignorance in action.",
-    "Nothing is more damaging to a new truth than an old error.",
-    "At night, that’s when you mess up. So if you go to bed at 9.30, you’re good.",
-    "Being famous is just a job",
-    "I think it’s an okay thing to express yourself",
-  ][Math.floor(Math.random() * 6)]
+  $: if ($blockNumber) now = performance.now()
 
-  const onDone = () => {
-    done = true
-    setTimeout(() => {
-      theme = "light"
-    }, 1000)
-  }
+  let send: (string: string) => Promise<void>
 
   let theme = "dark"
 </script>
 
 <div class="bg">
   <div class="split-screen">
-    <Terminal
-      bind:theme
-      stage={false}
-      track={false}
-      animated={false}
-      placeholder={"[h] for help. " + randomTerm}
-      sequence={[$narrative.help]}
-      on:show={() => ($showGraph = true)}
-    />
-    {#if $showGraph}
-      <Graph />
-    {:else}
-      <BoxStats box={$playerBox} />
-    {/if}
+    <div class="left-col">
+      <Terminal
+        on:show={() => ($showGraph = true)}
+        bind:theme
+        bind:send
+        stage={false}
+        track={false}
+        animated={false}
+        placeholder={"Welcome to your box"}
+        sequence={[$narrative.help]}
+      />
+    </div>
+    <div class="right-col">
+      <div class="stats">
+        <BoxStats on:read={() => send("read", true)} box={$playerBox} />
+      </div>
+      <div class="goal">
+        {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
+          <div
+            class="bg"
+            style:background-image="url(/images/gar{Math.ceil(
+              Math.random() * 23
+            )}.jpeg)"
+          />
+        {:else}
+          <Goal
+            on:hint={e => send("[whoareu?]")}
+            on:reward={e => {
+              send("ACHIEVEMETN UNLOCKKYYYY")
+              send("reward " + e.detail)
+            }}
+          />
+        {/if}
+      </div>
+
+      <div class="graph">
+        <Graph />
+      </div>
+    </div>
   </div>
 </div>
 
@@ -61,13 +76,41 @@
 
   .split-screen {
     display: grid;
-    grid-template-columns: 400px 1fr;
-    height: 100dvh;
+    grid-template-columns: 500px 1fr;
+    height: 100vh;
 
-    > * {
+    .left-col {
       height: 100%;
-      max-height: 100dvh;
-      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .right-col {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) 150px 150px;
+      grid-template-rows: 300px 1fr;
+      overflow: hidden;
+
+      .stats {
+        grid-column: 1 / 5;
+        border: var(--terminal-border);
+      }
+
+      .goal {
+        grid-column: 5 / 7;
+        border: var(--terminal-border);
+        position: relative;
+
+        .bg {
+          width: 100%;
+          height: 100%;
+          background-size: 200px 200px;
+          background-position: center;
+          filter: brightness(2) opacity(0.7) contrast(2) opacity(0.2);
+          pointer-events: none;
+          position: absolute;
+          inset: 0;
+        }
+      }
     }
   }
 
@@ -77,10 +120,10 @@
   }
 
   .bg {
-    position: fixed;
-    inset: 0;
-    transition: background 2s ease, border 2s ease, color 2s ease;
-    background: var(--terminal-background);
+    // position: fixed;
+    // inset: 0;
+    // transition: background 2s ease, border 2s ease, color 2s ease;
+    // background: var(--terminal-background);
   }
 
   .flowchart-container {
@@ -96,6 +139,10 @@
     justify-content: center;
     align-items: center;
     background: var(--terminal-background);
+  }
+
+  .graph {
+    grid-column: 1 / 7;
   }
 
   .graph-container {

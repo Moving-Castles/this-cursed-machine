@@ -15,7 +15,6 @@
   import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
-  import { showGraph } from "./modules/ui/stores"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
 
@@ -23,10 +22,9 @@
   import Flash from "./components/Flash/Flash.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
-  import Terminal from "./components/Terminal/Terminal.svelte"
   import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
-  import Graph from "./components/Graph/Graph.svelte"
+
   // import Game from "./components/Game/Game.svelte"
   // import Box from "./components/Box/Box.svelte"
 

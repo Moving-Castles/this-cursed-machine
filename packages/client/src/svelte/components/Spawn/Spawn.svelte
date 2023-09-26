@@ -30,7 +30,9 @@
   // }
 
   const onDone = e => {
-    console.log("done")
+    if (spawnInProgress) return
+    spawnInProgress = true
+    spawn()
   }
 </script>
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
-import { GameConfig, GameConfigData, Level, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, ROTATION } from "../codegen/Types.sol";
+pragma solidity >=0.8.21;
+import { GameConfig, GameConfigData, Level, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId } from "../codegen/index.sol";
+import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibArray {

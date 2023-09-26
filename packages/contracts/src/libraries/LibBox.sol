@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, Active, ActiveTableId, MinCores, MaxCores, Width, Height, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount } from "../codegen/Tables.sol";
-import { ENTITY_TYPE } from "../codegen/Types.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, Active, ActiveTableId, MinCores, MaxCores, Width, Height, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount } from "../codegen/index.sol";
+import { ENTITY_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -32,8 +32,8 @@ library LibBox {
     bool _active
   ) internal returns (bytes32) {
     bytes32 boxEntity = LibUtils.getRandomKey();
-    EntityType.set(boxEntity, ENTITY_TYPE.BOX);
     CreationBlock.set(boxEntity, block.number);
+    // EntityType.set(boxEntity, ENTITY_TYPE.BOX);
     Level.set(boxEntity, _level);
     Width.set(boxEntity, _width);
     Height.set(boxEntity, _height);
@@ -55,8 +55,8 @@ library LibBox {
    */
   function getBoxesByLevel(uint32 _level) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.BOX));
-    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encode(_level));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, abi.encode(ENTITY_TYPE.BOX));
+    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, abi.encode(_level));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
@@ -73,17 +73,17 @@ library LibBox {
    */
   function getInactiveBoxesByLevel(uint32 _level) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.BOX));
-    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encode(_level));
-    fragments[2] = QueryFragment(QueryType.HasValue, ActiveTableId, Active.encode(false));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, abi.encode(ENTITY_TYPE.BOX));
+    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, abi.encode(_level));
+    fragments[2] = QueryFragment(QueryType.HasValue, ActiveTableId, abi.encode(false));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
 
   function getMachinesByBox(bytes32 _boxEntity) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.MACHINE));
-    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_boxEntity));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, abi.encode(ENTITY_TYPE.MACHINE));
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, abi.encode(_boxEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
