@@ -1,35 +1,34 @@
-import { get } from "svelte/store";
-import { entities } from "../state";
-import { network } from "../network";
-import { toCamelCase } from "../utils/misc";
+import { get } from "svelte/store"
+import { entities } from "../state"
+import { network } from "../network"
+import { toCamelCase } from "../utils/misc"
 
 export function createComponentSystem(componentKey: string) {
-
   get(network).components[componentKey].update$.subscribe(update => {
-    console.log("==>", componentKey, update);
+    // console.log("==>", componentKey, update);
     const [nextValue] = update.value
 
     // Single-value components have a "value" property, structs do not
     const newValue =
       nextValue && Object.prototype.hasOwnProperty.call(nextValue, "value")
         ? nextValue.value
-        : nextValue;
+        : nextValue
 
-    const entityID = update.entity;
-    const propertyName = toCamelCase(componentKey);
+    const entityID = update.entity
+    const propertyName = toCamelCase(componentKey)
 
-    entities.update((value) => {
+    entities.update(value => {
       // Create an empty entity if it does not exist
-      if (value[entityID] === undefined) value[entityID] = {};
+      if (value[entityID] === undefined) value[entityID] = {}
 
       // Set or delete
       if (newValue === undefined) {
-        delete value[entityID][propertyName];
+        delete value[entityID][propertyName]
       } else {
-        value[entityID][propertyName] = newValue;
+        value[entityID][propertyName] = newValue
       }
 
-      return value;
-    });
+      return value
+    })
   })
 }

@@ -68,7 +68,6 @@
 
   $: links = graph.links.map(d => Object.create(d))
   $: nodes = graph.nodes.map(d => {
-    console.log(d)
     d.size = Math.pow(
       graph.links
         .filter(link => link.source == d.id || link.target == d.id)
@@ -84,7 +83,6 @@
   })
 
   function groupColour(context, d) {
-    console.log(d)
     let nodesize = 2 + Math.sqrt(d.size) / 5
     let radgrad = context.createRadialGradient(
       d.x,

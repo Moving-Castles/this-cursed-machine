@@ -92,9 +92,9 @@ contract ResolutionSystemTest is MudV2Test {
     world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 2");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% RESOLVE 2");
+    // console.log("%%%%%%%%%");
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
@@ -147,9 +147,9 @@ contract ResolutionSystemTest is MudV2Test {
     world.mc_SpawnSystem_spawn();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 2");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% RESOLVE 2");
+    // console.log("%%%%%%%%%");
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
@@ -173,8 +173,8 @@ contract ResolutionSystemTest is MudV2Test {
     // .. Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
 
-    console.log("outletInputPorts.length");
-    console.log(outletInputPorts.length);
+    // console.log("outletInputPorts.length");
+    // console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -205,9 +205,9 @@ contract ResolutionSystemTest is MudV2Test {
   function testMakeTeeth() public {
     setUp();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% MAKE TEETH");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% MAKE TEETH");
+    // console.log("%%%%%%%%%");
 
     // 1. Spawn core
     vm.startPrank(alice);

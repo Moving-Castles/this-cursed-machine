@@ -6,7 +6,7 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
-    console.log("Deployed world: ", worldAddress);
+    // console.log("Deployed world: ", worldAddress);
     IWorld world = IWorld(worldAddress);
 
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");

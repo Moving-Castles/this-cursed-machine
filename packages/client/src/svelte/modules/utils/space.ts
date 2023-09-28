@@ -1,4 +1,4 @@
-import { AStarFinder, Grid } from 'pathfinding'
+import { AStarFinder, Grid } from "pathfinding"
 const finder = new AStarFinder()
 
 /**
@@ -11,14 +11,14 @@ export const NULL_COORDINATE = { x: -1, y: -1 }
  * @param from Coord
  * @param to Coord
  * @param unavailableCoords Coord[]
- * @returns 
+ * @returns
  */
 export function aStarPath(from: Coord, to: Coord, unavailableCoords: Coord[]) {
-  console.log(unavailableCoords)
-
   const grid = new Grid(6, 6)
 
-  unavailableCoords.forEach(coord => grid.setWalkableAt(coord.x, coord.y, false))
+  unavailableCoords.forEach(coord =>
+    grid.setWalkableAt(coord.x, coord.y, false)
+  )
 
   const path = finder.findPath(from.x, from.y, to.x, to.y, grid)
 
@@ -31,7 +31,7 @@ export function aStarPath(from: Coord, to: Coord, unavailableCoords: Coord[]) {
  * @returns Manhattan distance from A to B (https://xlinux.nist.gov/dads/HTML/manhattanDistance.html)
  */
 export function manhattan(a: Coord, b: Coord) {
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y)
 }
 
 /**
@@ -40,7 +40,7 @@ export function manhattan(a: Coord, b: Coord) {
  * @returns Chebyshev distance from A to B (https://en.wikipedia.org/wiki/Chebyshev_distance)
  */
 export function chebyshev(a: Coord, b: Coord) {
-  return a && b ? Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) : 9999;
+  return a && b ? Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) : 9999
 }
 
 /**
@@ -49,19 +49,27 @@ export function chebyshev(a: Coord, b: Coord) {
  * @returns Finds a path between the from and to coordinates, used in some cases when aStar fails
  */
 export function directionalPathfind(from: Coord, to: Coord) {
-  const path: Coord[] = [];
-  const directionX = from.x < to.x ? 1 : -1;
-  const directionY = from.y < to.y ? 1 : -1;
+  const path: Coord[] = []
+  const directionX = from.x < to.x ? 1 : -1
+  const directionY = from.y < to.y ? 1 : -1
 
-  for (let x = from.x + directionX; directionX * x <= directionX * to.x; x = x + directionX) {
-    path.push({ x, y: from.y });
+  for (
+    let x = from.x + directionX;
+    directionX * x <= directionX * to.x;
+    x = x + directionX
+  ) {
+    path.push({ x, y: from.y })
   }
 
-  for (let y = from.y + directionY; directionY * y <= directionY * to.y; y = y + directionY) {
-    path.push({ x: to.x, y });
+  for (
+    let y = from.y + directionY;
+    directionY * y <= directionY * to.y;
+    y = y + directionY
+  ) {
+    path.push({ x: to.x, y })
   }
 
-  return path;
+  return path
 }
 
 /**
@@ -70,7 +78,7 @@ export function directionalPathfind(from: Coord, to: Coord) {
  * @param to Coord
  * @returns Boolean
  */
-export const isAdjacent = (from: Coord, to: Coord) => chebyshev(from, to) === 1;
+export const isAdjacent = (from: Coord, to: Coord) => chebyshev(from, to) === 1
 
 /**
  * Checks if given variable is a Coordinate
@@ -128,12 +136,12 @@ export function manhattanPath(start: Coord, end: Coord): Coord[] {
  * @returns string
  */
 export const getDirection = (from: Coord, to: Coord) => {
-  if (to.x < from.x) return 'west'
-  if (to.y < from.y) return 'north'
-  if (to.x > from.x) return 'east'
-  if (to.y > from.y) return 'south'
+  if (to.x < from.x) return "west"
+  if (to.y < from.y) return "north"
+  if (to.x > from.x) return "east"
+  if (to.y > from.y) return "south"
 
-  return ''
+  return ""
 }
 
 /**
@@ -173,7 +181,4 @@ export function initGrid(width: number, height: number) {
  * @returns Boolean
  */
 export const withinBounds = (coord: Coord, width: number, height: number) =>
-  coord.x >= 0 &&
-  coord.x < width &&
-  coord.y >= 0 &&
-  coord.y < height
+  coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height

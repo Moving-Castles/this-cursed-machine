@@ -42,7 +42,21 @@
   let numbers
   let labels
 
+  let inletFX = -200
+  let outletFX = 200
+  let inletFY = 0
+  let outletFY = 0
+
+  // $: console.log(inletFX, outletFX)
+
   $: {
+    let inletFixed = false
+    let outletFixed = false
+
+    if (nodes) {
+      //
+    }
+
     data = {
       nodes: [
         ...Object.entries($simulated)
@@ -51,7 +65,23 @@
             entry,
             group: EntityType.MACHINE,
           }))
-          .filter(({ entry }) => entry.entityType === EntityType.MACHINE),
+          .filter(({ entry }) => entry.entityType === EntityType.MACHINE)
+          .map(d => {
+            if (!inletFixed && d.entry.machineType === MachineType.INLET) {
+              inletFixed = true
+              return {
+                ...d,
+                fx: inletFX,
+                fy: inletFY,
+              }
+            }
+            if (!outletFixed && d.entry.machineType === MachineType.OUTLET) {
+              outletFixed = true
+              return { ...d, fx: outletFX, fy: outletFY }
+            }
+
+            return d
+          }),
       ],
       links: [
         // Connect ports to each other
@@ -99,7 +129,6 @@
    * Tick function updates data
    */
   const ticked = e => {
-    console.log("ticking")
     // Used for position links
     const l = svg.selectAll("line")
     const r = svg.selectAll("rect")
@@ -133,11 +162,10 @@
       })
 
     // Used for positioning nodes
-    r.attr("x", d => {
-      if (d.entry.numericalID === 8) console.log(d)
-      // if (d.entry.nu === 1) console.log(d.x)
-      return d.x - MACHINE_SIZE / 2
-    }).attr("y", d => d.y - MACHINE_SIZE / 2)
+    r.attr("x", d => d.x - MACHINE_SIZE / 2).attr(
+      "y",
+      d => d.y - MACHINE_SIZE / 2
+    )
     // Labels
     ll.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
     // Numbers
@@ -152,28 +180,57 @@
       .attr("y", d => d.y)
   }
 
+  function round(number, increment, offset = 0) {
+    return Math.ceil((number - offset) / increment) * increment + offset
+  }
+
+  /** Keep the number between min and max */
+  function boundX(number, min, max) {
+    min = -width / 2 + MACHINE_SIZE
+    max = width / 2 - MACHINE_SIZE
+    return Math.max(min, Math.min(max, number))
+  }
+  /** Keep the number between min and max */
+  function boundY(number, min, max) {
+    min = -height / 2 + MACHINE_SIZE
+    max = height / 2 - MACHINE_SIZE
+    return Math.max(min, Math.min(max, number))
+  }
+
   /**
    * Events
    */
   // Reheat the simulation when drag starts, and fix the subject position.
-  function dragstarted(event) {
+  function dragstarted(event, d) {
     if (!event.active) simulation.alphaTarget(0.3).restart()
-    event.subject.fx = event.subject.x
-    event.subject.fy = event.subject.y
+    d.x = boundX(event.x)
+    d.y = boundY(event.y)
   }
 
   // Update the subject (dragged node) position during drag.
-  function dragged(event) {
-    event.subject.fx = event.x
-    event.subject.fy = event.y
+  function dragged(event, d) {
+    if (d.entry.potential || !d.fx) {
+      d.x = boundX(event.x)
+      d.y = boundY(event.y)
+    } else {
+      if (d.fx && d.entry.machineType === MachineType.INLET)
+        [inletFX, inletFY] = [d.fx, d.fy]
+      if (d.fy && d.entry.machineType === MachineType.OUTLET)
+        [outletFX, outletFY] = [d.fx, d.fy]
+      d.fx = boundX(event.x)
+      d.fy = boundY(event.y)
+    }
   }
 
   // Restore the target alpha so the simulation cools after dragging ends.
   // Unfix the subject position now that it’s no longer being dragged.
-  function dragended(event) {
+  function dragended(event, d) {
     if (!event.active) simulation.alphaTarget(0)
-    event.subject.fx = null
-    event.subject.fy = null
+    if (d.entry.potential || !d.fx) return
+    if (d.fx && d.entry.machineType === MachineType.INLET) inletFX = d.fx
+    if (d.fy && d.entry.machineType === MachineType.OUTLET) outletFX = d.fx
+    d.fx = boundX(event.x)
+    d.fy = boundY(event.y)
   }
 
   /**
@@ -279,16 +336,18 @@
     simulation.force("link").links(links)
     simulation.alpha(1).restart()
 
-    svg.selectAll("g.node").call(dragBehavior)
+    svg
+      .selectAll("g.node")
+      .filter(d => {
+        return !d.fx
+      })
+      .call(dragBehavior)
   }
 
   /**
    * Initialize
    */
   const init = () => {
-    // The force simulation mutates links and nodes, so create a copy
-    // so that re-evaluating this cell produces the same result.
-
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
 
@@ -340,7 +399,7 @@
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("id", d => `link-${d.id}`)
+      .attr("id", d => `node-${d.id}`)
       .attr("x", d =>
         d.group === EntityType.MACHINE
           ? d.x - MACHINE_SIZE / 2
@@ -447,6 +506,11 @@
 <style>
   :global(rect:hover) {
     stroke: 4px solid blue;
+  }
+
+  :global(rect),
+  :global(text) {
+    cursor: grab;
   }
 
   .wrapper {

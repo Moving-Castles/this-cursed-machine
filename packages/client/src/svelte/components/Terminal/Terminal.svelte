@@ -433,7 +433,6 @@ Calculate the answer of life to get more help ya dumwit
   }
 
   const onConnectConfirm = ({ detail }) => {
-    console.log(detail)
     connectMachines(detail[0], detail[1])
     connecting = false
     userInput = ""
@@ -479,7 +478,7 @@ Calculate the answer of life to get more help ya dumwit
 
   /** Lifecycle hooks */
   onMount(() => {
-    inputElement.focus()
+    inputElement?.focus()
     $index = 0
   })
 
@@ -489,11 +488,11 @@ Calculate the answer of life to get more help ya dumwit
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  on:click={() => inputElement.focus()}
+  bind:this={outputElement}
+  on:click={() => inputElement?.focus()}
   use:onWheel
   class="terminal"
   class:stage
-  bind:this={outputElement}
 >
   {#if !input}
     {#if track}

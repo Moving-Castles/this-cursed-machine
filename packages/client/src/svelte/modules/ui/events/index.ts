@@ -36,7 +36,7 @@ export function initUI() {
  * Thin wrapper for drag events
  */
 export function onDragStart(e, address: string, passive = false) {
-  console.log("on drag start")
+  // console.log("on drag start")
   if (!passive) {
     originAddress.set(address)
     dragOrigin.set(get(entities)[address]?.position || NULL_COORDINATE)
@@ -57,7 +57,7 @@ export function onDragOver(coordinates: Coord) {
 export function onPortClick(address: string, port: Port) {
   const selection = get(portSelection)
 
-  console.log(address, port)
+  // console.log(address, port)
 
   // Override 0 if the port type clicked is the same as the first
   if (selection.length === 1 && selection[0].portType === port.portType) {
@@ -75,7 +75,7 @@ export function onPortClick(address: string, port: Port) {
     portSelection.set([])
   }
 
-  console.log(get(portSelection))
+  // console.log(get(portSelection))
 }
 
 /**

@@ -99,11 +99,11 @@ library LibBox {
     // Scale by number of blocks since last resolution
     Amount.set(materialEntity, _output.amount * uint32(_blocksSinceLastResolution));
     // ...
-    console.log("=!=!=!=!=!=!=!=!=!=");
-    console.log("=!=!=!=!= output");
-    console.log("=!=!=!=!=!=!=!=!=!=");
-    console.log("_output.materialType");
-    console.log(uint256(_output.materialType));
-    console.log(uint256(_output.amount * uint32(_blocksSinceLastResolution)));
+    // console.log("=!=!=!=!=!=!=!=!=!=");
+    // console.log("=!=!=!=!= output");
+    // console.log("=!=!=!=!=!=!=!=!=!=");
+    // console.log("_output.materialType");
+    // console.log(uint256(_output.materialType));
+    // console.log(uint256(_output.amount * uint32(_blocksSinceLastResolution)));
   }
 }

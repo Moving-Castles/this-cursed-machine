@@ -40,6 +40,9 @@
   // - - - - -
 
   let UIState = 0
+  let shown = false
+
+  $: console.log(UIState)
 
   initUI()
 
@@ -90,8 +93,13 @@
 
   {#if !$ready || UIState === 0}
     <Loading on:next={() => (UIState = 1)} />
-  {:else if UIState === 1}
-    <Flash on:next={() => (UIState = 2)} />
+  {:else if UIState === 1 && !shown}
+    <Flash
+      on:next={() => {
+        UIState = 2
+        shown = true
+      }}
+    />
   {:else if !$playerCore}
     <Spawn />
   {:else if $playerCore.level === 6}

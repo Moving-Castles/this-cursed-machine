@@ -3,6 +3,7 @@
   import { staticContent } from "../../modules/content"
   import { animateContent } from "./typewriter"
 
+  let called = false
   const dispatch = createEventDispatcher()
 
   const next = () => dispatch("next")
@@ -13,6 +14,8 @@
   }
 
   async function runIntroSequence() {
+    if (called) return
+    called = true
     await animateContent($staticContent.loading.content.content, 2, 300)
     await new Promise(res => setTimeout(res, 300))
     next()
