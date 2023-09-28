@@ -6,11 +6,11 @@ pragma solidity >=0.8.21;
 import { CONNECTION_TYPE } from "./../common.sol";
 
 interface IConnectionSystem {
-  function mc_ConnectionSystem_connect(
+  function connect(
     CONNECTION_TYPE _connectionType,
     bytes32 _sourcePort,
     bytes32 _targetPort
   ) external returns (bytes32);
 
-  function mc_ConnectionSystem_disconnect(bytes32 _connectionEntity) external;
+  function disconnect(bytes32 _connectionEntity) external;
 }

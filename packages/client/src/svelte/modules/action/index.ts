@@ -1,13 +1,22 @@
 import { ConnectionType, MachineType } from "../state/enums";
 import { addToSequencer } from "./actionSequencer";
 
+// export enum WorldFunctions {
+//     Spawn = "mc_SpawnSystem_spawn",
+//     Transfer = "mc_TransferSystem_transfer",
+//     Connect = "mc_ConnectionSystem_connect",
+//     Disconnect = "mc_ConnectionSystem_disconnect",
+//     Build = "mc_BuildSystem_build",
+//     Resolve = "mc_ResolveSystem_resolve",
+// }
+
 export enum WorldFunctions {
-    Spawn = "mc_SpawnSystem_spawn",
-    Transfer = "mc_TransferSystem_transfer",
-    Connect = "mc_ConnectionSystem_connect",
-    Disconnect = "mc_ConnectionSystem_disconnect",
-    Build = "mc_BuildSystem_build",
-    Resolve = "mc_ResolveSystem_resolve",
+    Spawn = "spawn",
+    Transfer = "transfer",
+    Connect = "connect",
+    Disconnect = "disconnect",
+    Build = "build",
+    Resolve = "resolve",
 }
 
 // --- API --------------------------------------------------------------

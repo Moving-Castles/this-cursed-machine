@@ -24,7 +24,7 @@ import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/s
 import { MATERIAL_TYPE } from "./../common.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("mc"), bytes16("MaterialType")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("MaterialType")))
 );
 ResourceId constant MaterialTypeTableId = _tableId;
 

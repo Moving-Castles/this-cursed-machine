@@ -6,5 +6,5 @@ pragma solidity >=0.8.21;
 import { MACHINE_TYPE } from "./../common.sol";
 
 interface IBuildSystem {
-  function mc_BuildSystem_build(MACHINE_TYPE _machineType, int32 _x, int32 _y) external returns (bytes32);
+  function build(MACHINE_TYPE _machineType, int32 _x, int32 _y) external returns (bytes32);
 }

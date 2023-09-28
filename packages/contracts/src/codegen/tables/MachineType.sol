@@ -24,7 +24,7 @@ import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/s
 import { MACHINE_TYPE } from "./../common.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("mc"), bytes16("MachineType")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("MachineType")))
 );
 ResourceId constant MachineTypeTableId = _tableId;
 

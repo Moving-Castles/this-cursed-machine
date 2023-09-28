@@ -24,7 +24,7 @@ import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/s
 import { CONNECTION_TYPE } from "./../common.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14("mc"), bytes16("ConnectionType")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("ConnectionType")))
 );
 ResourceId constant ConnectionTypeTableId = _tableId;
 

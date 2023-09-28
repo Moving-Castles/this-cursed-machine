@@ -12,7 +12,6 @@ export const enums = {
 
 export default mudConfig({
     deploysDirectory: "./deploys",
-    namespace: "mc",
     enums,
     tables: {
         EntityType: "ENTITY_TYPE",
@@ -72,30 +71,30 @@ export default mudConfig({
             root: true,
             args: [resolveTableId("EntityType")],
         },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("Level")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("Active")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("CarriedBy")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("PortType")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("SourcePort")],
-        },
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("Level")],
+        // },
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("Active")],
+        // },
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("CarriedBy")],
+        // },
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("PortType")],
+        // },
+        // {
+        //     name: "KeysWithValueModule",
+        //     root: true,
+        //     args: [resolveTableId("SourcePort")],
+        // },
     ],
 });
