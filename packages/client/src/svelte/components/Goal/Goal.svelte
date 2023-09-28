@@ -53,15 +53,22 @@
   $: $currentGoalIndex = $achieved.length
 </script>
 
-<div class="goal" on:click={onClick}>
-  <div>
-    GOAL:<br />
+<div class="goal-container" on:click={onClick}>
+  <div class="top-left">Do this:</div>
+  <div class="goal">
     {currentGoal.goal}
   </div>
 </div>
 
 <style>
-  .goal {
+  .top-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    color: #ccc;
+  }
+  .goal-container {
     width: 100%;
     height: 100%;
     display: flex;

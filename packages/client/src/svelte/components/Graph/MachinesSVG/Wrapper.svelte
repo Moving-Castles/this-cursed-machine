@@ -30,6 +30,7 @@
 
   let data = {}
   let previousData = {}
+  let previousPotential = {}
 
   // Top level variables used in the graph
   let svg
@@ -47,68 +48,14 @@
   let inletFY = 0
   let outletFY = 0
 
-  // $: console.log(inletFX, outletFX)
+  setData()
 
   $: {
-    let inletFixed = false
-    let outletFixed = false
-
-    if (nodes) {
-      //
-    }
-
-    data = {
-      nodes: [
-        ...Object.entries($simulated)
-          .map(([key, entry]) => ({
-            id: key,
-            entry,
-            group: EntityType.MACHINE,
-          }))
-          .filter(({ entry }) => entry.entityType === EntityType.MACHINE)
-          .map(d => {
-            if (!inletFixed && d.entry.machineType === MachineType.INLET) {
-              inletFixed = true
-              return {
-                ...d,
-                fx: inletFX,
-                fy: inletFY,
-              }
-            }
-            if (!outletFixed && d.entry.machineType === MachineType.OUTLET) {
-              outletFixed = true
-              return { ...d, fx: outletFX, fy: outletFY }
-            }
-
-            return d
-          }),
-      ],
-      links: [
-        // Connect ports to each other
-        ...Object.entries($simulated)
-          .map(([key, entry]) => ({
-            id: key,
-            entry,
-          }))
-          .filter(({ entry }) => entry.entityType === EntityType.CONNECTION)
-          .map(({ id, entry }) => {
-            // Connect the source machine to the target machine
-            const sP = $simulatedPorts[entry.sourcePort]
-            const tP = $simulatedPorts[entry.targetPort]
-
-            return {
-              id,
-              entry,
-              group: EntityType.CONNECTION,
-              source: sP.carriedBy,
-              target: tP.carriedBy,
-            }
-          }),
-      ],
-    }
-
     if (element && isEqual(data, previousData) === false) updateEverything() // update
+    if (element && isEqual($potential, previousPotential) === false)
+      updateEverything() // update
     previousData = { ...data }
+    previousPotential = { ...$potential }
   }
 
   // Utilities
@@ -234,9 +181,70 @@
   }
 
   /**
+   * Set Data
+   */
+  function setData() {
+    let inletFixed = false
+    let outletFixed = false
+
+    data = {
+      nodes: [
+        ...Object.entries($simulated)
+          .map(([key, entry]) => ({
+            id: key,
+            entry,
+            group: EntityType.MACHINE,
+          }))
+          .filter(({ entry }) => entry.entityType === EntityType.MACHINE)
+          .map(d => {
+            if (!inletFixed && d.entry.machineType === MachineType.INLET) {
+              inletFixed = true
+              return {
+                ...d,
+                fx: inletFX,
+                fy: inletFY,
+              }
+            }
+            if (!outletFixed && d.entry.machineType === MachineType.OUTLET) {
+              outletFixed = true
+              return { ...d, fx: outletFX, fy: outletFY }
+            }
+
+            return d
+          }),
+      ],
+      links: [
+        // Connect ports to each other
+        ...Object.entries($simulated)
+          .map(([key, entry]) => ({
+            id: key,
+            entry,
+          }))
+          .filter(({ entry }) => entry.entityType === EntityType.CONNECTION)
+          .map(({ id, entry }) => {
+            // Connect the source machine to the target machine
+            const sP = $simulatedPorts[entry.sourcePort]
+            const tP = $simulatedPorts[entry.targetPort]
+
+            return {
+              id,
+              entry,
+              group: EntityType.CONNECTION,
+              source: sP.carriedBy,
+              target: tP.carriedBy,
+            }
+          }),
+      ],
+    }
+  }
+
+  /**
    * Update
    */
   function updateEverything() {
+    setData()
+    console.log("updating graph, ", performance.now())
+
     // Update nodes and links with new data.
     const old = new Map(node.data().map(d => [d.id, d]))
     nodes = data.nodes.map(d => Object.assign(old.get(d.id) || {}, d))

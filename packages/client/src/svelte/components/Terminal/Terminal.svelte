@@ -182,7 +182,7 @@
      * Highlight core in the graph
      */
     if (string === "whoami") {
-      const rect = document.getElementById($playerEntityId)
+      const rect = document.getElementById(`node-${$playerEntityId}`)
       if (rect) {
         rect.classList.add("flash")
         setTimeout(() => rect.classList.remove("flash"), 7000)
@@ -552,16 +552,17 @@ Calculate the answer of life to get more help ya dumwit
 <style lang="scss">
   .terminal {
     font-family: var(--font-family);
-    // padding: 0 1rem;
+    padding: 8px;
     overflow: hidden;
     transition: background 2s ease, color 2s ease;
-    border: var(--terminal-border);
     color: var(--terminal-color);
     background: var(--terminal-background);
     width: 100%;
     position: relative;
     height: 100vh;
     white-space: pre-line;
+    outline: var(--terminal-border);
+    outline-offset: -8px;
 
     &.stage {
       position: fixed;

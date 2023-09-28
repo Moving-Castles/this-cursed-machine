@@ -6,6 +6,7 @@
 
 import { writable, get } from "svelte/store"
 import { network, blockNumber } from "../../network"
+import { potential } from "../../simulator"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
 import { setActionTimeout, clearActionTimeout } from "./timeoutHandler"
@@ -116,6 +117,9 @@ async function execute() {
     let result = await get(network).waitForTransaction(tx)
     if (result) {
       if (result.receipt.status == "success") {
+        // Remove any potentials from the simulated state
+        potential.set({})
+
         // Add action to completed list
         completedActions.update(completedActions => [
           action,

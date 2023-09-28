@@ -38,7 +38,7 @@
       <div class="goal">
         {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
           <div
-            class="bg"
+            class="bg flash-a-bit"
             style:background-image="url(/images/gar{Math.ceil(
               Math.random() * 23
             )}.jpeg)"
@@ -87,17 +87,19 @@
     .right-col {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr)) 150px 150px;
-      grid-template-rows: 300px 1fr;
+      grid-template-rows: 250px 1fr;
       overflow: hidden;
 
       .stats {
         grid-column: 1 / 5;
-        border: var(--terminal-border);
+        outline: var(--terminal-border);
+        outline-offset: -6px;
       }
 
       .goal {
         grid-column: 5 / 7;
-        border: var(--terminal-border);
+        outline: var(--terminal-border);
+        outline-offset: -4px;
         position: relative;
 
         .bg {

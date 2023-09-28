@@ -35,7 +35,7 @@
   --muted-opacity: 0.7;
   --backdrop: blur(10px);
   --outer-border: 1px solid rgba(var(--foreground), var(--muted-opacity));
-  --terminal-border: 1px dashed var(--foreground);
+  --terminal-border: 1px solid #666;
 }
 
 * {
@@ -56,6 +56,18 @@
 
 .flash {
   animation: strobe 200ms steps(1, end) infinite;
+}
+
+.flash-a-bit {
+  animation: strobe 200ms steps(1, end) 3;
+}
+
+.text-stroke {
+  text-shadow:
+    -1px -1px 0 var(--white),
+    1px -1px 0 var(--white),
+    -1px 1px 0 var(--white),
+    1px 1px 0 var(--white);
 }
 
 .race > span:nth-child(3n) {
