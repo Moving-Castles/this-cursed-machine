@@ -42,7 +42,6 @@ export const potential = writable({} as SimulatedEntities)
 export const simulated = derived(
   [entities, patches, potential, blocksSinceLastResolution],
   ([$entities, $patches, $potential, $blocksSinceLastResolution]) => {
-    console.log("Derive", $potential)
     // Add a numerical ID to each entry for the terminal
     let i = 0
 

@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte"
+  import { createEventDispatcher, onMount, onDestroy } from "svelte"
+
+  let timeout: ReturnType<typeof setTimeout>
 
   const dispatch = createEventDispatcher()
 
   const next = () => dispatch("next")
 
   onMount(() => {
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       next()
     }, 500)
   })
+  onDestroy(() => clearTimeout(timeout))
 </script>
 
 <div>

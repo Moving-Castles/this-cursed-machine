@@ -12,6 +12,12 @@
   import { ports } from "../../../modules/state"
   const { isEqual } = _
 
+  const dragBehavior = d3
+    .drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended)
+
   const MACHINE_SIZE = 100
   const PORT_SIZE = 100
 
@@ -24,6 +30,17 @@
 
   let data = {}
   let previousData = {}
+
+  // Top level variables used in the graph
+  let svg
+  let simulation
+  let node
+  let link
+  let nodes
+  let links
+  let rect
+  let numbers
+  let labels
 
   $: {
     data = {
@@ -60,7 +77,7 @@
       ],
     }
 
-    if (element && isEqual(data, previousData) === false) init() // update
+    if (element && isEqual(data, previousData) === false) updateEverything() // update
     previousData = { ...data }
   }
 
@@ -78,17 +95,213 @@
     return connectionPorts.some(item => machinePorts.includes(item))
   }
 
-  const init = () => {
-    // Specify the color scale.
-    const color = d3.scaleOrdinal(["rgba(0,0,0,1)"])
+  /**
+   * Tick function updates data
+   */
+  const ticked = e => {
+    console.log("ticking")
+    // Used for position links
+    const l = svg.selectAll("line")
+    const r = svg.selectAll("rect")
+    const ll = svg.selectAll("text.label")
+    const n = svg.selectAll("text.number")
+    const nn = svg.selectAll("g.node")
 
+    l.attr("x1", d =>
+      d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
+        ? d.source.x - MACHINE_SIZE / 2
+        : d.source.x
+    )
+      .attr("y1", d =>
+        d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
+          ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2
+          : d.source.y
+      )
+      .attr("x2", d =>
+        d.target.group === EntityType.MACHINE
+          ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
+          : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
+      )
+      .attr("y2", d =>
+        d.target.group === EntityType.MACHINE
+          ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
+          : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
+      )
+      .attr("z-index", 9999)
+      .attr("stroke-opacity", d => {
+        return d.source.group === EntityType.MACHINE ? 1 : 1
+      })
+
+    // Used for positioning nodes
+    r.attr("x", d => {
+      if (d.entry.numericalID === 8) console.log(d)
+      // if (d.entry.nu === 1) console.log(d.x)
+      return d.x - MACHINE_SIZE / 2
+    }).attr("y", d => d.y - MACHINE_SIZE / 2)
+    // Labels
+    ll.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
+    // Numbers
+    n.attr("x", d => d.x + 46).attr("y", d => d.y - 36)
+    // Dash or no dash
+    nn.attr("stroke", d => {
+      return isConnected(d) ? "#fff" : "#222"
+    })
+      .attr("stroke-dasharray", d => (isConnected(d) ? 20 : 0))
+      .attr("stroke-opacity", d => 1)
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
+  }
+
+  /**
+   * Events
+   */
+  // Reheat the simulation when drag starts, and fix the subject position.
+  function dragstarted(event) {
+    if (!event.active) simulation.alphaTarget(0.3).restart()
+    event.subject.fx = event.subject.x
+    event.subject.fy = event.subject.y
+  }
+
+  // Update the subject (dragged node) position during drag.
+  function dragged(event) {
+    event.subject.fx = event.x
+    event.subject.fy = event.y
+  }
+
+  // Restore the target alpha so the simulation cools after dragging ends.
+  // Unfix the subject position now that it’s no longer being dragged.
+  function dragended(event) {
+    if (!event.active) simulation.alphaTarget(0)
+    event.subject.fx = null
+    event.subject.fy = null
+  }
+
+  /**
+   * Update
+   */
+  function updateEverything() {
+    // Update nodes and links with new data.
+    const old = new Map(node.data().map(d => [d.id, d]))
+    nodes = data.nodes.map(d => Object.assign(old.get(d.id) || {}, d))
+    links = data.links.map(d => Object.assign({}, d))
+
+    // Links
+    svg
+      .selectAll("line")
+      .data(links, d => d.id)
+      .join(
+        enter =>
+          enter
+            .append("line")
+            .attr("stroke", "#fff")
+            .attr("stroke-dashoffset", 0)
+            .attr("stroke-dasharray", 20)
+            .attr("stroke-opacity", 0)
+            .attr("id", d => `link-${d.id}`)
+            .attr("stroke-width", d => Math.sqrt(d.value)),
+        update => update, // you can make adjustments to existing elements here if needed
+        exit => exit.remove()
+      )
+
+    // Nodes
+    node = svg
+      .selectAll("g.node")
+      .data(nodes, d => {
+        return d.id
+      })
+      .join(
+        enter => {
+          const newNode = enter
+            .append("g")
+            .attr("class", "node")
+            .attr("id", d => `node-${d.id}`)
+            .attr("x", d =>
+              d.group === EntityType.MACHINE
+                ? d.x - MACHINE_SIZE / 2
+                : d.x - MACHINE_SIZE / 2
+            )
+            .attr("y", d =>
+              d.group === EntityType.MACHINE
+                ? d.y - MACHINE_SIZE / 2
+                : d.y - MACHINE_SIZE / 2
+            )
+            .attr("opacity", d => (d.entry.potential ? 0.2 : 1))
+
+          newNode
+            .append("rect")
+            .attr("fill", "#000")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 1)
+            .attr("width", d =>
+              d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
+            )
+            .attr("height", d =>
+              d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
+            )
+            .attr("fill", "#000")
+
+          // Other node attributes like labels, numbers, etc., can be appended to `g` here
+          newNode
+            .filter(d => d.group === EntityType.MACHINE)
+            .append("text")
+            .attr("class", "label")
+            .attr("font-size", "4rem")
+            .attr("fill", "#fff")
+            .attr("stroke", "none")
+            .text(function (d) {
+              if (d.entry.entityType === EntityType.MACHINE) {
+                return `${MachineType[d.entry.machineType][0]}`
+              }
+
+              return EntityType[d.entry.entityType][0]
+            })
+
+          newNode
+            .filter(d => d.group !== EntityType.PORT)
+            .append("text")
+            .attr("class", "number")
+            .attr("text-anchor", "end")
+            .attr("font-size", "0.8rem")
+            .attr("fill", "#fff")
+            .attr("stroke", "none")
+            .text(d => $simulated[d.id]?.numericalID)
+
+          newNode.append("title").text(d => MachineType[d.entry.machineType])
+
+          return newNode
+        },
+        update => update, // adjustments to existing nodes
+        exit => exit.remove()
+      )
+
+    // Restart the simulation with new data
+    simulation.nodes(nodes)
+    simulation.force("link").links(links)
+    simulation.alpha(1).restart()
+
+    svg.selectAll("g.node").call(dragBehavior)
+  }
+
+  /**
+   * Initialize
+   */
+  const init = () => {
     // The force simulation mutates links and nodes, so create a copy
     // so that re-evaluating this cell produces the same result.
-    const links = data.links.map(d => ({ ...d }))
-    const nodes = data.nodes.map(d => ({ ...d }))
+
+    links = data.links.map(d => ({ ...d }))
+    nodes = data.nodes.map(d => ({ ...d }))
+
+    // Create the SVG container.
+    svg = d3
+      .create("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("style", "max-width: 100%; height: auto;")
 
     // Create a simulation with several forces.
-    const simulation = d3
+    simulation = d3
       .forceSimulation(nodes)
       .force(
         "link",
@@ -105,17 +318,10 @@
       .force("charge", d3.forceManyBody().strength(-1000))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
-
-    // Create the SVG container.
-    const svg = d3
-      .create("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [-width / 2, -height / 2, width, height])
-      .attr("style", "max-width: 100%; height: auto;")
+      .on("tick", ticked)
 
     // Links
-    const link = svg
+    link = svg
       .append("g")
       .selectAll("line")
       .data(links)
@@ -127,14 +333,14 @@
       .attr("id", d => `link-${d.id}`)
       .attr("stroke-width", d => Math.sqrt(d.value))
 
-    const node = svg
+    node = svg
       .append("g")
-      .attr("class", "node")
       .selectAll("g")
       .data(nodes)
       .enter()
       .append("g")
-      .attr("id", d => d.id)
+      .attr("class", "node")
+      .attr("id", d => `link-${d.id}`)
       .attr("x", d =>
         d.group === EntityType.MACHINE
           ? d.x - MACHINE_SIZE / 2
@@ -145,26 +351,24 @@
           ? d.y - MACHINE_SIZE / 2
           : d.y - MACHINE_SIZE / 2
       )
-      .attr("transform", d =>
-        d.group === EntityType.MACHINE ? "rotate(0)" : "rotate(0)"
-      )
 
-    const rect = node
+    rect = node
+      .append("rect")
       .attr("fill", "#000")
       .attr("stroke", "#fff")
       .attr("stroke-width", 1)
-      .append("rect")
       .attr("width", d =>
         d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
       )
       .attr("height", d =>
         d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
       )
-      .attr("fill", d => color(d.group))
+      .attr("fill", d => "#000")
 
-    const labels = node
+    labels = node
       .filter(d => d.group === EntityType.MACHINE)
       .append("text")
+      .attr("class", "label")
       .attr("font-size", "4rem")
       .attr("fill", "#fff")
       .attr("stroke", "none")
@@ -177,16 +381,17 @@
       })
 
     // Top right numbers
-    const numbers = node
+    numbers = node
       .filter(d => d.group !== EntityType.PORT)
       .append("text")
+      .attr("class", "number")
       .attr("text-anchor", "end")
       .attr("font-size", "0.8rem")
       .attr("fill", "#fff")
       .attr("stroke", "none")
       .text(d => $simulated[d.id]?.numericalID)
 
-    node.append("title").text(d => EntityType[d.entry.entityType])
+    node.append("title").text(d => MachineType[d.entry.machineType])
 
     // Add a drag behavior.
     node.call(
@@ -197,85 +402,12 @@
         .on("end", dragended)
     )
 
-    // Set the position attributes of links and nodes each time the simulation ticks.
-    simulation.on("tick", e => {
-      // Used for position links
-      link
-        .attr("x1", d =>
-          d.source.group === EntityType.PORT &&
-          d.target.group === EntityType.PORT
-            ? d.source.x - MACHINE_SIZE / 2
-            : d.source.x
-        )
-        .attr("y1", d =>
-          d.source.group === EntityType.PORT &&
-          d.target.group === EntityType.PORT
-            ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2
-            : d.source.y
-        )
-        .attr("x2", d =>
-          d.target.group === EntityType.MACHINE
-            ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-            : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-        )
-        .attr("y2", d =>
-          d.target.group === EntityType.MACHINE
-            ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-            : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-        )
-        .attr("z-index", 9999)
-        .attr("stroke-opacity", d => {
-          return d.source.group === EntityType.MACHINE ? 1 : 1
-        })
-
-      // Used for positioning nodes
-      rect
-        .attr("x", d => d.x - MACHINE_SIZE / 2)
-        .attr("y", d => d.y - MACHINE_SIZE / 2)
-      // Labels
-      labels.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
-      // Numbers
-      numbers.attr("x", d => d.x + 46).attr("y", d => d.y - 36)
-      // Dash or no dash
-      node
-        .attr("stroke", d => {
-          return isConnected(d) ? "#fff" : "#222"
-        })
-        .attr("stroke-dasharray", d => (isConnected(d) ? 20 : 0))
-        .attr("stroke-opacity", d => 1)
-    })
-
-    // Reheat the simulation when drag starts, and fix the subject position.
-    function dragstarted(event) {
-      if (!event.active) simulation.alphaTarget(0.3).restart()
-      event.subject.fx = event.subject.x
-      event.subject.fy = event.subject.y
-    }
-
-    // Update the subject (dragged node) position during drag.
-    function dragged(event) {
-      event.subject.fx = event.x
-      event.subject.fy = event.y
-    }
-
-    // Restore the target alpha so the simulation cools after dragging ends.
-    // Unfix the subject position now that it’s no longer being dragged.
-    function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0)
-      event.subject.fx = null
-      event.subject.fy = null
-    }
-
-    // When this cell is re-run, stop the previous simulation. (This doesn’t
-    // really matter since the target alpha is zero and the simulation will
-    // stop naturally, but it’s a good practice.)
-    // invalidation.then(() => simulation.stop())
-
+    // Insert SVG pls
     element.prepend(svg.node())
-    // element.appendChild(svg.node())
 
     // Animation station
     clearInterval(interval)
+
     // Updates the offset of dashes every 50ms:
     let offset = 1
     setInterval(function () {

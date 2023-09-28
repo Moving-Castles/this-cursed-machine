@@ -416,10 +416,10 @@ Calculate the answer of life to get more help ya dumwit
     potential.set({})
   }
 
-  const displayPotential = ({ detail }) => {
+  const displayMachinePotential = ({ detail }) => {
     potential.set({
       [uuid()]: {
-        machineType: detail,
+        machineType: MachineType[detail],
         entityType: EntityType.MACHINE,
         potential: true,
       },
@@ -516,7 +516,7 @@ Calculate the answer of life to get more help ya dumwit
         options={AVAILABLE_MACHINES}
         bind:value={userInput}
         on:confirm={onBuildConfirm}
-        on:change={displayPotential}
+        on:change={displayMachinePotential}
         on:cancel={clearPotential}
       />
     {:else if connecting}
