@@ -71,30 +71,30 @@ export default mudConfig({
             root: true,
             args: [resolveTableId("EntityType")],
         },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("Level")],
-        // },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("Active")],
-        // },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("CarriedBy")],
-        // },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("PortType")],
-        // },
-        // {
-        //     name: "KeysWithValueModule",
-        //     root: true,
-        //     args: [resolveTableId("SourcePort")],
-        // },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("Level")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("Active")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("CarriedBy")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("PortType")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("SourcePort")],
+        },
     ],
 });
