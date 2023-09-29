@@ -28,7 +28,6 @@
         track={false}
         animated={false}
         placeholder={"Welcome to your box"}
-        sequence={[$narrative.help]}
       />
     </div>
     <div class="right-col">

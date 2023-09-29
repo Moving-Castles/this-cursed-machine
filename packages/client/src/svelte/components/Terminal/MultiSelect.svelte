@@ -19,11 +19,24 @@
   // right = 39
   // down = 40
   const onKeyDown = ({ keyCode }) => {
+    const choice = Number(value.match(/\d+/)[0])
+    console.log(value, choice)
+
     if (keyCode === 38) {
       index = Math.max(index - 1, 0)
+
+      if (stage === options.length - 1) {
+        dispatch("change", [...choices, choice]) // Only commit the numerical ID
+        console.log([...choices, choice])
+      }
     }
     if (keyCode === 40) {
       index = Math.min(index + 1, options[stage].length - 1)
+
+      if (stage === options.length - 1) {
+        dispatch("change", [...choices, choice]) // Only commit the numerical ID
+        console.log([...choices, choice])
+      }
     }
 
     if (keyCode === 13) {
