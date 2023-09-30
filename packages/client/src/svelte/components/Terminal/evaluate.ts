@@ -35,7 +35,6 @@ export const evaluate = (
   if (string === "whoami") {
     const rect = document.getElementById(`node-${get(playerEntityId)}`)
     if (rect) {
-      console.log(rect)
       rect.classList.remove("flash-a-little")
       setTimeout(() => {
         rect.classList.add("flash-a-little")

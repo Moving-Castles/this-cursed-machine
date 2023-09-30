@@ -1,17 +1,18 @@
 <script>
   import * as d3 from "d3"
   import { EntityType, MachineType } from "../../../modules/state/enums"
-  import { onMount } from "svelte"
+  import { onMount, createEventDispatcher } from "svelte"
   import {
     simulated,
     potential,
     simulatedPorts,
     simulatedConnections,
   } from "../../../modules/simulator"
+  import MachineInformation from "../../Machines/MachineInformation.svelte"
   import _ from "lodash"
   import { ports } from "../../../modules/state"
-  const { isEqual } = _
 
+  const { isEqual } = _
   const dragBehavior = d3
     .drag()
     .on("start", dragstarted)
@@ -23,6 +24,7 @@
 
   let element // the parent container
   let interval // the interval used for animation
+  let inspecting // the machine currenty being inspected
 
   // Specify the dimensions of the chart.
   let width = 0
@@ -277,6 +279,10 @@
         enter => {
           const newNode = enter
             .append("g")
+            .on("mouseenter", (_, d) => {
+              inspecting = d.entry.machineType
+            })
+            .on("mouseleave", () => (inspecting = null))
             .attr("class", "node")
             .attr("id", d => `node-${d.id}`)
             .attr("x", d =>
@@ -405,6 +411,10 @@
       .data(nodes)
       .enter()
       .append("g")
+      .on("mouseenter", (_, d) => {
+        inspecting = d.entry.machineType
+      })
+      .on("mouseleave", () => (inspecting = null))
       .attr("class", "node")
       .attr("id", d => `node-${d.id}`)
       .attr("x", d =>
@@ -503,12 +513,18 @@
 
 <svelte:window on:resize={init} />
 
-<div
-  class="wrapper"
-  bind:this={element}
-  bind:clientWidth={width}
-  bind:clientHeight={height}
-/>
+<div class="wrapper">
+  {#if inspecting !== null}
+    <MachineInformation machineType={inspecting} />
+  {/if}
+
+  <div
+    class="wrapper"
+    bind:this={element}
+    bind:clientWidth={width}
+    bind:clientHeight={height}
+  />
+</div>
 
 <style>
   :global(rect:hover) {
@@ -521,6 +537,7 @@
   }
 
   .wrapper {
+    position: relative;
     width: 100%;
     height: 100%;
   }

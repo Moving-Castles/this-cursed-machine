@@ -11,7 +11,7 @@
   const blinkFn = async () => {
     const openTime = Math.random() * 300 + 100
     const closedTime = Math.random() * 7000 + 200
-    console.log(openTime, closedTime)
+    // console.log(openTime, closedTime)
     blink = true
     await sleep(openTime)
     blink = false

@@ -9,6 +9,7 @@
     watchingAction,
   } from "../../modules/action/actionSequencer"
   import {
+    AVAILABLE_MACHINES,
     potential,
     simulatedMachines,
     simulatedPorts,
@@ -36,10 +37,6 @@
 
   /** Constants */
   const dispatch = createEventDispatcher()
-  const AVAILABLE_MACHINES = Object.values(MachineType).splice(
-    0,
-    Object.keys(MachineType).length / 2
-  )
 
   /** Variables */
   let inputElement: HTMLElement

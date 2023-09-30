@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { narrative } from "../../modules/content/lore"
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
   import { playerBox } from "../../modules/state"

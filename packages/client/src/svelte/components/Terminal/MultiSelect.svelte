@@ -20,7 +20,6 @@
   // down = 40
   const onKeyDown = ({ keyCode }) => {
     const choice = Number(value.match(/\d+/)[0])
-    console.log(value, choice)
 
     if (keyCode === 38) {
       index = Math.max(index - 1, 0)

@@ -2,11 +2,18 @@
  *  Simulates the changing state of the game
  *
  */
+import { MachineType } from "../state/enums"
 import { writable, derived } from "svelte/store"
 import { entities, playerBox, playerEntityId } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
+
+// --- CONSTANTSLY ------------------------------------------------------------
+export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
+  0,
+  Object.keys(MachineType).length / 2
+)
 
 // --- STORES -----------------------------------------------------------------
 
