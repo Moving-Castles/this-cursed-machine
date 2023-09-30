@@ -4,7 +4,7 @@ import { output, symbols } from "./index"
 import { MachineType } from "../../modules/state/enums"
 import { playerCore, playerEntityId } from "../../modules/state"
 import { simulatedMachines } from "../../modules/simulator"
-import { connectMachines } from "./actions"
+import { buildMachine, connectMachines } from "./actions"
 
 /**
  * Evaluate string output
@@ -197,7 +197,7 @@ export const evaluate = (
           }`
         )
       } else {
-        buildMachine(MachineType[machineToBuild])
+        buildMachine(MachineType[machineToBuild], send)
       }
     }
   }

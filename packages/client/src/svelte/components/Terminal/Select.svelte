@@ -26,7 +26,10 @@
       index = Math.min(index + 1, options.length - 1)
     }
 
-    if (keyCode === 13) dispatch("confirm", value)
+    if (keyCode === 13) {
+      console.log("CONFIRM")
+      dispatch("confirm", value)
+    }
 
     if (keyCode === 27) dispatch("cancel")
   }

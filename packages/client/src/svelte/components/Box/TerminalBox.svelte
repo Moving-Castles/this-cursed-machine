@@ -74,9 +74,7 @@
   }
 
   .split-screen {
-    display: grid;
-    grid-template-columns: 500px 1fr;
-    height: 100vh;
+    // Display properties are set in app.css
 
     .left-col {
       height: 100%;

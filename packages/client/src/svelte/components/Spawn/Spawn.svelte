@@ -4,6 +4,7 @@
   import { playSound } from "../../modules/sound"
   import { spawn } from "../../modules/action"
   import Terminal from "../Terminal/Terminal.svelte"
+  import Frame from "../Frame/Frame.svelte"
 
   // import Ellipse from "../Game/Ellipse.svelte"
 
@@ -37,18 +38,26 @@
 </script>
 
 <div class="spawn">
-  {#if !$playerCore}
-    <Terminal
-      stage
-      input
-      theme="transparent"
-      placeholder="Blink"
-      on:done={onDone}
-    />
-  {/if}
+  <div class="split-screen">
+    {#if !$playerCore}
+      <Terminal
+        input
+        theme="transparent"
+        placeholder="Blink"
+        on:done={onDone}
+      />
+    {/if}
+    <div class="right-col">
+      <Frame name="intro" />
+    </div>
+  </div>
 </div>
 
 <style>
+  .split-screen {
+    align-items: center;
+    justify-items: center;
+  }
   .spawn {
     position: fixed;
     inset: 0;
@@ -56,5 +65,9 @@
     background-size: cover;
     background-position: center;
     z-index: 1;
+  }
+
+  .right-col {
+    /* grid-column: 1 / span 2; */
   }
 </style>

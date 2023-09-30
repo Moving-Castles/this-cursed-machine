@@ -222,7 +222,6 @@
           }))
           .filter(({ entry }) => entry.entityType === EntityType.CONNECTION)
           .map(({ id, entry }) => {
-            console.log(entry)
             // Connect the source machine to the target machine
             const sP = $simulatedPorts[entry.sourcePort]
             const tP = $simulatedPorts[entry.targetPort]
@@ -249,8 +248,6 @@
     const old = new Map(node.data().map(d => [d.id, d]))
     nodes = data.nodes.map(d => Object.assign(old.get(d.id) || {}, d))
     links = data.links.map(d => Object.assign({}, d))
-
-    console.log(links)
 
     // Links
     link = svg

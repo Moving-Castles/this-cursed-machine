@@ -33,6 +33,7 @@ export const queuedActions = writable([] as Action[])
 export const activeActions = writable([] as Action[])
 export const completedActions = writable([] as Action[])
 export const failedActions = writable([] as Action[])
+export const watchingAction = writable(null as Action | null)
 
 // --- API -----------------------------------------------------------------
 

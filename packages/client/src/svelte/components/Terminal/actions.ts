@@ -3,9 +3,10 @@ import {
   MachineType,
   ConnectionType,
 } from "../../modules/state/enums"
+import { connections } from "../../modules/state"
 import {
   simulated,
-  simulatedConnections,
+  // simulatedConnections,
   simulatedMachines,
   simulatedPorts,
 } from "../../modules/simulator"
@@ -21,18 +22,14 @@ export const availablePorts = (machineId: string) => {
   )
   const occupiedPorts = sourcePorts.filter(([id, _]) => {
     // if a connection exists with this as source OR target, list as occupied
-    const connectionsUsingPort = Object.values(
-      get(simulatedConnections)
-    ).filter(
+    const connectionsUsingPort = Object.values(get(connections)).filter(
       connection => connection.sourcePort === id || connection.targetPort === id
     )
     return connectionsUsingPort.length > 0
   })
   const freePorts = sourcePorts.filter(([id, _]) => {
     // if a connection exists with this as source OR target, list as occupied
-    const connectionsUsingPort = Object.values(
-      get(simulatedConnections)
-    ).filter(
+    const connectionsUsingPort = Object.values(get(connections)).filter(
       connection => connection.sourcePort === id || connection.targetPort === id
     )
     return connectionsUsingPort.length === 0
@@ -44,8 +41,11 @@ export const availablePorts = (machineId: string) => {
 // Build
 export const buildMachine = (machineType: string, send: Function) => {
   // First add the potential transaction
-  build(MachineType[machineType], 0, 0)
+  const action = build(MachineType[machineType], 0, 0)
   send(`Building a ${machineType}`)
+
+  // Wait for the result of the action
+  return action
 }
 
 // Connect
@@ -69,47 +69,20 @@ export const connectMachines = (
     ) {
       send("Please, only connect machines")
     } else {
-      const connections = Object.values($simulated).filter(
-        ent => ent.entityType === EntityType.CONNECTION
-      )
-      // Make sure there are ports we can connect
-      const sourcePorts = Object.entries($simulated).filter(
-        ([_, ent]) => ent?.carriedBy === sourceMachine[0]
-      )
-      const targetPorts = Object.entries($simulated).filter(
-        ([_, ent]) => ent?.carriedBy === targetMachine[0]
-      )
+      const [_, sourcePorts] = availablePorts(sourceMachine[1].numericalID)
+      const [__, targetPorts] = availablePorts(targetMachine[1].numericalID)
 
-      const occupiedSourcePorts = sourcePorts.filter(([id, _]) => {
-        // if a connection exists with this as source OR target, list as occupied
-        const connectionsUsingPort = connections.filter(
-          connection =>
-            connection.sourcePort === id || connection.targetPort === id
-        )
-        return connectionsUsingPort.length > 0
-      })
-      const totalOccupiedSourcePorts = occupiedSourcePorts.length
-      const totalAvailableSourcePorts =
-        sourcePorts.length - totalOccupiedSourcePorts
-
-      const occupiedTargetPorts = targetPorts.filter(([id, _]) => {
-        // if a connection exists with this as source OR target, list as occupied
-        const connectionsUsingPort = connections.filter(
-          connection =>
-            connection.sourcePort === id || connection.targetPort === id
-        )
-        return connectionsUsingPort.length > 0
-      })
-      const totalOccupiedTargetPorts = occupiedTargetPorts.length
-      const totalAvailableTargetPorts =
-        targetPorts.length - totalOccupiedTargetPorts
-
-      if (totalAvailableSourcePorts > 0 && totalAvailableTargetPorts > 0) {
+      if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
-        connect(ConnectionType.RESOURCE, sourcePorts[0][0], targetPorts[0][0])
+        return connect(
+          ConnectionType.RESOURCE,
+          sourcePorts[0][0],
+          targetPorts[0][0]
+        )
       } else {
         send("Ports occupied. Sawry")
       }
     }
   }
+  return null
 }

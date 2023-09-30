@@ -20,7 +20,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="flash" on:click={next}>
     <div class="flash-content">
-      <img src="./troll.jpg" alt="troll" />
+      <img src="./suffer.png" alt="swu" />
     </div>
   </div>
 </div>

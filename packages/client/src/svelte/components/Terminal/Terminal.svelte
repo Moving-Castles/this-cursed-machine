@@ -2,6 +2,12 @@
   import { symbols, output, index, parsed } from "./index"
   import { evaluate } from "./evaluate"
   import { buildMachine, connectMachines, availablePorts } from "./actions"
+  import type { Action } from "../../modules/action/actionSequencer"
+  import {
+    completedActions,
+    failedActions,
+    watchingAction,
+  } from "../../modules/action/actionSequencer"
   import {
     potential,
     simulatedMachines,
@@ -16,14 +22,16 @@
   import Select from "./Select.svelte"
   import MultiSelect from "./MultiSelect.svelte"
   import { EntityType, MachineType } from "../../modules/state/enums"
+
   export let speed = 80
   export let theme = "dark"
   export let placeholder = "Start typing"
   export let loop = false
   export let track = true
   export let input = false
-  export let stage = true // display the terminal centered and front stage
+  export let stage = false // display the terminal centered and front stage
   export let animated = false
+
   let machinesToConnect = {}
 
   /** Constants */
@@ -39,6 +47,24 @@
   let userInput = ""
   let selectedAction = ""
   let skip = false
+
+  // States for actions are queued, active, completed or failed
+  // This block updates the UI when an action is triggered
+  $: {
+    if ($watchingAction) {
+      // Now keep an eye on where that action goes.
+      const completed = $completedActions.find(
+        (action: Action) => action.actionId === $watchingAction.actionId
+      )
+      const failed = $failedActions.find(
+        (action: Action) => action.actionId === $watchingAction.actionId
+      )
+
+      if (completed || failed) {
+        watchingAction.set(null)
+      }
+    }
+  }
 
   /**
    * Send stuff to the terminal
@@ -58,8 +84,6 @@
     }
 
     const action = evaluate(string, dispatch, send)
-
-    console.log(action)
 
     if (action) {
       selectedAction = action
@@ -83,8 +107,8 @@
   }
 
   const displayConnectionPotential = ({ detail }) => {
-    const [occupiedFrom, availableFrom] = availablePorts(detail[0])
-    const [occupiedTo, availableTo] = availablePorts(detail[0])
+    const [_, availableFrom] = availablePorts(detail[0])
+    const [__, availableTo] = availablePorts(detail[0])
 
     if (availableFrom.length > 0 && availableTo.length > 0) {
       potential.set({
@@ -100,13 +124,13 @@
 
   const onBuildConfirm = ({ detail }) => {
     selectedAction = ""
-    buildMachine(detail, send)
+    $watchingAction = buildMachine(detail, send)
     userInput = ""
   }
 
   const onConnectConfirm = ({ detail }) => {
-    connectMachines(detail[0], detail[1], send)
-    selectedAction = "connect"
+    selectedAction = ""
+    $watchingAction = connectMachines(detail[0], detail[1], send)
     userInput = ""
   }
 
@@ -174,42 +198,46 @@
   {/if}
 
   <form class="terminal-input" on:submit|preventDefault={onSubmit}>
-    {#if selectedAction === "build"}
-      <Select
-        options={AVAILABLE_MACHINES}
-        bind:value={userInput}
-        on:confirm={onBuildConfirm}
-        on:change={displayMachinePotential}
-        on:cancel={clearPotential}
-      />
-    {:else if selectedAction === "connect"}
-      <MultiSelect
-        options={[
-          Object.values(machinesToConnect).map(
-            machine =>
-              `${MachineType[machine.machineType]}: ${machine.numericalID}`
-          ),
-          Object.values(machinesToConnect).map(
-            machine =>
-              `${MachineType[machine.machineType]}: ${machine.numericalID}`
-          ),
-        ]}
-        on:change={displayConnectionPotential}
-        on:advance={onAdvance}
-        on:confirm={onConnectConfirm}
-      />
-    {:else}
-      {#if !input}
-        <span class="player-stats">
-          {symbols[0]}
-        </span>
+    {#if !$watchingAction}
+      {#if selectedAction === "build"}
+        <Select
+          options={AVAILABLE_MACHINES}
+          bind:value={userInput}
+          on:confirm={onBuildConfirm}
+          on:change={displayMachinePotential}
+          on:cancel={clearPotential}
+        />
+      {:else if selectedAction === "connect"}
+        <MultiSelect
+          options={[
+            Object.values(machinesToConnect).map(
+              machine =>
+                `${MachineType[machine.machineType]}: ${machine.numericalID}`
+            ),
+            Object.values(machinesToConnect).map(
+              machine =>
+                `${MachineType[machine.machineType]}: ${machine.numericalID}`
+            ),
+          ]}
+          on:change={displayConnectionPotential}
+          on:advance={onAdvance}
+          on:confirm={onConnectConfirm}
+        />
+      {:else}
+        {#if !input}
+          <span class="player-stats">
+            {symbols[0]}
+          </span>
+        {/if}
+        <input
+          type="text"
+          {placeholder}
+          bind:this={inputElement}
+          bind:value={userInput}
+        />
       {/if}
-      <input
-        type="text"
-        {placeholder}
-        bind:this={inputElement}
-        bind:value={userInput}
-      />
+    {:else}
+      <p>Processing</p>
     {/if}
   </form>
 </div>

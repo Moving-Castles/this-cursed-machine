@@ -88,6 +88,12 @@
   animation-delay: 400ms;
 }
 
+.split-screen {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  height: 100vh;
+}
+
 @keyframes strobe {
   50% {
     opacity: 0;
