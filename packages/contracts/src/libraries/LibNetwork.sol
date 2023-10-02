@@ -58,11 +58,11 @@ library LibNetwork {
         // console.log("machineType");
         // console.log(uint8(MachineType.get(node)));
 
-        // Give inlet an input of pellets...
+        // Give inlet an input of bugs...
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           inputs[inputsCount] = Product({
             machineId: node,
-            materialType: MATERIAL_TYPE.PELLET,
+            materialType: MATERIAL_TYPE.BUG,
             amount: 100,
             temperature: 0
           });

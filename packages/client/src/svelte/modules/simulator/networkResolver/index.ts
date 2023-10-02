@@ -77,11 +77,11 @@ function resolve(_boxEntity: string) {
       // console.log('**********************')
       // console.log('** Processing machine_', shortenAddress(machineKey), 'type:', MachineType[machine.machineType])
 
-      // If the machine is an inlet, provide it with pellets as input.
+      // If the machine is an inlet, provide it with bugs as input.
       if (machine.machineType === MachineType.INLET) {
         inputs.push({
           machineId: machineKey,
-          materialType: MaterialType.PELLET,
+          materialType: MaterialType.BUG,
           amount: 100,
           temperature: 0,
         })

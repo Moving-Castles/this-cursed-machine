@@ -19,13 +19,21 @@ export enum MachineType {
 
 export enum MaterialType {
   NONE,
-  PELLET,
-  BLOOD,
+  BUG,
   PISS,
-  DIRT,
-  SAND,
-  FLESH,
-  TEETH,
+  BLOOD,
+  PRIME,
+  M150ED,
+  BANG,
+  MONSTER,
+  CLUB_MATE,
+  SPRITE,
+  MILK,
+  JUGGERNOG,
+  TABASCO,
+  IBUPROFENE,
+  AMMONIA,
+  NYQUIL
 }
 
 export enum PortType {

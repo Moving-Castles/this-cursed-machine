@@ -38,7 +38,7 @@ library LibMachine {
   }
 
   /**
-   * @notice Converts a pellet into products of type "PISS" and "BLOOD".
+   * @notice Converts a bug into products of type "PISS" and "BLOOD".
    *
    * @notice Inputs = 1
    * @notice Outputs = 2
@@ -53,8 +53,8 @@ library LibMachine {
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
-    // Abort if not pellet
-    if (_inputs[0].materialType != MATERIAL_TYPE.PELLET) return outputs;
+    // Abort if not bug
+    if (_inputs[0].materialType != MATERIAL_TYPE.BUG) return outputs;
     // Update core energy (factor: 0.2)
     Energy.set(_coreEntity, Energy.get(_coreEntity) + uint32(blocksSinceLastResolution));
     // Output Piss
@@ -126,18 +126,18 @@ library LibMachine {
     Product[] memory outputs = new Product[](2);
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
-      materialType: MATERIAL_TYPE.DIRT,
+      materialType: MATERIAL_TYPE.BLOOD,
       amount: _inputs[0].amount,
       temperature: _inputs[0].temperature
     });
 
-    // 1: BLOOD + PISS = TEETH
-    if (
-      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.BLOOD)
-    ) {
-      outputs[0].materialType = MATERIAL_TYPE.TEETH;
-    }
+    // // 1: BLOOD + PISS = TEETH
+    // if (
+    //   (_inputs[0].materialType == MATERIAL_TYPE.BLOOD && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
+    //   (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.BLOOD)
+    // ) {
+    //   outputs[0].materialType = MATERIAL_TYPE.TEETH;
+    // }
     return outputs;
   }
 

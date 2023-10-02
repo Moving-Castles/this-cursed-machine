@@ -30,9 +30,9 @@ contract ResolutionSystemTest is MudTest {
   // 7. Resolve network
   // 8. Check outlet pool
   // Expected result:
-  //    1 pellet => 1 x 2 pellets => 2 pellets
+  //    1 bug => 1 x 2 bugs => 2 bugs
   //    x 10 blocks
-  //    = 20 pellets in output pool
+  //    = 20 bugs in output pool
   function testResolve() public {
     setUp();
 

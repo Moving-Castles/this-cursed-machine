@@ -36,14 +36,14 @@ export function process(machineType: MachineType, inputs: Product[]) {
 
 /**
  * Processes products through the core machine.
- * Splits a PELLET type product into PISS and BLOOD types.
+ * Splits a BUG type product into PISS and BLOOD types.
  * @param {Product[]} inputs - Array of products to process.
  * @returns {Product[]} - Processed list of products.
  */
 function core(inputs: Product[]): Product[] {
     const outputs: Product[] = new Array(2).fill({});  // Initializing with an empty object
 
-    if (inputs[0].materialType !== MaterialType.PELLET) return outputs;
+    if (inputs[0].materialType !== MaterialType.BUG) return outputs;
 
     outputs[0] = {
         machineId: inputs[0].machineId,
