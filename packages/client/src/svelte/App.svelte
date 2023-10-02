@@ -51,7 +51,7 @@
     document.querySelector(".preloader")?.remove()
 
     // Get static content from CMS
-    await initStaticContent()
+    initStaticContent()
 
     // Write mud layer to svelte store
     const mudLayer = await setup()
