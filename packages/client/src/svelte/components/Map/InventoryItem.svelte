@@ -1,10 +1,7 @@
 <script lang="ts">
   import { setContext } from "svelte"
   import { EntityType } from "../../modules/state/enums"
-  import {
-    playerCanAffordMachine,
-    playerCanAffordControl,
-  } from "../../modules/state"
+  import { playerCanAffordMachine } from "../../modules/state"
   import { build } from "../../modules/action"
 
   export let buildableMachine: BuildableMachine

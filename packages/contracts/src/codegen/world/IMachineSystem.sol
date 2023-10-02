@@ -6,9 +6,11 @@ pragma solidity >=0.8.21;
 import { MACHINE_TYPE } from "./../common.sol";
 
 /**
- * @title IBuildSystem
+ * @title IMachineSystem
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface IBuildSystem {
+interface IMachineSystem {
   function build(MACHINE_TYPE _machineType) external returns (bytes32);
+
+  function destroy(bytes32 _machineEntity) external;
 }

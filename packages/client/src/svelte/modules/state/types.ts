@@ -139,10 +139,6 @@ declare global {
     [index: string]: Port
   }
 
-  type Claims = {
-    [index: string]: Claim
-  }
-
   type Machines = {
     [index: string]: Machine
   }

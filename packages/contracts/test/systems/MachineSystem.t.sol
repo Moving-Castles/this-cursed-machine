@@ -6,7 +6,7 @@ import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/common.sol";
 
-contract BuildSystemTest is MudTest {
+contract MachineSystemTest is MudTest {
   IWorld world;
   address internal alice;
   address internal bob;
@@ -37,5 +37,32 @@ contract BuildSystemTest is MudTest {
     // Check that the machine was created
     assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
     assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
+  }
+
+  function testDestroy() public {
+    setUp();
+
+    vm.startPrank(alice);
+    world.spawn();
+    vm.stopPrank();
+
+    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+    // Create a new entity
+    vm.startPrank(alice);
+    bytes32 machineEntity = world.build(MACHINE_TYPE.BLENDER);
+    vm.stopPrank();
+
+    // Check that the machine was created
+    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
+
+    // Destroy the machine
+    vm.startPrank(alice);
+    world.destroy(machineEntity);
+    vm.stopPrank();
+
+    // Check that the machine was destroyed
+    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.NONE));
   }
 }

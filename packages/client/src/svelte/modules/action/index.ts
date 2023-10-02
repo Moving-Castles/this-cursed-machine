@@ -1,23 +1,14 @@
-import { ConnectionType, MachineType, Rotation } from "../state/enums"
+import { ConnectionType, MachineType } from "../state/enums"
 import { addToSequencer } from "./actionSequencer"
 
-// export enum WorldFunctions {
-//     Spawn = "mc_SpawnSystem_spawn",
-//     Transfer = "mc_TransferSystem_transfer",
-//     Connect = "mc_ConnectionSystem_connect",
-//     Disconnect = "mc_ConnectionSystem_disconnect",
-//     Build = "mc_BuildSystem_build",
-//     Resolve = "mc_ResolveSystem_resolve",
-// }
-
 export enum WorldFunctions {
-  Spawn = "mc_SpawnSystem_spawn",
-  Transfer = "mc_TransferSystem_transfer",
-  Connect = "mc_ConnectionSystem_connect",
-  Disconnect = "mc_ConnectionSystem_disconnect",
-  Build = "mc_BuildSystem_build",
-  Rotate = "mc_RotationSystem_rotate",
-  Resolve = "mc_ResolveSystem_resolve",
+  Spawn = "spawn",
+  Transfer = "transfer",
+  Connect = "connect",
+  Disconnect = "disconnect",
+  Build = "build",
+  Destroy = "destroy",
+  Resolve = "resolve",
 }
 
 // --- API --------------------------------------------------------------
@@ -46,12 +37,12 @@ export function disconnect(connectionEntity: string) {
   return addToSequencer(WorldFunctions.Disconnect, [connectionEntity])
 }
 
-export function build(machineType: MachineType, x: number, y: number) {
-  return addToSequencer(WorldFunctions.Build, [machineType, x, y])
+export function build(machineType: MachineType) {
+  return addToSequencer(WorldFunctions.Build, [machineType])
 }
 
-export function rotate(entity: string, rotation: Rotation) {
-  return addToSequencer(WorldFunctions.Rotate, [entity, rotation])
+export function destroy(machineEntity: string) {
+  return addToSequencer(WorldFunctions.Destroy, [machineEntity])
 }
 
 export function resolve() {
