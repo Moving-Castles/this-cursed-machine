@@ -3,9 +3,9 @@ import { readable, writable, derived } from "svelte/store"
 // Write markdown
 export const wiki = readable({
   machines: {
-    BLOCKER: `### BLOCKER
+    NONE: `### NONE
 
-Blocks
+Nothing
   `,
     INLET: `### INLET
     
@@ -27,7 +27,7 @@ Splits
 
 Scorches
 `
-    // BLOCKER: `### BLOCKER`,
+    // NONE: `### NONE`,
     // SPLITTER: `### SPLITTER`,
     // COMBINATOR: `### COMBINATOR`,
     // MIXER: `### MIXER`,
@@ -42,7 +42,7 @@ Scorches
 
 export const explainer = writable("")
 
-export const  machineExplanation = derived([explainer, wiki], ([$explainer, $wiki]) => {
+export const machineExplanation = derived([explainer, wiki], ([$explainer, $wiki]) => {
   if ($explainer !== "") {
     return $wiki.machines[$explainer]
   }

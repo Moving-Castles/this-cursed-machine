@@ -7,7 +7,7 @@ export enum EntityType {
   PORT,
 }
 export enum MachineType {
-  BLOCKER,
+  NONE,
   INLET,
   OUTLET,
   CORE,

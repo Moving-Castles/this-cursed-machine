@@ -2,8 +2,8 @@ import { MachineType } from "./enums"
 
 export const machineDefinitions: BuildableMachine[] = [
   {
-    type: MachineType.BLOCKER,
-    name: "Blocker",
+    type: MachineType.NONE,
+    name: "None",
     cost: 0 // frontend only
   },
   {

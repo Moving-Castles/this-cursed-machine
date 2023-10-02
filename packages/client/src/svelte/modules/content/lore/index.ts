@@ -1,7 +1,7 @@
 import { MachineType } from "../../state/enums"
 
 const machineInformation = {
-  BLOCKER: "Blocks things",
+  NONE: "Does not exist",
   INLET: "Passes things into your box",
   OUTLET: "Blocks things",
   CORE: "Cores are you and other inhabitants of this box",

@@ -12,7 +12,7 @@ enum ENTITY_TYPE {
 }
 
 enum MACHINE_TYPE {
-  BLOCKER,
+  NONE,
   INLET,
   OUTLET,
   CORE,

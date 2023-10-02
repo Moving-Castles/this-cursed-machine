@@ -20,4 +20,20 @@ library LibEntity {
     MachineType.deleteRecord(_entity);
     CreationBlock.deleteRecord(_entity);
   }
+
+  function isBuildableMachineType(MACHINE_TYPE _machineType) internal pure returns (bool) {
+    MACHINE_TYPE[4] memory buildableMachineTypes = [
+      MACHINE_TYPE.BLENDER,
+      MACHINE_TYPE.SPLITTER,
+      MACHINE_TYPE.SCORCHER,
+      MACHINE_TYPE.COMBI_GATE
+    ];
+
+    for (uint i = 0; i < buildableMachineTypes.length; i++) {
+      if (_machineType == buildableMachineTypes[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

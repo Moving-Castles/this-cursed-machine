@@ -39,6 +39,22 @@ contract MachineSystemTest is MudTest {
     assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
   }
 
+  function testRevertNotBuildable() public {
+    setUp();
+
+    vm.startPrank(alice);
+    world.spawn();
+    vm.stopPrank();
+
+    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+    // Create a new entity
+    vm.startPrank(alice);
+    vm.expectRevert("not buildable");
+    bytes32 machineEntity = world.build(MACHINE_TYPE.CORE);
+    vm.stopPrank();
+  }
+
   function testDestroy() public {
     setUp();
 
