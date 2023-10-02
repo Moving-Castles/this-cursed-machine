@@ -5,6 +5,10 @@ pragma solidity >=0.8.21;
 
 import { CONNECTION_TYPE } from "./../common.sol";
 
+/**
+ * @title IConnectionSystem
+ * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
+ */
 interface IConnectionSystem {
   function connect(
     CONNECTION_TYPE _connectionType,

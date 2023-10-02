@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { GameConfig, GameConfigData, Level, LevelTableId, CreationBlock, ReadyBlock, Energy, EntityType, EntityTypeTableId, Active, MachineType } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, CreationBlock, ReadyBlock, Energy, EntityType, EntityTypeTableId, MachineType } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 

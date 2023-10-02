@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Position, CreationBlock, PositionData, GameConfig, GameConfigData } from "../codegen/index.sol";
-import { LibUtils } from "../libraries/Libraries.sol";
+import { GameConfig, GameConfigData } from "../codegen/index.sol";
 
 contract InitSystem is System {
   function init() public {

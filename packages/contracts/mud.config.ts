@@ -19,38 +19,18 @@ export default mudConfig({
         MaterialType: "MATERIAL_TYPE",
         ConnectionType: "CONNECTION_TYPE",
         PortType: "PORT_TYPE",
-        // ...
         Name: "string",
         Energy: "uint32",
         CarriedBy: "bytes32",
-        IsPrototype: "bool",
         Amount: "uint32",
         Temperature: "uint32",
-        // ...
-        Width: "int32",
-        Height: "int32",
-        // ...
         PortPlacement: "PORT_PLACEMENT",
-        // ...
         SourcePort: "bytes32",
         TargetPort: "bytes32",
-        // ...
         CreationBlock: "uint256",
         ReadyBlock: "uint256",
-        ClaimBlock: "uint256",
-        // ...
-        MinCores: "uint32",
-        MaxCores: "uint32",
         Level: "uint32",
-        Active: "bool",
         LastResolved: "uint256",
-        // ...
-        Position: {
-            valueSchema: {
-                x: "int32",
-                y: "int32",
-            },
-        },
         // ...
         GameConfig: {
             keySchema: {},
@@ -75,11 +55,6 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("Level")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("Active")],
         },
         {
             name: "KeysWithValueModule",

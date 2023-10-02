@@ -38,12 +38,7 @@ contract SpawnSystemTest is MudTest {
     assertEq(ReadyBlock.get(world, coreEntity), block.number);
     assertEq(CarriedBy.get(world, coreEntity), boxEntity);
 
-    PositionData memory spawnPosition = Position.get(world, coreEntity);
-    assertEq(spawnPosition.x, 2);
-    assertEq(spawnPosition.y, 1);
-
     // Check box
-    assertEq(Active.get(world, boxEntity), true);
     assertEq(Level.get(world, boxEntity), 0);
   }
 }

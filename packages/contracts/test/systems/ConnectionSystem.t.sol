@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
@@ -24,7 +25,6 @@ contract ConnectionSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    // world.mc_SpawnSystem_spawn();
     world.spawn();
     vm.stopPrank();
 
@@ -32,8 +32,7 @@ contract ConnectionSystemTest is MudTest {
 
     // Create a new entity
     vm.startPrank(alice);
-    // bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2);
-    bytes32 newEntity = world.build(MACHINE_TYPE.BLENDER, 1, 2);
+    bytes32 newEntity = world.build(MACHINE_TYPE.BLENDER);
     vm.stopPrank();
 
     // Get input ports for new entity
@@ -44,11 +43,6 @@ contract ConnectionSystemTest is MudTest {
 
     // Connect
     vm.startPrank(alice);
-    // bytes32 connection = world.mc_ConnectionSystem_connect(
-    //   CONNECTION_TYPE.RESOURCE,
-    //   coreEntityOutputPorts[0][0],
-    //   newEntityInputPorts[0][0]
-    // );
     bytes32 connection = world.connect(
       CONNECTION_TYPE.RESOURCE,
       coreEntityOutputPorts[0][0],

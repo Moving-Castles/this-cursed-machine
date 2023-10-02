@@ -38,34 +38,42 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    // world.spawn();
     world.spawn();
     vm.stopPrank();
+
+    console.log("%%%%%%%%%");
+    console.log("%%%%%%%%% RESOLVE 1");
+    console.log("%%%%%%%%%");
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    // bytes32 inletEntity = world.build(MACHINE_TYPE.INLET, 1, 2);
-    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET, 1, 2);
+    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET, 3, 2);
+    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET);
     vm.stopPrank();
 
     // 3. Create a blender entity
     vm.startPrank(alice);
-    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER, 3, 3);
+    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER);
     vm.stopPrank();
 
     // ... Get inlet output ports
     bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
 
+    console.log("inletOutputPorts.length");
+    console.log(inletOutputPorts.length);
+
     // ... Get core ports
     bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
     bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+
+    console.log("coreOutputPorts.length");
+    console.log(coreOutputPorts.length);
 
     // ... Get blender ports
     bytes32[][] memory blenderInputPorts = LibPort.getPorts(world, blenderEntity, PORT_TYPE.INPUT);
@@ -73,6 +81,9 @@ contract ResolutionSystemTest is MudTest {
 
     // .. Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+
+    console.log("outletInputPorts.length");
+    console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -116,12 +127,12 @@ contract ResolutionSystemTest is MudTest {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET, 1, 2);
+    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET, 3, 2);
+    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -133,6 +144,9 @@ contract ResolutionSystemTest is MudTest {
 
     // .. Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+
+    console.log("outletInputPorts.length");
+    console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -164,19 +178,19 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 2");
+    console.log("%%%%%%%%% RESOLVE 3");
     console.log("%%%%%%%%%");
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET, 1, 2);
+    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET, 3, 2);
+    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -234,17 +248,17 @@ contract ResolutionSystemTest is MudTest {
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
-    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET, 1, 2);
+    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
     vm.stopPrank();
 
     // 3. Create an outlet entity
     vm.startPrank(alice);
-    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET, 3, 2);
+    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET);
     vm.stopPrank();
 
     // 3. Create a blender entity
     vm.startPrank(alice);
-    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER, 3, 3);
+    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -260,6 +274,9 @@ contract ResolutionSystemTest is MudTest {
 
     // .. Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+
+    console.log("outletInputPorts.length");
+    console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);

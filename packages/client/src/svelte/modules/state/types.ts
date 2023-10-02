@@ -32,17 +32,10 @@ declare global {
     energy?: number
     readyBlock?: number
     level?: number
-    height?: number
-    width?: number
-    active?: boolean
-    minCores?: number
-    maxCores?: number
     isPrototype?: boolean
     carriedBy?: string
-    position?: Coord
     sourcePort?: string
     targetPort?: string
-    claimBlock?: number
     portPlacement?: PortPlacement
     amount?: number
     lastResolved?: number
@@ -66,11 +59,6 @@ declare global {
     type: EntityType.BOX
     creationBlock: number
     level: number
-    width: number
-    height: number
-    minCores: number
-    maxCores: number
-    active: boolean
     lastResolved: number
   }
 
@@ -121,7 +109,6 @@ declare global {
   type ResourceToEnergy = {
     type: EntityType.MACHINE
     creationBlock: number
-    position: Coord
     energy?: number
   }
 

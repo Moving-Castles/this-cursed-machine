@@ -24,7 +24,6 @@ contract BuildSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    // world.mc_SpawnSystem_spawn();
     world.spawn();
     vm.stopPrank();
 
@@ -32,14 +31,11 @@ contract BuildSystemTest is MudTest {
 
     // Create a new entity
     vm.startPrank(alice);
-    // bytes32 machineEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2);
-    bytes32 machineEntity = world.build(MACHINE_TYPE.BLENDER, 1, 2);
+    bytes32 machineEntity = world.build(MACHINE_TYPE.BLENDER);
     vm.stopPrank();
 
     // Check that the machine was created
     assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
     assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
-    assertEq(Position.get(world, machineEntity).x, 1);
-    assertEq(Position.get(world, machineEntity).y, 2);
   }
 }
