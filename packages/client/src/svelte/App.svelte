@@ -64,9 +64,8 @@
     initBlockListener()
 
     // Create systems to listen to changes to components in our namespace
-    for (const componentKey of Object.keys(
-      filterByNamespace($network.components, "mc")
-    )) {
+    // filterByNamespace($network.components, "mc")
+    for (const componentKey of Object.keys($network.components)) {
       createComponentSystem(componentKey)
     }
 

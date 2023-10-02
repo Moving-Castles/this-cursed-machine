@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { PortType, CarriedBy, EntityType, MachineType, CreationBlock, Position } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/Types.sol";
+import { PortType, CarriedBy, EntityType, MachineType, CreationBlock } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibEntity {
@@ -19,6 +19,5 @@ library LibEntity {
     EntityType.deleteRecord(_entity);
     MachineType.deleteRecord(_entity);
     CreationBlock.deleteRecord(_entity);
-    Position.deleteRecord(_entity);
   }
 }

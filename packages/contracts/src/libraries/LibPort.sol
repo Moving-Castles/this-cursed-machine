@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { IWorld } from "../codegen/world/IWorld.sol";
-import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, PortPlacement, CreationBlock } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../codegen/Types.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
+import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, PortPlacement, CreationBlock } from "../codegen/index.sol";
+import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibPort {
@@ -42,25 +42,37 @@ library LibPort {
     CarriedBy.deleteRecord(_portEntity);
   }
 
+  /**
+   * @notice Retrieves the ports of a given entity and port type.
+   * @param _entity The entity identifier for which to retrieve ports.
+   * @param _portType The type of port to be retrieved.
+   * @return ports A 2D array of byte32 representing the ports of the given entity and port type.
+   */
   function getPorts(bytes32 _entity, PORT_TYPE _portType) internal view returns (bytes32[][] memory ports) {
     QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.PORT));
-    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encode(_portType));
-    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_entity));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.PORT));
+    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
+    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
 
-  // Overload
+  /**
+   * @notice Retrieves the ports of a given entity and port type in a specific world.
+   * @param _world The world context in which to perform the query.
+   * @param _entity The entity identifier for which to retrieve ports.
+   * @param _portType The type of port to be retrieved.
+   * @return ports A 2D array of byte32 representing the ports of the given entity and port type in the specified world.
+   */
   function getPorts(
     IWorld _world,
     bytes32 _entity,
     PORT_TYPE _portType
   ) internal view returns (bytes32[][] memory ports) {
     QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encode(ENTITY_TYPE.PORT));
-    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encode(_portType));
-    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encode(_entity));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.PORT));
+    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
+    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
     bytes32[][] memory keyTuples = query(_world, fragments);
     return keyTuples;
   }

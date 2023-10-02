@@ -1,23 +1,38 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.8.17;
-import { MudV2Test } from "../MudV2Test.t.sol";
-import "../../src/codegen/Tables.sol";
+pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
+import { IWorld } from "../../src/codegen/world/IWorld.sol";
+import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE, ROTATION } from "../../src/codegen/Types.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/common.sol";
 
-contract ConnectionSystemTest is MudV2Test {
+contract ConnectionSystemTest is MudTest {
+  IWorld world;
+  address internal alice;
+  address internal bob;
+  GameConfigData gameConfig;
+
+  function setUp() public override {
+    super.setUp();
+    world = IWorld(worldAddress);
+    gameConfig = GameConfig.get(world);
+    alice = address(111);
+    bob = address(222);
+  }
+
   function testConnect() public {
     setUp();
 
     vm.startPrank(alice);
-    world.mc_SpawnSystem_spawn();
+    world.spawn();
     vm.stopPrank();
 
     bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 newEntity = world.mc_BuildSystem_build(MACHINE_TYPE.BLENDER, 1, 2);
+    bytes32 newEntity = world.build(MACHINE_TYPE.BLENDER);
     vm.stopPrank();
 
     // Get input ports for new entity
@@ -28,7 +43,7 @@ contract ConnectionSystemTest is MudV2Test {
 
     // Connect
     vm.startPrank(alice);
-    bytes32 connection = world.mc_ConnectionSystem_connect(
+    bytes32 connection = world.connect(
       CONNECTION_TYPE.RESOURCE,
       coreEntityOutputPorts[0][0],
       newEntityInputPorts[0][0]

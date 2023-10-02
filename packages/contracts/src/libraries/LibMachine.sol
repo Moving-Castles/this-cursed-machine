@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { GameConfig, GameConfigData, Level, Energy, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation, MachineType, MaterialType } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, ROTATION, MATERIAL_TYPE } from "../codegen/Types.sol";
+import { GameConfig, GameConfigData, Level, Energy, LevelTableId, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, MachineType, MaterialType } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { Product } from "../constants.sol";
 

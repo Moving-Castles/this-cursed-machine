@@ -43,10 +43,3 @@ export enum PortPlacement {
   BOTTOM,
   LEFT,
 }
-
-export enum Rotation {
-  DEG0,
-  DEG90,
-  DEG180,
-  DEG270,
-}

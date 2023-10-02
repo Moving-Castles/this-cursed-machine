@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
+pragma solidity >=0.8.21;
 
 library LibUtils {
   /**
@@ -10,7 +10,7 @@ library LibUtils {
    * @return  r  random value
    */
   function random(uint256 r1, uint256 r2) internal view returns (uint256 r) {
-    return uint256(keccak256(abi.encodePacked(r1, r2, block.difficulty, blockhash(block.number - 1))));
+    return uint256(keccak256(abi.encodePacked(r1, r2, block.prevrandao, blockhash(block.number - 1))));
   }
 
   /**

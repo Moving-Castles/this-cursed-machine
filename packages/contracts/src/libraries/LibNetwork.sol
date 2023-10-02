@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.17;
-// import { console } from "forge-std/console.sol";
-import { query, QueryFragment, QueryType } from "@latticexyz/world/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, Active, ActiveTableId, Rotation, MachineType, LastResolved, MaterialType, Amount } from "../codegen/Tables.sol";
-import { ENTITY_TYPE, ROTATION, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/Types.sol";
+pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, MachineType, LastResolved, MaterialType, Amount } from "../codegen/index.sol";
+import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibArray, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
@@ -113,8 +113,9 @@ library LibNetwork {
         //  - find the output ports on the current machine
         bytes32[][] memory ports = LibPort.getPorts(node, PORT_TYPE.OUTPUT);
 
-        // console.log("... ports.length");
-        // console.log(ports.length);
+        console.log("INTERNAL RESOLVER");
+        console.log("ports.length");
+        console.log(ports.length);
 
         // No output ports were found
         if (ports.length == 0) continue;
