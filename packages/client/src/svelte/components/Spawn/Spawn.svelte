@@ -23,8 +23,6 @@
       showSpawn = true
     }
   }
-
-  $: console.log($staticContent.spawning.content.content)
 </script>
 
 <div class="spawn">

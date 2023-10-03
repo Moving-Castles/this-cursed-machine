@@ -8,8 +8,6 @@
 
   export let id = "materials"
 
-  $: console.log($inspecting)
-
   let machineType = null
 
   const components = {

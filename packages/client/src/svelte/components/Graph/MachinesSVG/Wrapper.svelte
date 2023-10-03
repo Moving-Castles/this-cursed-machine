@@ -12,7 +12,7 @@
   import _ from "lodash"
   import { ports } from "../../../modules/state"
 
-  const { isEqual } = _
+  const { isEqual, isEmpty } = _
   const dragBehavior = d3
     .drag()
     .on("start", dragstarted)
@@ -54,8 +54,13 @@
 
   $: {
     if (element && isEqual(data, previousData) === false) updateEverything() // update
-    if (element && isEqual($potential, previousPotential) === false)
-      updateEverything() // update
+    if (
+      (element && isEqual($potential, previousPotential) === false) ||
+      (element && isEmpty($potential))
+    ) {
+      updateEverything()
+    }
+    console.log($potential)
     previousData = { ...data }
     previousPotential = { ...$potential }
   }
@@ -244,6 +249,9 @@
    * Update
    */
   function updateEverything() {
+    console.log("ASK FOR AN UPDATE")
+    console.log(performance.now())
+    console.log("ASK FOR AN UPDATE")
     setData()
 
     // Update nodes and links with new data.

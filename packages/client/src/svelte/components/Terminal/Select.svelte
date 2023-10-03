@@ -27,7 +27,6 @@
     }
 
     if (keyCode === 13) {
-      console.log("CONFIRM")
       dispatch("confirm", value)
     }
 

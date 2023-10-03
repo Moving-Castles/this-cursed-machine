@@ -55,7 +55,7 @@ export function addToSequencer(systemId: string, params: any[] = []) {
   })
 
   // Display error message if action does not complete in 10 seconds
-  setActionTimeout(10000)
+  setActionTimeout(15000)
 
   return newAction
 }
@@ -128,6 +128,7 @@ async function execute() {
         ])
         // Clear active list
         activeActions.update(() => [])
+
         // Clear action timeout
         clearActionTimeout()
       } else {
@@ -136,6 +137,7 @@ async function execute() {
     }
   } catch (e) {
     handleError(e, action)
+    clearActionTimeout()
   }
 }
 

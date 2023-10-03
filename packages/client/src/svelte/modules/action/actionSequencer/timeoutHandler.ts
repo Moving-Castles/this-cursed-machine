@@ -8,6 +8,7 @@ export function setActionTimeout(timeout: number) {
 }
 
 export function clearActionTimeout() {
+  console.log("clear", activeActionsTimeout)
   clearTimeout(activeActionsTimeout)
 }
 
