@@ -8,6 +8,7 @@
     simulatedPorts,
     simulatedConnections,
     simulatedPlayerCore,
+    simulatedMachines,
   } from "../../../modules/simulator"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
   import _ from "lodash"
@@ -198,7 +199,7 @@
 
     data = {
       nodes: [
-        ...Object.entries($simulated)
+        ...Object.entries($simulatedMachines)
           .map(([key, entry]) => ({
             id: key,
             entry,

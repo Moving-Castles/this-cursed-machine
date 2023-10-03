@@ -4,7 +4,7 @@
  */
 import { MachineType } from "../state/enums"
 import { writable, derived } from "svelte/store"
-import { entities, playerBox, playerCore, playerEntityId } from "../state"
+import { entities, playerBox, playerEntityId, playerCore } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
