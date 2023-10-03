@@ -99,6 +99,7 @@ export function initActionSequencer() {
 
 async function execute() {
   const action = get(queuedActions)[0]
+  let success = true // optimistic
   try {
     // Remove action from queue list
     queuedActions.update(queuedActions => queuedActions.slice(1))
@@ -118,30 +119,28 @@ async function execute() {
     let result = await get(network).waitForTransaction(tx)
 
     if (result) {
-      console.log(result)
       if (result.receipt.status == "success") {
-        // Remove any potentials from the simulated state
-        potential.set({})
-
-        // Add action to completed list
-        completedActions.update(completedActions => [
-          action,
-          ...completedActions,
-        ])
-        // Clear active list
-        activeActions.update(() => [])
-
-        // Clear action timeout
+        // Deprecated
       } else {
         handleError(result?.receipt, action)
       }
+
       clear()
     } else {
       clear()
     }
   } catch (e) {
+    success = false
     handleError(e, action)
     clear()
+  } finally {
+    if (success) {
+      completedActions.update(completedActions => [action, ...completedActions])
+    } else {
+      failedActions.update(completedActions => [action, ...completedActions])
+    }
+    // Clear active list
+    activeActions.update(() => [])
   }
 }
 
