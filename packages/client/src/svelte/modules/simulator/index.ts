@@ -4,7 +4,7 @@
  */
 import { MachineType } from "../state/enums"
 import { writable, derived } from "svelte/store"
-import { entities, playerBox, playerEntityId } from "../state"
+import { entities, playerBox, playerCore, playerEntityId } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
@@ -100,13 +100,19 @@ export const simulatedBoxes = derived(simulated, $simulated => {
 })
 
 /** Machines */
-export const simulatedMachines = derived(simulated, $simulated => {
-  return Object.fromEntries(
-    Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.MACHINE
+export const simulatedMachines = derived(
+  [simulated, playerCore],
+  ([$simulated, $playerCore]) => {
+    return Object.fromEntries(
+      Object.entries($simulated).filter(([_, entry]) => {
+        return (
+          entry.entityType === EntityType.MACHINE &&
+          entry.carriedBy === $playerCore.carriedBy
+        )
+      })
     )
-  )
-})
+  }
+)
 
 /** Connections */
 export const simulatedConnections = derived(simulated, $simulated => {
