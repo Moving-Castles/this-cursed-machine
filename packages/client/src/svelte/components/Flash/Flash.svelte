@@ -10,7 +10,7 @@
   onMount(() => {
     timeout = setTimeout(() => {
       next()
-    }, 500)
+    }, 3000)
   })
   onDestroy(() => clearTimeout(timeout))
 </script>
@@ -20,7 +20,8 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="flash" on:click={next}>
     <div class="flash-content">
-      <img src="./suffer.png" alt="swu" />
+      <h1 class="xl-text text-outline">THIS<br />CURSED<br />MACHINE</h1>
+      <!-- <img src="./suffer.png" alt="swu" /> -->
     </div>
   </div>
 </div>
@@ -32,6 +33,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 90;
     font-family: var(--font-family);
     background: var(--white);
     font-size: var(--font-size-normal);
@@ -44,8 +46,8 @@
     align-items: center;
 
     .flash-content {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100dvh;
       mix-blend-mode: exclusion;
       animation: blinkingOpacity 1s infinite;
       opacity: 1;
@@ -53,6 +55,17 @@
       img {
         width: 100%;
         height: 100%;
+      }
+
+      .xl-text {
+        font-size: 50vh;
+        line-height: 31vh;
+        text-align: center;
+        letter-spacing: -120px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) translateX(-6vh);
       }
     }
   }

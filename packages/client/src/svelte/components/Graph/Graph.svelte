@@ -8,8 +8,6 @@
 
   export let id = "materials"
 
-  $: console.log($inspecting)
-
   let machineType = null
 
   const components = {
@@ -19,9 +17,5 @@
     "machines-svg": MachinesSVG,
   }
 </script>
-
-{#if $inspecting !== null}
-  <MachineInformation machineType={$inspecting} />
-{/if}
 
 <MachinesSVG />

@@ -22,6 +22,7 @@
   import { v4 as uuid } from "uuid"
   import Select from "./Select.svelte"
   import MultiSelect from "./MultiSelect.svelte"
+  import BouncingSuffer from "../Loading/BouncingSuffer.svelte"
   import { EntityType, MachineType } from "../../modules/state/enums"
 
   export let speed = 80
@@ -49,6 +50,8 @@
   // This block updates the UI when an action is triggered
   $: {
     if ($watchingAction) {
+      // Select processing as the action to block the input
+      selectedAction = "processing"
       // Now keep an eye on where that action goes.
       const completed = $completedActions.find(
         (action: Action) => action.actionId === $watchingAction.actionId
@@ -59,9 +62,16 @@
 
       if (completed || failed) {
         watchingAction.set(null)
+        selectedAction = ""
+        clearPotential()
+        scrollToEnd()
       }
     }
   }
+
+  $: if ($watchingAction === null) clearPotential()
+
+  $: if (selectedAction) scrollToEnd()
 
   /**
    * Send stuff to the terminal
@@ -76,14 +86,18 @@
 
     dispatch("send", string)
 
-    if (outputElement) {
-      outputElement.scrollTop = outputElement.scrollTop + 10000
-    }
-
     const action = evaluate(string, dispatch, send)
 
     if (action) {
       selectedAction = action
+    }
+    scrollToEnd()
+  }
+
+  async function scrollToEnd() {
+    if (outputElement) {
+      await tick()
+      outputElement.scrollTop = outputElement.scrollTop + 10000
     }
   }
 
@@ -120,14 +134,14 @@
   }
 
   const onBuildConfirm = ({ detail }) => {
-    selectedAction = ""
     $watchingAction = buildMachine(detail, send)
+    // console.log($watchingAction)
     userInput = ""
   }
 
   const onConnectConfirm = ({ detail }) => {
-    selectedAction = ""
     $watchingAction = connectMachines(detail[0], detail[1], send)
+    // console.log($watchingAction)
     userInput = ""
   }
 
@@ -194,7 +208,11 @@
     {/each}
   {/if}
 
-  <form class="terminal-input" on:submit|preventDefault={onSubmit}>
+  <form
+    class:tool-active={selectedAction !== ""}
+    class="terminal-input"
+    on:submit|preventDefault={onSubmit}
+  >
     {#if !$watchingAction}
       {#if selectedAction === "build"}
         <Select
@@ -219,6 +237,7 @@
           on:change={displayConnectionPotential}
           on:advance={onAdvance}
           on:confirm={onConnectConfirm}
+          on:cancel={clearPotential}
         />
       {:else}
         {#if !input}
@@ -234,7 +253,7 @@
         />
       {/if}
     {:else}
-      <p>Processing</p>
+      <BouncingSuffer />
     {/if}
   </form>
 </div>
@@ -297,6 +316,10 @@
       transition: background 2s ease, color 2s ease;
       display: flex;
       // z-index: 999;
+
+      &.tool-active {
+        height: auto;
+      }
 
       .player-stats {
         white-space: nowrap;

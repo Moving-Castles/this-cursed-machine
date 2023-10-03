@@ -4,8 +4,6 @@
   // List contents etc
 
   const machineLore = MACHINE_LORE[machineType]
-
-  console.log(machineLore)
 </script>
 
 <div class="machine-information">

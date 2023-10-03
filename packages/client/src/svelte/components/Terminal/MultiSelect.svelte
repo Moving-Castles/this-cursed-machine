@@ -26,7 +26,6 @@
 
       if (stage === options.length - 1) {
         dispatch("change", [...choices, choice]) // Only commit the numerical ID
-        console.log([...choices, choice])
       }
     }
     if (keyCode === 40) {
@@ -34,7 +33,6 @@
 
       if (stage === options.length - 1) {
         dispatch("change", [...choices, choice]) // Only commit the numerical ID
-        console.log([...choices, choice])
       }
     }
 

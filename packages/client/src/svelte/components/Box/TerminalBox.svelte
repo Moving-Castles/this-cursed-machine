@@ -26,7 +26,7 @@
         stage={false}
         track={false}
         animated={false}
-        placeholder={"Welcome to your box"}
+        placeholder={"Build"}
       />
     </div>
     <div class="right-col">
@@ -45,7 +45,6 @@
           <Goal
             on:hint={e => send("[whoareu?]")}
             on:reward={e => {
-              send("ACHIEVEMETN UNLOCKKYYYY")
               send("reward " + e.detail)
             }}
           />

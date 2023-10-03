@@ -54,6 +54,8 @@ export const connectMachines = (
   target: string,
   send: Function
 ) => {
+  let action = null
+
   const $simulated = get(simulated)
 
   const sourceMachine = Object.entries($simulated).find(
@@ -74,7 +76,7 @@ export const connectMachines = (
 
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
-        return connect(
+        action = connect(
           ConnectionType.RESOURCE,
           sourcePorts[0][0],
           targetPorts[0][0]
@@ -84,5 +86,5 @@ export const connectMachines = (
       }
     }
   }
-  return null
+  return action
 }

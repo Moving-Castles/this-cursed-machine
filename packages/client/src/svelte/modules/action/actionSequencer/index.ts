@@ -9,7 +9,7 @@ import { network, blockNumber } from "../../network"
 import { potential } from "../../simulator"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
-import { setActionTimeout, clearActionTimeout } from "./timeoutHandler"
+import { timeout, clear, start } from "./timeoutHandler"
 
 // --- TYPES -----------------------------------------------------------------
 
@@ -54,8 +54,8 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     return [...queuedActions, newAction]
   })
 
-  // Display error message if action does not complete in 10 seconds
-  setActionTimeout(10000)
+  // Display error message if action does not complete in 15 seconds
+  start()
 
   return newAction
 }
@@ -99,6 +99,7 @@ export function initActionSequencer() {
 
 async function execute() {
   const action = get(queuedActions)[0]
+  let success = true // optimistic
   try {
     // Remove action from queue list
     queuedActions.update(queuedActions => queuedActions.slice(1))
@@ -133,13 +134,27 @@ async function execute() {
         // Clear active list
         activeActions.update(() => [])
         // Clear action timeout
-        clearActionTimeout()
+        clear()
       } else {
         handleError(receipt, action)
       }
+
+      clear()
+    } else {
+      clear()
     }
   } catch (e) {
+    success = false
     handleError(e, action)
+    clear()
+  } finally {
+    if (success) {
+      completedActions.update(completedActions => [action, ...completedActions])
+    } else {
+      failedActions.update(completedActions => [action, ...completedActions])
+    }
+    // Clear active list
+    activeActions.update(() => [])
   }
 }
 
@@ -152,5 +167,5 @@ function handleError(error: any, action: Action) {
   // Clear active list
   activeActions.update(() => [])
   // Clear action timeout
-  clearActionTimeout()
+  clearTimeout(get(timeout))
 }

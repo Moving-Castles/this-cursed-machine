@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onWheel } from "../../modules/ui/events"
   import { simulatedPlayerCore } from "../../modules/simulator"
-  import { createEventDispatcher } from "svelte"
 
   export let box: Box
 </script>

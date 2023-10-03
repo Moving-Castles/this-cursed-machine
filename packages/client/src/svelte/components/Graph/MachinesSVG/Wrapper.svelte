@@ -7,12 +7,13 @@
     potential,
     simulatedPorts,
     simulatedConnections,
+    simulatedPlayerCore,
   } from "../../../modules/simulator"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
   import _ from "lodash"
   import { ports } from "../../../modules/state"
 
-  const { isEqual } = _
+  const { isEqual, isEmpty } = _
   const dragBehavior = d3
     .drag()
     .on("start", dragstarted)
@@ -54,11 +55,17 @@
 
   $: {
     if (element && isEqual(data, previousData) === false) updateEverything() // update
-    if (element && isEqual($potential, previousPotential) === false)
-      updateEverything() // update
+    if (
+      (element && isEqual($potential, previousPotential) === false) ||
+      (element && isEmpty($potential))
+    ) {
+      updateEverything()
+    }
     previousData = { ...data }
     previousPotential = { ...$potential }
   }
+
+  $: if (element && $simulatedPlayerCore.energy) updateEverything()
 
   // Utilities
   const isConnected = d => {
@@ -266,7 +273,9 @@
             .attr("id", d => `link-${d.id}`)
             .attr("stroke-width", d => Math.sqrt(d.value)),
         update => update, // you can make adjustments to existing elements here if needed
-        exit => exit.remove()
+        exit => {
+          return exit.remove()
+        }
       )
 
     // Nodes
@@ -514,7 +523,7 @@
 <svelte:window on:resize={init} />
 
 <div class="wrapper">
-  {#if inspecting !== null}
+  {#if inspecting}
     <MachineInformation machineType={inspecting} />
   {/if}
 

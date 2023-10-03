@@ -5,6 +5,9 @@
   import { staticContent } from "../../modules/content"
   import { renderBlockText } from "../../modules/content/sanity"
   let spawnInProgress = false
+  let showSpawn = false
+
+  let i = 0
 
   function sendSpawn() {
     if (spawnInProgress) return
@@ -12,15 +15,28 @@
     playSound("tekken", "click")
     spawn()
   }
+
+  const next = () => {
+    if (i < $staticContent.spawning.content.content.length - 1) {
+      i++
+    } else {
+      showSpawn = true
+    }
+  }
 </script>
 
 <div class="spawn">
   {#if !$playerCore}
     <div class="placeholder">
-      {#if $staticContent.spawning && $staticContent.spawning.content}
-        {@html renderBlockText($staticContent.spawning.content.content)}
+      {#if $staticContent.spawning && $staticContent.spawning.content && !showSpawn}
+        {#key i}
+          <div class="block" on:click={next}>
+            {@html renderBlockText($staticContent.spawning.content.content[i])}
+          </div>
+        {/key}
+      {:else}
+        <button on:click={sendSpawn} disabled={spawnInProgress}>Spawn</button>
       {/if}
-      <button on:click={sendSpawn} disabled={spawnInProgress}>Spawn</button>
     </div>
   {/if}
 </div>
@@ -43,11 +59,26 @@
     font-size: var(--font-size-normal);
     font-family: var(--font-family);
     margin-top: 1em;
+    cursor: pointer;
+    background: black;
+    color: white;
+    border: 4px solid white;
+
+    &:hover {
+      background: white;
+      color: black;
+    }
   }
 
   .placeholder {
-    max-width: 80%;
+    max-width: 40ch;
     text-align: center;
     padding: 20px;
+    margin: 0 auto;
+    cursor: pointer;
+  }
+
+  :global(p.normal) {
+    margin-bottom: 1rem;
   }
 </style>
