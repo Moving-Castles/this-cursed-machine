@@ -522,7 +522,7 @@
 <svelte:window on:resize={init} />
 
 <div class="wrapper">
-  {#if inspecting !== null}
+  {#if inspecting}
     <MachineInformation machineType={inspecting} />
   {/if}
 

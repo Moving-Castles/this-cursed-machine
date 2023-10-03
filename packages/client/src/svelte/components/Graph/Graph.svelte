@@ -18,8 +18,4 @@
   }
 </script>
 
-{#if $inspecting !== null}
-  <MachineInformation machineType={$inspecting} />
-{/if}
-
 <MachinesSVG />
