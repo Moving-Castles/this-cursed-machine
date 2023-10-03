@@ -8,3 +8,7 @@ struct Product {
   uint32 amount;
   uint32 temperature;
 }
+
+struct LevelDefinition {
+  uint32 level;
+}

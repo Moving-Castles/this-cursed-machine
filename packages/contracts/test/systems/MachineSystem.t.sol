@@ -46,12 +46,10 @@ contract MachineSystemTest is MudTest {
     world.spawn();
     vm.stopPrank();
 
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
-
     // Create a new entity
     vm.startPrank(alice);
     vm.expectRevert("not buildable");
-    bytes32 machineEntity = world.build(MACHINE_TYPE.CORE);
+    world.build(MACHINE_TYPE.CORE);
     vm.stopPrank();
   }
 

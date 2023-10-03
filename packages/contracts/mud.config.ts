@@ -2,7 +2,7 @@ import { mudConfig } from "@latticexyz/world/register";
 import { resolveTableId } from "@latticexyz/config";
 
 export const enums = {
-    ENTITY_TYPE: ["NONE", "BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
+    ENTITY_TYPE: ["NONE", "LEVEL", "BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER", "COMBI_GATE"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "PRIME", "M150ED", "BANG", "MONSTER", "CLUB_MATE", "SPRITE", "MILK", "JUGGERNOG", "TABASCO", "IBUPROFENE", "AMMONIA", "NYQUIL"],
     CONNECTION_TYPE: ["CONTROL", "RESOURCE"],

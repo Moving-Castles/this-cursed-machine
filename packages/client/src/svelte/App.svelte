@@ -6,7 +6,7 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { entities, playerCore, cores, ports } from "./modules/state"
+  import { entities, levels, playerCore, cores, ports } from "./modules/state"
   // import {
   //   patches,
   //   simulated,
@@ -30,6 +30,7 @@
 
   // - - - - -
   // $: console.log("$entities", $entities)
+  // $: console.log("$levels", $levels)
   // $: console.log("$cores", $cores)
   // $: console.log("$network", $network)
   // $: console.log("$playerCore", $playerCore)

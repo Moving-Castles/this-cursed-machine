@@ -2,6 +2,8 @@
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, GameConfigData } from "../codegen/index.sol";
+import { LibLevel } from "../libraries/Libraries.sol";
+import { LevelDefinition } from "../constants.sol";
 
 contract InitSystem is System {
   function init() public {
@@ -16,5 +18,20 @@ contract InitSystem is System {
         buildCost: 20
       })
     );
+
+    // Create levels
+    LevelDefinition[7] memory levels = [
+      LevelDefinition({ level: 1 }),
+      LevelDefinition({ level: 2 }),
+      LevelDefinition({ level: 3 }),
+      LevelDefinition({ level: 4 }),
+      LevelDefinition({ level: 5 }),
+      LevelDefinition({ level: 6 }),
+      LevelDefinition({ level: 7 })
+    ];
+
+    for (uint256 i = 0; i < levels.length; i++) {
+      LibLevel.create(levels[i]);
+    }
   }
 }

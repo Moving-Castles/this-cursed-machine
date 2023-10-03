@@ -26,6 +26,13 @@ export const entities = writable({} as Entities);
 export const gameConfig = derived(entities, ($entities) => $entities[GAME_CONFIG_ID].gameconfig as GameConfig);
 
 /**
+ * Levels
+ */
+export const levels = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.LEVEL)) as Levels;
+});
+
+/**
  * Boxes
  */
 export const boxes = derived(entities, ($entities) => {

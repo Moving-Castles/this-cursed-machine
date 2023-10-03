@@ -1,5 +1,6 @@
 export enum EntityType {
   NONE,
+  LEVEL,
   BOX,
   MACHINE,
   CONNECTION,

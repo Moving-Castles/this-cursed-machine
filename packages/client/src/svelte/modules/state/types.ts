@@ -62,6 +62,12 @@ declare global {
     lastResolved: number
   }
 
+  type Level = {
+    type: EntityType.LEVEL
+    level: number
+    creationBlock: number
+  }
+
   type Core = {
     type: EntityType.MACHINE
     machineType: MachineType.CORE
@@ -143,12 +149,12 @@ declare global {
     [index: string]: Machine
   }
 
-  type Resources = {
-    [index: string]: Resource
-  }
-
   type Boxes = {
     [index: string]: Box
+  }
+
+  type Levels = {
+    [index: string]: Level
   }
 
   // ---
