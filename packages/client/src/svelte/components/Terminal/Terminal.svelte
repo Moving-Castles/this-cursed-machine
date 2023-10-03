@@ -63,10 +63,13 @@
       if (completed || failed) {
         watchingAction.set(null)
         selectedAction = ""
+        clearPotential()
         scrollToEnd()
       }
     }
   }
+
+  $: if ($watchingAction === null) clearPotential()
 
   $: if (selectedAction) scrollToEnd()
 
@@ -74,6 +77,7 @@
    * Send stuff to the terminal
    */
   export async function send(string: string, user = false) {
+    console.log("Send")
     // Send the actual string
     output.set([...$output, `${user ? `${symbols[2]} ` : ""}${string}`])
 
@@ -234,6 +238,7 @@
           on:change={displayConnectionPotential}
           on:advance={onAdvance}
           on:confirm={onConnectConfirm}
+          on:cancel={clearPotential}
         />
       {:else}
         {#if !input}
