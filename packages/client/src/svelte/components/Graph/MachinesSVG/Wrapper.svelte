@@ -61,7 +61,6 @@
     ) {
       updateEverything()
     }
-    console.log($potential)
     previousData = { ...data }
     previousPotential = { ...$potential }
   }
@@ -275,8 +274,7 @@
             .attr("stroke-width", d => Math.sqrt(d.value)),
         update => update, // you can make adjustments to existing elements here if needed
         exit => {
-          exit.remove()
-          console.log(exit)
+          return exit.remove()
         }
       )
 

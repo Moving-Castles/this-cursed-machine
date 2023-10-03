@@ -118,6 +118,7 @@ async function execute() {
     let result = await get(network).waitForTransaction(tx)
 
     if (result) {
+      console.log(result)
       if (result.receipt.status == "success") {
         // Remove any potentials from the simulated state
         potential.set({})

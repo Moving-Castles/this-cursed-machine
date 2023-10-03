@@ -77,7 +77,6 @@
    * Send stuff to the terminal
    */
   export async function send(string: string, user = false) {
-    console.log("Send")
     // Send the actual string
     output.set([...$output, `${user ? `${symbols[2]} ` : ""}${string}`])
 
@@ -135,14 +134,14 @@
   }
 
   const onBuildConfirm = ({ detail }) => {
-    selectedAction = ""
     $watchingAction = buildMachine(detail, send)
+    // console.log($watchingAction)
     userInput = ""
   }
 
   const onConnectConfirm = ({ detail }) => {
-    selectedAction = ""
     $watchingAction = connectMachines(detail[0], detail[1], send)
+    // console.log($watchingAction)
     userInput = ""
   }
 
