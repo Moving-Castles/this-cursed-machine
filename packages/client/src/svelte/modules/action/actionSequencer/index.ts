@@ -114,10 +114,14 @@ async function execute() {
       activeActions[0].timestamp = Date.now()
       return activeActions
     })
+
     // Wait for transaction to be executed
-    let result = await get(network).waitForTransaction(tx)
-    if (result) {
-      if (result.receipt.status == "success") {
+    let receipt = await get(network).publicClient.waitForTransactionReceipt({ hash: tx })
+
+    console.log('receipt', receipt);
+
+    if (receipt) {
+      if (receipt.status == "success") {
         // Remove any potentials from the simulated state
         potential.set({})
 
@@ -131,7 +135,7 @@ async function execute() {
         // Clear action timeout
         clearActionTimeout()
       } else {
-        handleError(result?.receipt, action)
+        handleError(receipt, action)
       }
     }
   } catch (e) {

@@ -7,6 +7,11 @@
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, levels, playerCore, cores, ports } from "./modules/state"
+  import {
+    queuedActions,
+    activeActions,
+    completedActions,
+  } from "./modules/action/actionSequencer"
   // import {
   //   patches,
   //   simulated,
@@ -29,6 +34,9 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
+  $: console.log("$queuedActions", $queuedActions)
+  $: console.log("$activeActions", $activeActions)
+  $: console.log("$completedActions", $completedActions)
   // $: console.log("$entities", $entities)
   // $: console.log("$levels", $levels)
   // $: console.log("$cores", $cores)
