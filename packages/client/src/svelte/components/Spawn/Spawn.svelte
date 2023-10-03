@@ -1,13 +1,9 @@
 <script lang="ts">
-  // import { toastMessage } from "../../modules/ui/toast"
-  import { playerCore, machines } from "../../modules/state"
+  import { playerCore } from "../../modules/state"
   import { playSound } from "../../modules/sound"
   import { spawn } from "../../modules/action"
-  import Terminal from "../Terminal/Terminal.svelte"
-  import Frame from "../Frame/Frame.svelte"
-
-  // import Ellipse from "../Game/Ellipse.svelte"
-
+  import { staticContent } from "../../modules/content"
+  import { renderBlockText } from "../../modules/content/sanity"
   let spawnInProgress = false
 
   function sendSpawn() {
@@ -16,40 +12,20 @@
     playSound("tekken", "click")
     spawn()
   }
-
-  // const onSend = e => {
-  //   sendSpawn()
-  // }
-
-  // const onDone = e => {
-  //   if (spawnInProgress) return
-  //   spawnInProgress = true
-  //   spawn()
-  // }
 </script>
 
 <div class="spawn">
-  <div class="split-screen">
-    {#if !$playerCore}
-      <button on:click={sendSpawn}>Spawn</button>
-      <!-- <Terminal
-        input
-        theme="transparent"
-        placeholder="Blink"
-        on:done={onDone}
-      /> -->
-    {/if}
-    <div class="right-col">
-      <Frame name="intro" />
+  {#if !$playerCore}
+    <div class="placeholder">
+      {#if $staticContent.spawning && $staticContent.spawning.content}
+        {@html renderBlockText($staticContent.spawning.content.content)}
+      {/if}
+      <button on:click={sendSpawn} disabled={spawnInProgress}>Spawn</button>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style>
-  .split-screen {
-    align-items: center;
-    justify-items: center;
-  }
   .spawn {
     position: fixed;
     inset: 0;
@@ -57,9 +33,21 @@
     background-size: cover;
     background-position: center;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-items: center;
   }
 
-  .right-col {
-    /* grid-column: 1 / span 2; */
+  button {
+    padding: 20px;
+    font-size: var(--font-size-normal);
+    font-family: var(--font-family);
+    margin-top: 1em;
+  }
+
+  .placeholder {
+    max-width: 80%;
+    text-align: center;
+    padding: 20px;
   }
 </style>
