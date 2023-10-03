@@ -45,7 +45,6 @@
           <Goal
             on:hint={e => send("[whoareu?]")}
             on:reward={e => {
-              send("ACHIEVEMETN UNLOCKKYYYY")
               send("reward " + e.detail)
             }}
           />

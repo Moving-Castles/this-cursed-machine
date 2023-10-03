@@ -9,7 +9,7 @@ import { network, blockNumber } from "../../network"
 import { potential } from "../../simulator"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
-import { setActionTimeout, clearActionTimeout } from "./timeoutHandler"
+import { timeout, clear, start } from "./timeoutHandler"
 
 // --- TYPES -----------------------------------------------------------------
 
@@ -54,8 +54,8 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     return [...queuedActions, newAction]
   })
 
-  // Display error message if action does not complete in 10 seconds
-  setActionTimeout(15000)
+  // Display error message if action does not complete in 15 seconds
+  start()
 
   return newAction
 }
@@ -116,6 +116,7 @@ async function execute() {
     })
     // Wait for transaction to be executed
     let result = await get(network).waitForTransaction(tx)
+
     if (result) {
       if (result.receipt.status == "success") {
         // Remove any potentials from the simulated state
@@ -130,14 +131,16 @@ async function execute() {
         activeActions.update(() => [])
 
         // Clear action timeout
-        clearActionTimeout()
       } else {
         handleError(result?.receipt, action)
       }
+      clear()
+    } else {
+      clear()
     }
   } catch (e) {
     handleError(e, action)
-    clearActionTimeout()
+    clear()
   }
 }
 
@@ -150,5 +153,5 @@ function handleError(error: any, action: Action) {
   // Clear active list
   activeActions.update(() => [])
   // Clear action timeout
-  clearActionTimeout()
+  clearTimeout(get(timeout))
 }

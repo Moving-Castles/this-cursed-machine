@@ -7,6 +7,7 @@
     potential,
     simulatedPorts,
     simulatedConnections,
+    simulatedPlayerCore,
   } from "../../../modules/simulator"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
   import _ from "lodash"
@@ -64,6 +65,8 @@
     previousData = { ...data }
     previousPotential = { ...$potential }
   }
+
+  $: if (element && $simulatedPlayerCore.energy) updateEverything()
 
   // Utilities
   const isConnected = d => {
@@ -249,9 +252,6 @@
    * Update
    */
   function updateEverything() {
-    console.log("ASK FOR AN UPDATE")
-    console.log(performance.now())
-    console.log("ASK FOR AN UPDATE")
     setData()
 
     // Update nodes and links with new data.
@@ -274,7 +274,10 @@
             .attr("id", d => `link-${d.id}`)
             .attr("stroke-width", d => Math.sqrt(d.value)),
         update => update, // you can make adjustments to existing elements here if needed
-        exit => exit.remove()
+        exit => {
+          exit.remove()
+          console.log(exit)
+        }
       )
 
     // Nodes
