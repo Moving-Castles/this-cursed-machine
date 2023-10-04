@@ -46,20 +46,22 @@ function core(inputs: Product[]): Product[] {
 
   const input = inputs[0]
 
-  if (inputs[0].materialType !== MaterialType.BUG) return outputs
+  if (!input) return []
+
+  if (input.materialType !== MaterialType.BUG) return outputs
 
   outputs[0] = {
-    machineId: inputs[0].machineId,
+    machineId: input.machineId,
     materialType: MaterialType.PISS,
-    amount: Number(inputs[0].amount) / 2,
-    temperature: inputs[0].temperature,
+    amount: Number(input.amount) / 2,
+    temperature: input.temperature,
   }
 
   outputs[1] = {
-    machineId: inputs[0].machineId,
+    machineId: input.machineId,
     materialType: MaterialType.BLOOD,
-    amount: Number(inputs[0].amount) / 2,
-    temperature: inputs[0].temperature,
+    amount: Number(input.amount) / 2,
+    temperature: input.temperature,
   }
 
   return outputs
@@ -111,20 +113,24 @@ function scorcher(inputs: Product[]): Product[] {
  * @returns {Product[]} - Processed list of products.
  */
 function splitter(inputs: Product[]): Product[] {
-  const halfAmount = Number(inputs[0].amount) / 2
+  const input = inputs[0]
+
+  if (!input) return []
+
+  const halfAmount = Number(input.amount) / 2
 
   return [
     {
-      machineId: inputs[0].machineId,
-      materialType: inputs[0].materialType,
+      machineId: input.machineId,
+      materialType: input.materialType,
       amount: halfAmount,
-      temperature: inputs[0].temperature,
+      temperature: input.temperature,
     },
     {
-      machineId: inputs[0].machineId,
-      materialType: inputs[0].materialType,
+      machineId: input.machineId,
+      materialType: input.materialType,
       amount: halfAmount,
-      temperature: inputs[0].temperature,
+      temperature: input.temperature,
     },
   ]
 }
@@ -136,23 +142,28 @@ function splitter(inputs: Product[]): Product[] {
  * @returns {Product[]} - Processed list of products.
  */
 function blender(inputs: Product[]): Product[] {
+  const input1 = inputs[0]
+  const input2 = inputs[1]
+
+  if (!input1 || !input2) return []
+
   let materialType = MaterialType.DIRT
 
   if (
-    (inputs[0].materialType === MaterialType.BLOOD &&
-      inputs[1].materialType === MaterialType.PISS) ||
-    (inputs[0].materialType === MaterialType.PISS &&
-      inputs[1].materialType === MaterialType.BLOOD)
+    (input1.materialType === MaterialType.BLOOD &&
+      input2.materialType === MaterialType.PISS) ||
+    (input1.materialType === MaterialType.PISS &&
+      input2.materialType === MaterialType.BLOOD)
   ) {
     materialType = MaterialType.TEETH
   }
 
   return [
     {
-      machineId: inputs[0].machineId,
+      machineId: input1.machineId,
       materialType: materialType,
-      amount: Number(inputs[0].amount),
-      temperature: inputs[0].temperature,
+      amount: Number(input1.amount),
+      temperature: input1.temperature,
     },
   ]
 }
