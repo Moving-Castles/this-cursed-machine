@@ -38,16 +38,16 @@ library LibBox {
    */
   function getBoxesByLevel(uint32 _level) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, abi.encode(ENTITY_TYPE.BOX));
-    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, abi.encode(_level));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.BOX));
+    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encodeStatic(_level));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
 
   function getMachinesByBox(bytes32 _boxEntity) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, abi.encode(ENTITY_TYPE.MACHINE));
-    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, abi.encode(_boxEntity));
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.MACHINE));
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }

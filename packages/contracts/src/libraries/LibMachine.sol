@@ -53,10 +53,16 @@ library LibMachine {
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
-    // Abort if not bug
+    // Tick down energy (1 per block)
+    if (Energy.get(_coreEntity) < uint32(blocksSinceLastResolution)) {
+      Energy.set(_coreEntity, 0);
+    } else {
+      Energy.set(_coreEntity, Energy.get(_coreEntity) - uint32(blocksSinceLastResolution));
+    }
+    // Abort if input is not bug
     if (_inputs[0].materialType != MATERIAL_TYPE.BUG) return outputs;
-    // Update core energy (factor: 0.2)
-    Energy.set(_coreEntity, Energy.get(_coreEntity) + uint32(blocksSinceLastResolution));
+    // Update core energy (2 per block)
+    Energy.set(_coreEntity, Energy.get(_coreEntity) + 2 * uint32(blocksSinceLastResolution));
     // Output Piss
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
@@ -122,6 +128,15 @@ library LibMachine {
     return outputs;
   }
 
+  /**
+   * @notice Combines input products and produces a new product of type BLOOD.
+   *
+   * @dev Assumes single product input and creates a single output with the BLOOD material type.
+   *
+   * @param _inputs Array of Product structs, each containing machineId, materialType, amount, and temperature.
+   *
+   * @return _outputs Array containing a single Product struct with the type set to BLOOD.
+   */
   function blender(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
     outputs[0] = Product({

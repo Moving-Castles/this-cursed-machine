@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onWheel } from "../../modules/ui/events"
   import { simulatedPlayerCore } from "../../modules/simulator"
+  import { blocksSinceLastResolution } from "../../modules/simulator/"
+  import { capAtZero } from "../../modules/utils/misc"
 
   export let box: Box
 </script>
@@ -11,7 +13,9 @@
     <span class="muted">Energy:</span><br />
     {#key $simulatedPlayerCore.energy}
       <span class="energy flash-a-bit text-stroke">
-        {$simulatedPlayerCore.energy}
+        {capAtZero(
+          ($simulatedPlayerCore.energy || 0) - $blocksSinceLastResolution
+        )}
       </span>
     {/key}
   </p>
@@ -30,11 +34,7 @@
     display: flex;
     flex-flow: column nowrap;
   }
-  .agreement-button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
+
   .energy {
     font-size: 8rem;
     letter-spacing: -1rem;

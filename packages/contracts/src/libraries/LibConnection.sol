@@ -45,7 +45,7 @@ library LibConnection {
 
   function getOutgoing(bytes32 _portEntity) internal view returns (bytes32 connection) {
     QueryFragment[] memory fragments = new QueryFragment[](1);
-    fragments[0] = QueryFragment(QueryType.HasValue, SourcePortTableId, abi.encode(_portEntity));
+    fragments[0] = QueryFragment(QueryType.HasValue, SourcePortTableId, SourcePort.encodeStatic(_portEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }

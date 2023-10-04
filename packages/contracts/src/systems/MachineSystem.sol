@@ -11,7 +11,7 @@ contract MachineSystem is System {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(Energy.get(coreEntity) >= gameConfig.buildCost, "insufficient energy");
-    require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
+    // require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));

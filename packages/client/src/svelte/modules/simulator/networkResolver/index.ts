@@ -102,8 +102,9 @@ function resolve(_boxEntity: string) {
         patchInputs.push(deepClone(currentInputs[k]))
       }
 
-      // Skip if the machine has no inputs.
-      if (currentInputs.length === 0) return
+      // Skip if the machine has no inputs and is not a core
+      // (Energy level of cores tick down even if not connected...)
+      if (currentInputs.length === 0 && machine.machineType !== MachineType.CORE) return
 
       // Process the machine's inputs to produce outputs.
       const currentOutputs = process(machine.machineType, currentInputs)

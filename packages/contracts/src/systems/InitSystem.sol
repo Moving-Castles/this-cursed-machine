@@ -19,15 +19,14 @@ contract InitSystem is System {
       })
     );
 
-    // Create levels
     LevelDefinition[7] memory levels = [
-      LevelDefinition({ level: 1 }),
-      LevelDefinition({ level: 2 }),
-      LevelDefinition({ level: 3 }),
-      LevelDefinition({ level: 4 }),
-      LevelDefinition({ level: 5 }),
-      LevelDefinition({ level: 6 }),
-      LevelDefinition({ level: 7 })
+      LevelDefinition({ level: 1, energy: 100 }),
+      LevelDefinition({ level: 2, energy: 100 }),
+      LevelDefinition({ level: 3, energy: 100 }),
+      LevelDefinition({ level: 4, energy: 100 }),
+      LevelDefinition({ level: 5, energy: 100 }),
+      LevelDefinition({ level: 6, energy: 100 }),
+      LevelDefinition({ level: 7, energy: 100 })
     ];
 
     for (uint256 i = 0; i < levels.length; i++) {

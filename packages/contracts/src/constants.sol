@@ -11,4 +11,5 @@ struct Product {
 
 struct LevelDefinition {
   uint32 level;
+  uint32 energy;
 }

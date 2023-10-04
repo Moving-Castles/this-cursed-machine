@@ -308,4 +308,25 @@ contract ResolutionSystemTest is MudTest {
 
     // 8.Check outlet pool
   }
+
+  function testEnergyTickDown() public {
+    setUp();
+
+    // 1. Spawn core
+    vm.startPrank(alice);
+    world.spawn();
+    vm.stopPrank();
+
+    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
+
+    // 2. Wait 10 blocks
+    vm.roll(block.number + 10);
+
+    // 7. Resolve
+    vm.startPrank(alice);
+    world.resolve();
+    vm.stopPrank();
+
+    assertEq(uint8(Energy.get(world, coreEntity)), 90);
+  }
 }

@@ -142,3 +142,17 @@ export function deepClone<T>(obj: T): T {
   }
   return copy as T
 }
+
+
+/**
+ * Ensure that a number is not negative. 
+ * If the input number is negative, the function returns 0; otherwise, it returns the input number.
+ * 
+ * @param num - The number to cap at 0. If it is negative, the function returns 0.
+ * 
+ * @returns A number which is either the input number (if it is non-negative) or 0 (if the input number is negative).
+ */
+export function capAtZero(num: number): number {
+  // Ensure that the input is not negative
+  return Math.max(0, num);
+}

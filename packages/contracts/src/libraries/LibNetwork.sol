@@ -9,8 +9,6 @@ import { Product } from "../constants.sol";
 
 library LibNetwork {
   function resolve(bytes32 _boxEntity) internal {
-    // @todo: check core energy
-
     // Blocks since last resolution
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
 
@@ -82,8 +80,9 @@ library LibNetwork {
           }
         }
 
-        // Skip if node has no input
-        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+        // Skip if node has no input and is not a core
+        // (Energy level of cores tick down even if not connected...)
+        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE && MachineType.get(node) != MACHINE_TYPE.CORE) continue;
 
         // console.log("__ processing node:");
         // console.log(uint256(node));
@@ -125,7 +124,7 @@ library LibNetwork {
           // console.log("... ports[k][0]");
           // console.log(uint256(ports[k][0]));
 
-          //  - find connections going from that port
+          //  Find connections going from that port
           bytes32 outgoingConnection = LibConnection.getOutgoing(ports[k][0]);
 
           // console.log("... outgoingConnection");
@@ -134,10 +133,10 @@ library LibNetwork {
           // No connection
           if (outgoingConnection == bytes32(0)) continue;
 
-          //  - get the port on the other end of the connection
+          //  Get the port on the other end of the connection
           bytes32 inputPort = TargetPort.get(outgoingConnection);
 
-          //  - get the machine that the port is on
+          //  Get the machine that the port is on
           bytes32 targetEntity = CarriedBy.get(inputPort);
           // console.log("targetEntity");
           // console.log(uint256(targetEntity));
