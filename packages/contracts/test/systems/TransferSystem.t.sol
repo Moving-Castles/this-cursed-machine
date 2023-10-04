@@ -4,7 +4,7 @@ import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, PORT_TYPE, CONNECTION_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE, PORT_TYPE } from "../../src/codegen/common.sol";
 
 contract TransferSystemTest is MudTest {
   IWorld world;
@@ -24,21 +24,17 @@ contract TransferSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    // bytes32 spawnBoxEntity = world.mc_SpawnSystem_spawn();
-    bytes32 spawnBoxEntity = world.spawn();
-    vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
-
-    assertEq(Level.get(world, coreEntity), 0);
-
-    vm.startPrank(alice);
-    // bytes32 transferBoxEntity = world.mc_TransferSystem_transfer();
-    bytes32 transferBoxEntity = world.transfer();
+    bytes32 coreEntity = world.spawn();
+    bytes32 spawnBoxEntity = world.transfer();
     vm.stopPrank();
 
     assertEq(Level.get(world, coreEntity), 1);
 
+    vm.startPrank(alice);
+    bytes32 transferBoxEntity = world.transfer();
+    vm.stopPrank();
+
+    assertEq(Level.get(world, coreEntity), 2);
     assert(spawnBoxEntity != transferBoxEntity);
   }
 }

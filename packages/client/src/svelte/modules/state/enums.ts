@@ -7,6 +7,7 @@ export enum EntityType {
   MATERIAL,
   PORT,
 }
+
 export enum MachineType {
   NONE,
   INLET,
@@ -40,11 +41,6 @@ export enum MaterialType {
 export enum PortType {
   INPUT,
   OUTPUT,
-}
-
-export enum ConnectionType {
-  CONTROL,
-  RESOURCE,
 }
 
 export enum PortPlacement {

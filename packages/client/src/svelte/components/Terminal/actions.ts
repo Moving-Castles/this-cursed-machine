@@ -1,7 +1,6 @@
 import {
   EntityType,
   MachineType,
-  ConnectionType,
 } from "../../modules/state/enums"
 import { connections } from "../../modules/state"
 import {
@@ -77,7 +76,6 @@ export const connectMachines = (
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
         action = connect(
-          ConnectionType.RESOURCE,
           sourcePorts[0][0],
           targetPorts[0][0]
         )

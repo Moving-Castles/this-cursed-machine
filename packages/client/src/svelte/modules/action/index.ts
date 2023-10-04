@@ -1,4 +1,4 @@
-import { ConnectionType, MachineType } from "../state/enums"
+import { MachineType } from "../state/enums"
 import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
@@ -22,12 +22,10 @@ export function transfer() {
 }
 
 export function connect(
-  connectionType: ConnectionType,
   sourcePort: string,
   targetPort: string
 ) {
   return addToSequencer(WorldFunctions.Connect, [
-    connectionType,
     sourcePort,
     targetPort,
   ])

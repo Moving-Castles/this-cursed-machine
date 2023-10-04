@@ -1,10 +1,18 @@
 <script lang="ts">
+  import { playerEntityId, playerCore, playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
   import { simulatedPlayerCore } from "../../modules/simulator"
   import { blocksSinceLastResolution } from "../../modules/simulator/"
   import { capAtZero } from "../../modules/utils/misc"
+  import { coreIsConnectedToInlet } from "../../modules/simulator/networkResolver"
+  import { blockNumber } from "../../modules/network/"
 
   export let box: Box
+
+  // If we are not connected to inlet energy is:
+  // Energy = on-chain energy - blocksSinceLastResolution
+  // If we are connected to inlet energy is:
+  // Energy = on-chain energy + blocksSinceLastResolution
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -12,16 +20,33 @@
   <p>
     <span class="muted">Energy:</span><br />
     {#key $simulatedPlayerCore.energy}
-      <span class="energy flash-a-bit text-stroke">
-        {capAtZero(
-          ($simulatedPlayerCore.energy || 0) - $blocksSinceLastResolution
+      <div>
+        On-chain: {$playerCore.energy}
+      </div>
+      <div class="green">
+        Simulated: {capAtZero(
+          ($simulatedPlayerCore.energy || 0) +
+            (coreIsConnectedToInlet($playerEntityId) ? 1 : -1) *
+              $blocksSinceLastResolution
         )}
-      </span>
+      </div>
+      <div>
+        Mod: {coreIsConnectedToInlet($playerEntityId) ? 1 : -1}
+      </div>
+      <div>
+        Past blocks: {$blocksSinceLastResolution}
+      </div>
+      <div>
+        Last resolved: {$playerBox.lastResolved}
+      </div>
+      <div>
+        Current block: {$blockNumber}
+      </div>
     {/key}
   </p>
 </div>
 
-<style>
+<style lang="scss">
   .box-stats {
     width: 100%;
     height: 100%;
@@ -43,5 +68,9 @@
 
   .muted {
     color: #ccc;
+  }
+
+  .green {
+    color: var(--color-success);
   }
 </style>

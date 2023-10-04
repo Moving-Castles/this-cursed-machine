@@ -34,7 +34,7 @@
         <div class="stats">
           <BoxStats on:read={() => send("read", true)} box={$playerBox} />
         </div>
-        <div class="goal">
+        <!-- <div class="goal">
           {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
             <div
               class="bg flash-a-bit"
@@ -50,7 +50,7 @@
               }}
             />
           {/if}
-        </div>
+        </div> -->
 
         <div class="graph">
           <Graph />
@@ -88,7 +88,7 @@
       overflow: hidden;
 
       .stats {
-        grid-column: 1 / 5;
+        grid-column: 1 / 6;
         outline: var(--terminal-border);
         outline-offset: -6px;
       }

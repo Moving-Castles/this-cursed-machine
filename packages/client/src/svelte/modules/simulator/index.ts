@@ -8,8 +8,9 @@ import { entities, playerBox, playerEntityId, playerCore } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
+import { capAtZero } from "../utils/misc"
 
-// --- CONSTANTSLY ------------------------------------------------------------
+// --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
   0,
   Object.keys(MachineType).length / 2
@@ -70,12 +71,16 @@ export const simulated = derived(
       // for (let k = 0; k < simulated[key].intermediaryProducts.length; k++) {
       //     simulated[key].intermediaryProducts[k].amount = patch.intermediaryProducts[k].amount * $blocksSinceLastResolution
       // }
-      if (patch.inputs) {
+      if (patch.inputs && simulated[key]) {
         simulated[key].inputs = patch.inputs
       }
-      if (patch.outputs) {
+      if (patch.outputs && simulated[key]) {
         simulated[key].outputs = patch.outputs
       }
+      // Energy
+      // if (patch.energy && simulated[key]) {
+      //   simulated[key].energy = capAtZero((simulated[key].energy || 0) + (patch.energy * $blocksSinceLastResolution))
+      // }
     }
 
     return simulated

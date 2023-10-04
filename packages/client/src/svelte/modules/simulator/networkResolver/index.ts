@@ -9,14 +9,16 @@ import { localResolved, patches } from ".."
 import { blockNumber } from "../../network"
 import { MachineType, MaterialType, PortType } from "../../state/enums"
 import {
+  playerEntityId,
   playerCore,
   machinesInPlayerBox,
   ports,
   connections,
+  machines
 } from "../../state"
 import { process } from "./machines"
 import type { Product, SimulatedEntities } from "../types"
-import { shortenAddress, deepClone } from "../../utils/misc"
+import { deepClone } from "../../utils/misc"
 
 // --- API -----------------------------------------------------------------
 
@@ -24,9 +26,6 @@ export function initStateSimulator() {
   blockNumber.subscribe(async () => {
     // Player is not spawned yet
     if (!get(playerCore)) return
-
-    // console.log('get(localResolved)', get(localResolved))
-    // console.log('get(playerBox).lastResolved', get(playerBox).lastResolved)
 
     // Network was resolved onchain
     if (get(playerBox).lastResolved !== get(localResolved)) {
@@ -36,6 +35,15 @@ export function initStateSimulator() {
       // Update localResolved
       localResolved.set(get(playerBox).lastResolved)
     }
+
+    // Update core energy
+    // patches.update(patches => {
+    //   if (!patches[get(playerEntityId)]) {
+    //     patches[get(playerEntityId)] = {}
+    //   }
+    //   patches[get(playerEntityId)].energy = updateCoreEnergy(get(playerEntityId));
+    //   return patches;
+    // })
   })
 }
 
@@ -102,9 +110,10 @@ function resolve(_boxEntity: string) {
         patchInputs.push(deepClone(currentInputs[k]))
       }
 
-      // Skip if the machine has no inputs and is not a core
-      // (Energy level of cores tick down even if not connected...)
-      if (currentInputs.length === 0 && machine.machineType !== MachineType.CORE) return
+      // Skip if the machine has no inputs !!! and is not a core
+      // !!! (Energy level of cores tick down even if not connected...)
+      // && machine.machineType !== MachineType.CORE
+      if (currentInputs.length === 0) return
 
       // Process the machine's inputs to produce outputs.
       const currentOutputs = process(machine.machineType, currentInputs)
@@ -174,6 +183,7 @@ function resolve(_boxEntity: string) {
 
   // console.log('patchOutputs', patchOutputs);
 
+  // Aggregate and organize patch outputs.
   for (let i = 0; i < patchOutputs.length; i++) {
     if (!patches[patchOutputs[i].machineId]) {
       patches[patchOutputs[i].machineId] = {
@@ -190,6 +200,7 @@ function resolve(_boxEntity: string) {
 
   // console.log('patchInputs', patchInputs);
 
+  // Aggregate and organize patch inputs.
   for (let i = 0; i < patchInputs.length; i++) {
     if (!patches[patchInputs[i].machineId]) {
       patches[patchInputs[i].machineId] = {
@@ -204,7 +215,51 @@ function resolve(_boxEntity: string) {
     patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
   }
 
-  // console.log('$$$$$$ patches', patches)
-
+  console.log('$$$$$$ patches', patches)
   return patches
+}
+
+// function updateCoreEnergy(_coreEntity: string) {
+//   return coreIsConnectedToInlet(_coreEntity) ? 1 : -1;
+// }
+
+export function coreIsConnectedToInlet(_coreEntity: string) {
+  // *** 1. Get all input ports on the core
+  const inputPortsOnCores = Object.fromEntries(
+    Object.entries(get(ports)).filter(
+      ([_, port]) => port.carriedBy === _coreEntity && port.portType === PortType.INPUT
+    )
+  )
+  // DEBUG
+  console.log('inputPortsOnCores', inputPortsOnCores);
+  console.log('Object.keys(inputPortsOnCores)', Object.keys(inputPortsOnCores))
+  console.log("get(connections)", get(connections))
+
+  // Abort early if no input ports on core
+  if (Object.keys(inputPortsOnCores).length === 0) return false;
+
+  // *** 2. Get connections going to input cores on core
+  const connectionsToInputPortsOnCores = Object.fromEntries(
+    Object.entries(get(connections)).filter(
+      ([_, connection]) => connection.sourcePort === Object.keys(inputPortsOnCores)[0]
+    )
+  )
+
+  // DEBUG
+  console.log('connectionsToInputPortsOnCores', connectionsToInputPortsOnCores);
+
+  // Abort early if no connections to input ports on core
+  if (Object.keys(connectionsToInputPortsOnCores).length === 0) return false;
+
+  // 3. Get output ports at end of connections
+  const outputPortsAtEndOfConnections = get(ports)[Object.values(connectionsToInputPortsOnCores)[0].targetPort]
+
+  // DEBUG
+  console.log('outputPortsAtEndOfConnections', outputPortsAtEndOfConnections);
+
+  // 4. Check if machine at end of connection is an inlet
+  if (get(machines)[outputPortsAtEndOfConnections.carriedBy].machineType !== MachineType.INLET) return false;
+
+  // Core is connected
+  return true;
 }

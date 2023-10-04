@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, MachineType, LastResolved, MaterialType, Amount } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, MachineType, LastResolved, MaterialType, Amount, Energy } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibArray, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
 import { Product } from "../constants.sol";
@@ -13,7 +13,10 @@ library LibNetwork {
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
 
     // Abort if box is already resolved
-    if (blocksSinceLastResolution == 0) return;
+    // if (blocksSinceLastResolution == 0) return;
+
+    // Tick down energy for core in box (1 per block)
+    tickDownEnergy(_boxEntity, blocksSinceLastResolution);
 
     // Counter for the number of iterations over the network
     uint32 counter;
@@ -82,24 +85,25 @@ library LibNetwork {
 
         // Skip if node has no input and is not a core
         // (Energy level of cores tick down even if not connected...)
-        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE && MachineType.get(node) != MACHINE_TYPE.CORE) continue;
+        // && MachineType.get(node) != MACHINE_TYPE.CORE
+        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
 
-        // console.log("__ processing node:");
-        // console.log(uint256(node));
+        console.log("__ processing node:");
+        console.log(uint256(node));
 
         // Mark as resolved
         resolvedNodes[resolvedCount] = node;
         resolvedCount += 1;
 
-        // console.log("__ resolvedCount");
-        // console.log(resolvedCount);
+        console.log("__ resolvedCount");
+        console.log(resolvedCount);
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
         currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
 
-        // console.log("%%% currentOutputs.length");
-        // console.log(currentOutputs.length);
+        console.log("%%% currentOutputs.length");
+        console.log(currentOutputs.length);
 
         // If the machine is an outlet, write to chain
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
@@ -121,14 +125,14 @@ library LibNetwork {
 
         // Fill outputs
         for (uint k; k < ports.length; k++) {
-          // console.log("... ports[k][0]");
-          // console.log(uint256(ports[k][0]));
+          console.log("... ports[k][0]");
+          console.log(uint256(ports[k][0]));
 
           //  Find connections going from that port
           bytes32 outgoingConnection = LibConnection.getOutgoing(ports[k][0]);
 
-          // console.log("... outgoingConnection");
-          // console.log(uint256(outgoingConnection));
+          console.log("... outgoingConnection");
+          console.log(uint256(outgoingConnection));
 
           // No connection
           if (outgoingConnection == bytes32(0)) continue;
@@ -138,8 +142,8 @@ library LibNetwork {
 
           //  Get the machine that the port is on
           bytes32 targetEntity = CarriedBy.get(inputPort);
-          // console.log("targetEntity");
-          // console.log(uint256(targetEntity));
+          console.log("targetEntity");
+          console.log(uint256(targetEntity));
 
           // Fill output
           if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
@@ -155,11 +159,23 @@ library LibNetwork {
       // console.log("== iteration");
       // console.log(counter);
       if (counter == machines.length * 2) {
+        // Set LastResolved on box entity
+        LastResolved.set(_boxEntity, block.number);
         return;
       }
     }
 
     // Set LastResolved on box entity
     LastResolved.set(_boxEntity, block.number);
+  }
+
+  function tickDownEnergy(bytes32 _boxEntity, uint256 _blocksSinceLastResolution) internal {
+    // Tick down energy for core in box (1 per block)
+    bytes32[][] memory coreEntities = LibBox.getCoresByBox(_boxEntity);
+    if (Energy.get(coreEntities[0][0]) < uint32(_blocksSinceLastResolution)) {
+      Energy.set(coreEntities[0][0], 0);
+    } else {
+      Energy.set(coreEntities[0][0], Energy.get(coreEntities[0][0]) - uint32(_blocksSinceLastResolution));
+    }
   }
 }

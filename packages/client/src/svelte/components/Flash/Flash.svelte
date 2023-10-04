@@ -10,7 +10,7 @@
   onMount(() => {
     timeout = setTimeout(() => {
       next()
-    }, 3000)
+    }, 300)
   })
   onDestroy(() => clearTimeout(timeout))
 </script>

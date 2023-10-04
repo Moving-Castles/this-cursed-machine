@@ -2,8 +2,8 @@
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount } from "../codegen/index.sol";
-import { ENTITY_TYPE } from "../codegen/common.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -47,6 +47,14 @@ library LibBox {
   function getMachinesByBox(bytes32 _boxEntity) internal view returns (bytes32[][] memory boxes) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
     fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.MACHINE));
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples;
+  }
+
+  function getCoresByBox(bytes32 _boxEntity) internal view returns (bytes32[][] memory boxes) {
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(MACHINE_TYPE.CORE));
     fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;

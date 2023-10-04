@@ -6,7 +6,6 @@ pragma solidity >=0.8.21;
 import { EntityType, EntityTypeTableId } from "./tables/EntityType.sol";
 import { MachineType, MachineTypeTableId } from "./tables/MachineType.sol";
 import { MaterialType, MaterialTypeTableId } from "./tables/MaterialType.sol";
-import { ConnectionType, ConnectionTypeTableId } from "./tables/ConnectionType.sol";
 import { PortType, PortTypeTableId } from "./tables/PortType.sol";
 import { Name, NameTableId } from "./tables/Name.sol";
 import { Energy, EnergyTableId } from "./tables/Energy.sol";

@@ -43,7 +43,7 @@ export function process(machineType: MachineType, inputs: Product[]) {
 function core(inputs: Product[]): Product[] {
     const outputs: Product[] = new Array(2).fill({});  // Initializing with an empty object
 
-    if (inputs[0].materialType !== MaterialType.BUG) return outputs;
+    if (!inputs[0] || inputs[0].materialType !== MaterialType.BUG) return outputs;
 
     outputs[0] = {
         machineId: inputs[0].machineId,
@@ -60,7 +60,7 @@ function core(inputs: Product[]): Product[] {
     };
 
     return outputs;
-}
+};
 
 /**
  * Processes the given products and forwards valid ones to the output.

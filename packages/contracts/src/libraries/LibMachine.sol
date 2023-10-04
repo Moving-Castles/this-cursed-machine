@@ -53,16 +53,21 @@ library LibMachine {
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
-    // Tick down energy (1 per block)
-    if (Energy.get(_coreEntity) < uint32(blocksSinceLastResolution)) {
-      Energy.set(_coreEntity, 0);
-    } else {
-      Energy.set(_coreEntity, Energy.get(_coreEntity) - uint32(blocksSinceLastResolution));
-    }
+
     // Abort if input is not bug
     if (_inputs[0].materialType != MATERIAL_TYPE.BUG) return outputs;
+
+    console.log("____ input is bug ____");
+
+    console.log("PRE: Energy.get(_coreEntity)");
+    console.log(Energy.get(_coreEntity));
+
     // Update core energy (2 per block)
     Energy.set(_coreEntity, Energy.get(_coreEntity) + 2 * uint32(blocksSinceLastResolution));
+
+    console.log("POST: Energy.get(_coreEntity)");
+    console.log(Energy.get(_coreEntity));
+
     // Output Piss
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
@@ -70,6 +75,7 @@ library LibMachine {
       amount: _inputs[0].amount / 2,
       temperature: _inputs[0].temperature
     });
+
     // Output blood
     outputs[1] = Product({
       machineId: _inputs[0].machineId,
@@ -77,6 +83,7 @@ library LibMachine {
       amount: _inputs[0].amount / 2,
       temperature: _inputs[0].temperature
     });
+
     return outputs;
   }
 

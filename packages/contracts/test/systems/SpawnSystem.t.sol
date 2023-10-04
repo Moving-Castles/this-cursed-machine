@@ -24,11 +24,8 @@ contract SpawnSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    // bytes32 boxEntity = world.mc_SpawnSystem_spawn();
-    bytes32 boxEntity = world.spawn();
+    bytes32 coreEntity = world.spawn();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Check that the core was spawned correctly
     assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.MACHINE));
@@ -36,9 +33,18 @@ contract SpawnSystemTest is MudTest {
     assertEq(Level.get(world, coreEntity), 0);
     assertEq(CreationBlock.get(world, coreEntity), block.number);
     assertEq(ReadyBlock.get(world, coreEntity), block.number);
-    assertEq(CarriedBy.get(world, coreEntity), boxEntity);
+  }
 
-    // Check box
-    assertEq(Level.get(world, boxEntity), 0);
+  function testSpawnAndTransfer() public {
+    setUp();
+
+    vm.startPrank(alice);
+    bytes32 coreEntity = world.spawn();
+    bytes32 boxEntity = world.transfer();
+    vm.stopPrank();
+
+    assertEq(CarriedBy.get(world, coreEntity), boxEntity);
+    assertEq(Level.get(world, coreEntity), 1);
+    assertEq(Level.get(world, boxEntity), 1);
   }
 }

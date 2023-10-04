@@ -16,7 +16,8 @@
 
   const dispatch = createEventDispatcher()
 
-  $: currentGoal = $progressions[$playerBox.level][$currentGoalIndex]
+  // $: currentGoal = $progressions[$playerBox.level][$currentGoalIndex]
+  $: currentGoal = $progressions[0][0]
 
   // Here we monitor player performance
   $: {
