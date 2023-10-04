@@ -15,7 +15,7 @@ import { world } from "./world"
 const worldPath = "contracts/out/IWorld.sol/IWorld.abi.json"
 // import IWorldAbi from worldPath
 const IWorldAbi = await import(
-  import.meta.env.NETLIFY ? "./IWorldCopy.abi.json" : worldPath
+  !import.meta.env.DEV ? "./IWorldCopy.abi.json" : worldPath
 )
 import {
   createBurnerAccount,
