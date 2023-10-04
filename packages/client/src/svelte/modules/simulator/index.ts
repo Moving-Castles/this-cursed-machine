@@ -65,18 +65,17 @@ export const simulated = derived(
       }),
     ])
 
-    for (const [key, patch] of Object.entries($patches)) {
-      // @todo: scaling the products by block since resolution is causing wrong values
-      // for (let k = 0; k < simulated[key].intermediaryProducts.length; k++) {
-      //     simulated[key].intermediaryProducts[k].amount = patch.intermediaryProducts[k].amount * $blocksSinceLastResolution
-      // }
+    Object.entries($patches).forEach(([key, patch]) => {
+      // Exit statements
+      if (key === "") return
+
       if (patch.inputs) {
         simulated[key].inputs = patch.inputs
       }
       if (patch.outputs) {
         simulated[key].outputs = patch.outputs
       }
-    }
+    })
 
     return simulated
   }
