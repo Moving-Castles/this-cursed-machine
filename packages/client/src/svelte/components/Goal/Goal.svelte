@@ -22,19 +22,25 @@
   // Here we monitor player performance
   $: {
     // If the player has connected to the inlet
-    const connectionsAsTypesArray = Object.values($simulatedConnections).map(
-      connection => [
-        MachineType[
-          $simulatedMachines[$simulatedPorts[connection.sourcePort].carriedBy]
-            .machineType
-        ],
-        MachineType[
-          $simulatedMachines[$simulatedPorts[connection.targetPort].carriedBy]
-            .machineType
-        ],
-      ]
-    )
+    const connectionsAsTypesArray = Object.values($simulatedConnections)
+      .filter(connection => {
+        return connection.sourcePort && connection.targetPort
+      })
+      .map(connection => {
+        const sourceMachine = $simulatedPorts[connection?.sourcePort]?.carriedBy
+        const targetMachine = $simulatedPorts[connection?.targetPort]?.carriedBy
 
+        if (sourceMachine && targetMachine) {
+          return [
+            MachineType[$simulatedMachines[sourceMachine].machineType],
+            MachineType[$simulatedMachines[targetMachine].machineType],
+          ]
+        }
+
+        return []
+      })
+
+    // Achievement 1 unlocked
     if (
       connectionsAsTypesArray.some(con => con.includes("CORE")) &&
       connectionsAsTypesArray.some(con => con.includes("INLET")) &&
