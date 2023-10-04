@@ -1,7 +1,7 @@
 <script lang="ts">
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
-  import { playerBox } from "../../modules/state"
+  import { playerBox, playerCore } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
