@@ -29,32 +29,34 @@
         placeholder={"Build"}
       />
     </div>
-    <div class="right-col">
-      <div class="stats">
-        <BoxStats on:read={() => send("read", true)} box={$playerBox} />
-      </div>
-      <div class="goal">
-        {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
-          <div
-            class="bg flash-a-bit"
-            style:background-image="url(/images/gar{Math.ceil(
-              Math.random() * 23
-            )}.jpeg)"
-          />
-        {:else}
-          <Goal
-            on:hint={e => send("[whoareu?]")}
-            on:reward={e => {
-              send("reward " + e.detail)
-            }}
-          />
-        {/if}
-      </div>
+    {#if $playerCore}
+      <div class="right-col">
+        <div class="stats">
+          <BoxStats on:read={() => send("read", true)} box={$playerBox} />
+        </div>
+        <div class="goal">
+          {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
+            <div
+              class="bg flash-a-bit"
+              style:background-image="url(/images/gar{Math.ceil(
+                Math.random() * 23
+              )}.jpeg)"
+            />
+          {:else}
+            <Goal
+              on:hint={e => send("[whoareu?]")}
+              on:reward={e => {
+                send("reward " + e.detail)
+              }}
+            />
+          {/if}
+        </div>
 
-      <div class="graph">
-        <Graph />
+        <div class="graph">
+          <Graph />
+        </div>
       </div>
-    </div>
+    {/if}
   </div>
 </div>
 
