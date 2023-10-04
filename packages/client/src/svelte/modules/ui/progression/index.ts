@@ -1,7 +1,7 @@
 import { readable, writable } from "svelte/store"
 
 export const currentGoalIndex = writable(0)
-export const achieved = writable([])
+export const achieved = writable([] as number[])
 export const progressions = readable([
   [
     // Reward has to be one word
