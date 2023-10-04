@@ -12,11 +12,7 @@ import { createFaucetService } from "@latticexyz/services/faucet"
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
 import { getNetworkConfig } from "./getNetworkConfig"
 import { world } from "./world"
-const worldPath = "contracts/out/IWorld.sol/IWorld.abi.json"
-// import IWorldAbi from worldPath
-const IWorldAbi = await import(
-  !import.meta.env.DEV ? "./IWorldCopy.abi.json" : worldPath
-)
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import {
   createBurnerAccount,
   createContract,
