@@ -34,23 +34,6 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <!-- <div class="goal">
-          {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
-            <div
-              class="bg flash-a-bit"
-              style:background-image="url(/images/gar{Math.ceil(
-                Math.random() * 23
-              )}.jpeg)"
-            />
-          {:else}
-            <Goal
-              on:hint={e => send("[whoareu?]")}
-              on:reward={e => {
-                send("reward " + e.detail)
-              }}
-            />
-          {/if}
-        </div> -->
 
         <div class="graph">
           <Graph />

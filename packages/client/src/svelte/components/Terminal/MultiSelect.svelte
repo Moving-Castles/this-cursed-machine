@@ -7,10 +7,16 @@
   let index = 0
   let stage = 0
   let choices: number[] = []
+  let stageOptions: string[] = []
   let value = ""
 
   $: {
-    value = options[stage][index]
+    stageOptions = [...options[stage]]
+    console.log(stageOptions, stage)
+    if (stage > 0) stageOptions = [...stageOptions, "BACK"]
+  }
+  $: {
+    value = stageOptions[index]
   }
 
   // enter / return = 13
@@ -19,7 +25,10 @@
   // right = 39
   // down = 40
   const onKeyDown = ({ keyCode }) => {
-    const choice = Number(value.match(/\d+/)[0])
+    const args = value.match(/\d+/)
+    const choice = args ? Number(args[0]) : value
+
+    if (keyCode === 27) dispatch("cancel")
 
     if (keyCode === 38) {
       index = Math.max(index - 1, 0)
@@ -29,7 +38,7 @@
       }
     }
     if (keyCode === 40) {
-      index = Math.min(index + 1, options[stage].length - 1)
+      index = Math.min(index + 1, stageOptions.length - 1)
 
       if (stage === options.length - 1) {
         dispatch("change", [...choices, choice]) // Only commit the numerical ID
@@ -37,18 +46,24 @@
     }
 
     if (keyCode === 13) {
-      const choice = Number(value.match(/\d+/)[0])
-      if (!choice) return
-      choices = [...choices, choice] // Only commit the numerical ID
-      dispatch("advance", value)
-      if (stage === options.length - 1) {
-        dispatch("confirm", choices)
-        stage = 0
-        // Store user progress
-      }
+      if (isNaN(choice)) {
+        console.log(choice)
+        stage--
+        index = 0
+        return
+      } else {
+        choices = [...choices, choice] // Only commit the numerical ID
 
-      if (stage !== options.length - 1) stage++
-      index = 0
+        dispatch("advance", value)
+        if (stage === options.length - 1) {
+          dispatch("confirm", choices)
+          stage = 0
+          // Store user progress
+        }
+
+        if (stage !== options.length - 1) stage++
+        index = 0
+      }
     }
   }
 </script>
@@ -56,7 +71,7 @@
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="inline-select">
-  {#each options[stage] as option (option)}
+  {#each stageOptions as option (option)}
     <p class:active={option === value} class="option output-content">
       {option}
     </p>

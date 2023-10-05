@@ -107,10 +107,12 @@
     }
   }
 
-  const clearPotential = () => {
+  const clearPotential = async () => {
     selectedAction = ""
     userInput = ""
     potential.set({})
+    await tick()
+    inputElement?.focus()
   }
 
   const displayMachinePotential = ({ detail }) => {
