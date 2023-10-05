@@ -11,7 +11,6 @@ import { showFlowChart, showGraph } from "../../ui/stores"
 import { portSelection } from "../../ui/paths"
 import { NULL_COORDINATE } from "../../utils/space"
 import { connect } from "../../action"
-import { ConnectionType } from "../../state/enums"
 
 const img = new Image()
 
@@ -70,7 +69,7 @@ export function onPortClick(address: string, port: Port) {
 
   // Tally the ports
   if (selection.length === 2) {
-    connect(ConnectionType.RESOURCE, selection[0], selection[1])
+    connect(selection[0], selection[1])
 
     portSelection.set([])
   }

@@ -1,6 +1,5 @@
 import {
   EntityType,
-  ConnectionType,
   MaterialType,
   PortType,
   MachineType,
@@ -9,7 +8,6 @@ import {
 
 export {
   EntityType,
-  ConnectionType,
   MaterialType,
   PortType,
   MachineType,
@@ -24,7 +22,6 @@ declare global {
     type?: EntityType
     machineType?: MachineType
     materialType?: MaterialType
-    connectionType?: ConnectionType
     portType?: PortType
     // ...
     creationBlock?: number
@@ -32,7 +29,6 @@ declare global {
     energy?: number
     readyBlock?: number
     level?: number
-    isPrototype?: boolean
     carriedBy?: string
     sourcePort?: string
     targetPort?: string

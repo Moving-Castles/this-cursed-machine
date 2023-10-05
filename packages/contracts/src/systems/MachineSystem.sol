@@ -10,11 +10,13 @@ contract MachineSystem is System {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
-    require(Energy.get(coreEntity) >= gameConfig.buildCost, "insufficient energy");
     // require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
+
+    // Check energy after resolving network
+    require(Energy.get(coreEntity) >= gameConfig.buildCost, "insufficient energy");
 
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);

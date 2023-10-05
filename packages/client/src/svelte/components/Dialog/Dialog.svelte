@@ -1,9 +1,10 @@
 <script lang="ts">
-  export let visible: boolean;
+  export let visible: boolean
 </script>
 
 {#if visible}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="backSide" on:click={() => (visible = false)}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="dialog" on:click={() => (visible = false)}>

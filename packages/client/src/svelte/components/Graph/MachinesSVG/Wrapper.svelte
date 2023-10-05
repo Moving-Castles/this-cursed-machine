@@ -325,7 +325,7 @@
             .filter(d => d.group === EntityType.MACHINE)
             .append("text")
             .attr("class", "label")
-            .attr("font-size", "4rem")
+            .attr("font-size", "2rem")
             .attr("fill", "#fff")
             .attr("stroke", "none")
             .text(function (d) {
@@ -455,7 +455,7 @@
       .filter(d => d.group === EntityType.MACHINE)
       .append("text")
       .attr("class", "label")
-      .attr("font-size", "4rem")
+      .attr("font-size", "2rem")
       .attr("fill", "#fff")
       .attr("stroke", "none")
       .text(function (d) {

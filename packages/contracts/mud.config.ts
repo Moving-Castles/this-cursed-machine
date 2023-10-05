@@ -5,7 +5,6 @@ export const enums = {
     ENTITY_TYPE: ["NONE", "LEVEL", "BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER", "COMBI_GATE"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "PRIME", "M150ED", "BANG", "MONSTER", "CLUB_MATE", "SPRITE", "MILK", "JUGGERNOG", "TABASCO", "IBUPROFENE", "AMMONIA", "NYQUIL"],
-    CONNECTION_TYPE: ["CONTROL", "RESOURCE"],
     PORT_TYPE: ["INPUT", "OUTPUT"],
     PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"]
 }
@@ -17,7 +16,6 @@ export default mudConfig({
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
         MaterialType: "MATERIAL_TYPE",
-        ConnectionType: "CONNECTION_TYPE",
         PortType: "PORT_TYPE",
         Name: "string",
         Energy: "uint32",
@@ -50,6 +48,11 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("EntityType")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
+            args: [resolveTableId("MachineType")],
         },
         {
             name: "KeysWithValueModule",

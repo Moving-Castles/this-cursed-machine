@@ -12,6 +12,7 @@
     activeActions,
     completedActions,
   } from "./modules/action/actionSequencer"
+  import { patches } from "./modules/simulator"
   // import {
   //   patches,
   //   simulated,
@@ -26,8 +27,8 @@
   import Loading from "./components/Loading/Loading.svelte"
   import Flash from "./components/Flash/Flash.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
+  import Intro from "./components/Intro/Intro.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
-  import End from "./components/End/End.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
 
   // import Game from "./components/Game/Game.svelte"
@@ -37,6 +38,7 @@
   $: console.log("$queuedActions", $queuedActions)
   $: console.log("$activeActions", $activeActions)
   $: console.log("$completedActions", $completedActions)
+  $: console.log("$patches", $patches)
   // $: console.log("$entities", $entities)
   // $: console.log("$levels", $levels)
   // $: console.log("$cores", $cores)
@@ -44,7 +46,6 @@
   // $: console.log("$playerCore", $playerCore)
   // $: console.log("$ports", $ports)
   // $: console.log("$simulated", $simulated)
-  // $: console.log("$patches", $patches)
   // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
   // - - - - -
 
@@ -110,8 +111,8 @@
     />
   {:else if !$playerCore}
     <Spawn />
-  {:else if $playerCore.level === 6}
-    <End />
+  {:else if $playerCore.level === 0}
+    <Intro />
   {:else}
     <TerminalBox />
   {/if}

@@ -42,11 +42,6 @@ enum MATERIAL_TYPE {
   NYQUIL
 }
 
-enum CONNECTION_TYPE {
-  CONTROL,
-  RESOURCE
-}
-
 enum PORT_TYPE {
   INPUT,
   OUTPUT

@@ -5,7 +5,7 @@ import { console } from "forge-std/console.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/common.sol";
+import { MACHINE_TYPE, ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../../src/codegen/common.sol";
 
 contract ResolutionSystemTest is MudTest {
   IWorld world;
@@ -38,14 +38,13 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
     console.log("%%%%%%%%% RESOLVE 1");
     console.log("%%%%%%%%%");
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
@@ -87,17 +86,17 @@ contract ResolutionSystemTest is MudTest {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output to blender input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[0][0], blenderInputPorts[0][0]);
+    world.connect(coreOutputPorts[0][0], blenderInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect blender output to outlet input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, blenderOutputPorts[0][0], outletInputPorts[0][0]);
+    world.connect(blenderOutputPorts[0][0], outletInputPorts[0][0]);
     vm.stopPrank();
 
     // 6. Wait 10 blocks
@@ -116,14 +115,13 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
 
     // console.log("%%%%%%%%%");
     // console.log("%%%%%%%%% RESOLVE 2");
     // console.log("%%%%%%%%%");
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
@@ -150,12 +148,12 @@ contract ResolutionSystemTest is MudTest {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output to outlet input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[0][0], outletInputPorts[0][0]);
+    world.connect(coreOutputPorts[0][0], outletInputPorts[0][0]);
     vm.stopPrank();
 
     // 6. Wait 10 blocks
@@ -174,14 +172,13 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
     console.log("%%%%%%%%% RESOLVE 3");
     console.log("%%%%%%%%%");
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
@@ -208,17 +205,17 @@ contract ResolutionSystemTest is MudTest {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output 1 to outlet input 1
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[0][0], outletInputPorts[0][0]);
+    world.connect(coreOutputPorts[0][0], outletInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output 2 to outlet input 2
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[1][0], outletInputPorts[1][0]);
+    world.connect(coreOutputPorts[1][0], outletInputPorts[1][0]);
     vm.stopPrank();
 
     // 6. Wait 10 blocks
@@ -241,10 +238,9 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Create an inlet entity
     vm.startPrank(alice);
@@ -280,22 +276,22 @@ contract ResolutionSystemTest is MudTest {
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, inletOutputPorts[0][0], coreInputPorts[0][0]);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output 1 to blender input 1
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[0][0], blenderInputPorts[0][0]);
+    world.connect(coreOutputPorts[0][0], blenderInputPorts[0][0]);
     vm.stopPrank();
 
     // 5. Connect core output 1 to blender input 1
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, coreOutputPorts[1][0], blenderInputPorts[1][0]);
+    world.connect(coreOutputPorts[1][0], blenderInputPorts[1][0]);
     vm.stopPrank();
 
     // 5. Connect blender output to outlet input
     vm.startPrank(alice);
-    world.connect(CONNECTION_TYPE.RESOURCE, blenderOutputPorts[0][0], outletInputPorts[0][0]);
+    world.connect(blenderOutputPorts[0][0], outletInputPorts[0][0]);
     vm.stopPrank();
 
     // 6. Wait 10 blocks
@@ -314,10 +310,9 @@ contract ResolutionSystemTest is MudTest {
 
     // 1. Spawn core
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // 2. Wait 10 blocks
     vm.roll(block.number + 10);
@@ -328,5 +323,43 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     assertEq(uint8(Energy.get(world, coreEntity)), 90);
+  }
+
+  function testBugsToEnergy() public {
+    setUp();
+
+    // 1. Spawn core
+    vm.startPrank(alice);
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
+    vm.stopPrank();
+
+    // 2. Create an inlet entity
+    vm.startPrank(alice);
+    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
+    vm.stopPrank();
+
+    assertEq(uint8(Energy.get(world, coreEntity)), 80);
+
+    // ... Get inlet output ports
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+
+    // ... Get core input ports
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
+
+    // 4. Connect inlet output to core input
+    vm.startPrank(alice);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
+    vm.stopPrank();
+
+    // 6. Wait 100 blocks
+    vm.roll(block.number + 40);
+
+    // 7. Resolve
+    vm.startPrank(alice);
+    world.resolve();
+    vm.stopPrank();
+
+    assertEq(uint8(Energy.get(world, coreEntity)), 120);
   }
 }

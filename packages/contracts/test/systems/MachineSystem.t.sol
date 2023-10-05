@@ -4,7 +4,7 @@ import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../../src/codegen/common.sol";
 
 contract MachineSystemTest is MudTest {
   IWorld world;
@@ -24,10 +24,9 @@ contract MachineSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
     vm.startPrank(alice);
@@ -44,6 +43,7 @@ contract MachineSystemTest is MudTest {
 
     vm.startPrank(alice);
     world.spawn();
+    world.transfer();
     vm.stopPrank();
 
     // Create a new entity
@@ -57,10 +57,9 @@ contract MachineSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
     vm.startPrank(alice);

@@ -30,6 +30,8 @@
     <div class="placeholder">
       {#if $staticContent.spawning && $staticContent.spawning.content && !showSpawn}
         {#key i}
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="block" on:click={next}>
             {@html renderBlockText($staticContent.spawning.content.content[i])}
           </div>

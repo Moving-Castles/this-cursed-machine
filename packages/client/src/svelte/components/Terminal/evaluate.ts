@@ -5,6 +5,7 @@ import { MachineType } from "../../modules/state/enums"
 import { playerCore, playerEntityId } from "../../modules/state"
 import { simulatedMachines } from "../../modules/simulator"
 import { buildMachine, connectMachines } from "./actions"
+import { resolve } from "../../modules/action"
 
 /**
  * Evaluate string output
@@ -91,6 +92,13 @@ export const evaluate = (
   }
 
   /**
+ * Resolve network on chain
+ */
+  if (string === "resolve") {
+    resolve();
+  }
+
+  /**
    * Show build interface
    */
   if (string === "build") {
@@ -114,10 +122,9 @@ export const evaluate = (
       `\nContents: \n ${Object.entries(get(simulatedMachines))
         .map(
           ([id, machine]) =>
-            `${symbols[1]} ${MachineType[machine.machineType]} ${
-              machine.machineType == MachineType.CORE
-                ? `E: ${machine.energy}`
-                : ""
+            `${symbols[1]} ${MachineType[machine.machineType]} ${machine.machineType == MachineType.CORE
+              ? `E: ${machine.energy}`
+              : ""
             }`
         )
         .join("\n")}\n
@@ -191,8 +198,7 @@ export const evaluate = (
       }
       if (!AVAILABLE_MACHINES.includes(machineToBuild)) {
         send(
-          `$$$$ We don't have that machine in store... We do have ${
-            AVAILABLE_MACHINES.join("s ") + "s"
+          `$$$$ We don't have that machine in store... We do have ${AVAILABLE_MACHINES.join("s ") + "s"
           }`
         )
       } else {

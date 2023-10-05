@@ -5,7 +5,7 @@ import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT, CONNECTION_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../../src/codegen/common.sol";
 
 contract ConnectionSystemTest is MudTest {
   IWorld world;
@@ -25,10 +25,9 @@ contract ConnectionSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    world.spawn();
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
     vm.stopPrank();
-
-    bytes32 coreEntity = LibUtils.addressToEntityKey(alice);
 
     // Create a new entity
     vm.startPrank(alice);
@@ -43,11 +42,7 @@ contract ConnectionSystemTest is MudTest {
 
     // Connect
     vm.startPrank(alice);
-    bytes32 connection = world.connect(
-      CONNECTION_TYPE.RESOURCE,
-      coreEntityOutputPorts[0][0],
-      newEntityInputPorts[0][0]
-    );
+    bytes32 connection = world.connect(coreEntityOutputPorts[0][0], newEntityInputPorts[0][0]);
     vm.stopPrank();
 
     // Check that the connection was created
