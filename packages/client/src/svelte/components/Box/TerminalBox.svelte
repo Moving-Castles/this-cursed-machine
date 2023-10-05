@@ -26,7 +26,7 @@
         stage={false}
         track={false}
         animated={false}
-        placeholder={"Build"}
+        placeholder={"Help"}
       />
     </div>
     {#if $playerCore}

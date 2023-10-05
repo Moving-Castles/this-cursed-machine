@@ -1,7 +1,4 @@
-import {
-  EntityType,
-  MachineType,
-} from "../../modules/state/enums"
+import { EntityType, MachineType } from "../../modules/state/enums"
 import { connections } from "../../modules/state"
 import {
   simulated,
@@ -10,7 +7,7 @@ import {
   simulatedPorts,
 } from "../../modules/simulator"
 import { get } from "svelte/store"
-import { build, connect } from "../../modules/action"
+import { build, connect, disconnect, destroy } from "../../modules/action"
 
 export const availablePorts = (machineId: string) => {
   const sourceMachine = Object.entries(get(simulatedMachines)).find(
@@ -74,14 +71,19 @@ export const connectMachines = (
 
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
-        action = connect(
-          sourcePorts[0][0],
-          targetPorts[0][0]
-        )
+        action = connect(sourcePorts[0][0], targetPorts[0][0])
       } else {
         send("Ports occupied.")
       }
     }
   }
   return action
+}
+
+export const destroyMachine = (machineId: string) => {
+  return destroy(machineId)
+}
+
+export const disconnectMachines = (connectionId: string) => {
+  return disconnect(connectionId)
 }

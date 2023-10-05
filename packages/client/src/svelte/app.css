@@ -63,7 +63,29 @@
   animation: strobe 200ms steps(1, end) 3;
 }
 
-.text-stroke {
+.xl-text {
+  font-size: 50vh;
+  line-height: 31vh;
+  text-align: center;
+  letter-spacing: -70px;
+}
+
+.centered {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateX(-6vh);
+}
+
+.text-stroke-red {
+  text-shadow:
+    -1px -1px 0 red,
+    1px -1px 0 red,
+    -1px 1px 0 red,
+    1px 1px 0 red;
+}
+
+.text-stroke-white {
   text-shadow:
     -1px -1px 0 var(--white),
     1px -1px 0 var(--white),
@@ -114,6 +136,30 @@ html {
   font-size: var(--font-size-normal);
   margin: 0;
   padding: 0;
+}
+
+h1,
+h2,
+h3,
+p,
+svg {
+  user-select: none;
+}
+
+button {
+  padding: 20px;
+  font-size: var(--font-size-normal);
+  font-family: var(--font-family);
+  margin-top: 1em;
+  cursor: pointer;
+  background: black;
+  color: white;
+  border: 4px solid white;
+
+  &:hover {
+    background: white;
+    color: black;
+  }
 }
 
 [role="button"] {

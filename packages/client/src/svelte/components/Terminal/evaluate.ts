@@ -3,8 +3,7 @@ import { get } from "svelte/store"
 import { output, symbols } from "./index"
 import { MachineType } from "../../modules/state/enums"
 import { playerCore, playerEntityId } from "../../modules/state"
-import { simulatedMachines } from "../../modules/simulator"
-import { buildMachine, connectMachines } from "./actions"
+import { simulatedMachines, readableConnections } from "../../modules/simulator"
 import { resolve } from "../../modules/action"
 
 /**
@@ -46,19 +45,17 @@ export const evaluate = (
   /**
    * Display help
    */
-  if (string === "h" || string === "help")
-    if (!get(output).join("").includes("please")) {
-      send("Say please")
-    } else {
-      const commandList = `
-      Commands:
-      Inspect [id]  Inspect a machine
-      Build         Create a machine
-      Connect       Connect machines
-            `
-      // List all available commands
-      send(commandList.replaceAll(" ", "&nbsp;"))
-    }
+  if (string === "h" || string === "help") {
+    const commandList = `
+    Commands:
+    Build         Create a machine
+    Connect       Connect machines
+    Destroy       Destroy machines
+    Disconnect    Disconnect machines
+          `
+    // List all available commands
+    send(commandList.replaceAll(" ", "&nbsp;"))
+  }
 
   /**
    * Show agreement
@@ -98,20 +95,20 @@ export const evaluate = (
     resolve()
   }
 
-  /**
-   * Show build interface
-   */
-  if (string === "build") {
-    // show an input
-    return "build"
+  if (string === "disconnect") {
+    if (get(readableConnections).length === 0) {
+      send("Can't disconnect if you ain't connected")
+    } else {
+      return "disconnect"
+    }
   }
 
   /**
-   * Show connect interface
+   * Show build interface
    */
-  if (string === "connect") {
+  if (string === "build" || string === "connect" || string === "destroy") {
     // show an input
-    return "connect"
+    return string
   }
 
   /**
