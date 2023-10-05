@@ -7,8 +7,6 @@
   import { coreIsConnectedToInlet } from "../../modules/simulator/"
   import { blockNumber } from "../../modules/network/"
 
-  $: console.log("$coreIsConnectedToInlet ", $coreIsConnectedToInlet)
-
   // If we are not connected to inlet energy is:
   // Energy = on-chain energy - blocksSinceLastResolution
   // If we are connected to inlet energy is:

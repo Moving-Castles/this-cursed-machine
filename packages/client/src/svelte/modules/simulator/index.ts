@@ -5,7 +5,13 @@
 import { MachineType, PortType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import {
-  entities, playerBox, playerEntityId, playerCore, ports, connections, machines
+  entities,
+  playerBox,
+  playerEntityId,
+  playerCore,
+  ports,
+  connections,
+  machines,
 } from "../state"
 import { blockNumber } from "../network"
 import { EntityType } from "../state/enums"
@@ -13,8 +19,8 @@ import type { SimulatedEntities } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
-  0,
-  Object.keys(MachineType).length / 2
+  4, // exclude some
+  Object.keys(MachineType).length / 2 - 4
 )
 
 // --- STORES -----------------------------------------------------------------
@@ -78,10 +84,6 @@ export const simulated = derived(
       if (patch.outputs && simulated[key]) {
         simulated[key].outputs = patch.outputs
       }
-      // Energy
-      // if (patch.energy && simulated[key]) {
-      //   simulated[key].energy = capAtZero((simulated[key].energy || 0) + (patch.energy * $blocksSinceLastResolution))
-      // }
     }
 
     return simulated
@@ -91,54 +93,48 @@ export const simulated = derived(
 export const coreIsConnectedToInlet = derived(
   [playerEntityId],
   ([$playerEntityId]) => {
-    const _coreEntity = $playerEntityId;
-
-    console.log('evaluating coreIsConnectedToInlet ...', _coreEntity)
+    const _coreEntity = $playerEntityId
 
     // *** 1. Get all input ports on the core
     const inputPortsOnCores = Object.fromEntries(
       Object.entries(get(ports)).filter(
-        ([_, port]) => port.carriedBy === _coreEntity && port.portType === PortType.INPUT
+        ([_, port]) =>
+          port.carriedBy === _coreEntity && port.portType === PortType.INPUT
       )
     )
-    // DEBUG
-    console.log('inputPortsOnCores', inputPortsOnCores);
-    console.log('Object.keys(inputPortsOnCores)', Object.keys(inputPortsOnCores))
-    console.log("get(connections)", get(connections))
-
     // Abort early if no input ports on core
-    if (Object.keys(inputPortsOnCores).length === 0) return false;
+    if (Object.keys(inputPortsOnCores).length === 0) return false
 
     // *** 2. Get connections going to input on core
     const connectionsToInputPortsOnCores = Object.fromEntries(
       Object.entries(get(connections)).filter(
-        ([_, connection]) => connection.targetPort === Object.keys(inputPortsOnCores)[0]
+        ([_, connection]) =>
+          connection.targetPort === Object.keys(inputPortsOnCores)[0]
       )
     )
-
-    // DEBUG
-    console.log('connectionsToInputPortsOnCores', connectionsToInputPortsOnCores);
 
     // HACK: short circuit for now
     // if (Object.keys(connectionsToInputPortsOnCores).length !== 0) return true;
     // return false;
 
     // Abort early if no connections to input ports on core
-    if (Object.keys(connectionsToInputPortsOnCores).length === 0) return false;
+    if (Object.keys(connectionsToInputPortsOnCores).length === 0) return false
 
     // 3. Get output ports at end of connections
-    const outputPortsAtEndOfConnections = get(ports)[Object.values(connectionsToInputPortsOnCores)[0].sourcePort]
-
-    // DEBUG
-    console.log('outputPortsAtEndOfConnections', outputPortsAtEndOfConnections);
+    const outputPortsAtEndOfConnections =
+      get(ports)[Object.values(connectionsToInputPortsOnCores)[0].sourcePort]
 
     // 4. Check if machine at end of connection is an inlet
-    if (get(machines)[outputPortsAtEndOfConnections.carriedBy].machineType !== MachineType.INLET) return false;
+    if (
+      get(machines)[outputPortsAtEndOfConnections.carriedBy].machineType !==
+      MachineType.INLET
+    )
+      return false
 
     // Core is connected
-    return true;
-  })
-
+    return true
+  }
+)
 
 /** Convenience methods for easy access */
 
@@ -163,6 +159,7 @@ export const simulatedMachines = derived(
   ([$simulated, $playerCore]) => {
     return Object.fromEntries(
       Object.entries($simulated).filter(([_, entry]) => {
+        // osn
         return (
           entry.entityType === EntityType.MACHINE &&
           entry.carriedBy === $playerCore.carriedBy

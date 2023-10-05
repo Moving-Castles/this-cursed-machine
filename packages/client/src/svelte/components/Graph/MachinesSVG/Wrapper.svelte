@@ -55,9 +55,9 @@
   setData()
 
   $: {
-    if (element && isEqual(data, previousData) === false) updateEverything() // update
     if (
       (element && isEqual($potential, previousPotential) === false) ||
+      (element && isEqual(data, previousData) === false) ||
       (element && isEmpty($potential))
     ) {
       updateEverything()
@@ -65,8 +65,6 @@
     previousData = { ...data }
     previousPotential = { ...$potential }
   }
-
-  $: if (element && $simulatedPlayerCore.energy) updateEverything()
 
   // Utilities
   const isConnected = d => {
@@ -159,6 +157,7 @@
    */
   // Reheat the simulation when drag starts, and fix the subject position.
   function dragstarted(event, d) {
+    console.log("SYATYAT")
     if (!event.active) simulation.alphaTarget(0.3).restart()
     d.x = boundX(event.x)
     d.y = boundY(event.y)
@@ -288,6 +287,9 @@
       .join(
         enter => {
           const newNode = enter
+            .filter(nn => {
+              return nn
+            })
             .append("g")
             .on("mouseenter", (_, d) => {
               inspecting = d.entry.machineType

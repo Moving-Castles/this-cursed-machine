@@ -92,10 +92,10 @@ export const evaluate = (
   }
 
   /**
- * Resolve network on chain
- */
+   * Resolve network on chain
+   */
   if (string === "resolve") {
-    resolve();
+    resolve()
   }
 
   /**
@@ -122,9 +122,10 @@ export const evaluate = (
       `\nContents: \n ${Object.entries(get(simulatedMachines))
         .map(
           ([id, machine]) =>
-            `${symbols[1]} ${MachineType[machine.machineType]} ${machine.machineType == MachineType.CORE
-              ? `E: ${machine.energy}`
-              : ""
+            `${symbols[1]} ${MachineType[machine.machineType]} ${
+              machine.machineType == MachineType.CORE
+                ? `E: ${machine.energy}`
+                : ""
             }`
         )
         .join("\n")}\n
@@ -158,68 +159,5 @@ export const evaluate = (
         send(`${machine}`)
       }
     }
-  }
-
-  /**
-   * Create pipes
-   */
-  if (string.startsWith("p ")) {
-    // Add pipe
-    if (args.length !== 2) {
-      send(`! e: ${energy} Provide at least two arguments to add a pipe`)
-    } else {
-      if (energy <= 10) {
-        send("Not enough energy. Building this would kill you. " + energy)
-      }
-
-      const source = Number(args[0])
-      const target = Number(args[1])
-
-      connectMachines(source, target, send)
-    }
-  }
-
-  /**
-   * Create machines
-   */
-  if (string.startsWith("m ")) {
-    // Add machine
-    if (args.length !== 1) {
-      send(
-        `@¥ Provide only one argument, which can be one of ${AVAILABLE_MACHINES.join(
-          " "
-        )}`
-      )
-    } else {
-      const machineToBuild: string = args[0].toUpperCase()
-
-      if (energy <= 20) {
-        send("Not enough energy. Building this would kill you. " + energy)
-      }
-      if (!AVAILABLE_MACHINES.includes(machineToBuild)) {
-        send(
-          `$$$$ We don't have that machine in store... We do have ${AVAILABLE_MACHINES.join("s ") + "s"
-          }`
-        )
-      } else {
-        buildMachine(MachineType[machineToBuild], send)
-      }
-    }
-  }
-
-  /**
-   * Remove pipes
-   */
-  if (string.startsWith("rp ")) {
-    // Remove pipe
-    send("We can't remove pipes yet. Come back later")
-  }
-
-  /**
-   * Remove machines
-   */
-  if (string.startsWith("rm ")) {
-    // Remove machine
-    send("We can't remove machines yet. Come back later")
   }
 }
