@@ -3,6 +3,7 @@ import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
   Spawn = "spawn",
+  Restart = "restart",
   Transfer = "transfer",
   Connect = "connect",
   Disconnect = "disconnect",
@@ -15,6 +16,10 @@ export enum WorldFunctions {
 
 export function spawn() {
   return addToSequencer(WorldFunctions.Spawn, [])
+}
+
+export function restart() {
+  return addToSequencer(WorldFunctions.Restart, [])
 }
 
 export function transfer() {

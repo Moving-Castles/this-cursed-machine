@@ -9,4 +9,6 @@ pragma solidity >=0.8.21;
  */
 interface ITransferSystem {
   function transfer() external returns (bytes32);
+
+  function restart() external returns (bytes32);
 }
