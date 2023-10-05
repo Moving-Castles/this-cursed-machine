@@ -40,9 +40,8 @@ export const availablePorts = (machineId: string) => {
 // Build
 export const buildMachine = (machineType: string, send: Function) => {
   // First add the potential transaction
-  const action = build(MachineType[machineType], 0, 0)
+  const action = build(MachineType[machineType])
   send(`Building a ${machineType}`)
-
   // Wait for the result of the action
   return action
 }
@@ -68,7 +67,7 @@ export const connectMachines = (
       sourceMachine[1].entityType !== EntityType.MACHINE ||
       targetMachine[1].entityType !== EntityType.MACHINE
     ) {
-      send("Please, only connect machines")
+      send("Only connect machines")
     } else {
       const [_, sourcePorts] = availablePorts(sourceMachine[1].numericalID)
       const [__, targetPorts] = availablePorts(targetMachine[1].numericalID)
@@ -80,7 +79,7 @@ export const connectMachines = (
           targetPorts[0][0]
         )
       } else {
-        send("Ports occupied. Sawry")
+        send("Ports occupied.")
       }
     }
   }

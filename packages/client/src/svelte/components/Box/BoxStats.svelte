@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { playerEntityId, playerCore, playerBox } from "../../modules/state"
+  import { playerCore, playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
   import { simulatedPlayerCore } from "../../modules/simulator"
   import { blocksSinceLastResolution } from "../../modules/simulator/"
   import { capAtZero } from "../../modules/utils/misc"
-  import { coreIsConnectedToInlet } from "../../modules/simulator/networkResolver"
+  import { coreIsConnectedToInlet } from "../../modules/simulator/"
   import { blockNumber } from "../../modules/network/"
 
-  export let box: Box
+  $: console.log("$coreIsConnectedToInlet ", $coreIsConnectedToInlet)
 
   // If we are not connected to inlet energy is:
   // Energy = on-chain energy - blocksSinceLastResolution
@@ -26,12 +26,11 @@
       <div class="green">
         Simulated: {capAtZero(
           ($simulatedPlayerCore.energy || 0) +
-            (coreIsConnectedToInlet($playerEntityId) ? 1 : -1) *
-              $blocksSinceLastResolution
+            ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
         )}
       </div>
       <div>
-        Mod: {coreIsConnectedToInlet($playerEntityId) ? 1 : -1}
+        Mod: {$coreIsConnectedToInlet ? 1 : -1}
       </div>
       <div>
         Past blocks: {$blocksSinceLastResolution}

@@ -215,7 +215,6 @@ function resolve(_boxEntity: string) {
     patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
   }
 
-  console.log('$$$$$$ patches', patches)
   return patches
 }
 
@@ -241,7 +240,7 @@ export function coreIsConnectedToInlet(_coreEntity: string) {
   // *** 2. Get connections going to input cores on core
   const connectionsToInputPortsOnCores = Object.fromEntries(
     Object.entries(get(connections)).filter(
-      ([_, connection]) => connection.sourcePort === Object.keys(inputPortsOnCores)[0]
+      ([_, connection]) => connection.targetPort === Object.keys(inputPortsOnCores)[0]
     )
   )
 

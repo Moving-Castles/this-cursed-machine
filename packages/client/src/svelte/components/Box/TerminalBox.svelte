@@ -32,7 +32,7 @@
     {#if $playerCore}
       <div class="right-col">
         <div class="stats">
-          <BoxStats on:read={() => send("read", true)} box={$playerBox} />
+          <BoxStats />
         </div>
         <!-- <div class="goal">
           {#if $lastSentTime > 0 && $lastSentTime + 1000 > now}
