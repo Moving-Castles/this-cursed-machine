@@ -29,6 +29,9 @@
         const sourceMachine = $simulatedPorts[connection?.sourcePort]?.carriedBy
         const targetMachine = $simulatedPorts[connection?.targetPort]?.carriedBy
 
+        console.log("source, target")
+        console.log(sourceMachine, targetMachine)
+
         if (sourceMachine && targetMachine) {
           return [
             MachineType[$simulatedMachines[sourceMachine].machineType],
