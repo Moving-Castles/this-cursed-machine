@@ -4,6 +4,7 @@
  */
 import { MachineType, PortType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
+import { capAtZero } from "../../modules/utils/misc"
 import {
   entities,
   playerBox,
@@ -91,13 +92,13 @@ export const simulated = derived(
 )
 
 export const coreIsConnectedToInlet = derived(
-  [playerEntityId],
-  ([$playerEntityId]) => {
+  [ports, machines, connections, playerEntityId],
+  ([$ports, $machines, $connections, $playerEntityId]) => {
     const _coreEntity = $playerEntityId
 
     // *** 1. Get all input ports on the core
     const inputPortsOnCores = Object.fromEntries(
-      Object.entries(get(ports)).filter(
+      Object.entries($ports).filter(
         ([_, port]) =>
           port.carriedBy === _coreEntity && port.portType === PortType.INPUT
       )
@@ -107,7 +108,7 @@ export const coreIsConnectedToInlet = derived(
 
     // *** 2. Get connections going to input on core
     const connectionsToInputPortsOnCores = Object.fromEntries(
-      Object.entries(get(connections)).filter(
+      Object.entries($connections).filter(
         ([_, connection]) =>
           connection.targetPort === Object.keys(inputPortsOnCores)[0]
       )
@@ -122,11 +123,11 @@ export const coreIsConnectedToInlet = derived(
 
     // 3. Get output ports at end of connections
     const outputPortsAtEndOfConnections =
-      get(ports)[Object.values(connectionsToInputPortsOnCores)[0].sourcePort]
+      $ports[Object.values(connectionsToInputPortsOnCores)[0].sourcePort]
 
     // 4. Check if machine at end of connection is an inlet
     if (
-      get(machines)[outputPortsAtEndOfConnections.carriedBy].machineType !==
+      $machines[outputPortsAtEndOfConnections.carriedBy].machineType !==
       MachineType.INLET
     )
       return false
@@ -195,3 +196,20 @@ export const simulatedPorts = derived(simulated, $simulated => {
     )
   )
 })
+
+// --- MISC ----------------------------------------------
+
+export const simulatedPlayerEnergy = derived(
+  [simulatedPlayerCore, coreIsConnectedToInlet, blocksSinceLastResolution],
+  ([
+    $simulatedPlayerCore,
+    $coreIsConnectedToInlet,
+    $blocksSinceLastResolution,
+  ]) => {
+    console.log("======", $coreIsConnectedToInlet)
+    return capAtZero(
+      ($simulatedPlayerCore.energy || 0) +
+        ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
+    )
+  }
+)

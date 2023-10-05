@@ -1,9 +1,11 @@
 <script lang="ts">
   import { playerCore, playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
-  import { simulatedPlayerCore } from "../../modules/simulator"
+  import {
+    simulatedPlayerCore,
+    simulatedPlayerEnergy,
+  } from "../../modules/simulator"
   import { blocksSinceLastResolution } from "../../modules/simulator/"
-  import { capAtZero } from "../../modules/utils/misc"
   import { coreIsConnectedToInlet } from "../../modules/simulator/"
   import { blockNumber } from "../../modules/network/"
 
@@ -22,10 +24,7 @@
         On-chain: {$playerCore.energy}
       </div>
       <div class="green">
-        Simulated: {capAtZero(
-          ($simulatedPlayerCore.energy || 0) +
-            ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
-        )}
+        Simulated: {$simulatedPlayerEnergy}
       </div>
       <div>
         Mod: {$coreIsConnectedToInlet ? 1 : -1}
