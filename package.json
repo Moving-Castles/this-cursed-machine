@@ -11,6 +11,7 @@
     "dev": "concurrently -n contracts,client -c cyan,magenta 'pnpm run dev:contracts' 'pnpm run dev:client'",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
+    "playtest": "pnpm run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {

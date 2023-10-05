@@ -117,9 +117,9 @@ async function execute() {
     })
 
     // Wait for transaction to be executed
-    let receipt = await get(network).publicClient.waitForTransactionReceipt({ hash: tx })
-
-    console.log('receipt', receipt);
+    let receipt = await get(network).publicClient.waitForTransactionReceipt({
+      hash: tx,
+    })
 
     if (receipt) {
       if (receipt.status == "success") {

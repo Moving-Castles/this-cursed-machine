@@ -35,7 +35,7 @@ export enum MaterialType {
   TABASCO,
   IBUPROFENE,
   AMMONIA,
-  NYQUIL
+  NYQUIL,
 }
 
 export enum PortType {

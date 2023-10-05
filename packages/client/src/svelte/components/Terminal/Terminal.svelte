@@ -23,6 +23,7 @@
   import Select from "./Select.svelte"
   import MultiSelect from "./MultiSelect.svelte"
   import BouncingSuffer from "../Loading/BouncingSuffer.svelte"
+  import { playerCore } from "../../modules/state"
   import { EntityType, MachineType } from "../../modules/state/enums"
 
   export let speed = 80
@@ -69,7 +70,12 @@
     }
   }
 
-  $: if ($watchingAction === null) clearPotential()
+  $: {
+    if ($watchingAction === null) {
+      clearPotential()
+      scrollToEnd()
+    }
+  }
 
   $: if (selectedAction) scrollToEnd()
 
@@ -113,6 +119,7 @@
         machineType: MachineType[detail],
         entityType: EntityType.MACHINE,
         potential: true,
+        carriedBy: $playerCore.carriedBy,
       },
     })
   }
@@ -220,6 +227,16 @@
           bind:value={userInput}
           on:confirm={onBuildConfirm}
           on:change={displayMachinePotential}
+          on:cancel={clearPotential}
+        />
+      {:else if selectedAction === "inspect"}
+        <Select
+          options={Object.values($simulatedMachines).map(
+            machine =>
+              `${MachineType[machine.machineType]}: ${machine.numericalID}`
+          )}
+          on:change={displayConnectionPotential}
+          on:confirm={onConnectConfirm}
           on:cancel={clearPotential}
         />
       {:else if selectedAction === "connect"}
