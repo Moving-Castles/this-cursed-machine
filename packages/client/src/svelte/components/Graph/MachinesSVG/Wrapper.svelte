@@ -518,12 +518,20 @@
     }, 120)
   }
 
+  const resizeSvg = () => {
+    svg
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("style", "max-width: 100%; height: auto;")
+  }
+
   onMount(() => {
     init()
   })
 </script>
 
-<svelte:window on:resize={init} />
+<svelte:window on:resize={resizeSvg} />
 
 <div class="wrapper">
   {#if inspecting}
