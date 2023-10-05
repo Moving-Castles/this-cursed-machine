@@ -56,9 +56,10 @@
 
   $: {
     if (
-      (element && isEqual($potential, previousPotential) === false) ||
-      (element && isEqual(data, previousData) === false) ||
-      (element && isEmpty($potential))
+      element &&
+      (isEqual($potential, previousPotential) === false ||
+        isEqual(data, previousData) === false ||
+        isEmpty($potential))
     ) {
       updateEverything()
     }
