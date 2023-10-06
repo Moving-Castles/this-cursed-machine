@@ -2,51 +2,42 @@
 pragma solidity >=0.8.21;
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, PortPlacement, CreationBlock } from "../codegen/index.sol";
-import { ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../codegen/common.sol";
+import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, CreationBlock } from "../codegen/index.sol";
+import { ENTITY_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibPort {
   /**
-   * @dev Creates a new port entity with specified attributes, associates it with a core entity, and sets its placement.
-   *
-   * The function generates a unique key for the port entity, assigns it the "PORT" entity type, and sets its type and placement.
-   * The placements can be one of the following: "TOP", "RIGHT", "BOTTOM", or "LEFT".
-   *
-   * @param _hostEntity The bytes32 key associated with the entity to which the port will be linked.
-   * @param _portType The type of the port to be created.
-   * @param _portPlacement The specific placement of the port, which can be "TOP", "RIGHT", "BOTTOM", or "LEFT".
-   *
-   * @return Returns the generated key associated with the newly created port entity.
+   * @notice Creates a new port entity with specified type and placement and associates it with a host entity.
+   * @param _hostEntity The identifier of the host entity to which the port is associated.
+   * @param _portType The type of the port, specified by the PORT_TYPE enum.
+   * @return portEntity The identifier for the newly created port entity.
    */
-  function create(bytes32 _hostEntity, PORT_TYPE _portType, PORT_PLACEMENT _portPlacement) internal returns (bytes32) {
+  function create(bytes32 _hostEntity, PORT_TYPE _portType) internal returns (bytes32) {
     bytes32 portEntity = LibUtils.getRandomKey();
     EntityType.set(portEntity, ENTITY_TYPE.PORT);
     CreationBlock.set(portEntity, block.number);
     PortType.set(portEntity, _portType);
-    PortPlacement.set(portEntity, _portPlacement);
     CarriedBy.set(portEntity, _hostEntity);
     return portEntity;
   }
 
   /**
-   * @notice Destroys a port entity.
-   * @dev This function removes all records associated with the given port entity. It should be used with caution to ensure data integrity.
-   * @param _portEntity The key of the port entity to be destroyed.
+   * @notice Deletes the records related to a specified port entity.
+   * @param _portEntity The identifier for the port entity whose records are to be deleted.
    */
   function destroy(bytes32 _portEntity) internal {
     EntityType.deleteRecord(_portEntity);
     CreationBlock.deleteRecord(_portEntity);
     PortType.deleteRecord(_portEntity);
-    PortPlacement.deleteRecord(_portEntity);
     CarriedBy.deleteRecord(_portEntity);
   }
 
   /**
-   * @notice Retrieves the ports of a given entity and port type.
-   * @param _entity The entity identifier for which to retrieve ports.
-   * @param _portType The type of port to be retrieved.
-   * @return ports A 2D array of byte32 representing the ports of the given entity and port type.
+   * @notice Retrieves ports of a specific type associated with a given entity.
+   * @param _entity The identifier of the entity to retrieve ports for.
+   * @param _portType The type of port to retrieve, specified by the PORT_TYPE enum.
+   * @return ports A dynamic 2D bytes32 array containing identifiers of the retrieved ports.
    */
   function getPorts(bytes32 _entity, PORT_TYPE _portType) internal view returns (bytes32[][] memory ports) {
     QueryFragment[] memory fragments = new QueryFragment[](3);
@@ -58,11 +49,11 @@ library LibPort {
   }
 
   /**
-   * @notice Retrieves the ports of a given entity and port type in a specific world.
+   * @notice Retrieves ports of a specified type associated with a given entity in the provided world.
    * @param _world The world context in which to perform the query.
-   * @param _entity The entity identifier for which to retrieve ports.
-   * @param _portType The type of port to be retrieved.
-   * @return ports A 2D array of byte32 representing the ports of the given entity and port type in the specified world.
+   * @param _entity The identifier of the entity to retrieve ports for.
+   * @param _portType The type of port to retrieve, specified by the PORT_TYPE enum.
+   * @return ports A dynamic 2D bytes32 array containing identifiers of the retrieved ports.
    */
   function getPorts(
     IWorld _world,

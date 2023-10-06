@@ -3,10 +3,9 @@ import { resolveTableId } from "@latticexyz/config";
 
 export const enums = {
     ENTITY_TYPE: ["NONE", "LEVEL", "BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
-    MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "CORE", "BLENDER", "SPLITTER", "SCORCHER", "COMBI_GATE"],
+    MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "CORE", "SPLITTER", "MIXER", "DRYER", "WETTER", "BOILER", "COOLER"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "PRIME", "M150ED", "BANG", "MONSTER", "CLUB_MATE", "SPRITE", "MILK", "JUGGERNOG", "TABASCO", "IBUPROFENE", "AMMONIA", "NYQUIL"],
-    PORT_TYPE: ["INPUT", "OUTPUT"],
-    PORT_PLACEMENT: ["TOP", "RIGHT", "BOTTOM", "LEFT"]
+    PORT_TYPE: ["INPUT", "OUTPUT"]
 }
 
 export default mudConfig({
@@ -21,8 +20,6 @@ export default mudConfig({
         Energy: "uint32",
         CarriedBy: "bytes32",
         Amount: "uint32",
-        Temperature: "uint32",
-        PortPlacement: "PORT_PLACEMENT",
         SourcePort: "bytes32",
         TargetPort: "bytes32",
         CreationBlock: "uint256",
@@ -34,10 +31,7 @@ export default mudConfig({
             keySchema: {},
             valueSchema: {
                 coolDown: "uint32",
-                coreEnergyCap: "uint32",
-                coreInitialEnergy: "uint32",
-                resourceConnectionCost: "uint32",
-                controlConnectionCost: "uint32",
+                connectionCost: "uint32",
                 buildCost: "uint32",
             },
             dataStruct: true,

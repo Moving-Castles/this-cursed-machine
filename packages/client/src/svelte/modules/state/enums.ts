@@ -13,10 +13,12 @@ export enum MachineType {
   INLET,
   OUTLET,
   CORE,
-  BLENDER,
   SPLITTER,
-  SCORCHER,
-  COMBI_GATE,
+  MIXER,
+  DRYER,
+  WETTER,
+  BOILER,
+  COOLER
 }
 
 export enum MaterialType {
@@ -41,11 +43,4 @@ export enum MaterialType {
 export enum PortType {
   INPUT,
   OUTPUT,
-}
-
-export enum PortPlacement {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
 }

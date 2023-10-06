@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, Temperature, MaterialType, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -67,7 +67,6 @@ library LibBox {
     CreationBlock.set(materialEntity, block.number);
     CarriedBy.set(materialEntity, _boxEntity);
     MaterialType.set(materialEntity, _output.materialType);
-    Temperature.set(materialEntity, _output.temperature);
     // Scale by number of blocks since last resolution
     Amount.set(materialEntity, _output.amount * uint32(_blocksSinceLastResolution));
     // ...

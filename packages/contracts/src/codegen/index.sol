@@ -11,8 +11,6 @@ import { Name, NameTableId } from "./tables/Name.sol";
 import { Energy, EnergyTableId } from "./tables/Energy.sol";
 import { CarriedBy, CarriedByTableId } from "./tables/CarriedBy.sol";
 import { Amount, AmountTableId } from "./tables/Amount.sol";
-import { Temperature, TemperatureTableId } from "./tables/Temperature.sol";
-import { PortPlacement, PortPlacementTableId } from "./tables/PortPlacement.sol";
 import { SourcePort, SourcePortTableId } from "./tables/SourcePort.sol";
 import { TargetPort, TargetPortTableId } from "./tables/TargetPort.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";

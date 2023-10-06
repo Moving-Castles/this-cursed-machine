@@ -4,10 +4,21 @@ import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { GameConfig, GameConfigData, Level, LevelTableId, CarriedBy, TargetPort, Name, CreationBlock, ReadyBlock, EntityType, EntityTypeTableId, MachineType, LastResolved, MaterialType, Amount, Energy } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibArray, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
+import { LibUtils, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
 library LibNetwork {
+  /**
+   * @dev Resolves the state of the entire network inside a given box entity by sequentially processing machines.
+   *
+   * The function loops through all machines inside a box, checking their types and processing inputs/outputs
+   * based on their functionality until all machines in the box have been resolved. For example, an INLET machine
+   * will be provided an input if it doesn't have one, while an OUTLET machine will write its outputs to the blockchain.
+   * Inputs and outputs between connected machines are properly handled and transferred. The state and outputs
+   * of each machine are updated based on its logic and the inputs it receives.
+   *
+   * @param _boxEntity The entity identifier of the box which contains the network of machines to be resolved.
+   */
   function resolve(bytes32 _boxEntity) internal {
     // Blocks since last resolution
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
@@ -54,19 +65,14 @@ library LibNetwork {
         // console.log(uint256(node));
 
         // Skip if node is already resolved
-        if (LibArray.isIdPresent(resolvedNodes, node)) continue;
+        if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
 
         // console.log("machineType");
         // console.log(uint8(MachineType.get(node)));
 
         // Give inlet an input of bugs...
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          inputs[inputsCount] = Product({
-            machineId: node,
-            materialType: MATERIAL_TYPE.BUG,
-            amount: 100,
-            temperature: 0
-          });
+          inputs[inputsCount] = Product({ machineId: node, materialType: MATERIAL_TYPE.BUG, amount: 100 });
           inputsCount++;
           // console.log("inlet");
           // console.log(uint256(inputs[i].machineId));
@@ -169,6 +175,16 @@ library LibNetwork {
     LastResolved.set(_boxEntity, block.number);
   }
 
+  /**
+   * @dev Reduces the energy of the core in a given box entity based on elapsed blocks.
+   *
+   * Ticks down the energy of the core contained in a specific box entity. The energy
+   * is reduced by an amount equivalent to `_blocksSinceLastResolution`. If reducing
+   * the energy by this amount would result in negative energy, the energy is set to zero.
+   *
+   * @param _boxEntity The entity identifier of the box containing the core whose energy is to be reduced.
+   * @param _blocksSinceLastResolution The number of blocks since the last resolution, indicating the amount to reduce the core’s energy by.
+   */
   function tickDownEnergy(bytes32 _boxEntity, uint256 _blocksSinceLastResolution) internal {
     // Tick down energy for core in box (1 per block)
     bytes32[][] memory coreEntities = LibBox.getCoresByBox(_boxEntity);

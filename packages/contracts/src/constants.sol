@@ -6,10 +6,9 @@ struct Product {
   bytes32 machineId;
   MATERIAL_TYPE materialType;
   uint32 amount;
-  uint32 temperature;
 }
 
 struct LevelDefinition {
   uint32 level;
-  uint32 energy;
+  uint32 initialCoreEnergy;
 }

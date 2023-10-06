@@ -3,7 +3,6 @@ import {
   MaterialType,
   PortType,
   MachineType,
-  PortPlacement,
 } from "./enums"
 
 export {
@@ -11,7 +10,6 @@ export {
   MaterialType,
   PortType,
   MachineType,
-  PortPlacement
 } from "./enums"
 
 declare global {
@@ -32,10 +30,8 @@ declare global {
     carriedBy?: string
     sourcePort?: string
     targetPort?: string
-    portPlacement?: PortPlacement
     amount?: number
     lastResolved?: number
-    temperature?: number
     potential?: boolean
   }
 
@@ -97,7 +93,6 @@ declare global {
     type: EntityType.PORT
     creationBlock: number
     portType: PortType
-    portPlacement: PortPlacement
     carriedBy: string
   }
 
@@ -105,7 +100,6 @@ declare global {
     type: EntityType.MATERIAL
     creationBlock: number
     amount: number
-    temperature: number
   }
 
   type ResourceToEnergy = {

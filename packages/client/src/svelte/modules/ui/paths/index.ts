@@ -133,7 +133,7 @@ export const portSelection = writable([])
  */
 export const portTotalRotation = (port: Port, entity: Entity) => {
   // Port direction is port side corrected by rotation
-  const portDirection = port.portPlacement
+  const portDirection = port.portPlacement || 0
   const entityRotation = entity.rotation || 0
   const totalRotation = (portDirection + entityRotation) % 4
 

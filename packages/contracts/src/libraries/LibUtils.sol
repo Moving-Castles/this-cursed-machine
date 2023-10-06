@@ -74,4 +74,20 @@ library LibUtils {
   function getRandomKey() internal view returns (bytes32 key) {
     return keccak256(abi.encode(block.number, msg.sender, gasleft()));
   }
+
+  /**
+   * @dev Checks if a given `_id` exists within the provided `_nodes` array.
+   *
+   * @param _nodes The list of node IDs of type bytes32.
+   * @param _id The ID to check for its existence in the `_nodes` list.
+   * @return true if `_id` exists in `_nodes`, false otherwise.
+   */
+  function isIdPresent(bytes32[] memory _nodes, bytes32 _id) internal pure returns (bool) {
+    for (uint i = 0; i < _nodes.length; i++) {
+      if (_nodes[i] == _id) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

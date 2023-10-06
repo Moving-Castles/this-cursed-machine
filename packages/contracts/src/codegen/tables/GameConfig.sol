@@ -26,15 +26,12 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GameConfigTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0018060004040404040400000000000000000000000000000000000000000000
+  0x000c030004040400000000000000000000000000000000000000000000000000
 );
 
 struct GameConfigData {
   uint32 coolDown;
-  uint32 coreEnergyCap;
-  uint32 coreInitialEnergy;
-  uint32 resourceConnectionCost;
-  uint32 controlConnectionCost;
+  uint32 connectionCost;
   uint32 buildCost;
 }
 
@@ -62,13 +59,10 @@ library GameConfig {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](6);
+    SchemaType[] memory _valueSchema = new SchemaType[](3);
     _valueSchema[0] = SchemaType.UINT32;
     _valueSchema[1] = SchemaType.UINT32;
     _valueSchema[2] = SchemaType.UINT32;
-    _valueSchema[3] = SchemaType.UINT32;
-    _valueSchema[4] = SchemaType.UINT32;
-    _valueSchema[5] = SchemaType.UINT32;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -86,13 +80,10 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](6);
+    fieldNames = new string[](3);
     fieldNames[0] = "coolDown";
-    fieldNames[1] = "coreEnergyCap";
-    fieldNames[2] = "coreInitialEnergy";
-    fieldNames[3] = "resourceConnectionCost";
-    fieldNames[4] = "controlConnectionCost";
-    fieldNames[5] = "buildCost";
+    fieldNames[1] = "connectionCost";
+    fieldNames[2] = "buildCost";
   }
 
   /**
@@ -174,9 +165,9 @@ library GameConfig {
   }
 
   /**
-   * @notice Get coreEnergyCap.
+   * @notice Get connectionCost.
    */
-  function getCoreEnergyCap() internal view returns (uint32 coreEnergyCap) {
+  function getConnectionCost() internal view returns (uint32 connectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
@@ -184,9 +175,9 @@ library GameConfig {
   }
 
   /**
-   * @notice Get coreEnergyCap.
+   * @notice Get connectionCost.
    */
-  function _getCoreEnergyCap() internal view returns (uint32 coreEnergyCap) {
+  function _getConnectionCost() internal view returns (uint32 connectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
@@ -194,9 +185,9 @@ library GameConfig {
   }
 
   /**
-   * @notice Get coreEnergyCap (using the specified store).
+   * @notice Get connectionCost (using the specified store).
    */
-  function getCoreEnergyCap(IStore _store) internal view returns (uint32 coreEnergyCap) {
+  function getConnectionCost(IStore _store) internal view returns (uint32 connectionCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
@@ -204,201 +195,30 @@ library GameConfig {
   }
 
   /**
-   * @notice Set coreEnergyCap.
+   * @notice Set connectionCost.
    */
-  function setCoreEnergyCap(uint32 coreEnergyCap) internal {
+  function setConnectionCost(uint32 connectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((connectionCost)), _fieldLayout);
   }
 
   /**
-   * @notice Set coreEnergyCap.
+   * @notice Set connectionCost.
    */
-  function _setCoreEnergyCap(uint32 coreEnergyCap) internal {
+  function _setConnectionCost(uint32 connectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((connectionCost)), _fieldLayout);
   }
 
   /**
-   * @notice Set coreEnergyCap (using the specified store).
+   * @notice Set connectionCost (using the specified store).
    */
-  function setCoreEnergyCap(IStore _store, uint32 coreEnergyCap) internal {
+  function setConnectionCost(IStore _store, uint32 connectionCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((coreEnergyCap)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get coreInitialEnergy.
-   */
-  function getCoreInitialEnergy() internal view returns (uint32 coreInitialEnergy) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get coreInitialEnergy.
-   */
-  function _getCoreInitialEnergy() internal view returns (uint32 coreInitialEnergy) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get coreInitialEnergy (using the specified store).
-   */
-  function getCoreInitialEnergy(IStore _store) internal view returns (uint32 coreInitialEnergy) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set coreInitialEnergy.
-   */
-  function setCoreInitialEnergy(uint32 coreInitialEnergy) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set coreInitialEnergy.
-   */
-  function _setCoreInitialEnergy(uint32 coreInitialEnergy) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set coreInitialEnergy (using the specified store).
-   */
-  function setCoreInitialEnergy(IStore _store, uint32 coreInitialEnergy) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((coreInitialEnergy)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get resourceConnectionCost.
-   */
-  function getResourceConnectionCost() internal view returns (uint32 resourceConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get resourceConnectionCost.
-   */
-  function _getResourceConnectionCost() internal view returns (uint32 resourceConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get resourceConnectionCost (using the specified store).
-   */
-  function getResourceConnectionCost(IStore _store) internal view returns (uint32 resourceConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set resourceConnectionCost.
-   */
-  function setResourceConnectionCost(uint32 resourceConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set resourceConnectionCost.
-   */
-  function _setResourceConnectionCost(uint32 resourceConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set resourceConnectionCost (using the specified store).
-   */
-  function setResourceConnectionCost(IStore _store, uint32 resourceConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((resourceConnectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get controlConnectionCost.
-   */
-  function getControlConnectionCost() internal view returns (uint32 controlConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get controlConnectionCost.
-   */
-  function _getControlConnectionCost() internal view returns (uint32 controlConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get controlConnectionCost (using the specified store).
-   */
-  function getControlConnectionCost(IStore _store) internal view returns (uint32 controlConnectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set controlConnectionCost.
-   */
-  function setControlConnectionCost(uint32 controlConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set controlConnectionCost.
-   */
-  function _setControlConnectionCost(uint32 controlConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set controlConnectionCost (using the specified store).
-   */
-  function setControlConnectionCost(IStore _store, uint32 controlConnectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((controlConnectionCost)), _fieldLayout);
+    _store.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((connectionCost)), _fieldLayout);
   }
 
   /**
@@ -407,7 +227,7 @@ library GameConfig {
   function getBuildCost() internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -417,7 +237,7 @@ library GameConfig {
   function _getBuildCost() internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -427,7 +247,7 @@ library GameConfig {
   function getBuildCost(IStore _store) internal view returns (uint32 buildCost) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -437,7 +257,7 @@ library GameConfig {
   function setBuildCost(uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((buildCost)), _fieldLayout);
   }
 
   /**
@@ -446,7 +266,7 @@ library GameConfig {
   function _setBuildCost(uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((buildCost)), _fieldLayout);
   }
 
   /**
@@ -455,7 +275,7 @@ library GameConfig {
   function setBuildCost(IStore _store, uint32 buildCost) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((buildCost)), _fieldLayout);
+    _store.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((buildCost)), _fieldLayout);
   }
 
   /**
@@ -503,22 +323,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(
-    uint32 coolDown,
-    uint32 coreEnergyCap,
-    uint32 coreInitialEnergy,
-    uint32 resourceConnectionCost,
-    uint32 controlConnectionCost,
-    uint32 buildCost
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      coolDown,
-      coreEnergyCap,
-      coreInitialEnergy,
-      resourceConnectionCost,
-      controlConnectionCost,
-      buildCost
-    );
+  function set(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -531,22 +337,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(
-    uint32 coolDown,
-    uint32 coreEnergyCap,
-    uint32 coreInitialEnergy,
-    uint32 resourceConnectionCost,
-    uint32 controlConnectionCost,
-    uint32 buildCost
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      coolDown,
-      coreEnergyCap,
-      coreInitialEnergy,
-      resourceConnectionCost,
-      controlConnectionCost,
-      buildCost
-    );
+  function _set(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -559,23 +351,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values (using the specified store).
    */
-  function set(
-    IStore _store,
-    uint32 coolDown,
-    uint32 coreEnergyCap,
-    uint32 coreInitialEnergy,
-    uint32 resourceConnectionCost,
-    uint32 controlConnectionCost,
-    uint32 buildCost
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      coolDown,
-      coreEnergyCap,
-      coreInitialEnergy,
-      resourceConnectionCost,
-      controlConnectionCost,
-      buildCost
-    );
+  function set(IStore _store, uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -589,14 +366,7 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(
-      _table.coolDown,
-      _table.coreEnergyCap,
-      _table.coreInitialEnergy,
-      _table.resourceConnectionCost,
-      _table.controlConnectionCost,
-      _table.buildCost
-    );
+    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -610,14 +380,7 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function _set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(
-      _table.coolDown,
-      _table.coreEnergyCap,
-      _table.coreInitialEnergy,
-      _table.resourceConnectionCost,
-      _table.controlConnectionCost,
-      _table.buildCost
-    );
+    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -631,14 +394,7 @@ library GameConfig {
    * @notice Set the full data using the data struct (using the specified store).
    */
   function set(IStore _store, GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(
-      _table.coolDown,
-      _table.coreEnergyCap,
-      _table.coreInitialEnergy,
-      _table.resourceConnectionCost,
-      _table.controlConnectionCost,
-      _table.buildCost
-    );
+    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -653,29 +409,12 @@ library GameConfig {
    */
   function decodeStatic(
     bytes memory _blob
-  )
-    internal
-    pure
-    returns (
-      uint32 coolDown,
-      uint32 coreEnergyCap,
-      uint32 coreInitialEnergy,
-      uint32 resourceConnectionCost,
-      uint32 controlConnectionCost,
-      uint32 buildCost
-    )
-  {
+  ) internal pure returns (uint32 coolDown, uint32 connectionCost, uint32 buildCost) {
     coolDown = (uint32(Bytes.slice4(_blob, 0)));
 
-    coreEnergyCap = (uint32(Bytes.slice4(_blob, 4)));
+    connectionCost = (uint32(Bytes.slice4(_blob, 4)));
 
-    coreInitialEnergy = (uint32(Bytes.slice4(_blob, 8)));
-
-    resourceConnectionCost = (uint32(Bytes.slice4(_blob, 12)));
-
-    controlConnectionCost = (uint32(Bytes.slice4(_blob, 16)));
-
-    buildCost = (uint32(Bytes.slice4(_blob, 20)));
+    buildCost = (uint32(Bytes.slice4(_blob, 8)));
   }
 
   /**
@@ -689,14 +428,7 @@ library GameConfig {
     PackedCounter,
     bytes memory
   ) internal pure returns (GameConfigData memory _table) {
-    (
-      _table.coolDown,
-      _table.coreEnergyCap,
-      _table.coreInitialEnergy,
-      _table.resourceConnectionCost,
-      _table.controlConnectionCost,
-      _table.buildCost
-    ) = decodeStatic(_staticData);
+    (_table.coolDown, _table.connectionCost, _table.buildCost) = decodeStatic(_staticData);
   }
 
   /**
@@ -730,23 +462,8 @@ library GameConfig {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(
-    uint32 coolDown,
-    uint32 coreEnergyCap,
-    uint32 coreInitialEnergy,
-    uint32 resourceConnectionCost,
-    uint32 controlConnectionCost,
-    uint32 buildCost
-  ) internal pure returns (bytes memory) {
-    return
-      abi.encodePacked(
-        coolDown,
-        coreEnergyCap,
-        coreInitialEnergy,
-        resourceConnectionCost,
-        controlConnectionCost,
-        buildCost
-      );
+  function encodeStatic(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal pure returns (bytes memory) {
+    return abi.encodePacked(coolDown, connectionCost, buildCost);
   }
 
   /**
@@ -757,20 +474,10 @@ library GameConfig {
    */
   function encode(
     uint32 coolDown,
-    uint32 coreEnergyCap,
-    uint32 coreInitialEnergy,
-    uint32 resourceConnectionCost,
-    uint32 controlConnectionCost,
+    uint32 connectionCost,
     uint32 buildCost
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(
-      coolDown,
-      coreEnergyCap,
-      coreInitialEnergy,
-      resourceConnectionCost,
-      controlConnectionCost,
-      buildCost
-    );
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

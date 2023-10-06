@@ -5,6 +5,9 @@ import { CarriedBy } from "../codegen/index.sol";
 import { LibUtils, LibNetwork } from "../libraries/Libraries.sol";
 
 contract ResolutionSystem is System {
+  /**
+   * @notice Triggers the resolution of the network associated with the sender's core entity.
+   */
   function resolve() public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     // Resolve network
