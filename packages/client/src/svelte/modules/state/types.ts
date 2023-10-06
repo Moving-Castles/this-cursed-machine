@@ -57,7 +57,6 @@ declare global {
   type Level = {
     type: EntityType.LEVEL
     level: number
-    creationBlock: number
   }
 
   type Core = {
@@ -73,7 +72,6 @@ declare global {
 
   type Connection = {
     type: EntityType.CONNECTION
-    creationBlock: number
     sourcePort: string
     targetPort: string
   }
@@ -91,29 +89,18 @@ declare global {
 
   type Port = {
     type: EntityType.PORT
-    creationBlock: number
     portType: PortType
     carriedBy: string
   }
 
   type Material = {
     type: EntityType.MATERIAL
-    creationBlock: number
     amount: number
-  }
-
-  type ResourceToEnergy = {
-    type: EntityType.MACHINE
-    creationBlock: number
-    energy?: number
   }
 
   type GameConfig = {
     coolDown: number
-    coreEnergyCap: number
-    coreInitialEnergy: number
-    resourceConnectionCost: number
-    controlConnectionCost: number
+    connectionCost: number
     buildCost: number
   }
 

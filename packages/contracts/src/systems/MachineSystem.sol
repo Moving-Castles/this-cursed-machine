@@ -32,8 +32,6 @@ contract MachineSystem is System {
     // Create ports on machine
     // @todo: Use machine type to determine port amount
     LibPort.create(machineEntity, PORT_TYPE.INPUT);
-    LibPort.create(machineEntity, PORT_TYPE.INPUT);
-    LibPort.create(machineEntity, PORT_TYPE.OUTPUT);
     LibPort.create(machineEntity, PORT_TYPE.OUTPUT);
 
     // Deduct energy

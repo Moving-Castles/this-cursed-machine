@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, CreationBlock, EntityType, TargetPort, SourcePort, SourcePortTableId } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, EntityType, TargetPort, SourcePort, SourcePortTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -17,7 +17,6 @@ library LibConnection {
    */
   function create(bytes32 _sourcePort, bytes32 _targetPort) internal returns (bytes32) {
     bytes32 connectionEntity = LibUtils.getRandomKey();
-    CreationBlock.set(connectionEntity, block.number);
     EntityType.set(connectionEntity, ENTITY_TYPE.CONNECTION);
     SourcePort.set(connectionEntity, _sourcePort);
     TargetPort.set(connectionEntity, _targetPort);
@@ -30,7 +29,6 @@ library LibConnection {
    * @param _connectionEntity The key of the connection entity to be destroyed.
    */
   function destroy(bytes32 _connectionEntity) internal {
-    CreationBlock.deleteRecord(_connectionEntity);
     EntityType.deleteRecord(_connectionEntity);
     SourcePort.deleteRecord(_connectionEntity);
     TargetPort.deleteRecord(_connectionEntity);

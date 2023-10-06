@@ -10,7 +10,6 @@ contract ResolutionSystem is System {
    */
   function resolve() public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
   }
 }

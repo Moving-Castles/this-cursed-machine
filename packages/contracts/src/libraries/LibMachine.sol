@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
 import { Energy, MachineType, MaterialType } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
+import { LibRecipe } from "./LibRecipe.sol";
 import { Product } from "../constants.sol";
 
 library LibMachine {
@@ -27,28 +27,16 @@ library LibMachine {
       return core(_inputs, _entity, blocksSinceLastResolution);
     }
     // Splitter
-    if (_machineType == MACHINE_TYPE.SPLITTER) {
+    else if (_machineType == MACHINE_TYPE.SPLITTER) {
       return splitter(_inputs);
     }
     // Mixer
-    if (_machineType == MACHINE_TYPE.MIXER) {
+    else if (_machineType == MACHINE_TYPE.MIXER) {
       return mixer(_inputs);
     }
-    // Dryer
-    if (_machineType == MACHINE_TYPE.DRYER) {
-      return dryer(_inputs);
-    }
-    // Wetter
-    if (_machineType == MACHINE_TYPE.WETTER) {
-      return wetter(_inputs);
-    }
-    // Boiler
-    if (_machineType == MACHINE_TYPE.BOILER) {
-      return boiler(_inputs);
-    }
-    // Cooler
-    if (_machineType == MACHINE_TYPE.COOLER) {
-      return cooler(_inputs);
+    // Dryer, Wetter, Boiler, Cooler
+    else if (_machineType >= MACHINE_TYPE.DRYER && _machineType <= MACHINE_TYPE.COOLER) {
+      return simpleMachine(_machineType, _inputs[0]);
     }
     // Default
     // for MACHINE_TYPE.NONE, MACHINE_TYPE.INLET and MACHINE_TYPE.OUTLET
@@ -124,33 +112,115 @@ library LibMachine {
     return outputs;
   }
 
+  /**
+   * @dev Mixes two input products, transforming them into a single output product based on predefined mixing recipes.
+   *
+   * @param _inputs An array of `Product` structs that are the inputs for the mixer.
+   * @return _outputs An array of `Product` structs after being processed by the mixer.
+   */
   function mixer(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-    outputs = _inputs;
+    Product[] memory outputs = new Product[](1);
+
+    // BLOOD + PISS => CAFFEINATED_HEMATURIC_LIQUID
+    if (
+      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.BLOOD)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.CAFFEINATED_HEMATURIC_LIQUID,
+        amount: _inputs[0].amount
+      });
+    }
+    // MONSTER + PISS => M150
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.MONSTER && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.MONSTER)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.M150,
+        amount: _inputs[0].amount
+      });
+    }
+    // M150 + PISS => FIVE_HOUR_ENERGY
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.M150 && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.M150)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.FIVE_HOUR_ENERGY,
+        amount: _inputs[0].amount
+      });
+    }
+    // M150 + PRIME => FIVE_HOUR_ENERGY
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.M150 && _inputs[1].materialType == MATERIAL_TYPE.PRIME) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.PRIME && _inputs[1].materialType == MATERIAL_TYPE.M150)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.FIVE_HOUR_ENERGY,
+        amount: _inputs[0].amount
+      });
+    }
+    // BLOOD_LIPIDS + CIGARETTE_JUICE => E_LIQUID
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD_LIPIDS &&
+        _inputs[1].materialType == MATERIAL_TYPE.CIGARETTE_JUICE) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.CIGARETTE_JUICE &&
+        _inputs[1].materialType == MATERIAL_TYPE.BLOOD_LIPIDS)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.E_LIQUID,
+        amount: _inputs[0].amount
+      });
+    }
+    // DIET_RED_BULL + CIGARETTE_JUICE => E_LIQUID
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.DIET_RED_BULL &&
+        _inputs[1].materialType == MATERIAL_TYPE.CIGARETTE_JUICE) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.CIGARETTE_JUICE &&
+        _inputs[1].materialType == MATERIAL_TYPE.DIET_RED_BULL)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.E_LIQUID,
+        amount: _inputs[0].amount
+      });
+    }
+    // FIVE_HOUR_ENERGY + E_LIQUID => HAND_OF_GOD
+    else if (
+      (_inputs[0].materialType == MATERIAL_TYPE.FIVE_HOUR_ENERGY &&
+        _inputs[1].materialType == MATERIAL_TYPE.E_LIQUID) ||
+      (_inputs[0].materialType == MATERIAL_TYPE.E_LIQUID && _inputs[1].materialType == MATERIAL_TYPE.FIVE_HOUR_ENERGY)
+    ) {
+      outputs[0] = Product({
+        machineId: _inputs[0].machineId,
+        materialType: MATERIAL_TYPE.HAND_OF_GOD,
+        amount: _inputs[0].amount
+      });
+    }
+
     return outputs;
   }
 
-  function dryer(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-    outputs = _inputs;
-    return outputs;
-  }
-
-  function wetter(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-    outputs = _inputs;
-    return outputs;
-  }
-
-  function boiler(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-    outputs = _inputs;
-    return outputs;
-  }
-
-  function cooler(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-    outputs = _inputs;
+  /**
+   * @notice Processes an input product through a specified machine type, creating an output product.
+   * @dev Determines output material type using LibRecipe.getOutput and generates an output product array of length 1.
+   * @param _machineType The type of machine to process the input product.
+   * @param _input A Product structure detailing the input product's attributes.
+   * @return _outputs An array of products representing the output after processing through the machine.
+   */
+  function simpleMachine(
+    MACHINE_TYPE _machineType,
+    Product memory _input
+  ) internal view returns (Product[] memory _outputs) {
+    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(_machineType, _input.materialType);
+    Product[] memory outputs = new Product[](1);
+    outputs[0] = Product({ machineId: _input.machineId, materialType: resultMaterialType, amount: _input.amount });
     return outputs;
   }
 }

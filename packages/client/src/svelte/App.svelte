@@ -12,7 +12,7 @@
     activeActions,
     completedActions,
   } from "./modules/action/actionSequencer"
-  import { patches } from "./modules/simulator"
+  import { patches, simulatedMaterials } from "./modules/simulator"
   // import {
   //   patches,
   //   simulated,
@@ -39,6 +39,7 @@
   $: console.log("$activeActions", $activeActions)
   $: console.log("$completedActions", $completedActions)
   $: console.log("$patches", $patches)
+  $: console.log("$simulatedMaterials", $simulatedMaterials)
   // $: console.log("$entities", $entities)
   // $: console.log("$levels", $levels)
   // $: console.log("$cores", $cores)

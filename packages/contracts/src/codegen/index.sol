@@ -17,4 +17,6 @@ import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol"
 import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
 import { Level, LevelTableId } from "./tables/Level.sol";
 import { LastResolved, LastResolvedTableId } from "./tables/LastResolved.sol";
+import { Input, InputTableId } from "./tables/Input.sol";
+import { Output, OutputTableId } from "./tables/Output.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";

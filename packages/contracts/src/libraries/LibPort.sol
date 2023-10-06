@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { PortType, CarriedBy, CarriedByTableId, EntityType, EntityTypeTableId, PortType, PortTypeTableId, CreationBlock } from "../codegen/index.sol";
+import { PortType, CarriedBy, CarriedByTableId, EntityType, PortType, PortTypeTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -16,7 +16,6 @@ library LibPort {
   function create(bytes32 _hostEntity, PORT_TYPE _portType) internal returns (bytes32) {
     bytes32 portEntity = LibUtils.getRandomKey();
     EntityType.set(portEntity, ENTITY_TYPE.PORT);
-    CreationBlock.set(portEntity, block.number);
     PortType.set(portEntity, _portType);
     CarriedBy.set(portEntity, _hostEntity);
     return portEntity;
@@ -28,7 +27,6 @@ library LibPort {
    */
   function destroy(bytes32 _portEntity) internal {
     EntityType.deleteRecord(_portEntity);
-    CreationBlock.deleteRecord(_portEntity);
     PortType.deleteRecord(_portEntity);
     CarriedBy.deleteRecord(_portEntity);
   }
@@ -40,10 +38,9 @@ library LibPort {
    * @return ports A dynamic 2D bytes32 array containing identifiers of the retrieved ports.
    */
   function getPorts(bytes32 _entity, PORT_TYPE _portType) internal view returns (bytes32[][] memory ports) {
-    QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.PORT));
-    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
-    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
@@ -60,10 +57,9 @@ library LibPort {
     bytes32 _entity,
     PORT_TYPE _portType
   ) internal view returns (bytes32[][] memory ports) {
-    QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.PORT));
-    fragments[1] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
-    fragments[2] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, PortTypeTableId, PortType.encodeStatic(_portType));
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_entity));
     bytes32[][] memory keyTuples = query(_world, fragments);
     return keyTuples;
   }
