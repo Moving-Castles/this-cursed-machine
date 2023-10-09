@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 import { Energy, MachineType, MaterialType } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -103,11 +104,30 @@ library LibMachine {
    * @return _outputs An array of `Product` structs after being processed by the mixer.
    */
   function mixer(Product[] memory _inputs) internal view returns (Product[] memory _outputs) {
+    Product[] memory outputs = new Product[](1);
+
+    console.log("_______ mixer");
+    console.log("_inputs.length");
+    console.log(_inputs.length);
+
+    if (_inputs.length != 2) {
+      console.log("ERROR: mixer requires 2 inputs");
+      return outputs;
+    }
+
+    console.log("material 1");
+    console.log(uint256(_inputs[0].materialType));
+    console.log("material 2");
+    console.log(uint256(_inputs[1].materialType));
+
     MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
-    Product[] memory outputs = new Product[](1);
+
+    console.log("resultMaterialType");
+    console.log(uint256(resultMaterialType));
+
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
       materialType: resultMaterialType,

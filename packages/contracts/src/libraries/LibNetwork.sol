@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-// import { console } from "forge-std/console.sol";
+import { console } from "forge-std/console.sol";
 import { CarriedBy, TargetPort, MachineType, LastResolved, MaterialType, Amount, Energy } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE, PORT_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibBox, LibPort, LibConnection, LibMachine } from "./Libraries.sol";
@@ -22,9 +22,6 @@ library LibNetwork {
     // Blocks since last resolution
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(_boxEntity);
 
-    // Abort if box is already resolved
-    // if (blocksSinceLastResolution == 0) return;
-
     // Tick down energy for core in box (1 per block)
     tickDownEnergy(_boxEntity, blocksSinceLastResolution);
 
@@ -44,7 +41,7 @@ library LibNetwork {
     // Counter for the number of resolved nodes
     uint32 resolvedCount;
 
-    // Inputs for each machine
+    // Inputs for machines
     Product[] memory inputs = new Product[](machines.length * 2);
 
     // Counter for the number of stored inputs
@@ -52,63 +49,70 @@ library LibNetwork {
 
     // Iterate until all machines in the network are resolved
     while (resolvedCount < machines.length) {
-      // console.log("??? TOP OF WHILE LOOP");
+      console.log("??? TOP OF WHILE LOOP");
       // For each machine in the list
       for (uint i; i < machines.length; i++) {
-        // console.log("??? TOP OF FOR LOOP");
+        console.log("??? TOP OF FOR LOOP");
+        console.log("i");
+        console.log(i);
+        console.log("machines.length");
+        console.log(machines.length);
+
+        // if (machines[i] == bytes32[](0)) continue;
 
         // Current node
         bytes32 node = machines[i][0];
 
-        // console.log("$$$ node");
-        // console.log(uint256(node));
+        console.log("$$$ node");
+        console.log(uint256(node));
 
         // Skip if node is already resolved
         if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
 
-        // console.log("machineType");
-        // console.log(uint8(MachineType.get(node)));
+        console.log("machineType");
+        console.log(uint8(MachineType.get(node)));
 
         // Give inlet an input of bugs...
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           inputs[inputsCount] = Product({ machineId: node, materialType: MATERIAL_TYPE.BUG, amount: 100 });
           inputsCount++;
-          // console.log("inlet");
-          // console.log(uint256(inputs[i].machineId));
         }
 
-        // There are never more than 2 inputs...
         uint currentInputsCount;
         Product[] memory currentInputs = new Product[](2);
         // Find all inputs for current node
         for (uint k; k < inputsCount; k++) {
           if (inputs[k].machineId == node) {
+            console.log("... found input");
+            console.log(uint256(inputs[k].machineId));
             currentInputs[currentInputsCount] = inputs[k];
             currentInputsCount++;
+            console.log("currentInputsCount");
+            console.log(currentInputsCount);
+            // There should never be more than 2 inputs...
+            if (currentInputsCount == 2) break;
           }
         }
 
-        // Skip if node has no input and is not a core
-        // (Energy level of cores tick down even if not connected...)
-        // && MachineType.get(node) != MACHINE_TYPE.CORE
-        if (currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+        // Skip if node has no input
+        if (currentInputs.length == 0 || currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
 
-        // console.log("__ processing node:");
-        // console.log(uint256(node));
+        console.log("__ processing node:");
+        console.log(uint256(node));
 
         // Mark as resolved
         resolvedNodes[resolvedCount] = node;
         resolvedCount += 1;
 
-        // console.log("__ resolvedCount");
-        // console.log(resolvedCount);
+        console.log("__ resolvedCount");
+        console.log(resolvedCount);
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
         currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
 
-        // console.log("%%% currentOutputs.length");
-        // console.log(currentOutputs.length);
+        console.log("%%% currentOutputs.length");
+        console.log(currentOutputs.length);
 
         // If the machine is an outlet, write to chain
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
@@ -118,26 +122,26 @@ library LibNetwork {
           }
         }
 
-        //  - find the output ports on the current machine
-        bytes32[][] memory ports = LibPort.getPorts(node, PORT_TYPE.OUTPUT);
+        // Find the output ports on the current machine
+        bytes32[][] memory outputPorts = LibPort.getPorts(node, PORT_TYPE.OUTPUT);
 
-        // console.log("INTERNAL RESOLVER");
-        // console.log("ports.length");
-        // console.log(ports.length);
+        console.log("INTERNAL RESOLVER");
+        console.log("outputPorts.length");
+        console.log(outputPorts.length);
 
         // No output ports were found
-        if (ports.length == 0) continue;
+        if (outputPorts.length == 0) continue;
 
         // Fill outputs
-        for (uint k; k < ports.length; k++) {
-          // console.log("... ports[k][0]");
-          // console.log(uint256(ports[k][0]));
+        for (uint k; k < outputPorts.length; k++) {
+          console.log("... outputPorts [k][0]");
+          console.log(uint256(outputPorts[k][0]));
 
           //  Find connections going from that port
-          bytes32 outgoingConnection = LibConnection.getOutgoing(ports[k][0]);
+          bytes32 outgoingConnection = LibConnection.getOutgoing(outputPorts[k][0]);
 
-          // console.log("... outgoingConnection");
-          // console.log(uint256(outgoingConnection));
+          console.log("... outgoingConnection");
+          console.log(uint256(outgoingConnection));
 
           // No connection
           if (outgoingConnection == bytes32(0)) continue;
@@ -147,13 +151,16 @@ library LibNetwork {
 
           //  Get the machine that the port is on
           bytes32 targetEntity = CarriedBy.get(inputPort);
-          // console.log("targetEntity");
-          // console.log(uint256(targetEntity));
+          console.log("targetEntity");
+          console.log(uint256(targetEntity));
 
           // Fill output
           if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
+            console.log("fill output");
+            console.log(inputsCount);
+            console.log(k);
             inputs[inputsCount] = currentOutputs[k];
-            // !!! Set the machineId to the target machine
+            // Set the machineId to the target machine
             inputs[inputsCount].machineId = targetEntity;
             inputsCount++;
           }
@@ -161,14 +168,13 @@ library LibNetwork {
       }
       // ...
       counter += 1;
-      // console.log("== iteration");
-      // console.log(counter);
       if (counter == machines.length * 2) {
-        // Set LastResolved on box entity
         LastResolved.set(_boxEntity, block.number);
         return;
       }
     }
+
+    console.log("????? DONE");
 
     // Set LastResolved on box entity
     LastResolved.set(_boxEntity, block.number);
@@ -186,7 +192,7 @@ library LibNetwork {
    */
   function tickDownEnergy(bytes32 _boxEntity, uint256 _blocksSinceLastResolution) internal {
     // Tick down energy for core in box (1 per block)
-    bytes32[][] memory coreEntities = LibBox.getCoresByBox(_boxEntity);
+    bytes32[][] memory coreEntities = LibBox.getMachinesOfTypeByBox(_boxEntity, MACHINE_TYPE.CORE);
     uint32 currentEnergy = Energy.get(coreEntities[0][0]);
     if (currentEnergy < uint32(_blocksSinceLastResolution)) {
       Energy.set(coreEntities[0][0], 0);

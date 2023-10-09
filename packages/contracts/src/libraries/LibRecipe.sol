@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { EntityType, EntityTypeTableId, MachineType, MachineTypeTableId, Input, InputTableId, Output } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
@@ -31,12 +32,14 @@ library LibRecipe {
    * @return The output material type corresponding to the provided machine and input types.
    */
   function getOutput(MACHINE_TYPE _machineType, uint256 _input) internal view returns (MATERIAL_TYPE) {
+    console.log("...get output");
+    console.log("_input");
+    console.log(_input);
     QueryFragment[] memory fragments = new QueryFragment[](2);
     // fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.RECIPE));
     fragments[0] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(_machineType));
     fragments[1] = QueryFragment(QueryType.HasValue, InputTableId, Input.encodeStatic(_input));
     bytes32[][] memory keyTuples = query(fragments);
-    // @todo: check return
-    return Output.get(keyTuples[0][0]);
+    return keyTuples.length > 0 ? Output.get(keyTuples[0][0]) : MATERIAL_TYPE.NONE;
   }
 }

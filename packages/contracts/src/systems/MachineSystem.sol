@@ -15,7 +15,7 @@ contract MachineSystem is System {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
-    // require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
+    require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Resolve network
     LibNetwork.resolve(CarriedBy.get(coreEntity));
@@ -30,9 +30,22 @@ contract MachineSystem is System {
     CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
 
     // Create ports on machine
-    // @todo: Use machine type to determine port amount
+    // - - - - - - - - - - - -
+    // SPLITTER:  1 IN, 2 OUT
+    // MIXER:     2 IN, 1 OUT
+    // WETTER:    1 IN, 1 OUT
+    // DRYER:     1 IN, 1 OUT
+    // BOILER:    1 IN, 1 OUT
+    // COOLER:    1 IN, 1 OUT
+
     LibPort.create(machineEntity, PORT_TYPE.INPUT);
     LibPort.create(machineEntity, PORT_TYPE.OUTPUT);
+
+    if (_machineType == MACHINE_TYPE.SPLITTER) {
+      LibPort.create(machineEntity, PORT_TYPE.OUTPUT);
+    } else if (_machineType == MACHINE_TYPE.MIXER) {
+      LibPort.create(machineEntity, PORT_TYPE.INPUT);
+    }
 
     // Deduct energy
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
