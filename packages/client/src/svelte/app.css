@@ -50,6 +50,59 @@
   padding: 0;
 }
 
+.BUG {
+  color: #9be97c;
+}
+.PISS {
+  color: #e9de7c;
+}
+.BLOOD_LIPIDS,
+.BLOOD {
+  color: #ff3333;
+}
+.SLUDGE {
+  color: #b1ab02;
+}
+.DIRT {
+  color: #c27800;
+}
+.PLANT {
+  color: #00c224;
+}
+.CAFFEINATED_HEMATURIC_LIQUID {
+  color: #d1c700;
+}
+.CLUB_MATE {
+  color: #e0bf00;
+}
+.DIET_RED_BULL {
+  color: #00edfa;
+}
+.PRIME {
+  color: #19fa00;
+}
+.M150 {
+  color: #f58f00;
+}
+.FIVE_HOUR_ENERGY {
+  color: #f57200;
+}
+.MONSTER {
+  color: #4cff42;
+}
+.E_LIQUID {
+  color: #c2fffc;
+}
+.TOBACCO {
+  color: #854d00;
+}
+.CIGARETTE_JUICE {
+  color: #4a3e08;
+}
+.HAND_OF_GOD {
+  color: #57eeff;
+}
+
 *::-webkit-scrollbar {
   display: none;
 }
@@ -61,6 +114,10 @@
 .flash-a-little,
 .flash-a-bit {
   animation: strobe 200ms steps(1, end) 3;
+}
+
+.muted {
+  color: #ccc;
 }
 
 .xl-text {

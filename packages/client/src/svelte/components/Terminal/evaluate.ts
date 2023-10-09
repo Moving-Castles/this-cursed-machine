@@ -48,6 +48,7 @@ export const evaluate = (
   if (string === "h" || string === "help") {
     const commandList = `
     Commands:
+    Resolve       Claim your outstanding potential
     Build         Create a machine
     Connect       Connect machines
     Destroy       Destroy machines

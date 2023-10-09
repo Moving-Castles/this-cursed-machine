@@ -62,10 +62,6 @@
     color: black;
   }
 
-  .muted {
-    color: #ccc;
-  }
-
   .green {
     color: var(--color-success);
   }

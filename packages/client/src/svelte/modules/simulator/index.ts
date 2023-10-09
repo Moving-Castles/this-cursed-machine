@@ -2,7 +2,7 @@
  *  Simulates the changing state of the game
  *
  */
-import { MachineType, PortType } from "../state/enums"
+import { EntityType, MachineType, PortType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
 import {
@@ -15,7 +15,6 @@ import {
   machines,
 } from "../state"
 import { blockNumber } from "../network"
-import { EntityType } from "../state/enums"
 import type { SimulatedEntities } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
@@ -237,6 +236,34 @@ export const readableMachines = derived(
       machine,
       read: `${MachineType[machine.machineType]} (${machine.numericalID})`,
     }))
+  }
+)
+
+export const boxOutput = derived(
+  [entities, playerCore],
+  ([$entities, $playerCore]) => {
+    const singles = Object.entries($entities).filter(([_, entry]) => {
+      return (
+        entry.entityType === EntityType.MATERIAL &&
+        entry.carriedBy === $playerCore.carriedBy
+      )
+    })
+
+    let result = {}
+
+    singles.forEach(([_, material]) => {
+      if (result[material.materialType]) {
+        const amount = result[material.materialType]
+
+        result[material.materialType] = amount + material.amount
+      } else {
+        result[material.materialType] = material.amount
+      }
+    })
+
+    console.log(singles)
+
+    return result
   }
 )
 

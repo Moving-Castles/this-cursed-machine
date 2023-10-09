@@ -292,7 +292,7 @@
             })
             .append("g")
             .on("mouseenter", (_, d) => {
-              inspecting = d.entry.machineType
+              inspecting = { address: d.id, machineType: d.entry.machineType }
             })
             .on("mouseleave", () => (inspecting = null))
             .attr("class", "node")
@@ -424,7 +424,7 @@
       .enter()
       .append("g")
       .on("mouseenter", (_, d) => {
-        inspecting = d.entry.machineType
+        inspecting = { address: d.id, machineType: d.entry.machineType }
       })
       .on("mouseleave", () => (inspecting = null))
       .attr("class", "node")
@@ -535,7 +535,10 @@
 
 <div class="wrapper">
   {#if inspecting}
-    <MachineInformation machineType={inspecting} />
+    <MachineInformation
+      address={inspecting.address}
+      machineType={inspecting.machineType}
+    />
   {/if}
 
   <div

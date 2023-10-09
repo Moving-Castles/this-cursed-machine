@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { playerCore, playerBox } from "../../modules/state"
+  // import { playerCore, playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
+  import { EntityType, MaterialType } from "../../modules/state/enums"
   import {
     simulatedPlayerCore,
     simulatedPlayerEnergy,
+    boxOutput,
   } from "../../modules/simulator"
-  import { blocksSinceLastResolution } from "../../modules/simulator/"
-  import { coreIsConnectedToInlet } from "../../modules/simulator/"
-  import { blockNumber } from "../../modules/network/"
+
+  // import { blocksSinceLastResolution } from "../../modules/simulator/"
+  // import { coreIsConnectedToInlet } from "../../modules/simulator/"
+  // import { blockNumber } from "../../modules/network/"
 
   // If we are not connected to inlet energy is:
   // Energy = on-chain energy - blocksSinceLastResolution
@@ -17,28 +20,25 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats" use:onWheel>
+  <p><span class="muted">You:</span> inhabitant#24</p>
   <p>
-    <span class="muted">Energy:</span><br />
+    <span class="muted">Energy:</span>
     {#key $simulatedPlayerCore.energy}
-      <div>
-        On-chain: {$playerCore.energy}
-      </div>
-      <div class="green">
-        Simulated: {$simulatedPlayerEnergy}
-      </div>
-      <div>
-        Mod: {$coreIsConnectedToInlet ? 1 : -1}
-      </div>
-      <div>
-        Past blocks: {$blocksSinceLastResolution}
-      </div>
-      <div>
-        Last resolved: {$playerBox.lastResolved}
-      </div>
-      <div>
-        Current block: {$blockNumber}
-      </div>
+      <span class="green">
+        {$simulatedPlayerEnergy}
+      </span>
     {/key}
+  </p>
+  <p class="muted">Pool:</p>
+  <p>
+    {#each Object.entries($boxOutput) as [type, amount] (type)}
+      <span>
+        {MaterialType[type]}:
+        <span class={MaterialType[type]}>
+          {amount}
+        </span>
+      </span><br />
+    {/each}
   </p>
 </div>
 
@@ -49,7 +49,7 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 1rem;
+    padding: 0.5rem;
     overflow: scroll;
     text-align: left;
     display: flex;
@@ -68,5 +68,9 @@
 
   .green {
     color: var(--color-success);
+  }
+
+  .PISS {
+    color: yellow;
   }
 </style>
