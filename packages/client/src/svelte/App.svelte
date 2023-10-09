@@ -6,7 +6,18 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
+<<<<<<< HEAD
   import { entities, levels, playerCore, cores, ports } from "./modules/state"
+=======
+  import {
+    entities,
+    levels,
+    playerCore,
+    cores,
+    ports,
+    recipes,
+  } from "./modules/state"
+>>>>>>> 843b36055a44493f4a4f527685acb35701abe05b
   import {
     patches,
     simulatedMaterials,
@@ -35,6 +46,11 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
+<<<<<<< HEAD
+=======
+  $: console.log("$simulatedMaterials", $simulatedMaterials)
+  $: console.log("$recipes", $recipes)
+>>>>>>> 843b36055a44493f4a4f527685acb35701abe05b
   // $: console.log("$queuedActions", $queuedActions)
   // $: console.log("$activeActions", $activeActions)
   // $: console.log("$completedActions", $completedActions)

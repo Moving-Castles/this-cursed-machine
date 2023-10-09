@@ -20,16 +20,13 @@ import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCou
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
-// Import user types
-import { MATERIAL_TYPE } from "./../common.sol";
-
 ResourceId constant _tableId = ResourceId.wrap(
   bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("Input")))
 );
 ResourceId constant InputTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0001010001000000000000000000000000000000000000000000000000000000
+  0x0020010020000000000000000000000000000000000000000000000000000000
 );
 
 library Input {
@@ -58,7 +55,7 @@ library Input {
    */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](1);
-    _valueSchema[0] = SchemaType.UINT8;
+    _valueSchema[0] = SchemaType.UINT256;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -105,127 +102,127 @@ library Input {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function getValue(bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function _getValue(bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value (using the specified store).
    */
-  function getValue(IStore _store, bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function getValue(IStore _store, bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function get(bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function _get(bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value (using the specified store).
    */
-  function get(IStore _store, bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function get(IStore _store, bytes32 key) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 key, MATERIAL_TYPE value) internal {
+  function setValue(bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 key, MATERIAL_TYPE value) internal {
+  function _setValue(bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value (using the specified store).
    */
-  function setValue(IStore _store, bytes32 key, MATERIAL_TYPE value) internal {
+  function setValue(IStore _store, bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function set(bytes32 key, MATERIAL_TYPE value) internal {
+  function set(bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _set(bytes32 key, MATERIAL_TYPE value) internal {
+  function _set(bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value (using the specified store).
    */
-  function set(IStore _store, bytes32 key, MATERIAL_TYPE value) internal {
+  function set(IStore _store, bytes32 key, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
@@ -262,7 +259,7 @@ library Input {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(MATERIAL_TYPE value) internal pure returns (bytes memory) {
+  function encodeStatic(uint256 value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -272,7 +269,7 @@ library Input {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(MATERIAL_TYPE value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  function encode(uint256 value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
     PackedCounter _encodedLengths;
