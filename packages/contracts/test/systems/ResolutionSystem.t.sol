@@ -5,7 +5,7 @@ import { console } from "forge-std/console.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../../src/codegen/common.sol";
+import { MACHINE_TYPE, ENTITY_TYPE, PORT_TYPE } from "../../src/codegen/common.sol";
 
 contract ResolutionSystemTest is MudTest {
   IWorld world;
@@ -58,7 +58,7 @@ contract ResolutionSystemTest is MudTest {
 
     // 3. Create a blender entity
     vm.startPrank(alice);
-    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER);
+    bytes32 blenderEntity = world.build(MACHINE_TYPE.SPLITTER);
     vm.stopPrank();
 
     // ... Get inlet output ports
@@ -227,82 +227,6 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // 8. Check outlet pool
-  }
-
-  function testMakeTeeth() public {
-    setUp();
-
-    // console.log("%%%%%%%%%");
-    // console.log("%%%%%%%%% MAKE TEETH");
-    // console.log("%%%%%%%%%");
-
-    // 1. Spawn core
-    vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
-    world.transfer();
-    vm.stopPrank();
-
-    // 2. Create an inlet entity
-    vm.startPrank(alice);
-    bytes32 inletEntity = world.build(MACHINE_TYPE.INLET);
-    vm.stopPrank();
-
-    // 3. Create an outlet entity
-    vm.startPrank(alice);
-    bytes32 outletEntity = world.build(MACHINE_TYPE.OUTLET);
-    vm.stopPrank();
-
-    // 3. Create a blender entity
-    vm.startPrank(alice);
-    bytes32 blenderEntity = world.build(MACHINE_TYPE.BLENDER);
-    vm.stopPrank();
-
-    // ... Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
-
-    // ... Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
-
-    // ... Get blender ports
-    bytes32[][] memory blenderInputPorts = LibPort.getPorts(world, blenderEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory blenderOutputPorts = LibPort.getPorts(world, blenderEntity, PORT_TYPE.OUTPUT);
-
-    // .. Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
-
-    console.log("outletInputPorts.length");
-    console.log(outletInputPorts.length);
-
-    // 4. Connect inlet output to core input
-    vm.startPrank(alice);
-    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
-    vm.stopPrank();
-
-    // 5. Connect core output 1 to blender input 1
-    vm.startPrank(alice);
-    world.connect(coreOutputPorts[0][0], blenderInputPorts[0][0]);
-    vm.stopPrank();
-
-    // 5. Connect core output 1 to blender input 1
-    vm.startPrank(alice);
-    world.connect(coreOutputPorts[1][0], blenderInputPorts[1][0]);
-    vm.stopPrank();
-
-    // 5. Connect blender output to outlet input
-    vm.startPrank(alice);
-    world.connect(blenderOutputPorts[0][0], outletInputPorts[0][0]);
-    vm.stopPrank();
-
-    // 6. Wait 10 blocks
-    vm.roll(block.number + 10);
-
-    // 7. Resolve
-    vm.startPrank(alice);
-    world.resolve();
-    vm.stopPrank();
-
-    // 8.Check outlet pool
   }
 
   function testEnergyTickDown() public {

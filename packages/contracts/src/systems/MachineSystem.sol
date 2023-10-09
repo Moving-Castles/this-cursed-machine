@@ -2,10 +2,15 @@
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
 import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType } from "../codegen/index.sol";
-import { PORT_TYPE, MACHINE_TYPE, PORT_PLACEMENT, ENTITY_TYPE } from "../codegen/common.sol";
+import { PORT_TYPE, MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibEntity, LibPort, LibNetwork } from "../libraries/Libraries.sol";
 
 contract MachineSystem is System {
+  /**
+   * @notice Creates a new machine entity and configures its ports and energy.
+   * @param _machineType The type of machine to build, specified by the MACHINE_TYPE enum.
+   * @return machineEntity The identifier for the newly created machine entity.
+   */
   function build(MACHINE_TYPE _machineType) public returns (bytes32) {
     GameConfigData memory gameConfig = GameConfig.get();
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
@@ -20,13 +25,14 @@ contract MachineSystem is System {
 
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);
+
+    // Place in same box as the core
     CarriedBy.set(machineEntity, CarriedBy.get(coreEntity));
 
     // Create ports on machine
-    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.TOP);
-    LibPort.create(machineEntity, PORT_TYPE.INPUT, PORT_PLACEMENT.LEFT);
-    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.RIGHT);
-    LibPort.create(machineEntity, PORT_TYPE.OUTPUT, PORT_PLACEMENT.BOTTOM);
+    // @todo: Use machine type to determine port amount
+    LibPort.create(machineEntity, PORT_TYPE.INPUT);
+    LibPort.create(machineEntity, PORT_TYPE.OUTPUT);
 
     // Deduct energy
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
@@ -34,6 +40,10 @@ contract MachineSystem is System {
     return machineEntity;
   }
 
+  /**
+   * @notice Destroys the specified machine entity.
+   * @param _machineEntity The identifier for the machine entity to be destroyed.
+   */
   function destroy(bytes32 _machineEntity) public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
@@ -44,7 +54,7 @@ contract MachineSystem is System {
     // Destroy machine entity
     LibEntity.destroy(_machineEntity);
 
-    // TODO: Destroy ports on machine
-    // TODO: Destroy connections on machine
+    // @todo: Destroy ports on machine
+    // @todo: Destroy connections on machine
   }
 }

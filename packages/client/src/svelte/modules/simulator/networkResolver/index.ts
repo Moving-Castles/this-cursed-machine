@@ -91,7 +91,6 @@ function resolve(_boxEntity: string) {
           machineId: machineKey,
           materialType: MaterialType.BUG,
           amount: 100,
-          temperature: 0,
         })
       }
 

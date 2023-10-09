@@ -6,7 +6,13 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { simulatedPlayerEnergy } from "./modules/simulator"
+  import { entities, levels, playerCore, cores, ports } from "./modules/state"
+  import {
+    queuedActions,
+    activeActions,
+    completedActions,
+  } from "./modules/action/actionSequencer"
+  import { patches, simulatedMaterials, simulatedPlayerEnergy  } from "./modules/simulator"
   import { playerCore } from "./modules/state"
   // import {
   //   queuedActions,
@@ -31,6 +37,7 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
+  $: console.log("$simulatedMaterials", $simulatedMaterials)
   // $: console.log("$queuedActions", $queuedActions)
   // $: console.log("$activeActions", $activeActions)
   // $: console.log("$completedActions", $completedActions)

@@ -3,7 +3,6 @@ import {
   MaterialType,
   PortType,
   MachineType,
-  PortPlacement,
 } from "./enums"
 
 export {
@@ -11,7 +10,6 @@ export {
   MaterialType,
   PortType,
   MachineType,
-  PortPlacement
 } from "./enums"
 
 declare global {
@@ -32,10 +30,10 @@ declare global {
     carriedBy?: string
     sourcePort?: string
     targetPort?: string
-    portPlacement?: PortPlacement
+    input?: MaterialType
+    output?: MaterialType
     amount?: number
     lastResolved?: number
-    temperature?: number
     potential?: boolean
   }
 
@@ -61,7 +59,6 @@ declare global {
   type Level = {
     type: EntityType.LEVEL
     level: number
-    creationBlock: number
   }
 
   type Core = {
@@ -77,7 +74,6 @@ declare global {
 
   type Connection = {
     type: EntityType.CONNECTION
-    creationBlock: number
     sourcePort: string
     targetPort: string
   }
@@ -95,31 +91,18 @@ declare global {
 
   type Port = {
     type: EntityType.PORT
-    creationBlock: number
     portType: PortType
-    portPlacement: PortPlacement
     carriedBy: string
   }
 
   type Material = {
     type: EntityType.MATERIAL
-    creationBlock: number
     amount: number
-    temperature: number
-  }
-
-  type ResourceToEnergy = {
-    type: EntityType.MACHINE
-    creationBlock: number
-    energy?: number
   }
 
   type GameConfig = {
     coolDown: number
-    coreEnergyCap: number
-    coreInitialEnergy: number
-    resourceConnectionCost: number
-    controlConnectionCost: number
+    connectionCost: number
     buildCost: number
   }
 

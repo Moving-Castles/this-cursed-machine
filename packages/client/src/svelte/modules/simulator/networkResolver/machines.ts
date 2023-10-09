@@ -6,7 +6,6 @@ const EMPTY_PRODUCT: Product = {
   machineId: "",
   materialType: MaterialType.NONE,
   amount: 0,
-  temperature: 0,
 }
 
 /**
@@ -24,12 +23,18 @@ export function process(machineType: MachineType, inputs: Product[]) {
       return outlet(inputs)
     case MachineType.INLET:
       return inlet(inputs)
-    case MachineType.SCORCHER:
-      return scorcher(inputs)
     case MachineType.SPLITTER:
       return splitter(inputs)
-    case MachineType.BLENDER:
-      return blender(inputs)
+    case MachineType.MIXER:
+      return mixer(inputs)
+    case MachineType.DRYER:
+      return dryer(inputs)
+    case MachineType.WETTER:
+      return wetter(inputs)
+    case MachineType.BOILER:
+      return boiler(inputs)
+    case MachineType.COOLER:
+      return cooler(inputs)
     default:
       return [EMPTY_PRODUCT]
   }
@@ -50,14 +55,12 @@ function core(inputs: Product[]): Product[] {
     machineId: inputs[0].machineId,
     materialType: MaterialType.PISS,
     amount: Number(inputs[0].amount) / 2,
-    temperature: inputs[0].temperature
   };
 
   outputs[1] = {
     machineId: inputs[0].machineId,
     materialType: MaterialType.BLOOD,
     amount: Number(inputs[0].amount) / 2,
-    temperature: inputs[0].temperature
   };
 
   return outputs;
@@ -86,23 +89,6 @@ function inlet(inputs: Product[]): Product[] {
 }
 
 /**
- * Processes products through the scorcher machine.
- * Increases the temperature of the product by 30.
- * @param {Product[]} inputs - Array of products to process.
- * @returns {Product[]} - Processed list of products.
- */
-function scorcher(inputs: Product[]): Product[] {
-  return [
-    {
-      machineId: inputs[0].machineId,
-      materialType: inputs[0].materialType,
-      amount: Number(inputs[0].amount),
-      temperature: inputs[0].temperature + 30,
-    },
-  ]
-}
-
-/**
  * Processes products through the splitter machine.
  * Splits a product into two with half the amount of the original.
  * @param {Product[]} inputs - Array of products to process.
@@ -120,46 +106,66 @@ function splitter(inputs: Product[]): Product[] {
       machineId: input.machineId,
       materialType: input.materialType,
       amount: halfAmount,
-      temperature: input.temperature,
     },
     {
       machineId: input.machineId,
       materialType: input.materialType,
       amount: halfAmount,
-      temperature: input.temperature,
     },
   ]
 }
 
 /**
- * Processes products through the blender machine.
- * Combines BLOOD and PISS types to produce a TEETH type.
- * @param {Product[]} inputs - Array of products to process.
- * @returns {Product[]} - Processed list of products.
+ * Clones the provided array of Product objects.
+ *
+ * @function
+ * @param {Product[]} inputs - An array of products to be cloned.
+ * @returns {Product[]} - A deep clone of the input array.
  */
-function blender(inputs: Product[]): Product[] {
-  const input1 = inputs[0]
-  const input2 = inputs[1]
+function mixer(inputs: Product[]): Product[] {
+  return deepClone(inputs)
+}
 
-  if (!input1 || !input2) return []
+/**
+ * Clones the provided array of Product objects.
+ *
+ * @function
+ * @param {Product[]} inputs - An array of products to be cloned.
+ * @returns {Product[]} - A deep clone of the input array.
+ */
+function dryer(inputs: Product[]): Product[] {
+  return deepClone(inputs)
+}
 
-  let materialType = MaterialType.DIRT
+/**
+ * Clones the provided array of Product objects.
+ *
+ * @function
+ * @param {Product[]} inputs - An array of products to be cloned.
+ * @returns {Product[]} - A deep clone of the input array.
+ */
+function wetter(inputs: Product[]): Product[] {
+  return deepClone(inputs)
+}
 
-  if (
-    (input1.materialType === MaterialType.BLOOD &&
-      input2.materialType === MaterialType.PISS) ||
-    (input1.materialType === MaterialType.PISS &&
-      input2.materialType === MaterialType.BLOOD)
-  ) {
-    materialType = MaterialType.TEETH
-  }
+/**
+ * Clones the provided array of Product objects.
+ *
+ * @function
+ * @param {Product[]} inputs - An array of products to be cloned.
+ * @returns {Product[]} - A deep clone of the input array.
+ */
+function boiler(inputs: Product[]): Product[] {
+  return deepClone(inputs)
+}
 
-  return [
-    {
-      machineId: input1.machineId,
-      materialType: materialType,
-      amount: Number(input1.amount),
-      temperature: input1.temperature,
-    },
-  ]
+/**
+ * Clones the provided array of Product objects.
+ *
+ * @function
+ * @param {Product[]} inputs - An array of products to be cloned.
+ * @returns {Product[]} - A deep clone of the input array.
+ */
+function cooler(inputs: Product[]): Product[] {
+  return deepClone(inputs)
 }

@@ -5,7 +5,6 @@ export type Product = {
     machineId: string;
     materialType: MaterialType;
     amount: number;
-    temperature: number;
 }
 
 type IntermediaryState = {

@@ -4,7 +4,7 @@ import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE, PORT_PLACEMENT } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_TYPE } from "../../src/codegen/common.sol";
 
 contract MachineSystemTest is MudTest {
   IWorld world;
@@ -30,7 +30,7 @@ contract MachineSystemTest is MudTest {
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 machineEntity = world.build(MACHINE_TYPE.BLENDER);
+    bytes32 machineEntity = world.build(MACHINE_TYPE.SPLITTER);
     vm.stopPrank();
 
     // Check that the machine was created
@@ -63,7 +63,7 @@ contract MachineSystemTest is MudTest {
 
     // Create a new entity
     vm.startPrank(alice);
-    bytes32 machineEntity = world.build(MACHINE_TYPE.BLENDER);
+    bytes32 machineEntity = world.build(MACHINE_TYPE.SPLITTER);
     vm.stopPrank();
 
     // Check that the machine was created

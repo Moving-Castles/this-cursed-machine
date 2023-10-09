@@ -8,6 +8,6 @@ import { LibPort } from "./LibPort.sol";
 import { LibConnection } from "./LibConnection.sol";
 import { LibEntity } from "./LibEntity.sol";
 import { LibNetwork } from "./LibNetwork.sol";
-import { LibArray } from "./LibArray.sol";
 import { LibMachine } from "./LibMachine.sol";
 import { LibLevel } from "./LibLevel.sol";
+import { LibRecipe } from "./LibRecipe.sol";

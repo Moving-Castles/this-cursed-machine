@@ -1,5 +1,6 @@
 export enum EntityType {
   NONE,
+  RECIPE,
   LEVEL,
   BOX,
   MACHINE,
@@ -13,10 +14,12 @@ export enum MachineType {
   INLET,
   OUTLET,
   CORE,
-  BLENDER,
   SPLITTER,
-  SCORCHER,
-  COMBI_GATE,
+  MIXER,
+  DRYER,
+  WETTER,
+  BOILER,
+  COOLER
 }
 
 export enum MaterialType {
@@ -24,28 +27,24 @@ export enum MaterialType {
   BUG,
   PISS,
   BLOOD,
-  PRIME,
-  M150ED,
-  BANG,
-  MONSTER,
+  SLUDGE,
+  DIRT,
+  BLOOD_LIPIDS,
+  PLANT,
+  CAFFEINATED_HEMATURIC_LIQUID,
   CLUB_MATE,
-  SPRITE,
-  MILK,
-  JUGGERNOG,
-  TABASCO,
-  IBUPROFENE,
-  AMMONIA,
-  NYQUIL,
+  DIET_RED_BULL,
+  PRIME,
+  M150,
+  FIVE_HOUR_ENERGY,
+  MONSTER,
+  E_LIQUID,
+  TOBACCO,
+  CIGARETTE_JUICE,
+  HAND_OF_GOD
 }
 
 export enum PortType {
   INPUT,
   OUTPUT,
-}
-
-export enum PortPlacement {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
 }

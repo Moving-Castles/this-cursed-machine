@@ -6,6 +6,7 @@
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
   import Goal from "../Goal/Goal.svelte"
+  import BoxMaterial from "./BoxMaterial.svelte"
 
   let now = performance.now()
 
@@ -34,6 +35,9 @@
         <div class="stats">
           <BoxStats />
         </div>
+        <!-- <div class="stats">
+          <BoxMaterial />
+        </div> -->
 
         <div class="graph">
           <Graph />
