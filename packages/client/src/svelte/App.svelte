@@ -34,8 +34,8 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  $: console.log("$simulatedMaterials", $simulatedMaterials)
-  $: console.log("$recipes", $recipes)
+  // $: console.log("$simulatedMaterials", $simulatedMaterials)
+  // $: console.log("$recipes", $recipes)
   // $: console.log("$activeActions", $activeActions)
   // $: console.log("$completedActions", $completedActions)
   // $: console.log("$entities", $entities)

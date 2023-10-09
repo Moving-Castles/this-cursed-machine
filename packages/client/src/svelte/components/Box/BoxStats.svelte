@@ -20,25 +20,24 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats" use:onWheel>
-  <p><span class="muted">You:</span> inhabitant#24</p>
   <p>
-    <span class="muted">Energy:</span>
-    {#key $simulatedPlayerCore.energy}
-      <span class="green">
-        {$simulatedPlayerEnergy}
-      </span>
-    {/key}
+    <span class="muted">You:</span><br /> worker#24 ({#key $simulatedPlayerCore.energy}
+      <span class="green">E: {$simulatedPlayerEnergy}</span>{/key})
   </p>
   <p class="muted">Pool:</p>
   <p>
-    {#each Object.entries($boxOutput) as [type, amount] (type)}
-      <span>
-        {MaterialType[type]}:
-        <span class={MaterialType[type]}>
-          {amount}
-        </span>
-      </span><br />
-    {/each}
+    {#if Object.entries($boxOutput).length > 0}
+      {#each Object.entries($boxOutput) as [type, amount] (type)}
+        <span>
+          {MaterialType[type]}:
+          <span class={MaterialType[type]}>
+            {amount}
+          </span>
+        </span><br />
+      {/each}
+    {:else}
+      Empty
+    {/if}
   </p>
 </div>
 

@@ -1,38 +1,8 @@
 import { EntityType, MachineType } from "../../modules/state/enums"
-import { connections } from "../../modules/state"
-import {
-  simulated,
-  // simulatedConnections,
-  simulatedMachines,
-  simulatedPorts,
-} from "../../modules/simulator"
+import { machinePorts } from "../../modules/state/convenience"
+import { simulated } from "../../modules/simulator"
 import { get } from "svelte/store"
 import { build, connect, disconnect, destroy } from "../../modules/action"
-
-export const availablePorts = (machineId: string) => {
-  const sourceMachine = Object.entries(get(simulatedMachines)).find(
-    ([_, ent]) => ent.numericalID === machineId
-  )
-  const sourcePorts = Object.entries(get(simulatedPorts)).filter(
-    ([_, ent]) => ent?.carriedBy === sourceMachine[0]
-  )
-  const occupiedPorts = sourcePorts.filter(([id, _]) => {
-    // if a connection exists with this as source OR target, list as occupied
-    const connectionsUsingPort = Object.values(get(connections)).filter(
-      connection => connection.sourcePort === id || connection.targetPort === id
-    )
-    return connectionsUsingPort.length > 0
-  })
-  const freePorts = sourcePorts.filter(([id, _]) => {
-    // if a connection exists with this as source OR target, list as occupied
-    const connectionsUsingPort = Object.values(get(connections)).filter(
-      connection => connection.sourcePort === id || connection.targetPort === id
-    )
-    return connectionsUsingPort.length === 0
-  })
-
-  return [occupiedPorts, freePorts]
-}
 
 // Build
 export const buildMachine = (machineType: string, send: Function) => {
@@ -66,8 +36,8 @@ export const connectMachines = (
     ) {
       send("Only connect machines")
     } else {
-      const [_, sourcePorts] = availablePorts(sourceMachine[1].numericalID)
-      const [__, targetPorts] = availablePorts(targetMachine[1].numericalID)
+      const [_, sourcePorts] = machinePorts(sourceMachine[1].numericalID)
+      const [__, targetPorts] = machinePorts(targetMachine[1].numericalID)
 
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
