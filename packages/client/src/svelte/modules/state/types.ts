@@ -30,6 +30,8 @@ declare global {
     carriedBy?: string
     sourcePort?: string
     targetPort?: string
+    input?: MaterialType
+    output?: MaterialType
     amount?: number
     lastResolved?: number
     potential?: boolean
