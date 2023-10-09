@@ -24,11 +24,11 @@ library LibMachine {
   ) internal returns (Product[] memory _output) {
     // Core
     if (_machineType == MACHINE_TYPE.CORE) {
-      return core(_inputs, _entity, blocksSinceLastResolution);
+      return core(_inputs[0], _entity, blocksSinceLastResolution);
     }
     // Splitter
     else if (_machineType == MACHINE_TYPE.SPLITTER) {
-      return splitter(_inputs);
+      return splitter(_inputs[0]);
     }
     // Mixer
     else if (_machineType == MACHINE_TYPE.MIXER) {
@@ -50,37 +50,29 @@ library LibMachine {
    * the energy of the `_coreEntity` and produce PISS and BLOOD products as output, each having
    * half the amount of the input BUG product.
    *
-   * @param _inputs An array of input products.
+   * @param _input Product to be processed.
    * @param _coreEntity The entity of the core whose energy is to be manipulated.
    * @param blocksSinceLastResolution The number of blocks since the last energy resolution.
    * @return _outputs An array of products output by the core machine.
    */
   function core(
-    Product[] memory _inputs,
+    Product memory _input,
     bytes32 _coreEntity,
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
 
     // Abort if input is not bug
-    if (_inputs[0].materialType != MATERIAL_TYPE.BUG) return outputs;
+    if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
 
     // Update core energy (2 per block)
     Energy.set(_coreEntity, Energy.get(_coreEntity) + 2 * uint32(blocksSinceLastResolution));
 
     // Output Piss
-    outputs[0] = Product({
-      machineId: _inputs[0].machineId,
-      materialType: MATERIAL_TYPE.PISS,
-      amount: _inputs[0].amount / 2
-    });
+    outputs[0] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.PISS, amount: _input.amount / 2 });
 
     // Output blood
-    outputs[1] = Product({
-      machineId: _inputs[0].machineId,
-      materialType: MATERIAL_TYPE.BLOOD,
-      amount: _inputs[0].amount / 2
-    });
+    outputs[1] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.BLOOD, amount: _input.amount / 2 });
 
     return outputs;
   }
@@ -92,23 +84,15 @@ library LibMachine {
    * the amount of the input. The outputs inherit the properties of the input
    * (i.e., `machineId`, `materialType`).
    *
-   * @param _inputs An array containing a single input product to be split.
+   * @param _input Product to be processed.
    * @return _outputs An array containing two products, each with half the amount of the input.
    */
-  function splitter(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
+  function splitter(Product memory _input) internal pure returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
     // Output 1
-    outputs[0] = Product({
-      machineId: _inputs[0].machineId,
-      materialType: _inputs[0].materialType,
-      amount: _inputs[0].amount / 2
-    });
+    outputs[0] = Product({ machineId: _input.machineId, materialType: _input.materialType, amount: _input.amount / 2 });
     // Output 2
-    outputs[1] = Product({
-      machineId: _inputs[0].machineId,
-      materialType: _inputs[0].materialType,
-      amount: _inputs[0].amount / 2
-    });
+    outputs[1] = Product({ machineId: _input.machineId, materialType: _input.materialType, amount: _input.amount / 2 });
     return outputs;
   }
 
@@ -118,92 +102,17 @@ library LibMachine {
    * @param _inputs An array of `Product` structs that are the inputs for the mixer.
    * @return _outputs An array of `Product` structs after being processed by the mixer.
    */
-  function mixer(Product[] memory _inputs) internal pure returns (Product[] memory _outputs) {
+  function mixer(Product[] memory _inputs) internal view returns (Product[] memory _outputs) {
+    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(
+      MACHINE_TYPE.MIXER,
+      LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
+    );
     Product[] memory outputs = new Product[](1);
-
-    // BLOOD + PISS => CAFFEINATED_HEMATURIC_LIQUID
-    if (
-      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.BLOOD)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.CAFFEINATED_HEMATURIC_LIQUID,
-        amount: _inputs[0].amount
-      });
-    }
-    // MONSTER + PISS => M150
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.MONSTER && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.MONSTER)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.M150,
-        amount: _inputs[0].amount
-      });
-    }
-    // M150 + PISS => FIVE_HOUR_ENERGY
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.M150 && _inputs[1].materialType == MATERIAL_TYPE.PISS) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.PISS && _inputs[1].materialType == MATERIAL_TYPE.M150)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.FIVE_HOUR_ENERGY,
-        amount: _inputs[0].amount
-      });
-    }
-    // M150 + PRIME => FIVE_HOUR_ENERGY
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.M150 && _inputs[1].materialType == MATERIAL_TYPE.PRIME) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.PRIME && _inputs[1].materialType == MATERIAL_TYPE.M150)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.FIVE_HOUR_ENERGY,
-        amount: _inputs[0].amount
-      });
-    }
-    // BLOOD_LIPIDS + CIGARETTE_JUICE => E_LIQUID
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.BLOOD_LIPIDS &&
-        _inputs[1].materialType == MATERIAL_TYPE.CIGARETTE_JUICE) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.CIGARETTE_JUICE &&
-        _inputs[1].materialType == MATERIAL_TYPE.BLOOD_LIPIDS)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.E_LIQUID,
-        amount: _inputs[0].amount
-      });
-    }
-    // DIET_RED_BULL + CIGARETTE_JUICE => E_LIQUID
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.DIET_RED_BULL &&
-        _inputs[1].materialType == MATERIAL_TYPE.CIGARETTE_JUICE) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.CIGARETTE_JUICE &&
-        _inputs[1].materialType == MATERIAL_TYPE.DIET_RED_BULL)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.E_LIQUID,
-        amount: _inputs[0].amount
-      });
-    }
-    // FIVE_HOUR_ENERGY + E_LIQUID => HAND_OF_GOD
-    else if (
-      (_inputs[0].materialType == MATERIAL_TYPE.FIVE_HOUR_ENERGY &&
-        _inputs[1].materialType == MATERIAL_TYPE.E_LIQUID) ||
-      (_inputs[0].materialType == MATERIAL_TYPE.E_LIQUID && _inputs[1].materialType == MATERIAL_TYPE.FIVE_HOUR_ENERGY)
-    ) {
-      outputs[0] = Product({
-        machineId: _inputs[0].machineId,
-        materialType: MATERIAL_TYPE.HAND_OF_GOD,
-        amount: _inputs[0].amount
-      });
-    }
-
+    outputs[0] = Product({
+      machineId: _inputs[0].machineId,
+      materialType: resultMaterialType,
+      amount: _inputs[0].amount
+    });
     return outputs;
   }
 
@@ -218,7 +127,7 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product memory _input
   ) internal view returns (Product[] memory _outputs) {
-    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(_machineType, _input.materialType);
+    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(_machineType, uint256(_input.materialType));
     Product[] memory outputs = new Product[](1);
     outputs[0] = Product({ machineId: _input.machineId, materialType: resultMaterialType, amount: _input.amount });
     return outputs;

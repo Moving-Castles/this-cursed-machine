@@ -33,6 +33,13 @@ export const levels = derived(entities, ($entities) => {
 });
 
 /**
+ * Recipes
+ */
+export const recipes = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.RECIPE)) as Recipes;
+});
+
+/**
  * Boxes
  */
 export const boxes = derived(entities, ($entities) => {

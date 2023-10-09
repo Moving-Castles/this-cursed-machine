@@ -26,7 +26,7 @@ export default mudConfig({
         ReadyBlock: "uint256",
         Level: "uint32",
         LastResolved: "uint256",
-        Input: "MATERIAL_TYPE",
+        Input: "uint256",
         Output: "MATERIAL_TYPE",
         // ...
         GameConfig: {

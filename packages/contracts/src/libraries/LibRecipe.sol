@@ -14,7 +14,7 @@ library LibRecipe {
    * @param _output The type of output material from the recipe.
    * @return entity The unique identifier (bytes32) for the new recipe entity.
    */
-  function create(MACHINE_TYPE _machineType, MATERIAL_TYPE _input, MATERIAL_TYPE _output) internal returns (bytes32) {
+  function create(MACHINE_TYPE _machineType, uint256 _input, MATERIAL_TYPE _output) internal returns (bytes32) {
     bytes32 entity = LibUtils.getRandomKey();
     EntityType.set(entity, ENTITY_TYPE.RECIPE);
     MachineType.set(entity, _machineType);
@@ -30,7 +30,7 @@ library LibRecipe {
    * @param _input The type of input material being used.
    * @return The output material type corresponding to the provided machine and input types.
    */
-  function getOutput(MACHINE_TYPE _machineType, MATERIAL_TYPE _input) internal view returns (MATERIAL_TYPE) {
+  function getOutput(MACHINE_TYPE _machineType, uint256 _input) internal view returns (MATERIAL_TYPE) {
     QueryFragment[] memory fragments = new QueryFragment[](2);
     // fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.RECIPE));
     fragments[0] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(_machineType));

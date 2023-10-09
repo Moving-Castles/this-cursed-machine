@@ -30,7 +30,7 @@ declare global {
     carriedBy?: string
     sourcePort?: string
     targetPort?: string
-    input?: MaterialType
+    input?: number
     output?: MaterialType
     amount?: number
     lastResolved?: number
@@ -106,6 +106,13 @@ declare global {
     buildCost: number
   }
 
+  type Recipe = {
+    type: EntityType.RECIPE
+    machineType: MachineType
+    input: number
+    output: MaterialType
+  }
+
   // ---
 
   type Entities = {
@@ -134,6 +141,10 @@ declare global {
 
   type Levels = {
     [index: string]: Level
+  }
+
+  type Recipes = {
+    [index: string]: Recipe
   }
 
   // ---
