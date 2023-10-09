@@ -1,7 +1,13 @@
 <script lang="ts">
   import { symbols, output, index, parsed } from "./index"
   import { evaluate } from "./evaluate"
-  import { buildMachine, connectMachines, availablePorts } from "./actions"
+  import {
+    buildMachine,
+    connectMachines,
+    disconnectMachines,
+    destroyMachine,
+    availablePorts,
+  } from "./actions"
   import type { Action } from "../../modules/action/actionSequencer"
   import {
     completedActions,
@@ -14,6 +20,8 @@
     simulatedMachines,
     simulatedPorts,
     simulatedConnections,
+    readableConnections,
+    readableMachines,
   } from "../../modules/simulator"
   import { onMount, onDestroy, createEventDispatcher, tick } from "svelte"
   import { playSound } from "../../modules/sound"
@@ -97,6 +105,7 @@
     if (action) {
       selectedAction = action
     }
+
     scrollToEnd()
   }
 
@@ -152,6 +161,20 @@
     $watchingAction = connectMachines(detail[0], detail[1], send)
     // console.log($watchingAction)
     userInput = ""
+  }
+
+  const onDisconnectConfirm = ({ detail }) => {
+    const connection = $readableConnections.find(con => con.read === detail)
+    if (connection) {
+      $watchingAction = disconnectMachines(connection.id)
+    }
+  }
+
+  const onDestroyConfirm = ({ detail }) => {
+    const machine = $readableMachines.find(mac => mac.read === detail)
+    if (machine) {
+      $watchingAction = destroyMachine(machine.id)
+    }
   }
 
   const onAdvance = ({ detail }) => {
@@ -239,6 +262,18 @@
           )}
           on:change={displayConnectionPotential}
           on:confirm={onConnectConfirm}
+          on:cancel={clearPotential}
+        />
+      {:else if selectedAction === "destroy"}
+        <Select
+          options={$readableMachines.map(r => r.read)}
+          on:confirm={onDestroyConfirm}
+          on:cancel={clearPotential}
+        />
+      {:else if selectedAction === "disconnect"}
+        <Select
+          options={$readableConnections.map(r => r.read)}
+          on:confirm={onDisconnectConfirm}
           on:cancel={clearPotential}
         />
       {:else if selectedAction === "connect"}

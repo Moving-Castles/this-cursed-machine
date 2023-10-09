@@ -20,7 +20,9 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="flash" on:click={next}>
     <div class="flash-content">
-      <h1 class="xl-text text-outline">THIS<br />CURSED<br />MACHINE</h1>
+      <h1 class="xl-text text-outline centered">
+        THIS<br />CURSED<br />MACHINE
+      </h1>
       <!-- <img src="./suffer.png" alt="swu" /> -->
     </div>
   </div>
@@ -52,20 +54,10 @@
       animation: blinkingOpacity 1s infinite;
       opacity: 1;
       transform: scale(0.5);
+
       img {
         width: 100%;
         height: 100%;
-      }
-
-      .xl-text {
-        font-size: 50vh;
-        line-height: 31vh;
-        text-align: center;
-        letter-spacing: -120px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%) translateX(-6vh);
       }
     }
   }

@@ -158,7 +158,6 @@
    */
   // Reheat the simulation when drag starts, and fix the subject position.
   function dragstarted(event, d) {
-    console.log("SYATYAT")
     if (!event.active) simulation.alphaTarget(0.3).restart()
     d.x = boundX(event.x)
     d.y = boundY(event.y)

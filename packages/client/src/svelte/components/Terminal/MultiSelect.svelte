@@ -12,7 +12,6 @@
 
   $: {
     stageOptions = [...options[stage]]
-    console.log(stageOptions, stage)
     if (stage > 0) stageOptions = [...stageOptions, "BACK"]
   }
   $: {
@@ -47,7 +46,6 @@
 
     if (keyCode === 13) {
       if (isNaN(choice)) {
-        console.log(choice)
         stage--
         index = 0
         return

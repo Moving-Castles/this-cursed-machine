@@ -12,13 +12,14 @@
     activeActions,
     completedActions,
   } from "./modules/action/actionSequencer"
-  import { patches, simulatedMaterials } from "./modules/simulator"
+  import { patches, simulatedMaterials, simulatedPlayerEnergy  } from "./modules/simulator"
+  import { playerCore } from "./modules/state"
   // import {
-  //   patches,
-  //   simulated,
-  //   blocksSinceLastResolution,
-  // } from "./modules/simulator"
-  import { filterByNamespace } from "./modules/utils/misc"
+  //   queuedActions,
+  //   activeActions,
+  //   completedActions,
+  // } from "./modules/action/actionSequencer"
+  // import { filterByNamespace } from "./modules/utils/misc"
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initUI, onKeyDown } from "./modules/ui/events"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
@@ -31,15 +32,16 @@
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
 
+  import Death from "./components/Death/Death.svelte"
   // import Game from "./components/Game/Game.svelte"
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  $: console.log("$queuedActions", $queuedActions)
-  $: console.log("$activeActions", $activeActions)
-  $: console.log("$completedActions", $completedActions)
-  $: console.log("$patches", $patches)
   $: console.log("$simulatedMaterials", $simulatedMaterials)
+  // $: console.log("$queuedActions", $queuedActions)
+  // $: console.log("$activeActions", $activeActions)
+  // $: console.log("$completedActions", $completedActions)
+  // $: console.log("$patches", $patches)
   // $: console.log("$entities", $entities)
   // $: console.log("$levels", $levels)
   // $: console.log("$cores", $cores)
@@ -52,8 +54,6 @@
 
   let UIState = 0
   let shown = false
-
-  $: console.log(UIState)
 
   initUI()
 
@@ -114,6 +114,8 @@
     <Spawn />
   {:else if $playerCore.level === 0}
     <Intro />
+  {:else if $simulatedPlayerEnergy === 0}
+    <Death />
   {:else}
     <TerminalBox />
   {/if}

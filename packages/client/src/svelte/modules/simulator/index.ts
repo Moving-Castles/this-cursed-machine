@@ -197,6 +197,49 @@ export const simulatedPorts = derived(simulated, $simulated => {
   )
 })
 
+// --- READABLE ------------------------------------------
+export const readableConnections = derived(
+  [connections, ports, machines],
+  ([$connections, $ports, $machines]) => {
+    return Object.entries($connections)
+      .map(([id, connection]) => {
+        const sP = connection?.sourcePort
+        const tP = connection?.targetPort
+
+        const ssP = $ports[sP]
+        const ttP = $ports[tP]
+
+        if (ssP && ttP) {
+          const sourceMachine =
+            MachineType[$machines[ssP?.carriedBy]?.machineType]
+          const targetMachine =
+            MachineType[$machines[ttP?.carriedBy]?.machineType]
+          if (sourceMachine && targetMachine) {
+            return {
+              id,
+              connection,
+              read: `From ${sourceMachine} To ${targetMachine}`,
+            }
+          }
+        }
+
+        return false
+      })
+      .filter(ent => ent)
+  }
+)
+
+export const readableMachines = derived(
+  simulatedMachines,
+  $simulatedMachines => {
+    return Object.entries($simulatedMachines).map(([id, machine]) => ({
+      id,
+      machine,
+      read: `${MachineType[machine.machineType]} (${machine.numericalID})`,
+    }))
+  }
+)
+
 // --- MISC ----------------------------------------------
 
 export const simulatedPlayerEnergy = derived(
@@ -206,9 +249,8 @@ export const simulatedPlayerEnergy = derived(
     $coreIsConnectedToInlet,
     $blocksSinceLastResolution,
   ]) => {
-    console.log("======", $coreIsConnectedToInlet)
     return capAtZero(
-      ($simulatedPlayerCore.energy || 0) +
+      ($simulatedPlayerCore?.energy || 0) +
         ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
     )
   }

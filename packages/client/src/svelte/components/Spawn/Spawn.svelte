@@ -56,22 +56,6 @@
     justify-items: center;
   }
 
-  button {
-    padding: 20px;
-    font-size: var(--font-size-normal);
-    font-family: var(--font-family);
-    margin-top: 1em;
-    cursor: pointer;
-    background: black;
-    color: white;
-    border: 4px solid white;
-
-    &:hover {
-      background: white;
-      color: black;
-    }
-  }
-
   .placeholder {
     max-width: 40ch;
     text-align: center;
