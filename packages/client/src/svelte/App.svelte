@@ -7,13 +7,7 @@
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
   import { entities, levels, playerCore, cores, ports } from "./modules/state"
-  import {
-    queuedActions,
-    activeActions,
-    completedActions,
-  } from "./modules/action/actionSequencer"
   import { patches, simulatedMaterials, simulatedPlayerEnergy  } from "./modules/simulator"
-  import { playerCore } from "./modules/state"
   // import {
   //   queuedActions,
   //   activeActions,
