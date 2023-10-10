@@ -512,4 +512,111 @@ contract ResolutionSystemTest is MudTest {
     console.log("MaterialType.get(world, materials[0][0])");
     console.log(uint256(MaterialType.get(world, materials[0][0])));
   }
+
+  function testMaterialConsolidation() public {
+    setUp();
+
+    // 1. Spawn core
+    vm.startPrank(alice);
+    bytes32 coreEntity = world.spawn();
+    world.transfer();
+    vm.stopPrank();
+
+    console.log("%%%%%%%%%");
+    console.log("%%%%%%%%% MAKE SLUDGE");
+    console.log("%%%%%%%%%");
+
+    // Get inlet entity
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
+      world,
+      CarriedBy.get(coreEntity),
+      MACHINE_TYPE.INLET
+    );
+    bytes32 inletEntity = inletEntities[0][0];
+
+    // Get outlet entity
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
+      world,
+      CarriedBy.get(coreEntity),
+      MACHINE_TYPE.OUTLET
+    );
+    bytes32 outletEntity = outletEntities[0][0];
+
+    // Get inlet output ports
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+
+    // Get core ports
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+
+    // Get outlet input ports
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+
+    // console.log("coreOutputPorts.length");
+    // console.log(coreOutputPorts.length);
+
+    // Connect inlet output to core input
+    vm.startPrank(alice);
+    world.connect(inletOutputPorts[0][0], coreInputPorts[0][0]);
+    vm.stopPrank();
+
+    vm.roll(block.number + 100);
+
+    vm.startPrank(alice);
+    world.resolve();
+    vm.stopPrank();
+
+    console.log("energy");
+    console.log(Energy.get(world, coreEntity));
+
+    // Create a dryer entity
+    vm.startPrank(alice);
+    bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
+    vm.stopPrank();
+
+    // Get dryer ports
+    bytes32[][] memory dryerInputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory dryerOutputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.OUTPUT);
+
+    console.log("dryerInputPorts.length");
+    console.log(dryerInputPorts.length);
+
+    console.log("dryerOutputPorts.length");
+    console.log(dryerOutputPorts.length);
+
+    // Connect core outputs to dryer input
+    vm.startPrank(alice);
+    world.connect(coreOutputPorts[0][0], dryerInputPorts[0][0]);
+    vm.stopPrank();
+
+    console.log("outletInputPorts.length");
+    console.log(outletInputPorts.length);
+
+    // Connect dryer output to outlet input
+    vm.startPrank(alice);
+    world.connect(dryerOutputPorts[0][0], outletInputPorts[0][0]);
+    vm.stopPrank();
+
+    // Wait 10 blocks
+    vm.roll(block.number + 10);
+
+    // 7. Resolve
+    vm.startPrank(alice);
+    world.resolve();
+    vm.stopPrank();
+
+    // Wait 10 blocks
+    vm.roll(block.number + 10);
+
+    // 7. Resolve
+    vm.startPrank(alice);
+    world.resolve();
+    vm.stopPrank();
+
+    // Check outlet pool
+    bytes32[][] memory materials = LibBox.getMaterialsByBox(world, CarriedBy.get(coreEntity));
+
+    console.log("materials.length");
+    console.log(materials.length);
+  }
 }

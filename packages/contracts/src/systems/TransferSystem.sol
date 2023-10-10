@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { Level, CarriedBy, Energy } from "../codegen/index.sol";
 import { PORT_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibBox, LibPort, LibEntity } from "../libraries/Libraries.sol";
+import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
   /**
@@ -15,14 +15,21 @@ contract TransferSystem is System {
   function transfer() public returns (bytes32) {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
 
+    // Resolve network
+    if (CarriedBy.get(coreEntity) != bytes32(0)) {
+      LibNetwork.resolve(CarriedBy.get(coreEntity));
+    }
+
+    require(LibGoal.goalsAreAchived(coreEntity), "goals not achieved");
+
     uint32 newLevel = Level.get(coreEntity) + 1;
 
     // Level up core entity
     Level.set(coreEntity, newLevel);
 
     // Set initial energy
-    // @todo Set energy based on level
-    Energy.set(coreEntity, 100);
+    bytes32 levelEntity = LibLevel.getLevel(newLevel);
+    Energy.set(coreEntity, Energy.get(levelEntity));
 
     // Create box entity
     bytes32 boxEntity = LibBox.create(newLevel);

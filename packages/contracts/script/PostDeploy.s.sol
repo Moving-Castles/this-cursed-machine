@@ -12,8 +12,10 @@ contract PostDeploy is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
 
-    // world.mc_InitSystem_init();
+    // Initialize gameConfig, levels and goals
     world.init();
+    // Initialize recipes
+    world.init2();
 
     vm.stopBroadcast();
   }

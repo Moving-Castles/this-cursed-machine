@@ -40,10 +40,24 @@ export const recipes = derived(entities, ($entities) => {
 });
 
 /**
+ * Goals
+ */
+export const goals = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.GOAL)) as Goals;
+});
+
+/**
  * Boxes
  */
 export const boxes = derived(entities, ($entities) => {
   return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.BOX)) as Boxes;
+});
+
+/**
+ * Materials
+ */
+export const materials = derived(entities, ($entities) => {
+  return Object.fromEntries(Object.entries($entities).filter(([, entity]) => entity.entityType === EntityType.MATERIAL)) as Materials;
 });
 
 /**

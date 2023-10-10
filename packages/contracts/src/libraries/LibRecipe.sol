@@ -32,9 +32,9 @@ library LibRecipe {
    * @return The output material type corresponding to the provided machine and input types.
    */
   function getOutput(MACHINE_TYPE _machineType, uint256 _input) internal view returns (MATERIAL_TYPE) {
-    console.log("...get output");
-    console.log("_input");
-    console.log(_input);
+    // console.log("...get output");
+    // console.log("_input");
+    // console.log(_input);
     QueryFragment[] memory fragments = new QueryFragment[](2);
     // fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.RECIPE));
     fragments[0] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(_machineType));

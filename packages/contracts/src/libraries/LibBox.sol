@@ -3,8 +3,8 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
-import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -151,6 +151,25 @@ library LibBox {
   }
 
   /**
+   * @notice Retrieve the identifier of a material of a specified type that is contained within a particular box entity.
+   * @dev Conducts a query for materials of a specified type (_materialType) within a specified box entity (_boxEntity).
+   *      The query filters entities based on ENTITY_TYPE.MATERIAL, the carrier entity, and material type.
+   * @param _boxEntity The identifier of the box entity which supposedly contains the material.
+   * @param _materialType The type of material that is being queried within the specified box entity.
+   * @return material The identifier (bytes32) of the found material if it exists; otherwise, returns a zero-bytes32.
+   */
+  function getMaterialOfTypeByBox(
+    bytes32 _boxEntity,
+    MATERIAL_TYPE _materialType
+  ) internal view returns (bytes32 material) {
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
+    fragments[1] = QueryFragment(QueryType.HasValue, MaterialTypeTableId, MaterialType.encodeStatic(_materialType));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
+  }
+
+  /**
    * @dev Writes the final output(s) to various components.
    *
    * The function initializes a new material entity, sets its various attributes,
@@ -170,20 +189,22 @@ library LibBox {
    * Note: The actual implementation might need some checks and validations.
    */
   function writeOutput(bytes32 _boxEntity, uint256 _blocksSinceLastResolution, Product memory _output) internal {
-    // Write final output(s) to components
-    bytes32 materialEntity = LibUtils.getRandomKey();
-    EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
-    CreationBlock.set(materialEntity, block.number);
-    CarriedBy.set(materialEntity, _boxEntity);
-    MaterialType.set(materialEntity, _output.materialType);
     // Scale by number of blocks since last resolution
-    Amount.set(materialEntity, _output.amount * uint32(_blocksSinceLastResolution));
-    // ...
-    // console.log("=!=!=!=!=!=!=!=!=!=");
-    // console.log("=!=!=!=!= output");
-    // console.log("=!=!=!=!=!=!=!=!=!=");
-    // console.log("_output.materialType");
-    // console.log(uint256(_output.materialType));
-    // console.log(uint256(_output.amount * uint32(_blocksSinceLastResolution)));
+    uint32 scaledAmount = _output.amount * uint32(_blocksSinceLastResolution);
+    // Check if there alreads is a material of the same type in the box
+    bytes32 materialEntity = getMaterialOfTypeByBox(_boxEntity, _output.materialType);
+
+    // If yes, add new amount to it
+    if (materialEntity != bytes32(0)) {
+      Amount.set(materialEntity, Amount.get(materialEntity) + scaledAmount);
+    } else {
+      // If no, create new material
+      materialEntity = LibUtils.getRandomKey();
+      EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
+      CreationBlock.set(materialEntity, block.number);
+      CarriedBy.set(materialEntity, _boxEntity);
+      MaterialType.set(materialEntity, _output.materialType);
+      Amount.set(materialEntity, scaledAmount);
+    }
   }
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { EntityType, MachineType, Level, Energy } from "../codegen/index.sol";
+import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
+import { EntityType, EntityTypeTableId, MachineType, Level, Energy, LevelTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LevelDefinition } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -17,5 +18,21 @@ library LibLevel {
     Level.set(entity, _level.level);
     Energy.set(entity, _level.initialCoreEnergy);
     return entity;
+  }
+
+  /**
+   * @notice Retrieve the first matching key for a specified level.
+   * @dev Queries the entity level and retrieves the first matching key using the provided _level.
+   *      Utilizes a fragment query methodology, checking if the ENTITY_TYPE and Level values
+   *      have the expected properties. Returns the first matching key or a zero-bytes32 if no match is found.
+   * @param _level The level identifier to be queried and retrieved.
+   * @return The first matching key as bytes32 if found, otherwise returns a zero-bytes32.
+   */
+  function getLevel(uint32 _level) internal view returns (bytes32) {
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.LEVEL));
+    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encodeStatic(_level));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }
 }
