@@ -6,7 +6,7 @@
     createSyncProgressSystem,
   } from "./modules/systems"
   import { network, ready, initBlockListener } from "./modules/network"
-  import { playerCore, recipes } from "./modules/state"
+  import { playerCore, recipes, goals, materials } from "./modules/state"
   import {
     simulatedMaterials,
     simulatedPlayerEnergy,
@@ -34,7 +34,8 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  // $: console.log("$simulatedMaterials", $simulatedMaterials)
+  // $: console.log("$goals", $goals)
+  $: console.log("$materials", $materials)
   // $: console.log("$recipes", $recipes)
   // $: console.log("$activeActions", $activeActions)
   // $: console.log("$completedActions", $completedActions)

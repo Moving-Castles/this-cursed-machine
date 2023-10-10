@@ -2,6 +2,7 @@ export enum EntityType {
   NONE,
   RECIPE,
   LEVEL,
+  GOAL,
   BOX,
   MACHINE,
   CONNECTION,

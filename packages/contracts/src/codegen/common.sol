@@ -6,6 +6,7 @@ enum ENTITY_TYPE {
   NONE,
   RECIPE,
   LEVEL,
+  GOAL,
   BOX,
   MACHINE,
   CONNECTION,

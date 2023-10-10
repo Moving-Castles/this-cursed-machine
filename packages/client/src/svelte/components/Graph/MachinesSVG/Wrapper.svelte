@@ -376,6 +376,8 @@
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
 
+    console.log('nodes', nodes)
+
     // Create the SVG container.
     svg = d3
       .create("svg")

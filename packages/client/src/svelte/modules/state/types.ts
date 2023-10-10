@@ -113,6 +113,13 @@ declare global {
     output: MaterialType
   }
 
+  type Goal = {
+    type: EntityType.GOAL
+    materialType: MaterialType
+    amount: number,
+    energy: number
+  }
+
   // ---
 
   type Entities = {
@@ -145,6 +152,14 @@ declare global {
 
   type Recipes = {
     [index: string]: Recipe
+  }
+
+  type Goals = {
+    [index: string]: Goal
+  }
+
+  type Materials = {
+    [index: string]: Material
   }
 
   // ---

@@ -11,3 +11,4 @@ import { LibNetwork } from "./LibNetwork.sol";
 import { LibMachine } from "./LibMachine.sol";
 import { LibLevel } from "./LibLevel.sol";
 import { LibRecipe } from "./LibRecipe.sol";
+import { LibGoal } from "./LibGoal.sol";

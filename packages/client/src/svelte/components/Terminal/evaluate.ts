@@ -4,7 +4,7 @@ import { output, symbols } from "./index"
 import { MachineType } from "../../modules/state/enums"
 import { playerCore, playerEntityId } from "../../modules/state"
 import { simulatedMachines, readableConnections } from "../../modules/simulator"
-import { resolve } from "../../modules/action"
+import { resolve, transfer } from "../../modules/action"
 
 /**
  * Evaluate string output
@@ -96,6 +96,13 @@ export const evaluate = (
     resolve()
   }
 
+  /**
+ * transfer (testing only)
+ */
+  if (string === "transfer") {
+    transfer()
+  }
+
   if (string === "disconnect") {
     if (get(readableConnections).length === 0) {
       send("Can't disconnect if you ain't connected")
@@ -120,10 +127,9 @@ export const evaluate = (
       `\nContents: \n ${Object.entries(get(simulatedMachines))
         .map(
           ([id, machine]) =>
-            `${symbols[1]} ${MachineType[machine.machineType]} ${
-              machine.machineType == MachineType.CORE
-                ? `E: ${machine.energy}`
-                : ""
+            `${symbols[1]} ${MachineType[machine.machineType]} ${machine.machineType == MachineType.CORE
+              ? `E: ${machine.energy}`
+              : ""
             }`
         )
         .join("\n")}\n
