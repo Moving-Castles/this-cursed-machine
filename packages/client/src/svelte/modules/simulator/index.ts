@@ -5,6 +5,7 @@
 import { EntityType, MachineType, PortType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
+import { portBelongsToBox, connectionBelongsToBox } from "../state/convenience"
 import {
   entities,
   playerBox,
@@ -170,13 +171,18 @@ export const simulatedMachines = derived(
 )
 
 /** Connections */
-export const simulatedConnections = derived(simulated, $simulated => {
-  return Object.fromEntries(
-    Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.CONNECTION
+export const simulatedConnections = derived(
+  [simulated, playerCore],
+  ([$simulated, $playerCore]) => {
+    return Object.fromEntries(
+      Object.entries($simulated)
+        .filter(([_, entry]) => entry.entityType === EntityType.CONNECTION)
+        .filter(([_, entry]) =>
+          connectionBelongsToBox(entry, $playerCore.carriedBy)
+        )
     )
-  )
-})
+  }
+)
 
 /** Materials */
 export const simulatedMaterials = derived(simulated, $simulated => {
@@ -188,13 +194,16 @@ export const simulatedMaterials = derived(simulated, $simulated => {
 })
 
 /** Ports */
-export const simulatedPorts = derived(simulated, $simulated => {
-  return Object.fromEntries(
-    Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.PORT
+export const simulatedPorts = derived(
+  [simulated, playerCore],
+  ([$simulated, $playerCore]) => {
+    return Object.fromEntries(
+      Object.entries($simulated)
+        .filter(([_, entry]) => entry.entityType === EntityType.PORT)
+        .filter(([_, entry]) => portBelongsToBox(entry, $playerCore.carriedBy))
     )
-  )
-})
+  }
+)
 
 // --- READABLE ------------------------------------------
 export const readableConnections = derived(
@@ -205,19 +214,21 @@ export const readableConnections = derived(
         const sP = connection?.sourcePort
         const tP = connection?.targetPort
 
-        const ssP = $ports[sP]
-        const ttP = $ports[tP]
+        if (sP && tP) {
+          const ssP = $ports[sP]
+          const ttP = $ports[tP]
 
-        if (ssP && ttP) {
-          const sourceMachine =
-            MachineType[$machines[ssP?.carriedBy]?.machineType]
-          const targetMachine =
-            MachineType[$machines[ttP?.carriedBy]?.machineType]
-          if (sourceMachine && targetMachine) {
-            return {
-              id,
-              connection,
-              read: `From ${sourceMachine} To ${targetMachine}`,
+          if (ssP && ttP) {
+            const sourceMachine =
+              MachineType[$machines[ssP?.carriedBy]?.machineType]
+            const targetMachine =
+              MachineType[$machines[ttP?.carriedBy]?.machineType]
+            if (sourceMachine && targetMachine) {
+              return {
+                id,
+                connection,
+                read: `From ${sourceMachine} To ${targetMachine}`,
+              }
             }
           }
         }
@@ -242,6 +253,7 @@ export const readableMachines = derived(
 export const boxOutput = derived(
   [entities, playerCore],
   ([$entities, $playerCore]) => {
+    // Outputs
     const singles = Object.entries($entities).filter(([_, entry]) => {
       return (
         entry.entityType === EntityType.MATERIAL &&
@@ -260,8 +272,6 @@ export const boxOutput = derived(
         result[material.materialType] = material.amount
       }
     })
-
-    console.log(singles)
 
     return result
   }

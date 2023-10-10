@@ -229,10 +229,6 @@ export function coreIsConnectedToInlet(_coreEntity: string) {
         port.carriedBy === _coreEntity && port.portType === PortType.INPUT
     )
   )
-  // DEBUG
-  console.log("inputPortsOnCores", inputPortsOnCores)
-  console.log("Object.keys(inputPortsOnCores)", Object.keys(inputPortsOnCores))
-  console.log("get(connections)", get(connections))
 
   // Abort early if no input ports on core
   if (Object.keys(inputPortsOnCores).length === 0) return false
@@ -245,18 +241,12 @@ export function coreIsConnectedToInlet(_coreEntity: string) {
     )
   )
 
-  // DEBUG
-  console.log("connectionsToInputPortsOnCores", connectionsToInputPortsOnCores)
-
   // Abort early if no connections to input ports on core
   if (Object.keys(connectionsToInputPortsOnCores).length === 0) return false
 
   // 3. Get output ports at end of connections
   const outputPortsAtEndOfConnections =
     get(ports)[Object.values(connectionsToInputPortsOnCores)[0].targetPort]
-
-  // DEBUG
-  console.log("outputPortsAtEndOfConnections", outputPortsAtEndOfConnections)
 
   // 4. Check if machine at end of connection is an inlet
   if (

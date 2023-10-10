@@ -15,11 +15,11 @@
   import { ports } from "../../../modules/state"
 
   const { isEqual, isEmpty } = _
-  const dragBehavior = d3
-    .drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended)
+  // const dragBehavior = d3
+  //   .drag()
+  //   .on("start", dragstarted)
+  //   .on("drag", dragged)
+  //   .on("end", dragended)
 
   const MACHINE_SIZE = 100
   const PORT_SIZE = 100
@@ -204,7 +204,6 @@
             entry,
             group: EntityType.MACHINE,
           }))
-          .filter(({ entry }) => entry.entityType === EntityType.MACHINE)
           .map(d => {
             if (!inletFixed && d.entry.machineType === MachineType.INLET) {
               inletFixed = true
@@ -224,23 +223,24 @@
       ],
       links: [
         // Connect ports to each other
-        ...Object.entries($simulated)
+        ...Object.entries($simulatedConnections)
           .map(([key, entry]) => ({
             id: key,
             entry,
           }))
-          .filter(({ entry }) => entry.entityType === EntityType.CONNECTION)
           .map(({ id, entry }) => {
             // Connect the source machine to the target machine
             const sP = $simulatedPorts[entry.sourcePort]
             const tP = $simulatedPorts[entry.targetPort]
 
-            return {
-              id,
-              entry,
-              group: EntityType.CONNECTION,
-              source: sP.carriedBy,
-              target: tP.carriedBy,
+            if (sP && tP) {
+              return {
+                id,
+                entry,
+                group: EntityType.CONNECTION,
+                source: sP.carriedBy,
+                target: tP.carriedBy,
+              }
             }
           }),
       ],
@@ -361,12 +361,12 @@
     simulation.force("link").links(links)
     simulation.alpha(1).restart()
 
-    svg
-      .selectAll("g.node")
-      .filter(d => {
-        return !d.fx
-      })
-      .call(dragBehavior)
+    // svg
+    //   .selectAll("g.node")
+    //   .filter(d => {
+    //     return !d.fx
+    //   })
+    //   .call(dragBehavior)
   }
 
   /**
@@ -482,13 +482,13 @@
     node.append("title").text(d => MachineType[d.entry.machineType])
 
     // Add a drag behavior.
-    node.call(
-      d3
-        .drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended)
-    )
+    // node.call(
+    //   d3
+    //     .drag()
+    //     .on("start", dragstarted)
+    //     .on("drag", dragged)
+    //     .on("end", dragended)
+    // )
 
     // Insert SVG pls
     element.prepend(svg.node())
@@ -556,7 +556,6 @@
 
   :global(rect),
   :global(text) {
-    cursor: grab;
   }
 
   .wrapper {

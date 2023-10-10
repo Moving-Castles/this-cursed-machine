@@ -22,8 +22,6 @@
   $: {
     let playerConnected = false
 
-    // If there is a connection between the core and the inlet, we are officially connected
-
     // CHeck connections for sourcePort that belongs to the inlet machine
     const myInlet = Object.entries($simulatedMachines).find(
       ([_, machine]) => machine.machineType === MachineType.INLET
@@ -39,7 +37,6 @@
       if (connectionWithInletSource) {
         const p = $simulatedPorts[connectionWithInletSource[1].targetPort]
         if (p.carriedBy === $playerEntityId) {
-          console.log("We are connected")
           playerConnected = true
         }
       }
