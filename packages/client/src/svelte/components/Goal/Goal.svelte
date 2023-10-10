@@ -1,53 +1,60 @@
 <script lang="ts">
-  import { playerBox } from "../../modules/state"
+  import { ports } from "../../modules/state"
   import {
     currentGoalIndex,
     progressions,
     achieved,
   } from "../../modules/ui/progression"
+  import { connections, playerEntityId } from "../../modules/state"
   import { MachineType } from "../../modules/state/enums"
   import { createEventDispatcher } from "svelte"
   import {
-    simulatedPlayerCore,
-    simulatedConnections,
-    simulatedPorts,
     simulatedMachines,
+    simulatedPorts,
+    simulatedPlayerEnergy,
   } from "../../modules/simulator"
 
   const dispatch = createEventDispatcher()
 
-  // $: currentGoal = $progressions[$playerBox.level][$currentGoalIndex]
-  $: currentGoal = $progressions[0][0]
+  $: currentProgression = $progressions[0]
 
-  // Here we monitor player performance
+  /** Monitor player's performance here */
   $: {
-    // If the player has connected to the inlet
-    const connectionsAsTypesArray = Object.values($simulatedConnections)
-      .filter(connection => {
-        return connection.sourcePort && connection.targetPort
-      })
-      .map(connection => {
-        const sourceMachine = $simulatedPorts[connection?.sourcePort]?.carriedBy
-        const targetMachine = $simulatedPorts[connection?.targetPort]?.carriedBy
+    let playerConnected = false
 
-        if (sourceMachine && targetMachine) {
-          return [
-            MachineType[$simulatedMachines[sourceMachine].machineType],
-            MachineType[$simulatedMachines[targetMachine].machineType],
-          ]
+    // If there is a connection between the core and the inlet, we are officially connected
+
+    // CHeck connections for sourcePort that belongs to the inlet machine
+    const myInlet = Object.entries($simulatedMachines).find(
+      ([_, machine]) => machine.machineType === MachineType.INLET
+    )
+
+    if (myInlet) {
+      const connectionWithInletSource = Object.entries($connections).find(
+        ([_, conn]) => {
+          return $ports[conn.sourcePort]?.carriedBy === myInlet[0]
         }
+      )
 
-        return []
-      })
+      if (connectionWithInletSource) {
+        const p = $simulatedPorts[connectionWithInletSource[1].targetPort]
+        if (p.carriedBy === $playerEntityId) {
+          console.log("We are connected")
+          playerConnected = true
+        }
+      }
+    }
+    //
 
     // Achievement 1 unlocked
-    if (
-      connectionsAsTypesArray.some(con => con.includes("CORE")) &&
-      connectionsAsTypesArray.some(con => con.includes("INLET")) &&
-      !$achieved.includes(0)
-    ) {
+    if (playerConnected && !$achieved.includes(0)) {
       $achieved = [...$achieved, 0]
-      dispatch("reward", $progressions[$playerBox.level][0].reward)
+    }
+  }
+
+  $: {
+    if ($simulatedPlayerEnergy > 200 && !$achieved.includes(1)) {
+      $achieved = [...$achieved, 1]
     }
   }
 
@@ -61,9 +68,10 @@
 </script>
 
 <div class="goal-container" on:click={onClick}>
-  <div class="top-left">Do this:</div>
+  <div class="top-left">Goal:</div>
   <div class="goal">
-    {currentGoal.goal}
+    <!-- {$currentGoalIndex} -->
+    {currentProgression[$currentGoalIndex].goal}
   </div>
 </div>
 

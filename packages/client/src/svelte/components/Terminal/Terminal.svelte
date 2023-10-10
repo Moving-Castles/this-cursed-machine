@@ -6,8 +6,8 @@
     connectMachines,
     disconnectMachines,
     destroyMachine,
-    availablePorts,
   } from "./actions"
+  import { machinePorts as availablePorts } from "../../modules/state/convenience"
   import type { Action } from "../../modules/action/actionSequencer"
   import {
     completedActions,

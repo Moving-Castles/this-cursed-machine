@@ -6,12 +6,7 @@ export const achieved = writable([])
 export const progressions = readable([
   [
     { goal: "Connect yourself to the inlet", reward: "ALIVE" },
-    { goal: "Produce 200 blood", reward: "FULLY-CHARGED" },
-    { goal: "Pool 200 of your blood", reward: "EXTENDACORE" },
-  ],
-  [
-    { goal: "Connect yourself to the inlet", reward: "ALIVE" },
-    { goal: "Produce 200 blood", reward: "FULLY-CHARGED" },
+    { goal: "Produce 200 energy", reward: "FULLY-CHARGED" },
     { goal: "Pool 200 of your blood", reward: "EXTENDACORE" },
   ],
 ])
