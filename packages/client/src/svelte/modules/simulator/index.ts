@@ -250,7 +250,21 @@ export const readableMachines = derived(
   }
 )
 
-
+/**
+ * Calculates the aggregated amount of each material type carried by the player,
+ * considering patches on outlets.
+ * 
+ * @function boxOutput
+ * @exports
+ * @param {Object} entities - A store containing all in-game entities.
+ * @param {Object} playerCore - Store with information about the player's core properties.
+ * @param {Number} blocksSinceLastResolution - Count of blockchain blocks since the last resolution.
+ * @returns {Object} - An object where each key is a material type and the value is the aggregated amount
+ *                     of that material type carried by the player, including patches.
+ * @todo The way patches are added to outputs is hacky and needs a more robust solution.
+ * @todo There's a need to handle a potential missing outlet.
+ * @todo Consider handling scenarios where there are multiple outputs from patches.
+ */
 export const boxOutput = derived(
   [entities, playerCore, blocksSinceLastResolution],
   ([$entities, $playerCore, $blocksSinceLastResolution]) => {
