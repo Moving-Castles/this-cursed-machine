@@ -7,8 +7,7 @@
     simulatedPlayerEnergy,
     boxOutput,
   } from "../../modules/simulator"
-
-  // import { blocksSinceLastResolution } from "../../modules/simulator/"
+  import { blocksSinceLastResolution } from "../../modules/simulator/"
   // import { coreIsConnectedToInlet } from "../../modules/simulator/"
   // import { blockNumber } from "../../modules/network/"
 
@@ -22,7 +21,7 @@
 <div class="box-stats" use:onWheel>
   <p>
     <span class="muted">You:</span><br /> worker#24 ({#key $simulatedPlayerCore.energy}
-      <span class="green">E: {$simulatedPlayerEnergy}</span>{/key})
+      <span class="green">ENERGY: {$simulatedPlayerEnergy}</span>{/key})
   </p>
   <p class="muted">Pool:</p>
   <p>

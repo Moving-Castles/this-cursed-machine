@@ -156,3 +156,25 @@ export function capAtZero(num: number): number {
   // Ensure that the input is not negative
   return Math.max(0, num);
 }
+
+/**
+ * Generate a unique identifier for a pair of `number` values.
+ * 
+ * @notice This function uses the Cantor pairing function to produce a unique
+ * identifier from two `number` values. The order of input values does not affect
+ * the generated identifier, meaning that (a, b) will produce the same output
+ * as (b, a). Note that the input values should represent valid `MATERIAL_TYPE`
+ * enum values to ensure consistent behavior.
+ * 
+ * @param a First `number` value representing a `MATERIAL_TYPE`.
+ * @param b Second `number` value representing a `MATERIAL_TYPE`.
+ * @returns A unique identifier derived from the inputs (a, b).
+ */
+export function getUniqueIdentifier(a: number, b: number): number {
+  // Ensure a is always smaller than or equal to b
+  if (a > b) {
+    [a, b] = [b, a];
+  }
+
+  return ((a + b) * (a + b + 1)) / 2 + b;
+}

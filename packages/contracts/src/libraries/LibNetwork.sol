@@ -72,23 +72,19 @@ library LibNetwork {
         // console.log("machineType");
         // console.log(uint8(MachineType.get(node)));
 
-        // Give inlet an input of bugs...
+        // If the machine is an inlet, provide it with bugs as input.
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           inputs[inputsCount] = Product({ machineId: node, materialType: MATERIAL_TYPE.BUG, amount: 100 });
           inputsCount++;
         }
 
+        // Gather all the inputs for the current machine.
         uint currentInputsCount;
         Product[] memory currentInputs = new Product[](2);
-        // Find all inputs for current node
         for (uint k; k < inputsCount; k++) {
           if (inputs[k].machineId == node) {
-            // console.log("... found input");
-            // console.log(uint256(inputs[k].machineId));
             currentInputs[currentInputsCount] = inputs[k];
             currentInputsCount++;
-            // console.log("currentInputsCount");
-            // console.log(currentInputsCount);
             // There should never be more than 2 inputs...
             if (currentInputsCount == 2) break;
           }
@@ -100,16 +96,15 @@ library LibNetwork {
         // console.log("__ processing node:");
         // console.log(uint256(node));
 
-        // Mark as resolved
-        resolvedNodes[resolvedCount] = node;
-        resolvedCount += 1;
-
-        // console.log("__ resolvedCount");
-        // console.log(resolvedCount);
-
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
         currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
+
+        // Mark as resolved
+        resolvedNodes[resolvedCount] = node;
+        resolvedCount += 1;
+        // console.log("__ resolvedCount");
+        // console.log(resolvedCount);
 
         // console.log("%%% currentOutputs.length");
         // console.log(currentOutputs.length);
@@ -125,14 +120,10 @@ library LibNetwork {
         // Find the output ports on the current machine
         bytes32[][] memory outputPorts = LibPort.getPorts(node, PORT_TYPE.OUTPUT);
 
-        // console.log("INTERNAL RESOLVER");
-        // console.log("outputPorts.length");
-        // console.log(outputPorts.length);
-
         // No output ports were found
         if (outputPorts.length == 0) continue;
 
-        // Fill outputs
+        // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outputPorts.length; k++) {
           // console.log("... outputPorts [k][0]");
           // console.log(uint256(outputPorts[k][0]));
@@ -166,8 +157,9 @@ library LibNetwork {
           }
         }
       }
-      // ...
+      // Increment the counter.
       counter += 1;
+      // Break out of the loop if it seems like an infinite loop is occurring.
       if (counter == machines.length * 2) {
         LastResolved.set(_boxEntity, block.number);
         return;

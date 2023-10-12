@@ -250,10 +250,11 @@ export const readableMachines = derived(
   }
 )
 
+
 export const boxOutput = derived(
-  [entities, playerCore],
-  ([$entities, $playerCore]) => {
-    // Outputs
+  [entities, playerCore, blocksSinceLastResolution],
+  ([$entities, $playerCore, $blocksSinceLastResolution]) => {
+    // Filter entities to retrieve only those which are of type MATERIAL and are in the same box as the player
     const singles = Object.entries($entities).filter(([_, entry]) => {
       return (
         entry.entityType === EntityType.MATERIAL &&
@@ -261,17 +262,39 @@ export const boxOutput = derived(
       )
     })
 
+    // Initialize the result object.
     let result = {}
 
-    singles.forEach(([_, material]) => {
-      if (result[material.materialType]) {
-        const amount = result[material.materialType]
+    // !!!
+    // VERY hacky way to add patches to outputs
+    // @todo: fix this
 
-        result[material.materialType] = amount + material.amount
-      } else {
-        result[material.materialType] = material.amount
-      }
+    // Get outlet entity
+    const outlet = Object.entries($entities).find(([_, entry]) => {
+      return (
+        entry.entityType === EntityType.MACHINE &&
+        entry.carriedBy === $playerCore.carriedBy &&
+        entry.machineType === MachineType.OUTLET
+      )
     })
+
+    // Get patches on outlet
+    // @todo: handle missing outlet
+    const patchesOnOutlet = get(patches)[outlet[0]]
+
+    // Loop through the filtered materials to aggregate their amounts by material type.
+    // Materials are consolidated onchain, so there will only ever be one entry per material type.
+    singles.forEach(([_, material]) => {
+      // Get patch value
+      // @todo: possibly handle multiple outputs
+      let patchValue = patchesOnOutlet && patchesOnOutlet.outputs && patchesOnOutlet.outputs[0] && patchesOnOutlet.outputs[0].materialType === material.materialType ? patchesOnOutlet.outputs[0].amount : 0
+      result[material.materialType] = material.amount + (patchValue * $blocksSinceLastResolution)
+    })
+
+    // Handle patches that are not yet resolved
+    if (patchesOnOutlet && patchesOnOutlet.outputs && patchesOnOutlet.outputs[0] && patchesOnOutlet.outputs[0].materialType && !result[patchesOnOutlet.outputs[0].materialType]) {
+      result[patchesOnOutlet.outputs[0].materialType] = patchesOnOutlet.outputs[0].amount * $blocksSinceLastResolution
+    }
 
     return result
   }
@@ -288,7 +311,7 @@ export const simulatedPlayerEnergy = derived(
   ]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-        ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
+      ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
     )
   }
 )

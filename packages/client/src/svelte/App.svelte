@@ -10,6 +10,7 @@
   import {
     simulatedMaterials,
     simulatedPlayerEnergy,
+    patches,
   } from "./modules/simulator"
   // import {
   //   queuedActions,
@@ -34,8 +35,9 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
+  $: console.log("$patches", $patches)
   // $: console.log("$goals", $goals)
-  $: console.log("$materials", $materials)
+  // $: console.log("$materials", $materials)
   // $: console.log("$recipes", $recipes)
   // $: console.log("$activeActions", $activeActions)
   // $: console.log("$completedActions", $completedActions)
