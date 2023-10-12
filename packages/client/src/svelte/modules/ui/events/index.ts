@@ -70,7 +70,6 @@ export function onPortClick(address: string, port: Port) {
   // Tally the ports
   if (selection.length === 2) {
     connect(selection[0], selection[1])
-
     portSelection.set([])
   }
 

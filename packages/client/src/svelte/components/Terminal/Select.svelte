@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getRandomInt } from "../../modules/utils/misc"
   export let options: string[] = []
   import { onMount, createEventDispatcher } from "svelte"
 
@@ -41,7 +42,7 @@
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="inline-select">
-  {#each options as option (option)}
+  {#each options as option (option + getRandomInt(0, 10000))}
     <div class:active={option === value} class="option">
       {option}
     </div>

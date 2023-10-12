@@ -1,4 +1,4 @@
-import { EntityType, MachineType } from "../../modules/state/enums"
+import { EntityType, MachineType, PortType } from "../../modules/state/enums"
 import { machinePorts } from "../../modules/state/convenience"
 import { simulated } from "../../modules/simulator"
 import { get } from "svelte/store"
@@ -36,8 +36,8 @@ export const connectMachines = (
     ) {
       send("Only connect machines")
     } else {
-      const [_, sourcePorts] = machinePorts(sourceMachine[1].numericalID)
-      const [__, targetPorts] = machinePorts(targetMachine[1].numericalID)
+      const [_, sourcePorts] = machinePorts(sourceMachine[1].numericalID, PortType.OUTPUT)
+      const [__, targetPorts] = machinePorts(targetMachine[1].numericalID, PortType.INPUT)
 
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port
