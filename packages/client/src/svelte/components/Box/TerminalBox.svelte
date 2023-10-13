@@ -39,8 +39,8 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <div class="goal">
-          <button on:click={() => ($showGoals = true)}> Show goal </button>
+        <div on:click={() => ($showGoals = true)} class="goal">
+          <p>Show goal</p>
         </div>
 
         {#key $potential}
@@ -81,7 +81,7 @@
       overflow: hidden;
 
       .stats {
-        grid-column: 1 / 4;
+        grid-column: 1 / 5;
         outline: var(--terminal-border);
         outline-offset: -6px;
       }
@@ -91,7 +91,14 @@
         outline: var(--terminal-border);
         outline-offset: -4px;
         position: relative;
-
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          background: white;
+          color: black;
+        }
         .bg {
           width: 100%;
           height: 100%;
