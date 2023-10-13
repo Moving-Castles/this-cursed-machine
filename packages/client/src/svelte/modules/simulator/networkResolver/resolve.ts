@@ -8,6 +8,7 @@ import {
 import { process } from "./machines"
 import type { Product, SimulatedEntities } from "../types"
 import { deepClone } from "../../utils/misc"
+import { playerEnergyMod } from ".."
 
 /**
  * Resolves the state of a given box entity.
@@ -72,8 +73,15 @@ export function resolve(_boxEntity: string) {
                 patchInputs.push(deepClone(currentInputs[k]))
             }
 
-            // Skip if node has no input
-            if (currentInputs.length === 0) return
+            // Node has no input
+            if (currentInputs.length === 0) {
+                if (machine.machineType === MachineType.CORE) {
+                    // If machine is a core, set energy modifier to -1
+                    playerEnergyMod.set(-1);
+                }
+                // Skip 
+                return
+            }
 
             // Process the inputs of the machine to get the outputs
             const currentOutputs = process(machine.machineType, currentInputs)

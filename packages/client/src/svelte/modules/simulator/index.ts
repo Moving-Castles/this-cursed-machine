@@ -92,52 +92,6 @@ export const simulated = derived(
   }
 )
 
-export const coreIsConnectedToInlet = derived(
-  [ports, machines, connections, playerEntityId],
-  ([$ports, $machines, $connections, $playerEntityId]) => {
-    const _coreEntity = $playerEntityId
-
-    // *** 1. Get all input ports on the core
-    const inputPortsOnCores = Object.fromEntries(
-      Object.entries($ports).filter(
-        ([_, port]) =>
-          port.carriedBy === _coreEntity && port.portType === PortType.INPUT
-      )
-    )
-    // Abort early if no input ports on core
-    if (Object.keys(inputPortsOnCores).length === 0) return false
-
-    // *** 2. Get connections going to input on core
-    const connectionsToInputPortsOnCores = Object.fromEntries(
-      Object.entries($connections).filter(
-        ([_, connection]) =>
-          connection.targetPort === Object.keys(inputPortsOnCores)[0]
-      )
-    )
-
-    // HACK: short circuit for now
-    // if (Object.keys(connectionsToInputPortsOnCores).length !== 0) return true;
-    // return false;
-
-    // Abort early if no connections to input ports on core
-    if (Object.keys(connectionsToInputPortsOnCores).length === 0) return false
-
-    // 3. Get output ports at end of connections
-    const outputPortsAtEndOfConnections =
-      $ports[Object.values(connectionsToInputPortsOnCores)[0].sourcePort]
-
-    // 4. Check if machine at end of connection is an inlet
-    if (
-      $machines[outputPortsAtEndOfConnections.carriedBy].machineType !==
-      MachineType.INLET
-    )
-      return false
-
-    // Core is connected
-    return true
-  }
-)
-
 /** Convenience methods for easy access */
 
 /** Core */
@@ -307,9 +261,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-        patchesOnOutlet.outputs &&
-        patchesOnOutlet.outputs[0] &&
-        patchesOnOutlet.outputs[0].materialType === material.materialType
+          patchesOnOutlet.outputs &&
+          patchesOnOutlet.outputs[0] &&
+          patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType] =
@@ -334,16 +288,17 @@ export const boxOutput = derived(
 
 // --- MISC ----------------------------------------------
 
+export const playerEnergyMod = writable(-1)
+
 export const simulatedPlayerEnergy = derived(
-  [simulatedPlayerCore, coreIsConnectedToInlet, blocksSinceLastResolution],
+  [simulatedPlayerCore, playerEnergyMod, blocksSinceLastResolution],
   ([
     $simulatedPlayerCore,
-    $coreIsConnectedToInlet,
+    $playerEnergyMod,
     $blocksSinceLastResolution,
   ]) => {
     return capAtZero(
-      ($simulatedPlayerCore?.energy || 0) +
-        ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
+      ($simulatedPlayerCore?.energy || 0) + $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )
@@ -365,3 +320,5 @@ export const goalsSatisfied = derived(
     return achieved.every(v => v === true)
   }
 )
+
+

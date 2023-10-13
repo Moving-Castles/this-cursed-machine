@@ -3,6 +3,7 @@ import { recipes } from "../../state"
 import { MachineType, MaterialType } from "../../state/enums"
 import type { Product } from "../types"
 import { deepClone, getUniqueIdentifier } from "../../utils/misc"
+import { playerEnergyMod } from ".."
 
 const EMPTY_PRODUCT: Product = {
   machineId: "",
@@ -53,7 +54,15 @@ function core(inputs: Product[]): Product[] {
 
   const input = inputs[0]
 
-  if (!input || input.materialType !== MaterialType.BUG) return outputs;
+  if (!input || input.materialType !== MaterialType.BUG) {
+    // Set energy modifier
+    playerEnergyMod.set(-1);
+    return outputs;
+  } else {
+    // Set energy modifier
+    // @todo scale based on amount of bugs
+    playerEnergyMod.set(1);
+  }
 
   const halfAmount = Number(input.amount) / 2
 
@@ -116,12 +125,6 @@ function mixer(inputs: Product[]): Product[] {
   if (inputs.length !== 2) return outputs
 
   const recipe = Object.values(get(recipes)).find(recipe => {
-    // console.log('recipe.machineType', recipe.machineType)
-    // console.log('recipe.machineType === MachineType.MIXER', recipe.machineType === MachineType.MIXER)
-    // console.log('getUniqueIdentifier(Number(inputs[0].materialType), Number(inputs[1].materialType))', getUniqueIdentifier(Number(inputs[0].materialType), Number(inputs[1].materialType)))
-    // console.log('recipe.input', recipe.input)
-    // console.log('Number(recipe.input) === Number(input.materialType)', Number(recipe.input) === getUniqueIdentifier(Number(inputs[0].materialType), Number(inputs[1].materialType)))
-    // console.log('-----')
     if (
       recipe.machineType === MachineType.MIXER
       && Number(recipe.input) === getUniqueIdentifier(Number(inputs[0].materialType), Number(inputs[1].materialType))
@@ -161,13 +164,6 @@ function simpleMachine(machineType: MachineType, inputs: Product[]): Product[] {
   if (!input) return outputs
 
   const recipe = Object.values(get(recipes)).find(recipe => {
-    // console.log('machineType', machineType)
-    // console.log('recipe.machineType', recipe.machineType)
-    // console.log('recipe.machineType === machineType', recipe.machineType === machineType)
-    // console.log('input.materialType', input.materialType)
-    // console.log('recipe.input', recipe.input)
-    // console.log('Number(recipe.input) === Number(input.materialType)', Number(recipe.input) === Number(input.materialType))
-    // console.log('-----')
     if (
       recipe.machineType === machineType
       && Number(recipe.input) === Number(input.materialType)

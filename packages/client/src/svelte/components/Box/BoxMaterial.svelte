@@ -6,7 +6,7 @@
     simulatedPlayerEnergy,
   } from "../../modules/simulator"
   import { blocksSinceLastResolution } from "../../modules/simulator/"
-  import { coreIsConnectedToInlet } from "../../modules/simulator/"
+  import { playerEnergyMod } from "../../modules/simulator/"
   import { blockNumber } from "../../modules/network/"
 
   // If we are not connected to inlet energy is:
@@ -27,7 +27,7 @@
         Simulated: {$simulatedPlayerEnergy}
       </div>
       <div>
-        Mod: {$coreIsConnectedToInlet ? 1 : -1}
+        Mod: {$playerEnergyMod}
       </div>
       <div>
         Past blocks: {$blocksSinceLastResolution}
