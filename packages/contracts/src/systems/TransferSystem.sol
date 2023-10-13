@@ -15,46 +15,63 @@ contract TransferSystem is System {
   function transfer() public returns (bytes32) {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
 
-    // Resolve network
+    // Resolve network if we are in pod
     if (CarriedBy.get(coreEntity) != bytes32(0)) {
       LibNetwork.resolve(CarriedBy.get(coreEntity));
     }
 
+    // Check goals
     require(LibGoal.goalsAreAchived(coreEntity), "goals not achieved");
 
-    uint32 newLevel = Level.get(coreEntity) + 1;
-
     // Level up core entity
+    uint32 newLevel = Level.get(coreEntity) + 1;
     Level.set(coreEntity, newLevel);
 
-    // Set initial energy
-    bytes32 levelEntity = LibLevel.getLevel(newLevel);
-    Energy.set(coreEntity, Energy.get(levelEntity));
+    if (newLevel == 1) {
+      // Core is at level 1, enter the pod
 
-    // Create box entity
-    bytes32 boxEntity = LibBox.create(newLevel);
+      // Set initial energy
+      bytes32 levelEntity = LibLevel.getLevel(newLevel);
+      Energy.set(coreEntity, Energy.get(levelEntity));
 
-    // Create Inlet
-    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
-    CarriedBy.set(inletEntity, boxEntity);
-    LibPort.create(inletEntity, PORT_TYPE.OUTPUT);
+      // Create box entity
+      bytes32 boxEntity = LibBox.create(newLevel);
 
-    // Place core in box
-    CarriedBy.set(coreEntity, boxEntity);
+      // Create Inlet
+      bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
+      CarriedBy.set(inletEntity, boxEntity);
+      LibPort.create(inletEntity, PORT_TYPE.OUTPUT);
 
-    // Create ports on core
-    LibPort.create(coreEntity, PORT_TYPE.INPUT);
-    LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
-    LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
+      // Place core in box
+      CarriedBy.set(coreEntity, boxEntity);
 
-    // Create Outlet
-    bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
-    CarriedBy.set(outletEntity, boxEntity);
-    LibPort.create(outletEntity, PORT_TYPE.INPUT);
+      // Create ports on core
+      LibPort.create(coreEntity, PORT_TYPE.INPUT);
+      LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
+      LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
 
-    // @todo Destroy old box
+      // Create Outlet
+      bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
+      CarriedBy.set(outletEntity, boxEntity);
+      LibPort.create(outletEntity, PORT_TYPE.INPUT);
 
-    return boxEntity;
+      // Return box
+      return boxEntity;
+    } else if (newLevel == 9) {
+      // Core is at level 9, progression done
+      // Remove core from box
+      CarriedBy.deleteRecord(coreEntity);
+      // @todo Destroy old box
+      // @todo Transfer materials to warehouse
+      // Return null-pod
+      return bytes32(0);
+    } else {
+      // Core is at level 2-8
+      // Level up box
+      Level.set(CarriedBy.get(coreEntity), newLevel);
+      // Return box
+      return CarriedBy.get(coreEntity);
+    }
   }
 
   /**
