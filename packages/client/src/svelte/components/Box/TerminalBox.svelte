@@ -42,7 +42,7 @@
         </div>
 
         {#key $potential}
-          <div transition:strobe={{ duration: 300 }} class="graph">
+          <div class="graph">
             <Graph />
           </div>
         {/key}
