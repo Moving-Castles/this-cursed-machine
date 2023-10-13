@@ -3,8 +3,7 @@
   import { playerGoals, playerBox } from "../../modules/state"
   import { goalsSatisfied } from "../../modules/simulator"
   import { transfer } from "../../modules/action"
-
-  let show = true
+  import { showGoals } from "../../modules/ui/stores"
 
   $: goalTypes = $playerGoals.map(goal => {
     return MaterialType[goal?.materialType] === "NONE"
@@ -15,7 +14,7 @@
 
 <!-- Start of new box -->
 {#key $playerGoals}
-  {#if show}
+  {#if $showGoals}
     <div class="goalBox">
       Pod #{$playerBox.level}<br />
       <br />
@@ -32,7 +31,9 @@
       <br />
       <br />
       <br />
-      <button class="btn" on:click={() => (show = false)}>I am ready </button>
+      <button class="btn" on:click={() => ($showGoals = false)}
+        >I am ready
+      </button>
     </div>
   {/if}
 {/key}
@@ -51,7 +52,7 @@
     <button
       class="btn"
       on:click={() => {
-        show = true
+        $showGoals = true
         transfer()
       }}
     >

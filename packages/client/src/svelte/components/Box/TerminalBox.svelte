@@ -6,8 +6,8 @@
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
-  import Goal from "../Goal/Goal.svelte"
   import Goals from "../Goal/Goals.svelte"
+  import { showGoals } from "../../modules/ui/stores"
   // import BoxMaterial from "./BoxMaterial.svelte"
 
   let now = performance.now()
@@ -39,9 +39,9 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <!-- <div class="goal"> -->
-        <!-- <Goal /> -->
-        <!-- </div> -->
+        <div class="goal">
+          <button on:click={() => ($showGoals = true)}> Show goal </button>
+        </div>
 
         {#key $potential}
           <div class="graph">

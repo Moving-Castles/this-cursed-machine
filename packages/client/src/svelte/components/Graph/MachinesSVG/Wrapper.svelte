@@ -94,26 +94,65 @@
     const n = svg.selectAll("text.number")
     const nn = svg.selectAll("g.node")
 
-    l.attr("x1", d =>
-      d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
-        ? d.source.x - MACHINE_SIZE / 2
-        : d.source.x
-    )
-      .attr("y1", d =>
-        d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
-          ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.source.y
-      )
-      .attr("x2", d =>
-        d.target.group === EntityType.MACHINE
-          ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-      )
-      .attr("y2", d =>
-        d.target.group === EntityType.MACHINE
-          ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-      )
+    // Create the line
+    l.attr("x1", d => {
+      const linksWithSource = data.links.filter(l => l.source === d.source.id)
+
+      let OFFSET = 0
+
+      if (linksWithSource.length > 1) {
+        OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+        OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+      }
+
+      return d.source.group === EntityType.PORT &&
+        d.target.group === EntityType.PORT
+        ? d.source.x - MACHINE_SIZE / 2 + OFFSET
+        : d.source.x + OFFSET
+    })
+      .attr("y1", d => {
+        const linksWithSource = data.links.filter(l => l.source === d.source.id)
+
+        let OFFSET = 0
+
+        if (linksWithSource.length > 1) {
+          OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+        }
+
+        return d.source.group === EntityType.PORT &&
+          d.target.group === EntityType.PORT
+          ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.source.y + OFFSET
+      })
+      .attr("x2", d => {
+        const linksWithTarget = data.links.filter(l => l.target === d.target.id)
+
+        let OFFSET = 0
+
+        if (linksWithTarget.length > 1) {
+          OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+        }
+
+        return d.target.group === EntityType.MACHINE
+          ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+      })
+      .attr("y2", d => {
+        const linksWithTarget = data.links.filter(l => l.target === d.target.id)
+
+        let OFFSET = 0
+
+        if (linksWithTarget.length > 1) {
+          OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+        }
+
+        return d.target.group === EntityType.MACHINE
+          ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+      })
       .attr("z-index", 9999)
       .attr("stroke-opacity", d => {
         return d.source.group === EntityType.MACHINE ? 1 : 1
@@ -231,7 +270,6 @@
             entry,
           }))
           .map(({ id, entry }) => {
-            console.log("MAPPING THE LINKS")
             // Connect the source machine to the target machine
             const sP = $simulatedPorts[entry.sourcePort]
             const tP = $simulatedPorts[entry.targetPort]
@@ -244,12 +282,10 @@
                 source: sP.carriedBy,
                 target: tP.carriedBy,
               }
-            } else {
-              console.log("NOT")
-              return false
             }
+            return false
           })
-          .filter(thing => thing),
+          .filter(thing => thing), // check if they are all valid links
       ],
     }
   }
@@ -367,13 +403,6 @@
     simulation.nodes(nodes)
     simulation.force("link").links(links)
     simulation.alpha(1).restart()
-
-    // svg
-    //   .selectAll("g.node")
-    //   .filter(d => {
-    //     return !d.fx
-    //   })
-    //   .call(dragBehavior)
   }
 
   /**
@@ -382,9 +411,6 @@
   const init = () => {
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
-
-    console.log("links", links)
-    console.log("nodes", nodes)
 
     // Create the SVG container.
     svg = d3
@@ -490,15 +516,6 @@
       .text(d => $simulated[d.id]?.numericalID)
 
     node.append("title").text(d => MachineType[d.entry.machineType])
-
-    // Add a drag behavior.
-    // node.call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragstarted)
-    //     .on("drag", dragged)
-    //     .on("end", dragended)
-    // )
 
     // Insert SVG pls
     element.prepend(svg.node())
