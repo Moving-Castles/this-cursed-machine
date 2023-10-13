@@ -14,6 +14,7 @@ import {
   ports,
   connections,
   machines,
+  playerGoal,
 } from "../state"
 import { blockNumber } from "../network"
 import type { SimulatedEntities } from "./types"
@@ -344,5 +345,19 @@ export const simulatedPlayerEnergy = derived(
       ($simulatedPlayerCore?.energy || 0) +
         ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
     )
+  }
+)
+
+// Return the number of the last solved level
+export const goalSatisfied = derived(
+  [playerGoal, boxOutput, simulatedPlayerEnergy],
+  ([$playerGoal, $boxOutput, $simulatedPlayerEnergy]) => {
+    if ($playerGoal?.materialType === 0) {
+      return $simulatedPlayerEnergy >= $playerGoal?.amount
+    }
+
+    const pooledMaterial = $boxOutput[$playerGoal.materialType]
+
+    return pooledMaterial && pooledMaterial >= $playerGoal?.amount
   }
 )
