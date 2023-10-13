@@ -35,6 +35,7 @@
   }
 
   onMount(() => {
+    if (options.length === 0) dispatch("cancel")
     dispatch("change", value)
   })
 </script>

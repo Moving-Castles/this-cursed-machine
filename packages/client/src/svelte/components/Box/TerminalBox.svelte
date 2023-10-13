@@ -2,7 +2,8 @@
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
   import { playerBox, playerCore } from "../../modules/state"
-  import { boxOutput } from "../../modules/simulator"
+  import { strobe } from "../../modules/ui/transitions"
+  import { potential } from "../../modules/simulator"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
@@ -40,9 +41,11 @@
           <Goal />
         </div>
 
-        <div class="graph">
-          <Graph />
-        </div>
+        {#key $potential}
+          <div transition:strobe={{ duration: 300 }} class="graph">
+            <Graph />
+          </div>
+        {/key}
       </div>
     {/if}
   </div>

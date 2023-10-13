@@ -207,9 +207,12 @@ export const simulatedPorts = derived(
 
 // --- READABLE ------------------------------------------
 export const readableConnections = derived(
-  [connections, ports, machines],
-  ([$connections, $ports, $machines]) => {
+  [connections, ports, machines, playerCore],
+  ([$connections, $ports, $machines, $playerCore]) => {
     return Object.entries($connections)
+      .filter(([_, entry]) =>
+        connectionBelongsToBox(entry, $playerCore.carriedBy)
+      )
       .map(([id, connection]) => {
         const sP = connection?.sourcePort
         const tP = connection?.targetPort
@@ -253,7 +256,7 @@ export const readableMachines = derived(
 /**
  * Calculates the aggregated amount of each material type carried by the player,
  * considering patches on outlets.
- * 
+ *
  * @function boxOutput
  * @exports
  * @param {Object} entities - A store containing all in-game entities.
@@ -301,13 +304,27 @@ export const boxOutput = derived(
     singles.forEach(([_, material]) => {
       // Get patch value
       // @todo: possibly handle multiple outputs
-      let patchValue = patchesOnOutlet && patchesOnOutlet.outputs && patchesOnOutlet.outputs[0] && patchesOnOutlet.outputs[0].materialType === material.materialType ? patchesOnOutlet.outputs[0].amount : 0
-      result[material.materialType] = material.amount + (patchValue * $blocksSinceLastResolution)
+      let patchValue =
+        patchesOnOutlet &&
+        patchesOnOutlet.outputs &&
+        patchesOnOutlet.outputs[0] &&
+        patchesOnOutlet.outputs[0].materialType === material.materialType
+          ? patchesOnOutlet.outputs[0].amount
+          : 0
+      result[material.materialType] =
+        material.amount + patchValue * $blocksSinceLastResolution
     })
 
     // Handle patches that are not yet resolved
-    if (patchesOnOutlet && patchesOnOutlet.outputs && patchesOnOutlet.outputs[0] && patchesOnOutlet.outputs[0].materialType && !result[patchesOnOutlet.outputs[0].materialType]) {
-      result[patchesOnOutlet.outputs[0].materialType] = patchesOnOutlet.outputs[0].amount * $blocksSinceLastResolution
+    if (
+      patchesOnOutlet &&
+      patchesOnOutlet.outputs &&
+      patchesOnOutlet.outputs[0] &&
+      patchesOnOutlet.outputs[0].materialType &&
+      !result[patchesOnOutlet.outputs[0].materialType]
+    ) {
+      result[patchesOnOutlet.outputs[0].materialType] =
+        patchesOnOutlet.outputs[0].amount * $blocksSinceLastResolution
     }
 
     return result
@@ -325,7 +342,7 @@ export const simulatedPlayerEnergy = derived(
   ]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-      ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
+        ($coreIsConnectedToInlet ? 1 : -1) * $blocksSinceLastResolution
     )
   }
 )
