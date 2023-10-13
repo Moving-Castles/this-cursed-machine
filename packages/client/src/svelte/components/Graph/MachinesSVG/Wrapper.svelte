@@ -231,6 +231,7 @@
             entry,
           }))
           .map(({ id, entry }) => {
+            console.log("MAPPING THE LINKS")
             // Connect the source machine to the target machine
             const sP = $simulatedPorts[entry.sourcePort]
             const tP = $simulatedPorts[entry.targetPort]
@@ -243,8 +244,12 @@
                 source: sP.carriedBy,
                 target: tP.carriedBy,
               }
+            } else {
+              console.log("NOT")
+              return false
             }
-          }),
+          })
+          .filter(thing => thing),
       ],
     }
   }
@@ -378,6 +383,7 @@
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
 
+    console.log("links", links)
     console.log("nodes", nodes)
 
     // Create the SVG container.

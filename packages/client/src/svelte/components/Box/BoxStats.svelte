@@ -1,7 +1,7 @@
 <script lang="ts">
   // import { playerCore, playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
-  import {  MaterialType } from "../../modules/state/enums"
+  import { MaterialType } from "../../modules/state/enums"
   import {
     simulatedPlayerCore,
     simulatedPlayerEnergy,
@@ -23,11 +23,8 @@
   <p>
     {#if Object.entries($boxOutput).length > 0}
       {#each Object.entries($boxOutput) as [type, amount] (type)}
-        <span>
-          {MaterialType[type]}:
-          <span class={MaterialType[type]}>
-            {amount}
-          </span>
+        <span class={MaterialType[type]}>
+          {MaterialType[type]}: {amount}
         </span><br />
       {/each}
     {/if}

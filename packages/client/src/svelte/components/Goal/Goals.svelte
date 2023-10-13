@@ -1,46 +1,52 @@
 <script lang="ts">
   import { MaterialType } from "../../modules/state/enums"
-  import { playerGoal } from "../../modules/state"
-  import { goalSatisfied } from "../../modules/simulator"
+  import { playerGoals, playerBox } from "../../modules/state"
+  import { goalsSatisfied } from "../../modules/simulator"
   import { transfer } from "../../modules/action"
 
   let show = true
 
-  $: goalType =
-    MaterialType[$playerGoal?.materialType] === "NONE"
+  $: goalTypes = $playerGoals.map(goal => {
+    return MaterialType[goal?.materialType] === "NONE"
       ? "ENERGY"
-      : MaterialType[$playerGoal?.materialType]
+      : MaterialType[goal?.materialType]
+  })
 </script>
 
 <!-- Start of new box -->
-{#key $playerGoal}
+{#key $playerGoals}
   {#if show}
     <div class="goalBox">
-      Pod #{$playerGoal.level}<br />
+      Pod #{$playerBox.level}<br />
       <br />
       Don't damage company property
       <br />
       <br />
       Production quota:
       <br />
-      <div class={goalType}>
-        {goalType} = {$playerGoal.amount}
-      </div>
+      {#each $playerGoals as goal, i}
+        <div class={goalTypes[i]}>
+          {goalTypes[i]} = {goal.amount}
+        </div>
+      {/each}
       <br />
-      <button class="btn" on:click={() => (show = false)}> I am ready </button>
+      <br />
+      <br />
+      <button class="btn" on:click={() => (show = false)}>I am ready </button>
     </div>
   {/if}
 {/key}
 
 <!-- End of current box -->
-{#if $goalSatisfied}
+{#if $goalsSatisfied}
   <div class="rewardBox">
-    Pod #{$playerGoal.level} completed<br />
+    Pod #{$playerBox.level} completed<br />
     <br />
     Performance: acceptable
     <br />
     <br />
     Production: n/a
+    <br />
     <br />
     <button
       class="btn"
@@ -62,9 +68,10 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
+    width: 600px;
     height: auto;
-    padding: 1rem;
+    min-height: 400px;
+    padding: 2rem;
     background: var(--terminal-background);
     border: var(--terminal-border);
   }
