@@ -115,9 +115,9 @@ declare global {
 
   type Goal = {
     type: EntityType.GOAL
+    level: number,
     materialType: MaterialType
-    amount: number,
-    energy: number
+    amount: number
   }
 
   // ---
