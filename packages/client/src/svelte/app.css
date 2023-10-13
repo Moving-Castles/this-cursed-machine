@@ -66,6 +66,7 @@
 .DIRT {
   color: #c27800;
 }
+.ENERGY,
 .PLANT {
   color: #00c224;
 }
@@ -109,6 +110,10 @@
 
 .flash {
   animation: strobe 200ms steps(1, end) infinite;
+}
+
+.flash-fast {
+  animation: strobe 80ms steps(1, end) infinite;
 }
 
 .flash-a-little,

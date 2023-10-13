@@ -36,7 +36,7 @@
 
   // - - - - -
   $: console.log("$patches", $patches)
-  // $: console.log("$goals", $goals)
+  $: console.log("$goals", $goals)
   // $: console.log("$materials", $materials)
   // $: console.log("$recipes", $recipes)
   // $: console.log("$activeActions", $activeActions)

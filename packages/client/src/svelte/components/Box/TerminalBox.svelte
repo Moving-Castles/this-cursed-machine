@@ -1,13 +1,13 @@
 <script lang="ts">
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
-  import { playerBox, playerCore } from "../../modules/state"
-  import { strobe } from "../../modules/ui/transitions"
+  import { playerCore } from "../../modules/state"
   import { potential } from "../../modules/simulator"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
   import Goal from "../Goal/Goal.svelte"
+  import Goals from "../Goal/Goals.svelte"
   // import BoxMaterial from "./BoxMaterial.svelte"
 
   let now = performance.now()
@@ -18,6 +18,8 @@
 
   let theme = "dark"
 </script>
+
+<Goals />
 
 <div class="bg">
   <div class="split-screen">
@@ -37,9 +39,9 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <div class="goal">
-          <Goal />
-        </div>
+        <!-- <div class="goal"> -->
+        <!-- <Goal /> -->
+        <!-- </div> -->
 
         {#key $potential}
           <div class="graph">

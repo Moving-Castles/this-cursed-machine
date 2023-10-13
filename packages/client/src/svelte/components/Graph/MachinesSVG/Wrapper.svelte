@@ -14,6 +14,8 @@
   import _ from "lodash"
   import { ports } from "../../../modules/state"
 
+  let done = false
+
   const { isEqual, isEmpty } = _
   // const dragBehavior = d3
   //   .drag()
@@ -376,7 +378,7 @@
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
 
-    console.log('nodes', nodes)
+    console.log("nodes", nodes)
 
     // Create the SVG container.
     svg = d3
@@ -530,12 +532,14 @@
 
   onMount(() => {
     init()
+    setTimeout(() => (done = true), 320)
   })
 </script>
 
 <svelte:window on:resize={resizeSvg} />
 
 <div class="wrapper">
+  <div class="strobe flash-fast" class:hidden={done} />
   {#if inspecting}
     <MachineInformation
       address={inspecting.address}
@@ -551,18 +555,34 @@
   />
 </div>
 
-<style>
+<style lang="scss">
   :global(rect:hover) {
     stroke: 4px solid blue;
-  }
-
-  :global(rect),
-  :global(text) {
   }
 
   .wrapper {
     position: relative;
     width: 100%;
     height: 100%;
+
+    .strobe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      z-index: 50;
+      background: white;
+      // background: radial-gradient(
+      //   ellipse at center,
+      //   rgba(255, 255, 255, 1) 0%,
+      //   rgba(255, 255, 255, 1) 80%,
+      //   rgba(255, 255, 255, 0) 85%,
+      //   rgba(255, 255, 255, 0) 100%
+      // );
+
+      &.hidden {
+        display: none;
+      }
+    }
   }
 </style>
