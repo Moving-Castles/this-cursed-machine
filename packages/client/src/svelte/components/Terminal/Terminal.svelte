@@ -266,7 +266,15 @@
         />
       {:else if selectedAction === "destroy"}
         <Select
-          options={$readableMachines.map(r => r.read)}
+          options={$readableMachines
+            .filter(({ machine: mac }) => {
+              return (
+                mac.machineType !== MachineType.CORE &&
+                mac.machineType !== MachineType.INLET &&
+                mac.machineType !== MachineType.OUTLET
+              )
+            })
+            .map(r => r.read)}
           on:confirm={onDestroyConfirm}
           on:cancel={clearPotential}
         />
