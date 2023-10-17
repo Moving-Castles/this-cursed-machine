@@ -54,6 +54,38 @@
   let userInput = ""
   let selectedAction = ""
   let skip = false
+  let connectMachinesOptions: Record<string, any>[][] = []
+
+  // If defined, sort by creation first
+  const creationBlockSort = (a, b) => {
+    if (
+      typeof a?.creationBlock === "bigint" &&
+      typeof b?.creationBlock === "bigint"
+    ) {
+      return b?.creationBlock - a?.creationBlock
+    } else {
+      return 1
+    }
+  }
+
+  $: {
+    // The sorting for connect is 1. inlet 2. outlet and then the rest of the components
+    const fromOptions = Object.entries(machinesToConnect)
+      .sort(creationBlockSort)
+      .map(([id, machine]) => ({
+        id,
+        machine,
+        text: MachineType[machine.machineType],
+      }))
+    const toOptions = Object.entries(machinesToConnect)
+      .sort(creationBlockSort)
+      .map(([id, machine]) => ({
+        id,
+        machine,
+        text: MachineType[machine.machineType],
+      }))
+    connectMachinesOptions = [fromOptions, toOptions]
+  }
 
   // States for actions are queued, active, completed or failed
   // This block updates the UI when an action is triggered
@@ -86,6 +118,15 @@
   }
 
   $: if (selectedAction) scrollToEnd()
+
+  // Key for transitions
+  $: key = $index + (skip ? "-skip" : "")
+
+  $: {
+    machinesToConnect = Object.fromEntries(
+      Object.entries($simulatedMachines).filter(filterByAvailablePorts)
+    )
+  }
 
   /**
    * Send stuff to the terminal
@@ -158,7 +199,7 @@
   }
 
   const onConnectConfirm = ({ detail }) => {
-    $watchingAction = connectMachines(detail[0], detail[1], send)
+    $watchingAction = connectMachines(detail[0].id, detail[1].id, send)
     // console.log($watchingAction)
     userInput = ""
   }
@@ -178,7 +219,7 @@
   }
 
   const onAdvance = ({ detail }) => {
-    send("Connecting: " + detail)
+    send("Connecting: " + detail.text)
   }
 
   /** The submit function */
@@ -203,15 +244,6 @@
     })
 
     return machinePorts.length - occupiedPorts.length > 0
-  }
-
-  /** Reactive statements */
-  // Key for transitions
-  $: key = $index + (skip ? "-skip" : "")
-  $: {
-    machinesToConnect = Object.fromEntries(
-      Object.entries($simulatedMachines).filter(filterByAvailablePorts)
-    )
   }
 
   /** Lifecycle hooks */
@@ -254,16 +286,6 @@
           on:change={displayMachinePotential}
           on:cancel={clearPotential}
         />
-      {:else if selectedAction === "inspect"}
-        <Select
-          options={Object.values($simulatedMachines).map(
-            machine =>
-              `${MachineType[machine.machineType]}: ${machine.numericalID}`
-          )}
-          on:change={displayConnectionPotential}
-          on:confirm={onConnectConfirm}
-          on:cancel={clearPotential}
-        />
       {:else if selectedAction === "destroy"}
         <Select
           options={$readableMachines
@@ -286,16 +308,7 @@
         />
       {:else if selectedAction === "connect"}
         <MultiSelect
-          options={[
-            Object.values(machinesToConnect).map(
-              machine =>
-                `${MachineType[machine.machineType]}: ${machine.numericalID}`
-            ),
-            Object.values(machinesToConnect).map(
-              machine =>
-                `${MachineType[machine.machineType]}: ${machine.numericalID}`
-            ),
-          ]}
+          options={connectMachinesOptions}
           on:change={displayConnectionPotential}
           on:advance={onAdvance}
           on:confirm={onConnectConfirm}

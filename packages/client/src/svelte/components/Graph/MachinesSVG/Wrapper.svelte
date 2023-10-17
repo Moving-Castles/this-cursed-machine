@@ -67,6 +67,10 @@
     previousPotential = { ...$potential }
   }
 
+  const onClick = () => {
+    // console.log("on click")
+  }
+
   // Utilities
   const isConnected = d => {
     // If the connections contain ports that are connected to this machine, that means they are connected
@@ -571,7 +575,7 @@
 
 <svelte:window on:resize={resizeSvg} />
 
-<div class="wrapper">
+<div on:click={onClick} class="wrapper">
   <!-- <div class="strobe flash-fast" class:hidden={done} /> -->
   {#if inspecting}
     <MachineInformation

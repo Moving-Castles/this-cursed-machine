@@ -64,15 +64,9 @@ export const simulated = derived(
 
     let simulated: SimulatedEntities = Object.fromEntries([
       // Entities
-      ...Object.entries($entities).map(([key, ent]) => {
-        i++
-        return [key, { ...ent, numericalID: i }]
-      }),
+      ...Object.entries($entities),
       // Potential
-      ...Object.entries($potential).map(([key, ent]) => {
-        i++
-        return [key, { ...ent, numericalID: i }]
-      }),
+      ...Object.entries($potential),
     ])
 
     for (const [key, patch] of Object.entries($patches)) {
@@ -203,7 +197,7 @@ export const readableMachines = derived(
     return Object.entries($simulatedMachines).map(([id, machine]) => ({
       id,
       machine,
-      read: `${MachineType[machine.machineType]} (${machine.numericalID})`,
+      read: MachineType[machine.machineType],
     }))
   }
 )
@@ -252,7 +246,7 @@ export const boxOutput = derived(
 
     // Get patches on outlet
     // @todo: handle missing outlet
-    const patchesOnOutlet = get(patches)[outlet[0]]
+    const patchesOnOutlet = outlet ? get(patches)[outlet[0]] : false
 
     // Loop through the filtered materials to aggregate their amounts by material type.
     // Materials are consolidated onchain, so there will only ever be one entry per material type.
@@ -261,9 +255,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-          patchesOnOutlet.outputs &&
-          patchesOnOutlet.outputs[0] &&
-          patchesOnOutlet.outputs[0].materialType === material.materialType
+        patchesOnOutlet.outputs &&
+        patchesOnOutlet.outputs[0] &&
+        patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType] =
@@ -292,13 +286,10 @@ export const playerEnergyMod = writable(-1)
 
 export const simulatedPlayerEnergy = derived(
   [simulatedPlayerCore, playerEnergyMod, blocksSinceLastResolution],
-  ([
-    $simulatedPlayerCore,
-    $playerEnergyMod,
-    $blocksSinceLastResolution,
-  ]) => {
+  ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
-      ($simulatedPlayerCore?.energy || 0) + $playerEnergyMod * $blocksSinceLastResolution
+      ($simulatedPlayerCore?.energy || 0) +
+        $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )
@@ -320,5 +311,3 @@ export const goalsSatisfied = derived(
     return achieved.every(v => v === true)
   }
 )
-
-

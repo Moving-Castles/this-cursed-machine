@@ -6,17 +6,18 @@
 
   let index = 0
   let stage = 0
-  let choices: number[] = []
-  let stageOptions: string[] = []
-  let value = ""
+  let choice: Record<string, any>
+  let choices: Record<string, any>[] = []
+  let stageOptions: Record<string, any>[] = []
 
   $: {
     stageOptions = [...options[stage]]
-    if (stage > 0) stageOptions = [...stageOptions, "BACK"]
+    // Add back if the stage is advanced
+    if (stage > 0)
+      stageOptions = [...stageOptions, { id: "back", text: "BACK" }]
   }
-  $: {
-    value = stageOptions[index]
-  }
+
+  $: choice = stageOptions[index]
 
   // enter / return = 13
   // left = 37
@@ -24,35 +25,34 @@
   // right = 39
   // down = 40
   const onKeyDown = ({ keyCode }) => {
-    const args = value.match(/\d+/)
-    const choice = args ? Number(args[0]) : value
-
     if (keyCode === 27) dispatch("cancel")
 
+    // Up / down
     if (keyCode === 38) {
       index = Math.max(index - 1, 0)
 
       if (stage === options.length - 1) {
-        dispatch("change", [...choices, choice]) // Only commit the numerical ID
+        dispatch("change", [...choices, choice.id])
       }
     }
     if (keyCode === 40) {
       index = Math.min(index + 1, stageOptions.length - 1)
 
       if (stage === options.length - 1) {
-        dispatch("change", [...choices, choice]) // Only commit the numerical ID
+        dispatch("change", [...choices, choice.id])
       }
     }
 
+    // Confirm
     if (keyCode === 13) {
-      if (isNaN(choice)) {
+      if (choice.id === "back") {
         stage--
         index = 0
         return
       } else {
-        choices = [...choices, choice] // Only commit the numerical ID
+        choices = [...choices, choice]
 
-        dispatch("advance", value)
+        dispatch("advance", choice)
         if (stage === options.length - 1) {
           dispatch("confirm", choices)
           stage = 0
@@ -69,9 +69,9 @@
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="inline-select">
-  {#each stageOptions as option (option)}
-    <p class:active={option === value} class="option output-content">
-      {option}
+  {#each stageOptions as option (option.id)}
+    <p class:active={option.id === choice.id} class="option output-content">
+      {option.text}
     </p>
   {/each}
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
-  import { playerCore } from "../../modules/state"
+  import { playerCore, machines, connections } from "../../modules/state"
   import { potential } from "../../modules/simulator"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
@@ -43,7 +43,7 @@
           <p>Show goal</p>
         </div>
 
-        {#key $potential}
+        {#key `${JSON.stringify($potential)}-${Object.keys($machines).length}-${Object.keys($connections).length}`}
           <div class="graph">
             <Graph />
           </div>

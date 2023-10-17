@@ -24,10 +24,10 @@ export const connectMachines = (
   const $simulated = get(simulated)
 
   const sourceMachine = Object.entries($simulated).find(
-    ([_, ent]) => ent.numericalID === source
+    ([id, _]) => id === source
   )
   const targetMachine = Object.entries($simulated).find(
-    ([_, ent]) => ent.numericalID === target
+    ([id, _]) => id === target
   )
   if (sourceMachine && targetMachine) {
     if (
@@ -36,8 +36,8 @@ export const connectMachines = (
     ) {
       send("Only connect machines")
     } else {
-      const [_, sourcePorts] = machinePorts(sourceMachine[1].numericalID, PortType.OUTPUT)
-      const [__, targetPorts] = machinePorts(targetMachine[1].numericalID, PortType.INPUT)
+      const [_, sourcePorts] = machinePorts(sourceMachine[0], PortType.OUTPUT)
+      const [__, targetPorts] = machinePorts(targetMachine[0], PortType.INPUT)
 
       if (sourcePorts.length > 0 && targetPorts.length > 0) {
         // Connect the first available port

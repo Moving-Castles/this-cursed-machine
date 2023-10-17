@@ -97,8 +97,8 @@ export const evaluate = (
   }
 
   /**
- * transfer (testing only)
- */
+   * transfer (testing only)
+   */
   if (string === "transfer") {
     transfer()
   }
@@ -127,9 +127,10 @@ export const evaluate = (
       `\nContents: \n ${Object.entries(get(simulatedMachines))
         .map(
           ([id, machine]) =>
-            `${symbols[1]} ${MachineType[machine.machineType]} ${machine.machineType == MachineType.CORE
-              ? `E: ${machine.energy}`
-              : ""
+            `${symbols[1]} ${MachineType[machine.machineType]} ${
+              machine.machineType == MachineType.CORE
+                ? `E: ${machine.energy}`
+                : ""
             }`
         )
         .join("\n")}\n
@@ -152,16 +153,15 @@ export const evaluate = (
     if (args.length === 0) {
       send("What would you like to inspect?")
     } else {
-      const numID = Number(args[0])
-      const machine = Object.values($simulatedMachines).find(
-        m => m.numericalID === numID
-      )
-
-      if (!machine) {
-        send("Could not find that machine")
-      } else {
-        send(`${machine}`)
-      }
+      // const id = Number(args[0])
+      // const machine = Object.keys($simulatedMachines).find(
+      //   m => m === id
+      // )
+      // if (!machine) {
+      //   send("Could not find that machine")
+      // } else {
+      //   send(`${machine}`)
+      // }
     }
   }
 }
