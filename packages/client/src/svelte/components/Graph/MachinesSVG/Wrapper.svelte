@@ -1,6 +1,11 @@
 <script>
   import * as d3 from "d3"
-  import { EntityType, MachineType } from "../../../modules/state/enums"
+  import {
+    EntityType,
+    MachineType,
+    MaterialType,
+  } from "../../../modules/state/enums"
+  import { connectionSourceMachine } from "../../../modules/state/convenience"
   import { onMount, createEventDispatcher } from "svelte"
   import {
     simulated,
@@ -320,7 +325,7 @@
             .attr("stroke-dasharray", 20)
             .attr("stroke-opacity", 0)
             .attr("id", d => `link-${d.id}`)
-            .attr("stroke-width", d => Math.sqrt(d.value)),
+            .attr("stroke-width", 40),
         update => update, // you can make adjustments to existing elements here if needed
         exit => {
           return exit.remove()
@@ -453,12 +458,21 @@
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", "#fff")
+      .attr("stroke", d => {
+        // Get the outputs of the sourceMachine
+        const linksWithSource = data.links.filter(l => l.source === d.source.id)
+        const sourceMachine = connectionSourceMachine(d.id)
+        const index = linksWithSource.map(l => l.source).indexOf(d.source.id)
+
+        const outputing = sourceMachine?.outputs[index]
+
+        return `var(--${MaterialType[outputing.materialType]})`
+      })
       .attr("stroke-dashoffset", 0)
       .attr("stroke-dasharray", 20)
       .attr("stroke-opacity", 0)
       .attr("id", d => `link-${d.id}`)
-      .attr("stroke-width", d => Math.sqrt(d.value))
+      .attr("stroke-width", 40)
 
     node = svg
       .append("g")

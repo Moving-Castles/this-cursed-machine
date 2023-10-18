@@ -3,6 +3,12 @@ import { simulatedMachines, simulatedPorts } from "../simulator"
 import { connections } from "./index"
 import { PortType } from "./types"
 
+export const connectionSourceMachine = (connectionId: string) => {
+  return get(simulatedMachines)[
+    get(simulatedPorts)[get(connections)[connectionId].sourcePort]?.carriedBy
+  ]
+}
+
 /**
  * Get the occupied and available ports for a machine.
  *
