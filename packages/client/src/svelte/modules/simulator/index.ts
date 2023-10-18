@@ -54,20 +54,72 @@ export const patches = writable({} as SimulatedEntities)
 export const simulated = derived(
   [entities, patches],
   ([$entities, $patches]) => {
-    // Add a numerical ID to each entry for the terminal
-    let i = 0
-
     let simulated: SimulatedEntities = Object.fromEntries([
       // Entities
       ...Object.entries($entities),
     ])
 
     for (const [key, patch] of Object.entries($patches)) {
+      // Inputs
       if (patch.inputs && simulated[key]) {
+        // Attach inputs to machine
         simulated[key].inputs = patch.inputs
+
+        for (const input of patch.inputs) {
+          console.log("IN ", input)
+          // Select the first available in port of the simulated entity
+          const inPort = Object.entries(simulated)
+            .filter(([_, ent]) => ent.entityType === EntityType.PORT)
+            .filter(([_, ent]) => ent.carriedBy === key)
+            .filter(([_, port]) => port.portType === PortType.INPUT)
+            .find(([_, port]) => !port.product)
+
+          console.log(inPort)
+
+          if (inPort) {
+            const portAddress = inPort[0]
+            // Attach the materialType and amount to port
+            simulated[portAddress].product = input
+
+            console.log(simulated[portAddress])
+
+            // If something is input, that means it's a connection
+            // Follow the trace to the connection that leads to this port
+            const connector = Object.entries(simulated)
+              .filter(([_, ent]) => ent.entityType === EntityType.CONNECTION)
+              .find(([_, c]) => c.targetPort === portAddress)
+
+            if (connector) {
+              console.log("connector", connector)
+              const connectorAddress = connector[0]
+              simulated[connectorAddress].product = patch.input
+            }
+          }
+        }
       }
+
+      // Outputs
       if (patch.outputs && simulated[key]) {
         simulated[key].outputs = patch.outputs
+
+        for (const output of patch.outputs) {
+          // Select the first available out port of the simulated entity
+          const outPort = Object.entries(simulated)
+            .filter(([_, ent]) => ent.entityType === EntityType.PORT)
+            .filter(([_, ent]) => ent.carriedBy === key)
+            .filter(([_, port]) => port.portType === PortType.OUTPUT)
+            .find(([_, port]) => !port.product) // first available
+
+          console.log("out", outPort)
+
+          if (outPort) {
+            const portAddress = outPort[0]
+
+            simulated[portAddress].product = output
+
+            console.log("patched", simulated[portAddress])
+          }
+        }
       }
     }
 
