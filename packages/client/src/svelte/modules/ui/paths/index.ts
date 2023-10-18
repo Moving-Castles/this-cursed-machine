@@ -26,13 +26,15 @@ export const makeSvgPath = (coords: Coord[], offset: number) => {
     // We use 'M' (move to) followed by the coordinate to define the start point of the path.
     // We add 0.5 to center the path in the middle of the coordinate grid cell.
     if (i === 0) {
-      string += `M${coords[i].x * 100 + 50 + offsetX} ${coords[i].y * 100 + 50 + offsetY
-        }`
+      string += `M${coords[i].x * 100 + 50 + offsetX} ${
+        coords[i].y * 100 + 50 + offsetY
+      }`
     } else {
       // For all other coordinates, we use 'L' (line to) followed by the coordinate to define a line from the current point to this coordinate.
       // We add 0.5 to center the path in the middle of the coordinate grid cell.
-      string += `L${coords[i].x * 100 + 50 + offsetX} ${coords[i].y * 100 + 50 + offsetY
-        }`
+      string += `L${coords[i].x * 100 + 50 + offsetX} ${
+        coords[i].y * 100 + 50 + offsetY
+      }`
     }
   }
 
@@ -86,13 +88,15 @@ export const makePolyline = (
         offsetX = offsetMapping[totalRotation].x * 40
         offsetY = offsetMapping[totalRotation].y * 40
       }
-      string += `${coords[i].x * unit + unit / 2 + offsetX},${coords[i].y * unit + unit / 2 + offsetY
-        } `
+      string += `${coords[i].x * unit + unit / 2 + offsetX},${
+        coords[i].y * unit + unit / 2 + offsetY
+      } `
     } else if (i < coords.length) {
       if (i !== coords.length - 1 && coords.length > 3) {
         // HACKY: cut one coord
-        string += `${coords[i].x * unit + unit / 2 + offsetX},${coords[i].y * unit + unit / 2 + offsetY
-          } `
+        string += `${coords[i].x * unit + unit / 2 + offsetX},${
+          coords[i].y * unit + unit / 2 + offsetY
+        } `
       }
     } else {
       if (endEntity && targetPort) {
@@ -106,8 +110,9 @@ export const makePolyline = (
         offsetX = offsetMapping[totalRotation].x * 40
         offsetY = offsetMapping[totalRotation].y * 40
       }
-      string += `${coords[coords.length - 1].x * unit + unit / 2 + offsetX},${coords[coords.length - 1].y * unit + unit / 2 + offsetY
-        } `
+      string += `${coords[coords.length - 1].x * unit + unit / 2 + offsetX},${
+        coords[coords.length - 1].y * unit + unit / 2 + offsetY
+      } `
     }
   }
 
@@ -238,7 +243,6 @@ export const plannedPath = derived(
         withinBounds(endCoord, $playerBox.width, $playerBox.height)
       ) {
         return {
-          potential: true,
           startEntity: entity,
           sourcePort: port,
           endEntity: endEntity ? endEntity[1] : false,

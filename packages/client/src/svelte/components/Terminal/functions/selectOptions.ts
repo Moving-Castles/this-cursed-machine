@@ -1,9 +1,16 @@
 import { SelectOption, COMMAND } from "../types"
 import { MachineType, PortType } from "../../../modules/state/enums"
-import { readableConnections, simulatedMachines, simulatedConnections } from "../../../modules/simulator";
-import { get } from "svelte/store";
-import { FIXED_MACHINE_TYPES } from "..";
-import { getMachinesWithAvailablePorts } from "./helpers";
+import {
+    simulatedMachines,
+    readableConnections,
+} from "../../../modules/simulator"
+// import { connections, machines } from "../../../modules/state"
+import { get } from "svelte/store"
+import { FIXED_MACHINE_TYPES } from ".."
+import {
+    getMachinesWithAvailablePorts,
+    creationBlockSortEntry,
+} from "./helpers"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -80,14 +87,17 @@ function createSelectOptionsDestroy(): SelectOption[] {
     let selectOptions: SelectOption[] = []
 
     // Options => all machines except core, inlet, outlet
-    Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
-        if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
-            selectOptions.push({
-                label: MachineType[machine.machineType],
-                value: machineId
-            })
-        }
-    })
+    Object.entries(get(simulatedMachines))
+        // .map(([key, machine]) => ({ key, machine }))
+        .sort(creationBlockSortEntry)
+        .forEach(([machineId, machine]) => {
+            if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
+                selectOptions.push({
+                    label: MachineType[machine.machineType],
+                    value: machineId,
+                })
+            }
+        })
 
     return selectOptions
 }
@@ -120,14 +130,13 @@ function createSelectOptionsInspect(): SelectOption[] {
 
     // Options => all machines
     Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
-        // @todo: Better label
         selectOptions.push({
             label: MachineType[machine.machineType],
-            value: machineId
+            value: machineId,
         })
-    })
 
-    return selectOptions
+        return selectOptions
+    })
 }
 
 /**

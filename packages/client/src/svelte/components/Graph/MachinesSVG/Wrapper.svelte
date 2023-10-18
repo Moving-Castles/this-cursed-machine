@@ -9,7 +9,6 @@
   import { onMount, createEventDispatcher } from "svelte"
   import {
     simulated,
-    potential,
     simulatedPorts,
     simulatedConnections,
     simulatedPlayerCore,
@@ -41,7 +40,6 @@
 
   let data = {}
   let previousData = {}
-  let previousPotential = {}
 
   // Top level variables used in the graph
   let svg
@@ -60,16 +58,10 @@
   let outletFY = 0
 
   $: {
-    if (
-      element &&
-      (isEqual($potential, previousPotential) === false ||
-        isEqual(data, previousData) === false ||
-        isEmpty($potential))
-    ) {
+    if (element && isEqual(data, previousData) === false) {
       updateEverything()
     }
     previousData = { ...data }
-    previousPotential = { ...$potential }
   }
 
   const onClick = () => {
@@ -204,42 +196,6 @@
   }
 
   /**
-   * Events
-   */
-  // Reheat the simulation when drag starts, and fix the subject position.
-  // function dragstarted(event, d) {
-  //   if (!event.active) simulation.alphaTarget(0.3).restart()
-  //   d.x = boundX(event.x)
-  //   d.y = boundY(event.y)
-  // }
-
-  // // Update the subject (dragged node) position during drag.
-  // function dragged(event, d) {
-  //   if (d.entry.potential || !d.fx) {
-  //     d.x = boundX(event.x)
-  //     d.y = boundY(event.y)
-  //   } else {
-  //     if (d.fx && d.entry.machineType === MachineType.INLET)
-  //       [inletFX, inletFY] = [d.fx, d.fy]
-  //     if (d.fy && d.entry.machineType === MachineType.OUTLET)
-  //       [outletFX, outletFY] = [d.fx, d.fy]
-  //     d.fx = boundX(event.x)
-  //     d.fy = boundY(event.y)
-  //   }
-  // }
-
-  // // Restore the target alpha so the simulation cools after dragging ends.
-  // // Unfix the subject position now that it’s no longer being dragged.
-  // function dragended(event, d) {
-  //   if (!event.active) simulation.alphaTarget(0)
-  //   if (d.entry.potential || !d.fx) return
-  //   if (d.fx && d.entry.machineType === MachineType.INLET) inletFX = d.fx
-  //   if (d.fy && d.entry.machineType === MachineType.OUTLET) outletFX = d.fx
-  //   d.fx = boundX(event.x)
-  //   d.fy = boundY(event.y)
-  // }
-
-  /**
    * Set Data
    */
   function setData() {
@@ -349,7 +305,7 @@
               inspecting = { address: d.id, machineType: d.entry.machineType }
             })
             .on("mouseleave", () => (inspecting = null))
-            .attr("class", d => `node node-${d.entry.potential}`)
+            .attr("class", "node")
             .attr("stroke", d => (d.entry.potential ? "#222" : "#fff"))
             .attr("id", d => `node-${d.id}`)
             .attr("x", d =>
