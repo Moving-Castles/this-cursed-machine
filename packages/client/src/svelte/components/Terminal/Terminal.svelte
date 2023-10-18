@@ -171,9 +171,6 @@
       let targetPorts =
         getMachinePorts(String(targetMachine), PortType.INPUT) || []
 
-      console.log("sourcePorts", sourcePorts)
-      console.log("targetPorts", targetPorts)
-
       if (sourcePorts.length === 0 || targetPorts.length === 0) {
         writeToTerminal(
           OutputType.ERROR,
@@ -189,6 +186,8 @@
       // @todo: handle port selection, for now use the first available
       parameters = [sourcePorts[0][0], targetPorts[0][0]]
     }
+
+    console.log(command, parameters)
 
     // Execute function
     await command.fn(...parameters)

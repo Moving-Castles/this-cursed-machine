@@ -88,7 +88,6 @@ function createSelectOptionsDestroy(): SelectOption[] {
 
   // Options => all machines except core, inlet, outlet
   Object.entries(get(simulatedMachines))
-    // .map(([key, machine]) => ({ key, machine }))
     .sort(creationBlockSortEntry)
     .forEach(([machineId, machine]) => {
       if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {

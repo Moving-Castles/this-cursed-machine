@@ -281,7 +281,7 @@
             .attr("stroke-dasharray", 20)
             .attr("stroke-opacity", 0)
             .attr("id", d => `link-${d.id}`)
-            .attr("stroke-width", 40),
+            .attr("stroke-width", 20),
         update => update, // you can make adjustments to existing elements here if needed
         exit => {
           return exit.remove()
@@ -430,7 +430,7 @@
       .attr("stroke-dasharray", 20)
       .attr("stroke-opacity", 0)
       .attr("id", d => `link-${d.id}`)
-      .attr("stroke-width", 40)
+      .attr("stroke-width", 20)
 
     node = svg
       .append("g")
