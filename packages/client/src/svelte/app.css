@@ -9,7 +9,7 @@
   --foreground: rgb(var(--white));
   --terminal-background: black;
   --terminal-color: var(--white);
-  --color-info: #0707cc;
+  --color-info: #3131e4;
   --color-alert: #effb04;
   --color-success: #3bb13b;
   --color-failure: #ff4000;

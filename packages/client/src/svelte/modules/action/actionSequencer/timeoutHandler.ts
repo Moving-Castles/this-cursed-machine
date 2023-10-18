@@ -1,17 +1,18 @@
-import { writable, get } from "svelte/store"
 import { toastMessage } from "../../ui/toast"
-import { watchingAction } from "../actionSequencer"
 
-export const timeout = writable(null as ReturnType<typeof setTimeout> | null)
+export let timeout: NodeJS.Timeout
 
-export const clear = () => clearTimeout(get(timeout))
-export const start = () =>
-  timeout.set(setTimeout(handleQueuedActionTimeout, 15000))
+export const clearActionTimer = () => {
+  clearTimeout(timeout)
+}
+
+export const startActionTimer = () => {
+  timeout = setTimeout(handleQueuedActionTimeout, 15000)
+}
 
 export function handleQueuedActionTimeout() {
   toastMessage("Action timed out. Try reloading.", {
     type: "error",
     disappear: false,
   })
-  watchingAction.set(null)
 }

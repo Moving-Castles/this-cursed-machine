@@ -24,15 +24,7 @@
 <div class="bg">
   <div class="split-screen">
     <div class="left-col">
-      <Terminal
-        on:show={() => ($showGraph = true)}
-        bind:theme
-        bind:send
-        stage={false}
-        track={false}
-        animated={false}
-        placeholder={"Help"}
-      />
+      <Terminal />
     </div>
     {#if $playerCore}
       <div class="right-col">

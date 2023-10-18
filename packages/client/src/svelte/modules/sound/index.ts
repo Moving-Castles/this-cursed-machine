@@ -5,6 +5,21 @@ import { get, writable } from "svelte/store";
 export const music = writable(new Howl({ src: [""] }));
 export const fx = writable([new Howl({ src: [""] })]);
 
+/**
+ * Plays a sound based on category and id. Provides options for looping and fade effects.
+ *
+ * @export
+ * @param {string} category - The category of the sound.
+ * @param {string} id - The id of the sound within the category.
+ * @param {boolean} [loop=false] - Determines if the sound should loop.
+ * @param {boolean} [fade=false] - Determines if the sound should have fade in/out effects.
+ *
+ * @example
+ * // Plays a sound without loop and fade
+ * playSound('music', 'theme');
+ * // Plays a sound with loop and fade
+ * playSound('music', 'theme', true, true);
+ */
 export function playSound(category: string, id: string, loop = false, fade = false) {
 
   const sound = new Howl({

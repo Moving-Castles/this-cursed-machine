@@ -46,6 +46,7 @@ export enum MaterialType {
 }
 
 export enum PortType {
+  NONE,
   INPUT,
   OUTPUT,
 }

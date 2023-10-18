@@ -1,11 +1,14 @@
-import { writable, get } from "svelte/store"
+import { writable } from "svelte/store"
+import type { Output } from "./types"
+import { COMMAND } from "./types"
+import { MachineType } from "../../modules/state/enums"
 
-/**
- * Core >::)
- */
-export const index = writable(-1)
-export const output = writable([])
-export const symbols = [
+// STORES
+export const terminalIndex = writable(-1)
+export const terminalOutput = writable([] as Output[])
+
+// CONSTANTS
+export const SYMBOLS = [
   "›",
   "»",
   "*",
@@ -19,53 +22,23 @@ export const symbols = [
   "#",
   "«",
   "¥",
+  "?",
+  "»"
 ]
-
-/**
- * REGEXES
- */
-export const betweenSquareBrackets = /(?<=\[).+?(?=\])/g
-export const betweenBrackets = /(?<=\().+?(?=\))/g
-export const betweenCarets = /(?<=\>).+?(?=\<)/g
-
-export const spanner = (string: string) => {
-  return string
-    .split("")
-    .map(char => `<span>${char}</span>`)
-    .join("")
-}
-
-/**
- * Returns a parsed string.
- *
- * Everything between brackets becomes an action based on the content of what's between those brackets
- * @param string
- * @returns
- */
-export const parsed = (string: string) => {
-  // console.log('parse: ', string)
-  // Replace all actions
-  const result = string
-    .split("\n")
-    .map(s => {
-      return s.replaceAll(
-        betweenCarets,
-        match => `<span class="aim">${spanner(match)}</span>`
-      )
-    })
-    .map(s => {
-      return s.replaceAll(
-        betweenSquareBrackets,
-        match => `<span class="flash">${spanner(match)}</span>`
-      )
-    })
-    .map(s => {
-      return s.replaceAll(
-        betweenBrackets,
-        match => `<span class="race">${spanner(match)}</span>`
-      )
-    })
-    .join("\n")
-
-  return result
-}
+export const NO_INPUT_COMMANDS = [
+  COMMAND.BLINK,
+  COMMAND.CLEAR,
+  COMMAND.HELP,
+  COMMAND.RESOLVE,
+  COMMAND.TRANSFER,
+]
+export const SINGLE_INPUT_COMMANDS = [
+  COMMAND.BUILD,
+  COMMAND.DESTROY,
+  COMMAND.DISCONNECT,
+  COMMAND.INSPECT
+]
+export const FIXED_MACHINE_TYPES = [MachineType.CORE, MachineType.INLET, MachineType.OUTLET]
+export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g
+export const BETWEEN_BRACKETS = /(?<=\().+?(?=\))/g
+export const BETWEEN_CARETS = /(?<=\>).+?(?=\<)/g

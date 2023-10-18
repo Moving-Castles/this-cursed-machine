@@ -1,392 +1,268 @@
 <script lang="ts">
-  import { symbols, output, index, parsed } from "./index"
-  import { evaluate } from "./evaluate"
-  import {
-    buildMachine,
-    connectMachines,
-    disconnectMachines,
-    destroyMachine,
-  } from "./actions"
-  import { machinePorts as availablePorts } from "../../modules/state/convenience"
-  import type { Action } from "../../modules/action/actionSequencer"
-  import {
-    completedActions,
-    failedActions,
-    watchingAction,
-  } from "../../modules/action/actionSequencer"
-  import {
-    AVAILABLE_MACHINES,
-    potential,
-    simulatedMachines,
-    simulatedPorts,
-    simulatedConnections,
-    readableConnections,
-    readableMachines,
-  } from "../../modules/simulator"
-  import { onMount, onDestroy, createEventDispatcher, tick } from "svelte"
-  import { playSound } from "../../modules/sound"
-  import { onWheel } from "../../modules/ui/events"
-  import { lastSentTime } from "../../modules/ui/stores"
-  import { v4 as uuid } from "uuid"
+  import { onMount, tick } from "svelte"
+  import { COMMAND, OutputType } from "./types"
+  import type { SelectOption } from "./types"
+  import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
+  import { evaluate } from "./functions/evaluate"
+  import { playInputSound } from "./functions/sound"
+  import { MachineType, PortType } from "../../modules/state/enums"
+  import { writeToTerminal } from "./functions/writeToTerminal"
+  import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
-  import MultiSelect from "./MultiSelect.svelte"
-  import BouncingSuffer from "../Loading/BouncingSuffer.svelte"
-  import { playerCore } from "../../modules/state"
-  import { EntityType, MachineType } from "../../modules/state/enums"
+  import TerminalOutput from "./TerminalOutput.svelte"
+  import { shortenAddress } from "../../modules/utils/misc"
+  import { getMachinePorts } from "./functions/helpers"
 
-  export let speed = 80
-  export let theme = "dark"
-  export let placeholder = "Start typing"
-  export let loop = false
-  export let track = true
-  export let input = false
-  export let stage = false // display the terminal centered and front stage
-  export let animated = false
-
-  let machinesToConnect = {}
-
-  /** Constants */
-  const dispatch = createEventDispatcher()
-
-  /** Variables */
-  let inputElement: HTMLElement
-  let outputElement: HTMLElement
+  let inputElement: HTMLInputElement
   let userInput = ""
-  let selectedAction = ""
-  let skip = false
+  let inputActive = true
+  let selectContainerElement: HTMLDivElement
 
-  // States for actions are queued, active, completed or failed
-  // This block updates the UI when an action is triggered
-  $: {
-    if ($watchingAction) {
-      // Select processing as the action to block the input
-      selectedAction = "processing"
-      // Now keep an eye on where that action goes.
-      const completed = $completedActions.find(
-        (action: Action) => action.actionId === $watchingAction.actionId
-      )
-      const failed = $failedActions.find(
-        (action: Action) => action.actionId === $watchingAction.actionId
-      )
-
-      if (completed || failed) {
-        watchingAction.set(null)
-        selectedAction = ""
-        clearPotential()
-        scrollToEnd()
-      }
-    }
+  const focusInput = async () => {
+    await tick()
+    inputElement?.focus()
   }
 
-  $: {
-    if ($watchingAction === null) {
-      clearPotential()
-      scrollToEnd()
-    }
+  const resetInput = async () => {
+    userInput = ""
+    inputActive = true
+    focusInput()
   }
-
-  $: if (selectedAction) scrollToEnd()
 
   /**
-   * Send stuff to the terminal
+   * Renders a select component and resolves a promise when a value is selected.
+   * @param {SelectOption[]} selectOptions - Array of options for the select component.
+   * @returns {Promise<string | MachineType | null>} Resolves to the selected value which can be a string, a MachineType or null
    */
-  export async function send(string: string, user = false) {
-    // Send the actual string
-    output.set([...$output, `${user ? `${symbols[2]} ` : ""}${string}`])
-
-    lastSentTime.set(performance.now())
-
-    await tick()
-
-    dispatch("send", string)
-
-    const action = evaluate(string, dispatch, send)
-
-    if (action) {
-      selectedAction = action
-    }
-
-    scrollToEnd()
-  }
-
-  async function scrollToEnd() {
-    if (outputElement) {
-      await tick()
-      outputElement.scrollTop = outputElement.scrollTop + 10000
-    }
-  }
-
-  const clearPotential = async () => {
-    selectedAction = ""
-    userInput = ""
-    potential.set({})
-    await tick()
-    inputElement?.focus()
-  }
-
-  const displayMachinePotential = ({ detail }) => {
-    potential.set({
-      [uuid()]: {
-        machineType: MachineType[detail],
-        entityType: EntityType.MACHINE,
-        potential: true,
-        carriedBy: $playerCore.carriedBy,
-      },
-    })
-  }
-
-  const displayConnectionPotential = ({ detail }) => {
-    const [_, availableFrom] = availablePorts(detail[0])
-    const [__, availableTo] = availablePorts(detail[0])
-
-    if (availableFrom.length > 0 && availableTo.length > 0) {
-      potential.set({
-        [uuid()]: {
-          entityType: EntityType.CONNECTION,
-          sourcePort: availableFrom[0][0],
-          targetPort: availableTo[0][0],
-          potential: true,
+  async function renderSelect(
+    selectOptions: SelectOption[]
+  ): Promise<string | MachineType | null> {
+    return new Promise(resolve => {
+      const component = new Select({
+        target: selectContainerElement,
+        props: {
+          selectOptions,
+          returnFunction: (value: string | MachineType | null) => {
+            resolve(value)
+          },
         },
       })
-    }
-  }
-
-  const onBuildConfirm = ({ detail }) => {
-    $watchingAction = buildMachine(detail, send)
-    // console.log($watchingAction)
-    userInput = ""
-  }
-
-  const onConnectConfirm = ({ detail }) => {
-    $watchingAction = connectMachines(detail[0], detail[1], send)
-    // console.log($watchingAction)
-    userInput = ""
-  }
-
-  const onDisconnectConfirm = ({ detail }) => {
-    const connection = $readableConnections.find(con => con.read === detail)
-    if (connection) {
-      $watchingAction = disconnectMachines(connection.id)
-    }
-  }
-
-  const onDestroyConfirm = ({ detail }) => {
-    const machine = $readableMachines.find(mac => mac.read === detail)
-    if (machine) {
-      $watchingAction = destroyMachine(machine.id)
-    }
-  }
-
-  const onAdvance = ({ detail }) => {
-    send("Connecting: " + detail)
-  }
-
-  /** The submit function */
-  const onSubmit = async () => {
-    if (userInput === "") return
-    send(userInput, true)
-    playSound("ui", "selectFour")
-    userInput = ""
-  }
-
-  const filterByAvailablePorts = ([machineId, _]) => {
-    // Get machine associated ports
-    const machinePorts = Object.entries($simulatedPorts).filter(
-      ([_, port]) => port.carriedBy === machineId
-    )
-
-    const occupiedPorts = machinePorts.filter(([id, _]) => {
-      return Object.values($simulatedConnections).find(
-        connection =>
-          connection.sourcePort === id || connection.targetPort === id
-      )
+      // Listen to the custom event we're dispatching
+      component.$on("requestDestroy", () => {
+        component.$destroy() // Actually destroy the component
+      })
     })
-
-    return machinePorts.length - occupiedPorts.length > 0
   }
 
-  /** Reactive statements */
-  // Key for transitions
-  $: key = $index + (skip ? "-skip" : "")
-  $: {
-    machinesToConnect = Object.fromEntries(
-      Object.entries($simulatedMachines).filter(filterByAvailablePorts)
-    )
+  const onSubmit = async () => {
+    // De-activate input-field
+    inputActive = false
+
+    // Write input to terminal
+    writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
+
+    // Evaluate input
+    const command = evaluate(userInput)
+
+    // Handle invalid command
+    if (!command) {
+      writeToTerminal(OutputType.ERROR, "Command not found", false, SYMBOLS[5])
+      resetInput()
+      return
+    }
+
+    // To be filled with required parameter values
+    // @todo: typing
+    let parameters: any[] = []
+
+    // Get required parameter values and execute command
+    if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
+      let value = await renderSelect(createSelectOptions(command.id))
+
+      // Abort if nothing selected
+      if (!value) {
+        resetInput()
+        return
+      }
+
+      // Push the value to parameters
+      parameters = [value]
+    } else if (command.id === COMMAND.CONNECT) {
+      // %%%%%%%%%%%%%%%%%%%%%%%%
+      // %% Get source machine %%
+      // %%%%%%%%%%%%%%%%%%%%%%%%
+
+      let sourceSelectOptions = createSelectOptions(
+        COMMAND.CONNECT,
+        PortType.OUTPUT
+      )
+
+      console.log("sourceSelectOptions", sourceSelectOptions)
+
+      // @todo: Does the machine have multiple output ports?
+
+      writeToTerminal(OutputType.NORMAL, "Select source machine:")
+
+      let sourceMachine = await renderSelect(sourceSelectOptions)
+
+      console.log("sourceMachine", sourceMachine)
+
+      // Abort if nothing selected
+      if (!sourceMachine) {
+        writeToTerminal(
+          OutputType.ERROR,
+          "No source machine",
+          false,
+          SYMBOLS[5]
+        )
+        resetInput()
+        return
+      }
+
+      writeToTerminal(
+        OutputType.SPECIAL,
+        `Source: ${shortenAddress(String(sourceMachine))}`,
+        true,
+        SYMBOLS[11]
+      )
+
+      // %%%%%%%%%%%%%%%%%%%%%%%%
+      // %% Get target machine %%
+      // %%%%%%%%%%%%%%%%%%%%%%%%
+
+      let targetSelectOptions = createSelectOptions(
+        COMMAND.CONNECT,
+        PortType.INPUT
+      )
+
+      console.log("targetSelectOptions", targetSelectOptions)
+
+      // @todo: Does the machine have multiple input ports?
+
+      await writeToTerminal(OutputType.NORMAL, "Select target machine:")
+
+      let targetMachine = await renderSelect(targetSelectOptions)
+
+      // Abort if nothing selected
+      if (!targetMachine) {
+        writeToTerminal(
+          OutputType.ERROR,
+          "No target machine",
+          false,
+          SYMBOLS[5]
+        )
+        resetInput()
+        return
+      }
+
+      writeToTerminal(
+        OutputType.SPECIAL,
+        `Target: ${shortenAddress(String(targetMachine))}`,
+        true,
+        SYMBOLS[14]
+      )
+
+      // %%%%%%%%%%%%%%%
+      // %% Get ports %%
+      // %%%%%%%%%%%%%%%
+
+      let sourcePorts =
+        getMachinePorts(String(sourceMachine), PortType.OUTPUT) || []
+      let targetPorts =
+        getMachinePorts(String(targetMachine), PortType.INPUT) || []
+
+      console.log("sourcePorts", sourcePorts)
+      console.log("targetPorts", targetPorts)
+
+      if (sourcePorts.length === 0 || targetPorts.length === 0) {
+        writeToTerminal(
+          OutputType.ERROR,
+          "Could not connect machines",
+          false,
+          SYMBOLS[5]
+        )
+        resetInput()
+        return
+      }
+
+      // Push the values to parameters
+      // @todo: handle port selection, for now use the first available
+      parameters = [sourcePorts[0][0], targetPorts[0][0]]
+    }
+
+    // Execute function
+    await command.fn(...parameters)
+
+    // Reset input
+    resetInput()
   }
 
-  /** Lifecycle hooks */
+  const onInput = (e: KeyboardEvent) => {
+    playInputSound(e)
+  }
+
   onMount(() => {
-    inputElement?.focus()
-    $index = 0
+    resetInput()
   })
-
-  onDestroy(() => index.set(-1))
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  bind:this={outputElement}
-  on:click={() => inputElement?.focus()}
-  use:onWheel
-  class="terminal"
-  class:stage
->
-  {#if !input}
-    {#each $output as o, i (i + key)}
-      <p class="output-content">
-        {@html parsed(o)}
-      </p>
-    {/each}
-  {/if}
+<div id="terminal" on:click={focusInput} class="terminal">
+  <!-- OUTPUT -->
+  {#each $terminalOutput as output, index (index)}
+    <TerminalOutput {output} />
+  {/each}
 
-  <form
-    class:tool-active={selectedAction !== ""}
-    class="terminal-input"
-    on:submit|preventDefault={onSubmit}
-  >
-    {#if !$watchingAction}
-      {#if selectedAction === "build"}
-        <Select
-          options={AVAILABLE_MACHINES}
-          bind:value={userInput}
-          on:confirm={onBuildConfirm}
-          on:change={displayMachinePotential}
-          on:cancel={clearPotential}
-        />
-      {:else if selectedAction === "inspect"}
-        <Select
-          options={Object.values($simulatedMachines).map(
-            machine =>
-              `${MachineType[machine.machineType]}: ${machine.numericalID}`
-          )}
-          on:change={displayConnectionPotential}
-          on:confirm={onConnectConfirm}
-          on:cancel={clearPotential}
-        />
-      {:else if selectedAction === "destroy"}
-        <Select
-          options={$readableMachines
-            .filter(({ machine: mac }) => {
-              return (
-                mac.machineType !== MachineType.CORE &&
-                mac.machineType !== MachineType.INLET &&
-                mac.machineType !== MachineType.OUTLET
-              )
-            })
-            .map(r => r.read)}
-          on:confirm={onDestroyConfirm}
-          on:cancel={clearPotential}
-        />
-      {:else if selectedAction === "disconnect"}
-        <Select
-          options={$readableConnections.map(r => r.read)}
-          on:confirm={onDisconnectConfirm}
-          on:cancel={clearPotential}
-        />
-      {:else if selectedAction === "connect"}
-        <MultiSelect
-          options={[
-            Object.values(machinesToConnect).map(
-              machine =>
-                `${MachineType[machine.machineType]}: ${machine.numericalID}`
-            ),
-            Object.values(machinesToConnect).map(
-              machine =>
-                `${MachineType[machine.machineType]}: ${machine.numericalID}`
-            ),
-          ]}
-          on:change={displayConnectionPotential}
-          on:advance={onAdvance}
-          on:confirm={onConnectConfirm}
-          on:cancel={clearPotential}
-        />
-      {:else}
-        {#if !input}
-          <span class="player-stats">
-            {symbols[0]}
-          </span>
-        {/if}
-        <input
-          type="text"
-          {placeholder}
-          bind:this={inputElement}
-          bind:value={userInput}
-        />
-      {/if}
-    {:else}
-      <BouncingSuffer />
-    {/if}
-  </form>
+  <!-- SELECT -->
+  <div class="select-container" bind:this={selectContainerElement} />
+
+  <!-- INPUT -->
+  {#if inputActive}
+    <form on:submit|preventDefault={onSubmit}>
+      <span class="prompt-symbol">
+        {SYMBOLS[0]}
+      </span>
+      <input
+        id="terminal-input"
+        class="terminal-input"
+        type="text"
+        on:keydown={onInput}
+        bind:this={inputElement}
+        bind:value={userInput}
+      />
+    </form>
+  {/if}
 </div>
 
 <style lang="scss">
   .terminal {
     font-family: var(--font-family);
-    padding: 8px;
+    padding: 1em;
     overflow: hidden;
-    transition: background 2s ease, color 2s ease;
     color: var(--terminal-color);
     background: var(--terminal-background);
     width: 100%;
     position: relative;
     height: 100vh;
     white-space: pre-line;
-    outline: var(--terminal-border);
-    outline-offset: -8px;
+    border: 1px solid var(--terminal-color);
+    padding-bottom: 2em;
+    line-height: 1.2em;
 
-    &.stage {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 400px;
-    }
-
-    .track {
-      position: absolute;
-      right: 1rem;
-      pointer-events: none;
-    }
-
-    :global(*) {
-      &::selection {
-        background: var(--terminal-color);
-        color: var(--terminal-background);
-      }
-    }
-
-    .terminal-output {
-      // height: calc(100% - 1.5rem);
-      white-space: pre-wrap;
-      overflow: hidden;
-      line-height: 1.5rem;
-    }
-    .terminal-input {
-      background: var(--terminal-background);
+    form {
       color: var(--terminal-color);
       font-family: var(--font-family);
-      height: 3rem;
-      // padding: 0;
-      line-height: 2rem;
-      font-size: 1rem;
       border: none;
       outline: none;
-      // position: absolute;
-      // bottom: 0;
-      left: 1.5rem;
-      height: 1.5rem;
-      transition: background 2s ease, color 2s ease;
+      left: 1em;
       display: flex;
-      // z-index: 999;
 
-      &.tool-active {
-        height: auto;
-      }
-
-      .player-stats {
+      .prompt-symbol {
         white-space: nowrap;
         vertical-align: middle;
-        line-height: 1.5rem;
+        margin-right: 1ch;
+        color: inherit;
       }
 
       input {
@@ -398,20 +274,18 @@
         max-width: 100%;
         background-color: inherit;
         border: none;
-        padding: 0 1ch;
+        padding: 0;
+        position: relative; /* To position the pseudo-element */
+        // caret-color: transparent; /* Hide the default cursor */
+        caret-shape: underscore;
+        caret-color: white;
 
         &:focus {
           border: none;
           outline: none;
         }
+        // }
       }
     }
-  }
-
-  .output-content {
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0;
   }
 </style>

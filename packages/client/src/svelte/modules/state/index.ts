@@ -91,7 +91,7 @@ export const machines = derived(entities, $entities => {
     Object.entries($entities).filter(
       ([, entity]) => entity.entityType === EntityType.MACHINE
     )
-  )
+  ) as Machines
 })
 
 /**

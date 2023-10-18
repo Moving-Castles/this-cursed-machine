@@ -1,73 +1,104 @@
 <script lang="ts">
-  import { getRandomInt } from "../../modules/utils/misc"
-  export let options: string[] = []
+  import { fade } from "svelte/transition"
   import { onMount, createEventDispatcher } from "svelte"
+  import { MachineType } from "../../modules/state/enums"
+  import type { SelectOption } from "./types"
+  import { playSound } from "../../modules/sound"
+
+  type ReturnFunction = (value: string | MachineType | null) => void
+
+  export let returnFunction: ReturnFunction | null = null
+  export let selectOptions: SelectOption[] = []
 
   const dispatch = createEventDispatcher()
 
-  let index = 0
-  let value = ""
+  let selectedIndex = 0
+  let selectContainerElement: HTMLDivElement
 
-  $: {
-    value = options[index]
-    dispatch("change", value)
+  function returnValue(value: string | MachineType | null) {
+    if (returnFunction) {
+      // Returns the value to the function that created the component
+      returnFunction(value)
+    }
+    // Signal the parent that the component wants to be destroyed.
+    dispatch("requestDestroy")
   }
 
-  // enter / return = 13
-  // escape = 27
-  // left = 37
-  // up = 38
-  // right = 39
-  // down = 40
-  const onKeyDown = ({ keyCode }) => {
-    if (keyCode === 38) {
-      index = Math.max(index - 1, 0)
+  /**
+   * Handles key down events for navigation and selection within select options.
+   *
+   * This function is responsible for handling arrow key navigation within a list of options,
+   * selecting an option with the Enter key, and closing the list without selecting with the Escape key.
+   *
+   * @param {KeyboardEvent} e - The key down event.
+   */
+  const onKeyDown = (e: KeyboardEvent) => {
+    const { key } = e
+    switch (key) {
+      case "ArrowUp":
+        // Navigate to the previous option
+        playSound("ui", "cursor")
+        selectedIndex = Math.max(selectedIndex - 1, 0)
+        break
+      case "ArrowDown":
+        // Navigate to the next option
+        playSound("ui", "cursor")
+        selectedIndex = Math.min(selectedIndex + 1, selectOptions.length - 1)
+        break
+      case "Enter":
+        // Select the current highlighted option
+        returnValue(selectOptions[selectedIndex]?.value || null)
+        break
+      case "Escape":
+        playSound("ui", "eventBad")
+        // Close the options list without making a selection
+        returnValue(null)
+        break
     }
-    if (keyCode === 40) {
-      index = Math.min(index + 1, options.length - 1)
-    }
-
-    if (keyCode === 13) {
-      dispatch("confirm", value)
-    }
-
-    if (keyCode === 27) dispatch("cancel")
   }
 
   onMount(() => {
-    if (options.length === 0) dispatch("cancel")
-    dispatch("change", value)
+    console.log("selectOptions", selectOptions)
+    // Abort if no options
+    if (selectOptions.length === 0) {
+      returnValue(null)
+    }
+    selectContainerElement.focus()
   })
 </script>
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="inline-select">
-  {#each options as option (option + getRandomInt(0, 10000))}
-    <div class:active={option === value} class="option">
-      {option}
-    </div>
-  {/each}
-</div>
+{#if selectOptions.length > 0}
+  <div class="inline-select" bind:this={selectContainerElement}>
+    {#each selectOptions as option, index (option.value)}
+      <div
+        class:active={selectedIndex === index}
+        class="option"
+        in:fade={{ duration: 100, delay: 50 * index }}
+      >
+        {option.label}
+      </div>
+    {/each}
+  </div>
+{/if}
 
 <style lang="scss">
   .inline-select {
-  }
+    .option {
+      color: #fff;
+      margin-left: 2ch;
+      height: 1.1em;
 
-  .option {
-    color: #ccc;
-    margin-left: 2ch;
-    height: 1.5rem;
-  }
+      &.active {
+        color: #000;
+        background: #fff;
+        margin-left: 0;
 
-  .active {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    color: #fff;
-    margin-left: 0;
-
-    &::before {
-      content: "> ";
+        &::before {
+          content: "> ";
+        }
+      }
     }
   }
 </style>

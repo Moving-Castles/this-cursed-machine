@@ -19,7 +19,7 @@ contract InitSystem is System {
 
     // Create levels
     LevelDefinition[8] memory levels = [
-      LevelDefinition({ level: 1, initialCoreEnergy: 100 }),
+      LevelDefinition({ level: 1, initialCoreEnergy: 10000 }),
       LevelDefinition({ level: 2, initialCoreEnergy: 100 }),
       LevelDefinition({ level: 3, initialCoreEnergy: 100 }),
       LevelDefinition({ level: 4, initialCoreEnergy: 100 }),

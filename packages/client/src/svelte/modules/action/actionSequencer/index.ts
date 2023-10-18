@@ -9,7 +9,7 @@ import { network, blockNumber } from "../../network"
 import { potential } from "../../simulator"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
-import { timeout, clear, start } from "./timeoutHandler"
+import { timeout, clearActionTimer, startActionTimer } from "./timeoutHandler"
 
 // --- TYPES -----------------------------------------------------------------
 
@@ -24,6 +24,8 @@ export type Action = {
   params: string[]
   tx?: string
   timestamp?: number
+  completed: boolean
+  failed: boolean
 }
 
 // --- STORES -----------------------------------------------------------------
@@ -33,7 +35,6 @@ export const queuedActions = writable([] as Action[])
 export const activeActions = writable([] as Action[])
 export const completedActions = writable([] as Action[])
 export const failedActions = writable([] as Action[])
-export const watchingAction = writable(null as Action | null)
 
 // --- API -----------------------------------------------------------------
 
@@ -48,6 +49,8 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     actionId: uuid(),
     systemId: systemId,
     params: params || [],
+    completed: false,
+    failed: false
   }
 
   queuedActions.update(queuedActions => {
@@ -55,7 +58,7 @@ export function addToSequencer(systemId: string, params: any[] = []) {
   })
 
   // Display error message if action does not complete in 15 seconds
-  start()
+  startActionTimer()
 
   return newAction
 }
@@ -99,7 +102,6 @@ export function initActionSequencer() {
 
 async function execute() {
   const action = get(queuedActions)[0]
-  let success = true // optimistic
   try {
     // Remove action from queue list
     queuedActions.update(queuedActions => queuedActions.slice(1))
@@ -126,6 +128,9 @@ async function execute() {
         // Remove any potentials from the simulated state
         potential.set({})
 
+        // Set to completed
+        action.completed = true
+
         // Add action to completed list
         completedActions.update(completedActions => [
           action,
@@ -134,32 +139,24 @@ async function execute() {
         // Clear active list
         activeActions.update(() => [])
         // Clear action timeout
-        clear()
+        clearActionTimer()
       } else {
+        // Set to failed
+        console.log('in else', action)
+        action.failed = true
         handleError(receipt, action)
       }
-
-      clear()
     } else {
-      clear()
+      clearActionTimer()
     }
   } catch (e) {
-    success = false
+    console.log('in catch', action)
+    action.failed = true
     handleError(e, action)
-    clear()
-  } finally {
-    if (success) {
-      completedActions.update(completedActions => [action, ...completedActions])
-    } else {
-      failedActions.update(completedActions => [action, ...completedActions])
-    }
-    // Clear active list
-    activeActions.update(() => [])
   }
 }
 
 function handleError(error: any, action: Action) {
-  // @todo: handle error better
   console.error(error)
   toastMessage("Something went wrong", { type: "error" })
   // Add action to failed list
@@ -167,5 +164,5 @@ function handleError(error: any, action: Action) {
   // Clear active list
   activeActions.update(() => [])
   // Clear action timeout
-  clearTimeout(get(timeout))
+  clearActionTimer()
 }

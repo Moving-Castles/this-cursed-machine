@@ -50,6 +50,7 @@ enum MATERIAL_TYPE {
 }
 
 enum PORT_TYPE {
+  NONE,
   INPUT,
   OUTPUT
 }

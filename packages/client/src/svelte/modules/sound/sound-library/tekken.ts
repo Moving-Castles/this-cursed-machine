@@ -3,7 +3,7 @@ import type { SoundAssets } from "../types.ts";
 export const tekken: SoundAssets = {
     beep1: {
         src: "./sounds/tekken/beep1.wav",
-        volume: 1,
+        volume: 0.1,
     },
     beep2: {
         src: "./sounds/tekken/beep2.wav",

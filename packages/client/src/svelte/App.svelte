@@ -35,11 +35,12 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
-  $: console.log("$patches", $patches)
-  $: console.log("$goals", $goals)
+  // $: console.log("$patches", $patches)
+  // $: console.log("$goals", $goals)
   // $: console.log("$materials", $materials)
   // $: console.log("$recipes", $recipes)
   // $: console.log("$activeActions", $activeActions)
+  // $: console.log("$queuedActions", $queuedActions)
   // $: console.log("$completedActions", $completedActions)
   // $: console.log("$entities", $entities)
   // $: console.log("$levels", $levels)
