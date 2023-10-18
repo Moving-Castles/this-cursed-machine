@@ -6,7 +6,8 @@ export enum OutputType {
     NORMAL,
     SUCCESS,
     HELP,
-    SPECIAL
+    SPECIAL,
+    INFO
 }
 
 export enum COMMAND {

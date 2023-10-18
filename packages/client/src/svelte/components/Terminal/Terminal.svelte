@@ -10,8 +10,8 @@
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
   import TerminalOutput from "./TerminalOutput.svelte"
-  import { shortenAddress } from "../../modules/utils/misc"
   import { getMachinePorts } from "./functions/helpers"
+  import { simulatedMachines } from "../../modules/simulator"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -77,7 +77,16 @@
 
     // Get required parameter values and execute command
     if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
-      let value = await renderSelect(createSelectOptions(command.id))
+      const selectOptions = createSelectOptions(command.id)
+
+      // Abort if no options
+      if (selectOptions.length === 0) {
+        writeToTerminal(OutputType.ERROR, "Nothing", false, SYMBOLS[4])
+        resetInput()
+        return
+      }
+
+      let value = await renderSelect(selectOptions)
 
       // Abort if nothing selected
       if (!value) {
@@ -97,15 +106,11 @@
         PortType.OUTPUT
       )
 
-      console.log("sourceSelectOptions", sourceSelectOptions)
-
       // @todo: Does the machine have multiple output ports?
 
       writeToTerminal(OutputType.NORMAL, "Select source machine:")
 
       let sourceMachine = await renderSelect(sourceSelectOptions)
-
-      console.log("sourceMachine", sourceMachine)
 
       // Abort if nothing selected
       if (!sourceMachine) {
@@ -121,7 +126,11 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `Source: ${shortenAddress(String(sourceMachine))}`,
+        `Source: ${
+          MachineType[
+            $simulatedMachines[sourceMachine]?.machineType || MachineType.NONE
+          ]
+        }`,
         true,
         SYMBOLS[11]
       )
@@ -134,8 +143,6 @@
         COMMAND.CONNECT,
         PortType.INPUT
       )
-
-      console.log("targetSelectOptions", targetSelectOptions)
 
       // @todo: Does the machine have multiple input ports?
 
@@ -157,7 +164,11 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `Target: ${shortenAddress(String(targetMachine))}`,
+        `Target: ${
+          MachineType[
+            $simulatedMachines[targetMachine]?.machineType || MachineType.NONE
+          ]
+        }`,
         true,
         SYMBOLS[14]
       )
@@ -186,8 +197,6 @@
       // @todo: handle port selection, for now use the first available
       parameters = [sourcePorts[0][0], targetPorts[0][0]]
     }
-
-    console.log(command, parameters)
 
     // Execute function
     await command.fn(...parameters)
@@ -275,9 +284,6 @@
         border: none;
         padding: 0;
         position: relative; /* To position the pseudo-element */
-        // caret-color: transparent; /* Hide the default cursor */
-        caret-shape: underscore;
-        caret-color: white;
 
         &:focus {
           border: none;

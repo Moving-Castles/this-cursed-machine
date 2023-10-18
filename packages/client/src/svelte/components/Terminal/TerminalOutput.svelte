@@ -33,5 +33,9 @@
     &.SPECIAL {
       color: #d013d0;
     }
+
+    &.INFO {
+      color: #50908e;
+    }
   }
 </style>

@@ -5,13 +5,13 @@ import { writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
-import { simulated } from "../../../modules/simulator";
+import { simulatedMachines } from "../../../modules/simulator";
 import { get } from "svelte/store";
 import { MachineType } from "../../../modules/state/enums";
 
 async function execute(machineEntity: string) {
 
-    const machine = get(simulated)[machineEntity]
+    const machine = get(simulatedMachines)[machineEntity]
 
     // @todo: handle this better
     if (!machine || !machine.machineType) return
