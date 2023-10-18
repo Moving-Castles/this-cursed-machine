@@ -133,9 +133,9 @@ function createSelectOptionsInspect(): SelectOption[] {
       label: MachineType[machine.machineType],
       value: machineId,
     })
-  })
 
-  return selectOptions
+    return selectOptions
+  })
 }
 
 /**
@@ -150,6 +150,7 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
   const machines = getMachinesWithAvailablePorts(portType)
 
   Object.entries(machines).forEach(([machineId, machine]) => {
+    // @todo: Better label
     selectOptions.push({
       label: MachineType[machine?.machineType || MachineType.NONE],
       value: machineId,

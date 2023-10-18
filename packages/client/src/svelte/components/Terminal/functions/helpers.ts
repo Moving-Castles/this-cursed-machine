@@ -1,10 +1,9 @@
 import { tick } from "svelte"
-import type { Action } from "../../../modules/action/actionSequencer"
-import { simulated } from "../../../modules/simulator"
-import { get } from "svelte/store"
-import { PortType, EntityType } from "../../../modules/state/enums"
-import { connections } from "../../../modules/state"
-import { SimulatedEntities } from "../../../modules/simulator/types"
+import type { Action } from "../../../modules/action/actionSequencer";
+import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../../modules/simulator";
+import { get } from "svelte/store";
+import { PortType } from "../../../modules/state/enums";
+import { SimulatedEntities } from "../../../modules/simulator/types";
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -85,34 +84,29 @@ export const waitForCompletion = (action: Action): Promise<Action> => {
  * @param {PortType} [portType] - A port type to filter by.
  * @returns {Array} An array of available ports.
  */
-export const getMachinePorts = (
-  machineId: string,
-  portType: PortType
-): any[] => {
+export const getMachinePorts = (machineId: string, portType: PortType): any[] => {
   // Get machine entity
-  const machine = Object.entries(get(simulated)).find(
+  const machine = Object.entries(get(simulatedMachines)).find(
     ([key, _]) => key === machineId
   )
 
-  // Abort of machine does not exist
-  if (!machine) return []
+  if (!machine) return [];
 
   // Retrieve ports based on the source machine and optionally filter by portType
-  const ports = Object.entries(get(simulated)).filter(
-    ([_, entity]) =>
-      entity?.carriedBy === machine[0] && entity.portType === portType
+  const ports = Object.entries(get(simulatedPorts)).filter(
+    ([_, entity]) => entity?.carriedBy === machine[0] && entity.portType === portType
   )
 
   const isPortOccupied = (id: string) => {
-    const connectionsUsingPort = Object.values(get(connections)).filter(
+    const connectionsUsingPort = Object.values(get(simulatedConnections)).filter(
       connection => connection.sourcePort === id || connection.targetPort === id
     )
-    return connectionsUsingPort.length > 0
+    return connectionsUsingPort.length > 0;
   }
 
-  const availablePorts = ports.filter(([id, _]) => !isPortOccupied(id))
+  const availablePorts = ports.filter(([id, _]) => !isPortOccupied(id));
 
-  return availablePorts
+  return availablePorts;
 }
 
 /**
@@ -123,36 +117,24 @@ export const getMachinePorts = (
 export function getMachinesWithAvailablePorts(portType: PortType) {
   let availableMachines: SimulatedEntities = {}
 
-  // Get all machines
-  const allMachines = Object.fromEntries(
-    Object.entries(get(simulated)).filter(
-      ([, entity]) => entity.entityType === EntityType.MACHINE
-    )
-  )
-
-  console.log("allMachines", allMachines)
-
   // For each machine...
-  for (let [machineKey, machine] of Object.entries(allMachines)) {
+  for (let [machineKey, machine] of Object.entries(get(simulatedMachines))) {
     // Get all ports of type
     const portsOnMachine = Object.fromEntries(
-      Object.entries(get(simulated)).filter(
-        ([, entity]) =>
-          entity.entityType === EntityType.PORT &&
-          entity.carriedBy === machineKey &&
-          entity.portType === portType
+      Object.entries(get(simulatedPorts)).filter(
+        ([, entity]) => entity.carriedBy === machineKey && entity.portType === portType
       )
     )
 
-    console.log("portsOnMachine", portsOnMachine)
+    console.log('portsOnMachine', portsOnMachine)
 
     let occupiedPorts = 0
 
     // For each port ...
     for (let portKey of Object.keys(portsOnMachine)) {
       // Check if there is  connection going to or from that port
-      let connectionToPort = Object.values(get(simulated)).filter(
-        entity => entity.sourcePort === portKey || entity.targetPort === portKey
+      let connectionToPort = Object.values(get(simulatedConnections)).filter(
+        (entity) => entity.sourcePort === portKey || entity.targetPort === portKey
       )
       // Connection(s) found
       if (connectionToPort.length > 0) {
