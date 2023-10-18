@@ -21,11 +21,6 @@
   let done = false
 
   const { isEqual, isEmpty } = _
-  // const dragBehavior = d3
-  //   .drag()
-  //   .on("start", dragstarted)
-  //   .on("drag", dragged)
-  //   .on("end", dragended)
 
   const MACHINE_SIZE = 100
   const PORT_SIZE = 100
@@ -51,7 +46,6 @@
   let rect
   let numbers
   let labels
-
   let inletFX = -200
   let outletFX = 200
   let inletFY = 0
@@ -349,16 +343,6 @@
               return EntityType[d.entry.entityType][0]
             })
 
-          // newNode
-          //   .filter(d => d.group !== EntityType.PORT)
-          //   .append("text")
-          //   .attr("class", "number")
-          //   .attr("text-anchor", "end")
-          //   .attr("font-size", "0.8rem")
-          //   .attr("fill", "#fff")
-          //   .attr("stroke", "none")
-          //   .text(d => $simulated[d.id]?.numericalID)
-
           newNode.append("title").text(d => MachineType[d.entry.machineType])
 
           return newNode
@@ -415,15 +399,8 @@
       .data(links)
       .join("line")
       .attr("stroke", d => {
-        // Get the outputs of the sourceMachine
-        const linksWithSource = data.links.filter(l => l.source === d.source.id)
-        const sourceMachine = connectionSourceMachine(d.id)
-        const index = linksWithSource.map(l => l.source).indexOf(d.source.id)
-
-        const outputs = sourceMachine?.outputs
-
-        return outputs
-          ? `var(--${MaterialType[outputs[index].materialType]})`
+        return d.entry?.product?.materialType
+          ? `var(--${MaterialType[d.entry.product.materialType]})`
           : "#fff"
       })
       .attr("stroke-dashoffset", 0)
@@ -541,7 +518,6 @@
   onMount(() => {
     setData()
     init()
-    setTimeout(() => (done = true), 320)
   })
 </script>
 
