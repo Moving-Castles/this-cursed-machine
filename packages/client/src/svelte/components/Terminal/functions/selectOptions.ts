@@ -126,9 +126,8 @@ function createSelectOptionsInspect(): SelectOption[] {
             value: machineId
         })
     })
-})
 
-return selectOptions
+    return selectOptions
 }
 
 /**
@@ -149,7 +148,6 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
             value: machineId
         })
     })
-})
 
-return selectOptions
+    return selectOptions
 }
