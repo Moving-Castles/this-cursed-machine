@@ -1,16 +1,6 @@
-import {
-  EntityType,
-  MaterialType,
-  PortType,
-  MachineType,
-} from "./enums"
+import { EntityType, MaterialType, PortType, MachineType } from "./enums"
 
-export {
-  EntityType,
-  MaterialType,
-  PortType,
-  MachineType,
-} from "./enums"
+export { EntityType, MaterialType, PortType, MachineType } from "./enums"
 
 declare global {
   // Default type with all potential properties.
@@ -34,7 +24,6 @@ declare global {
     output?: MaterialType
     amount?: number
     lastResolved?: number
-    potential?: boolean
   }
 
   type BuildableEntity = {
@@ -115,7 +104,7 @@ declare global {
 
   type Goal = {
     type: EntityType.GOAL
-    level: number,
+    level: number
     materialType: MaterialType
     amount: number
   }
@@ -171,15 +160,6 @@ declare global {
 
   type CalculatedEnergies = {
     [index: string]: number
-  }
-
-  type PathDefinition = {
-    coords: Coord[]
-    startEntity?: Entity
-    endEntity?: Entity
-    sourcePort?: Port
-    targetPort?: Port
-    potential?: Boolean
   }
 
   interface GridTile {

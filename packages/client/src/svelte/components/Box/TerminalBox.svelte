@@ -2,7 +2,6 @@
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
   import { playerCore, machines, connections } from "../../modules/state"
-  import { potential } from "../../modules/simulator"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
@@ -35,7 +34,7 @@
           <p>Show goal</p>
         </div>
 
-        {#key `${JSON.stringify($potential)}-${Object.keys($machines).length}-${Object.keys($connections).length}`}
+        {#key `${Object.keys($machines).length}-${Object.keys($connections).length}`}
           <div class="graph">
             <Graph />
           </div>

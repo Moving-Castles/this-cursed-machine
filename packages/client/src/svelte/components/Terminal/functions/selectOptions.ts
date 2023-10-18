@@ -1,10 +1,16 @@
 import { SelectOption, COMMAND } from "../types"
 import { MachineType, PortType } from "../../../modules/state/enums"
-import { readableConnections } from "../../../modules/simulator"
-import { connections, machines } from "../../../modules/state"
+import {
+  simulatedMachines,
+  readableConnections,
+} from "../../../modules/simulator"
+// import { connections, machines } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES } from ".."
-import { getMachinesWithAvailablePorts } from "./helpers"
+import {
+  getMachinesWithAvailablePorts,
+  creationBlockSortEntry,
+} from "./helpers"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -81,14 +87,17 @@ function createSelectOptionsDestroy(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   // Options => all machines except core, inlet, outlet
-  Object.entries(get(machines)).forEach(([machineId, machine]) => {
-    if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
-      selectOptions.push({
-        label: MachineType[machine.machineType],
-        value: machineId,
-      })
-    }
-  })
+  Object.entries(get(simulatedMachines))
+    // .map(([key, machine]) => ({ key, machine }))
+    .sort(creationBlockSortEntry)
+    .forEach(([machineId, machine]) => {
+      if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
+        selectOptions.push({
+          label: MachineType[machine.machineType],
+          value: machineId,
+        })
+      }
+    })
 
   return selectOptions
 }
@@ -120,7 +129,7 @@ function createSelectOptionsInspect(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   // Options => all machines
-  Object.entries(get(machines)).forEach(([machineId, machine]) => {
+  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
     selectOptions.push({
       label: MachineType[machine.machineType],
       value: machineId,

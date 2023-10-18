@@ -6,7 +6,6 @@
 
 import { writable, get } from "svelte/store"
 import { network, blockNumber } from "../../network"
-import { potential } from "../../simulator"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
 import { timeout, clearActionTimer, startActionTimer } from "./timeoutHandler"
@@ -50,7 +49,7 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     systemId: systemId,
     params: params || [],
     completed: false,
-    failed: false
+    failed: false,
   }
 
   queuedActions.update(queuedActions => {
@@ -125,9 +124,6 @@ async function execute() {
 
     if (receipt) {
       if (receipt.status == "success") {
-        // Remove any potentials from the simulated state
-        potential.set({})
-
         // Set to completed
         action.completed = true
 
@@ -142,7 +138,7 @@ async function execute() {
         clearActionTimer()
       } else {
         // Set to failed
-        console.log('in else', action)
+        console.log("in else", action)
         action.failed = true
         handleError(receipt, action)
       }
@@ -150,7 +146,7 @@ async function execute() {
       clearActionTimer()
     }
   } catch (e) {
-    console.log('in catch', action)
+    console.log("in catch", action)
     action.failed = true
     handleError(e, action)
   }

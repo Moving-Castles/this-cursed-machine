@@ -49,31 +49,20 @@ export const blocksSinceLastResolution = derived(
 export const patches = writable({} as SimulatedEntities)
 
 /**
- * Potential machines
- */
-export const potential = writable({} as SimulatedEntities)
-
-/**
  * On-chain state with the local patches applied each block.
  */
 export const simulated = derived(
-  [entities, patches, potential, blocksSinceLastResolution],
-  ([$entities, $patches, $potential, $blocksSinceLastResolution]) => {
+  [entities, patches],
+  ([$entities, $patches]) => {
     // Add a numerical ID to each entry for the terminal
     let i = 0
 
     let simulated: SimulatedEntities = Object.fromEntries([
       // Entities
       ...Object.entries($entities),
-      // Potential
-      ...Object.entries($potential),
     ])
 
     for (const [key, patch] of Object.entries($patches)) {
-      // @todo: scaling the products by block since resolution is causing wrong values
-      // for (let k = 0; k < simulated[key].intermediaryProducts.length; k++) {
-      //     simulated[key].intermediaryProducts[k].amount = patch.intermediaryProducts[k].amount * $blocksSinceLastResolution
-      // }
       if (patch.inputs && simulated[key]) {
         simulated[key].inputs = patch.inputs
       }
