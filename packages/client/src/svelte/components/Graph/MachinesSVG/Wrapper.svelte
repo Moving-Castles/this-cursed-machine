@@ -464,9 +464,11 @@
         const sourceMachine = connectionSourceMachine(d.id)
         const index = linksWithSource.map(l => l.source).indexOf(d.source.id)
 
-        const outputing = sourceMachine?.outputs[index]
+        const outputs = sourceMachine?.outputs
 
-        return `var(--${MaterialType[outputing.materialType]})`
+        return outputs
+          ? `var(--${MaterialType[outputs[index].materialType]})`
+          : "#fff"
       })
       .attr("stroke-dashoffset", 0)
       .attr("stroke-dasharray", 20)

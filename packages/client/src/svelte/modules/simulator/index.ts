@@ -179,7 +179,7 @@ export const readableConnections = derived(
               return {
                 id,
                 connection,
-                read: `From ${sourceMachine} To ${targetMachine}`,
+                label: `From ${sourceMachine} To ${targetMachine}`,
               }
             }
           }

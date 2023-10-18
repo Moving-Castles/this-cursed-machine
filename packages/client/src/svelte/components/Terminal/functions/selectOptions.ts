@@ -1,6 +1,6 @@
 import { SelectOption, COMMAND } from "../types"
 import { MachineType, PortType } from "../../../modules/state/enums"
-import { simulatedMachines, simulatedConnections } from "../../../modules/simulator";
+import { readableConnections, simulatedMachines, simulatedConnections } from "../../../modules/simulator";
 import { get } from "svelte/store";
 import { FIXED_MACHINE_TYPES } from "..";
 import { getMachinesWithAvailablePorts } from "./helpers";
@@ -11,24 +11,27 @@ import { getMachinesWithAvailablePorts } from "./helpers";
  * @param {PortType} [portType] - Optional. The type of port, used especially when the command type is `COMMAND.CONNECT`.
  * @returns {SelectOption[]} An array of select options appropriate for the given command and port type.
  */
-export function createSelectOptions(commandType: COMMAND, portType: PortType = PortType.NONE): SelectOption[] {
+export function createSelectOptions(
+    commandType: COMMAND,
+    portType: PortType = PortType.NONE
+): SelectOption[] {
     switch (commandType) {
         case COMMAND.BUILD:
-            return createSelectOptionsBuild();
+            return createSelectOptionsBuild()
         case COMMAND.DESTROY:
-            return createSelectOptionsDestroy();
+            return createSelectOptionsDestroy()
         case COMMAND.CONNECT:
             if (portType === PortType.NONE) {
-                return [] as SelectOption[];
+                return [] as SelectOption[]
             } else {
-                return createSelectOptionsConnect(portType);
+                return createSelectOptionsConnect(portType)
             }
         case COMMAND.DISCONNECT:
-            return createSelectOptionsDisconnect();
+            return createSelectOptionsDisconnect()
         case COMMAND.INSPECT:
-            return createSelectOptionsInspect();
+            return createSelectOptionsInspect()
         default:
-            return [] as SelectOption[];
+            return [] as SelectOption[]
     }
 }
 
@@ -93,16 +96,14 @@ function createSelectOptionsDestroy(): SelectOption[] {
  * Generates select options for disconnecting existing connections.
  * This function returns select options for all available connections.
  * @returns {SelectOption[]} An array of select options representing various connections to disconnect, using a generic "Connection" label and the connection ID as the value.
- * @todo Implement a better label for the connections.
  */
 function createSelectOptionsDisconnect(): SelectOption[] {
     let selectOptions: SelectOption[] = []
-    // Options => all connections
-    // @todo: Better label
-    Object.entries(get(simulatedConnections)).forEach(([connectionId, _]) => {
+
+    get(readableConnections).forEach(({ id, label }) => {
         selectOptions.push({
-            label: "Connection",
-            value: connectionId
+            label,
+            value: id,
         })
     })
 
@@ -125,8 +126,9 @@ function createSelectOptionsInspect(): SelectOption[] {
             value: machineId
         })
     })
+})
 
-    return selectOptions
+return selectOptions
 }
 
 /**
@@ -147,6 +149,7 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
             value: machineId
         })
     })
+})
 
-    return selectOptions
+return selectOptions
 }
