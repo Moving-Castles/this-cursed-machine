@@ -1,6 +1,11 @@
 <script>
   import * as d3 from "d3"
-  import { EntityType, MachineType } from "../../../modules/state/enums"
+  import {
+    EntityType,
+    MachineType,
+    MaterialType,
+  } from "../../../modules/state/enums"
+  import { connectionSourceMachine } from "../../../modules/state/convenience"
   import { onMount, createEventDispatcher } from "svelte"
   import {
     simulated,
@@ -54,8 +59,6 @@
   let inletFY = 0
   let outletFY = 0
 
-  setData()
-
   $: {
     if (
       element &&
@@ -67,6 +70,10 @@
     }
     previousData = { ...data }
     previousPotential = { ...$potential }
+  }
+
+  const onClick = () => {
+    // console.log("on click")
   }
 
   // Utilities
@@ -94,26 +101,65 @@
     const n = svg.selectAll("text.number")
     const nn = svg.selectAll("g.node")
 
-    l.attr("x1", d =>
-      d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
-        ? d.source.x - MACHINE_SIZE / 2
-        : d.source.x
-    )
-      .attr("y1", d =>
-        d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
-          ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.source.y
-      )
-      .attr("x2", d =>
-        d.target.group === EntityType.MACHINE
-          ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2
-      )
-      .attr("y2", d =>
-        d.target.group === EntityType.MACHINE
-          ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-          : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2
-      )
+    // Create the line
+    l.attr("x1", d => {
+      const linksWithSource = data.links.filter(l => l.source === d.source.id)
+
+      let OFFSET = 0
+
+      if (linksWithSource.length > 1) {
+        OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+        OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+      }
+
+      return d.source.group === EntityType.PORT &&
+        d.target.group === EntityType.PORT
+        ? d.source.x - MACHINE_SIZE / 2 + OFFSET
+        : d.source.x + OFFSET
+    })
+      .attr("y1", d => {
+        const linksWithSource = data.links.filter(l => l.source === d.source.id)
+
+        let OFFSET = 0
+
+        if (linksWithSource.length > 1) {
+          OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+        }
+
+        return d.source.group === EntityType.PORT &&
+          d.target.group === EntityType.PORT
+          ? d.source.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.source.y + OFFSET
+      })
+      .attr("x2", d => {
+        const linksWithTarget = data.links.filter(l => l.target === d.target.id)
+
+        let OFFSET = 0
+
+        if (linksWithTarget.length > 1) {
+          OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+        }
+
+        return d.target.group === EntityType.MACHINE
+          ? d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.target.x - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+      })
+      .attr("y2", d => {
+        const linksWithTarget = data.links.filter(l => l.target === d.target.id)
+
+        let OFFSET = 0
+
+        if (linksWithTarget.length > 1) {
+          OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+          OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+        }
+
+        return d.target.group === EntityType.MACHINE
+          ? d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+          : d.target.y - (MACHINE_SIZE - PORT_SIZE) / 2 + OFFSET
+      })
       .attr("z-index", 9999)
       .attr("stroke-opacity", d => {
         return d.source.group === EntityType.MACHINE ? 1 : 1
@@ -130,7 +176,9 @@
     n.attr("x", d => d.x + 46).attr("y", d => d.y - 36)
     // Dash or no dash
     nn.attr("stroke", d => {
-      return isConnected(d) ? "#fff" : "#222"
+      return isConnected(d) || d.entry?.machineType === MachineType.INLET
+        ? "#fff"
+        : "#222"
     })
       .attr("stroke-dasharray", d => (isConnected(d) ? 20 : 0))
       .attr("stroke-opacity", d => 1)
@@ -159,37 +207,37 @@
    * Events
    */
   // Reheat the simulation when drag starts, and fix the subject position.
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart()
-    d.x = boundX(event.x)
-    d.y = boundY(event.y)
-  }
+  // function dragstarted(event, d) {
+  //   if (!event.active) simulation.alphaTarget(0.3).restart()
+  //   d.x = boundX(event.x)
+  //   d.y = boundY(event.y)
+  // }
 
-  // Update the subject (dragged node) position during drag.
-  function dragged(event, d) {
-    if (d.entry.potential || !d.fx) {
-      d.x = boundX(event.x)
-      d.y = boundY(event.y)
-    } else {
-      if (d.fx && d.entry.machineType === MachineType.INLET)
-        [inletFX, inletFY] = [d.fx, d.fy]
-      if (d.fy && d.entry.machineType === MachineType.OUTLET)
-        [outletFX, outletFY] = [d.fx, d.fy]
-      d.fx = boundX(event.x)
-      d.fy = boundY(event.y)
-    }
-  }
+  // // Update the subject (dragged node) position during drag.
+  // function dragged(event, d) {
+  //   if (d.entry.potential || !d.fx) {
+  //     d.x = boundX(event.x)
+  //     d.y = boundY(event.y)
+  //   } else {
+  //     if (d.fx && d.entry.machineType === MachineType.INLET)
+  //       [inletFX, inletFY] = [d.fx, d.fy]
+  //     if (d.fy && d.entry.machineType === MachineType.OUTLET)
+  //       [outletFX, outletFY] = [d.fx, d.fy]
+  //     d.fx = boundX(event.x)
+  //     d.fy = boundY(event.y)
+  //   }
+  // }
 
-  // Restore the target alpha so the simulation cools after dragging ends.
-  // Unfix the subject position now that it’s no longer being dragged.
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0)
-    if (d.entry.potential || !d.fx) return
-    if (d.fx && d.entry.machineType === MachineType.INLET) inletFX = d.fx
-    if (d.fy && d.entry.machineType === MachineType.OUTLET) outletFX = d.fx
-    d.fx = boundX(event.x)
-    d.fy = boundY(event.y)
-  }
+  // // Restore the target alpha so the simulation cools after dragging ends.
+  // // Unfix the subject position now that it’s no longer being dragged.
+  // function dragended(event, d) {
+  //   if (!event.active) simulation.alphaTarget(0)
+  //   if (d.entry.potential || !d.fx) return
+  //   if (d.fx && d.entry.machineType === MachineType.INLET) inletFX = d.fx
+  //   if (d.fy && d.entry.machineType === MachineType.OUTLET) outletFX = d.fx
+  //   d.fx = boundX(event.x)
+  //   d.fy = boundY(event.y)
+  // }
 
   /**
    * Set Data
@@ -197,6 +245,8 @@
   function setData() {
     let inletFixed = false
     let outletFixed = false
+    inletFX = -width / 2 + MACHINE_SIZE / 2
+    outletFX = width / 2 - MACHINE_SIZE / 2 - 8
 
     data = {
       nodes: [
@@ -244,7 +294,9 @@
                 target: tP.carriedBy,
               }
             }
-          }),
+            return false
+          })
+          .filter(thing => thing), // check if they are all valid links
       ],
     }
   }
@@ -273,7 +325,7 @@
             .attr("stroke-dasharray", 20)
             .attr("stroke-opacity", 0)
             .attr("id", d => `link-${d.id}`)
-            .attr("stroke-width", d => Math.sqrt(d.value)),
+            .attr("stroke-width", 40),
         update => update, // you can make adjustments to existing elements here if needed
         exit => {
           return exit.remove()
@@ -297,7 +349,8 @@
               inspecting = { address: d.id, machineType: d.entry.machineType }
             })
             .on("mouseleave", () => (inspecting = null))
-            .attr("class", "node")
+            .attr("class", d => `node node-${d.entry.potential}`)
+            .attr("stroke", d => (d.entry.potential ? "#222" : "#fff"))
             .attr("id", d => `node-${d.id}`)
             .attr("x", d =>
               d.group === EntityType.MACHINE
@@ -314,7 +367,7 @@
           newNode
             .append("rect")
             .attr("fill", "#000")
-            .attr("stroke", "#fff")
+            .attr("stroke", d => (d.entry.potential ? "#222" : "#fff"))
             .attr("stroke-width", 1)
             .attr("width", d =>
               d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
@@ -340,15 +393,15 @@
               return EntityType[d.entry.entityType][0]
             })
 
-          newNode
-            .filter(d => d.group !== EntityType.PORT)
-            .append("text")
-            .attr("class", "number")
-            .attr("text-anchor", "end")
-            .attr("font-size", "0.8rem")
-            .attr("fill", "#fff")
-            .attr("stroke", "none")
-            .text(d => $simulated[d.id]?.numericalID)
+          // newNode
+          //   .filter(d => d.group !== EntityType.PORT)
+          //   .append("text")
+          //   .attr("class", "number")
+          //   .attr("text-anchor", "end")
+          //   .attr("font-size", "0.8rem")
+          //   .attr("fill", "#fff")
+          //   .attr("stroke", "none")
+          //   .text(d => $simulated[d.id]?.numericalID)
 
           newNode.append("title").text(d => MachineType[d.entry.machineType])
 
@@ -362,13 +415,6 @@
     simulation.nodes(nodes)
     simulation.force("link").links(links)
     simulation.alpha(1).restart()
-
-    // svg
-    //   .selectAll("g.node")
-    //   .filter(d => {
-    //     return !d.fx
-    //   })
-    //   .call(dragBehavior)
   }
 
   /**
@@ -377,8 +423,6 @@
   const init = () => {
     links = data.links.map(d => ({ ...d }))
     nodes = data.nodes.map(d => ({ ...d }))
-
-    console.log("nodes", nodes)
 
     // Create the SVG container.
     svg = d3
@@ -414,12 +458,21 @@
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", "#fff")
+      .attr("stroke", d => {
+        // Get the outputs of the sourceMachine
+        const linksWithSource = data.links.filter(l => l.source === d.source.id)
+        const sourceMachine = connectionSourceMachine(d.id)
+        const index = linksWithSource.map(l => l.source).indexOf(d.source.id)
+
+        const outputing = sourceMachine?.outputs[index]
+
+        return `var(--${MaterialType[outputing.materialType]})`
+      })
       .attr("stroke-dashoffset", 0)
       .attr("stroke-dasharray", 20)
       .attr("stroke-opacity", 0)
       .attr("id", d => `link-${d.id}`)
-      .attr("stroke-width", d => Math.sqrt(d.value))
+      .attr("stroke-width", 40)
 
     node = svg
       .append("g")
@@ -447,7 +500,13 @@
     rect = node
       .append("rect")
       .attr("fill", "#000")
-      .attr("stroke", "#fff")
+      .attr("stroke", d => (d.entry.potential ? "#222" : "#fff"))
+      .attr("stroke-opacity", d =>
+        d.entry?.machineType === MachineType.INLET ||
+        d.entry?.machineType === MachineType.OUTLET
+          ? 0
+          : 1
+      )
       .attr("stroke-width", 1)
       .attr("width", d =>
         d.group === EntityType.MACHINE ? MACHINE_SIZE : PORT_SIZE
@@ -462,7 +521,7 @@
       .append("text")
       .attr("class", "label")
       .attr("font-size", "2rem")
-      .attr("fill", "#fff")
+      .attr("fill", d => (d.entry.potential ? "#222" : "#fff"))
       .attr("stroke", "none")
       .text(function (d) {
         if (d.entry.entityType === EntityType.MACHINE) {
@@ -473,26 +532,17 @@
       })
 
     // Top right numbers
-    numbers = node
-      .filter(d => d.group !== EntityType.PORT)
-      .append("text")
-      .attr("class", "number")
-      .attr("text-anchor", "end")
-      .attr("font-size", "0.8rem")
-      .attr("fill", "#fff")
-      .attr("stroke", "none")
-      .text(d => $simulated[d.id]?.numericalID)
+    // numbers = node
+    //   .filter(d => d.group !== EntityType.PORT)
+    //   .append("text")
+    //   .attr("class", "number")
+    //   .attr("text-anchor", "end")
+    //   .attr("font-size", "0.8rem")
+    //   .attr("fill", d => (d.entry.potential ? "#222" : "#fff"))
+    //   .attr("stroke", "none")
+    //   .text(d => $simulated[d.id]?.numericalID)
 
     node.append("title").text(d => MachineType[d.entry.machineType])
-
-    // Add a drag behavior.
-    // node.call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragstarted)
-    //     .on("drag", dragged)
-    //     .on("end", dragended)
-    // )
 
     // Insert SVG pls
     element.prepend(svg.node())
@@ -531,6 +581,7 @@
   }
 
   onMount(() => {
+    setData()
     init()
     setTimeout(() => (done = true), 320)
   })
@@ -538,8 +589,8 @@
 
 <svelte:window on:resize={resizeSvg} />
 
-<div class="wrapper">
-  <div class="strobe flash-fast" class:hidden={done} />
+<div on:click={onClick} class="wrapper">
+  <!-- <div class="strobe flash-fast" class:hidden={done} /> -->
   {#if inspecting}
     <MachineInformation
       address={inspecting.address}

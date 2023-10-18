@@ -3,37 +3,45 @@ import { simulatedMachines, simulatedPorts } from "../simulator"
 import { connections } from "./index"
 import { PortType } from "./types"
 
+export const connectionSourceMachine = (connectionId: string) => {
+  return get(simulatedMachines)[
+    get(simulatedPorts)[get(connections)[connectionId].sourcePort]?.carriedBy
+  ]
+}
+
 /**
  * Get the occupied and available ports for a machine.
- * 
+ *
  * @param {string} machineId - The ID of the machine.
  * @param {PortType} [portType] - The optional type of port (INPUT/OUTPUT) to filter by.
  * @returns {[any[], any[]]} - A tuple containing occupied ports and available ports.
  */
 export const machinePorts = (machineId: string, portType?: PortType) => {
   const sourceMachine = Object.entries(get(simulatedMachines)).find(
-    ([_, ent]) => ent.numericalID === machineId
+    ([id, _]) => id === machineId
   )
 
   // Check if source machine exists
-  if (!sourceMachine) return [[], []];
+  if (!sourceMachine) return [[], []]
 
   // Retrieve ports based on the source machine and optionally filter by portType
   const sourcePorts = Object.entries(get(simulatedPorts)).filter(
-    ([_, ent]) => ent?.carriedBy === sourceMachine[0] && (portType === undefined || ent.portType === portType)
+    ([_, ent]) =>
+      ent?.carriedBy === sourceMachine[0] &&
+      (portType === undefined || ent.portType === portType)
   )
 
   const isPortOccupied = (id: string) => {
     const connectionsUsingPort = Object.values(get(connections)).filter(
       connection => connection.sourcePort === id || connection.targetPort === id
     )
-    return connectionsUsingPort.length > 0;
+    return connectionsUsingPort.length > 0
   }
 
-  const occupiedPorts = sourcePorts.filter(([id, _]) => isPortOccupied(id));
-  const availablePorts = sourcePorts.filter(([id, _]) => !isPortOccupied(id));
+  const occupiedPorts = sourcePorts.filter(([id, _]) => isPortOccupied(id))
+  const availablePorts = sourcePorts.filter(([id, _]) => !isPortOccupied(id))
 
-  return [occupiedPorts, availablePorts];
+  return [occupiedPorts, availablePorts]
 }
 
 /**

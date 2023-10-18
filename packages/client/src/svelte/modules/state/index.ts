@@ -291,9 +291,9 @@ export const outputsForEntity = (address: string) =>
     ) as Ports
   })
 
-export const playerGoal = derived(
+export const playerGoals = derived(
   [playerBox, goals],
   ([$playerBox, $goals]) => {
-    return Object.values($goals).find(g => g?.level === $playerBox.level)
+    return Object.values($goals).filter(g => g?.level === $playerBox.level)
   }
 )

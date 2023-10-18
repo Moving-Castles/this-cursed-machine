@@ -1,13 +1,13 @@
 <script lang="ts">
   import { showGraph, lastSentTime } from "../../modules/ui/stores"
   import { blockNumber } from "../../modules/network"
-  import { playerCore } from "../../modules/state"
+  import { playerCore, machines, connections } from "../../modules/state"
   import { potential } from "../../modules/simulator"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
-  import Goal from "../Goal/Goal.svelte"
   import Goals from "../Goal/Goals.svelte"
+  import { showGoals } from "../../modules/ui/stores"
   // import BoxMaterial from "./BoxMaterial.svelte"
 
   let now = performance.now()
@@ -31,11 +31,11 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <!-- <div class="goal"> -->
-        <!-- <Goal /> -->
-        <!-- </div> -->
+        <div on:click={() => ($showGoals = true)} class="goal">
+          <p>Show goal</p>
+        </div>
 
-        {#key $potential}
+        {#key `${JSON.stringify($potential)}-${Object.keys($machines).length}-${Object.keys($connections).length}`}
           <div class="graph">
             <Graph />
           </div>
@@ -73,7 +73,7 @@
       overflow: hidden;
 
       .stats {
-        grid-column: 1 / 4;
+        grid-column: 1 / 5;
         outline: var(--terminal-border);
         outline-offset: -6px;
       }
@@ -83,7 +83,14 @@
         outline: var(--terminal-border);
         outline-offset: -4px;
         position: relative;
-
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+          background: white;
+          color: black;
+        }
         .bg {
           width: 100%;
           height: 100%;
