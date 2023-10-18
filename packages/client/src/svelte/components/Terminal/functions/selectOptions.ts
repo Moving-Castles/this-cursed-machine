@@ -1,6 +1,6 @@
 import { SelectOption, COMMAND } from "../types"
 import { MachineType, PortType } from "../../../modules/state/enums"
-import { connections, machines } from "../../../modules/state";
+import { simulatedMachines, simulatedConnections } from "../../../modules/simulator";
 import { get } from "svelte/store";
 import { FIXED_MACHINE_TYPES } from "..";
 import { getMachinesWithAvailablePorts } from "./helpers";
@@ -77,7 +77,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
     let selectOptions: SelectOption[] = []
 
     // Options => all machines except core, inlet, outlet
-    Object.entries(get(machines)).forEach(([machineId, machine]) => {
+    Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
         if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
             selectOptions.push({
                 label: MachineType[machine.machineType],
@@ -99,7 +99,7 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     let selectOptions: SelectOption[] = []
     // Options => all connections
     // @todo: Better label
-    Object.entries(get(connections)).forEach(([connectionId, connection]) => {
+    Object.entries(get(simulatedConnections)).forEach(([connectionId, _]) => {
         selectOptions.push({
             label: "Connection",
             value: connectionId
@@ -118,7 +118,8 @@ function createSelectOptionsInspect(): SelectOption[] {
     let selectOptions: SelectOption[] = []
 
     // Options => all machines
-    Object.entries(get(machines)).forEach(([machineId, machine]) => {
+    Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
+        // @todo: Better label
         selectOptions.push({
             label: MachineType[machine.machineType],
             value: machineId
@@ -140,6 +141,7 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
     const machines = getMachinesWithAvailablePorts(portType)
 
     Object.entries(machines).forEach(([machineId, machine]) => {
+        // @todo: Better label
         selectOptions.push({
             label: MachineType[machine?.machineType || MachineType.NONE],
             value: machineId

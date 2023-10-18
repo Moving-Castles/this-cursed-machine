@@ -1,9 +1,8 @@
 import { tick } from "svelte"
 import type { Action } from "../../../modules/action/actionSequencer";
-import { simulated } from "../../../modules/simulator";
+import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../../modules/simulator";
 import { get } from "svelte/store";
-import { PortType, EntityType } from "../../../modules/state/enums";
-import { connections } from "../../../modules/state";
+import { PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
 
 /**
@@ -86,7 +85,7 @@ export const waitForCompletion = (action: Action): Promise<Action> => {
  */
 export const getMachinePorts = (machineId: string, portType: PortType): any[] => {
     // Get machine entity
-    const machine = Object.entries(get(simulated)).find(
+    const machine = Object.entries(get(simulatedMachines)).find(
         ([key, _]) => key === machineId
     )
 
@@ -94,12 +93,12 @@ export const getMachinePorts = (machineId: string, portType: PortType): any[] =>
     if (!machine) return []
 
     // Retrieve ports based on the source machine and optionally filter by portType
-    const ports = Object.entries(get(simulated)).filter(
+    const ports = Object.entries(get(simulatedPorts)).filter(
         ([_, entity]) => entity?.carriedBy === machine[0] && entity.portType === portType
     )
 
     const isPortOccupied = (id: string) => {
-        const connectionsUsingPort = Object.values(get(connections)).filter(
+        const connectionsUsingPort = Object.values(get(simulatedConnections)).filter(
             connection => connection.sourcePort === id || connection.targetPort === id
         )
         return connectionsUsingPort.length > 0;
@@ -119,21 +118,12 @@ export function getMachinesWithAvailablePorts(portType: PortType) {
 
     let availableMachines: SimulatedEntities = {}
 
-    // Get all machines
-    const allMachines = Object.fromEntries(
-        Object.entries(get(simulated)).filter(
-            ([, entity]) => entity.entityType === EntityType.MACHINE
-        )
-    )
-
-    console.log('allMachines', allMachines)
-
     // For each machine...
-    for (let [machineKey, machine] of Object.entries(allMachines)) {
+    for (let [machineKey, machine] of Object.entries(get(simulatedMachines))) {
         // Get all ports of type
         const portsOnMachine = Object.fromEntries(
-            Object.entries(get(simulated)).filter(
-                ([, entity]) => entity.entityType === EntityType.PORT && entity.carriedBy === machineKey && entity.portType === portType
+            Object.entries(get(simulatedPorts)).filter(
+                ([, entity]) => entity.carriedBy === machineKey && entity.portType === portType
             )
         )
 
@@ -144,7 +134,7 @@ export function getMachinesWithAvailablePorts(portType: PortType) {
         // For each port ...
         for (let portKey of Object.keys(portsOnMachine)) {
             // Check if there is  connection going to or from that port
-            let connectionToPort = Object.values(get(simulated)).filter(
+            let connectionToPort = Object.values(get(simulatedConnections)).filter(
                 (entity) => entity.sourcePort === portKey || entity.targetPort === portKey
             )
             // Connection(s) found
