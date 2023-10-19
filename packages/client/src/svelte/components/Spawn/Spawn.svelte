@@ -54,6 +54,7 @@
     display: flex;
     align-items: center;
     justify-items: center;
+    user-select: none;
   }
 
   .placeholder {

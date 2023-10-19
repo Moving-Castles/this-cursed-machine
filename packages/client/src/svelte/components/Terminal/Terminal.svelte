@@ -126,7 +126,7 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `Source: ${
+        `From: ${
           MachineType[
             $simulatedMachines[sourceMachine]?.machineType || MachineType.NONE
           ]
@@ -164,7 +164,7 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `Target: ${
+        `To: ${
           MachineType[
             $simulatedMachines[targetMachine]?.machineType || MachineType.NONE
           ]
@@ -256,7 +256,7 @@
     height: 100vh;
     white-space: pre-line;
     border: 1px solid var(--terminal-color);
-    padding-bottom: 2em;
+    padding-bottom: 4hem;
     line-height: 1.2em;
 
     form {

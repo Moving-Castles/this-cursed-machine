@@ -17,7 +17,7 @@ async function execute(machineEntity: string) {
     if (machine.inputs && machine.inputs.length > 0) {
         for (let i = 0; i < machine.inputs.length; i++) {
             let input = machine.inputs[i]
-            await writeToTerminal(OutputType.INFO, `${MaterialType[input.materialType]} : ${input.amount}/block`, false, SYMBOLS[6], 20)
+            await writeToTerminal(OutputType.INFO, `${MaterialType[input.materialType]}: ${input.amount}/block`, false, SYMBOLS[6], 20)
         }
     } else {
         await writeToTerminal(OutputType.INFO, "NONE", false, SYMBOLS[6], 20)
@@ -28,7 +28,7 @@ async function execute(machineEntity: string) {
     if (machine.outputs && machine.outputs.length > 0) {
         for (let i = 0; i < machine.outputs.length; i++) {
             let output = machine.outputs[i]
-            await writeToTerminal(OutputType.INFO, `${MaterialType[output.materialType]} : ${output.amount}/block`, false, SYMBOLS[6], 20)
+            await writeToTerminal(OutputType.INFO, `${MaterialType[output.materialType]}: ${output.amount}/block`, false, SYMBOLS[6], 20)
         }
     } else {
         await writeToTerminal(OutputType.INFO, "NONE", false, SYMBOLS[6], 20)
