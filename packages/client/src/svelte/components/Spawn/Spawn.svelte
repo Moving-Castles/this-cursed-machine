@@ -25,14 +25,14 @@
   }
 </script>
 
-<div class="spawn">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div class="spawn" on:click={next}>
   {#if !$playerCore}
     <div class="placeholder">
       {#if $staticContent.spawning && $staticContent.spawning.content && !showSpawn}
         {#key i}
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class="block" on:click={next}>
+          <div class="block">
             {@html renderBlockText($staticContent.spawning.content.content[i])}
           </div>
         {/key}
@@ -55,6 +55,7 @@
     align-items: center;
     justify-items: center;
     user-select: none;
+    cursor: pointer;
   }
 
   .placeholder {
@@ -62,7 +63,6 @@
     text-align: center;
     padding: 20px;
     margin: 0 auto;
-    cursor: pointer;
   }
 
   :global(p.normal) {
