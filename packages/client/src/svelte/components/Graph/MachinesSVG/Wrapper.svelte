@@ -159,7 +159,7 @@
     // Labels
     ll.attr("x", d => d.x - 17).attr("y", d => d.y + 17)
     // Numbers
-    n.attr("x", d => d.x + 46).attr("y", d => d.y - 36)
+    n.attr("x", d => d.x + 46).attr("y", d => d.y - 32)
     // Dash or no dash
     nn.attr("stroke", d => {
       return isConnected(d) || d.entry?.machineType === MachineType.INLET
@@ -467,15 +467,16 @@
       })
 
     // Top right numbers
-    // numbers = node
-    //   .filter(d => d.group !== EntityType.PORT)
-    //   .append("text")
-    //   .attr("class", "number")
-    //   .attr("text-anchor", "end")
-    //   .attr("font-size", "0.8rem")
-    //   .attr("fill", d => (d.entry.potential ? "#222" : "#fff"))
-    //   .attr("stroke", "none")
-    //   .text(d => $simulated[d.id]?.numericalID)
+    numbers = node
+      .filter(d => d.group !== EntityType.PORT)
+      .filter(d => $simulated[d.id]?.buildIndex)
+      .append("text")
+      .attr("class", "number")
+      .attr("text-anchor", "end")
+      .attr("font-size", "0.8rem")
+      .attr("fill", d => (d.entry.potential ? "#222" : "#fff"))
+      .attr("stroke", "none")
+      .text(d => `#${$simulated[d.id]?.buildIndex}`)
 
     node.append("title").text(d => MachineType[d.entry.machineType])
 
