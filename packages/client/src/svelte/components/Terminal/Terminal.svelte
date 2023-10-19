@@ -260,7 +260,7 @@
     height: 100vh;
     white-space: pre-line;
     border: 1px solid var(--terminal-color);
-    padding-bottom: 4hem;
+    padding-bottom: 4em;
     line-height: 1.2em;
 
     form {
