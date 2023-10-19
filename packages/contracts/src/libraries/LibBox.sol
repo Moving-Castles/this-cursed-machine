@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -180,8 +180,6 @@ library LibBox {
    * @param _blocksSinceLastResolution The number of blocks passed since the last resolution.
    * @param _output A Product struct containing details about the material output (e.g., type and amount).
    *
-   * Emits a `MaterialCreated` event (not implemented in the given code snippet).
-   *
    * Requirements:
    * - `_blocksSinceLastResolution` should be greater than or equal to 0.
    * - `_output.amount` must be scaled safely without overflow.
@@ -205,6 +203,39 @@ library LibBox {
       CarriedBy.set(materialEntity, _boxEntity);
       MaterialType.set(materialEntity, _output.materialType);
       Amount.set(materialEntity, scaledAmount);
+    }
+  }
+
+  /**
+   * @dev Fetches or creates a build index entity based on the specified box entity and machine type.
+   *
+   * Function first queries the existing build index entities based on provided parameters. If there's an existing
+   * match, it returns the corresponding entity, otherwise, it creates a new build index entity and returns it.
+   *
+   * @param _boxEntity The identifier for the box entity.
+   * @param _machineType The type of machine being used.
+   * @return buildIndexEntity The identifier for the fetched or newly created build index entity.
+   */
+  function getBuildIndexEntity(bytes32 _boxEntity, MACHINE_TYPE _machineType) internal returns (bytes32) {
+    QueryFragment[] memory fragments = new QueryFragment[](3);
+    fragments[0] = QueryFragment(
+      QueryType.HasValue,
+      EntityTypeTableId,
+      EntityType.encodeStatic(ENTITY_TYPE.BUILD_INDEX)
+    );
+    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
+    fragments[2] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(_machineType));
+    bytes32[][] memory keyTuples = query(fragments);
+    if (keyTuples.length > 0) {
+      return keyTuples[0][0];
+    } else {
+      // Create a new build index entity
+      bytes32 buildIndexEntity = LibUtils.getRandomKey();
+      EntityType.set(buildIndexEntity, ENTITY_TYPE.BUILD_INDEX);
+      CarriedBy.set(buildIndexEntity, _boxEntity);
+      MachineType.set(buildIndexEntity, _machineType);
+      BuildIndex.set(buildIndexEntity, 0);
+      return buildIndexEntity;
     }
   }
 }

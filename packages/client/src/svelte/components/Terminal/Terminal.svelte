@@ -126,11 +126,13 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `From: ${
+        "From: " +
           MachineType[
             $simulatedMachines[sourceMachine]?.machineType || MachineType.NONE
-          ]
-        }`,
+          ] +
+          ($simulatedMachines[sourceMachine]?.buildIndex
+            ? " #" + $simulatedMachines[sourceMachine]?.buildIndex
+            : ""),
         true,
         SYMBOLS[11]
       )
@@ -164,11 +166,13 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `To: ${
+        "To: " +
           MachineType[
             $simulatedMachines[targetMachine]?.machineType || MachineType.NONE
-          ]
-        }`,
+          ] +
+          ($simulatedMachines[targetMachine]?.buildIndex
+            ? " #" + $simulatedMachines[targetMachine]?.buildIndex
+            : ""),
         true,
         SYMBOLS[14]
       )

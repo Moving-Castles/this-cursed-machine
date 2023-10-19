@@ -20,6 +20,7 @@ declare global {
     carriedBy?: string
     sourcePort?: string
     targetPort?: string
+    buildIndex: number
     input?: number
     output?: MaterialType
     amount?: number
@@ -72,6 +73,7 @@ declare global {
     machineType: MachineType
     creationBlock: number
     carriedBy: string
+    buildIndex: number
     name?: string
     energy?: number
     readyBlock?: number

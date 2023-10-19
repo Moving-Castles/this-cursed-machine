@@ -1,5 +1,6 @@
 export enum EntityType {
   NONE,
+  BUILD_INDEX,
   RECIPE,
   LEVEL,
   GOAL,
