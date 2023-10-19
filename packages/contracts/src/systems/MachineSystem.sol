@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType } from "../codegen/index.sol";
+import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType, BuildIndex } from "../codegen/index.sol";
 import { PORT_TYPE, MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibEntity, LibPort, LibNetwork } from "../libraries/Libraries.sol";
+import { LibUtils, LibEntity, LibPort, LibNetwork, LibBox } from "../libraries/Libraries.sol";
 
 contract MachineSystem is System {
   /**
@@ -46,6 +46,18 @@ contract MachineSystem is System {
     } else if (_machineType == MACHINE_TYPE.MIXER) {
       LibPort.create(machineEntity, PORT_TYPE.INPUT);
     }
+
+    // Get build index entity
+    bytes32 buildIndexEntity = LibBox.getBuildIndexEntity(CarriedBy.get(coreEntity), _machineType);
+
+    // Increment
+    uint32 newBuildIndex = BuildIndex.get(buildIndexEntity) + 1;
+
+    // Set build index on machine
+    BuildIndex.set(machineEntity, newBuildIndex);
+
+    // Set global build index
+    BuildIndex.set(buildIndexEntity, newBuildIndex);
 
     // Deduct energy
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);

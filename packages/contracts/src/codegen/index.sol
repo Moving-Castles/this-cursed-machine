@@ -15,6 +15,7 @@ import { SourcePort, SourcePortTableId } from "./tables/SourcePort.sol";
 import { TargetPort, TargetPortTableId } from "./tables/TargetPort.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";
 import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
+import { BuildIndex, BuildIndexTableId } from "./tables/BuildIndex.sol";
 import { Level, LevelTableId } from "./tables/Level.sol";
 import { LastResolved, LastResolvedTableId } from "./tables/LastResolved.sol";
 import { Input, InputTableId } from "./tables/Input.sol";

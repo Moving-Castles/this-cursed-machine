@@ -126,11 +126,13 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `From: ${
+        "From: " +
           MachineType[
             $simulatedMachines[sourceMachine]?.machineType || MachineType.NONE
-          ]
-        }`,
+          ] +
+          ($simulatedMachines[sourceMachine]?.buildIndex
+            ? " #" + $simulatedMachines[sourceMachine]?.buildIndex
+            : ""),
         true,
         SYMBOLS[11]
       )
@@ -164,11 +166,13 @@
 
       writeToTerminal(
         OutputType.SPECIAL,
-        `To: ${
+        "To: " +
           MachineType[
             $simulatedMachines[targetMachine]?.machineType || MachineType.NONE
-          ]
-        }`,
+          ] +
+          ($simulatedMachines[targetMachine]?.buildIndex
+            ? " #" + $simulatedMachines[targetMachine]?.buildIndex
+            : ""),
         true,
         SYMBOLS[14]
       )
@@ -256,7 +260,7 @@
     height: 100vh;
     white-space: pre-line;
     border: 1px solid var(--terminal-color);
-    padding-bottom: 4hem;
+    padding-bottom: 4em;
     line-height: 1.2em;
 
     form {
