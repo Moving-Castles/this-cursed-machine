@@ -235,6 +235,7 @@
         id="terminal-input"
         class="terminal-input"
         type="text"
+        placeholder="HELP"
         on:keydown={onInput}
         bind:this={inputElement}
         bind:value={userInput}
