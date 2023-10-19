@@ -207,10 +207,10 @@
         writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
 
-        for (let i = 1; i < sourcePorts.length; i++) {
+        for (let i = 0; i < sourcePorts.length; i++) {
           let currenPortEntity = $simulatedPorts[sourcePorts[i][0]]
           sourcePortOptions.push({
-            label: `Port #${i}: ${
+            label: `Port #${i+1}: ${
               MaterialType[
                 currenPortEntity.product?.materialType || MaterialType.NONE
               ]
