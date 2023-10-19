@@ -64,6 +64,8 @@
   $: $currentGoalIndex = $achieved.length
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="goal-container" on:click={onClick}>
   <div class="top-left">Goal:</div>
   <div class="goal">

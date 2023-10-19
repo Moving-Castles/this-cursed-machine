@@ -13,51 +13,49 @@
 </script>
 
 <!-- Start of new box -->
-{#key $playerGoals}
-  {#if $showGoals}
-    <div class="goalBox">
-      Pod #{$playerBox.level}<br />
-      <br />
-      Don't damage company property
-      <br />
-      <br />
-      Production quota:
-      <br />
-      {#each $playerGoals as goal, i}
-        <div class={goalTypes[i]}>
-          {goalTypes[i]} = {goal.amount}
-        </div>
-      {/each}
-      <br />
-      <br />
-      <br />
-      <button class="btn" on:click={() => ($showGoals = false)}
-        >I am ready
-      </button>
-    </div>
-  {/if}
-{/key}
 
-<!-- End of current box -->
-{#if $goalsSatisfied}
-  <div class="rewardBox">
-    Pod #{$playerBox.level} completed<br />
-    <br />
-    Performance: acceptable
-    <br />
-    <br />
-    Production: n/a
-    <br />
-    <br />
-    <button
-      class="btn"
-      on:click={() => {
-        $showGoals = true
-        transfer()
-      }}
-    >
-      Transfer
-    </button>
+{#if $showGoals || $goalsSatisfied}
+  <div class="goalBox">
+    {#key $playerGoals}
+      {#if $showGoals}
+        Pod #{$playerBox.level}<br />
+        <br />
+        Don't damage company property
+        <br />
+        <br />
+        Production quota:
+        <br />
+        {#each $playerGoals as goal, i}
+          <div class={goalTypes[i]}>
+            {goalTypes[i]} = {goal.amount}
+          </div>
+        {/each}
+        <br />
+        <br />
+        <br />
+        <button class="btn" on:click={() => ($showGoals = false)}
+          >I am ready
+        </button>
+      {:else if $goalsSatisfied}
+        Pod #{$playerBox.level} completed<br />
+        <br />
+        Performance: acceptable
+        <br />
+        <br />
+        Production: n/a
+        <br />
+        <br />
+        <button
+          class="btn"
+          on:click={() => {
+            $showGoals = true
+            transfer()
+          }}
+        >
+          Next job
+        </button>
+      {/if}
+    {/key}
   </div>
 {/if}
 
