@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, EntityType, TargetPort, SourcePort, SourcePortTableId } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, EntityType, TargetPort, SourcePort, SourcePortTableId, TargetPort, TargetPortTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -42,6 +42,18 @@ library LibConnection {
   function getOutgoing(bytes32 _portEntity) internal view returns (bytes32 connection) {
     QueryFragment[] memory fragments = new QueryFragment[](1);
     fragments[0] = QueryFragment(QueryType.HasValue, SourcePortTableId, SourcePort.encodeStatic(_portEntity));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
+  }
+
+  /**
+   * @notice Retrieves the incoming connection from a specified port entity.
+   * @param _portEntity The identifier of the port entity to query.
+   * @return connection The identifier of the incoming connection, or a zero bytes32 if none.
+   */
+  function getIncoming(bytes32 _portEntity) internal view returns (bytes32 connection) {
+    QueryFragment[] memory fragments = new QueryFragment[](1);
+    fragments[0] = QueryFragment(QueryType.HasValue, TargetPortTableId, TargetPort.encodeStatic(_portEntity));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples.length > 0 ? keyTuples[0][0] : bytes32(0);
   }

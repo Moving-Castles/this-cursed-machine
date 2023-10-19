@@ -5,7 +5,7 @@ import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType, 
 import { PORT_TYPE, MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibEntity, LibPort, LibNetwork, LibBox } from "../libraries/Libraries.sol";
 
-contract MachineSystem is System {
+contract BuildSystem is System {
   /**
    * @notice Creates a new machine entity and configures its ports and energy.
    * @param _machineType The type of machine to build, specified by the MACHINE_TYPE enum.
@@ -63,23 +63,5 @@ contract MachineSystem is System {
     Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
 
     return machineEntity;
-  }
-
-  /**
-   * @notice Destroys the specified machine entity.
-   * @param _machineEntity The identifier for the machine entity to be destroyed.
-   */
-  function destroy(bytes32 _machineEntity) public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
-    require(EntityType.get(_machineEntity) == ENTITY_TYPE.MACHINE, "not machine");
-
-    LibNetwork.resolve(CarriedBy.get(coreEntity));
-
-    // Destroy machine entity
-    LibEntity.destroy(_machineEntity);
-
-    // @todo: Destroy ports on machine
-    // @todo: Destroy connections on machine
   }
 }

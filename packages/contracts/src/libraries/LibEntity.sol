@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { PortType, CarriedBy, EntityType, MachineType } from "../codegen/index.sol";
+import { PortType, CarriedBy, EntityType, MachineType, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -24,6 +24,7 @@ library LibEntity {
   function destroy(bytes32 _entity) internal {
     EntityType.deleteRecord(_entity);
     MachineType.deleteRecord(_entity);
+    BuildIndex.deleteRecord(_entity);
   }
 
   /**

@@ -79,6 +79,11 @@ export default mudConfig({
         {
             name: "KeysWithValueModule",
             root: true,
+            args: [resolveTableId("TargetPort")],
+        },
+        {
+            name: "KeysWithValueModule",
+            root: true,
             args: [resolveTableId("Input")],
         },
     ],

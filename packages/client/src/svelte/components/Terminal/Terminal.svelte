@@ -210,7 +210,7 @@
         for (let i = 0; i < sourcePorts.length; i++) {
           let currenPortEntity = $simulatedPorts[sourcePorts[i][0]]
           sourcePortOptions.push({
-            label: `Port #${i+1}: ${
+            label: `Port #${i + 1}: ${
               MaterialType[
                 currenPortEntity.product?.materialType || MaterialType.NONE
               ]
