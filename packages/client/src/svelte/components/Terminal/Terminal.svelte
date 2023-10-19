@@ -5,13 +5,17 @@
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
-  import { MachineType, PortType } from "../../modules/state/enums"
+  import {
+    MachineType,
+    PortType,
+    MaterialType,
+  } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
   import TerminalOutput from "./TerminalOutput.svelte"
   import { getMachinePorts } from "./functions/helpers"
-  import { simulatedMachines } from "../../modules/simulator"
+  import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -124,14 +128,14 @@
         return
       }
 
+      let sourceMachineEntity = $simulatedMachines[sourceMachine]
+
       writeToTerminal(
         OutputType.SPECIAL,
         "From: " +
-          MachineType[
-            $simulatedMachines[sourceMachine]?.machineType || MachineType.NONE
-          ] +
-          ($simulatedMachines[sourceMachine]?.buildIndex
-            ? " #" + $simulatedMachines[sourceMachine]?.buildIndex
+          MachineType[sourceMachineEntity.machineType || MachineType.NONE] +
+          (sourceMachineEntity.buildIndex
+            ? " #" + sourceMachineEntity.buildIndex
             : ""),
         true,
         SYMBOLS[11]
@@ -164,14 +168,14 @@
         return
       }
 
+      let targetMachineEntity = $simulatedMachines[targetMachine]
+
       writeToTerminal(
         OutputType.SPECIAL,
         "To: " +
-          MachineType[
-            $simulatedMachines[targetMachine]?.machineType || MachineType.NONE
-          ] +
-          ($simulatedMachines[targetMachine]?.buildIndex
-            ? " #" + $simulatedMachines[targetMachine]?.buildIndex
+          MachineType[targetMachineEntity.machineType || MachineType.NONE] +
+          (targetMachineEntity.buildIndex
+            ? " #" + targetMachineEntity.buildIndex
             : ""),
         true,
         SYMBOLS[14]
@@ -197,9 +201,43 @@
         return
       }
 
-      // Push the values to parameters
-      // @todo: handle port selection, for now use the first available
-      parameters = [sourcePorts[0][0], targetPorts[0][0]]
+      // If the source machine is the core:
+      // Allow selecting the output port
+      if (sourceMachineEntity.machineType === MachineType.CORE) {
+        writeToTerminal(OutputType.NORMAL, "Select source port:")
+        let sourcePortOptions: SelectOption[] = []
+
+        for (let i = 1; i < sourcePorts.length; i++) {
+          let currenPortEntity = $simulatedPorts[sourcePorts[i][0]]
+          sourcePortOptions.push({
+            label: `Port #${i}: ${
+              MaterialType[
+                currenPortEntity.product?.materialType || MaterialType.NONE
+              ]
+            }`,
+            value: sourcePorts[i][0],
+          })
+        }
+
+        let sourcePort = await renderSelect(sourcePortOptions)
+
+        // Abort if nothing selected
+        if (!sourcePort) {
+          writeToTerminal(
+            OutputType.ERROR,
+            "No port selected",
+            false,
+            SYMBOLS[5]
+          )
+          resetInput()
+          return
+        }
+
+        parameters = [sourcePort, targetPorts[0][0]]
+      } else {
+        // Use the first one available
+        parameters = [sourcePorts[0][0], targetPorts[0][0]]
+      }
     }
 
     // Execute function
