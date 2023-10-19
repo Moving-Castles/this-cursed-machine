@@ -208,13 +208,19 @@ export const readableConnections = derived(
           if (ssP && ttP) {
             const sourceMachine =
               MachineType[$machines[ssP?.carriedBy]?.machineType]
+            const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
             const targetMachine =
               MachineType[$machines[ttP?.carriedBy]?.machineType]
+            const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
             if (sourceMachine && targetMachine) {
               return {
                 id,
                 connection,
-                label: `From ${sourceMachine} To ${targetMachine}`,
+                label: `From ${sourceMachine}${
+                  sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
+                } To ${targetMachine}${
+                  targetMachineIndex ? ` #${targetMachineIndex}` : ""
+                }`,
               }
             }
           }
