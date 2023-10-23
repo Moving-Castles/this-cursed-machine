@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MaterialType } from "../../modules/state/enums"
-  import { playerGoals, playerBox } from "../../modules/state"
+  import { playerGoals, playerBox, goals } from "../../modules/state"
   import { goalsSatisfied } from "../../modules/simulator"
   import { transfer } from "../../modules/action"
   import { showGoals } from "../../modules/ui/stores"
@@ -10,6 +10,14 @@
       ? "ENERGY"
       : MaterialType[goal?.materialType]
   })
+
+  $: {
+    let levels = {}
+    Object.values($goals).forEach(g => {
+      if (!levels[g.level]) levels[g.level] = []
+      levels[g.level].push(`${g.amount} ${MaterialType[g.materialType]}`)
+    })
+  }
 </script>
 
 <!-- Start of new box -->

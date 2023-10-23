@@ -12,6 +12,8 @@
     forceCenter,
   } from "d3-force"
 
+  export let graph
+
   let d3 = {
     scaleLinear,
     scaleOrdinal,
@@ -25,8 +27,6 @@
     forceCenter,
   }
 
-  export let graph
-
   let svg
   let width = 500
   let height = 600
@@ -34,6 +34,8 @@
   let links = graph.links
 
   const padding = { top: 20, right: 40, bottom: 40, left: 25 }
+
+  // $: nodeIdCounter = nodes && nodes.length ? nodes[nodes.length - 1].id + 1 : 1
 
   $: console.log(nodes.map(node => node.id))
 
@@ -80,15 +82,41 @@
     return simulation.find(event.x, event.y)
   }
 
+  function addNode() {
+    const newNode = {
+      id: `Node ${nodes.length + 1}`,
+      group: Math.floor(Math.random() * 10), // Random group for color. Adjust as necessary.
+    }
+    const newNode2 = {
+      id: `Node2 ${nodes.length + 1}`,
+      group: Math.floor(Math.random() * 10), // Random group for color. Adjust as necessary.
+    }
+    nodes = [...nodes, newNode, newNode2]
+    simulation.nodes(nodes).restart()
+
+    addLink(newNode.id, newNode2.id)
+    addLink(newNode.id, "Napoleon")
+    // if (nodes.find(node => node.id === `Node ${nodes.length}`)) {
+    //   addLink(newNode.id, `Node ${nodes.length}`)
+    // } else {
+    // }
+  }
+
+  function addLink(source, target) {
+    const newLink = { source, target, value: 0.1 }
+    links = [...links, newLink]
+    console.log(links)
+    simulation.force("link").links(links)
+    simulation.alpha(0.3).restart()
+  }
+
   $: {
-    console.log(
-      "TRIGGETRED",
-      nodes.map(n => n.id)
-    )
     simulation
       .force(
         "link",
-        d3.forceLink(links).id(d => d.id)
+        d3.forceLink(links).id(d => {
+          return d.id || d
+        })
       )
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2))
@@ -107,38 +135,13 @@
         .on("end", dragended)
     )
   }
-
-  onMount(() => {
-    const newId = `NEW`
-    nodes = [...nodes, { id: newId, group: 6 }]
-    links = [...links, { source: "Napoleon", target: newId }]
-  })
 </script>
 
-<h2>d3 Force Directed Graph in Sveltejs - svg</h2>
+<button on:click={addNode}>Add node</button>
 
 <svelte:window on:resize={resize} />
 
-<!-- SVG was here -->
 <svg bind:this={svg}>
-  <!-- <g class="axis y-axis">
-    {#each yTicks as tick}
-      <g class="tick tick-{tick}" transform="translate(0, {yScale(tick)})">
-        <line x1={padding.left} x2={xScale(22)} />
-        <text x={padding.left - 8} y="+4">{tick}</text>
-      </g>
-    {/each}
-  </g>
-
-  <g class="axis x-axis">
-    {#each xTicks as tick}
-      <g class="tick" transform="translate({xScale(tick)},0)">
-        <line y1={yScale(0)} y2={yScale(13)} />
-        <text y={height - padding.bottom + 16}>{tick}</text>
-      </g>
-    {/each}
-  </g> -->
-
   {#each links as link}
     <g stroke="#999" stroke-opacity="0.6">
       <line
@@ -169,8 +172,8 @@
 
 <style>
   svg {
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     float: left;
   }
 

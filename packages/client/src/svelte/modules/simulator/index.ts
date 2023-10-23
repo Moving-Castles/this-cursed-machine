@@ -70,7 +70,7 @@ export const simulated = derived(
           let inPort = Object.entries(simulated)
             .filter(([_, ent]) => ent.entityType === EntityType.PORT)
             .filter(([_, ent]) => ent.carriedBy === key)
-          console.log("in port ", inPort)
+
           inPort = inPort
             .filter(([_, port]) => port.portType === PortType.INPUT)
             .find(([_, port]) => !port.product)
@@ -88,7 +88,6 @@ export const simulated = derived(
               .find(([_, c]) => c.targetPort === portAddress)
 
             if (connector) {
-              console.log("CONNECTOR")
               const connectorAddress = connector[0]
               simulated[connectorAddress].product = { ...input }
             }

@@ -4,7 +4,8 @@
   import { playerCore, machines, connections } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
-  import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
+  // import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
+  import Graph from "../Graph/Machines/Wrapper.svelte"
   import Goals from "../Goal/Goals.svelte"
   import { showGoals } from "../../modules/ui/stores"
   // import BoxMaterial from "./BoxMaterial.svelte"
@@ -34,11 +35,9 @@
           <p>Show goal</p>
         </div>
 
-        {#key `${Object.keys($machines).length}-${Object.keys($connections).length}`}
-          <div class="graph">
-            <Graph />
-          </div>
-        {/key}
+        <div class="graph">
+          <Graph />
+        </div>
       </div>
     {/if}
   </div>
