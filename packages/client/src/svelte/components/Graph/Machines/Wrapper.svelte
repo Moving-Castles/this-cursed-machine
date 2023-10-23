@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte"
+  import MachineInformation from "../../Machines/MachineInformation.svelte"
   import { MaterialType } from "../../../modules/state/enums"
   import {
     simulatedMachines,
@@ -39,6 +40,7 @@
   let svg
   let width = 0
   let height = 0
+  let inspecting = null
 
   let [nodes, links] = [[], []]
 
@@ -49,6 +51,10 @@
   }
 
   const simulation = d3.forceSimulation(nodes)
+
+  const onNodeMouseEnter = (e, d) => {
+    inspecting = { ...d }
+  }
 
   $: {
     const graph = data(
@@ -75,8 +81,8 @@
   }
 
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
-  // $: console.log(d3yScale(1))
 
+  // Updates the graph
   $: {
     simulation
       .nodes(nodes)
@@ -99,21 +105,28 @@
       })
   }
 
+  // GO ON THEN
   onMount(resize)
 </script>
 
 <svelte:window on:resize={resize} />
 
 <div class="wrapper" bind:clientWidth={width} bind:clientHeight={height}>
+  {#if inspecting}
+    <MachineInformation machine={inspecting} />
+  {/if}
   <svg
     style:width="{width}px"
     style:height="{height}px"
     bind:this={svg}
     viewBox={[-width / 2, -height / 2, width, height]}
   >
+    <!-- LINKS -->
     {#each links as link}
       <g
-        stroke="var(--{MaterialType[link.entry?.product?.materialType]})"
+        stroke="var(--{link.entry?.product?.materialType
+          ? MaterialType[link.entry?.product?.materialType]
+          : 'STATE_INACTIVE'})"
         stroke-opacity="1"
         stroke-width={20}
       >
@@ -128,10 +141,17 @@
         </line>
       </g>
     {/each}
+    <!-- END LINKS -->
 
+    <!-- NODES -->
     {#each nodes as d (d.id)}
       <g class="node" id={d.id}>
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <rect
+          on:mouseenter={e => {
+            onNodeMouseEnter(e, d.entry)
+          }}
+          on:mouseleave={() => (inspecting = null)}
           x={d.x - MACHINE_SIZE / 2}
           y={d.y - MACHINE_SIZE / 2}
           width={MACHINE_SIZE}
@@ -151,6 +171,7 @@
         <title>{MachineType[d.entry.machineType]}</title>
       </g>
     {/each}
+    <!-- END NODES -->
   </svg>
 </div>
 
