@@ -40,6 +40,6 @@ export type Output = {
 }
 
 export type SelectOption = {
-    value: string | MachineType
     label: string
+    value: string | MachineType | null
 }
