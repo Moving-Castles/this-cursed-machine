@@ -10,12 +10,14 @@ import { destroy } from "./destroy";
 import { inspect } from "./inspect";
 import { transfer } from "./transfer";
 import { resolve } from "./resolve";
+import { map } from "./map";
 
 export const commands: Command[] = [
     build,
     destroy,
     connect,
     disconnect,
+    map,
     inspect,
     blink,
     clear,

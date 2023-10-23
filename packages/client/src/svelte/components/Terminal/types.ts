@@ -20,7 +20,8 @@ export enum COMMAND {
     DISCONNECT,
     INSPECT,
     RESOLVE,
-    TRANSFER
+    TRANSFER,
+    MAP
 }
 
 export type Command<T extends any[] = any[]> = {

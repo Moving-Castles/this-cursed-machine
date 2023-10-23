@@ -92,7 +92,7 @@ export const getMachinePorts = (machineId: string, portType: PortType): any[] =>
 
   if (!machine) return [];
 
-  // Retrieve ports based on the source machine and optionally filter by portType
+  // Retrieve ports based on the source machine and filter by portType
   const ports = Object.entries(get(simulatedPorts)).filter(
     ([_, entity]) => entity?.carriedBy === machine[0] && entity.portType === portType
   )
