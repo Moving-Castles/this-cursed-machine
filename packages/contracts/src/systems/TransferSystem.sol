@@ -100,6 +100,16 @@ contract TransferSystem is System {
     // Place core in box
     CarriedBy.set(coreEntity, boxEntity);
 
+    // Destroy all ports on core
+    bytes32[][] memory coreInputs = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    for (uint256 i = 0; i < coreInputs.length; i++) {
+      LibPort.destroy(coreInputs[i][0]);
+    }
+    bytes32[][] memory coreOutputs = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
+    for (uint256 i = 0; i < coreOutputs.length; i++) {
+      LibPort.destroy(coreOutputs[i][0]);
+    }
+
     // Create ports on core
     LibPort.create(coreEntity, PORT_TYPE.INPUT);
     LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
