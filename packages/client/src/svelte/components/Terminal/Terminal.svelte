@@ -99,6 +99,12 @@
 
       // Abort if nothing selected
       if (!value) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "Nothing selected",
+          false,
+          SYMBOLS[5]
+        )
         resetInput()
         return
       }

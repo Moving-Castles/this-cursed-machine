@@ -15,8 +15,8 @@ async function execute(sourcePort: string, targetPort: string) {
     // ...
     writeToTerminal(OutputType.NORMAL, "Connection in progress...")
     await waitForCompletion(action);
-    playSound("ui", "eventGood")
-    writeToTerminal(OutputType.SUCCESS, "Done")
+    playSound("tcm", "swipe5")
+    await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;
 }

@@ -22,6 +22,7 @@
   import { initUI, onKeyDown } from "./modules/ui/events"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
+  import { playSound } from "./modules/sound"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Flash from "./components/Flash/Flash.svelte"
@@ -86,6 +87,8 @@
 
     // Simulate state changes
     initStateSimulator()
+
+    playSound("tcm", "inner", true, false)
   })
 </script>
 

@@ -13,12 +13,6 @@ export const fx = writable([new Howl({ src: [""] })]);
  * @param {string} id - The id of the sound within the category.
  * @param {boolean} [loop=false] - Determines if the sound should loop.
  * @param {boolean} [fade=false] - Determines if the sound should have fade in/out effects.
- *
- * @example
- * // Plays a sound without loop and fade
- * playSound('music', 'theme');
- * // Plays a sound with loop and fade
- * playSound('music', 'theme', true, true);
  */
 export function playSound(category: string, id: string, loop = false, fade = false) {
 
@@ -42,7 +36,7 @@ export function playSound(category: string, id: string, loop = false, fade = fal
     sound.fade(0, 0.4, FADE_TIME);
     sound.on("load", function () {
       const FADE_OUT_TIME = sound.duration() * 1000 - sound.seek() - FADE_TIME;
-      timeout = setTimeout(function () {
+      setTimeout(function () {
         sound.fade(0.4, 0, FADE_TIME);
       }, FADE_OUT_TIME);
     });

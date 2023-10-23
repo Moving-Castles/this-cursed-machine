@@ -1,12 +1,18 @@
 <script lang="ts">
-  import { playerCore, machines, connections } from "../../modules/state"
+  import { onMount } from "svelte"
+  import { playerCore } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
-  // import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
   import Graph from "../Graph/Machines/Wrapper.svelte"
   import Goals from "../Goal/Goals.svelte"
   import Map from "../Map/Map.svelte"
   import { showGoals, showMap } from "../../modules/ui/stores"
+  import { playSound } from "../../modules/sound"
+
+  onMount(() => {
+    playSound("tcm", "heartbeat", true, false)
+    playSound("tcm", "background", true, false)
+  })
 </script>
 
 <Goals />

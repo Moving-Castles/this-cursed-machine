@@ -7,13 +7,13 @@ import { playSound } from "../../../modules/sound"
  */
 export function playInputSound(e: KeyboardEvent) {
     if (e.key === "Backspace") {
-        playSound("tekken", "beep1")
+        playSound("tcm", "button3")
     } else if (e.key === "Enter") {
-        playSound("tekken", "click")
+        playSound("tcm", "bow")
     } else {
         // Check if the key represents a single, printable character.
         if (e.key.length === 1 && e.key >= ' ' && e.key <= '~') {
-            playSound("ui", "cursor");
+            playSound("tcm", "button2")
         }
     }
 }
