@@ -13,7 +13,7 @@ const SANITY_PROJECT_ID = "70kzkeor"
 export const client = createClient({
   projectId: SANITY_PROJECT_ID,
   dataset: "production",
-  apiVersion: "2023-03-21", // use a UTC date string
+  apiVersion: "2023-10-23", // use a UTC date string
   useCdn: true,
 })
 
@@ -112,7 +112,7 @@ const serializers = {
   },
 }
 
-export const loadData = async (query, params) => {
+export const loadData = async (query: string, params: any) => {
   try {
     const res = await client.fetch(query, params)
     if (res === null) {

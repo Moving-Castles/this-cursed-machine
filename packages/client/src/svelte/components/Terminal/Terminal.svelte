@@ -112,7 +112,7 @@
 
       // @todo: Does the machine have multiple output ports?
 
-      writeToTerminal(OutputType.NORMAL, "Select source machine:")
+      writeToTerminal(OutputType.NORMAL, "From:")
 
       let sourceMachine = await renderSelect(sourceSelectOptions)
 
@@ -152,7 +152,7 @@
 
       // @todo: Does the machine have multiple input ports?
 
-      await writeToTerminal(OutputType.NORMAL, "Select target machine:")
+      await writeToTerminal(OutputType.NORMAL, "TO:")
 
       let targetMachine = await renderSelect(targetSelectOptions)
 
@@ -253,6 +253,12 @@
 
   onMount(() => {
     resetInput()
+    // Regularly refocus the input every 100ms
+    // setInterval(() => {
+    //   if (inputElement) {
+    //     inputElement.focus()
+    //   }
+    // }, 100)
   })
 </script>
 

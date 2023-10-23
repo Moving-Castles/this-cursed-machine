@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte"
+  import { MaterialType } from "../../../modules/state/enums"
   import {
     simulatedMachines,
     simulatedConnections,
@@ -10,7 +11,7 @@
   import { schemeCategory10 } from "d3-scale-chromatic"
   import { select, selectAll } from "d3-selection"
   import { drag } from "d3-drag"
-  import { data } from "./index"
+  import { MACHINE_SIZE, data, x1, y1, x2, y2 } from "./index"
   import {
     forceSimulation,
     forceLink,
@@ -36,10 +37,8 @@
   }
 
   let svg
-  let width = 500
-  let height = 600
-
-  const MACHINE_SIZE = 100
+  let width = 0
+  let height = 0
 
   let [nodes, links] = [[], []]
 
@@ -75,8 +74,8 @@
     simulation.alpha(1).restart()
   }
 
-  $: d3xScale = scaleLinear().domain([width, 0]).range([0, width])
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
+  // $: console.log(d3yScale(1))
 
   $: {
     simulation
@@ -113,12 +112,16 @@
     viewBox={[-width / 2, -height / 2, width, height]}
   >
     {#each links as link}
-      <g stroke="#555" stroke-opacity="1" stroke-width={20}>
+      <g
+        stroke="var(--{MaterialType[link.entry?.product?.materialType]})"
+        stroke-opacity="1"
+        stroke-width={20}
+      >
         <line
-          x1={link.source.x}
-          y1={d3yScale(link.source.y)}
-          x2={link.target.x}
-          y2={d3yScale(link.target.y)}
+          x1={x1(links, link)}
+          y1={y1(links, link, d3yScale)}
+          x2={x2(links, link)}
+          y2={y2(links, link, d3yScale)}
           transform="translate(0 {height}) scale(1 -1)"
         >
           <title>{link.source.id}</title>

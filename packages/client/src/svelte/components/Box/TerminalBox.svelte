@@ -1,25 +1,19 @@
 <script lang="ts">
-  import { showGraph, lastSentTime } from "../../modules/ui/stores"
-  import { blockNumber } from "../../modules/network"
   import { playerCore, machines, connections } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   // import Graph from "../Graph/MachinesSVG/Wrapper.svelte"
   import Graph from "../Graph/Machines/Wrapper.svelte"
   import Goals from "../Goal/Goals.svelte"
-  import { showGoals } from "../../modules/ui/stores"
-  // import BoxMaterial from "./BoxMaterial.svelte"
-
-  let now = performance.now()
-
-  $: if ($blockNumber) now = performance.now()
-
-  let send: (string: string) => Promise<void>
-
-  let theme = "dark"
+  import Map from "../Map/Map.svelte"
+  import { showGoals, showMap } from "../../modules/ui/stores"
 </script>
 
 <Goals />
+
+{#if $showMap}
+  <Map />
+{/if}
 
 <div class="bg">
   <div class="split-screen">
@@ -31,7 +25,7 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <div on:click={() => ($showGoals = true)} class="goal">
+        <button on:click={() => ($showGoals = true)} class="goal">
           <p>Show goal</p>
         </div>
 
@@ -79,6 +73,7 @@
       .goal {
         grid-column: 5 / 7;
         outline: var(--terminal-border);
+        margin: 0;
         outline-offset: -4px;
         position: relative;
         display: flex;

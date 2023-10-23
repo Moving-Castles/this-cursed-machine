@@ -10,6 +10,9 @@
   export let returnFunction: ReturnFunction | null = null
   export let selectOptions: SelectOption[] = []
 
+  // Add cancel option
+  selectOptions = [...selectOptions, { label: "cancel", value: null }]
+
   const dispatch = createEventDispatcher()
 
   let selectedIndex = 0
@@ -74,7 +77,7 @@
     {#each selectOptions as option, index (option.value)}
       <div
         class:active={selectedIndex === index}
-        class="option"
+        class="option {option.label}"
         in:fade={{ duration: 100, delay: 50 * index }}
       >
         {option.label}
@@ -97,6 +100,21 @@
 
         &::before {
           content: "> ";
+        }
+      }
+
+      &.cancel {
+        &::after {
+          content: " [ESC]";
+        }
+
+        &.active {
+          color: #000;
+          background: var(--color-failure);
+
+          &::before {
+            content: "x ";
+          }
         }
       }
     }

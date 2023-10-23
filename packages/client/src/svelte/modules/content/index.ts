@@ -17,7 +17,8 @@ export type StaticContent = {
   machines: any[],
   levels: any[],
   materials: any[],
-  commands: any[]
+  commands: any[],
+  map: any
 }
 
 // --- STORES -----------------------------------------------------------
@@ -33,6 +34,7 @@ export async function initStaticContent() {
   const machines = await loadData("*[_type == 'machine']", {})
   const materials = await loadData("*[_type == 'material']", {})
   const commands = await loadData("*[_type == 'command']", {})
+  const map = await loadData("*[_type == 'map'][0]", {})
   staticContent.set(
     {
       loading,
@@ -40,7 +42,8 @@ export async function initStaticContent() {
       levels,
       machines,
       materials,
-      commands
+      commands,
+      map
     }
   )
 }

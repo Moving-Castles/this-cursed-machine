@@ -1,5 +1,7 @@
 import { EntityType } from "../../../modules/state/enums"
 
+export const MACHINE_SIZE = 100
+
 export function data(
   simulatedMachines: Entity[],
   simulatedConnections: Entity[],
@@ -39,4 +41,69 @@ export function data(
         .filter(thing => thing), // check if they are all valid links
     ],
   }
+}
+
+export function x1(links: any[], d) {
+  const linksWithSource = links.filter(l => l.source === d.source.id)
+
+  let OFFSET = 0
+
+  if (linksWithSource.length > 1) {
+    OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+    OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+  }
+
+  return d.source.group === EntityType.PORT &&
+    d.target.group === EntityType.PORT
+    ? d.source.x - MACHINE_SIZE / 2 + OFFSET
+    : d.source.x + OFFSET
+}
+
+export function y1(links: any, d, d3yScale) {
+  const linksWithSource = links.filter(l => l.source === d.source.id)
+
+  let OFFSET = 0
+
+  if (linksWithSource.length > 1) {
+    OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+    OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+  }
+
+  return d3yScale(
+    d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
+      ? d.source.y - MACHINE_SIZE / 2 + OFFSET
+      : d.source.y + OFFSET
+  )
+}
+
+export function x2(links: any, d) {
+  const linksWithTarget = links.filter(l => l.target === d?.target?.id)
+
+  let OFFSET = 0
+
+  if (linksWithTarget.length > 1) {
+    OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+    OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+  }
+
+  return d?.target?.group === EntityType.MACHINE
+    ? d?.target.x - MACHINE_SIZE / 2 + OFFSET
+    : d?.target.x - MACHINE_SIZE / 2 + OFFSET
+}
+
+export function y2(links: any, d, d3yScale) {
+  const linksWithTarget = links.filter(l => l.target === d.target.id)
+
+  let OFFSET = 0
+
+  if (linksWithTarget.length > 1) {
+    OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
+    OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+  }
+
+  return d3yScale(
+    d?.target.group === EntityType.MACHINE
+      ? d?.target.y - MACHINE_SIZE / 2 + OFFSET
+      : d?.target.y - MACHINE_SIZE / 2 + OFFSET
+  )
 }

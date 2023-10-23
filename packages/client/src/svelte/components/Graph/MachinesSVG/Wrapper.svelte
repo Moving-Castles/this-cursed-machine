@@ -87,6 +87,21 @@
     const n = svg.selectAll("text.number")
     const nn = svg.selectAll("g.node")
 
+    // function x1 (d) {
+    //   const linksWithSource = data.links.filter(l => l.source === d.source.id)
+
+    //   let OFFSET = 0
+
+    //   if (linksWithSource.length > 1) {
+    //     OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
+    //     OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+    //   }
+
+    //   return d.source.group === EntityType.PORT &&
+    //     d.target.group === EntityType.PORT
+    //     ? d.source.x - MACHINE_SIZE / 2 + OFFSET
+    //     : d.source.x + OFFSET
+    // }
     // Create the line
     l.attr("x1", d => {
       const linksWithSource = data.links.filter(l => l.source === d.source.id)

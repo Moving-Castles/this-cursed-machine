@@ -20,7 +20,8 @@ export enum COMMAND {
     DISCONNECT,
     INSPECT,
     RESOLVE,
-    TRANSFER
+    TRANSFER,
+    MAP
 }
 
 export type Command<T extends any[] = any[]> = {
@@ -39,6 +40,6 @@ export type Output = {
 }
 
 export type SelectOption = {
-    value: string | MachineType
     label: string
+    value: string | MachineType | null
 }
