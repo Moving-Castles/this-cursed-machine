@@ -6,6 +6,23 @@ export const music = writable(new Howl({ src: [""] }));
 export const fx = writable([new Howl({ src: [""] })]);
 
 /**
+ * Initializes and preloads all sounds from the `tcm` property of the `soundLibrary` object.
+ * This ensures that there's minimal delay when the sounds are played for the first time.
+ *
+ * @example
+ * initSound();  // Preloads all the sounds in soundLibrary.tcm
+ *
+ * @returns {void}
+ */
+export function initSound() {
+  for (const key in soundLibrary.tcm) {
+    const sound = soundLibrary.tcm[key];
+    const audio = new Audio(sound.src);
+    audio.load();
+  }
+}
+
+/**
  * Plays a sound based on category and id. Provides options for looping and fade effects.
  *
  * @export

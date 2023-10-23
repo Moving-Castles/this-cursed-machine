@@ -31,7 +31,13 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <button on:click={() => ($showGoals = true)} class="goal">
+        <button
+          on:click={() => {
+            playSound("tcm", "alarm")
+            $showGoals = true
+          }}
+          class="goal"
+        >
           <p>Show goal</p>
         </button>
         <div class="graph">

@@ -1,6 +1,7 @@
 <script lang="ts">
   // import { staticContent } from "../../modules/content"
   // import { urlFor } from "../../modules/content/sanity"
+  import { playSound } from "../../modules/sound"
   import { showMap } from "../../modules/ui/stores"
   // console.log($staticContent)
 </script>
@@ -12,6 +13,7 @@
     src="/images/map.png"
     alt="map"
     on:click={() => {
+      playSound("tcm", "buzzer")
       showMap.set(false)
     }}
   />
