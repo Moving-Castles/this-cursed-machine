@@ -1,15 +1,10 @@
 <script lang="ts">
-  export let machineType // can be numerical or string
-  export let address: string
+  export let machine: Machine // can be numerical or string
   import { MaterialType, MachineType } from "../../modules/state/enums"
-  import { simulatedMachines } from "../../modules/simulator"
   import { MACHINE_LORE } from "../../modules/content/lore"
-  import { outputs } from "../../modules/state"
   // List contents etc
 
-  const machineLore = MACHINE_LORE[machineType]
-
-  $: machine = $simulatedMachines[address]
+  const machineLore = MACHINE_LORE[machine.machineType]
 </script>
 
 <div class="machine-information">

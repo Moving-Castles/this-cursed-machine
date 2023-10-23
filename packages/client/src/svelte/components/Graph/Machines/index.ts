@@ -55,7 +55,7 @@ export function x1(links: any[], d) {
 
   return d.source.group === EntityType.PORT &&
     d.target.group === EntityType.PORT
-    ? d.source.x - MACHINE_SIZE / 2 + OFFSET
+    ? d.source.x + OFFSET
     : d.source.x + OFFSET
 }
 
@@ -71,7 +71,7 @@ export function y1(links: any, d, d3yScale) {
 
   return d3yScale(
     d.source.group === EntityType.PORT && d.target.group === EntityType.PORT
-      ? d.source.y - MACHINE_SIZE / 2 + OFFSET
+      ? d.source.y + OFFSET
       : d.source.y + OFFSET
   )
 }
@@ -87,8 +87,8 @@ export function x2(links: any, d) {
   }
 
   return d?.target?.group === EntityType.MACHINE
-    ? d?.target.x - MACHINE_SIZE / 2 + OFFSET
-    : d?.target.x - MACHINE_SIZE / 2 + OFFSET
+    ? d?.target.x + OFFSET
+    : d?.target.x + OFFSET
 }
 
 export function y2(links: any, d, d3yScale) {
@@ -103,7 +103,7 @@ export function y2(links: any, d, d3yScale) {
 
   return d3yScale(
     d?.target.group === EntityType.MACHINE
-      ? d?.target.y - MACHINE_SIZE / 2 + OFFSET
-      : d?.target.y - MACHINE_SIZE / 2 + OFFSET
+      ? d?.target.y + OFFSET
+      : d?.target.y + OFFSET
   )
 }

@@ -540,7 +540,6 @@
 <svelte:window on:resize={resizeSvg} />
 
 <div on:click={onClick} class="wrapper">
-  <!-- <div class="strobe flash-fast" class:hidden={done} /> -->
   {#if inspecting}
     <MachineInformation
       address={inspecting.address}

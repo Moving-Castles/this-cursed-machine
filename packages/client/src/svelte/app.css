@@ -57,6 +57,10 @@
   --TOBACCO: #854d00;
   --CIGARETTE_JUICE: #4a3e08;
   --HAND_OF_GOD: #57eeff;
+
+  /* Transaction states */
+  --STATE_ACTIVE: #fff;
+  --STATE_INACTIVE: #ccc;
 }
 
 * {

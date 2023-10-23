@@ -28,7 +28,6 @@
         <button on:click={() => ($showGoals = true)} class="goal">
           <p>Show goal</p>
         </button>
-
         <div class="graph">
           <Graph />
         </div>
@@ -131,7 +130,6 @@
 
   .graph-container {
     position: fixed;
-    /* background: red; */
     inset: 0;
     z-index: 999;
     background: rgba(0, 0, 0, 0.8);
