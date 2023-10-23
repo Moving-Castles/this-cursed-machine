@@ -113,7 +113,7 @@
     viewBox={[-width / 2, -height / 2, width, height]}
   >
     {#each links as link}
-      <g stroke="white" stroke-opacity="1" stroke-width={10}>
+      <g stroke="#555" stroke-opacity="1" stroke-width={20}>
         <line
           x1={link.source.x}
           y1={d3yScale(link.source.y)}
@@ -139,6 +139,12 @@
         <text fill="white" font-size="30px" x={d.x - 10} y={d.y + 10}
           >{MachineType[d.entry.machineType][0]}</text
         >
+
+        {#if d.entry.buildIndex}
+          <text fill="white" font-size="12px" x={d.x + 10} y={d.y + 10}>
+            #{d.entry.buildIndex}
+          </text>
+        {/if}
         <title>{MachineType[d.entry.machineType]}</title>
       </g>
     {/each}
