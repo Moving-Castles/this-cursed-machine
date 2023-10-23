@@ -4,7 +4,7 @@
 
 <div class="dead">
   <h1 class="xl-text text-outline centered">DEAD</h1>
-  <button on:click={restart} class="btn"> Respawn </button>
+  <button on:click={restart} class="btn">Respawn</button>
 </div>
 
 <style lang="scss">
