@@ -6,17 +6,16 @@
 </script>
 
 <div class="map-container">
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div
-    class="map"
+  <img
+    src="/images/map.png"
+    alt="map"
     on:click={() => {
       showMap.set(false)
     }}
-  >
-    <!-- <img src={urlFor($staticContent.map.image.asset).url()} alt="map" /> -->
-    <img src="/images/map.png" alt="map" />
-  </div>
+  />
+  <!-- <img src={urlFor($staticContent.map.image.asset).url()} alt="map" /> -->
 </div>
 
 <style lang="scss">
@@ -31,16 +30,12 @@
     align-items: center;
     z-index: 100000;
 
-    .map {
-      width: 90%;
-      height: 90%;
+    img {
+      width: 1200px;
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
       cursor: pointer;
-
-      img {
-        width: 1200px;
-        max-width: 100%;
-        max-height: 100%;
-      }
     }
   }
 </style>

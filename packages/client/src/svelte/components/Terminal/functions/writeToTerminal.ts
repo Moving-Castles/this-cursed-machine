@@ -10,7 +10,7 @@ import { scrollToEnd } from "./helpers"
  * @param {boolean} [replace=false] - Whether to replace the previous output. Defaults to false.
  * @returns {Promise<void>} - A promise indicating the completion of the write operation.
  */
-export async function writeToTerminal(type: OutputType, str: string, replace: boolean = false, symbol: string = SYMBOLS[2], delay: number = 0): Promise<void> {
+export async function writeToTerminal(type: OutputType, str: string, replace: boolean = false, symbol: string = SYMBOLS[2], delay: number = 10): Promise<void> {
     // Write to terminal output
     terminalOutput.update(output => {
         let newOutput: Output =

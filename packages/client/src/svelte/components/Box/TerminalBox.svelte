@@ -27,7 +27,7 @@
         </div>
         <button on:click={() => ($showGoals = true)} class="goal">
           <p>Show goal</p>
-        </div>
+        </button>
 
         <div class="graph">
           <Graph />
