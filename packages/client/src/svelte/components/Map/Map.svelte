@@ -32,14 +32,14 @@
     z-index: 100000;
 
     .map {
-      max-width: 90%;
-      max-height: 90%;
+      width: 90%;
+      height: 90%;
       cursor: pointer;
 
       img {
         width: 1200px;
         max-width: 100%;
-        height: auto;
+        max-height: 100%;
       }
     }
   }
