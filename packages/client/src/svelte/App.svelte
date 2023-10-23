@@ -35,6 +35,7 @@
   // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
+  // $: console.log("$staticContent", $staticContent)
   // $: console.log("$patches", $patches)
   // $: console.log("$goals", $goals)
   // $: console.log("$materials", $materials)
