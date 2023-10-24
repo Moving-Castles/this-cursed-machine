@@ -6,7 +6,7 @@
   import {
     EntityType,
     MaterialType,
-    ConnectionStatusType,
+    ConnectionState,
   } from "../../../modules/state/enums"
   import {
     simulatedMachines,
@@ -163,11 +163,10 @@
       {#each links as link}
         <g
           on:mouseenter={e => {
-            console.log(link)
             onNodeOrConnectionMouseEnter(e, link.entry, link.address)
           }}
           on:mouseleave={() => (inspecting = null)}
-          class={ConnectionStatusType[connectionState(link.address)]}
+          class={ConnectionState[connectionState(link.entry)]}
           stroke="var(--{link.entry?.product?.materialType
             ? MaterialType[link.entry?.product?.materialType]
             : 'STATE_INACTIVE'})"

@@ -5,7 +5,8 @@ import {
   simulatedPorts,
 } from "../simulator"
 import { connections } from "./index"
-import { ConnectionStatusType } from "../state/enums"
+import { ConnectionState } from "../state/enums"
+import type { SimulatedEntity } from "./types"
 import { MachineType, PortType } from "./types"
 
 /**
@@ -143,72 +144,65 @@ export const connectionBelongsToBox = (
   return false
 }
 
-/**
- * BROKEN: Return the connection state for this specific connection
- *
- *
- * @param connectionId string
- * @returns Connection Status ConnectionStatusType
- */
-export const connectionState = (connectionId: string) => {
-  // Create a new Set to track visited machines
-  const visitedOut: string[] = []
-  const visitedIn: string[] = []
+const dfs = (
+  currentMachineUID: string,
+  visited: Set<string>,
+  machinesMap: Map<string, Machine>,
+  portsMap: Map<string, Port>,
+  connections: Connection[]
+): boolean => {
+  if (visited.has(currentMachineUID)) return false
+  visited.add(currentMachineUID)
 
-  const connections = get(simulatedConnections)
-  const connection = connections[connectionId]
+  const currentMachine = machinesMap.get(currentMachineUID)
 
-  if (!connection.sourcePort || !connection.targetPort)
-    return ConnectionStatusType.NONE
+  if (currentMachine!.machineType === MachineType.OUTLET) {
+    return true
+  }
 
-  let connectedToOutlet = false
-  let connectedToInlet = false
+  for (const connection of connections) {
+    let nextPortUID: string | null = null
+    if (portsMap.get(connection.sourcePort)!.carriedBy === currentMachineUID) {
+      nextPortUID = connection.targetPort
+    }
 
-  // Get the machine that the targetPort belongs to
-  const targetAddress = connectionTargetMachine(connectionId, "address")
-
-  /**
-   * Look ahead or look back based off of port type. If the port type is output, we look ahead towards the oulet,
-   * If the port type is input, we look backwards towards the inlet
-   * @param machine
-   * @param portType
-   * @returns void
-   */
-  const look = (
-    machineAddress: string,
-    portType: PortType,
-    visited: string[]
-  ) => {
-    const machine = get(simulatedMachines)[machineAddress]
-
-    if (visited.includes(machineAddress)) return // Prevent circular connections
-    visited.push(machineAddress)
-
-    let targetType = 0
-
-    if (portType === PortType.OUTPUT) targetType = MachineType.OUTLET
-    if (portType === PortType.INPUT) targetType = MachineType.INLET
-
-    // Check if it's the tarhetType
-    if (machine?.machineType === targetType) {
-      if (portType === PortType.OUTPUT) connectedToOutlet = true
-      if (portType === PortType.INPUT) connectedToInlet = true
-      return
-    } else {
-      // See what the next machine is
-      const [usedPorts, _] = machinePorts(machineAddress, portType)
-
-      usedPorts.forEach(([address, _]) => {
-        const [add, __] = portConnectionOppositeMachine(address)
-        look(add, portType, visited)
-      })
+    if (nextPortUID) {
+      const nextMachineUID = portsMap.get(nextPortUID)!.carriedBy
+      if (dfs(nextMachineUID, visited, machinesMap, portsMap, connections)) {
+        return true
+      }
     }
   }
 
-  look(targetAddress, PortType.OUTPUT, visitedOut)
-  look(targetAddress, PortType.INPUT, visitedIn)
+  return false
+}
 
-  return connectedToOutlet && connectedToInlet
-    ? ConnectionStatusType.FLOWING
-    : ConnectionStatusType.CONNECTED
+const determineConnectionState = (
+  connection: Connection,
+  machinesEntries: [string, SimulatedEntity][],
+  portsEntries: [string, SimulatedEntity][],
+  connections: SimulatedEntity[]
+): ConnectionState => {
+  const machinesMap = new Map<string, Machine>(machinesEntries)
+  const portsMap = new Map<string, Port>(portsEntries)
+
+  const startingMachineUID = portsMap.get(connection.sourcePort)!.carriedBy
+  const visited = new Set<string>()
+
+  if (machinesMap.get(startingMachineUID)!.machineType === MachineType.INLET) {
+    if (dfs(startingMachineUID, visited, machinesMap, portsMap, connections)) {
+      return ConnectionState.FLOWING
+    }
+  }
+
+  return ConnectionState.CONNECTED
+}
+
+export const connectionState = (connection: Connection) => {
+  return determineConnectionState(
+    connection,
+    Object.entries(get(simulatedMachines)),
+    Object.entries(get(simulatedPorts)),
+    Object.values(get(simulatedConnections))
+  )
 }

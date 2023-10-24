@@ -54,8 +54,7 @@ const materialImages = {
   ENERGY: "",
   PLANT: "",
   CAFFEINATED_HEMATURIC_LIQUID: "",
-  CLUB_MATE:
-    "My neighbour, I think he exists. I think he is trying to tell me about this drink from rural Germany",
+  CLUB_MATE: "",
   DIET_RED_BULL: "",
   PRIME: "",
   M150: "",

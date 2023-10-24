@@ -52,7 +52,7 @@ export enum PortType {
   OUTPUT,
 }
 
-export enum ConnectionStatusType {
+export enum ConnectionState {
   NONE,
   CONNECTED,
   FLOWING,
