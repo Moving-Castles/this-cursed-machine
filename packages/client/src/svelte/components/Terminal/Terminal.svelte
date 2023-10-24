@@ -264,7 +264,22 @@
   }
 
   onMount(async () => {
-    await tick()
+    // De-activate input-field
+    inputActive = false
+    await writeToTerminal(
+      OutputType.INFO,
+      "WELCOME WORKER #24",
+      false,
+      SYMBOLS[7],
+      400
+    )
+    await writeToTerminal(
+      OutputType.INFO,
+      "TYPE 'HELP' TO START",
+      false,
+      SYMBOLS[7],
+      400
+    )
     resetInput()
   })
 </script>
