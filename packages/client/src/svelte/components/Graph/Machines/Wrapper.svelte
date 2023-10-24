@@ -1,12 +1,16 @@
 <script>
   import { onMount } from "svelte"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
-  import { MaterialType } from "../../../modules/state/enums"
+  import {
+    MaterialType,
+    ConnectionStatusType,
+  } from "../../../modules/state/enums"
   import {
     simulatedMachines,
     simulatedConnections,
     simulatedPorts,
   } from "../../../modules/simulator"
+  import { connectionState } from "../../../modules/state/convenience"
   import { MachineType } from "../../../modules/state/types"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
@@ -124,6 +128,7 @@
     <!-- LINKS -->
     {#each links as link}
       <g
+        class={ConnectionStatusType[connectionState(link.address)]}
         stroke="var(--{link.entry?.product?.materialType
           ? MaterialType[link.entry?.product?.materialType]
           : 'STATE_INACTIVE'})"

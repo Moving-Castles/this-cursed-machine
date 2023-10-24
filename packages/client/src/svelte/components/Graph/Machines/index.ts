@@ -11,6 +11,7 @@ export function data(
     nodes: [
       ...Object.entries(simulatedMachines).map(([key, entry]) => ({
         id: `Machine-${key}`,
+        address: key,
         entry,
         group: EntityType.MACHINE,
       })),
@@ -18,19 +19,16 @@ export function data(
     links: [
       // Connect ports to each other
       ...Object.entries(simulatedConnections)
-        .map(([key, entry]) => ({
-          id: key,
-          entry,
-        }))
-        .map(({ id, entry }) => {
+        .map(([key, entry]) => {
           // Connect the source machine to the target machine
           const sP = simulatedPorts[entry.sourcePort]
           const tP = simulatedPorts[entry.targetPort]
 
           if (sP && tP) {
             return {
-              id,
+              id: `Connection-${key}`,
               entry,
+              address: key,
               group: EntityType.CONNECTION,
               source: `Machine-${sP.carriedBy}`,
               target: `Machine-${tP.carriedBy}`,

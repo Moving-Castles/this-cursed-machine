@@ -1,12 +1,71 @@
 import { get } from "svelte/store"
-import { simulatedMachines, simulatedPorts } from "../simulator"
+import {
+  simulatedMachines,
+  simulatedConnections,
+  simulatedPorts,
+} from "../simulator"
 import { connections } from "./index"
-import { PortType } from "./types"
+import { ConnectionStatusType } from "../state/enums"
+import { MachineType, PortType } from "./types"
 
-export const connectionSourceMachine = (connectionId: string) => {
-  return get(simulatedMachines)[
+/**
+ * Get the machine this connection runs from
+ * @param connectionId
+ * @returns
+ */
+export const connectionSourceMachine = (
+  connectionId: string,
+  type: "address" | "entity" | "entry" = "entity"
+) => {
+  const address =
     get(simulatedPorts)[get(connections)[connectionId].sourcePort]?.carriedBy
-  ]
+  if (type === "address") return address
+  const entity = get(simulatedMachines)[address]
+  if (type === "entity") return entity
+  // entry format
+  return [address, entity]
+}
+
+/**
+ * Get the machine this connection targets
+ * @param connectionId
+ * @param type "entry" | "address" | "both" = "entry"
+ * @returns address, entity or entry based on your preference. Default is entry
+ */
+export const connectionTargetMachine = (
+  connectionId: string,
+  type: "address" | "entity" | "entry" = "entity"
+) => {
+  const address =
+    get(simulatedPorts)[get(connections)[connectionId].targetPort]?.carriedBy
+  if (type === "address") return address
+  const entity = get(simulatedMachines)[address]
+  if (type === "entity") return entity
+  // Entry format
+  return [address, entity]
+}
+
+/**
+ * Get the machine that this port connects to,
+ * NOTE: This is NOT the machine this port is carried by, but the machine the port connects to through the connection
+
+ * @param portId 
+ * @returns 
+ */
+export const portConnectionOppositeMachine = (portId: string) => {
+  const port = get(simulatedPorts)[portId]
+  const connection = Object.entries(get(connections)).find(([_, conn]) => {
+    return conn.sourcePort === portId || conn.targetPort === portId
+  })
+
+  if (connection) {
+    if (port.portType === PortType.OUTPUT)
+      return connectionSourceMachine(connection[0], "entry")
+    if (port.portType === PortType.INPUT)
+      return connectionTargetMachine(connection[0], "entry")
+  }
+
+  return false
 }
 
 /**
@@ -82,4 +141,85 @@ export const connectionBelongsToBox = (
   }
 
   return false
+}
+
+/**
+ * BROKEN: Return the connection state for this specific connection
+ *
+ *
+ * @param connectionId string
+ * @returns Connection Status ConnectionStatusType
+ */
+export const connectionState = (connectionId: string) => {
+  console.log("DEBUG: CONNECTION STATE", connectionId)
+  // Create a new Set to track visited machines
+  const visitedOut: string[] = []
+  const visitedIn: string[] = []
+  console.log(visitedIn, "at beginngin")
+  console.log(visitedOut, "at beginngin")
+
+  const connections = get(simulatedConnections)
+  const connection = connections[connectionId]
+
+  if (!connection.sourcePort || !connection.targetPort)
+    return ConnectionStatusType.NONE
+
+  let connectedToOutlet = false
+  let connectedToInlet = false
+
+  // Get the machine that the targetPort belongs to
+  const targetAddress = connectionTargetMachine(connectionId, "address")
+
+  /**
+   * Look ahead or look back based off of port type. If the port type is output, we look ahead towards the oulet,
+   * If the port type is input, we look backwards towards the inlet
+   * @param machine
+   * @param portType
+   * @returns void
+   */
+  const look = (
+    machineAddress: string,
+    portType: PortType,
+    visited: string[]
+  ) => {
+    const machine = get(simulatedMachines)[machineAddress]
+
+    if (visited.includes(machineAddress)) return // Prevent circular connections
+    visited.push(machineAddress)
+
+    let targetType = 0
+
+    if (portType === PortType.OUTPUT) targetType = MachineType.OUTLET
+    if (portType === PortType.INPUT) targetType = MachineType.INLET
+
+    // Check if it's the tarhetType
+    if (machine?.machineType === targetType) {
+      if (portType === PortType.OUTPUT) connectedToOutlet = true
+      if (portType === PortType.INPUT) connectedToInlet = true
+      return
+    } else {
+      // See what the next machine is
+      const [usedPorts, _] = machinePorts(machineAddress, portType)
+
+      usedPorts.forEach(([address, _]) => {
+        console.log("PORTSSSSSS ", usedPorts)
+        const [add, __] = portConnectionOppositeMachine(address)
+        console.log(add, __)
+        look(add, portType, visited)
+      })
+    }
+  }
+
+  look(targetAddress, PortType.OUTPUT, visitedOut)
+  look(targetAddress, PortType.INPUT, visitedIn)
+
+  console.log("WE FLOWY", connectedToOutlet, connectedToInlet)
+  console.log("")
+  console.log("")
+  console.log("")
+  console.log("END DEBUG: CONNECTION STATE", connectionId)
+
+  return connectedToOutlet && connectedToInlet
+    ? ConnectionStatusType.FLOWING
+    : ConnectionStatusType.CONNECTED
 }
