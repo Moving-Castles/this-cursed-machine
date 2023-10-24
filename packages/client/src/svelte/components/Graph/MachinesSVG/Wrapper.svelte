@@ -5,7 +5,6 @@
     MachineType,
     MaterialType,
   } from "../../../modules/state/enums"
-  import { connectionSourceMachine } from "../../../modules/state/convenience"
   import { onMount, createEventDispatcher } from "svelte"
   import {
     simulated,

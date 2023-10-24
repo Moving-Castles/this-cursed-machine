@@ -21,7 +21,7 @@ export enum MachineType {
   DRYER,
   WETTER,
   BOILER,
-  COOLER
+  COOLER,
 }
 
 export enum MaterialType {
@@ -43,11 +43,17 @@ export enum MaterialType {
   E_LIQUID,
   TOBACCO,
   CIGARETTE_JUICE,
-  HAND_OF_GOD
+  HAND_OF_GOD,
 }
 
 export enum PortType {
   NONE,
   INPUT,
   OUTPUT,
+}
+
+export enum ConnectionStatusType {
+  NONE,
+  CONNECTED,
+  FLOWING,
 }

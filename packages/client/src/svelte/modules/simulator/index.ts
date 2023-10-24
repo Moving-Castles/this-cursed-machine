@@ -59,6 +59,7 @@ export const simulated = derived(
       ...Object.entries($entities),
     ])
 
+    // Attach products to the ports and connections
     for (const [key, patch] of Object.entries($patches)) {
       // Inputs
       if (patch.inputs && simulated[key]) {
@@ -68,24 +69,23 @@ export const simulated = derived(
         for (const input of patch.inputs) {
           // Select the first available in port of the simulated entity
           let inPort = Object.entries(simulated)
+            .filter(([_, ent]) => ent?.carriedBy === key)
             .filter(([_, ent]) => ent.entityType === EntityType.PORT)
-            .filter(([_, ent]) => ent.carriedBy === key)
 
+          // Find the in port
           inPort = inPort
             .filter(([_, port]) => port.portType === PortType.INPUT)
             .find(([_, port]) => !port.product)
-          console.log("in port ", inPort)
 
           if (inPort) {
-            const portAddress = inPort[0]
             // Attach the materialType and amount to port
-            simulated[portAddress].product = { ...input }
+            simulated[inPort[0]].product = { ...input }
 
             // If something is input, that means it's a connection
             // Follow the trace to the connection that leads to this port
             const connector = Object.entries(simulated)
               .filter(([_, ent]) => ent.entityType === EntityType.CONNECTION)
-              .find(([_, c]) => c.targetPort === portAddress)
+              .find(([_, c]) => c.targetPort === inPort[0])
 
             if (connector) {
               const connectorAddress = connector[0]
@@ -108,9 +108,7 @@ export const simulated = derived(
             .find(([_, port]) => !port.product) // first available
 
           if (outPort) {
-            const portAddress = outPort[0]
-
-            simulated[portAddress].product = { ...output }
+            simulated[outPort[0]].product = { ...output }
           }
         }
       }
