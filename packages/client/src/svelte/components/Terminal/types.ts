@@ -21,7 +21,8 @@ export enum COMMAND {
     INSPECT,
     RESOLVE,
     TRANSFER,
-    MAP
+    MAP,
+    GOALS
 }
 
 export type Command<T extends any[] = any[]> = {
