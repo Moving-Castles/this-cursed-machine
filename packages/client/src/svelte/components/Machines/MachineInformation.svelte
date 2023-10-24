@@ -1,4 +1,5 @@
 <script lang="ts">
+  export let address: string
   export let machine: Machine // can be numerical or string
   import { MaterialType, MachineType } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
@@ -10,30 +11,31 @@
 <div class="machine-information">
   {MachineType[machine.machineType]}
   <p class="muted">
-    {machineLore}
+    {machineLore}<br />
+    -------------------
   </p>
   {#if machine?.inputs || machine?.outputs}
     <div class="flex">
-      <div class="inputs">
+      <p class="inputs">
         {#if machine?.inputs}
-          <p>IN</p>
+          <p class="muted">IN</p>
           {#each machine?.inputs as input}
-            <p class="muted">
-              {MaterialType[input.materialType]}: {input.amount}
+            <p>
+              <span style:color="var(--{MaterialType[input.materialType]})"
+                >{MaterialType[input.materialType]}</span
+              >: {input.amount}
             </p>
           {/each}
         {/if}
-      </div>
-      <div class="divider">
-        |<br />
-        |<br />
-      </div>
+      </p>
       <div class="outputs">
-        {#if machine?.outputs}
-          <p>OUT</p>
+        {#if machine?.outputs && machine.machineType !== MachineType.OUTLET}
+          <p class="muted">OUT</p>
           {#each machine?.outputs as output}
-            <p class="muted">
-              {MaterialType[output.materialType]}: {output.amount}
+            <p>
+              <span style:color="var(--{MaterialType[output.materialType]})"
+                >{MaterialType[output.materialType]}</span
+              >: {output.amount}
             </p>
           {/each}
         {/if}
@@ -43,13 +45,6 @@
 </div>
 
 <style>
-  .machine-information {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-  }
-
   .flex {
     display: flex;
   }

@@ -539,10 +539,14 @@
 <svelte:window on:resize={resizeSvg} />
 
 <div on:click={onClick} class="wrapper">
-  {#if inspecting}
+  {#if inspecting?.entityType === EntityType.MACHINE}
     <MachineInformation
-      address={inspecting.address}
-      machineType={inspecting.machineType}
+      machine={inspecting}
+    />
+  {/if}
+  {#if inspecting?.entityType === EntityType.CONNECTION}
+    <ConnectionInformation
+      connection={inspecting}
     />
   {/if}
 

@@ -1,6 +1,6 @@
 import { EntityType } from "../../../modules/state/enums"
 
-export const MACHINE_SIZE = 100
+export const MACHINE_SIZE = 80
 
 export function data(
   simulatedMachines: Entity[],

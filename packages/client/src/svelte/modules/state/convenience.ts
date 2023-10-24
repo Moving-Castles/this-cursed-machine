@@ -151,12 +151,9 @@ export const connectionBelongsToBox = (
  * @returns Connection Status ConnectionStatusType
  */
 export const connectionState = (connectionId: string) => {
-  console.log("DEBUG: CONNECTION STATE", connectionId)
   // Create a new Set to track visited machines
   const visitedOut: string[] = []
   const visitedIn: string[] = []
-  console.log(visitedIn, "at beginngin")
-  console.log(visitedOut, "at beginngin")
 
   const connections = get(simulatedConnections)
   const connection = connections[connectionId]
@@ -202,9 +199,7 @@ export const connectionState = (connectionId: string) => {
       const [usedPorts, _] = machinePorts(machineAddress, portType)
 
       usedPorts.forEach(([address, _]) => {
-        console.log("PORTSSSSSS ", usedPorts)
         const [add, __] = portConnectionOppositeMachine(address)
-        console.log(add, __)
         look(add, portType, visited)
       })
     }
@@ -212,12 +207,6 @@ export const connectionState = (connectionId: string) => {
 
   look(targetAddress, PortType.OUTPUT, visitedOut)
   look(targetAddress, PortType.INPUT, visitedIn)
-
-  console.log("WE FLOWY", connectedToOutlet, connectedToInlet)
-  console.log("")
-  console.log("")
-  console.log("")
-  console.log("END DEBUG: CONNECTION STATE", connectionId)
 
   return connectedToOutlet && connectedToInlet
     ? ConnectionStatusType.FLOWING
