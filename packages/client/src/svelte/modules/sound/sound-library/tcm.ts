@@ -7,7 +7,7 @@ export const tcm: SoundAssets = {
     },
     background: {
         src: "./sounds/tcm/background.mp3",
-        volume: 1,
+        volume: 0.3,
     },
     bow: {
         src: "./sounds/tcm/BOW.mp3",
@@ -63,10 +63,14 @@ export const tcm: SoundAssets = {
     },
     inner: {
         src: "./sounds/tcm/inner.mp3",
-        volume: 1,
+        volume: 0.5,
     },
     heartbeat: {
         src: "./sounds/tcm/heartbeat.mp3",
+        volume: 1,
+    },
+    singleHeartbeat: {
+        src: "./sounds/tcm/single-heartbeat.mp3",
         volume: 1,
     },
 };

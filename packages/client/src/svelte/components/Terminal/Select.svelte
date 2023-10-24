@@ -1,9 +1,10 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { onMount, createEventDispatcher } from "svelte"
+  import { onMount, createEventDispatcher, tick } from "svelte"
   import { MachineType } from "../../modules/state/enums"
   import type { SelectOption } from "./types"
   import { playSound } from "../../modules/sound"
+  import { scrollToEnd } from "./functions/helpers"
 
   type ReturnFunction = (value: string | MachineType | null) => void
 
@@ -61,13 +62,15 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     console.log("selectOptions", selectOptions)
     // Abort if no options
     if (selectOptions.length === 0) {
       returnValue(null)
     }
     selectContainerElement.focus()
+    await tick()
+    scrollToEnd()
   })
 </script>
 

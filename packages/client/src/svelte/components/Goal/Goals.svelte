@@ -10,14 +10,6 @@
       ? "ENERGY"
       : MaterialType[goal?.materialType]
   })
-
-  $: {
-    let levels = {}
-    Object.values($goals).forEach(g => {
-      if (!levels[g.level]) levels[g.level] = []
-      levels[g.level].push(`${g.amount} ${MaterialType[g.materialType]}`)
-    })
-  }
 </script>
 
 <!-- Start of new box -->

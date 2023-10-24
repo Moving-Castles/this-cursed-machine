@@ -14,7 +14,7 @@
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
   import TerminalOutput from "./TerminalOutput.svelte"
-  import { getMachinePorts } from "./functions/helpers"
+  import { getMachinePorts, scrollToEnd } from "./functions/helpers"
   import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
 
   let inputElement: HTMLInputElement
@@ -30,6 +30,7 @@
   const resetInput = async () => {
     userInput = ""
     inputActive = true
+    scrollToEnd()
     focusInput()
   }
 
@@ -262,16 +263,28 @@
     playInputSound(e)
   }
 
-  onMount(() => {
+  onMount(async () => {
+    // De-activate input-field
+    inputActive = false
+    await writeToTerminal(
+      OutputType.INFO,
+      "WELCOME WORKER #24",
+      false,
+      SYMBOLS[7],
+      400
+    )
+    await writeToTerminal(
+      OutputType.INFO,
+      "TYPE 'HELP' TO START",
+      false,
+      SYMBOLS[7],
+      400
+    )
     resetInput()
-    // Regularly refocus the input every 100ms
-    // setInterval(() => {
-    //   if (inputElement) {
-    //     inputElement.focus()
-    //   }
-    // }, 100)
   })
 </script>
+
+<svelte:window on:keydown={focusInput} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -315,7 +328,7 @@
     height: 100vh;
     white-space: pre-line;
     border: 1px solid var(--terminal-color);
-    padding-bottom: 4em;
+    padding-bottom: 2em;
     line-height: 1.2em;
 
     form {

@@ -10,7 +10,6 @@
   import { playSound } from "../../modules/sound"
 
   onMount(() => {
-    playSound("tcm", "heartbeat", true, false)
     playSound("tcm", "background", true, false)
   })
 </script>
@@ -28,6 +27,8 @@
     </div>
     {#if $playerCore}
       <div class="right-col">
+        <!-- <div class="scanlines" /> -->
+        <!-- <div class="scanlines2" /> -->
         <div class="stats">
           <BoxStats />
         </div>
@@ -61,6 +62,34 @@
     z-index: 1000;
   }
 
+  .scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    // background: url(/images/scanlines.gif);
+    background: url(/images/vhs.webp);
+    background-size: 100% 100%;
+    mix-blend-mode: lighten;
+    z-index: 1010000000;
+  }
+
+  .scanlines2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    background: url(/images/scanlines.gif);
+    // background: url(/images/vhs.webp);
+    background-size: 100% 100%;
+    mix-blend-mode: multiply;
+    z-index: 1010000000;
+  }
+
   .split-screen {
     // Display properties are set in app.css
 
@@ -74,6 +103,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr)) 150px 150px;
       grid-template-rows: 250px 1fr;
       overflow: hidden;
+      position: relative;
 
       .stats {
         grid-column: 1 / 5;
@@ -138,6 +168,8 @@
 
   .graph {
     grid-column: 1 / 7;
+    position: relative;
+    // background: red;
   }
 
   .graph-container {
