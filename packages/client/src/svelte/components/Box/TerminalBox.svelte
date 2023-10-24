@@ -41,6 +41,8 @@
           <p>Show goal</p>
         </button>
         <div class="graph">
+          <!-- <div class="scanlines" /> -->
+          <!-- <div class="scanlines2" /> -->
           <Graph />
         </div>
       </div>
@@ -59,6 +61,34 @@
     background-color: #444;
     font-size: var(--font-size-normal);
     z-index: 1000;
+  }
+
+  .scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    // background: url(/images/scanlines.gif);
+    background: url(/images/vhs.webp);
+    background-size: 100% 100%;
+    mix-blend-mode: lighten;
+    z-index: 1010000000;
+  }
+
+  .scanlines2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    background: url(/images/scanlines.gif);
+    // background: url(/images/vhs.webp);
+    background-size: 100% 100%;
+    mix-blend-mode: multiply;
+    z-index: 1010000000;
   }
 
   .split-screen {
@@ -138,6 +168,8 @@
 
   .graph {
     grid-column: 1 / 7;
+    position: relative;
+    // background: red;
   }
 
   .graph-container {
