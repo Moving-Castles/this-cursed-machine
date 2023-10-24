@@ -15,7 +15,7 @@ contract InitSystem is System {
     require(GameConfig.get().coolDown == 0, "InitSystem: already initialized");
 
     // Set game config
-    GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 10, buildCost: 20 }));
+    GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0 }));
 
     // Create levels
     LevelDefinition[8] memory levels = [
@@ -35,12 +35,12 @@ contract InitSystem is System {
 
     // Create goals for levels
     // ** 1 (MATERIAL_TYPE.NONE => Core energy check)
-    LibGoal.create(1, MATERIAL_TYPE.NONE, 200);
+    LibGoal.create(1, MATERIAL_TYPE.NONE, 101);
     // ** 2
     LibGoal.create(2, MATERIAL_TYPE.PISS, 2000);
     LibGoal.create(2, MATERIAL_TYPE.BLOOD, 2000);
     // ** 3
-    LibGoal.create(3, MATERIAL_TYPE.MONSTER, 2000);
+    LibGoal.create(3, MATERIAL_TYPE.M150, 2000);
     // ** 4
     LibGoal.create(4, MATERIAL_TYPE.PRIME, 4000);
     // ** 5

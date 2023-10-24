@@ -304,10 +304,10 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Starting energy: 100
-    // Connection cost : 10
+    // Connection cost : 0
     // 40 blocks: 40 bugs => 40 energy
     // == 130 energy
-    assertEq(uint8(Energy.get(world, coreEntity)), 130);
+    assertEq(uint8(Energy.get(world, coreEntity)), 140);
   }
 
   function testMakeSludge() public {
