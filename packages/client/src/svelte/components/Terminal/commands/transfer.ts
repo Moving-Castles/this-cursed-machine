@@ -14,8 +14,8 @@ async function execute() {
     // ...
     writeToTerminal(OutputType.NORMAL, "Transfer in progress...")
     await waitForCompletion(action);
-    playSound("ui", "eventGood")
-    writeToTerminal(OutputType.SUCCESS, "Done")
+    playSound("tcm", "swipe5")
+    await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;
 }

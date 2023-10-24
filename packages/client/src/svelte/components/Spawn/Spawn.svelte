@@ -12,7 +12,7 @@
   function sendSpawn() {
     if (spawnInProgress) return
     spawnInProgress = true
-    playSound("tekken", "click")
+    playSound("tcm", "alarm")
     spawn()
   }
 

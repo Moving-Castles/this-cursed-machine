@@ -6,7 +6,7 @@
   function sendTransfer() {
     if (inProgress) return
     inProgress = true
-    playSound("tekken", "click")
+    playSound("tcm", "solidTile01")
     transfer()
   }
 </script>

@@ -15,8 +15,8 @@ async function execute(connectionEntity: string) {
     // ...
     writeToTerminal(OutputType.NORMAL, "Disconnecting...")
     await waitForCompletion(action);
-    playSound("ui", "eventGood")
-    writeToTerminal(OutputType.SUCCESS, "Done")
+    playSound("tcm", "swipe5")
+    await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;
 }

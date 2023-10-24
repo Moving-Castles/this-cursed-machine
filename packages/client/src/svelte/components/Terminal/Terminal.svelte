@@ -63,14 +63,19 @@
     inputActive = false
 
     // Write input to terminal
-    writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
+    await writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
 
     // Evaluate input
     const command = evaluate(userInput)
 
     // Handle invalid command
     if (!command) {
-      writeToTerminal(OutputType.ERROR, "Command not found", false, SYMBOLS[5])
+      await writeToTerminal(
+        OutputType.ERROR,
+        "Command not found",
+        false,
+        SYMBOLS[5]
+      )
       resetInput()
       return
     }
@@ -85,7 +90,7 @@
 
       // Abort if no options
       if (selectOptions.length === 0) {
-        writeToTerminal(OutputType.ERROR, "Nothing", false, SYMBOLS[4])
+        await writeToTerminal(OutputType.ERROR, "Nothing", false, SYMBOLS[4])
         resetInput()
         return
       }
@@ -94,6 +99,12 @@
 
       // Abort if nothing selected
       if (!value) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "Nothing selected",
+          false,
+          SYMBOLS[5]
+        )
         resetInput()
         return
       }
@@ -112,13 +123,13 @@
 
       // @todo: Does the machine have multiple output ports?
 
-      writeToTerminal(OutputType.NORMAL, "From:")
+      await writeToTerminal(OutputType.NORMAL, "From:")
 
       let sourceMachine = await renderSelect(sourceSelectOptions)
 
       // Abort if nothing selected
       if (!sourceMachine) {
-        writeToTerminal(
+        await writeToTerminal(
           OutputType.ERROR,
           "No source machine",
           false,
@@ -158,7 +169,7 @@
 
       // Abort if nothing selected
       if (!targetMachine) {
-        writeToTerminal(
+        await writeToTerminal(
           OutputType.ERROR,
           "No target machine",
           false,
@@ -170,7 +181,7 @@
 
       let targetMachineEntity = $simulatedMachines[targetMachine]
 
-      writeToTerminal(
+      await writeToTerminal(
         OutputType.SPECIAL,
         "To: " +
           MachineType[targetMachineEntity.machineType || MachineType.NONE] +
@@ -191,7 +202,7 @@
         getMachinePorts(String(targetMachine), PortType.INPUT) || []
 
       if (sourcePorts.length === 0 || targetPorts.length === 0) {
-        writeToTerminal(
+        await writeToTerminal(
           OutputType.ERROR,
           "Could not connect machines",
           false,
@@ -204,7 +215,7 @@
       // If the source machine is the core:
       // Allow selecting the output port
       if (sourceMachineEntity.machineType === MachineType.CORE) {
-        writeToTerminal(OutputType.NORMAL, "Select source port:")
+        await writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
 
         for (let i = 0; i < sourcePorts.length; i++) {
@@ -223,7 +234,7 @@
 
         // Abort if nothing selected
         if (!sourcePort) {
-          writeToTerminal(
+          await writeToTerminal(
             OutputType.ERROR,
             "No port selected",
             false,

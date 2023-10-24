@@ -16,8 +16,8 @@ async function execute(machineType: MachineType) {
   writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
   // ...
   await waitForCompletion(action)
-  playSound("ui", "eventGood")
-  writeToTerminal(OutputType.SUCCESS, "Done")
+  playSound("tcm", "swipe5")
+  await writeToTerminal(OutputType.SUCCESS, "Done")
   // ...
   return
 }

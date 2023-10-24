@@ -2,7 +2,7 @@
  *  Simulates the changing state of the game
  *
  */
-import { EntityType, MachineType, PortType } from "../state/enums"
+import { EntityType, MachineType, PortType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
 import { portBelongsToBox, connectionBelongsToBox } from "../state/convenience"
@@ -186,15 +186,32 @@ export const simulatedPorts = derived(
   }
 )
 
-// --- READABLE ------------------------------------------
+/**
+ * Derives a readable list of connections based on the input stores.
+ * 
+ * Given the current connections, ports, machines, and playerCore, this function
+ * will filter, map, and transform the connections to a more readable format
+ * showcasing the relationship between source machines and target machines.
+ * @param {Array} - Array of svelte stores: [connections, ports, machines, playerCore]
+ * @returns {Array} - An array of transformed connection objects which includes the id,
+ *                    connection details, and a human-readable label for each connection.
+ */
 export const readableConnections = derived(
   [connections, ports, machines, playerCore],
   ([$connections, $ports, $machines, $playerCore]) => {
     return Object.entries($connections)
+      // Filter connections to only those that belong to the current box carried by player
       .filter(([_, entry]) =>
         connectionBelongsToBox(entry, $playerCore.carriedBy)
       )
       .map(([id, connection]) => {
+
+        console.log("connection", connection)
+
+        // Get the material being transported 
+        const materialType = connection.product?.materialType
+
+        // Extract the source and target ports for the current connection
         const sP = connection?.sourcePort
         const tP = connection?.targetPort
 
@@ -203,21 +220,23 @@ export const readableConnections = derived(
           const ttP = $ports[tP]
 
           if (ssP && ttP) {
-            const sourceMachine =
-              MachineType[$machines[ssP?.carriedBy]?.machineType]
+            // Fetch the machine types and indices for source and target
+            const sourceMachine = MachineType[$machines[ssP?.carriedBy]?.machineType]
             const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-            const targetMachine =
-              MachineType[$machines[ttP?.carriedBy]?.machineType]
+            const targetMachine = MachineType[$machines[ttP?.carriedBy]?.machineType]
             const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
+
             if (sourceMachine && targetMachine) {
+              // Construct a label showcasing the source to target machine connection
+
+              console.log('sourceMachine', sourceMachine)
+
               return {
                 id,
                 connection,
-                label: `From ${sourceMachine}${
-                  sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                } To ${targetMachine}${
-                  targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                }`,
+                label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
+                  } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
+                  } ${sourceMachine === "CORE" ? `(${MaterialType[materialType]})` : ""}`,
               }
             }
           }
@@ -225,9 +244,11 @@ export const readableConnections = derived(
 
         return false
       })
+      // Filter out any invalid or non-transformed entries
       .filter(ent => ent)
   }
 )
+
 
 export const readableMachines = derived(
   simulatedMachines,
@@ -293,9 +314,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-        patchesOnOutlet.outputs &&
-        patchesOnOutlet.outputs[0] &&
-        patchesOnOutlet.outputs[0].materialType === material.materialType
+          patchesOnOutlet.outputs &&
+          patchesOnOutlet.outputs[0] &&
+          patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType] =
@@ -327,7 +348,7 @@ export const simulatedPlayerEnergy = derived(
   ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-        $playerEnergyMod * $blocksSinceLastResolution
+      $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )
