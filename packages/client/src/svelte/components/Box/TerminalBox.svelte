@@ -169,7 +169,7 @@
   .graph {
     grid-column: 1 / 7;
     position: relative;
-    background: red;
+    // background: red;
   }
 
   .graph-container {
