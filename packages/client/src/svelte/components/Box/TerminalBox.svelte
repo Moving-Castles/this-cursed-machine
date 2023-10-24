@@ -27,6 +27,8 @@
     </div>
     {#if $playerCore}
       <div class="right-col">
+        <!-- <div class="scanlines" /> -->
+        <!-- <div class="scanlines2" /> -->
         <div class="stats">
           <BoxStats />
         </div>
@@ -40,8 +42,6 @@
           <p>Show goal</p>
         </button>
         <div class="graph">
-          <!-- <div class="scanlines" /> -->
-          <!-- <div class="scanlines2" /> -->
           <Graph />
         </div>
       </div>
@@ -103,6 +103,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr)) 150px 150px;
       grid-template-rows: 250px 1fr;
       overflow: hidden;
+      position: relative;
 
       .stats {
         grid-column: 1 / 5;
@@ -168,7 +169,7 @@
   .graph {
     grid-column: 1 / 7;
     position: relative;
-    // background: red;
+    background: red;
   }
 
   .graph-container {

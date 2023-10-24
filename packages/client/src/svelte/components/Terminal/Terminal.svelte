@@ -263,16 +263,13 @@
     playInputSound(e)
   }
 
-  onMount(() => {
+  onMount(async () => {
+    await tick()
     resetInput()
-    // Regularly refocus the input every 100ms
-    // setInterval(() => {
-    //   if (inputElement) {
-    //     inputElement.focus()
-    //   }
-    // }, 100)
   })
 </script>
+
+<svelte:window on:keydown={focusInput} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->

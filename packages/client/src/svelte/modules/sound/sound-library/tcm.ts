@@ -63,7 +63,7 @@ export const tcm: SoundAssets = {
     },
     inner: {
         src: "./sounds/tcm/inner.mp3",
-        volume: 1,
+        volume: 0.5,
     },
     heartbeat: {
         src: "./sounds/tcm/heartbeat.mp3",
