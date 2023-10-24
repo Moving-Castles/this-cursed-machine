@@ -1,12 +1,15 @@
 import { get } from "svelte/store";
 import { network, blockNumber } from "./index";
 import { toastMessage } from "../ui/toast"
+import { playSound } from "../sound"
 
 let blockTimeout: NodeJS.Timeout;
 const TIMEOUT = 10000;
 
 export function initBlockListener() {
     get(network).latestBlock$.subscribe((block) => {
+        // Play heartbeat on new block
+        playSound("tcm", "singleHeartbeat")
         // Show a error message if we haven't received a block in a while
         clearTimeout(blockTimeout);
         blockTimeout = setTimeout(handleBlockTimeout, TIMEOUT);

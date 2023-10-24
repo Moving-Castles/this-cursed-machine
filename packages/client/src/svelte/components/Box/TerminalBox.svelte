@@ -10,7 +10,6 @@
   import { playSound } from "../../modules/sound"
 
   onMount(() => {
-    playSound("tcm", "heartbeat", true, false)
     playSound("tcm", "background", true, false)
   })
 </script>
