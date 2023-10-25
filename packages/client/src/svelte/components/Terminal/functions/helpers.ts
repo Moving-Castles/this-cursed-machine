@@ -55,13 +55,15 @@ export const waitForTransaction = (action: Action): Promise<Action> => {
  * @param {Action} action - The action object to check for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once it's completed, or rejects after a certain number of retries.
  */
-export const waitForCompletion = (action: Action): Promise<Action> => {
+export const waitForCompletion = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100 // just an example, set to however many retries you want
+    let index = 0
     let attempts = 0
 
     const checkCompletion = () => {
-      console.log("top", action)
+      index++;
+      if (loadingFunction) loadingFunction(index);
       if (action.completed) {
         resolve(action)
       } else if (action.failed) {
@@ -70,7 +72,7 @@ export const waitForCompletion = (action: Action): Promise<Action> => {
       } else if (attempts < maxRetries) {
         attempts++
         // wait for some time before checking again
-        setTimeout(checkCompletion, 100) // checking every second in this example
+        setTimeout(checkCompletion, 100)
       } else {
         reject(new Error("Max retries reached without completion."))
       }

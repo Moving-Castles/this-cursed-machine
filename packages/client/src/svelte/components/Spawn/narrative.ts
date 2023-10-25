@@ -1,4 +1,4 @@
-import { typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
+import { loadingLine, typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
 import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
 import { spawn, transfer } from "../../modules/action"
@@ -70,7 +70,7 @@ export const narrative = [
         const action = spawn()
         console.log(action)
         await waitForTransaction(action);
-        await waitForCompletion(action);
+        await waitForCompletion(action, loadingLine);
         // Spawn complete
         await writeNarrativeSuccess("On-boarding complete")
         await writeNarrative("Congratulations Worker#24")
@@ -84,7 +84,7 @@ export const narrative = [
         const action = transfer()
         console.log(action)
         await waitForTransaction(action);
-        await waitForCompletion(action);
+        await waitForCompletion(action, loadingLine);
         await writeNarrativeSuccess("Transfer complete")
     },
 ]

@@ -1,4 +1,3 @@
-import { tick } from "svelte"
 import { terminalOutput, SYMBOLS } from ".."
 import { OutputType, type Output } from "../types"
 import { scrollToEnd } from "./helpers"
@@ -38,6 +37,18 @@ export async function writeToTerminal(type: OutputType, str: string, replace: bo
     return
 }
 
+/**
+ * Types characters one by one to the terminal with a given delay.
+ * 
+ * @async
+ * @function
+ * @param {OutputType} type - The type of output.
+ * @param {string} str - The string to be typed out.
+ * @param {string} [symbol=SYMBOLS[2]] - The symbol used to represent typing progress.
+ * @param {number} [delay=10] - The delay (in milliseconds) between typing each character.
+ * @param {number} [endDelay=10] - The delay (in milliseconds) after the entire string is typed.
+ * @returns {Promise<void>} A promise that resolves when typing is complete.
+ */
 export async function typeWriteToTerminal(type: OutputType, str: string, symbol: string = SYMBOLS[2], delay: number = 10, endDelay: number = 10): Promise<void> {
 
     await writeToTerminal(type, str[0], false, symbol, delay)
@@ -51,4 +62,14 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
 
     scrollToEnd()
     return
+}
+
+export async function loadingLine(index: number): Promise<void> {
+    const CHARACTER = "."
+    playSound("tcm", "cant");
+    if (index === 1) {
+        await writeToTerminal(OutputType.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
+    } else {
+        await writeToTerminal(OutputType.NORMAL, CHARACTER.repeat(index), true, SYMBOLS[2], 0)
+    }
 }

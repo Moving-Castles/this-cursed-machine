@@ -1,7 +1,7 @@
 import type { Command } from "../types"
 import { COMMAND } from "../types"
 import { build as sendBuild } from "../../../modules/action"
-import { writeToTerminal } from "../functions/writeToTerminal"
+import { loadingLine, writeToTerminal } from "../functions/writeToTerminal"
 import { waitForCompletion, waitForTransaction } from "../functions/helpers"
 import { OutputType } from "../types"
 import { MachineType } from "../../../modules/state/enums"
@@ -15,7 +15,7 @@ async function execute(machineType: MachineType) {
   await waitForTransaction(action)
   writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
   // ...
-  await waitForCompletion(action)
+  await waitForCompletion(action, loadingLine)
   playSound("tcm", "swipe5")
   await writeToTerminal(OutputType.SUCCESS, "Done")
   // ...
