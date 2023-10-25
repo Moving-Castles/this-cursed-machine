@@ -25,15 +25,10 @@
   import { initSound, playSound } from "./modules/sound"
 
   import Loading from "./components/Loading/Loading.svelte"
-  import Flash from "./components/Flash/Flash.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  import Intro from "./components/Intro/Intro.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
-
   import Death from "./components/Death/Death.svelte"
-  // import Game from "./components/Game/Game.svelte"
-  // import Box from "./components/Box/Box.svelte"
 
   // - - - - -
   // $: console.log("$staticContent", $staticContent)
@@ -55,7 +50,6 @@
   // - - - - -
 
   let UIState = 0
-  let shown = false
 
   initUI()
 
@@ -110,17 +104,8 @@
 
   {#if !$ready || UIState === 0}
     <Loading on:next={() => (UIState = 1)} />
-  {:else if UIState === 1 && !shown}
-    <Flash
-      on:next={() => {
-        UIState = 2
-        shown = true
-      }}
-    />
-  {:else if !$playerCore}
+  {:else if $playerCore?.level == undefined || $playerCore?.level === 0}
     <Spawn />
-  {:else if $playerCore.level === 0}
-    <Intro />
   {:else if $simulatedPlayerEnergy === 0}
     <Death />
   {:else}

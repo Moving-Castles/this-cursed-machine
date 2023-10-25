@@ -139,6 +139,7 @@ export const simulatedBoxes = derived(simulated, $simulated => {
 export const simulatedMachines = derived(
   [simulated, playerCore],
   ([$simulated, $playerCore]) => {
+    if (!$playerCore) return {}
     return Object.fromEntries(
       Object.entries($simulated).filter(([_, entry]) => {
         // osn

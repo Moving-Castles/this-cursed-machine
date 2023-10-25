@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte"
-  import { COMMAND, OutputType } from "./types"
+  import { onMount, tick, createEventDispatcher } from "svelte"
+  import { COMMAND, OutputType, TerminalType } from "./types"
   import type { SelectOption } from "./types"
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
   import { evaluate } from "./functions/evaluate"
@@ -16,47 +16,30 @@
   import TerminalOutput from "./TerminalOutput.svelte"
   import { getMachinePorts, scrollToEnd } from "./functions/helpers"
   import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
+  import { renderSelect } from "./functions/renderSelect"
+  import { clearTerminalOutput } from "./functions/helpers"
 
   let inputElement: HTMLInputElement
   let userInput = ""
   let inputActive = true
   let selectContainerElement: HTMLDivElement
 
+  export let terminalInit = async () => {}
+  export let terminalType: TerminalType = TerminalType.FULL
+  export let placeholder = "HELP"
+
+  const dispatch = createEventDispatcher()
+
   const focusInput = async () => {
     await tick()
     inputElement?.focus()
   }
 
-  const resetInput = async () => {
+  export const resetInput = async () => {
     userInput = ""
     inputActive = true
     scrollToEnd()
     focusInput()
-  }
-
-  /**
-   * Renders a select component and resolves a promise when a value is selected.
-   * @param {SelectOption[]} selectOptions - Array of options for the select component.
-   * @returns {Promise<string | MachineType | null>} Resolves to the selected value which can be a string, a MachineType or null
-   */
-  async function renderSelect(
-    selectOptions: SelectOption[]
-  ): Promise<string | MachineType | null> {
-    return new Promise(resolve => {
-      const component = new Select({
-        target: selectContainerElement,
-        props: {
-          selectOptions,
-          returnFunction: (value: string | MachineType | null) => {
-            resolve(value)
-          },
-        },
-      })
-      // Listen to the custom event we're dispatching
-      component.$on("requestDestroy", () => {
-        component.$destroy() // Actually destroy the component
-      })
-    })
   }
 
   const onSubmit = async () => {
@@ -67,7 +50,7 @@
     await writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
 
     // Evaluate input
-    const command = evaluate(userInput)
+    const command = evaluate(userInput, terminalType)
 
     // Handle invalid command
     if (!command) {
@@ -96,7 +79,11 @@
         return
       }
 
-      let value = await renderSelect(selectOptions)
+      let value = await renderSelect(
+        selectContainerElement,
+        Select,
+        selectOptions
+      )
 
       // Abort if nothing selected
       if (!value) {
@@ -126,7 +113,11 @@
 
       await writeToTerminal(OutputType.NORMAL, "From:")
 
-      let sourceMachine = await renderSelect(sourceSelectOptions)
+      let sourceMachine = await renderSelect(
+        selectContainerElement,
+        Select,
+        sourceSelectOptions
+      )
 
       // Abort if nothing selected
       if (!sourceMachine) {
@@ -166,7 +157,11 @@
 
       await writeToTerminal(OutputType.NORMAL, "TO:")
 
-      let targetMachine = await renderSelect(targetSelectOptions)
+      let targetMachine = await renderSelect(
+        selectContainerElement,
+        Select,
+        targetSelectOptions
+      )
 
       // Abort if nothing selected
       if (!targetMachine) {
@@ -231,7 +226,11 @@
           })
         }
 
-        let sourcePort = await renderSelect(sourcePortOptions)
+        let sourcePort = await renderSelect(
+          selectContainerElement,
+          Select,
+          sourcePortOptions
+        )
 
         // Abort if nothing selected
         if (!sourcePort) {
@@ -252,11 +251,16 @@
       }
     }
 
+    // The two commands allowed at spawn (blink and help) take ther terminal type as parameter
+    if (terminalType === TerminalType.SPAWN) {
+      parameters = [terminalType]
+    }
+
     // Execute function
     await command.fn(...parameters)
 
-    // Reset input
-    resetInput()
+    // Note: It is the parents responibility to reset the input on this event
+    dispatch("commandExecuted", { command, parameters })
   }
 
   const onInput = (e: KeyboardEvent) => {
@@ -264,31 +268,21 @@
   }
 
   onMount(async () => {
+    clearTerminalOutput()
+
     // De-activate input-field
     inputActive = false
-    await writeToTerminal(
-      OutputType.INFO,
-      "WELCOME WORKER #24",
-      false,
-      SYMBOLS[7],
-      400
-    )
-    await writeToTerminal(
-      OutputType.INFO,
-      "TYPE 'HELP' TO START",
-      false,
-      SYMBOLS[7],
-      400
-    )
+
+    // Execute init sequence
+    await terminalInit()
+
     resetInput()
   })
 </script>
 
 <svelte:window on:keydown={focusInput} />
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div id="terminal" on:click={focusInput} class="terminal">
+<div id="terminal" class="terminal">
   <!-- OUTPUT -->
   {#each $terminalOutput as output, index (index)}
     <TerminalOutput {output} />
@@ -304,10 +298,9 @@
         {SYMBOLS[0]}
       </span>
       <input
-        id="terminal-input"
         class="terminal-input"
         type="text"
-        placeholder="HELP"
+        {placeholder}
         on:keydown={onInput}
         bind:this={inputElement}
         bind:value={userInput}
@@ -327,9 +320,9 @@
     position: relative;
     height: 100vh;
     white-space: pre-line;
-    border: 1px solid var(--terminal-color);
     padding-bottom: 2em;
     line-height: 1.2em;
+    max-width: 70ch;
 
     form {
       color: var(--terminal-color);

@@ -8,6 +8,38 @@
   import Map from "../Map/Map.svelte"
   import { showGoals, showMap } from "../../modules/ui/stores"
   import { playSound } from "../../modules/sound"
+  import { writeToTerminal } from "../Terminal/functions/writeToTerminal"
+  import { OutputType } from "../Terminal/types"
+  import { SYMBOLS } from "../Terminal/index"
+
+  let terminalComponent: any
+  const terminalInit = async () => {
+    await writeToTerminal(
+      OutputType.INFO,
+      "Welcome Worker#24",
+      false,
+      SYMBOLS[4],
+      1000
+    )
+    await writeToTerminal(
+      OutputType.INFO,
+      `This is pod#${$playerCore?.level}`,
+      false,
+      SYMBOLS[4],
+      1000
+    )
+    await writeToTerminal(
+      OutputType.INFO,
+      "Type HELP to get started",
+      false,
+      SYMBOLS[4],
+      1000
+    )
+  }
+
+  const handleCommand = async (e: any) => {
+    terminalComponent.resetInput()
+  }
 
   onMount(() => {
     playSound("tcm", "background", true, false)
@@ -23,7 +55,12 @@
 <div class="bg">
   <div class="split-screen">
     <div class="left-col">
-      <Terminal />
+      <Terminal
+        bind:this={terminalComponent}
+        {terminalInit}
+        on:commandExecuted={e => handleCommand(e)}
+        placeholder="HELP"
+      />
     </div>
     {#if $playerCore}
       <div class="right-col">
@@ -96,6 +133,7 @@
     .left-col {
       height: 100%;
       overflow: hidden;
+      border: 1px solid #fff;
     }
 
     .right-col {

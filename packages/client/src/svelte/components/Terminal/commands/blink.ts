@@ -1,15 +1,18 @@
+import { flashEffect } from "../functions/helpers";
 import type { Command } from "../types";
-import { COMMAND } from "../types";
+import { COMMAND, TerminalType } from "../types";
 
-async function execute() {
+async function execute(terminalType: TerminalType) {
+    console.log('terminalType', terminalType)
+    await flashEffect()
     return;
 }
 
-export const blink: Command<[]> = {
+export const blink: Command<[terminalType: TerminalType]> = {
     id: COMMAND.BLINK,
     public: true,
     name: "blink",
-    alias: "-",
+    alias: ".",
     description: "...",
     fn: execute,
 }

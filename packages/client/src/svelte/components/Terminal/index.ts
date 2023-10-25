@@ -38,6 +38,10 @@ export const SINGLE_INPUT_COMMANDS = [
   COMMAND.DISCONNECT,
   COMMAND.INSPECT
 ]
+export const SPAWN_COMMANDS = [
+  COMMAND.HELP,
+  COMMAND.BLINK
+]
 export const FIXED_MACHINE_TYPES = [MachineType.CORE, MachineType.INLET, MachineType.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g
 export const BETWEEN_BRACKETS = /(?<=\().+?(?=\))/g

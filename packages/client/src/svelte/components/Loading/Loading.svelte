@@ -16,7 +16,7 @@
   async function runIntroSequence() {
     if (called) return
     called = true
-    await animateContent($staticContent.loading.content.content, 2, 300)
+    await animateContent($staticContent.loading.content.content, 1, 100)
     await new Promise(res => setTimeout(res, 300))
     next()
   }

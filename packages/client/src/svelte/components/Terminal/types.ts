@@ -1,5 +1,10 @@
 import { MachineType } from "../../modules/state/enums";
 
+export enum TerminalType {
+    FULL,
+    SPAWN
+}
+
 export enum OutputType {
     ERROR,
     COMMAND,
@@ -7,6 +12,7 @@ export enum OutputType {
     SUCCESS,
     HELP,
     SPECIAL,
+    SPECIALINV,
     INFO
 }
 
