@@ -156,6 +156,7 @@ export const simulatedMachines = derived(
 export const simulatedConnections = derived(
   [simulated, playerCore],
   ([$simulated, $playerCore]) => {
+    if (!$playerCore) return {}
     return Object.fromEntries(
       Object.entries($simulated)
         .filter(([_, entry]) => entry.entityType === EntityType.CONNECTION)
@@ -179,6 +180,7 @@ export const simulatedMaterials = derived(simulated, $simulated => {
 export const simulatedPorts = derived(
   [simulated, playerCore],
   ([$simulated, $playerCore]) => {
+    if (!$playerCore) return {}
     return Object.fromEntries(
       Object.entries($simulated)
         .filter(([_, entry]) => entry.entityType === EntityType.PORT)
