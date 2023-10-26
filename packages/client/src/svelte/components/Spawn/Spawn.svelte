@@ -1,22 +1,24 @@
 <script lang="ts">
-  // import { playerCore } from "../../modules/state"
-  // import { staticContent } from "../../modules/content"
-  // import { playSound } from "../../modules/sound"
-  // import { spawn } from "../../modules/action"
-  import { COMMAND, TerminalType } from "../Terminal/types"
+  import { createEventDispatcher, onMount } from "svelte"
+  import { COMMAND, TerminalType, OutputType } from "../Terminal/types"
+  import { SYMBOLS } from "../Terminal"
+  import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
+  import { clearTerminalOutput } from "../Terminal/functions/helpers"
+  import { playerCore } from "../../modules/state"
+
+  const dispatch = createEventDispatcher()
 
   import Terminal from "../Terminal/Terminal.svelte"
 
   let terminalComponent: any
   let narrativeIndex = 0
 
-  // async function sendSpawn() {
-  //   playSound("tcm", "alarm")
-  //   await spawn()
-  // }
-
   const handleCommand = async (e: any) => {
+    if (e.detail.command.id === COMMAND.SKIP) {
+      clearTerminalOutput()
+      dispatch("done")
+    }
     if (e.detail.command.id === COMMAND.BLINK) {
       // Move the story forward
       narrativeIndex++
@@ -24,15 +26,38 @@
       if (narrativeIndex < narrative.length) {
         await narrative[narrativeIndex]()
       }
+      // End of narrative reached
+      if (narrativeIndex === narrative.length - 1) {
+        clearTerminalOutput()
+        dispatch("done")
+      }
     }
+
     terminalComponent.resetInput()
   }
+
+  onMount(async () => {
+    // Skip intro if player is already spawned
+    if ($playerCore && $playerCore.carriedBy) {
+      await typeWriteToTerminal(
+        OutputType.SPECIAL,
+        "Welcome back...",
+        SYMBOLS[7],
+        10,
+        1000
+      )
+      clearTerminalOutput()
+      dispatch("done")
+    } else {
+      await narrative[0]()
+      terminalComponent.resetInput()
+    }
+  })
 </script>
 
 <div class="spawn">
   <Terminal
     bind:this={terminalComponent}
-    terminalInit={narrative[0]}
     terminalType={TerminalType.SPAWN}
     placeholder="BLINK"
     on:commandExecuted={e => handleCommand(e)}

@@ -4,6 +4,8 @@ import { blockNumber } from "../../network"
 import { playerBox, playerCore } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
+import { checkLevelGoals } from "./checkLevelGoals"
+import { showLevelModal } from "../../ui/stores"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.
@@ -19,8 +21,17 @@ export function initStateSimulator() {
   blockNumber.subscribe(async () => {
     // Player is not spawned yet
     if (!get(playerCore)) return
-    // Play heartbeat on new block
-    playSound("tcm", "singleHeartbeat")
+
+    // Play heartbeat on new block if player is in pod
+    if (get(playerCore).carriedBy) {
+      playSound("tcm", "singleHeartbeat")
+    }
+
+    // Check if level goals have been reached
+    if (checkLevelGoals()) {
+      showLevelModal.set(true)
+    }
+
     // Network was resolved onchain
     if (get(playerBox).lastResolved !== get(localResolved)) {
       // Resolve output
@@ -30,3 +41,4 @@ export function initStateSimulator() {
     }
   })
 }
+

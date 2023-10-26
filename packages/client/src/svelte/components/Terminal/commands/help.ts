@@ -7,9 +7,6 @@ import { OutputType, TerminalType } from "../types"
 import { terminalTypeCommandFilter } from "../functions/helpers";
 
 async function execute(terminalType: TerminalType) {
-
-    console.log('terminalType', terminalType)
-
     // Get subset if not full terminal
     const commandList = commands.filter(command => terminalTypeCommandFilter(terminalType, command.id) && command.public)
 

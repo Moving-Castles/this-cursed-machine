@@ -7,11 +7,12 @@
     simulatedPlayerEnergy,
     boxOutput,
   } from "../../modules/simulator"
+  import { playerCore } from "../../modules/state"
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats" use:onWheel>
-  <p>Worker#24</p>
+  <p>Worker#24 (Level {$playerCore.level})</p>
   <p class="muted">-------------------</p>
   <p>
     {#key $simulatedPlayerCore.energy}

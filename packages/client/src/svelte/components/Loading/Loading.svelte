@@ -6,7 +6,7 @@
   let called = false
   const dispatch = createEventDispatcher()
 
-  const next = () => dispatch("next")
+  const done = () => dispatch("done")
 
   // Run intro sequence when content is loaded
   $: if ($staticContent.loading) {
@@ -18,13 +18,13 @@
     called = true
     await animateContent($staticContent.loading.content.content, 1, 100)
     await new Promise(res => setTimeout(res, 300))
-    next()
+    done()
   }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:click={next}>
+<div>
   <div class="loading">
     <div id="root" class="loading-message" />
   </div>

@@ -4,7 +4,6 @@ import { COMMAND } from "./types"
 import { MachineType } from "../../modules/state/enums"
 
 // STORES
-export const terminalIndex = writable(-1)
 export const terminalOutput = writable([] as Output[])
 
 // CONSTANTS
@@ -40,7 +39,8 @@ export const SINGLE_INPUT_COMMANDS = [
 ]
 export const SPAWN_COMMANDS = [
   COMMAND.HELP,
-  COMMAND.BLINK
+  COMMAND.BLINK,
+  COMMAND.SKIP
 ]
 export const FIXED_MACHINE_TYPES = [MachineType.CORE, MachineType.INLET, MachineType.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g

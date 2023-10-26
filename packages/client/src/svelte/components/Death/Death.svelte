@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { restart } from "../../modules/action"
+  import { createEventDispatcher } from "svelte"
+  const dispatch = createEventDispatcher()
+  const restart = () => {
+    dispatch("restart")
+  }
 </script>
 
 <div class="dead">

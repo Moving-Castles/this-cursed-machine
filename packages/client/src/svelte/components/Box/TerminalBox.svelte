@@ -1,40 +1,23 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, createEventDispatcher } from "svelte"
   import { playerCore } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/Machines/Graph.svelte"
-  import Goals from "../Goal/Goals.svelte"
+  import LevelModal from "../LevelModal/LevelModal.svelte"
   import Map from "../Map/Map.svelte"
-  import { showGoals, showMap } from "../../modules/ui/stores"
+  import { showLevelModal, showMap } from "../../modules/ui/stores"
   import { playSound } from "../../modules/sound"
-  import { writeToTerminal } from "../Terminal/functions/writeToTerminal"
-  import { OutputType } from "../Terminal/types"
-  import { SYMBOLS } from "../Terminal/index"
+  import { simulatedPlayerEnergy } from "../../modules/simulator"
+
+  const dispatch = createEventDispatcher()
 
   let terminalComponent: any
-  const terminalInit = async () => {
-    await writeToTerminal(
-      OutputType.INFO,
-      "Welcome Worker#24",
-      false,
-      SYMBOLS[4],
-      1000
-    )
-    await writeToTerminal(
-      OutputType.INFO,
-      `This is pod#${$playerCore?.level}`,
-      false,
-      SYMBOLS[4],
-      1000
-    )
-    await writeToTerminal(
-      OutputType.INFO,
-      "Type HELP to get started",
-      false,
-      SYMBOLS[4],
-      1000
-    )
+
+  $: {
+    if ($playerCore && $simulatedPlayerEnergy === 0) {
+      dispatch("dead")
+    }
   }
 
   const handleCommand = async (e: any) => {
@@ -46,7 +29,9 @@
   })
 </script>
 
-<Goals />
+{#if $showLevelModal}
+  <LevelModal />
+{/if}
 
 {#if $showMap}
   <Map />
@@ -57,7 +42,6 @@
     <div class="left-col">
       <Terminal
         bind:this={terminalComponent}
-        {terminalInit}
         on:commandExecuted={e => handleCommand(e)}
         placeholder="HELP"
       />
@@ -69,15 +53,6 @@
         <div class="stats">
           <BoxStats />
         </div>
-        <button
-          on:click={() => {
-            playSound("tcm", "alarm")
-            $showGoals = true
-          }}
-          class="goal"
-        >
-          <p>Show goal</p>
-        </button>
         <div class="graph">
           <Graph />
         </div>
@@ -92,8 +67,8 @@
     top: 0;
     left: 0;
     padding: 40px;
-    height: 100vh;
-    width: 100vw;
+    height: calc(100vh - 20px);
+    width: calc(100vw - 20px);
     background-color: #444;
     font-size: var(--font-size-normal);
     z-index: 1000;
@@ -131,9 +106,10 @@
     // Display properties are set in app.css
 
     .left-col {
-      height: 100%;
+      height: calc(100vh - 20px);
       overflow: hidden;
       border: 1px solid #fff;
+      margin: 10px;
     }
 
     .right-col {
@@ -142,37 +118,12 @@
       grid-template-rows: 250px 1fr;
       overflow: hidden;
       position: relative;
+      margin: 10px;
+      margin-left: 0;
 
       .stats {
-        grid-column: 1 / 5;
-        outline: var(--terminal-border);
-        outline-offset: -6px;
-      }
-
-      .goal {
-        grid-column: 5 / 7;
-        outline: var(--terminal-border);
-        margin: 0;
-        outline-offset: -4px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        &:hover {
-          background: white;
-          color: black;
-        }
-        .bg {
-          width: 100%;
-          height: 100%;
-          background-size: 200px 200px;
-          background-position: center;
-          filter: brightness(2) opacity(0.7) contrast(2) opacity(0.2);
-          pointer-events: none;
-          position: absolute;
-          inset: 0;
-        }
+        grid-column: 1 / 7;
+        border: 1px solid white;
       }
     }
   }
@@ -180,13 +131,6 @@
   .icon {
     height: 50px;
     width: 50px;
-  }
-
-  .bg {
-    // position: fixed;
-    // inset: 0;
-    // transition: background 2s ease, border 2s ease, color 2s ease;
-    // background: var(--terminal-background);
   }
 
   .flowchart-container {

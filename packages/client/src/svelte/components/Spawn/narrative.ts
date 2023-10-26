@@ -3,6 +3,7 @@ import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
 import { spawn, transfer } from "../../modules/action"
 import { waitForCompletion, waitForTransaction } from "../Terminal/functions/helpers"
+import { playSound } from "../../modules/sound"
 
 async function writeNarrative(text: string) {
     await typeWriteToTerminal(
@@ -62,13 +63,15 @@ export const narrative = [
     },
     async () => {
         await writeNarrative("Your consent is important to us.")
+        playSound("tcm", "cant")
         await writeNarrativeInfo("Auto-signing contract (life-time term)")
+        playSound("tcm", "cant")
         await writeNarrativeInfo("Auto-signing non liability agreement (extreme coverage)")
+        playSound("tcm", "cant")
         await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
         await writeNarrativeInfo("On-boarding in progress...")
         // Send spawn
         const action = spawn()
-        console.log(action)
         await waitForTransaction(action);
         await waitForCompletion(action, loadingLine);
         // Spawn complete
@@ -82,7 +85,6 @@ export const narrative = [
         await writeNarrativeInfo("Transferring worker to pod #1...")
         // Send spawn
         const action = transfer()
-        console.log(action)
         await waitForTransaction(action);
         await waitForCompletion(action, loadingLine);
         await writeNarrativeSuccess("Transfer complete")

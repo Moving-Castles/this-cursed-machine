@@ -5,24 +5,12 @@
     createComponentSystem,
     createSyncProgressSystem,
   } from "./modules/systems"
-  import { network, ready, initBlockListener } from "./modules/network"
-  import { playerCore, recipes, goals, materials } from "./modules/state"
-  import {
-    simulatedMaterials,
-    simulatedPlayerEnergy,
-    patches,
-  } from "./modules/simulator"
-  // import {
-  //   queuedActions,
-  //   activeActions,
-  //   completedActions,
-  // } from "./modules/action/actionSequencer"
-  // import { filterByNamespace } from "./modules/utils/misc"
+  import { network, initBlockListener } from "./modules/network"
   import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { initUI, onKeyDown } from "./modules/ui/events"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
   import { initSound, playSound } from "./modules/sound"
+  import { restart as sendRestart } from "./modules/action"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -30,28 +18,31 @@
   import Toasts from "./components/Toast/Toasts.svelte"
   import Death from "./components/Death/Death.svelte"
 
-  // - - - - -
-  // $: console.log("$staticContent", $staticContent)
-  // $: console.log("$patches", $patches)
-  // $: console.log("$goals", $goals)
-  // $: console.log("$materials", $materials)
-  // $: console.log("$recipes", $recipes)
-  // $: console.log("$activeActions", $activeActions)
-  // $: console.log("$queuedActions", $queuedActions)
-  // $: console.log("$completedActions", $completedActions)
-  // $: console.log("$entities", $entities)
-  // $: console.log("$levels", $levels)
-  // $: console.log("$cores", $cores)
-  // $: console.log("$network", $network)
-  // $: console.log("$playerCore", $playerCore)
-  // $: console.log("$ports", $ports)
-  // $: console.log("$simulated", $simulated)
-  // $: console.log("$blocksSinceLastResolution", $blocksSinceLastResolution)
-  // - - - - -
+  enum UI {
+    LOADING,
+    SPAWNING,
+    DEAD,
+    READY,
+  }
 
-  let UIState = 0
+  let UIState = UI.LOADING
 
-  initUI()
+  const restart = () => {
+    sendRestart()
+    UIState = UI.LOADING
+  }
+
+  const dead = () => {
+    UIState = UI.DEAD
+  }
+
+  const loaded = () => {
+    UIState = UI.SPAWNING
+  }
+
+  const spawned = () => {
+    UIState = UI.READY
+  }
 
   onMount(async () => {
     // Remove preloader
@@ -89,53 +80,22 @@
   })
 </script>
 
-<svelte:window on:keydown={onKeyDown} />
-
 <main>
-  <!-- <svelte:component this={selected.component} /> -->
+  {#if UIState === UI.LOADING}
+    <Loading on:done={loaded} />
+  {/if}
 
-  <div class="warning">
-    <div class="warning-message">
-      ### THIS CURSED MACHINE ###<br /><br />This machine has cursed all mobile
-      devices.<br />
-      Come back with a real computer.
-    </div>
-  </div>
+  {#if UIState === UI.SPAWNING}
+    <Spawn on:done={spawned} />
+  {/if}
 
-  {#if !$ready || UIState === 0}
-    <Loading on:next={() => (UIState = 1)} />
-  {:else if $playerCore?.level == undefined || $playerCore?.level === 0}
-    <Spawn />
-  {:else if $simulatedPlayerEnergy === 0}
-    <Death />
-  {:else}
-    <TerminalBox />
+  {#if UIState === UI.READY}
+    <TerminalBox on:dead={dead} />
+  {/if}
+
+  {#if UIState === UI.DEAD}
+    <Death on:restart={restart} />
   {/if}
 </main>
 
 <Toasts />
-
-<style>
-  .warning {
-    position: fixed;
-    inset: 0;
-    color: var(--terminal-color);
-    background: var(--terminal-background);
-    z-index: 99999999;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .warning-message {
-    padding: 1rem;
-    border: var(--terminal-border);
-  }
-
-  @media screen and (min-width: 768px) {
-    .warning {
-      display: none;
-    }
-  }
-</style>

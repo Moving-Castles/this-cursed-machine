@@ -17,7 +17,7 @@ import {
   playerGoals,
 } from "../state"
 import { blockNumber } from "../network"
-import type { SimulatedEntities } from "./types"
+import type { SimulatedEntities, BoxOutputs } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -252,7 +252,6 @@ export const readableConnections = derived(
   }
 )
 
-
 export const readableMachines = derived(
   simulatedMachines,
   $simulatedMachines => {
@@ -291,7 +290,7 @@ export const boxOutput = derived(
     })
 
     // Initialize the result object.
-    let result = {}
+    let result: BoxOutputs = {}
 
     // !!!
     // VERY hacky way to add patches to outputs
@@ -322,7 +321,7 @@ export const boxOutput = derived(
           patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
-      result[material.materialType] =
+      result[material.materialType || MaterialType.NONE] =
         material.amount + patchValue * $blocksSinceLastResolution
     })
 

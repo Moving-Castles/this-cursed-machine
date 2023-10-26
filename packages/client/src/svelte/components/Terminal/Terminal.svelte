@@ -17,18 +17,39 @@
   import { getMachinePorts, scrollToEnd } from "./functions/helpers"
   import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
+  import { playerCore } from "../../modules/state"
+  import { localLevel } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
+  import { writeNewLevel } from "./functions/writeNewLevel"
 
   let inputElement: HTMLInputElement
   let userInput = ""
-  let inputActive = true
+  let inputActive = false
   let selectContainerElement: HTMLDivElement
 
-  export let terminalInit = async () => {}
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
 
   const dispatch = createEventDispatcher()
+
+  $: if (
+    terminalType == TerminalType.FULL &&
+    $playerCore &&
+    $playerCore.level !== $localLevel
+  ) {
+    handleLevelChange($playerCore.level)
+  }
+
+  const handleLevelChange = async (level: number) => {
+    inputActive = false
+    await new Promise(resolve => setTimeout(resolve, 500))
+    console.log("level change detected")
+    clearTerminalOutput()
+    await writeNewLevel(level)
+    localLevel.set(level)
+    resetInput()
+    inputActive = true
+  }
 
   const focusInput = async () => {
     await tick()
@@ -266,18 +287,6 @@
   const onInput = (e: KeyboardEvent) => {
     playInputSound(e)
   }
-
-  onMount(async () => {
-    clearTerminalOutput()
-
-    // De-activate input-field
-    inputActive = false
-
-    // Execute init sequence
-    await terminalInit()
-
-    resetInput()
-  })
 </script>
 
 <svelte:window on:keydown={focusInput} />
@@ -320,7 +329,7 @@
     position: relative;
     height: 100vh;
     white-space: pre-line;
-    padding-bottom: 2em;
+    padding-bottom: 4em;
     line-height: 1.2em;
     max-width: 70ch;
 
