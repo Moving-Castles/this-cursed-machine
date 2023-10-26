@@ -17,7 +17,7 @@ import { showLevelModal } from "../../ui/stores"
  * @see {@link localResolved} For the local resolution state.
  * @see {@link patches} For applying patches or updates to the state.
  */
-export function initStateSimulator() {
+export async function initStateSimulator() {
   blockNumber.subscribe(async () => {
     // Player is not spawned yet
     if (!get(playerCore)) return
@@ -27,17 +27,20 @@ export function initStateSimulator() {
       playSound("tcm", "singleHeartbeat")
     }
 
-    // Check if level goals have been reached
-    if (checkLevelGoals()) {
-      showLevelModal.set(true)
-    }
-
     // Network was resolved onchain
     if (get(playerBox).lastResolved !== get(localResolved)) {
       // Resolve output
       patches.set(resolve(get(playerCore).carriedBy))
       // Update localResolved
       localResolved.set(get(playerBox).lastResolved)
+    }
+
+    // !hack: Wait to allow the changes to propagate
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    // Check if level goals have been reached
+    if (checkLevelGoals()) {
+      showLevelModal.set(true)
     }
   })
 }

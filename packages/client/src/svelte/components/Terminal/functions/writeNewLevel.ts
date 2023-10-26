@@ -11,7 +11,7 @@ async function writeNarrative(text: string) {
         text,
         SYMBOLS[7],
         10,
-        500
+        100
     )
 }
 
