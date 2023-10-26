@@ -3,10 +3,7 @@
   import { playSound } from "../../modules/sound"
   import { transfer } from "../../modules/action"
   import { showLevelModal } from "../../modules/ui/stores"
-  import {
-    waitForCompletion,
-    waitForTransaction,
-  } from "../Terminal/functions/helpers"
+  import { waitForCompletion } from "../Terminal/functions/helpers"
   import CompletedLevel from "./CompletedLevel.svelte"
 
   let loading = false
@@ -14,11 +11,7 @@
   const handleTransfer = async () => {
     loading = true
     // Initiate transfer
-    const action = transfer()
-    console.log(action)
-    // @todo Show loading state in box here
-    await waitForTransaction(action)
-    await waitForCompletion(action)
+    await waitForCompletion(transfer())
     // Close modal
     showLevelModal.set(false)
   }
@@ -52,5 +45,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .loading {
+      animation: pulseOpacity 1s infinite;
+    }
+  }
+
+  @keyframes pulseOpacity {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.3;
+    }
   }
 </style>
