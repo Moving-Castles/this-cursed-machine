@@ -54,14 +54,32 @@
   let height = 0
   let inspecting = null
 
-  let nodesG, linksG // Will hold the SVG groups for nodes and links
   let [nodes, links] = [[], []]
+
+  // Initialize forces
+  const linkForce = d3
+    .forceLink()
+    .id(d => d.id || d)
+    .distance(MACHINE_SIZE * 2)
+  const chargeForce = d3.forceManyBody().strength(-1000)
+  const xForce = d3.forceX()
+  const yForce = d3.forceY()
 
   function resize() {
     ;({ width, height } = svg.getBoundingClientRect())
   }
 
-  const simulation = d3.forceSimulation(nodes)
+  const simulation = d3
+    .forceSimulation(nodes)
+    .force("link", linkForce)
+    .force("charge", chargeForce)
+    .force("x", xForce)
+    .force("y", yForce)
+    .on("tick", function ticked() {
+      simulation.tick()
+      nodes = [...nodes]
+      links = [...links]
+    })
 
   const onNodeOrConnectionMouseEnter = (e, d, a) => {
     inspecting = { ...d, address: a }
@@ -86,53 +104,49 @@
     }
   }
 
+  $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
+
   $: {
     const graph = data(
       $simulatedMachines,
       $simulatedConnections,
       $simulatedPorts
     )
-    nodes = [...graph.nodes].map(d => {
-      if (
-        d.entry?.machineType === MachineType.INLET ||
-        d.entry?.machineType === MachineType.OUTLET
-      ) {
-        d.fx =
-          d.entry?.machineType === MachineType.INLET
-            ? -width / 2 + MACHINE_SIZE
-            : width / 2 - MACHINE_SIZE
-        d.fy = d.entry?.machineType === MachineType.INLET ? -80 : 80
+
+    // Update nodes
+    graph.nodes.forEach(newNode => {
+      const existingNode = nodes.find(node => node.id === newNode.id)
+      if (existingNode) {
+        Object.assign(existingNode, newNode) // Update existing node
+      } else {
+        nodes.push(newNode) // Add new node
       }
-
-      return d
     })
-    links = [...graph.links]
+
+    // Remove nodes that no longer exist
+    nodes = nodes.filter(node =>
+      graph.nodes.some(newNode => newNode.id === node.id)
+    )
+
+    // Update links
+    graph.links.forEach(newLink => {
+      const existingLink = links.find(link => link.id === newLink.id)
+      if (existingLink) {
+        Object.assign(existingLink, newLink) // Update existing link
+      } else {
+        links.push(newLink) // Add new link
+      }
+    })
+
+    // Remove links that no longer exist
+    links = links.filter(link =>
+      graph.links.some(newLink => newLink.id === link.id)
+    )
+
+    // Update simulation with new nodes and links
+    simulation.nodes(nodes)
+    linkForce.links(links)
     simulation.alpha(1).restart()
-  }
-
-  $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
-
-  // Updates the graph
-  $: {
-    simulation
-      .nodes(nodes)
-      .force(
-        "link",
-        d3
-          .forceLink(links)
-          .id(d => {
-            return d.id || d
-          })
-          .distance(MACHINE_SIZE * 2)
-      )
-      .force("charge", d3.forceManyBody().strength(-1000))
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
-      .on("tick", function ticked() {
-        simulation.tick()
-        nodes = [...nodes]
-        links = [...links]
-      })
   }
 
   // GO ON THEN

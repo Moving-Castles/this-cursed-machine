@@ -12,6 +12,7 @@ import { transfer } from "./transfer";
 import { resolve } from "./resolve";
 import { map } from "./map";
 import { goals } from "./goals";
+import { skip } from "./skip";
 
 export const commands: Command[] = [
     build,
@@ -26,4 +27,5 @@ export const commands: Command[] = [
     help,
     resolve,
     transfer,
+    skip
 ]

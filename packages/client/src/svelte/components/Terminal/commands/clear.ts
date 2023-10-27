@@ -1,9 +1,9 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
-import { terminalOutput } from "..";
+import { clearTerminalOutput } from "../functions/helpers";
 
 async function execute() {
-    terminalOutput.set([])
+    clearTerminalOutput()
     return;
 }
 
@@ -11,7 +11,7 @@ export const clear: Command<[]> = {
     id: COMMAND.CLEAR,
     public: true,
     name: "clear",
-    alias: ".",
+    alias: "-",
     description: "Clear terminal",
     fn: execute,
 }

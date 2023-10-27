@@ -37,8 +37,8 @@ contract InitSystem is System {
     // ** 1 (MATERIAL_TYPE.NONE => Core energy check)
     LibGoal.create(1, MATERIAL_TYPE.NONE, 101);
     // ** 2
-    LibGoal.create(2, MATERIAL_TYPE.PISS, 2000);
-    LibGoal.create(2, MATERIAL_TYPE.BLOOD, 2000);
+    LibGoal.create(2, MATERIAL_TYPE.PISS, 200);
+    LibGoal.create(2, MATERIAL_TYPE.BLOOD, 200);
     // ** 3
     LibGoal.create(3, MATERIAL_TYPE.M150, 2000);
     // ** 4

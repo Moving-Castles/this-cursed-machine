@@ -4,6 +4,8 @@ import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../.
 import { get } from "svelte/store";
 import { PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
+import { COMMAND, TerminalType } from "../types"
+import { SPAWN_COMMANDS, FULL_COMMANDS, terminalOutput } from ".."
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -53,13 +55,15 @@ export const waitForTransaction = (action: Action): Promise<Action> => {
  * @param {Action} action - The action object to check for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once it's completed, or rejects after a certain number of retries.
  */
-export const waitForCompletion = (action: Action): Promise<Action> => {
+export const waitForCompletion = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100 // just an example, set to however many retries you want
+    let index = 0
     let attempts = 0
 
     const checkCompletion = () => {
-      console.log("top", action)
+      index++;
+      if (loadingFunction) loadingFunction(index);
       if (action.completed) {
         resolve(action)
       } else if (action.failed) {
@@ -68,7 +72,7 @@ export const waitForCompletion = (action: Action): Promise<Action> => {
       } else if (attempts < maxRetries) {
         attempts++
         // wait for some time before checking again
-        setTimeout(checkCompletion, 100) // checking every second in this example
+        setTimeout(checkCompletion, 100)
       } else {
         reject(new Error("Max retries reached without completion."))
       }
@@ -152,29 +156,46 @@ export function getMachinesWithAvailablePorts(portType: PortType) {
   return availableMachines
 }
 
-/** Sorts entities by Creation block */
-export const creationBlockSort = (a: Entity, b: Entity) => {
-  if (
-    typeof a?.creationBlock === "bigint" &&
-    typeof b?.creationBlock === "bigint"
-  ) {
-    return b?.creationBlock - a?.creationBlock
+/**
+ * Filters a command based on the terminal type.
+ * 
+ * @param {TerminalType} terminalType - The type of the terminal.
+ * @param {COMMAND} commandId - The ID of the command.
+ * @returns {boolean} Returns true if the command is valid for the given terminal type, otherwise false.
+ */
+export function terminalTypeCommandFilter(terminalType: TerminalType, commandId: COMMAND): boolean {
+  if (terminalType === TerminalType.SPAWN) {
+    return SPAWN_COMMANDS.includes(commandId) ? true : false;
   } else {
-    return 1
+    return FULL_COMMANDS.includes(commandId) ? true : false;
   }
 }
 
-/** Sorts entities by Creation block */
-export const creationBlockSortEntry = (
-  [_, a]: [string, Entity],
-  [__, b]: [string, Entity]
-) => {
-  if (
-    typeof a?.creationBlock === "bigint" &&
-    typeof b?.creationBlock === "bigint"
-  ) {
-    return b?.creationBlock - a?.creationBlock
-  } else {
-    return 1
-  }
+/**
+ * Display a full-screen flash effect that lasts for 100ms.
+ * 
+ * @returns {Promise<void>} Resolves once the flash effect completes.
+ */
+export async function flashEffect(): Promise<void> {
+  return new Promise(resolve => {
+    // Create a new div element
+    const flashDiv = document.createElement('div');
+
+    // Assign the 'flash-effect' class to it
+    flashDiv.className = 'flash';
+
+    // Append it to the body
+    document.body.appendChild(flashDiv);
+
+    // Remove the div after 100ms and resolve the promise
+    setTimeout(() => {
+      document.body.removeChild(flashDiv);
+      resolve();
+    }, 50);
+  });
 }
+
+export function clearTerminalOutput() {
+  terminalOutput.set([])
+}
+

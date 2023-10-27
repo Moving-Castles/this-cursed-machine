@@ -63,7 +63,6 @@
   }
 
   onMount(async () => {
-    console.log("selectOptions", selectOptions)
     // Abort if no options
     if (selectOptions.length === 0) {
       returnValue(null)

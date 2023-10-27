@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { transfer as sendTransfer } from "../../../modules/action";
-import { writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
@@ -13,7 +13,7 @@ async function execute() {
     await waitForTransaction(action);
     // ...
     writeToTerminal(OutputType.NORMAL, "Transfer in progress...")
-    await waitForCompletion(action);
+    await waitForCompletion(action, loadingLine);
     playSound("tcm", "swipe5")
     await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...

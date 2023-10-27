@@ -17,3 +17,7 @@ export type SimulatedEntity = Entity & IntermediaryState;
 export type SimulatedEntities = {
     [key: string]: SimulatedEntity;
 }
+
+export type BoxOutputs = {
+    [key in MaterialType]: number;
+};

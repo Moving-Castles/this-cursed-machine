@@ -5,7 +5,7 @@
 
 <p class="output-content {OutputType[output.type]}">
   <span class="symbol">{output.symbol}</span>
-  {@html output.text}
+  <span class="content">{@html output.text}</span>
 </p>
 
 <style lang="scss">
@@ -14,6 +14,19 @@
     width: 100%;
     padding: 0;
     margin: 0;
+    position: relative;
+
+    .content {
+      padding-left: 2ch;
+      display: inline-block;
+    }
+
+    .symbol {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
     &.ERROR {
       color: var(--color-failure);
@@ -32,6 +45,11 @@
 
     &.SPECIAL {
       color: #d013d0;
+    }
+
+    &.SPECIALINV {
+      color: #000;
+      background: #d013d0;
     }
 
     &.INFO {

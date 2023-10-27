@@ -1,46 +1,67 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from "svelte"
+  import { COMMAND, TerminalType, OutputType } from "../Terminal/types"
+  import { SYMBOLS } from "../Terminal"
+  import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
+  import { narrative } from "./narrative"
+  import { clearTerminalOutput } from "../Terminal/functions/helpers"
   import { playerCore } from "../../modules/state"
-  import { playSound } from "../../modules/sound"
-  import { spawn } from "../../modules/action"
-  import { staticContent } from "../../modules/content"
-  import { renderBlockText } from "../../modules/content/sanity"
-  let spawnInProgress = false
-  let showSpawn = false
 
-  let i = 0
+  const dispatch = createEventDispatcher()
 
-  function sendSpawn() {
-    if (spawnInProgress) return
-    spawnInProgress = true
-    playSound("tcm", "alarm")
-    spawn()
-  }
+  import Terminal from "../Terminal/Terminal.svelte"
 
-  const next = () => {
-    if (i < $staticContent.spawning.content.content.length - 1) {
-      i++
-    } else {
-      showSpawn = true
+  let terminalComponent: any
+  let narrativeIndex = 0
+
+  const handleCommand = async (e: any) => {
+    if (e.detail.command.id === COMMAND.SKIP) {
+      clearTerminalOutput()
+      dispatch("done")
     }
+    if (e.detail.command.id === COMMAND.BLINK) {
+      // Move the story forward
+      narrativeIndex++
+      // Write the next part of the story to the terminal
+      if (narrativeIndex < narrative.length) {
+        await narrative[narrativeIndex]()
+      }
+      // End of narrative reached
+      if (narrativeIndex === narrative.length - 1) {
+        clearTerminalOutput()
+        dispatch("done")
+      }
+    }
+
+    terminalComponent.resetInput()
   }
+
+  onMount(async () => {
+    // Skip intro if player is already spawned
+    if ($playerCore && $playerCore.carriedBy) {
+      await typeWriteToTerminal(
+        OutputType.SPECIAL,
+        "Welcome back...",
+        SYMBOLS[7],
+        10,
+        1000
+      )
+      clearTerminalOutput()
+      dispatch("done")
+    } else {
+      await narrative[0]()
+      terminalComponent.resetInput()
+    }
+  })
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="spawn" on:click={next}>
-  {#if !$playerCore}
-    <div class="placeholder">
-      {#if $staticContent.spawning && $staticContent.spawning.content && !showSpawn}
-        {#key i}
-          <div class="block">
-            {@html renderBlockText($staticContent.spawning.content.content[i])}
-          </div>
-        {/key}
-      {:else}
-        <button on:click={sendSpawn} disabled={spawnInProgress}>Spawn</button>
-      {/if}
-    </div>
-  {/if}
+<div class="spawn">
+  <Terminal
+    bind:this={terminalComponent}
+    terminalType={TerminalType.SPAWN}
+    placeholder="BLINK"
+    on:commandExecuted={e => handleCommand(e)}
+  />
 </div>
 
 <style>
@@ -56,13 +77,6 @@
     justify-items: center;
     user-select: none;
     cursor: pointer;
-  }
-
-  .placeholder {
-    max-width: 40ch;
-    text-align: center;
-    padding: 20px;
-    margin: 0 auto;
   }
 
   :global(p.normal) {

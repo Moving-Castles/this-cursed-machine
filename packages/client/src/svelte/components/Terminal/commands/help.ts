@@ -3,10 +3,12 @@ import { COMMAND } from "../types";
 import { writeToTerminal } from "../functions/writeToTerminal";
 import { commands } from ".";
 import { SYMBOLS } from "..";
-import { OutputType } from "../types"
+import { OutputType, TerminalType } from "../types"
+import { terminalTypeCommandFilter } from "../functions/helpers";
 
-async function execute() {
-    const commandList = commands.filter(command => command.public)
+async function execute(terminalType: TerminalType) {
+    // Get subset if not full terminal
+    const commandList = commands.filter(command => terminalTypeCommandFilter(terminalType, command.id) && command.public)
 
     // List all available commands
     for (let i = 0; i < commandList.length; i++) {
@@ -18,7 +20,7 @@ async function execute() {
     return;
 }
 
-export const help: Command<[]> = {
+export const help: Command<[terminalType: TerminalType]> = {
     id: COMMAND.HELP,
     public: true,
     name: "help",
