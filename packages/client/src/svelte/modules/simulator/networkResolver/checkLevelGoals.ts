@@ -1,21 +1,29 @@
 import { get } from "svelte/store"
-import { playerGoals } from "../../state"
+import { goals } from "../../state"
 import { MaterialType } from "../../state/enums"
 import { simulatedPlayerEnergy, boxOutput } from ".."
 
 /**
  * Checks if all player level goals have been met.
+ * @param level - The level to check.
  * @returns {boolean} - Returns `true` if all level goals are achieved, otherwise returns `false`.
  */
-export function checkLevelGoals(): boolean {
-  let currentGoals = get(playerGoals)
+export function checkLevelGoals(level: number): boolean {
+
+  // console.log('!!! checking level goals', level)
+
+  let currentGoals = Object.values(get(goals)).filter(goal => goal?.level === level)
+
+  // console.log('currentGoals', currentGoals)
 
   if (currentGoals.length === 0) return false
 
   const achieved = currentGoals.map(goal => {
+
+    // console.log('goal', goal)
+
     // MaterialType.NONE => energy check
     if (goal.materialType === MaterialType.NONE) {
-      console.log("energy check")
       return get(simulatedPlayerEnergy) >= goal.amount
     }
 

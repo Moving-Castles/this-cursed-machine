@@ -41,12 +41,12 @@
   }
 
   const handleLevelChange = async (level: number) => {
+    localLevel.set(level)
     inputActive = false
     await new Promise(resolve => setTimeout(resolve, 500))
     console.log("level change detected")
     clearTerminalOutput()
     await writeNewLevel(level)
-    localLevel.set(level)
     resetInput()
     inputActive = true
   }

@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { destroy as sendDestroy } from "../../../modules/action";
-import { loadingLine, loeadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
