@@ -5,7 +5,7 @@ import { playerBox, playerCore } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
-import { showLevelModal } from "../../ui/stores"
+import { showLevelModal, lastCompletedBlock } from "../../ui/stores"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.
@@ -18,7 +18,7 @@ import { showLevelModal } from "../../ui/stores"
  * @see {@link patches} For applying patches or updates to the state.
  */
 export async function initStateSimulator() {
-  blockNumber.subscribe(async () => {
+  blockNumber.subscribe(async blockNumber => {
     // Player is not spawned yet
     if (!get(playerCore)) return
 
@@ -39,8 +39,10 @@ export async function initStateSimulator() {
     await new Promise((resolve) => setTimeout(resolve, 100))
 
     // Check if level goals have been reached
-    if (checkLevelGoals()) {
+    // @hack: Wait 5 blocks from last completion to avoid duplicate modals bug
+    if (checkLevelGoals(get(playerCore).level) && blockNumber > get(lastCompletedBlock) + 5) {
       showLevelModal.set(true)
+      lastCompletedBlock.set(blockNumber)
     }
   })
 }
