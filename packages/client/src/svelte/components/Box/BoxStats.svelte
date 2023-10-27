@@ -25,7 +25,7 @@
     {#if Object.entries($boxOutput).length > 0}
       {#each Object.entries($boxOutput) as [type, amount] (type)}
         <span class={MaterialType[type]}>
-          {MaterialType[type]}: {amount}
+          {MaterialType[type].split("_").join(" ")}: {amount}
         </span><br />
       {/each}
     {/if}

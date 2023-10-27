@@ -8,11 +8,10 @@
   import { MachineType, MaterialType } from "../../modules/state/enums"
   import { MATERIAL_LORE, MATERIAL_IMAGES } from "../../modules/content/lore"
 
-  console.log(address)
   // List contents etc
 
-  $: connectionLore = MATERIAL_LORE[connection.product?.materialType]
-  $: connectionImage = MATERIAL_IMAGES[connection.product?.materialType]
+  $: connectionLore = MATERIAL_LORE[connection?.product?.materialType]
+  $: connectionImage = MATERIAL_IMAGES[connection?.product?.materialType]
   $: fromMachine = connectionSourceMachine(address)
   $: toMachine = connectionTargetMachine(address)
 </script>
@@ -20,11 +19,13 @@
 <div class="material-information">
   <p class="muted">
     Connection transporting <span
-      style:color="var(--{MaterialType[connection.product?.materialType]})"
-      >{MaterialType[connection.product?.materialType]}</span
+      style:color="var(--{MaterialType[connection?.product?.materialType]})"
+      >{MaterialType[connection?.product?.materialType]
+        ?.split("_")
+        ?.join(" ")}</span
     >
     from {MachineType[fromMachine.machineType]} to {MachineType[
-      toMachine.machineType
+      toMachine?.machineType
     ]}
   </p>
 
@@ -32,48 +33,19 @@
     <div
       class="filtered"
       style:background-color="var(--{MaterialType[
-        connection.product?.materialType
+        connection?.product?.materialType
       ]})"
     >
       <img
         src={connectionImage}
         class="connection-image"
-        alt={MaterialType[connection.product?.materialType]}
+        alt={MaterialType[connection?.product?.materialType]}
       />
     </div>
   {/if}
   <p>
     {connectionLore}
   </p>
-
-  <!-- {#if connection?.product || machine?.outputs}
-    <div class="flex">
-      <div class="inputs">
-        {#if machine?.inputs}
-          <p>IN</p>
-          {#each machine?.inputs as input}
-            <p class="muted">
-              {MaterialType[input.materialType]}: {input.amount}
-            </p>
-          {/each}
-        {/if}
-      </div>
-      <div class="divider">
-        |<br />
-        |<br />
-      </div>
-      <div class="outputs">
-        {#if machine?.outputs}
-          <p>OUT</p>
-          {#each machine?.outputs as output}
-            <p class="muted">
-              {MaterialType[output.materialType]}: {output.amount}
-            </p>
-          {/each}
-        {/if}
-      </div>
-    </div>
-  {/if} -->
 </div>
 
 <style>

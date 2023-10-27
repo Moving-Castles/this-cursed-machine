@@ -42,7 +42,9 @@ export function data(
 }
 
 export function x1(links: any[], d) {
-  const linksWithSource = links.filter(l => l.source === d.source.id)
+  const linksWithSource = links.filter(l => {
+    return l.source.id === d.source.id
+  })
 
   let OFFSET = 0
 
@@ -58,7 +60,7 @@ export function x1(links: any[], d) {
 }
 
 export function y1(links: any, d, d3yScale) {
-  const linksWithSource = links.filter(l => l.source === d.source.id)
+  const linksWithSource = links.filter(l => l.source.id === d.source.id)
 
   let OFFSET = 0
 
@@ -75,7 +77,7 @@ export function y1(links: any, d, d3yScale) {
 }
 
 export function x2(links: any, d) {
-  const linksWithTarget = links.filter(l => l.target === d?.target?.id)
+  const linksWithTarget = links.filter(l => l.target.id === d?.target?.id)
 
   let OFFSET = 0
 
@@ -90,7 +92,7 @@ export function x2(links: any, d) {
 }
 
 export function y2(links: any, d, d3yScale) {
-  const linksWithTarget = links.filter(l => l.target === d.target.id)
+  const linksWithTarget = links.filter(l => l.target.id === d.target.id)
 
   let OFFSET = 0
 

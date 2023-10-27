@@ -17,8 +17,9 @@
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
-  import Toasts from "./components/Toast/Toasts.svelte"
   import Death from "./components/Death/Death.svelte"
+  import Cursor from "./components/Cursor/Cursor.svelte"
+  import Toasts from "./components/Toast/Toasts.svelte"
 
   enum UI {
     LOADING,
@@ -95,6 +96,9 @@
   {/if}
 
   {#if UIState === UI.READY}
+    <Cursor>
+      <p>█</p>
+    </Cursor>
     <TerminalBox on:dead={dead} />
   {/if}
 

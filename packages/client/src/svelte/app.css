@@ -59,8 +59,10 @@
   --HAND_OF_GOD: #57eeff;
 
   /* Transaction states */
-  --STATE_ACTIVE: #fff;
-  --STATE_INACTIVE: #ccc;
+  --STATE_INACTIVE: #111;
+
+  /* Animate.css */
+  --animate-duration: 1s;
 }
 
 * {
@@ -73,6 +75,14 @@
   /* user-select: none; */
   margin: 0;
   padding: 0;
+}
+
+.cursor-none {
+  cursor: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
 }
 
 .BUG {
