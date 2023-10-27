@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { transfer as sendTransfer } from "../../../modules/action";
-import { loadingLine, writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
@@ -10,7 +10,7 @@ async function execute() {
     writeToTerminal(OutputType.NORMAL, "Attempting transfer..")
     const action = sendTransfer()
     // ...
-    await waitForTransaction(action);
+    await waitForTransaction(action, loadingSpinner);
     // ...
     writeToTerminal(OutputType.NORMAL, "Transfer in progress...")
     await waitForCompletion(action, loadingLine);

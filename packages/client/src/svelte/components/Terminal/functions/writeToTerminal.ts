@@ -64,6 +64,11 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
     return
 }
 
+/**
+ * Display a loading line with increasing character count.
+ * @param {number} index - The number of characters to display.
+ * @returns {Promise<void>} A promise that resolves when the loading line has been written to the terminal.
+ */
 export async function loadingLine(index: number): Promise<void> {
     const CHARACTER = "."
     playSound("tcm", "cant");
@@ -71,5 +76,21 @@ export async function loadingLine(index: number): Promise<void> {
         await writeToTerminal(OutputType.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
     } else {
         await writeToTerminal(OutputType.NORMAL, CHARACTER.repeat(index), true, SYMBOLS[2], 0)
+    }
+}
+
+/**
+ * Display a spinner using cycling glyphs to indicate loading.
+ * @param {number} index - The linearly increasing index for the spinner animation.
+ * @returns {Promise<void>} A promise that resolves when the spinner glyph has been written to the terminal.
+ */
+export async function loadingSpinner(index: number): Promise<void> {
+    const GLYPHS = ["/", "–", "\\", "|"];
+    const currentGlyph = GLYPHS[index % GLYPHS.length];
+    // playSound("tcm", "cant");
+    if (index === 1) {
+        await writeToTerminal(OutputType.NORMAL, currentGlyph, false, SYMBOLS[2], 0);
+    } else {
+        await writeToTerminal(OutputType.NORMAL, currentGlyph, true, SYMBOLS[2], 0);
     }
 }

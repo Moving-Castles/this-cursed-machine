@@ -24,14 +24,18 @@ export async function scrollToEnd() {
  *
  * @function waitForTransaction
  * @param {Action} action - The action object to check for a transaction.
+ * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once its transaction is set, or rejects after a certain number of retries.
  */
-export const waitForTransaction = (action: Action): Promise<Action> => {
+export const waitForTransaction = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100
     let attempts = 0
+    let index = 0
 
     const checkTransaction = () => {
+      index++;
+      if (loadingFunction) loadingFunction(index);
       if (action.tx) {
         // check if tx is set (i.e., it has a truthy value)
         resolve(action)
@@ -53,13 +57,14 @@ export const waitForTransaction = (action: Action): Promise<Action> => {
  *
  * @function waitForCompletion
  * @param {Action} action - The action object to check for completion.
+ * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once it's completed, or rejects after a certain number of retries.
  */
 export const waitForCompletion = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100 // just an example, set to however many retries you want
-    let index = 0
     let attempts = 0
+    let index = 0
 
     const checkCompletion = () => {
       index++;

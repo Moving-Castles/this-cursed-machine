@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { connect as sendConnect } from "../../../modules/action";
-import { loadingLine, writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
@@ -11,7 +11,7 @@ async function execute(sourcePort: string, targetPort: string) {
     // ...
     const action = sendConnect(sourcePort, targetPort)
     // ...
-    await waitForTransaction(action);
+    await waitForTransaction(action, loadingSpinner)
     // ...
     writeToTerminal(OutputType.NORMAL, "Connection in progress...")
     await waitForCompletion(action, loadingLine)

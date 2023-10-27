@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { destroy as sendDestroy } from "../../../modules/action";
-import { loadingLine, writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, loeadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
@@ -20,7 +20,7 @@ async function execute(machineEntity: string) {
     // ...
     const action = sendDestroy(machineEntity)
     // ...
-    await waitForTransaction(action);
+    await waitForTransaction(action, loadingSpinner)
     // ...
     await waitForCompletion(action, loadingLine);
     playSound("tcm", "swipe5")

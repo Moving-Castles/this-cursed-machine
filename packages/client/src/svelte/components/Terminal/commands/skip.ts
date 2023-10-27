@@ -1,7 +1,7 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { spawn, transfer } from "../../../modules/action";
-import { loadingLine, writeToTerminal } from "../functions/writeToTerminal";
+import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
 
@@ -10,13 +10,13 @@ async function execute() {
 
     writeToTerminal(OutputType.NORMAL, "Spawning")
     const spawnAction = spawn()
-    await waitForTransaction(spawnAction);
+    await waitForTransaction(spawnAction, loadingSpinner)
     await waitForCompletion(spawnAction, loadingLine);
     writeToTerminal(OutputType.SUCCESS, "Spawn done")
 
     writeToTerminal(OutputType.NORMAL, "Transferring")
     const transferAction = transfer()
-    await waitForTransaction(transferAction);
+    await waitForTransaction(transferAction, loadingSpinner);
     await waitForCompletion(transferAction, loadingLine);
     writeToTerminal(OutputType.SUCCESS, "Transfer done")
 

@@ -1,4 +1,4 @@
-import { loadingLine, typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
+import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
 import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
 import { spawn, transfer } from "../../modules/action"
@@ -72,7 +72,7 @@ export const narrative = [
         await writeNarrativeInfo("On-boarding in progress...")
         // Send spawn
         const action = spawn()
-        await waitForTransaction(action);
+        await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
         // Spawn complete
         await writeNarrativeSuccess("On-boarding complete")
@@ -85,7 +85,7 @@ export const narrative = [
         await writeNarrativeInfo("Transferring worker to pod #1...")
         // Send spawn
         const action = transfer()
-        await waitForTransaction(action);
+        await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
         await writeNarrativeSuccess("Transfer complete")
     },
