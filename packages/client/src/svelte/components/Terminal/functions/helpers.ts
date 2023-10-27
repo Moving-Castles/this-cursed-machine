@@ -5,7 +5,7 @@ import { get } from "svelte/store";
 import { PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
 import { COMMAND, TerminalType } from "../types"
-import { SPAWN_COMMANDS, terminalOutput } from ".."
+import { SPAWN_COMMANDS, FULL_COMMANDS, terminalOutput } from ".."
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -167,7 +167,7 @@ export function terminalTypeCommandFilter(terminalType: TerminalType, commandId:
   if (terminalType === TerminalType.SPAWN) {
     return SPAWN_COMMANDS.includes(commandId) ? true : false;
   } else {
-    return true;
+    return FULL_COMMANDS.includes(commandId) ? true : false;
   }
 }
 

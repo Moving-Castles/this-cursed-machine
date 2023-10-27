@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick, createEventDispatcher } from "svelte"
+  import { tick, createEventDispatcher } from "svelte"
   import { COMMAND, OutputType, TerminalType } from "./types"
   import type { SelectOption } from "./types"
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
