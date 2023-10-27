@@ -40,12 +40,11 @@ contract InitSystem is System {
     LibGoal.create(2, MATERIAL_TYPE.PISS, 200);
     LibGoal.create(2, MATERIAL_TYPE.BLOOD, 200);
     // ** 3
-    LibGoal.create(3, MATERIAL_TYPE.M150, 2000);
+    LibGoal.create(3, MATERIAL_TYPE.MONSTER, 2000);
     // ** 4
-    LibGoal.create(4, MATERIAL_TYPE.PRIME, 4000);
+    LibGoal.create(4, MATERIAL_TYPE.M150, 2000);
     // ** 5
-    LibGoal.create(5, MATERIAL_TYPE.TOBACCO, 2000);
-    LibGoal.create(5, MATERIAL_TYPE.MONSTER, 2000);
+    LibGoal.create(5, MATERIAL_TYPE.PLANT, 2000);
     // ** 6
     LibGoal.create(6, MATERIAL_TYPE.CLUB_MATE, 2000);
     // ** 7
