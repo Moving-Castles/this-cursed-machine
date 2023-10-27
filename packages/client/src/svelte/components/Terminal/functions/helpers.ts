@@ -2,9 +2,9 @@ import { tick } from "svelte"
 import type { Action } from "../../../modules/action/actionSequencer";
 import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../../modules/simulator";
 import { get } from "svelte/store";
-import { PortType } from "../../../modules/state/enums";
+import { MachineType, PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
-import { COMMAND, TerminalType } from "../types"
+import { COMMAND, TerminalType, SelectOption } from "../types"
 import { SPAWN_COMMANDS, FULL_COMMANDS, terminalOutput } from ".."
 
 /**
@@ -203,4 +203,19 @@ export async function flashEffect(): Promise<void> {
 export function clearTerminalOutput() {
   terminalOutput.set([])
 }
-
+/**
+ * Orders an array of SelectOption objects with 'inlet' first, 'outlet' last, 
+ * and the rest in alphabetical order by the 'label' property.
+ * @param {SelectOption[]} array - The array of SelectOption objects to be sorted.
+ * @returns {SelectOption[]} - The sorted array.
+ */
+export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
+  return array.sort((a, b) => {
+    console.log(a, b)
+    if (a.label === "INLET") return -1;
+    if (b.label === "INLET") return 1;
+    if (a.label === "OUTLET") return 1;
+    if (b.label === "OUTLET") return -1;
+    return a.label.localeCompare(b.label);
+  });
+}
