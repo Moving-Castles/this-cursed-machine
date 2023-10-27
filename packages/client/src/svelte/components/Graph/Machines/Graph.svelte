@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte"
   import Tooltip from "../../Tooltip/Tooltip.svelte"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
@@ -13,7 +13,10 @@
     simulatedConnections,
     simulatedPorts,
   } from "../../../modules/simulator"
-  import { connectionState } from "../../../modules/state/convenience"
+  import {
+    connectionState,
+    machineState,
+  } from "../../../modules/state/convenience"
   import { MachineType } from "../../../modules/state/types"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
@@ -97,7 +100,7 @@
           d.entry?.machineType === MachineType.INLET
             ? -width / 2 + MACHINE_SIZE
             : width / 2 - MACHINE_SIZE
-        d.fy = 0
+        d.fy = d.entry?.machineType === MachineType.INLET ? -80 : 80
       }
 
       return d
@@ -161,6 +164,7 @@
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
       {#each links as link}
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <g
           on:mouseenter={e => {
             onNodeOrConnectionMouseEnter(e, link.entry, link.address)
@@ -195,6 +199,7 @@
               onNodeOrConnectionMouseEnter(e, d.entry, d.address)
             }}
             on:mouseleave={() => (inspecting = null)}
+            class={ConnectionState[machineState(d.address)]}
             x={d.x - MACHINE_SIZE / 2}
             y={d.y - MACHINE_SIZE / 2}
             width={MACHINE_SIZE}
@@ -203,8 +208,12 @@
             stroke="white"
           />
           {#if d.entry.machineType !== MachineType.CORE}
-            <text fill="white" font-size="30px" x={d.x - 10} y={d.y + 10}
-              >{MachineType[d.entry.machineType][0]}</text
+            <text
+              style:pointer-events="none"
+              fill="white"
+              font-size="30px"
+              x={d.x - 10}
+              y={d.y + 10}>{MachineType[d.entry.machineType][0]}</text
             >
           {:else}
             <text
@@ -240,5 +249,8 @@
     height: 100%;
     max-width: 100%;
     float: left;
+  }
+
+  .FLOWING {
   }
 </style>

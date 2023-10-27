@@ -61,6 +61,9 @@
   /* Transaction states */
   --STATE_ACTIVE: #fff;
   --STATE_INACTIVE: #ccc;
+
+  /* Animate.css */
+  --animate-duration: 1s;
 }
 
 * {
