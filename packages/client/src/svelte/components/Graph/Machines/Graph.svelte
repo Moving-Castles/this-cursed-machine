@@ -208,6 +208,9 @@
           class="machine-connection {ConnectionState[
             connectionState(link.entry)
           ]}"
+          style:color="var(--{link.entry?.product?.materialType
+            ? MaterialType[link.entry?.product?.materialType]
+            : "STATE_INACTIVE"})"
           stroke="var(--{link.entry?.product?.materialType
             ? MaterialType[link.entry?.product?.materialType]
             : 'STATE_INACTIVE'})"

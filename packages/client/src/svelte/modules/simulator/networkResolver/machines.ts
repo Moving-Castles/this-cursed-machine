@@ -175,9 +175,6 @@ function simpleMachine(machineType: MachineType, inputs: Product[]): Product[] {
 
   const resultMaterialType = recipe ? recipe.output : MaterialType.NONE
 
-  console.log("recipe", recipe)
-  console.log("resultMaterialType", resultMaterialType)
-
   outputs[0] = {
     machineId: input.machineId,
     materialType: resultMaterialType,

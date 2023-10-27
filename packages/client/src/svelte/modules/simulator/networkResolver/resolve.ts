@@ -28,18 +28,26 @@ export function resolve(_boxEntity: string) {
   // Inputs for machines
   let inputs: Product[] = []
 
+
   // Store the products for intermediary state
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
 
+  console.log("AT START")
+  console.log("resolvedNodes")
+  console.log(resolvedNodes)
+
+
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-    // console.log('__ Iteration', iterationCounter)
+    console.log('__ Iteration', iterationCounter)
 
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
       // Skip if node is already resolved
-      if (resolvedNodes.includes(machineKey)) return
+      if (resolvedNodes.includes(machineKey)) {
+        return
+      }
 
       // console.log('**********************')
       // console.log('**********************')
@@ -150,11 +158,12 @@ export function resolve(_boxEntity: string) {
     if (iterationCounter === Object.values(machines).length * 2) break
   }
 
+  console.log("patchOutputs", "patchInputs")
+  console.log(patchOutputs, patchInputs)
+
   // @todo: work on patch system...
 
   let patches = {} as SimulatedEntities
-
-  // console.log('patchOutputs', patchOutputs);
 
   // Aggregate and organize patch outputs.
   for (let i = 0; i < patchOutputs.length; i++) {
@@ -171,8 +180,6 @@ export function resolve(_boxEntity: string) {
     patches[patchOutputs[i].machineId].outputs.push(patchOutputs[i])
   }
 
-  // console.log('patchInputs', patchInputs);
-
   // Aggregate and organize patch inputs.
   for (let i = 0; i < patchInputs.length; i++) {
     if (!patches[patchInputs[i].machineId]) {
@@ -187,6 +194,8 @@ export function resolve(_boxEntity: string) {
 
     patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
   }
+
+  console.log("FINAL PATCHES", patches)
 
   return patches
 }

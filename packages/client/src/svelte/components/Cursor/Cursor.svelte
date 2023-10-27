@@ -7,15 +7,16 @@
 
   export let [mouseX, mouseY] = [0, 0]
 
-  let coords = writable({ x: mouseX, y: mouseY })
-  // let scale = spring(1.5, { stiffness: 0.2, damping: 0.8 })
+  /** IDEA */
+  // Resting position of the mouse could be on input, to simulate the text cursor.
+  // Then when it is time, they can fly away and become the actual mouse cursor
 
+  let coords = writable({ x: mouseX, y: mouseY })
   let style = `transform: translate(${$coords.x}px, ${$coords.y}px)`
 
   $: style = `transform: translate(${$coords.x}px, ${$coords.y}px) translate(-50%, -50%)`
 
   const onMouseMove = (e: MouseEvent) => {
-    console.log(mouseX, mouseY)
     mouseX = e.clientX
     mouseY = e.clientY
     coords.set({ x: mouseX, y: mouseY })

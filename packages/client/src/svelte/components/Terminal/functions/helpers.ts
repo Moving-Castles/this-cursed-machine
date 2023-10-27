@@ -72,7 +72,6 @@ export const waitForCompletion = (action: Action, loadingFunction?: (index: numb
       if (action.completed) {
         resolve(action)
       } else if (action.failed) {
-        console.log("failed", action)
         reject(new Error("Action failed."))
       } else if (attempts < maxRetries) {
         attempts++

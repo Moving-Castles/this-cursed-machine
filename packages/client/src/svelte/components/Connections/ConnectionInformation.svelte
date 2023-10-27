@@ -29,20 +29,6 @@
     ]}
   </p>
 
-  {#if connectionImage !== ""}
-    <div
-      class="filtered"
-      style:background-color="var(--{MaterialType[
-        connection?.product?.materialType
-      ]})"
-    >
-      <img
-        src={connectionImage}
-        class="connection-image"
-        alt={MaterialType[connection?.product?.materialType]}
-      />
-    </div>
-  {/if}
   <p>
     {connectionLore}
   </p>

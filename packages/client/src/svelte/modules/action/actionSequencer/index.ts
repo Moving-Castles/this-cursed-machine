@@ -138,7 +138,6 @@ async function execute() {
         clearActionTimer()
       } else {
         // Set to failed
-        console.log("in else", action)
         action.failed = true
         handleError(receipt, action)
       }
@@ -146,7 +145,6 @@ async function execute() {
       clearActionTimer()
     }
   } catch (e) {
-    console.log("in catch", action)
     action.failed = true
     handleError(e, action)
   }

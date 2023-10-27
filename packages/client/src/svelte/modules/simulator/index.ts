@@ -61,6 +61,7 @@ export const simulated = derived(
 
     // Attach products to the ports and connections
     for (const [key, patch] of Object.entries($patches)) {
+      console.log(performance.now())
       // Inputs
       if (patch.inputs && simulated[key]) {
         // Attach inputs to machine
@@ -191,7 +192,7 @@ export const simulatedPorts = derived(
 
 /**
  * Derives a readable list of connections based on the input stores.
- * 
+ *
  * Given the current connections, ports, machines, and playerCore, this function
  * will filter, map, and transform the connections to a more readable format
  * showcasing the relationship between source machines and target machines.
@@ -202,53 +203,55 @@ export const simulatedPorts = derived(
 export const readableConnections = derived(
   [connections, ports, machines, playerCore],
   ([$connections, $ports, $machines, $playerCore]) => {
-    return Object.entries($connections)
-      // Filter connections to only those that belong to the current box carried by player
-      .filter(([_, entry]) =>
-        connectionBelongsToBox(entry, $playerCore.carriedBy)
-      )
-      .map(([id, connection]) => {
+    return (
+      Object.entries($connections)
+        // Filter connections to only those that belong to the current box carried by player
+        .filter(([_, entry]) =>
+          connectionBelongsToBox(entry, $playerCore.carriedBy)
+        )
+        .map(([id, connection]) => {
+          // Get the material being transported
+          const materialType = connection.product?.materialType
 
-        console.log("connection", connection)
+          // Extract the source and target ports for the current connection
+          const sP = connection?.sourcePort
+          const tP = connection?.targetPort
 
-        // Get the material being transported 
-        const materialType = connection.product?.materialType
+          if (sP && tP) {
+            const ssP = $ports[sP]
+            const ttP = $ports[tP]
 
-        // Extract the source and target ports for the current connection
-        const sP = connection?.sourcePort
-        const tP = connection?.targetPort
+            if (ssP && ttP) {
+              // Fetch the machine types and indices for source and target
+              const sourceMachine =
+                MachineType[$machines[ssP?.carriedBy]?.machineType]
+              const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
+              const targetMachine =
+                MachineType[$machines[ttP?.carriedBy]?.machineType]
+              const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
 
-        if (sP && tP) {
-          const ssP = $ports[sP]
-          const ttP = $ports[tP]
+              if (sourceMachine && targetMachine) {
+                // Construct a label showcasing the source to target machine connection
 
-          if (ssP && ttP) {
-            // Fetch the machine types and indices for source and target
-            const sourceMachine = MachineType[$machines[ssP?.carriedBy]?.machineType]
-            const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-            const targetMachine = MachineType[$machines[ttP?.carriedBy]?.machineType]
-            const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
-
-            if (sourceMachine && targetMachine) {
-              // Construct a label showcasing the source to target machine connection
-
-              console.log('sourceMachine', sourceMachine)
-
-              return {
-                id,
-                connection,
-                label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                  } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                  } ${sourceMachine === "CORE" ? `(${MaterialType[materialType]})` : ""}`,
+                return {
+                  id,
+                  connection,
+                  label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
+                    } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
+                    } ${sourceMachine === "CORE"
+                      ? `(${MaterialType[materialType]})`
+                      : ""
+                    }`,
+                }
               }
             }
           }
-        }
 
-        return false
-      })
-      // Filter out any invalid or non-transformed entries
-      .filter(ent => ent)
+          return false
+        })
+        // Filter out any invalid or non-transformed entries
+        .filter(ent => ent)
+    )
   }
 )
 
