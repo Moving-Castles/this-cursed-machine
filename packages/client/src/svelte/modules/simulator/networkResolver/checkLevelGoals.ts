@@ -8,40 +8,22 @@ import { simulatedPlayerEnergy, boxOutput } from ".."
  * @returns {boolean} - Returns `true` if all level goals are achieved, otherwise returns `false`.
  */
 export function checkLevelGoals(): boolean {
+  let currentGoals = get(playerGoals)
 
-    console.log('checking level goals')
+  if (currentGoals.length === 0) return false
 
-    // export const playerGoals = derived(
-    //     [playerBox, goals],
-    //     ([$playerBox, $goals]) => {
-    //       return Object.values($goals).filter(g => g?.level === $playerBox.level)
-    //     }
-    //   )
+  const achieved = currentGoals.map(goal => {
+    // MaterialType.NONE => energy check
+    if (goal.materialType === MaterialType.NONE) {
+      console.log("energy check")
+      return get(simulatedPlayerEnergy) >= goal.amount
+    }
 
-    let currentGoals = get(playerGoals)
+    const pooledMaterialAmount = get(boxOutput)[goal.materialType]
 
-    console.log('currentGoals', currentGoals)
+    // Do we have the required amount of the material?
+    return pooledMaterialAmount && pooledMaterialAmount >= goal.amount
+  })
 
-    if (currentGoals.length === 0) return false
-
-    const achieved = currentGoals.map(goal => {
-
-        console.log('goal', goal)
-
-        // MaterialType.NONE => energy check
-        if (goal.materialType === MaterialType.NONE) {
-            console.log('energy check')
-            return get(simulatedPlayerEnergy) >= goal.amount
-        }
-
-        const pooledMaterialAmount = get(boxOutput)[goal.materialType]
-
-        console.log('pooledMaterialAmount', pooledMaterialAmount)
-        console.log('pooledMaterialAmount && pooledMaterialAmount >= goal.amount', pooledMaterialAmount && pooledMaterialAmount >= goal.amount)
-
-        // Do we have the required amount of the material?
-        return pooledMaterialAmount && pooledMaterialAmount >= goal.amount
-    })
-
-    return achieved.every(v => v === true)
+  return achieved.every(v => v === true)
 }

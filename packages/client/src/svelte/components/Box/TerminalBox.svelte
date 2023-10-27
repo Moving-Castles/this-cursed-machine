@@ -3,7 +3,7 @@
   import { playerCore } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
-  import Graph from "../Graph/Machines/GraphUpdate.svelte"
+  import Graph from "../Graph/Machines/Graph.svelte"
   import LevelModal from "../LevelModal/LevelModal.svelte"
   import Map from "../Map/Map.svelte"
   import { showLevelModal, showMap } from "../../modules/ui/stores"
