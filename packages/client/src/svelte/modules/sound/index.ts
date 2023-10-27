@@ -22,7 +22,6 @@ export function initSound() {
       preload: true
     })
   }
-  console.log('soundLibrary.tcm', soundLibrary.tcm)
 }
 
 /**

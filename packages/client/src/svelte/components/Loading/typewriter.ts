@@ -20,17 +20,18 @@ type ObjType = {
 /**
  * Creates div elements from the given array of objects and appends them sequentially
  * to the root element with a typewriter effect and an optional delay between divs.
+ * @param {HTMLElement} root - The HTML element to append the divs to.
  * @param {ObjType[]} array - The array of objects.
  * @param {number} speed - The speed at which to write each character.
  * @param {number} delayBetweenDivs - The delay between the output of the divs.
  * @returns {Promise<void>} - A promise that resolves when all divs and their children have been appended.
  */
 export async function animateContent(
+    root: HTMLElement,
     array: ObjType[],
     speed: number = 100,
     delayBetweenDivs: number = 0
 ): Promise<void> {
-    const root = document.getElementById("root")
     if (!root) return
 
     for (const obj of array) {
@@ -65,13 +66,14 @@ export async function animateContent(
  * @param {number} speed - The speed at which to write each character.
  * @returns {Promise<void>} - A promise that resolves when the typing is complete.
  */
-async function typeWriter(
+export async function typeWriter(
     element: HTMLElement,
     text: string,
     speed: number
 ): Promise<void> {
     let i = 0
     return new Promise<void>(resolve => {
+        // if (!element) return
         const intervalId = setInterval(() => {
             if (i < text.length) {
                 // If the character is a newline character, append a <br> element; otherwise, append the character.
