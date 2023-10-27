@@ -7,13 +7,14 @@
   const dispatch = createEventDispatcher()
 
   let introDone = false
+  let introStarted = false
   let loadingMessageElement: HTMLDivElement
   let loadingInterval: NodeJS.Timeout
 
   const done = () => dispatch("done")
 
   // Run intro sequence when content is loaded
-  $: if ($staticContent.loading && loadingMessageElement) {
+  $: if ($staticContent.loading && loadingMessageElement && !introStarted) {
     runIntroSequence()
   }
 
@@ -24,6 +25,7 @@
   }
 
   async function runIntroSequence() {
+    introStarted = true
     await animateContent(
       loadingMessageElement,
       $staticContent.loading.content.content,
