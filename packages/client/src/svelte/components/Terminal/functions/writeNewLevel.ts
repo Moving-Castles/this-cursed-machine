@@ -19,7 +19,10 @@ async function writeNarrative(text: string) {
 
 export const writeNewLevel = async (level: number) => {
     const currentLevelContent = get(staticContent).levels.find(l => l.level === level)
-    const text = extractTexts(currentLevelContent.short_content_start)
+    let text = []
+    if (currentLevelContent.short_content_start && currentLevelContent.short_content_start.content) {
+        text = extractTexts(currentLevelContent.short_content_start)
+    }
 
     await writeNarrative("********************")
     await writeNarrative(`Order #${level}`)
