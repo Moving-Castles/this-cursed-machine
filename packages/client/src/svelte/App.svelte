@@ -45,6 +45,7 @@
   }
 
   const spawned = () => {
+    clearTerminalOutput()
     UIState = UI.READY
   }
 

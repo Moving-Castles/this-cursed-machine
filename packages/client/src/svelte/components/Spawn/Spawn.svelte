@@ -4,7 +4,6 @@
   import { SYMBOLS } from "../Terminal"
   import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { clearTerminalOutput } from "../Terminal/functions/helpers"
   import { playerCore } from "../../modules/state"
 
   const dispatch = createEventDispatcher()
@@ -16,7 +15,6 @@
 
   const handleCommand = async (e: any) => {
     if (e.detail.command.id === COMMAND.SKIP) {
-      clearTerminalOutput()
       dispatch("done")
     }
     if (e.detail.command.id === COMMAND.BLINK) {
@@ -28,7 +26,6 @@
       }
       // End of narrative reached
       if (narrativeIndex === narrative.length - 1) {
-        clearTerminalOutput()
         dispatch("done")
       }
     }
@@ -46,7 +43,6 @@
         10,
         1000
       )
-      clearTerminalOutput()
       dispatch("done")
     } else {
       await narrative[0]()
