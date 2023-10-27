@@ -11,6 +11,8 @@
   import { initStaticContent } from "./modules/content"
   import { initSound, playSound } from "./modules/sound"
   import { restart as sendRestart } from "./modules/action"
+  import { localLevel } from "./modules/ui/stores"
+  import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -28,6 +30,8 @@
   let UIState = UI.LOADING
 
   const restart = () => {
+    clearTerminalOutput()
+    localLevel.set(0)
     sendRestart()
     UIState = UI.LOADING
   }
