@@ -2,9 +2,9 @@ import { tick } from "svelte"
 import type { Action } from "../../../modules/action/actionSequencer";
 import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../../modules/simulator";
 import { get } from "svelte/store";
-import { PortType } from "../../../modules/state/enums";
+import { MachineType, PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
-import { COMMAND, TerminalType } from "../types"
+import { COMMAND, TerminalType, SelectOption } from "../types"
 import { SPAWN_COMMANDS, FULL_COMMANDS, terminalOutput } from ".."
 
 /**
@@ -24,14 +24,18 @@ export async function scrollToEnd() {
  *
  * @function waitForTransaction
  * @param {Action} action - The action object to check for a transaction.
+ * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once its transaction is set, or rejects after a certain number of retries.
  */
-export const waitForTransaction = (action: Action): Promise<Action> => {
+export const waitForTransaction = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100
     let attempts = 0
+    let index = 0
 
     const checkTransaction = () => {
+      index++;
+      if (loadingFunction) loadingFunction(index);
       if (action.tx) {
         // check if tx is set (i.e., it has a truthy value)
         resolve(action)
@@ -53,13 +57,14 @@ export const waitForTransaction = (action: Action): Promise<Action> => {
  *
  * @function waitForCompletion
  * @param {Action} action - The action object to check for completion.
+ * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once it's completed, or rejects after a certain number of retries.
  */
 export const waitForCompletion = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100 // just an example, set to however many retries you want
-    let index = 0
     let attempts = 0
+    let index = 0
 
     const checkCompletion = () => {
       index++;
@@ -198,4 +203,19 @@ export async function flashEffect(): Promise<void> {
 export function clearTerminalOutput() {
   terminalOutput.set([])
 }
-
+/**
+ * Orders an array of SelectOption objects with 'inlet' first, 'outlet' last, 
+ * and the rest in alphabetical order by the 'label' property.
+ * @param {SelectOption[]} array - The array of SelectOption objects to be sorted.
+ * @returns {SelectOption[]} - The sorted array.
+ */
+export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
+  return array.sort((a, b) => {
+    console.log(a, b)
+    if (a.label === "INLET") return -1;
+    if (b.label === "INLET") return 1;
+    if (a.label === "OUTLET") return 1;
+    if (b.label === "OUTLET") return -1;
+    return a.label.localeCompare(b.label);
+  });
+}

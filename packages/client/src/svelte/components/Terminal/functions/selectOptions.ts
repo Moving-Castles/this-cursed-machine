@@ -6,7 +6,7 @@ import {
 } from "../../../modules/simulator"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES } from ".."
-import { getMachinesWithAvailablePorts } from "./helpers"
+import { connectionMachineSort, getMachinesWithAvailablePorts } from "./helpers"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -151,5 +151,5 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
         })
     })
 
-    return selectOptions
+    return connectionMachineSort(selectOptions)
 }

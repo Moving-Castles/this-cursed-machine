@@ -1,32 +1,52 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
   import { staticContent } from "../../modules/content"
-  import { animateContent } from "./typewriter"
+  import { animateContent, typeWriter } from "./typewriter"
+  import { ready } from "../../modules/network"
 
-  let called = false
   const dispatch = createEventDispatcher()
+
+  let introDone = false
+  let loadingMessageElement: HTMLDivElement
+  let loadingInterval: NodeJS.Timeout
 
   const done = () => dispatch("done")
 
   // Run intro sequence when content is loaded
-  $: if ($staticContent.loading) {
+  $: if ($staticContent.loading && loadingMessageElement) {
     runIntroSequence()
   }
 
-  async function runIntroSequence() {
-    if (called) return
-    called = true
-    await animateContent($staticContent.loading.content.content, 1, 100)
-    await new Promise(res => setTimeout(res, 300))
+  // Finished when intro is done and chain is ready
+  $: if (introDone && $ready) {
+    if (loadingInterval) clearInterval(loadingInterval)
     done()
+  }
+
+  async function runIntroSequence() {
+    await animateContent(
+      loadingMessageElement,
+      $staticContent.loading.content.content,
+      1,
+      100
+    )
+    await new Promise(res => setTimeout(res, 300))
+    // Intro sequence done
+    introDone = true
+    // Return early if chain is already ready
+    if ($ready) return
+    // Otherwise wait for chain to load
+    await typeWriter(loadingMessageElement, "Syncing network", 10)
+    await new Promise(res => setTimeout(res, 300))
+    loadingInterval = setInterval(() => {
+      loadingMessageElement.innerHTML += "  *"
+    }, 100)
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div>
   <div class="loading">
-    <div id="root" class="loading-message" />
+    <div class="loading-message" bind:this={loadingMessageElement} />
   </div>
 </div>
 
@@ -49,8 +69,10 @@
       max-width: 64ch;
       padding: 20px;
       height: 100%;
-      overflow: scroll;
+      overflow-y: scroll;
       padding-bottom: 20%;
+      text-wrap: wrap;
+      word-break: break-all;
     }
   }
 </style>

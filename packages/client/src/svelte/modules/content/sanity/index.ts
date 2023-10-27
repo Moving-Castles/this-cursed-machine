@@ -55,6 +55,20 @@ export const toPlainText = (blocks = []) => {
     .join("\n\n")
 }
 
+export function extractTexts(editor: any): string[] {
+  const texts: string[] = [];
+
+  for (let block of editor.content) {
+    for (let child of block.children) {
+      if (child.text) {
+        texts.push(child.text);
+      }
+    }
+  }
+
+  return texts;
+}
+
 const builder = imageUrlBuilder(client)
 
 export const urlFor = (source: any) => builder.image(source)
