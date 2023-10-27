@@ -4,6 +4,8 @@ import { SYMBOLS } from ".."
 import { get } from "svelte/store"
 import { playerGoals } from "../../../modules/state"
 import { MaterialType } from "../../../modules/state/enums"
+import { staticContent } from "../../../modules/content"
+import { extractTexts } from "../../../modules/content/sanity"
 
 async function writeNarrative(text: string) {
     await typeWriteToTerminal(
@@ -16,9 +18,16 @@ async function writeNarrative(text: string) {
 }
 
 export const writeNewLevel = async (level: number) => {
+    const currentLevelContent = get(staticContent).levels.find(l => l.level === level)
+    const text = extractTexts(currentLevelContent.short_content_start)
+
     await writeNarrative("********************")
-    await writeNarrative(`Pod #${level}`)
-    await writeNarrative("Do not destroy company property")
+    await writeNarrative(`Order #${level}`)
+
+    for (let i = 0; i < text.length; i++) {
+        await writeNarrative(text[i])
+    }
+
     await writeNarrative("Production goals:")
     const currentGoals = get(playerGoals)
     for (let i = 0; i < currentGoals.length; i++) {
