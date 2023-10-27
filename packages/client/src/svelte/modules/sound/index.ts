@@ -1,6 +1,6 @@
 import { Howl } from "howler";
 import { soundLibrary } from "./sound-library";
-import { get, writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 export const music = writable(new Howl({ src: [""] }));
 export const fx = writable([new Howl({ src: [""] })]);
@@ -16,10 +16,13 @@ export const fx = writable([new Howl({ src: [""] })]);
  */
 export function initSound() {
   for (const key in soundLibrary.tcm) {
-    const sound = soundLibrary.tcm[key];
-    const audio = new Audio(sound.src);
-    audio.load();
+    soundLibrary.tcm[key].sound = new Howl({
+      src: [soundLibrary.tcm[key].src],
+      volume: soundLibrary.tcm[key].volume,
+      preload: true
+    })
   }
+  console.log('soundLibrary.tcm', soundLibrary.tcm)
 }
 
 /**
@@ -33,16 +36,13 @@ export function initSound() {
  */
 export function playSound(category: string, id: string, loop = false, fade = false) {
 
-  const sound = new Howl({
-    src: [soundLibrary[category][id].src],
-    volume: soundLibrary[category][id].volume,
-    preload: true,
-    loop: loop,
-  })
+  const sound = soundLibrary[category][id].sound
 
-  const sounds = get(fx)
+  if (!sound) return
 
-  fx.set([...sounds, sound]);
+  if (loop) {
+    sound.loop(true)
+  }
 
   if (fade) {
     // Fade on begin and end

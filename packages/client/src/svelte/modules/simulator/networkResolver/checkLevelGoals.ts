@@ -9,16 +9,35 @@ import { simulatedPlayerEnergy, boxOutput } from ".."
  */
 export function checkLevelGoals(): boolean {
 
-    if (get(playerGoals).length === 0) return false
+    console.log('checking level goals')
 
-    const achieved = get(playerGoals).map(goal => {
+    // export const playerGoals = derived(
+    //     [playerBox, goals],
+    //     ([$playerBox, $goals]) => {
+    //       return Object.values($goals).filter(g => g?.level === $playerBox.level)
+    //     }
+    //   )
+
+    let currentGoals = get(playerGoals)
+
+    console.log('currentGoals', currentGoals)
+
+    if (currentGoals.length === 0) return false
+
+    const achieved = currentGoals.map(goal => {
+
+        console.log('goal', goal)
 
         // MaterialType.NONE => energy check
         if (goal.materialType === MaterialType.NONE) {
+            console.log('energy check')
             return get(simulatedPlayerEnergy) >= goal.amount
         }
 
         const pooledMaterialAmount = get(boxOutput)[goal.materialType]
+
+        console.log('pooledMaterialAmount', pooledMaterialAmount)
+        console.log('pooledMaterialAmount && pooledMaterialAmount >= goal.amount', pooledMaterialAmount && pooledMaterialAmount >= goal.amount)
 
         // Do we have the required amount of the material?
         return pooledMaterialAmount && pooledMaterialAmount >= goal.amount
