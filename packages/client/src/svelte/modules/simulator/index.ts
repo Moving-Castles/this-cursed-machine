@@ -68,49 +68,14 @@ export const simulated = derived(
         simulated[key].inputs = patch.inputs
 
         for (const input of patch.inputs) {
-          // Select the first available in port of the simulated entity
-          let inPort = Object.entries(simulated)
-            .filter(([_, ent]) => ent?.carriedBy === key)
-            .filter(([_, ent]) => ent.entityType === EntityType.PORT)
-
-          // Find the in port
-          inPort = inPort
-            .filter(([_, port]) => port.portType === PortType.INPUT)
-            .find(([_, port]) => !port.product)
-
-          if (inPort) {
-            // Attach the materialType and amount to port
-            simulated[inPort[0]].product = { ...input }
-
-            // If something is input, that means it's a connection
-            // Follow the trace to the connection that leads to this port
-            const connector = Object.entries(simulated)
-              .filter(([_, ent]) => ent.entityType === EntityType.CONNECTION)
-              .find(([_, c]) => c.targetPort === inPort[0])
-
-            if (connector) {
-              const connectorAddress = connector[0]
-              simulated[connectorAddress].product = { ...input }
-            }
-          }
+          console.log('missing i', input)
         }
       }
 
       // Outputs
       if (patch.outputs && simulated[key]) {
-        simulated[key].outputs = patch.outputs
-
         for (const output of patch.outputs) {
-          // Select the first available out port of the simulated entity
-          const outPort = Object.entries(simulated)
-            .filter(([_, ent]) => ent.entityType === EntityType.PORT)
-            .filter(([_, ent]) => ent.carriedBy === key)
-            .filter(([_, port]) => port.portType === PortType.OUTPUT)
-            .find(([_, port]) => !port.product) // first available
-
-          if (outPort) {
-            simulated[outPort[0]].product = { ...output }
-          }
+          console.log('missing o', output)
         }
       }
     }

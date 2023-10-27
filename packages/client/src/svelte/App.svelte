@@ -13,6 +13,9 @@
   import { restart as sendRestart } from "./modules/action"
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
+  import { patches } from "./modules/simulator"
+
+  $: console.log("$patches", $patches)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"

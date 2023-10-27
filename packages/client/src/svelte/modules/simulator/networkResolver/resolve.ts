@@ -28,15 +28,14 @@ export function resolve(_boxEntity: string) {
   // Inputs for machines
   let inputs: Product[] = []
 
-
   // Store the products for intermediary state
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
+  let connectionPatches: any[] = []
 
   console.log("AT START")
   console.log("resolvedNodes")
   console.log(resolvedNodes)
-
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
@@ -123,17 +122,21 @@ export function resolve(_boxEntity: string) {
         // console.log("machinePorts[k]", machinePorts[k])
 
         //  Find connections going from that port
-        const outgoingConnection = Object.values(get(connections)).find(
-          entity => entity.sourcePort === machinePorts[k]
-        ) as Connection
-
-        // console.log("outgoingConnection", outgoingConnection)
+        const outgoingConnection = Object.entries(get(connections)).find(
+          ([key, entity]) => entity.sourcePort === machinePorts[k]
+        )
 
         // No connection
         if (!outgoingConnection) continue
 
+        // Make connection patches
+        connectionPatches.push({
+          connectionId: outgoingConnection[0],
+          inputs: currentOutputs[k],
+        })
+
         //  Get the port on the other end of the connection
-        const inputPort = outgoingConnection.targetPort
+        const inputPort = outgoingConnection[1].targetPort
 
         //  Get the machine that the port is on
         const targetEntity = get(ports)[inputPort].carriedBy
@@ -160,6 +163,7 @@ export function resolve(_boxEntity: string) {
 
   console.log("patchOutputs", "patchInputs")
   console.log(patchOutputs, patchInputs)
+  console.log("connectionPatches", connectionPatches)
 
   // @todo: work on patch system...
 
@@ -193,6 +197,23 @@ export function resolve(_boxEntity: string) {
     }
 
     patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
+  }
+
+  // Aggregate and organize connection patches.
+  for (let i = 0; i < connectionPatches.length; i++) {
+    if (!patches[connectionPatches[i].connectionId]) {
+      patches[connectionPatches[i].connectionId] = {
+        inputs: [],
+      }
+    }
+
+    if (!patches[connectionPatches[i].connectionId].inputs) {
+      patches[connectionPatches[i].connectionId].inputs = []
+    }
+
+    patches[connectionPatches[i].connectionId].connection = true
+
+    patches[connectionPatches[i].connectionId].inputs.push(patchInputs[i])
   }
 
   console.log("FINAL PATCHES", patches)
