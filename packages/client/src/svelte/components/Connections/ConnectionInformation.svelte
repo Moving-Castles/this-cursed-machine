@@ -1,37 +1,38 @@
 <script lang="ts">
   export let address: string
   export let connection: Connection
-  import {
-    connectionSourceMachine,
-    connectionTargetMachine,
-  } from "../../modules/state/convenience"
+  // import {
+  //   connectionSourceMachine,
+  //   connectionTargetMachine,
+  // } from "../../modules/state/convenience"
   import { MachineType, MaterialType } from "../../modules/state/enums"
-  import { MATERIAL_LORE, MATERIAL_IMAGES } from "../../modules/content/lore"
+  // import { MATERIAL_LORE, MATERIAL_IMAGES } from "../../modules/content/lore"
 
   // List contents etc
 
-  $: connectionLore = MATERIAL_LORE[connection?.product?.materialType]
-  $: connectionImage = MATERIAL_IMAGES[connection?.product?.materialType]
-  $: fromMachine = connectionSourceMachine(address)
-  $: toMachine = connectionTargetMachine(address)
+  // $: connectionLore = MATERIAL_LORE[connection?.product?.materialType]
+  // $: connectionImage = MATERIAL_IMAGES[connection?.product?.materialType]
+  // $: fromMachine = connectionSourceMachine(address)
+  // $: toMachine = connectionTargetMachine(address)
 </script>
 
 <div class="material-information">
   <p class="muted">
-    Connection transporting <span
-      style:color="var(--{MaterialType[connection?.product?.materialType]})"
-      >{MaterialType[connection?.product?.materialType]
-        ?.split("_")
-        ?.join(" ")}</span
-    >
-    from {MachineType[fromMachine.machineType]} to {MachineType[
-      toMachine?.machineType
-    ]}
+    {#if connection?.product}
+      Connection transporting <span
+        style:color="var(--{MaterialType[connection?.product?.materialType]})"
+        >{MaterialType[connection?.product?.materialType]
+          ?.split("_")
+          ?.join(" ")}</span
+      >
+    {:else}
+      Inactive connection
+    {/if}
   </p>
 
-  <p>
+  <!-- <p>
     {connectionLore}
-  </p>
+  </p> -->
 </div>
 
 <style>

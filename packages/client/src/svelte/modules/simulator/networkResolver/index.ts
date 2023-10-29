@@ -5,11 +5,15 @@ import { playerBox, playerCore } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
-import { showLevelModal, lastCompletedBlock } from "../../ui/stores"
+import {
+  showLevelModal,
+  lastCompletedBlock,
+  cursorCharacter,
+} from "../../ui/stores"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.
- * 
+ *
  * @notice The function subscribes to changes in the block number. When a block number change is detected, the function checks the state of the player and the network's resolution. If the player has been spawned and there's a discrepancy between the last on-chain resolution and the local resolution, the function resolves the output and updates the local resolution.
  * @see {@link blockNumber} For the observable representing block number changes.
  * @see {@link playerCore} For the state of the player.
@@ -25,6 +29,8 @@ export async function initStateSimulator() {
     // Play heartbeat on new block if player is in pod
     if (get(playerCore).carriedBy) {
       playSound("tcm", "singleHeartbeat")
+      const c = get(cursorCharacter)
+      cursorCharacter.set(c === "" ? "█" : "")
     }
 
     // Network was resolved onchain
@@ -36,14 +42,16 @@ export async function initStateSimulator() {
     }
 
     // !hack: Wait to allow the changes to propagate
-    await new Promise((resolve) => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     // Check if level goals have been reached
     // @hack: Wait 5 blocks from last completion to avoid duplicate modals bug
-    if (checkLevelGoals(get(playerCore).level) && blockNumber > get(lastCompletedBlock) + 5) {
+    if (
+      checkLevelGoals(get(playerCore).level) &&
+      blockNumber > get(lastCompletedBlock) + 5
+    ) {
       showLevelModal.set(true)
       lastCompletedBlock.set(blockNumber)
     }
   })
 }
-

@@ -5,7 +5,11 @@
 import { EntityType, MachineType, PortType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
-import { portBelongsToBox, connectionBelongsToBox } from "../state/convenience"
+import {
+  portBelongsToBox,
+  connectionBelongsToBox,
+  machinePorts,
+} from "../state/convenience"
 import {
   entities,
   playerBox,
@@ -64,8 +68,29 @@ export const simulated = derived(
       // Inputs
       if (patch.inputs && simulated[key]) {
         simulated[key] = { ...simulated[key], inputs: [...patch.inputs] }
-        patch.inputs.forEach(input => {
-          simulated[key].product = input.inputs
+
+        patch.inputs.forEach((input, i) => {
+          simulated[key] = { ...simulated[key], product: input.inputs }
+
+          if (simulated[key].entityType === EntityType.MACHINE) {
+            const ports = Object.entries(simulated).filter(([_, ent]) => {
+              return (
+                ent?.carriedBy === key &&
+                ent.entityType === EntityType.PORT &&
+                ent.portType === PortType.OUTPUT
+              )
+            })
+            if (ports.length > 0 && input.inputs) {
+              const portAddress = ports[i][0]
+              simulated[portAddress] = {
+                ...simulated[portAddress],
+                product: input.inputs,
+              }
+
+              console.log("simulated[portAddress]")
+              console.log(simulated[portAddress])
+            }
+          }
         })
       }
 
@@ -74,10 +99,16 @@ export const simulated = derived(
         simulated[key] = { ...simulated[key], outputs: [...patch.outputs] }
 
         patch.outputs.forEach(output => {
-          simulated[key].product = output.outputs
+          simulated[key] = { ...simulated[key], product: output.outputs }
+
+          if (simulated[key].entityType === EntityType.MACHINE) {
+            //
+          }
         })
       }
     }
+
+    console.log("updated simulated", simulated)
 
     return simulated
   }
@@ -165,10 +196,10 @@ export const simulatedPorts = derived(
  *                    connection details, and a human-readable label for each connection.
  */
 export const readableConnections = derived(
-  [connections, ports, machines, playerCore],
-  ([$connections, $ports, $machines, $playerCore]) => {
+  [simulatedConnections, ports, machines, playerCore],
+  ([$simulatedConnections, $ports, $machines, $playerCore]) => {
     return (
-      Object.entries($connections)
+      Object.entries($simulatedConnections)
         // Filter connections to only those that belong to the current box carried by player
         .filter(([_, entry]) =>
           connectionBelongsToBox(entry, $playerCore.carriedBy)
@@ -176,6 +207,7 @@ export const readableConnections = derived(
         .map(([id, connection]) => {
           // Get the material being transported
           const materialType = connection.product?.materialType
+          console.log(connection.product)
 
           // Extract the source and target ports for the current connection
           const sP = connection?.sourcePort

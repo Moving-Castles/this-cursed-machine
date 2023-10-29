@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tick, createEventDispatcher } from "svelte"
+  import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import { COMMAND, OutputType, TerminalType } from "./types"
   import type { SelectOption } from "./types"
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
@@ -18,7 +18,7 @@
   import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
   import { playerCore } from "../../modules/state"
-  import { localLevel } from "../../modules/ui/stores"
+  import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeNewLevel } from "./functions/writeNewLevel"
 
@@ -26,6 +26,7 @@
   let userInput = ""
   let inputActive = false
   let selectContainerElement: HTMLDivElement
+  let interval: ReturnType<typeof setInterval>
 
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
@@ -236,11 +237,12 @@
         let sourcePortOptions: SelectOption[] = []
 
         for (let i = 0; i < sourcePorts.length; i++) {
-          let currenPortEntity = $simulatedPorts[sourcePorts[i][0]]
+          let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
+          console.log("sim port ", currentPortEntity, sourcePorts)
           sourcePortOptions.push({
             label: `Port #${i + 1}: ${
               MaterialType[
-                currenPortEntity.product?.materialType || MaterialType.NONE
+                currentPortEntity.product?.materialType || MaterialType.NONE
               ]
             }`,
             value: sourcePorts[i][0],
@@ -291,7 +293,7 @@
 
 <svelte:window on:keydown={focusInput} />
 
-<div id="terminal" class="terminal">
+<div on:click={() => inputElement.focus()} id="terminal" class="terminal">
   <!-- OUTPUT -->
   {#each $terminalOutput as output, index (index)}
     <TerminalOutput {output} />
@@ -307,13 +309,17 @@
         {SYMBOLS[0]}
       </span>
       <input
+        style:width="{userInput.length}ch"
         class="terminal-input"
         type="text"
-        {placeholder}
+        placeholder="{placeholder}{$cursorCharacter}"
         on:keydown={onInput}
         bind:this={inputElement}
         bind:value={userInput}
       />
+      <span>
+        {$cursorCharacter}
+      </span>
     </form>
   {/if}
 </div>
@@ -348,6 +354,16 @@
         color: inherit;
       }
 
+      .terminal-input-wrapper {
+        color: white;
+        width: 100%;
+
+        .terminal-input {
+          display: inline-block;
+          width: auto;
+        }
+      }
+
       input {
         font-family: inherit;
         font-size: inherit;
@@ -359,6 +375,7 @@
         border: none;
         padding: 0;
         position: relative; /* To position the pseudo-element */
+        caret-color: transparent;
 
         &:focus {
           border: none;

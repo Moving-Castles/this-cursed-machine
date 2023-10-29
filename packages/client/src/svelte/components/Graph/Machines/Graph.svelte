@@ -61,7 +61,7 @@
   const linkForce = d3
     .forceLink()
     .id(d => d.id || d)
-    .distance(MACHINE_SIZE * 2)
+    .distance(MACHINE_SIZE * 1.5)
   const chargeForce = d3.forceManyBody().strength(-800)
   const xForce = d3.forceX()
   const yForce = d3.forceY()

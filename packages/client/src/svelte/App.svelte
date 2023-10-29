@@ -99,9 +99,9 @@
   {/if}
 
   {#if UIState === UI.READY}
-    <Cursor>
+    <!-- <Cursor>
       <p>█</p>
-    </Cursor>
+    </Cursor> -->
     <TerminalBox on:dead={dead} />
   {/if}
 
