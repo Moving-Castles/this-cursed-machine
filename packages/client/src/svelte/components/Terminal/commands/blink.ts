@@ -3,7 +3,6 @@ import type { Command } from "../types";
 import { COMMAND, TerminalType } from "../types";
 
 async function execute(terminalType: TerminalType) {
-    console.log('terminalType', terminalType)
     await flashEffect()
     return;
 }

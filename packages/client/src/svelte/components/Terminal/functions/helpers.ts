@@ -134,7 +134,7 @@ export function getMachinesWithAvailablePorts(portType: PortType) {
       )
     )
 
-    console.log('portsOnMachine', portsOnMachine)
+    // console.log('portsOnMachine', portsOnMachine)
 
     let occupiedPorts = 0
 
@@ -210,7 +210,6 @@ export function clearTerminalOutput() {
  */
 export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
   return array.sort((a, b) => {
-    console.log(a, b)
     if (a.label === "INLET") return -1;
     if (b.label === "INLET") return 1;
     if (a.label === "OUTLET") return 1;

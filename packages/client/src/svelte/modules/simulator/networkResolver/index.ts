@@ -45,10 +45,11 @@ export async function initStateSimulator() {
     await new Promise(resolve => setTimeout(resolve, 100))
 
     // Check if level goals have been reached
-    // @hack: Wait 5 blocks from last completion to avoid duplicate modals bug
+    // @hack: Wait 10 blocks from last completion to avoid duplicate modals bug
     if (
       checkLevelGoals(get(playerCore).level) &&
-      blockNumber > get(lastCompletedBlock) + 5
+      get(showLevelModal) === false &&
+      blockNumber > get(lastCompletedBlock) + 10
     ) {
       showLevelModal.set(true)
       lastCompletedBlock.set(blockNumber)

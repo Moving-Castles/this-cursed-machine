@@ -232,15 +232,12 @@ export const readableConnections = derived(
                 return {
                   id,
                   connection,
-                  label: `From ${sourceMachine}${
-                    sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                  } To ${targetMachine}${
-                    targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                  } ${
-                    sourceMachine === "CORE"
+                  label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
+                    } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
+                    } ${sourceMachine === "CORE"
                       ? `(${MaterialType[materialType]})`
                       : ""
-                  }`,
+                    }`,
                 }
               }
             }
@@ -318,9 +315,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-        patchesOnOutlet.outputs &&
-        patchesOnOutlet.outputs[0] &&
-        patchesOnOutlet.outputs[0].materialType === material.materialType
+          patchesOnOutlet.outputs &&
+          patchesOnOutlet.outputs[0] &&
+          patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType || MaterialType.NONE] =
@@ -352,7 +349,7 @@ export const simulatedPlayerEnergy = derived(
   ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-        $playerEnergyMod * $blocksSinceLastResolution
+      $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )
