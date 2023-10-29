@@ -33,13 +33,13 @@ export function resolve(_boxEntity: string) {
   let patchInputs: Product[] = []
   let connectionPatches: any[] = []
 
-  console.log("AT START")
-  console.log("resolvedNodes")
-  console.log(resolvedNodes)
+  // console.log("AT START")
+  // console.log("resolvedNodes")
+  // console.log(resolvedNodes)
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-    console.log('__ Iteration', iterationCounter)
+    // console.log('__ Iteration', iterationCounter)
 
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
@@ -167,7 +167,7 @@ export function resolve(_boxEntity: string) {
   aggregateAndOrganize(patchInputs, 'machineId', 'inputs', patches);
   aggregateAndOrganize(connectionPatches, 'connectionId', 'inputs', patches);
 
-  console.log("____ FINAL PATCHES", patches)
+  // console.log("____ FINAL PATCHES", patches)
 
   return patches
 }

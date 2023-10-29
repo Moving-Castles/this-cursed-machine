@@ -11,11 +11,17 @@
   import { initStaticContent } from "./modules/content"
   import { initSound, playSound } from "./modules/sound"
   import { restart as sendRestart } from "./modules/action"
-  import { localLevel } from "./modules/ui/stores"
+  import { localLevel, showLevelModal, lastCompletedBlock } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { patches } from "./modules/simulator"
+  import { blockNumber } from "./modules/network"
 
-  $: console.log("$patches", $patches)
+  // $: console.log("$patches", $patches)
+  $: console.log("$showLevelModal", $showLevelModal)
+  $: if ($showLevelModal) {
+    console.log("show level modal true => $localLevel", $localLevel)
+  }
+  $: console.log("$blockNumber", $blockNumber, "$lastCompletedBlock", $lastCompletedBlock, "difference", $blockNumber - $lastCompletedBlock)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"

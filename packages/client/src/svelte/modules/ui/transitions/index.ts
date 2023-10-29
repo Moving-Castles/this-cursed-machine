@@ -64,7 +64,7 @@ export function strobe(node, { delay = 0, duration = 400 }) {
     delay,
     duration,
     css: t => {
-      console.log(t, Math.sin(t))
+      // console.log(t, Math.sin(t))
       return `opacity: ${t * o}`
     },
   }

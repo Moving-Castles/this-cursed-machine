@@ -331,7 +331,7 @@
     white-space: pre-line;
     padding-bottom: 4em;
     line-height: 1.2em;
-    max-width: 70ch;
+    max-width: 69ch;
 
     form {
       color: var(--terminal-color);

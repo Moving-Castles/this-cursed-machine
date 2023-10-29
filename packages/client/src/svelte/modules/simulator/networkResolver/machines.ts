@@ -136,9 +136,6 @@ function mixer(inputs: Product[]): Product[] {
 
   const resultMaterialType = recipe ? recipe.output : MaterialType.NONE
 
-  console.log("recipe", recipe)
-  console.log("resultMaterialType", resultMaterialType)
-
   outputs[0] = {
     machineId: inputs[0].machineId,
     materialType: resultMaterialType,

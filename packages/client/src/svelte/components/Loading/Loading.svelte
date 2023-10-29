@@ -42,6 +42,8 @@
     await new Promise(res => setTimeout(res, 300))
     loadingInterval = setInterval(() => {
       loadingMessageElement.innerHTML += "  *"
+      // Scroll to bottom
+      loadingMessageElement.scrollTop = loadingMessageElement.scrollHeight
     }, 100)
   }
 </script>
