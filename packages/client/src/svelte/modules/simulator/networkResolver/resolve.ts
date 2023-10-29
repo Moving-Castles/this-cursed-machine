@@ -161,62 +161,39 @@ export function resolve(_boxEntity: string) {
     if (iterationCounter === Object.values(machines).length * 2) break
   }
 
-  console.log("patchOutputs", "patchInputs")
-  console.log(patchOutputs, patchInputs)
-  console.log("connectionPatches", connectionPatches)
-
-  // @todo: work on patch system...
-
   let patches = {} as SimulatedEntities
 
-  // Aggregate and organize patch outputs.
-  for (let i = 0; i < patchOutputs.length; i++) {
-    if (!patches[patchOutputs[i].machineId]) {
-      patches[patchOutputs[i].machineId] = {
-        outputs: [],
-      }
-    }
+  aggregateAndOrganize(patchOutputs, 'machineId', 'outputs', patches);
+  aggregateAndOrganize(patchInputs, 'machineId', 'inputs', patches);
+  aggregateAndOrganize(connectionPatches, 'connectionId', 'inputs', patches);
 
-    if (!patches[patchOutputs[i].machineId].outputs) {
-      patches[patchOutputs[i].machineId].outputs = []
-    }
-
-    patches[patchOutputs[i].machineId].outputs.push(patchOutputs[i])
-  }
-
-  // Aggregate and organize patch inputs.
-  for (let i = 0; i < patchInputs.length; i++) {
-    if (!patches[patchInputs[i].machineId]) {
-      patches[patchInputs[i].machineId] = {
-        inputs: [],
-      }
-    }
-
-    if (!patches[patchInputs[i].machineId].inputs) {
-      patches[patchInputs[i].machineId].inputs = []
-    }
-
-    patches[patchInputs[i].machineId].inputs.push(patchInputs[i])
-  }
-
-  // Aggregate and organize connection patches.
-  for (let i = 0; i < connectionPatches.length; i++) {
-    if (!patches[connectionPatches[i].connectionId]) {
-      patches[connectionPatches[i].connectionId] = {
-        inputs: [],
-      }
-    }
-
-    if (!patches[connectionPatches[i].connectionId].inputs) {
-      patches[connectionPatches[i].connectionId].inputs = []
-    }
-
-    patches[connectionPatches[i].connectionId].connection = true
-
-    patches[connectionPatches[i].connectionId].inputs.push(patchInputs[i])
-  }
-
-  console.log("FINAL PATCHES", patches)
+  console.log("____ FINAL PATCHES", patches)
 
   return patches
+}
+
+/**
+ * Aggregates and organizes data from an array based on provided key and field, updating the `patches` object.
+ * @param {any[]} dataArray - The array of data to process.
+ * @param {string} key - The property name within each data item to use as a key for grouping in `patches`.
+ * @param {string} field - The property name in `patches` where the aggregated data should be stored.
+ * @param {SimulatedEntities} patches - An object that gets populated or updated based on `dataArray`.
+ */
+function aggregateAndOrganize(dataArray: any[], key: string, field: string, patches: SimulatedEntities) {
+  for (let i = 0; i < dataArray.length; i++) {
+    if (!patches[dataArray[i][key]]) {
+      patches[dataArray[i][key]] = {};
+      patches[dataArray[i][key]][field] = [];
+    }
+
+    if (!patches[dataArray[i][key]][field]) {
+      patches[dataArray[i][key]][field] = [];
+    }
+
+    patches[dataArray[i][key]][field].push(dataArray[i]);
+
+    if (key === 'connectionId') {
+      patches[dataArray[i][key]].connection = true;
+    }
+  }
 }
