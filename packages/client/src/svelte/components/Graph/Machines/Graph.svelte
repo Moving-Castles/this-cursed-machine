@@ -113,6 +113,21 @@
     )
   }
 
+  const linkColor = entry => {
+    // console.log(entry.inputs, entry.outputs, entry.product)
+    // console.log("LINK COLOR")
+    // console.log(entry.inputs[0].inputs)
+    if (entry?.inputs) {
+      return `var(--${
+        entry.product?.materialType
+          ? MaterialType[entry.product?.materialType]
+          : "STATE_INACTIVE"
+      })`
+    } else {
+      return "var(--STATE_INACTIVE)"
+    }
+  }
+
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
 
   $: {
@@ -208,12 +223,8 @@
           class="machine-connection {ConnectionState[
             connectionState(link.entry)
           ]}"
-          style:color="var(--{link.entry?.product?.materialType
-            ? MaterialType[link.entry?.product?.materialType]
-            : "STATE_INACTIVE"})"
-          stroke="var(--{link.entry?.product?.materialType
-            ? MaterialType[link.entry?.product?.materialType]
-            : 'STATE_INACTIVE'})"
+          style:color={linkColor(link.entry)}
+          stroke={linkColor(link.entry)}
           stroke-opacity="1"
           stroke-width={12}
           stroke-dasharray="1,7"
@@ -225,9 +236,7 @@
             x2={x2(links, link)}
             y2={y2(links, link, d3yScale)}
             transform="translate(0 {height}) scale(1 -1)"
-          >
-            <title>{link.source.id}</title>
-          </line>
+          />
         </g>
       {/each}
       <!-- END LINKS -->

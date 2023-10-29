@@ -61,22 +61,21 @@ export const simulated = derived(
 
     // Attach products to the ports and connections
     for (const [key, patch] of Object.entries($patches)) {
-      // console.log(performance.now())
       // Inputs
       if (patch.inputs && simulated[key]) {
-        // Attach inputs to machine
-        simulated[key].inputs = patch.inputs
-
-        for (const input of patch.inputs) {
-          // console.log('missing i', input)
-        }
+        simulated[key] = { ...simulated[key], inputs: [...patch.inputs] }
+        patch.inputs.forEach(input => {
+          simulated[key].product = input.inputs
+        })
       }
 
       // Outputs
       if (patch.outputs && simulated[key]) {
-        for (const output of patch.outputs) {
-          // console.log('missing o', output)
-        }
+        simulated[key] = { ...simulated[key], outputs: [...patch.outputs] }
+
+        patch.outputs.forEach(output => {
+          simulated[key].product = output.outputs
+        })
       }
     }
 
