@@ -61,22 +61,21 @@ export const simulated = derived(
 
     // Attach products to the ports and connections
     for (const [key, patch] of Object.entries($patches)) {
-      console.log(performance.now())
       // Inputs
       if (patch.inputs && simulated[key]) {
-        // Attach inputs to machine
-        simulated[key].inputs = patch.inputs
-
-        for (const input of patch.inputs) {
-          console.log('missing i', input)
-        }
+        simulated[key] = { ...simulated[key], inputs: [...patch.inputs] }
+        patch.inputs.forEach(input => {
+          simulated[key].product = input.inputs
+        })
       }
 
       // Outputs
       if (patch.outputs && simulated[key]) {
-        for (const output of patch.outputs) {
-          console.log('missing o', output)
-        }
+        simulated[key] = { ...simulated[key], outputs: [...patch.outputs] }
+
+        patch.outputs.forEach(output => {
+          simulated[key].product = output.outputs
+        })
       }
     }
 
@@ -201,12 +200,15 @@ export const readableConnections = derived(
                 return {
                   id,
                   connection,
-                  label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                    } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                    } ${sourceMachine === "CORE"
+                  label: `From ${sourceMachine}${
+                    sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
+                  } To ${targetMachine}${
+                    targetMachineIndex ? ` #${targetMachineIndex}` : ""
+                  } ${
+                    sourceMachine === "CORE"
                       ? `(${MaterialType[materialType]})`
                       : ""
-                    }`,
+                  }`,
                 }
               }
             }
@@ -284,9 +286,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-          patchesOnOutlet.outputs &&
-          patchesOnOutlet.outputs[0] &&
-          patchesOnOutlet.outputs[0].materialType === material.materialType
+        patchesOnOutlet.outputs &&
+        patchesOnOutlet.outputs[0] &&
+        patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType || MaterialType.NONE] =
@@ -318,7 +320,7 @@ export const simulatedPlayerEnergy = derived(
   ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-      $playerEnergyMod * $blocksSinceLastResolution
+        $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )
