@@ -14,8 +14,6 @@ import { playerEnergyMod } from ".."
  * @param _boxEntity - Identifier for the box entity to be resolved.
  */
 export function resolve(_boxEntity: string) {
-  // console.log('____ Resolving at block', get(blockNumber));
-
   // Counter for the number of iterations over the network
   let iterationCounter = 0
 
@@ -29,28 +27,22 @@ export function resolve(_boxEntity: string) {
   let inputs: Product[] = []
 
   // Store the products for intermediary state
+  // Only used for frontend display, not used in actual resolution
+  // @todo: use a single patch array
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
   let connectionPatches: any[] = []
-
-  // console.log("AT START")
-  // console.log("resolvedNodes")
-  // console.log(resolvedNodes)
+  let inputPortPatches: any[] = []
+  let outputPortPatches: any[] = []
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-    // console.log('__ Iteration', iterationCounter)
-
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
       // Skip if node is already resolved
       if (resolvedNodes.includes(machineKey)) {
         return
       }
-
-      // console.log('**********************')
-      // console.log('**********************')
-      // console.log('** Processing machine_', shortenAddress(machineKey), 'type:', MachineType[machine.machineType])
 
       // If the machine is an inlet, provide it with bugs as input.
       if (machine.machineType === MachineType.INLET) {
@@ -92,21 +84,15 @@ export function resolve(_boxEntity: string) {
 
       // Save to patchInputs
       for (let k = 0; k < currentOutputs.length; k++) {
-
         patchOutputs.push(deepClone(currentOutputs[k]))
       }
 
       // Mark the machine as resolved.
       resolvedNodes.push(machineKey)
-      console.log('Marked as resolved', machineKey)
 
       // Find the output ports on the current machine
       let machinePorts: string[] = []
       Object.entries(get(ports)).forEach(([portKey, port]) => {
-        // console.log('=1', port.carriedBy)
-        // console.log('=2', machineKey)
-        // console.log('port.portType === PortType.OUTPUT', port.portType === PortType.OUTPUT)
-        // console.log('port.carriedBy == machineKey', port.carriedBy == machineKey)
         if (port.portType == PortType.OUTPUT && port.carriedBy == machineKey) {
           machinePorts.push(portKey)
         }
@@ -117,9 +103,14 @@ export function resolve(_boxEntity: string) {
 
       // Distribute the machine's outputs to the connected machines.
       for (let k = 0; k < machinePorts.length; k++) {
-        // console.log("machinePorts[k]", machinePorts[k])
 
-        //  Find connections going from that port
+        // Save to outpoutPortPatches: output(s) on output port
+        outputPortPatches.push({
+          portId: machinePorts[k],
+          outputs: currentOutputs[k],
+        })
+
+        // Find connections going from that port
         const outgoingConnection = Object.entries(get(connections)).find(
           ([key, entity]) => entity.sourcePort === machinePorts[k]
         )
@@ -136,6 +127,12 @@ export function resolve(_boxEntity: string) {
         // Get the port on the other end of the connection
         const inputPort = outgoingConnection[1].targetPort
 
+        // Save to inputPortPatches: output product(s) on input port
+        inputPortPatches.push({
+          portId: inputPort,
+          inputs: currentOutputs[k],
+        })
+
         // Get the machine that the port is on
         const targetEntity = get(ports)[inputPort].carriedBy
 
@@ -148,9 +145,6 @@ export function resolve(_boxEntity: string) {
           }
         }
       }
-
-      // console.log('**********************')
-      // console.log('**********************')
     })
 
     // Increment the counter.
@@ -164,8 +158,8 @@ export function resolve(_boxEntity: string) {
   aggregateAndOrganize(patchOutputs, 'machineId', 'outputs', patches);
   aggregateAndOrganize(patchInputs, 'machineId', 'inputs', patches);
   aggregateAndOrganize(connectionPatches, 'connectionId', 'inputs', patches);
-
-  // console.log("____ FINAL PATCHES", patches)
+  aggregateAndOrganize(inputPortPatches, 'portId', 'inputs', patches);
+  aggregateAndOrganize(outputPortPatches, 'portId', 'outputs', patches);
 
   return patches
 }
@@ -192,6 +186,10 @@ function aggregateAndOrganize(dataArray: any[], key: string, field: string, patc
 
     if (key === 'connectionId') {
       patches[dataArray[i][key]].connection = true;
+    }
+
+    if (key === 'portId') {
+      patches[dataArray[i][key]].port = true;
     }
   }
 }
