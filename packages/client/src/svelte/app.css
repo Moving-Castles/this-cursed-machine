@@ -231,6 +231,7 @@ html {
   font-size: var(--font-size-normal);
   margin: 0;
   padding: 0;
+  overscroll-behavior-y: none;
 }
 
 h1,

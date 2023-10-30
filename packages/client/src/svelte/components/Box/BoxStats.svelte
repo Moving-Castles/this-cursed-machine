@@ -52,6 +52,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    overflow-y: auto;
 
     .column {
       width: 50%;
