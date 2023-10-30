@@ -293,7 +293,7 @@
 
 <svelte:window on:keydown={focusInput} />
 
-<div on:click={() => inputElement.focus()} id="terminal" class="terminal">
+<div on:click={() => inputElement?.focus()} id="terminal" class="terminal">
   <!-- OUTPUT -->
   {#each $terminalOutput as output, index (index)}
     <TerminalOutput {output} />
