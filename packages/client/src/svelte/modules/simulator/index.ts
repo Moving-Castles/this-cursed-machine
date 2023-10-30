@@ -53,26 +53,36 @@ export const blocksSinceLastResolution = derived(
 export const patches = writable({} as SimulatedEntities)
 
 /**
- * On-chain state with the local patches applied each block.
+ * Generates a derived on-chain state by applying local patches to entities each block.
+ *
+ * @param {Store} entities - The svelte store representing the entities' state.
+ * @param {Store} patches - The svelte store representing patches to be applied.
+ *
+ * @returns {DerivedStore} simulated - The derived state after applying the patches.
  */
 export const simulated = derived(
   [entities, patches],
   ([$entities, $patches]) => {
+    // Initialize the simulated state using the entities from the entities store.
     let simulated: SimulatedEntities = Object.fromEntries([
-      // Entities
       ...Object.entries($entities),
     ])
 
-    // Attach products to the ports and connections
+    // Iterate over each patch in the patches store.
     for (const [key, patch] of Object.entries($patches)) {
-      // Inputs
+      // Process inputs from the patch if they exist and the entity for the key exists in the simulated state.
       if (patch.inputs && simulated[key]) {
+        // Assign the inputs from the patch to the entity's inputs in the simulated state.
         simulated[key] = { ...simulated[key], inputs: [...patch.inputs] }
 
+        // Iterate over each input in the patch.
         patch.inputs.forEach((input, i) => {
+          // Assign the product from the input to the entity's product in the simulated state.
           simulated[key] = { ...simulated[key], product: input.inputs }
 
+          // If the current entity is a machine.
           if (simulated[key].entityType === EntityType.MACHINE) {
+            // Find all ports associated with the current machine that are output ports.
             const ports = Object.entries(simulated).filter(([_, ent]) => {
               return (
                 ent?.carriedBy === key &&
@@ -80,27 +90,36 @@ export const simulated = derived(
                 ent.portType === PortType.OUTPUT
               )
             })
+
+            // If there are associated ports and the input has a product.
             if (ports.length > 0 && input.inputs) {
               const portAddress = ports[i][0]
+
+              // Assign the product from the input to the port's product in the simulated state.
               simulated[portAddress] = {
                 ...simulated[portAddress],
                 product: input.inputs,
               }
 
-              console.log("simulated[portAddress]")
-              console.log(simulated[portAddress])
+              // Log the updated port state.
+              // console.log("simulated[portAddress]")
+              // console.log(simulated[portAddress])
             }
           }
         })
       }
 
-      // Outputs
+      // Process outputs from the patch if they exist and the entity for the key exists in the simulated state.
       if (patch.outputs && simulated[key]) {
+        // Assign the outputs from the patch to the entity's outputs in the simulated state.
         simulated[key] = { ...simulated[key], outputs: [...patch.outputs] }
 
+        // Iterate over each output in the patch.
         patch.outputs.forEach(output => {
+          // Assign the product from the output to the entity's product in the simulated state.
           simulated[key] = { ...simulated[key], product: output.outputs }
 
+          // Placeholder for processing the machine's outputs (currently empty).
           if (simulated[key].entityType === EntityType.MACHINE) {
             //
           }
@@ -108,8 +127,10 @@ export const simulated = derived(
       }
     }
 
-    console.log("updated simulated", simulated)
+    // Log the updated simulated state.
+    // console.log("updated simulated", simulated)
 
+    // Return the updated simulated state.
     return simulated
   }
 )

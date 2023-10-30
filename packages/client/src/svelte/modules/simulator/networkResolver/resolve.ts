@@ -66,13 +66,14 @@ export function resolve(_boxEntity: string) {
         input => input.machineId === machineKey
       )
 
+      if (machine.machineType === MachineType.MIXER) {
+        console.log('!!!! MIXER')
+        console.log('inputs', inputs)
+        console.log('currentInputs', currentInputs)
+      }
+
       // Save to patchInputs
       for (let k = 0; k < currentInputs.length; k++) {
-        // console.log('&& Input', k);
-        // console.log('&& machineId', shortenAddress(currentInputs[k].machineId));
-        // console.log('&& materialType', MaterialType[currentInputs[k].materialType]);
-        // console.log('&& amount', currentInputs[k].amount);
-        // console.log('&&&&&&&&&&')
         patchInputs.push(deepClone(currentInputs[k]))
       }
 
@@ -91,16 +92,13 @@ export function resolve(_boxEntity: string) {
 
       // Save to patchInputs
       for (let k = 0; k < currentOutputs.length; k++) {
-        // console.log('%% Output', k);
-        // console.log('%% machineId', shortenAddress(currentOutputs[k].machineId));
-        // console.log('%% materialType', MaterialType[currentOutputs[k].materialType]);
-        // console.log('%% amount', currentOutputs[k].amount);
-        // console.log('%%%%%%%%%%')
+
         patchOutputs.push(deepClone(currentOutputs[k]))
       }
 
       // Mark the machine as resolved.
       resolvedNodes.push(machineKey)
+      console.log('Marked as resolved', machineKey)
 
       // Find the output ports on the current machine
       let machinePorts: string[] = []
@@ -129,16 +127,16 @@ export function resolve(_boxEntity: string) {
         // No connection
         if (!outgoingConnection) continue
 
-        // Make connection patches
+        // Save to connectionPatches
         connectionPatches.push({
           connectionId: outgoingConnection[0],
           inputs: currentOutputs[k],
         })
 
-        //  Get the port on the other end of the connection
+        // Get the port on the other end of the connection
         const inputPort = outgoingConnection[1].targetPort
 
-        //  Get the machine that the port is on
+        // Get the machine that the port is on
         const targetEntity = get(ports)[inputPort].carriedBy
 
         // Fill output

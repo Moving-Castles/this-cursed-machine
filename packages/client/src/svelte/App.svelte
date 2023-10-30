@@ -11,24 +11,44 @@
   import { initStaticContent } from "./modules/content"
   import { initSound, playSound } from "./modules/sound"
   import { restart as sendRestart } from "./modules/action"
-  import { localLevel, showLevelModal, lastCompletedBlock } from "./modules/ui/stores"
+  import {
+    localLevel,
+    showLevelModal,
+    lastCompletedBlock,
+  } from "./modules/ui/stores"
+  import { recipes } from "./modules/state"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { patches } from "./modules/simulator"
   import { blockNumber } from "./modules/network"
+  import { getUniqueIdentifier } from "./modules/utils/misc"
 
   // $: console.log("$patches", $patches)
-  $: console.log("$showLevelModal", $showLevelModal)
-  $: if ($showLevelModal) {
-    console.log("show level modal true => $localLevel", $localLevel)
-  }
-  $: console.log("$blockNumber", $blockNumber, "$lastCompletedBlock", $lastCompletedBlock, "difference", $blockNumber - $lastCompletedBlock)
+  // $: console.log("$showLevelModal", $showLevelModal)
+  // $: if ($showLevelModal) {
+  //   console.log("show level modal true => $localLevel", $localLevel)
+  // }
+  // $: console.log(
+  //   "$recipes",
+  //   Object.entries($recipes).filter(([key, value]) => value.machineType === 5)
+  // )
+
+  console.log(
+    "getUniqueIdentifier 1",
+    getUniqueIdentifier(Number(MaterialType.PISS), Number(MaterialType.MONSTER))
+  )
+
+  console.log(
+    "getUniqueIdentifier 2",
+    getUniqueIdentifier(Number(MaterialType.MONSTER), Number(MaterialType.PISS))
+  )
+  // $: console.log("$blockNumber", $blockNumber, "$lastCompletedBlock", $lastCompletedBlock, "difference", $blockNumber - $lastCompletedBlock)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Death from "./components/Death/Death.svelte"
-  import Cursor from "./components/Cursor/Cursor.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
+  import { MaterialType } from "./modules/state/enums"
 
   enum UI {
     LOADING,
@@ -105,9 +125,6 @@
   {/if}
 
   {#if UIState === UI.READY}
-    <!-- <Cursor>
-      <p>█</p>
-    </Cursor> -->
     <TerminalBox on:dead={dead} />
   {/if}
 
