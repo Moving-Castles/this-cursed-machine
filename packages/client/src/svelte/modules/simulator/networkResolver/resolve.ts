@@ -163,9 +163,9 @@ export function resolve(_boxEntity: string) {
 
   let patches = {} as SimulatedEntities
 
-  aggregateAndOrganize(patchOutputs, 'machineId', 'outputs', patches);
-  aggregateAndOrganize(patchInputs, 'machineId', 'inputs', patches);
-  aggregateAndOrganize(connectionPatches, 'connectionId', 'inputs', patches);
+  aggregateAndOrganize(patchOutputs, "machineId", "outputs", patches)
+  aggregateAndOrganize(patchInputs, "machineId", "inputs", patches)
+  aggregateAndOrganize(connectionPatches, "connectionId", "inputs", patches)
 
   // console.log("____ FINAL PATCHES", patches)
 
@@ -179,21 +179,26 @@ export function resolve(_boxEntity: string) {
  * @param {string} field - The property name in `patches` where the aggregated data should be stored.
  * @param {SimulatedEntities} patches - An object that gets populated or updated based on `dataArray`.
  */
-function aggregateAndOrganize(dataArray: any[], key: string, field: string, patches: SimulatedEntities) {
+function aggregateAndOrganize(
+  dataArray: any[],
+  key: string,
+  field: string,
+  patches: SimulatedEntities
+) {
   for (let i = 0; i < dataArray.length; i++) {
     if (!patches[dataArray[i][key]]) {
-      patches[dataArray[i][key]] = {};
-      patches[dataArray[i][key]][field] = [];
+      patches[dataArray[i][key]] = {}
+      patches[dataArray[i][key]][field] = []
     }
 
     if (!patches[dataArray[i][key]][field]) {
-      patches[dataArray[i][key]][field] = [];
+      patches[dataArray[i][key]][field] = []
     }
 
-    patches[dataArray[i][key]][field].push(dataArray[i]);
+    patches[dataArray[i][key]][field].push(dataArray[i])
 
-    if (key === 'connectionId') {
-      patches[dataArray[i][key]].connection = true;
+    if (key === "connectionId") {
+      patches[dataArray[i][key]].connection = true
     }
   }
 }
