@@ -52,7 +52,6 @@ export async function initStateSimulator() {
       blockNumber > get(lastCompletedBlock) + 10
     ) {
       showLevelModal.set(true)
-      lastCompletedBlock.set(blockNumber)
     }
   })
 }

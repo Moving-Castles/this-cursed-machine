@@ -2,9 +2,10 @@
   import { onMount } from "svelte"
   import { playSound } from "../../modules/sound"
   import { transfer } from "../../modules/action"
-  import { showLevelModal } from "../../modules/ui/stores"
+  import { showLevelModal, lastCompletedBlock } from "../../modules/ui/stores"
   import { waitForCompletion } from "../Terminal/functions/helpers"
   import CompletedLevel from "./CompletedLevel.svelte"
+  import { blockNumber } from "../../modules/network"
 
   let loading = false
 
@@ -14,6 +15,8 @@
     await waitForCompletion(transfer())
     // Close modal
     showLevelModal.set(false)
+    // Used to avoid double completion bug
+    lastCompletedBlock.set($blockNumber)
   }
 
   onMount(() => {
