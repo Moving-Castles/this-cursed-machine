@@ -15,7 +15,7 @@ contract MachineSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -34,8 +34,8 @@ contract MachineSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the machine was created
-    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
+    assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(CarriedBy.get(machineEntity), CarriedBy.get(coreEntity));
 
     // Destroy the machine
     vm.startPrank(alice);
@@ -43,7 +43,7 @@ contract MachineSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the machine was destroyed
-    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.NONE));
+    assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.NONE));
   }
 
   function testDestroyConnection() public {
@@ -60,18 +60,18 @@ contract MachineSystemTest is MudTest {
     vm.stopPrank();
 
     // Get output port on core
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
     // Get input port on entity
-    bytes32[][] memory machineInputPorts = LibPort.getPorts(world, machineEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory machineInputPorts = LibPort.getPorts(machineEntity, PORT_TYPE.INPUT);
     // Connect core to entity
     vm.startPrank(alice);
     bytes32 connection = world.connect(coreOutputPorts[0][0], machineInputPorts[0][0]);
     vm.stopPrank();
 
     // Check that the connection was created
-    assertEq(uint8(EntityType.get(world, connection)), uint8(ENTITY_TYPE.CONNECTION));
-    assertEq(SourcePort.get(world, connection), coreOutputPorts[0][0]);
-    assertEq(TargetPort.get(world, connection), machineInputPorts[0][0]);
+    assertEq(uint8(EntityType.get(connection)), uint8(ENTITY_TYPE.CONNECTION));
+    assertEq(SourcePort.get(connection), coreOutputPorts[0][0]);
+    assertEq(TargetPort.get(connection), machineInputPorts[0][0]);
 
     // Destroy the machine
     vm.startPrank(alice);
@@ -79,10 +79,10 @@ contract MachineSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the machine was destroyed
-    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.NONE));
+    assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.NONE));
     // Check that the port was destroyed
-    assertEq(uint8(EntityType.get(world, machineInputPorts[0][0])), uint8(ENTITY_TYPE.NONE));
+    assertEq(uint8(EntityType.get(machineInputPorts[0][0])), uint8(ENTITY_TYPE.NONE));
     // Check that the connection was destroyed
-    assertEq(uint8(EntityType.get(world, connection)), uint8(ENTITY_TYPE.NONE));
+    assertEq(uint8(EntityType.get(connection)), uint8(ENTITY_TYPE.NONE));
   }
 }

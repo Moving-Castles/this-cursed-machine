@@ -16,7 +16,7 @@ contract ConnectionSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -35,10 +35,10 @@ contract ConnectionSystemTest is MudTest {
     vm.stopPrank();
 
     // Get input ports for new entity
-    bytes32[][] memory newEntityInputPorts = LibPort.getPorts(world, newEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory newEntityInputPorts = LibPort.getPorts(newEntity, PORT_TYPE.INPUT);
 
     // Get output port for core
-    bytes32[][] memory coreEntityOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreEntityOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Connect
     vm.startPrank(alice);
@@ -46,8 +46,8 @@ contract ConnectionSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the connection was created
-    assertEq(uint8(EntityType.get(world, connection)), uint8(ENTITY_TYPE.CONNECTION));
-    assertEq(SourcePort.get(world, connection), coreEntityOutputPorts[0][0]);
-    assertEq(TargetPort.get(world, connection), newEntityInputPorts[0][0]);
+    assertEq(uint8(EntityType.get(connection)), uint8(ENTITY_TYPE.CONNECTION));
+    assertEq(SourcePort.get(connection), coreEntityOutputPorts[0][0]);
+    assertEq(TargetPort.get(connection), newEntityInputPorts[0][0]);
   }
 }

@@ -15,7 +15,7 @@ contract TransferSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -25,17 +25,17 @@ contract TransferSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    bytes32 spawnBoxEntity = world.transfer();
+    world.transfer();
     vm.stopPrank();
 
-    assertEq(Level.get(world, coreEntity), 1);
+    assertEq(Level.get(coreEntity), 1);
 
     // @todo test whole transfer progression, fullfilling goals
     // vm.startPrank(alice);
     // bytes32 transferBoxEntity = world.transfer();
     // vm.stopPrank();
 
-    // assertEq(Level.get(world, coreEntity), 2);
+    // assertEq(Level.get(coreEntity), 2);
     // assert(spawnBoxEntity != transferBoxEntity);
   }
 }

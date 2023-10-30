@@ -12,24 +12,31 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats" use:onWheel>
-  <p>Worker#24 (Level {$playerCore.level})</p>
-  <p class="muted">-------------------</p>
-  <p>
-    {#key $simulatedPlayerCore.energy}
-      <span class="green">ENERGY:{$simulatedPlayerEnergy}</span>
-    {/key}
-  </p>
-  <p class="muted">-------------------</p>
-  <p class="muted">Produced materials:</p>
-  <p>
-    {#if Object.entries($boxOutput).length > 0}
-      {#each Object.entries($boxOutput) as [type, amount] (type)}
-        <span class={MaterialType[type]}>
-          {MaterialType[type].split("_").join(" ")}: {amount}
-        </span><br />
-      {/each}
-    {/if}
-  </p>
+  <!-- RIGHT COLUMN -->
+  <div class="column">
+    <p>Worker#24 (Level {$playerCore.level})</p>
+    <p class="muted">-------------------</p>
+    <p>
+      {#key $simulatedPlayerCore.energy}
+        <span class="green">ENERGY:{$simulatedPlayerEnergy}</span>
+      {/key}
+    </p>
+  </div>
+
+  <!-- LEFT COLUMN -->
+  <div class="column">
+    <p class="muted">Produced materials:</p>
+    <p class="muted">-------------------</p>
+    <p>
+      {#if Object.entries($boxOutput).length > 0}
+        {#each Object.entries($boxOutput) as [type, amount] (type)}
+          <span class={MaterialType[type]}>
+            {MaterialType[type].split("_").join(" ")}: {amount}
+          </span><br />
+        {/each}
+      {/if}
+    </p>
+  </div>
 </div>
 
 <style lang="scss">
@@ -43,7 +50,14 @@
     overflow: scroll;
     text-align: left;
     display: flex;
-    flex-flow: column nowrap;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-y: auto;
+
+    .column {
+      width: 50%;
+      height: 100%;
+    }
   }
 
   .energy {

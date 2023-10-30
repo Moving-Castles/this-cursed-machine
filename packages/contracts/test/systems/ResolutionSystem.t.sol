@@ -16,7 +16,7 @@ contract ResolutionSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -47,19 +47,11 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // 3. Create a splitter entity
@@ -68,24 +60,24 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // ... Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     console.log("inletOutputPorts.length");
     console.log(inletOutputPorts.length);
 
     // ... Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     console.log("coreOutputPorts.length");
     console.log(coreOutputPorts.length);
 
     // ... Get blender ports
-    bytes32[][] memory blenderInputPorts = LibPort.getPorts(world, blenderEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory blenderOutputPorts = LibPort.getPorts(world, blenderEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory blenderInputPorts = LibPort.getPorts(blenderEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory blenderOutputPorts = LibPort.getPorts(blenderEntity, PORT_TYPE.OUTPUT);
 
     // .. Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     console.log("outletInputPorts.length");
     console.log(outletInputPorts.length);
@@ -130,30 +122,22 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     // console.log("outletInputPorts.length");
     // console.log(outletInputPorts.length);
@@ -193,30 +177,22 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     console.log("outletInputPorts.length");
     console.log(outletInputPorts.length);
@@ -264,7 +240,7 @@ contract ResolutionSystemTest is MudTest {
     world.resolve();
     vm.stopPrank();
 
-    assertEq(uint8(Energy.get(world, coreEntity)), 90);
+    assertEq(uint8(Energy.get(coreEntity)), 90);
   }
 
   function testBugsToEnergy() public {
@@ -277,18 +253,14 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core input ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -307,7 +279,7 @@ contract ResolutionSystemTest is MudTest {
     // Connection cost : 0
     // 40 blocks: 40 bugs => 40 energy
     // == 130 energy
-    assertEq(uint8(Energy.get(world, coreEntity)), 140);
+    assertEq(uint8(Energy.get(coreEntity)), 140);
   }
 
   function testMakeSludge() public {
@@ -324,30 +296,22 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     // console.log("coreOutputPorts.length");
     // console.log(coreOutputPorts.length);
@@ -364,7 +328,7 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     console.log("energy");
-    console.log(Energy.get(world, coreEntity));
+    console.log(Energy.get(coreEntity));
 
     // Create a dryer entity
     vm.startPrank(alice);
@@ -372,8 +336,8 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Get dryer ports
-    bytes32[][] memory dryerInputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory dryerOutputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory dryerInputPorts = LibPort.getPorts(dryerEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory dryerOutputPorts = LibPort.getPorts(dryerEntity, PORT_TYPE.OUTPUT);
 
     console.log("dryerInputPorts.length");
     console.log(dryerInputPorts.length);
@@ -403,12 +367,12 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Check outlet pool
-    bytes32[][] memory materials = LibBox.getMaterialsByBox(world, CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibBox.getMaterialsByBox(CarriedBy.get(coreEntity));
 
     console.log("materials.length");
     console.log(materials.length);
-    console.log("MaterialType.get(world, materials[0][0])");
-    console.log(uint256(MaterialType.get(world, materials[0][0])));
+    console.log("MaterialType.get( materials[0][0])");
+    console.log(uint256(MaterialType.get(materials[0][0])));
   }
 
   function testMakeCHL() public {
@@ -425,30 +389,22 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     // console.log("coreOutputPorts.length");
     // console.log(coreOutputPorts.length);
@@ -465,7 +421,7 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     console.log("energy");
-    console.log(Energy.get(world, coreEntity));
+    console.log(Energy.get(coreEntity));
 
     // Create a mixer entity
     vm.startPrank(alice);
@@ -473,8 +429,8 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Get mixer ports
-    bytes32[][] memory mixerInputPorts = LibPort.getPorts(world, mixerEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory mixerOutputPorts = LibPort.getPorts(world, mixerEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory mixerInputPorts = LibPort.getPorts(mixerEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory mixerOutputPorts = LibPort.getPorts(mixerEntity, PORT_TYPE.OUTPUT);
 
     console.log("mixerInputPorts.length");
     console.log(mixerInputPorts.length);
@@ -505,12 +461,12 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Check outlet pool
-    bytes32[][] memory materials = LibBox.getMaterialsByBox(world, CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibBox.getMaterialsByBox(CarriedBy.get(coreEntity));
 
     console.log("materials.length");
     console.log(materials.length);
-    console.log("MaterialType.get(world, materials[0][0])");
-    console.log(uint256(MaterialType.get(world, materials[0][0])));
+    console.log("MaterialType.get( materials[0][0])");
+    console.log(uint256(MaterialType.get(materials[0][0])));
   }
 
   function testMaterialConsolidation() public {
@@ -527,30 +483,22 @@ contract ResolutionSystemTest is MudTest {
     console.log("%%%%%%%%%");
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.INLET
-    );
+    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(
-      world,
-      CarriedBy.get(coreEntity),
-      MACHINE_TYPE.OUTLET
-    );
+    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(world, inletEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
     // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(world, coreEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
     // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(world, outletEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
     // console.log("coreOutputPorts.length");
     // console.log(coreOutputPorts.length);
@@ -567,7 +515,7 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     console.log("energy");
-    console.log(Energy.get(world, coreEntity));
+    console.log(Energy.get(coreEntity));
 
     // Create a dryer entity
     vm.startPrank(alice);
@@ -575,8 +523,8 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Get dryer ports
-    bytes32[][] memory dryerInputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory dryerOutputPorts = LibPort.getPorts(world, dryerEntity, PORT_TYPE.OUTPUT);
+    bytes32[][] memory dryerInputPorts = LibPort.getPorts(dryerEntity, PORT_TYPE.INPUT);
+    bytes32[][] memory dryerOutputPorts = LibPort.getPorts(dryerEntity, PORT_TYPE.OUTPUT);
 
     console.log("dryerInputPorts.length");
     console.log(dryerInputPorts.length);
@@ -614,7 +562,7 @@ contract ResolutionSystemTest is MudTest {
     vm.stopPrank();
 
     // Check outlet pool
-    bytes32[][] memory materials = LibBox.getMaterialsByBox(world, CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibBox.getMaterialsByBox(CarriedBy.get(coreEntity));
 
     console.log("materials.length");
     console.log(materials.length);

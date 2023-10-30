@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
@@ -79,27 +78,6 @@ library LibBox {
   }
 
   /**
-   * @notice Retrieve machines of a specific type associated with a specified box entity from the world state.
-   * @dev Executes a query against the provided world state using the specified box entity and machine type to return keys of relevant machines.
-   * @param _world The world state interface through which the query will be executed.
-   * @param _boxEntity The identifier of the box entity for which machines are being queried.
-   * @param _machineType The type of machine entities to retrieve.
-   * @return boxes A two-dimensional bytes32 array containing the keys of machines of the specified type associated with the specified box entity in the provided world state.
-   */
-  function getMachinesOfTypeByBox(
-    IWorld _world,
-    bytes32 _boxEntity,
-    MACHINE_TYPE _machineType
-  ) internal view returns (bytes32[][] memory boxes) {
-    QueryFragment[] memory fragments = new QueryFragment[](3);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.MACHINE));
-    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
-    fragments[2] = QueryFragment(QueryType.HasValue, MachineTypeTableId, MachineType.encodeStatic(_machineType));
-    bytes32[][] memory keyTuples = query(_world, fragments);
-    return keyTuples;
-  }
-
-  /**
    * @dev Retrieves materials associated with a specified box entity.
    *
    * The function queries the associated data store to find material entities
@@ -121,32 +99,6 @@ library LibBox {
     fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.MATERIAL));
     fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
     bytes32[][] memory keyTuples = query(fragments);
-    return keyTuples;
-  }
-
-  /**
-   * @dev Retrieves materials associated with a specified box entity in a specified world.
-   *
-   * This function queries the associated data store within the specified world to
-   * find material entities that are carried by the specified box entity. It returns
-   * an array of tuples, where each tuple represents keys related to materials.
-   *
-   * @param _world The world in which to query for materials.
-   * @param _boxEntity The identifier of the box entity to query materials for.
-   *
-   * @return boxes A two-dimensional array of bytes32, where each sub-array
-   * represents keys (or identifiers) related to materials found in the specified world.
-   *
-   * Note: Ensure that _world and _boxEntity are valid and exist before invoking
-   * this function. No checks for existence or validation of the world and box entity
-   * are performed in this function. Handling of the query results
-   * (keyTuples) should be done in a way that considers possible empty results.
-   */
-  function getMaterialsByBox(IWorld _world, bytes32 _boxEntity) internal view returns (bytes32[][] memory boxes) {
-    QueryFragment[] memory fragments = new QueryFragment[](2);
-    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.MATERIAL));
-    fragments[1] = QueryFragment(QueryType.HasValue, CarriedByTableId, CarriedBy.encodeStatic(_boxEntity));
-    bytes32[][] memory keyTuples = query(_world, fragments);
     return keyTuples;
   }
 

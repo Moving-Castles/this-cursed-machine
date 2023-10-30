@@ -59,7 +59,7 @@
   --HAND_OF_GOD: #57eeff;
 
   /* Transaction states */
-  --STATE_INACTIVE: #111;
+  --STATE_INACTIVE: #353535;
 
   /* Animate.css */
   --animate-duration: 1s;
@@ -231,6 +231,7 @@ html {
   font-size: var(--font-size-normal);
   margin: 0;
   padding: 0;
+  overscroll-behavior-y: none;
 }
 
 h1,

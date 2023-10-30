@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { IWorld } from "../codegen/world/IWorld.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { GameConfig, GameConfigData, EntityType, TargetPort, SourcePort, SourcePortTableId, TargetPort, TargetPortTableId } from "../codegen/index.sol";
 import { ENTITY_TYPE } from "../codegen/common.sol";

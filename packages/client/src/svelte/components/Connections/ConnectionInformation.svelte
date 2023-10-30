@@ -19,7 +19,7 @@
 <div class="material-information">
   <p class="muted">
     {#if connection?.product}
-      Connection transporting <span
+      Transporting: <span
         style:color="var(--{MaterialType[connection?.product?.materialType]})"
         >{MaterialType[connection?.product?.materialType]
           ?.split("_")

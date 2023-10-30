@@ -91,10 +91,11 @@ library LibNetwork {
         }
 
         // Skip if node has no input
-        if (currentInputs.length == 0 || currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+        if (currentInputsCount == 0 || currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
 
-        // console.log("__ processing node:");
-        // console.log(uint256(node));
+        // If this is a mixer and it has less than two inputs:
+        // skip without marking as resolved to avoid missing the second input
+        if (MachineType.get(node) == MACHINE_TYPE.MIXER && currentInputsCount < 2) continue;
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
