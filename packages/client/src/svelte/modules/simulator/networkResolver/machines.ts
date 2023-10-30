@@ -26,14 +26,12 @@ const EMPTY_PRODUCT: Product = {
  * @returns {Product[]} An array containing the processed products.
  */
 export function process(machineType: MachineType, inputs: Product[]) {
-  console.log('process', machineType, inputs)
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MachineType.CORE) {
     return core(inputs)
   } else if (machineType === MachineType.SPLITTER) {
     return splitter(inputs)
   } else if (machineType === MachineType.MIXER) {
-    console.log('to mixer...')
     return mixer(inputs)
   } else if (machineType >= MachineType.DRYER && machineType <= MachineType.COOLER) {
     return simpleMachine(machineType, inputs)
@@ -124,11 +122,7 @@ function splitter(inputs: Product[]): Product[] {
 function mixer(inputs: Product[]): Product[] {
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT];  // Initializing with two distinct empty objects
 
-  console.log('in mixer', inputs)
-
   if (inputs.length !== 2) return outputs
-
-  console.log('in mixer', inputs)
 
   const recipe = Object.values(get(recipes)).find(recipe => {
     if (
@@ -139,8 +133,6 @@ function mixer(inputs: Product[]): Product[] {
     }
     return false
   })
-
-  console.log('recipe', recipe);
 
   const resultMaterialType = recipe ? recipe.output : MaterialType.NONE
 

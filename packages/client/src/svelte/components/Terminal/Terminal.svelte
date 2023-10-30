@@ -238,7 +238,6 @@
 
         for (let i = 0; i < sourcePorts.length; i++) {
           let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
-          console.log("sim port ", currentPortEntity, sourcePorts)
           sourcePortOptions.push({
             label: `Port #${i + 1}: ${
               MaterialType[

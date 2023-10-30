@@ -14,11 +14,17 @@ import { playerEnergyMod } from ".."
  * @param _boxEntity - Identifier for the box entity to be resolved.
  */
 export function resolve(_boxEntity: string) {
+
+  // console.log('############################')
+  // console.log('############################')
+
   // Counter for the number of iterations over the network
   let iterationCounter = 0
 
   // Get all the machines associated with the box entity.
   const machines = get(machinesInPlayerBox)
+
+  // console.log('machines', machines)
 
   // List to keep track of nodes (machines) that have processed their inputs
   const resolvedNodes: string[] = []
@@ -37,10 +43,17 @@ export function resolve(_boxEntity: string) {
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
+
+    // console.log('*** ITERATION', iterationCounter)
+
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
+
+      // console.log('___ RESOLVING MACHINE', MachineType[machine.machineType], machine.buildIndex, machine)
+
       // Skip if node is already resolved
       if (resolvedNodes.includes(machineKey)) {
+        // console.log('___ ALREADY RESOLVED')
         return
       }
 
@@ -58,25 +71,30 @@ export function resolve(_boxEntity: string) {
         input => input.machineId === machineKey
       )
 
-      if (machine.machineType === MachineType.MIXER) {
-        console.log('!!!! MIXER')
-        console.log('inputs', inputs)
-        console.log('currentInputs', currentInputs)
-      }
+      // console.log('___ currentInputs', currentInputs)
 
-      // Save to patchInputs
-      for (let k = 0; k < currentInputs.length; k++) {
-        patchInputs.push(deepClone(currentInputs[k]))
-      }
+      // if (machine.machineType === MachineType.MIXER) {
+      //   console.log('!!!! MIXER')
+      //   console.log('inputs', inputs)
+      //   console.log('currentInputs', currentInputs)
+      // }
 
-      // Node has no input
+      // Skip if node has no input
       if (currentInputs.length === 0) {
         if (machine.machineType === MachineType.CORE) {
           // If machine is a core, set energy modifier to -1
           playerEnergyMod.set(-1)
         }
-        // Skip
         return
+      }
+
+      // If this is a mixer and it has less than two inputs:
+      // skip without marking as resolved to avoid missing the second input
+      if (machine.machineType === MachineType.MIXER && currentInputs.length < 2) return;
+
+      // Save to patchInputs
+      for (let k = 0; k < currentInputs.length; k++) {
+        patchInputs.push(deepClone(currentInputs[k]))
       }
 
       // Process the inputs of the machine to get the outputs
@@ -86,6 +104,8 @@ export function resolve(_boxEntity: string) {
       for (let k = 0; k < currentOutputs.length; k++) {
         patchOutputs.push(deepClone(currentOutputs[k]))
       }
+
+      // console.log('___ currentOutputs', currentOutputs)
 
       // Mark the machine as resolved.
       resolvedNodes.push(machineKey)
@@ -97,6 +117,8 @@ export function resolve(_boxEntity: string) {
           machinePorts.push(portKey)
         }
       })
+
+      // console.log('___ machinePorts', machinePorts)
 
       // No output ports were found
       if (machinePorts.length === 0) return
@@ -115,6 +137,8 @@ export function resolve(_boxEntity: string) {
           ([key, entity]) => entity.sourcePort === machinePorts[k]
         )
 
+        // console.log('___ outgoingConnection', outgoingConnection)
+
         // No connection
         if (!outgoingConnection) continue
 
@@ -127,6 +151,8 @@ export function resolve(_boxEntity: string) {
         // Get the port on the other end of the connection
         const inputPort = outgoingConnection[1].targetPort
 
+        // console.log('___ inputPort', inputPort)
+
         // Save to inputPortPatches: output product(s) on input port
         inputPortPatches.push({
           portId: inputPort,
@@ -136,9 +162,12 @@ export function resolve(_boxEntity: string) {
         // Get the machine that the port is on
         const targetEntity = get(ports)[inputPort].carriedBy
 
+        // console.log('___ targetEntity', targetEntity)
+
         // Fill output
         if (currentOutputs[k]?.materialType !== MaterialType.NONE) {
           const output = currentOutputs[k]
+          // console.log('___ output', output)
           if (output) {
             output.machineId = targetEntity
             inputs.push(output)
@@ -150,8 +179,14 @@ export function resolve(_boxEntity: string) {
     // Increment the counter.
     iterationCounter++
     // Break out of the loop if it seems like an infinite loop is occurring.
-    if (iterationCounter === Object.values(machines).length * 2) break
+    if (iterationCounter === Object.values(machines).length * 2) {
+      // console.log('!!!!! BREAKING OUT OF LOOP')
+      break
+    }
   }
+
+  // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+  // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
 
   let patches = {} as SimulatedEntities
 
