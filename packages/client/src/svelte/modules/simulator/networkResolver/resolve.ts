@@ -14,7 +14,6 @@ import { playerEnergyMod } from ".."
  * @param _boxEntity - Identifier for the box entity to be resolved.
  */
 export function resolve(_boxEntity: string) {
-
   // console.log('############################')
   // console.log('############################')
 
@@ -43,12 +42,10 @@ export function resolve(_boxEntity: string) {
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-
     // console.log('*** ITERATION', iterationCounter)
 
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
-
       // console.log('___ RESOLVING MACHINE', MachineType[machine.machineType], machine.buildIndex, machine)
 
       // Skip if node is already resolved
@@ -90,7 +87,8 @@ export function resolve(_boxEntity: string) {
 
       // If this is a mixer and it has less than two inputs:
       // skip without marking as resolved to avoid missing the second input
-      if (machine.machineType === MachineType.MIXER && currentInputs.length < 2) return;
+      if (machine.machineType === MachineType.MIXER && currentInputs.length < 2)
+        return
 
       // Save to patchInputs
       for (let k = 0; k < currentInputs.length; k++) {
@@ -125,7 +123,6 @@ export function resolve(_boxEntity: string) {
 
       // Distribute the machine's outputs to the connected machines.
       for (let k = 0; k < machinePorts.length; k++) {
-
         // Save to outpoutPortPatches: output(s) on output port
         outputPortPatches.push({
           portId: machinePorts[k],
@@ -190,11 +187,11 @@ export function resolve(_boxEntity: string) {
 
   let patches = {} as SimulatedEntities
 
-  aggregateAndOrganize(patchOutputs, 'machineId', 'outputs', patches);
-  aggregateAndOrganize(patchInputs, 'machineId', 'inputs', patches);
-  aggregateAndOrganize(connectionPatches, 'connectionId', 'inputs', patches);
-  aggregateAndOrganize(inputPortPatches, 'portId', 'inputs', patches);
-  aggregateAndOrganize(outputPortPatches, 'portId', 'outputs', patches);
+  aggregateAndOrganize(patchOutputs, "machineId", "outputs", patches)
+  aggregateAndOrganize(patchInputs, "machineId", "inputs", patches)
+  aggregateAndOrganize(connectionPatches, "connectionId", "inputs", patches)
+  aggregateAndOrganize(inputPortPatches, "portId", "inputs", patches)
+  aggregateAndOrganize(outputPortPatches, "portId", "outputs", patches)
 
   return patches
 }
@@ -206,25 +203,30 @@ export function resolve(_boxEntity: string) {
  * @param {string} field - The property name in `patches` where the aggregated data should be stored.
  * @param {SimulatedEntities} patches - An object that gets populated or updated based on `dataArray`.
  */
-function aggregateAndOrganize(dataArray: any[], key: string, field: string, patches: SimulatedEntities) {
+function aggregateAndOrganize(
+  dataArray: any[],
+  key: string,
+  field: string,
+  patches: SimulatedEntities
+) {
   for (let i = 0; i < dataArray.length; i++) {
     if (!patches[dataArray[i][key]]) {
-      patches[dataArray[i][key]] = {};
-      patches[dataArray[i][key]][field] = [];
+      patches[dataArray[i][key]] = {}
+      patches[dataArray[i][key]][field] = []
     }
 
     if (!patches[dataArray[i][key]][field]) {
-      patches[dataArray[i][key]][field] = [];
+      patches[dataArray[i][key]][field] = []
     }
 
-    patches[dataArray[i][key]][field].push(dataArray[i]);
+    patches[dataArray[i][key]][field].push(dataArray[i])
 
-    if (key === 'connectionId') {
-      patches[dataArray[i][key]].connection = true;
+    if (key === "connectionId") {
+      patches[dataArray[i][key]].connection = true
     }
 
-    if (key === 'portId') {
-      patches[dataArray[i][key]].port = true;
+    if (key === "portId") {
+      patches[dataArray[i][key]].port = true
     }
   }
 }

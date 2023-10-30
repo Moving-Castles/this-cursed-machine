@@ -30,6 +30,9 @@
 
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
+  export let setBlink = false
+
+  console.log("SET BLINK", setBlink)
 
   const dispatch = createEventDispatcher()
 
@@ -288,11 +291,22 @@
   const onInput = (e: KeyboardEvent) => {
     playInputSound(e)
   }
+
+  onMount(() => {
+    if (setBlink)
+      interval = setInterval(
+        () => cursorCharacter.set($cursorCharacter === "" ? "█" : ""),
+        800
+      )
+  })
+  onDestroy(() => {
+    if (setBlink) clearInterval(interval)
+  })
 </script>
 
 <svelte:window on:keydown={focusInput} />
 
-<div on:click={() => inputElement.focus()} id="terminal" class="terminal">
+<div on:click={() => inputElement?.focus()} id="terminal" class="terminal">
   <!-- OUTPUT -->
   {#each $terminalOutput as output, index (index)}
     <TerminalOutput {output} />

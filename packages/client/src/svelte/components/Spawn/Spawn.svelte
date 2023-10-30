@@ -56,6 +56,7 @@
     bind:this={terminalComponent}
     terminalType={TerminalType.SPAWN}
     placeholder="BLINK"
+    setBlink
     on:commandExecuted={e => handleCommand(e)}
   />
 </div>
