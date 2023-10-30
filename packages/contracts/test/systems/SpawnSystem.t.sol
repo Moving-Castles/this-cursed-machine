@@ -15,7 +15,7 @@ contract SpawnSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -28,11 +28,11 @@ contract SpawnSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the core was spawned correctly
-    assertEq(uint8(EntityType.get(world, coreEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(uint8(MachineType.get(world, coreEntity)), uint8(MACHINE_TYPE.CORE));
-    assertEq(Level.get(world, coreEntity), 0);
-    assertEq(CreationBlock.get(world, coreEntity), block.number);
-    assertEq(ReadyBlock.get(world, coreEntity), block.number);
+    assertEq(uint8(EntityType.get(coreEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(uint8(MachineType.get(coreEntity)), uint8(MACHINE_TYPE.CORE));
+    assertEq(Level.get(coreEntity), 0);
+    assertEq(CreationBlock.get(coreEntity), block.number);
+    assertEq(ReadyBlock.get(coreEntity), block.number);
   }
 
   function testSpawnAndTransfer() public {
@@ -43,8 +43,8 @@ contract SpawnSystemTest is MudTest {
     bytes32 boxEntity = world.transfer();
     vm.stopPrank();
 
-    assertEq(CarriedBy.get(world, coreEntity), boxEntity);
-    assertEq(Level.get(world, coreEntity), 1);
-    assertEq(Level.get(world, boxEntity), 1);
+    assertEq(CarriedBy.get(coreEntity), boxEntity);
+    assertEq(Level.get(coreEntity), 1);
+    assertEq(Level.get(boxEntity), 1);
   }
 }

@@ -15,7 +15,7 @@ contract BuildSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     world = IWorld(worldAddress);
-    gameConfig = GameConfig.get(world);
+    gameConfig = GameConfig.get();
     alice = address(111);
     bob = address(222);
   }
@@ -34,8 +34,8 @@ contract BuildSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the machine was created
-    assertEq(uint8(EntityType.get(world, machineEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(CarriedBy.get(world, machineEntity), CarriedBy.get(world, coreEntity));
+    assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(CarriedBy.get(machineEntity), CarriedBy.get(coreEntity));
   }
 
   function testRevertNotBuildable() public {

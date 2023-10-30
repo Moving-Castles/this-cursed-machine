@@ -15,11 +15,11 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-main-143a6ea5",
+    "@latticexyz/cli": "2.0.0-next.12",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
-    "eslint": "8.49.0",
-    "rimraf": "^5.0.1",
+    "eslint": "8.52.0",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },
   "engines": {
