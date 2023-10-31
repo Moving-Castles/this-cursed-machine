@@ -63,11 +63,11 @@ export const narrative = [
     },
     async () => {
         await writeNarrative("Your consent is important to us.")
-        playSound("tcm", "cant")
+        playSound("tcm2", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing contract (life-time term)")
-        playSound("tcm", "cant")
+        playSound("tcm2", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing non liability agreement (extreme coverage)")
-        playSound("tcm", "cant")
+        playSound("tcm2", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
         await writeNarrativeInfo("On-boarding in progress...")
         // Send spawn

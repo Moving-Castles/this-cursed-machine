@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import { localResolved, patches } from ".."
 import { blockNumber } from "../../network"
 import { playerBox, playerCore } from "../../state"
-import { playSound } from "../../sound"
+// import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
 import {
@@ -28,9 +28,9 @@ export async function initStateSimulator() {
 
     // Play heartbeat on new block if player is in pod
     if (get(playerCore).carriedBy) {
-      playSound("tcm", "singleHeartbeat")
-      const c = get(cursorCharacter)
-      cursorCharacter.set(c === "" ? "█" : "")
+      // playSound("tcm", "singleHeartbeat")
+      // const c = get(cursorCharacter)
+      // cursorCharacter.set(c === "" ? "█" : "")
     }
 
     // Network was resolved onchain

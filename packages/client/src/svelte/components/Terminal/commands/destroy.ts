@@ -4,10 +4,10 @@ import { destroy as sendDestroy } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
-import { playSound } from "../../../modules/sound";
 import { simulatedMachines } from "../../../modules/simulator";
 import { get } from "svelte/store";
 import { MachineType } from "../../../modules/state/enums";
+import { playSound } from "../../../modules/sound";
 
 async function execute(machineEntity: string) {
 
@@ -23,7 +23,7 @@ async function execute(machineEntity: string) {
     await waitForTransaction(action, loadingSpinner)
     // ...
     await waitForCompletion(action, loadingLine);
-    playSound("tcm", "swipe5")
+    playSound("tcm2", "TRX_yes")
     await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;

@@ -5,7 +5,7 @@ import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/write
 import { waitForCompletion, waitForTransaction } from "../functions/helpers"
 import { OutputType } from "../types"
 import { MachineType } from "../../../modules/state/enums"
-import { playSound } from "../../../modules/sound"
+import { playSound } from "../../../modules/sound";
 
 async function execute(machineType: MachineType) {
   writeToTerminal(OutputType.NORMAL, "Requesting material")
@@ -16,7 +16,7 @@ async function execute(machineType: MachineType) {
   writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
   // ...
   await waitForCompletion(action, loadingLine)
-  playSound("tcm", "swipe5")
+  playSound("tcm2", "TRX_yes")
   await writeToTerminal(OutputType.SUCCESS, "Done")
   // ...
   return

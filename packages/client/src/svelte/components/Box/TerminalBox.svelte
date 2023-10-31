@@ -7,7 +7,6 @@
   import LevelModal from "../LevelModal/LevelModal.svelte"
   import Map from "../Map/Map.svelte"
   import { showLevelModal, showMap } from "../../modules/ui/stores"
-  import { playSound } from "../../modules/sound"
   import { simulatedPlayerEnergy } from "../../modules/simulator"
 
   const dispatch = createEventDispatcher()
@@ -27,7 +26,7 @@
   }
 
   onMount(() => {
-    playSound("tcm", "background", true, false)
+    // playSound("tcm", "background", true, false)
   })
 </script>
 
@@ -46,6 +45,7 @@
         <Terminal
           bind:this={terminalComponent}
           on:commandExecuted={e => handleCommand(e)}
+          setBlink
           placeholder="HELP"
         />
       </div>

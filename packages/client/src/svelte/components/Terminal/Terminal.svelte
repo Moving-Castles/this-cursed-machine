@@ -293,11 +293,12 @@
   }
 
   onMount(() => {
-    if (setBlink)
-      interval = setInterval(
-        () => cursorCharacter.set($cursorCharacter === "" ? "█" : ""),
-        800
-      )
+    cursorCharacter.set("█")
+    // if (setBlink)
+    //   interval = setInterval(
+    //     () => cursorCharacter.set($cursorCharacter === "" ? "█" : ""),
+    //     400
+    //   )
   })
   onDestroy(() => {
     if (setBlink) clearInterval(interval)
@@ -306,7 +307,7 @@
 
 <svelte:window on:keydown={focusInput} />
 
-<div on:click={() => inputElement?.focus()} id="terminal" class="terminal">
+<div id="terminal" class="terminal">
   <!-- OUTPUT -->
   {#each $terminalOutput as output, index (index)}
     <TerminalOutput {output} />
@@ -340,7 +341,7 @@
 <style lang="scss">
   .terminal {
     font-family: var(--font-family);
-    padding: 1em;
+    padding: 0.5em;
     overflow: hidden;
     color: var(--terminal-color);
     background: var(--terminal-background);

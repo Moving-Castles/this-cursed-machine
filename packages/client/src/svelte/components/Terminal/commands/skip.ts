@@ -4,6 +4,7 @@ import { spawn, transfer } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
 import { OutputType } from "../types"
+import { playSound } from "../../../modules/sound";
 
 async function execute() {
     writeToTerminal(OutputType.NORMAL, "Skipping intro...")
@@ -12,12 +13,14 @@ async function execute() {
     const spawnAction = spawn()
     await waitForTransaction(spawnAction, loadingSpinner)
     await waitForCompletion(spawnAction, loadingLine);
+    playSound("tcm2", "TRX_yes")
     writeToTerminal(OutputType.SUCCESS, "Spawn done")
 
     writeToTerminal(OutputType.NORMAL, "Transferring")
     const transferAction = transfer()
     await waitForTransaction(transferAction, loadingSpinner);
     await waitForCompletion(transferAction, loadingLine);
+    playSound("tcm2", "TRX_yes")
     writeToTerminal(OutputType.SUCCESS, "Transfer done")
 
     return;

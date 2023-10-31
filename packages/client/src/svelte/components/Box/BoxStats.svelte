@@ -46,7 +46,7 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 0.5rem;
+    padding: 0.5em;
     overflow: scroll;
     text-align: left;
     display: flex;

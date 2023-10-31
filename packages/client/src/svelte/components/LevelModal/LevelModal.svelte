@@ -20,7 +20,7 @@
   }
 
   onMount(() => {
-    playSound("tcm", "alarm")
+    // playSound("tcm", "alarm")
   })
 </script>
 

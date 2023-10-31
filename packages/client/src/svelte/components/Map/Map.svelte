@@ -13,7 +13,7 @@
     src="/images/map.png"
     alt="map"
     on:click={() => {
-      playSound("tcm", "buzzer")
+      // playSound("tcm", "buzzer")
       showMap.set(false)
     }}
   />

@@ -22,6 +22,13 @@ export function initSound() {
       preload: true
     })
   }
+  for (const key in soundLibrary.tcm2) {
+    soundLibrary.tcm2[key].sound = new Howl({
+      src: [soundLibrary.tcm2[key].src],
+      volume: soundLibrary.tcm2[key].volume,
+      preload: true
+    })
+  }
 }
 
 /**

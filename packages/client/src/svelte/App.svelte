@@ -91,7 +91,7 @@
     // Preload sounds
     initSound()
 
-    playSound("tcm", "inner", true, false)
+    // playSound("tcm", "inner", true, false)
   })
 </script>
 
