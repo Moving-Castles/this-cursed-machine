@@ -43,7 +43,7 @@ export enum MaterialType {
   E_LIQUID,
   TOBACCO,
   CIGARETTE_JUICE,
-  HAND_OF_GOD,
+  ERASERBABY,
 }
 
 export enum PortType {

@@ -39,8 +39,8 @@ const materialInformation = {
   TOBACCO: "Old-school self-sabotage. Classic.",
   CIGARETTE_JUICE:
     "Oh, the modern version of self-loathing. How... innovative.",
-  HAND_OF_GOD:
-    "Probably the only hand reaching out to you, and it's not even real.",
+  ERASERBABY:
+    "..."
 }
 
 const materialImages = {
@@ -66,7 +66,7 @@ const materialImages = {
     "Electronic despair in liquid form, because breathing wasn't sad enough.",
   TOBACCO: "",
   CIGARETTE_JUICE: "",
-  HAND_OF_GOD: "",
+  ERASERBABY: "",
 }
 
 function addNumericKeysFromEnum(e, o) {

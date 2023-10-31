@@ -12,7 +12,7 @@ contract NameSystem is System {
    */
   function name(string memory _name) public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(Level.get(coreEntity) == uint32(9), "not completed");
+    require(Level.get(coreEntity) == uint32(8), "not completed");
     // require(keccak256(abi.encodePacked(Name.get(coreEntity))) != keccak256(abi.encodePacked("")), "already named");
     require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked("")), "name empty");
     Name.set(coreEntity, _name);

@@ -27,7 +27,7 @@ contract TransferSystem is System {
     uint32 newLevel = Level.get(coreEntity) + 1;
     // uint32 newLevel;
     // if (Level.get(coreEntity) == 0) {
-    //   newLevel = 8;
+    //   newLevel = 7;
     // } else {
     //   newLevel = Level.get(coreEntity) + 1;
     // }
@@ -63,8 +63,8 @@ contract TransferSystem is System {
 
       // Return box
       return boxEntity;
-    } else if (newLevel == 9) {
-      // Core is at level 9, progression done
+    } else if (newLevel == 8) {
+      // Core is at level 8, progression done
       // Remove core from box
       CarriedBy.deleteRecord(coreEntity);
       // @todo Destroy old box
