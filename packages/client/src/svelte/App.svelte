@@ -11,50 +11,25 @@
   import { initStaticContent } from "./modules/content"
   import { initSound, playSound } from "./modules/sound"
   import { restart as sendRestart } from "./modules/action"
-  import {
-    localLevel,
-    showLevelModal,
-    lastCompletedBlock,
-  } from "./modules/ui/stores"
-  import { recipes } from "./modules/state"
+  import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
-  import { patches } from "./modules/simulator"
-  import { blockNumber } from "./modules/network"
-  import { getUniqueIdentifier } from "./modules/utils/misc"
-
-  // $: console.log("$patches", $patches)
-  // $: console.log("$showLevelModal", $showLevelModal)
-  // $: if ($showLevelModal) {
-  //   console.log("show level modal true => $localLevel", $localLevel)
-  // }
-  // $: console.log(
-  //   "$recipes",
-  //   Object.entries($recipes).filter(([key, value]) => value.machineType === 5)
-  // )
-
-  console.log(
-    "getUniqueIdentifier 1",
-    getUniqueIdentifier(Number(MaterialType.PISS), Number(MaterialType.MONSTER))
-  )
-
-  console.log(
-    "getUniqueIdentifier 2",
-    getUniqueIdentifier(Number(MaterialType.MONSTER), Number(MaterialType.PISS))
-  )
-  // $: console.log("$blockNumber", $blockNumber, "$lastCompletedBlock", $lastCompletedBlock, "difference", $blockNumber - $lastCompletedBlock)
+  import { playerCore } from "./modules/state"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Death from "./components/Death/Death.svelte"
+  import Completed from "./components/Completed/Completed.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
-  import { MaterialType } from "./modules/state/enums"
+
+  $: console.log("$playerCore", $playerCore)
 
   enum UI {
     LOADING,
     SPAWNING,
     DEAD,
     READY,
+    COMPLETED,
   }
 
   let UIState = UI.LOADING
@@ -77,6 +52,11 @@
   const spawned = () => {
     clearTerminalOutput()
     UIState = UI.READY
+  }
+
+  const completed = () => {
+    clearTerminalOutput()
+    UIState = UI.COMPLETED
   }
 
   onMount(async () => {
@@ -121,15 +101,19 @@
   {/if}
 
   {#if UIState === UI.SPAWNING}
-    <Spawn on:done={spawned} />
+    <Spawn on:done={spawned} on:completed={completed} />
   {/if}
 
   {#if UIState === UI.READY}
-    <TerminalBox on:dead={dead} />
+    <TerminalBox on:dead={dead} on:completed={completed} />
   {/if}
 
   {#if UIState === UI.DEAD}
     <Death on:restart={restart} />
+  {/if}
+
+  {#if UIState === UI.COMPLETED}
+    <Completed />
   {/if}
 </main>
 

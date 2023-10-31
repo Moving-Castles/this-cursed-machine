@@ -25,6 +25,12 @@ contract TransferSystem is System {
 
     // Level up core entity
     uint32 newLevel = Level.get(coreEntity) + 1;
+    // uint32 newLevel;
+    // if (Level.get(coreEntity) == 0) {
+    //   newLevel = 8;
+    // } else {
+    //   newLevel = Level.get(coreEntity) + 1;
+    // }
     Level.set(coreEntity, newLevel);
 
     if (newLevel == 1) {

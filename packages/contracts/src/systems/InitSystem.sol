@@ -51,5 +51,6 @@ contract InitSystem is System {
     LibGoal.create(7, MATERIAL_TYPE.CIGARETTE_JUICE, 2000);
     // ** 8
     LibGoal.create(8, MATERIAL_TYPE.HAND_OF_GOD, 2000);
+    // LibGoal.create(8, MATERIAL_TYPE.BLOOD, 500);
   }
 }

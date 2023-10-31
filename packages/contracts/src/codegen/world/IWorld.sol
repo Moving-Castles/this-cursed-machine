@@ -10,6 +10,7 @@ import { IConnectionSystem } from "./IConnectionSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
 import { IInit2System } from "./IInit2System.sol";
 import { IInitSystem } from "./IInitSystem.sol";
+import { INameSystem } from "./INameSystem.sol";
 import { IResolutionSystem } from "./IResolutionSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { ITransferSystem } from "./ITransferSystem.sol";
@@ -27,6 +28,7 @@ interface IWorld is
   IDestroySystem,
   IInit2System,
   IInitSystem,
+  INameSystem,
   IResolutionSystem,
   ISpawnSystem,
   ITransferSystem

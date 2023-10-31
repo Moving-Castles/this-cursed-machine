@@ -10,6 +10,7 @@ export enum WorldFunctions {
   Build = "build",
   Destroy = "destroy",
   Resolve = "resolve",
+  Name = "name",
 }
 
 // --- API --------------------------------------------------------------
@@ -50,4 +51,8 @@ export function destroy(machineEntity: string) {
 
 export function resolve() {
   return addToSequencer(WorldFunctions.Resolve, [])
+}
+
+export function name(name: string) {
+  return addToSequencer(WorldFunctions.Name, [name])
 }

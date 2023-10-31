@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
-  import { playerCore } from "../../modules/state"
+  import { playerCore, levels } from "../../modules/state"
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/Machines/Graph.svelte"
@@ -14,10 +14,12 @@
 
   let terminalComponent: any
 
-  $: {
-    if ($playerCore && $simulatedPlayerEnergy === 0) {
-      dispatch("dead")
-    }
+  $: if ($playerCore && $simulatedPlayerEnergy === 0) {
+    dispatch("dead")
+  }
+
+  $: if ($playerCore.level === Object.keys($levels).length + 1) {
+    dispatch("completed")
   }
 
   const handleCommand = async (e: any) => {
@@ -37,29 +39,31 @@
   <Map />
 {/if}
 
-<div class="bg">
-  <div class="split-screen">
-    <div class="left-col">
-      <Terminal
-        bind:this={terminalComponent}
-        on:commandExecuted={e => handleCommand(e)}
-        placeholder="HELP"
-      />
-    </div>
-    {#if $playerCore}
-      <div class="right-col">
-        <!-- <div class="scanlines" /> -->
-        <!-- <div class="scanlines2" /> -->
-        <div class="stats">
-          <BoxStats />
-        </div>
-        <div class="graph">
-          <Graph />
-        </div>
+{#if $playerCore.carriedBy}
+  <div class="bg">
+    <div class="split-screen">
+      <div class="left-col">
+        <Terminal
+          bind:this={terminalComponent}
+          on:commandExecuted={e => handleCommand(e)}
+          placeholder="HELP"
+        />
       </div>
-    {/if}
+      {#if $playerCore}
+        <div class="right-col">
+          <!-- <div class="scanlines" /> -->
+          <!-- <div class="scanlines2" /> -->
+          <div class="stats">
+            <BoxStats />
+          </div>
+          <div class="graph">
+            <Graph />
+          </div>
+        </div>
+      {/if}
+    </div>
   </div>
-</div>
+{/if}
 
 <style lang="scss">
   .box {
