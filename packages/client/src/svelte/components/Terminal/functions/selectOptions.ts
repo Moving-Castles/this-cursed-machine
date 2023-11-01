@@ -4,8 +4,9 @@ import {
     simulatedMachines,
     readableConnections,
 } from "../../../modules/simulator"
+import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
-import { FIXED_MACHINE_TYPES } from ".."
+import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort, getMachinesWithAvailablePorts } from "./helpers"
 
 /**
@@ -44,32 +45,16 @@ export function createSelectOptions(
  * @returns {SelectOption[]} An array of select options representing various machine types.
  */
 function createSelectOptionsBuild(): SelectOption[] {
-    let selectOptions: SelectOption[] = [
-        {
-            label: "Splitter",
-            value: MachineType.SPLITTER,
-        },
-        {
-            label: "Mixer",
-            value: MachineType.MIXER,
-        },
-        {
-            label: "Dryer",
-            value: MachineType.DRYER,
-        },
-        {
-            label: "Wetter",
-            value: MachineType.WETTER,
-        },
-        {
-            label: "Boiler",
-            value: MachineType.BOILER,
-        },
-        {
-            label: "Cooler",
-            value: MachineType.COOLER,
-        },
-    ]
+    let selectOptions: SelectOption[] = []
+    let availableMachines: MachineType[] = MACHINES_BY_LEVEL[get(playerCore)?.level || 0]
+
+    for (let i = 0; i < availableMachines.length; i++) {
+        selectOptions.push({
+            label: MachineType[availableMachines[i]],
+            value: availableMachines[i],
+        })
+    }
+
     return selectOptions
 }
 

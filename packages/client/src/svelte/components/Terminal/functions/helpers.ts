@@ -2,10 +2,10 @@ import { tick } from "svelte"
 import type { Action } from "../../../modules/action/actionSequencer";
 import { simulatedConnections, simulatedMachines, simulatedPorts } from "../../../modules/simulator";
 import { get } from "svelte/store";
-import { MachineType, PortType } from "../../../modules/state/enums";
+import { PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
-import { COMMAND, TerminalType, SelectOption } from "../types"
-import { SPAWN_COMMANDS, FULL_COMMANDS, terminalOutput } from ".."
+import { COMMAND, SelectOption } from "../types"
+import { COMMANDS_BY_LEVEL, terminalOutput } from ".."
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -160,19 +160,9 @@ export function getMachinesWithAvailablePorts(portType: PortType) {
   return availableMachines
 }
 
-/**
- * Filters a command based on the terminal type.
- * 
- * @param {TerminalType} terminalType - The type of the terminal.
- * @param {COMMAND} commandId - The ID of the command.
- * @returns {boolean} Returns true if the command is valid for the given terminal type, otherwise false.
- */
-export function terminalTypeCommandFilter(terminalType: TerminalType, commandId: COMMAND): boolean {
-  if (terminalType === TerminalType.SPAWN) {
-    return SPAWN_COMMANDS.includes(commandId) ? true : false;
-  } else {
-    return FULL_COMMANDS.includes(commandId) ? true : false;
-  }
+
+export function levelCommandFilter(level: number, commandId: COMMAND): boolean {
+  return COMMANDS_BY_LEVEL[level].includes(commandId) ? true : false;
 }
 
 /**
