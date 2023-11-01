@@ -323,17 +323,18 @@
         {SYMBOLS[0]}
       </span>
       <input
-        style:width="{userInput.length}ch"
         class="terminal-input"
         type="text"
-        placeholder="{placeholder}{$cursorCharacter}"
+        {placeholder}
         on:keydown={onInput}
         bind:this={inputElement}
         bind:value={userInput}
       />
-      <span>
+      <!-- style:width="{userInput.length}ch" -->
+
+      <!-- <span>
         {$cursorCharacter}
-      </span>
+      </span> -->
     </form>
   {/if}
 </div>
