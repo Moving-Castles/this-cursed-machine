@@ -47,7 +47,7 @@ async function writeNarrativeSuccess(text: string) {
 
 export const narrative = [
     async () => {
-        await writeNarrative("welcome Worker#24")
+        await writeNarrative("welcome Stump #24719")
         await writeNarrativeAction("blink if you can hear me")
     },
     async () => {
@@ -82,7 +82,7 @@ export const narrative = [
         await writeNarrativeAction("Blink to enter the pod.")
     },
     async () => {
-        await writeNarrativeInfo("Transferring worker to pod #1...")
+        await writeNarrativeInfo("Transferring worker to pod...")
         // Send spawn
         const action = transfer()
         await waitForTransaction(action, loadingSpinner);

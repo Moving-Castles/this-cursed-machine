@@ -208,11 +208,9 @@ export const readableConnections = derived(
 
             if (ssP && ttP) {
               // Fetch the machine types and indices for source and target
-              const sourceMachine =
-                MachineType[$machines[ssP?.carriedBy]?.machineType]
+              const sourceMachine = $machines[ssP?.carriedBy]?.machineType === MachineType.CORE ? "YOU" : MachineType[$machines[ssP?.carriedBy]?.machineType]
               const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-              const targetMachine =
-                MachineType[$machines[ttP?.carriedBy]?.machineType]
+              const targetMachine = $machines[ttP?.carriedBy]?.machineType === MachineType.CORE ? "YOU" : MachineType[$machines[ttP?.carriedBy]?.machineType]
               const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
 
               if (sourceMachine && targetMachine) {

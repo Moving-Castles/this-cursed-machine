@@ -28,7 +28,7 @@ export enum COMMAND {
     RESOLVE,
     TRANSFER,
     MAP,
-    GOALS,
+    ORDERS,
     SKIP,
     RESTART
 }

@@ -109,7 +109,7 @@ function createSelectOptionsInspect(): SelectOption[] {
     // All machines
     Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
         selectOptions.push({
-            label: MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
+            label: machine.machineType === MachineType.CORE ? "YOU" : MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
             value: machineId,
         })
     })
@@ -131,7 +131,7 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
     Object.entries(machines).forEach(([machineId, machine]) => {
         // @todo: Better label
         selectOptions.push({
-            label: MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
+            label: machine.machineType === MachineType.CORE ? "YOU" : MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
             value: machineId,
         })
     })

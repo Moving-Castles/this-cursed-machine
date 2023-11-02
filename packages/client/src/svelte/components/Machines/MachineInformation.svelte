@@ -9,7 +9,9 @@
 </script>
 
 <div class="machine-information">
-  {MachineType[machine.machineType]}
+  {machine.machineType === MachineType.CORE
+    ? "YOU (Stump #24719)"
+    : MachineType[machine.machineType]}
   <p class="muted">
     {machineLore}<br />
     -------------------

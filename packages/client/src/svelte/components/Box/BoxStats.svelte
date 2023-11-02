@@ -14,7 +14,7 @@
 <div class="box-stats" use:onWheel>
   <!-- RIGHT COLUMN -->
   <div class="column">
-    <p>Worker#24 (Level {$playerCore.level})</p>
+    <p>Stump #24719 ({$playerCore.level})</p>
     <p class="muted">-------------------</p>
     <p>
       {#key $simulatedPlayerCore.energy}
@@ -25,7 +25,7 @@
 
   <!-- LEFT COLUMN -->
   <div class="column">
-    <p class="muted">Produced materials:</p>
+    <p class="muted">SENT TO WAREHOUSE:</p>
     <p class="muted">-------------------</p>
     <p>
       {#if Object.entries($boxOutput).length > 0}

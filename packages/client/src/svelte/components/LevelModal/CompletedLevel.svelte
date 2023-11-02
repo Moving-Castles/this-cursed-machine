@@ -19,7 +19,7 @@
 </script>
 
 <div class="completed-level">
-  <div class="level-title">COMPLETED level Pod #{$playerBox.level}</div>
+  <div class="level-title">COMPLETED order #{$playerBox.level}</div>
   <div class="level-description">Level description does here</div>
   <div class="level-goals">
     Production quota:
