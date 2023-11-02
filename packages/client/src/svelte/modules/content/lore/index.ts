@@ -24,7 +24,7 @@ const materialInformation = {
   DIRT: "Salt of the earth. Crushed, like ground up dreams.",
   ENERGY: "You have it, it makes you more productive.",
   PLANT: "Haven't seen those in a while",
-  CAFFEINATED_HEMATURIC_LIQUID: "... .,.. . .. Google won't tell me",
+  CAFFEINE_SLUSHY: "... .,.. . .. Google won't tell me",
   CLUB_MATE:
     "My neighbour, I think he exists. I think he is trying to tell me about this drink from rural Germany",
   DIET_RED_BULL: "Post and pre-workout and game drink... I need some",
@@ -53,7 +53,7 @@ const materialImages = {
   DIRT: "",
   ENERGY: "",
   PLANT: "",
-  CAFFEINATED_HEMATURIC_LIQUID: "",
+  CAFFEINE_SLUSHY: "",
   CLUB_MATE: "",
   DIET_RED_BULL: "",
   PRIME: "",

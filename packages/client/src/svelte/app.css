@@ -46,7 +46,7 @@
   --DIRT: #c27800;
   --ENERGY: #00c224;
   --PLANT: #00c224;
-  --CAFFEINATED_HEMATURIC_LIQUID: #e0bf00;
+  --CAFFEINE_SLUSHY: #e0bf00;
   --CLUB_MATE: #e0bf00;
   --DIET_RED_BULL: #00edfa;
   --PRIME: #19fa00;
@@ -105,9 +105,9 @@
 .PLANT {
   color: var(--ENERGY);
 }
-.CAFFEINATED_HEMATURIC_LIQUID,
+.CAFFEINE_SLUSHY,
 .CLUB_MATE {
-  color: var(--CAFFEINATED_HEMATURIC_LIQUID);
+  color: var(--CAFFEINE_SLUSHY);
 }
 .DIET_RED_BULL {
   color: var(--DIET_RED_BULL);
