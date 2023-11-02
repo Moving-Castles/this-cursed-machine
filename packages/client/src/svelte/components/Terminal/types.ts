@@ -29,7 +29,8 @@ export enum COMMAND {
     TRANSFER,
     MAP,
     GOALS,
-    SKIP
+    SKIP,
+    RESTART
 }
 
 export type Command<T extends any[] = any[]> = {

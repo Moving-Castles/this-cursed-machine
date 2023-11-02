@@ -56,14 +56,16 @@ export const FULL_COMMANDS = [
   COMMAND.RESOLVE,
   COMMAND.TRANSFER,
   COMMAND.MAP,
-  COMMAND.GOALS
+  COMMAND.GOALS,
+  COMMAND.RESTART
 ]
 
 export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
   0: [
     COMMAND.HELP,
     COMMAND.BLINK,
-    COMMAND.SKIP
+    COMMAND.SKIP,
+    COMMAND.RESTART
   ],
   1: [
     COMMAND.CONNECT,
@@ -71,6 +73,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.GOALS,
     COMMAND.BLINK,
+    COMMAND.RESTART
   ],
   2: [
     COMMAND.CONNECT,
@@ -78,6 +81,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.GOALS,
     COMMAND.BLINK,
+    COMMAND.RESTART
   ],
   3: [
     COMMAND.CONNECT,
@@ -87,6 +91,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.GOALS,
     COMMAND.BLINK,
+    COMMAND.RESTART
   ],
   4: [
     COMMAND.CONNECT,

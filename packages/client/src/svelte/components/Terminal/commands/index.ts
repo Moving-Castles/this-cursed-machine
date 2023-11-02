@@ -13,6 +13,7 @@ import { resolve } from "./resolve";
 import { map } from "./map";
 import { goals } from "./goals";
 import { skip } from "./skip";
+import { restart } from "./restart";
 
 export const commands: Command[] = [
     build,
@@ -27,5 +28,6 @@ export const commands: Command[] = [
     help,
     resolve,
     transfer,
-    skip
+    skip,
+    restart
 ]
