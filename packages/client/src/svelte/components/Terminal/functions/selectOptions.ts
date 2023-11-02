@@ -8,6 +8,7 @@ import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort, getMachinesWithAvailablePorts } from "./helpers"
+import { machineTypeToLabel } from "../../../modules/state/convenience"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -71,7 +72,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
         .forEach(([machineId, machine]) => {
             if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
                 selectOptions.push({
-                    label: `${MachineType[machine.machineType]} #${machine.buildIndex}`,
+                    label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
                     value: machineId,
                 })
             }
@@ -109,7 +110,7 @@ function createSelectOptionsInspect(): SelectOption[] {
     // All machines
     Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
         selectOptions.push({
-            label: machine.machineType === MachineType.CORE ? "YOU" : MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
+            label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
             value: machineId,
         })
     })
@@ -131,7 +132,7 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
     Object.entries(machines).forEach(([machineId, machine]) => {
         // @todo: Better label
         selectOptions.push({
-            label: machine.machineType === MachineType.CORE ? "YOU" : MachineType[machine.machineType] + (machine.buildIndex ? " #" + machine.buildIndex : ""),
+            label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
             value: machineId,
         })
     })

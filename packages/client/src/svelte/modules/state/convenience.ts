@@ -6,7 +6,6 @@ import {
 } from "../simulator"
 import { connections } from "./index"
 import { ConnectionState } from "../state/enums"
-import type { SimulatedEntity } from "./types"
 import { MachineType, PortType } from "./types"
 
 /**
@@ -354,4 +353,22 @@ export const machineState = (machineId: string) => {
     Object.entries(get(simulatedPorts)),
     Object.values(get(simulatedConnections))
   )
+}
+
+/**
+ * Converts a MachineType enum value to a corresponding string label.
+ * @param {MachineType} machineType - The machine type to convert.
+ * @returns {string} The string label corresponding to the provided machine type.
+ */
+export function machineTypeToLabel(machineType: MachineType | undefined) {
+  switch (machineType || MachineType.NONE) {
+    case MachineType.INLET:
+      return "FOOD DISPENSER"
+    case MachineType.OUTLET:
+      return "WAREHOUSE"
+    case MachineType.CORE:
+      return "YOU"
+    default:
+      return MachineType[machineType]
+  }
 }

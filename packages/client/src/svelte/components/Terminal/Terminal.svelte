@@ -21,6 +21,7 @@
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeNewLevel } from "./functions/writeNewLevel"
+  import { machineTypeToLabel } from "../../modules/state/convenience"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -31,8 +32,6 @@
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
   export let setBlink = false
-
-  console.log("SET BLINK", setBlink)
 
   const dispatch = createEventDispatcher()
 
@@ -75,7 +74,7 @@
     await writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
 
     // Evaluate input
-    const command = evaluate(userInput, terminalType)
+    const command = evaluate(userInput)
 
     // Handle invalid command
     if (!command) {
@@ -161,7 +160,7 @@
       writeToTerminal(
         OutputType.SPECIAL,
         "From: " +
-          MachineType[sourceMachineEntity.machineType || MachineType.NONE] +
+          machineTypeToLabel(sourceMachineEntity.machineType) +
           (sourceMachineEntity.buildIndex
             ? " #" + sourceMachineEntity.buildIndex
             : ""),
@@ -205,7 +204,7 @@
       await writeToTerminal(
         OutputType.SPECIAL,
         "To: " +
-          MachineType[targetMachineEntity.machineType || MachineType.NONE] +
+          machineTypeToLabel(targetMachineEntity.machineType) +
           (targetMachineEntity.buildIndex
             ? " #" + targetMachineEntity.buildIndex
             : ""),

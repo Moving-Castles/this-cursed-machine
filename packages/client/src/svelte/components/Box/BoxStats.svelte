@@ -14,7 +14,8 @@
 <div class="box-stats" use:onWheel>
   <!-- RIGHT COLUMN -->
   <div class="column">
-    <p>Stump #24719 ({$playerCore.level})</p>
+    <!-- ({$playerCore.level}) -->
+    <p>Stump #24719</p>
     <p class="muted">-------------------</p>
     <p>
       {#key $simulatedPlayerCore.energy}

@@ -11,7 +11,7 @@ async function writeNarrative(text: string) {
         text,
         SYMBOLS[7],
         10,
-        1000
+        800
     )
 }
 
@@ -21,7 +21,7 @@ async function writeNarrativeAction(text: string) {
         text,
         SYMBOLS[7],
         10,
-        1000
+        800
     )
 }
 
@@ -31,7 +31,7 @@ async function writeNarrativeInfo(text: string) {
         text,
         false,
         SYMBOLS[10],
-        1000
+        800
     )
 }
 
@@ -41,7 +41,7 @@ async function writeNarrativeSuccess(text: string) {
         text,
         false,
         SYMBOLS[10],
-        1000
+        800
     )
 }
 
@@ -76,7 +76,7 @@ export const narrative = [
         await waitForCompletion(action, loadingLine);
         // Spawn complete
         await writeNarrativeSuccess("On-boarding complete")
-        await writeNarrative("Congratulations Worker#24")
+        await writeNarrative("Congratulations Stump #24719")
         await writeNarrative("Brain-machine-interface is now calibrated.")
         await writeNarrative("Blood and piss is being pumped from your body.")
         await writeNarrativeAction("Blink to enter the pod.")

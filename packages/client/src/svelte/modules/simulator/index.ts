@@ -8,7 +8,6 @@ import { capAtZero } from "../../modules/utils/misc"
 import {
   portBelongsToBox,
   connectionBelongsToBox,
-  machinePorts,
 } from "../state/convenience"
 import {
   entities,
@@ -16,12 +15,12 @@ import {
   playerEntityId,
   playerCore,
   ports,
-  connections,
   machines,
   playerGoals,
 } from "../state"
 import { blockNumber } from "../network"
 import type { SimulatedEntities, BoxOutputs } from "./types"
+import { machineTypeToLabel } from "../state/convenience"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -208,9 +207,9 @@ export const readableConnections = derived(
 
             if (ssP && ttP) {
               // Fetch the machine types and indices for source and target
-              const sourceMachine = $machines[ssP?.carriedBy]?.machineType === MachineType.CORE ? "YOU" : MachineType[$machines[ssP?.carriedBy]?.machineType]
+              const sourceMachine = machineTypeToLabel($machines[ssP?.carriedBy]?.machineType)
               const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-              const targetMachine = $machines[ttP?.carriedBy]?.machineType === MachineType.CORE ? "YOU" : MachineType[$machines[ttP?.carriedBy]?.machineType]
+              const targetMachine = machineTypeToLabel($machines[ttP?.carriedBy]?.machineType)
               const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
 
               if (sourceMachine && targetMachine) {

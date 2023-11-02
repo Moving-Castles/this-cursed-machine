@@ -62,7 +62,7 @@ export const writeNewLevel = async (level: number) => {
         await typeWrite(text[i])
     }
 
-    await write("Orders:")
+    await write("WAREHOUSE GOALS:")
     const currentGoals = get(playerGoals)
     for (let i = 0; i < currentGoals.length; i++) {
         await writeNormal(`${currentGoals[i].materialType === MaterialType.NONE ? "Energy" : MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)

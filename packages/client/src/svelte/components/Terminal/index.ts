@@ -73,7 +73,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.ORDERS,
     COMMAND.BLINK,
-    COMMAND.RESTART
+    COMMAND.RESTART,
   ],
   2: [
     COMMAND.CONNECT,

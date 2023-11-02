@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import type { Toast } from "./index"
+  import type { Toast } from "../../modules/ui/toast"
   import { createEventDispatcher } from "svelte"
 
   const dispatch = createEventDispatcher<{ end: Toast }>()
@@ -15,6 +15,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="toast absolute {toast.type}" on:click={close}>
   <p>
     {toast.message}
@@ -28,7 +29,7 @@
     display: flex;
     flex-flow: column nowrap;
     color: white;
-    padding: 0px;
+    padding: 20px;
     cursor: pointer;
     text-align: center;
     background: red;
