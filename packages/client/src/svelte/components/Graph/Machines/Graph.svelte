@@ -291,6 +291,7 @@
           class="node {ConnectionState[machineState(d.address)]} {MachineType[
             d.entry.machineType
           ]}"
+          style:animation-delay="{Math.random() * -10}s"
           id={d.id}
         >
           <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -408,38 +409,127 @@
     0% {
       transform: translate(0, 0);
     }
+    2.5% {
+      transform: translate(0, -1px);
+    } /* Up */
     5% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    7.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    10% {
       transform: translate(1px, 1px);
-    }
+    } /* Down */
+    12.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
     15% {
       transform: translate(-1px, 1px);
-    }
-    24% {
-      transform: translate(1px, 2px);
-    }
-    33% {
-      transform: translate(2px, -1px);
-    }
-    44% {
+    } /* Left */
+    17.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    20% {
       transform: translate(-1px, -1px);
-    }
-    55% {
-      transform: translate(1px, 0);
-    }
-    66% {
-      transform: translate(-1px, 1px);
-    }
-    77% {
+    } /* Up */
+    22.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    25% {
       transform: translate(1px, -1px);
-    }
-    88% {
+    } /* Down */
+    27.5% {
+      transform: translate(1px, 0);
+    } /* Right */
+    30% {
       transform: translate(1px, 1px);
-    }
-    97% {
-      transform: translate(1px, 0px);
-    }
+    } /* Down */
+    32.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    35% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    37.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    40% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    42.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    45% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    47.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    50% {
+      transform: translate(1px, 1px);
+    } /* Left */
+    52.5% {
+      transform: translate(0px, 1px);
+    } /* Down */
+    55% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    57.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    60% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    62.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    65% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    67.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    70% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    72.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    75% {
+      transform: translate(-1px, 1px);
+    } /* Up */
+    77.5% {
+      transform: translate(-1px, 0);
+    } /* Left */
+    80% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    82.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    85% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    87.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    90% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    92.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    95% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    97.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    100% {
+      transform: translate(0, 0);
+    } /* Right */
   }
-
   @keyframes flowAnimation {
     to {
       stroke-dashoffset: 0; /* Reveal the line. */
@@ -460,7 +550,7 @@
   }
 
   .node:not(.INLET):not(.OUTLET).FLOWING {
-    animation: vibrate 2s infinite;
+    animation: vibrate 10s infinite;
   }
 
   .MACHINE_NONE {
