@@ -42,9 +42,9 @@ contract ResolutionSystemTest is MudTest {
     world.transfer();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 1");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% RESOLVE 1");
+    // console.log("%%%%%%%%%");
 
     // Get inlet entity
     bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
@@ -62,15 +62,15 @@ contract ResolutionSystemTest is MudTest {
     // ... Get inlet output ports
     bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
 
-    console.log("inletOutputPorts.length");
-    console.log(inletOutputPorts.length);
+    // console.log("inletOutputPorts.length");
+    // console.log(inletOutputPorts.length);
 
     // ... Get core ports
     bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
     bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
 
-    console.log("coreOutputPorts.length");
-    console.log(coreOutputPorts.length);
+    // console.log("coreOutputPorts.length");
+    // console.log(coreOutputPorts.length);
 
     // ... Get blender ports
     bytes32[][] memory blenderInputPorts = LibPort.getPorts(blenderEntity, PORT_TYPE.INPUT);
@@ -79,8 +79,8 @@ contract ResolutionSystemTest is MudTest {
     // .. Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
-    console.log("outletInputPorts.length");
-    console.log(outletInputPorts.length);
+    // console.log("outletInputPorts.length");
+    // console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -117,9 +117,9 @@ contract ResolutionSystemTest is MudTest {
     world.transfer();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 2");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% RESOLVE 2");
+    // console.log("%%%%%%%%%");
 
     // Get inlet entity
     bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
@@ -172,9 +172,9 @@ contract ResolutionSystemTest is MudTest {
     world.transfer();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% RESOLVE 3");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% RESOLVE 3");
+    // console.log("%%%%%%%%%");
 
     // Get inlet entity
     bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
@@ -194,8 +194,8 @@ contract ResolutionSystemTest is MudTest {
     // Get outlet input ports
     bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
 
-    console.log("outletInputPorts.length");
-    console.log(outletInputPorts.length);
+    // console.log("outletInputPorts.length");
+    // console.log(outletInputPorts.length);
 
     // 4. Connect inlet output to core input
     vm.startPrank(alice);
@@ -291,9 +291,9 @@ contract ResolutionSystemTest is MudTest {
     world.transfer();
     vm.stopPrank();
 
-    console.log("%%%%%%%%%");
-    console.log("%%%%%%%%% MAKE SLUDGE");
-    console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%%");
+    // console.log("%%%%%%%%% MAKE SLUDGE");
+    // console.log("%%%%%%%%%");
 
     // Get inlet entity
     bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);

@@ -13,7 +13,6 @@
   import { restart as sendRestart } from "./modules/action"
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
-  import { playerCore } from "./modules/state"
   import { UIState, UI } from "./modules/ui/stores"
 
   import Loading from "./components/Loading/Loading.svelte"
@@ -22,8 +21,6 @@
   import Death from "./components/Death/Death.svelte"
   import Completed from "./components/Completed/Completed.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
-
-  $: console.log("$playerCore", $playerCore)
 
   const restart = () => {
     clearTerminalOutput()

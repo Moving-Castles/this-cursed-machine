@@ -11,7 +11,6 @@ contract DeployTest is MudTest {
 
   function setUp() public override {
     super.setUp();
-    console.log(worldAddress);
     world = IWorld(worldAddress);
   }
 

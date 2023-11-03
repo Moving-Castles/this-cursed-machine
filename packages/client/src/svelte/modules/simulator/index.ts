@@ -195,7 +195,6 @@ export const readableConnections = derived(
         .map(([id, connection]) => {
           // Get the material being transported
           const materialType = connection.product?.materialType
-          console.log(connection.product)
 
           // Extract the source and target ports for the current connection
           const sP = connection?.sourcePort

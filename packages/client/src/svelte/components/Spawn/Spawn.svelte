@@ -14,8 +14,6 @@
   let narrativeIndex = 0
 
   const handleCommand = async (e: any) => {
-    console.log(e.detail.command.id)
-
     if (e.detail.command.id === COMMAND.SKIP) {
       dispatch("done")
     }
