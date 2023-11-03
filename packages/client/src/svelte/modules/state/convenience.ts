@@ -363,7 +363,7 @@ export const machineState = (machineId: string) => {
 export function machineTypeToLabel(machineType: MachineType | undefined) {
   switch (machineType || MachineType.NONE) {
     case MachineType.INLET:
-      return "FOOD DISPENSER"
+      return "BUG DISPENSER"
     case MachineType.OUTLET:
       return "WAREHOUSE"
     case MachineType.CORE:
