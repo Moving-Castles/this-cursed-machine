@@ -1,5 +1,6 @@
 <script lang="ts">
   export let align: "center" | "left" | "right" = "center"
+  import { onMount, onDestroy } from "svelte"
 
   let [h, x, y] = [0, 0, 0]
 
@@ -9,13 +10,13 @@
     console.log(align)
     switch (align) {
       case "left":
-        alignTransformation = "translate(-20px, -20px)"
+        alignTransformation = "translate(-20px, 50%)"
         break
       case "right":
-        alignTransformation = "translate(-100%, -20px) translateX(20px)"
+        alignTransformation = "translate(-100%, 50%) translateX(20px)"
         break
       case "center":
-        alignTransformation = "translate(-50%, -20px)"
+        alignTransformation = "translate(-50%, 50%)"
         break
     }
   }
@@ -24,6 +25,13 @@
     x = clientX
     y = clientY
   }
+
+  onMount(() => {
+    document.body.classList.add("cursor-none")
+  })
+  onDestroy(() => {
+    document.body.classList.remove("cursor-none")
+  })
 </script>
 
 <svelte:window bind:innerHeight={h} on:mousemove={onMouseMove} />
@@ -49,6 +57,7 @@
     background-color: black !important;
     border: 1px solid white;
     pointer-events: none;
+    cursor: none;
   }
 
   .inner {

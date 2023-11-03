@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import Tooltip from "../../Tooltip/Tooltip.svelte"
-  import { fade } from "svelte/transition"
+  import { draw, fade } from "svelte/transition"
   import { range } from "../../../modules/utils/misc"
   import ConnectionInformation from "../../Connections/ConnectionInformation.svelte"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
@@ -123,11 +123,20 @@
   }
 
   const linkColor = entry => {
-    // console.log(entry.inputs, entry.outputs, entry.product)
-    // console.log("LINK COLOR")
-    // console.log(entry.inputs[0].inputs)
     if (entry?.inputs) {
       return `var(--${
+        entry.product?.materialType
+          ? MaterialType[entry.product?.materialType]
+          : "STATE_INACTIVE"
+      })`
+    } else {
+      return "var(--STATE_INACTIVE)"
+    }
+  }
+
+  const linkGradient = entry => {
+    if (entry?.inputs) {
+      return `url(#gradient-${
         entry.product?.materialType
           ? MaterialType[entry.product?.materialType]
           : "STATE_INACTIVE"
@@ -223,6 +232,20 @@
     style:height="{height}px"
     viewBox={[-width / 2, -height / 2, width, height]}
   >
+    <defs>
+      {#each Object.keys(MaterialType).filter(t => typeof parseInt(t) === "number") as type}
+        <linearGradient
+          id="gradient-{MaterialType[type]}"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop offset="0%" stop-color="var(--{MaterialType[type]})" />
+          <stop offset="100%" stop-color="var(--STATE_INACTIVE)" />
+        </linearGradient>
+      {/each}
+    </defs>
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
       {#each links as link (link.id)}
@@ -236,17 +259,25 @@
             connectionState(link.entry)
           ]}"
           style:color={linkColor(link.entry)}
-          stroke={linkColor(link.entry)}
           stroke-opacity="1"
           stroke-width={12}
           stroke-dasharray="1,7"
           stroke-linecap="round"
         >
-          <line
-            x1={x1(links, link)}
-            y1={y1(links, link, d3yScale)}
-            x2={x2(links, link)}
-            y2={y2(links, link, d3yScale)}
+          <path
+            class="path"
+            in:draw={{ duration: 700 }}
+            out:draw={{ duration: 300 }}
+            d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
+              links,
+              link
+            )} ${y2(links, link, d3yScale)}`}
+            fill="none"
+            stroke={linkColor(link.entry)}
+            stroke-opacity="1"
+            stroke-width={12}
+            stroke-dasharray="1,7"
+            stroke-linecap="round"
             transform="translate(0 {height}) scale(1 -1)"
           />
         </g>
@@ -358,15 +389,19 @@
   }
 
   .machine-connection.CONNECTED {
-    animation: flowAnimation 10s forwards, colorChangeAnimation 1s forwards;
+    stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
+    stroke-dashoffset: 80; /* Hide the line initially. */
   }
 
   .machine-connection.FLOWING {
     /* stroke: var(--STATE_INACTIVE); */
     stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
     stroke-dashoffset: 80; /* Hide the line initially. */
-    animation: flowAnimation 1s forwards infinite,
-      colorChangeAnimation 1s forwards;
+    animation: flowAnimation 1s forwards infinite;
+  }
+
+  path {
+    transition: stroke 0.3s ease;
   }
 
   @keyframes vibrate {
@@ -408,15 +443,6 @@
   @keyframes flowAnimation {
     to {
       stroke-dashoffset: 0; /* Reveal the line. */
-    }
-  }
-
-  @keyframes colorChangeAnimation {
-    from {
-      stroke: var(--STATE_INACTIVE);
-    }
-    to {
-      stroke: currentColor;
     }
   }
 
