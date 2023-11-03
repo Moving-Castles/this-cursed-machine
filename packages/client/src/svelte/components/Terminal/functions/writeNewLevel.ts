@@ -6,6 +6,7 @@ import { playerGoals } from "../../../modules/state"
 import { MaterialType } from "../../../modules/state/enums"
 import { staticContent } from "../../../modules/content"
 import { extractTexts } from "../../../modules/content/sanity"
+import { playSound } from "../../../modules/sound"
 
 async function typeWrite(text: string) {
     await typeWriteToTerminal(
@@ -43,7 +44,7 @@ async function writeNormal(text: string) {
         text,
         false,
         SYMBOLS[7],
-        100
+        400
     )
 }
 

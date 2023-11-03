@@ -9,11 +9,12 @@
   import { initActionSequencer } from "./modules/action/actionSequencer"
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
-  import { initSound, playSound } from "./modules/sound"
+  import { initSound } from "./modules/sound"
   import { restart as sendRestart } from "./modules/action"
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { playerCore } from "./modules/state"
+  import { UIState, UI } from "./modules/ui/stores"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -24,39 +25,29 @@
 
   $: console.log("$playerCore", $playerCore)
 
-  enum UI {
-    LOADING,
-    SPAWNING,
-    DEAD,
-    READY,
-    COMPLETED,
-  }
-
-  let UIState = UI.LOADING
-
   const restart = () => {
     clearTerminalOutput()
     localLevel.set(0)
     sendRestart()
-    UIState = UI.LOADING
+    UIState.set(UI.LOADING)
   }
 
   const dead = () => {
-    UIState = UI.DEAD
+    UIState.set(UI.DEAD)
   }
 
   const loaded = () => {
-    UIState = UI.SPAWNING
+    UIState.set(UI.SPAWNING)
   }
 
   const spawned = () => {
     clearTerminalOutput()
-    UIState = UI.READY
+    UIState.set(UI.READY)
   }
 
   const completed = () => {
     clearTerminalOutput()
-    UIState = UI.COMPLETED
+    UIState.set(UI.COMPLETED)
   }
 
   onMount(async () => {
@@ -96,23 +87,23 @@
 </script>
 
 <main>
-  {#if UIState === UI.LOADING}
+  {#if $UIState === UI.LOADING}
     <Loading on:done={loaded} />
   {/if}
 
-  {#if UIState === UI.SPAWNING}
+  {#if $UIState === UI.SPAWNING}
     <Spawn on:done={spawned} on:completed={completed} />
   {/if}
 
-  {#if UIState === UI.READY}
+  {#if $UIState === UI.READY}
     <TerminalBox on:dead={dead} on:completed={completed} />
   {/if}
 
-  {#if UIState === UI.DEAD}
+  {#if $UIState === UI.DEAD}
     <Death on:restart={restart} />
   {/if}
 
-  {#if UIState === UI.COMPLETED}
+  {#if $UIState === UI.COMPLETED}
     <Completed />
   {/if}
 </main>
