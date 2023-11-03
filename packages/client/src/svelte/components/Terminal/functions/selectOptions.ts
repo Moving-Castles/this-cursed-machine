@@ -130,7 +130,6 @@ function createSelectOptionsConnect(portType: PortType): SelectOption[] {
     const machines = getMachinesWithAvailablePorts(portType)
 
     Object.entries(machines).forEach(([machineId, machine]) => {
-        // @todo: Better label
         selectOptions.push({
             label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
             value: machineId,

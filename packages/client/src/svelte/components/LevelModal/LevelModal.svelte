@@ -26,7 +26,7 @@
 
 <div class="level-modal">
   {#if loading}
-    <div class="loading">Receiving new orders</div>
+    <div class="loading">Receiving new order</div>
   {:else}
     <CompletedLevel on:transfer={handleTransfer} />
   {/if}
