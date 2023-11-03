@@ -6,6 +6,8 @@ import { PortType } from "../../../modules/state/enums";
 import { SimulatedEntities } from "../../../modules/simulator/types";
 import { COMMAND, SelectOption } from "../types"
 import { COMMANDS_BY_LEVEL, terminalOutput } from ".."
+import { machineTypeToLabel } from "../../../modules/state/convenience";
+import { MachineType } from "../../../modules/state/enums";
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -192,6 +194,7 @@ export async function flashEffect(): Promise<void> {
 export function clearTerminalOutput() {
   terminalOutput.set([])
 }
+
 /**
  * Orders an array of SelectOption objects with 'inlet' first, 'outlet' last, 
  * and the rest in alphabetical order by the 'label' property.
@@ -199,11 +202,16 @@ export function clearTerminalOutput() {
  * @returns {SelectOption[]} - The sorted array.
  */
 export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
+  // @todo reorder:
+  // INLET
+  // CORE
+  // ... All other machines in alphabetical order
+  // OUTLET
   return array.sort((a, b) => {
-    if (a.label === "INLET") return -1;
-    if (b.label === "INLET") return 1;
-    if (a.label === "OUTLET") return 1;
-    if (b.label === "OUTLET") return -1;
+    if (a.label === machineTypeToLabel(MachineType.INLET)) return -1;
+    if (b.label === machineTypeToLabel(MachineType.INLET)) return 1;
+    if (a.label === machineTypeToLabel(MachineType.OUTLET)) return 1;
+    if (b.label === machineTypeToLabel(MachineType.OUTLET)) return -1;
     return a.label.localeCompare(b.label);
   });
 }

@@ -26,7 +26,6 @@ const EMPTY_PRODUCT: Product = {
  * @returns {Product[]} An array containing the processed products.
  */
 export function process(machineType: MachineType, inputs: Product[]) {
-  console.log("DEBUG PROCESS", inputs)
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MachineType.CORE) {
     return core(inputs)
@@ -124,10 +123,7 @@ function splitter(inputs: Product[]): Product[] {
  * @returns {Product[]} An array containing the processed product. If the input does not meet the requirements or no matching recipe is found, it returns an array with an empty product.
  */
 function mixer(inputs: Product[]): Product[] {
-  console.log("DEBUG ", "MIXER")
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
-
-  console.log("DEBUG", inputs)
 
   if (inputs.length !== 2) return outputs
 
@@ -135,17 +131,14 @@ function mixer(inputs: Product[]): Product[] {
     const isValidRecipe =
       recipe.machineType === MachineType.MIXER &&
       Number(recipe.input) ===
-        getUniqueIdentifier(
-          Number(inputs[0].materialType),
-          Number(inputs[1].materialType)
-        )
-    console.log(recipe, isValidRecipe)
+      getUniqueIdentifier(
+        Number(inputs[0].materialType),
+        Number(inputs[1].materialType)
+      )
     return isValidRecipe
   })
 
   const resultMaterialType = recipe ? recipe.output : MaterialType.NONE
-
-  console.log("DEBUG", recipe.output)
 
   outputs[0] = {
     machineId: inputs[0].machineId,

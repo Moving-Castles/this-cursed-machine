@@ -29,14 +29,17 @@ export const delayedTweened = (resetToValue, delay) => {
   }
 }
 
-export const showInventory = writable(false)
+export enum UI {
+  LOADING,
+  SPAWNING,
+  DEAD,
+  READY,
+  COMPLETED,
+}
 
+export const UIState = writable(UI.LOADING)
 export const showFlowChart = writable(false)
-export const showPipeChart = writable(false)
-export const showCores = writable(false)
 export const showGraph = writable(false)
-export const lastSentTime = writable(-1)
-export const currentGoalIndex = writable(0)
 export const showMap = writable(false)
 export const showLevelModal = writable(false)
 export const localLevel = writable(0)
