@@ -5,7 +5,7 @@ import {
   simulatedPorts,
 } from "../simulator"
 import { connections } from "./index"
-import { ConnectionState } from "../state/enums"
+import { ConnectionState, MaterialType } from "../state/enums"
 import { MachineType, PortType } from "./types"
 
 /**
@@ -371,4 +371,8 @@ export function machineTypeToLabel(machineType: MachineType | undefined) {
     default:
       return MachineType[machineType]
   }
+}
+
+export const materialTypeToLabel = (materialType: MaterialType) => {
+  return MaterialType[materialType]?.split("_")?.join(" ")
 }

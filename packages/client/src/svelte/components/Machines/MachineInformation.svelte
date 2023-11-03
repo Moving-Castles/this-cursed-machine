@@ -1,7 +1,10 @@
 <script lang="ts">
   export let address: string
   export let machine: Machine // can be numerical or string
-  import { machineTypeToLabel } from "../../modules/state/convenience"
+  import {
+    machineTypeToLabel,
+    materialTypeToLabel,
+  } from "../../modules/state/convenience"
   import { MaterialType, MachineType } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
 
@@ -26,7 +29,7 @@
           {#each machine?.inputs as input}
             <p>
               <span style:color="var(--{MaterialType[input.materialType]})"
-                >{MaterialType[input.materialType]}</span
+                >{materialTypeToLabel(input.materialType)}</span
               >: {input.amount}
             </p>
           {/each}
@@ -38,7 +41,7 @@
           {#each machine?.outputs as output}
             <p>
               <span style:color="var(--{MaterialType[output.materialType]})"
-                >{MaterialType[output.materialType]}</span
+                >{materialTypeToLabel(output.materialType)}</span
               >: {output.amount}
             </p>
           {/each}
