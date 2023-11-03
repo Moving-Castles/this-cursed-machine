@@ -524,9 +524,20 @@
       transform: translate(0, 0);
     } /* Right */
   }
+
   @keyframes flowAnimation {
     to {
       stroke-dashoffset: 0; /* Reveal the line. */
+    }
+  }
+
+  @keyframes growAnimation {
+    10%,
+    50% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.1);
     }
   }
 
@@ -544,7 +555,7 @@
   }
 
   .node:not(.INLET):not(.OUTLET).FLOWING {
-    animation: vibrate 4s infinite;
+    animation: vibrate 4s infinite, growAnimation 1s infinite;
   }
 
   .MACHINE_NONE {
