@@ -259,10 +259,6 @@
             connectionState(link.entry)
           ]}"
           style:color={linkColor(link.entry)}
-          stroke-opacity="1"
-          stroke-width={12}
-          stroke-dasharray="1,7"
-          stroke-linecap="round"
         >
           <path
             class="path"
@@ -274,10 +270,6 @@
             )} ${y2(links, link, d3yScale)}`}
             fill="none"
             stroke={linkColor(link.entry)}
-            stroke-opacity="1"
-            stroke-width={12}
-            stroke-dasharray="1,7"
-            stroke-linecap="round"
             transform="translate(0 {height}) scale(1 -1)"
           />
         </g>
@@ -389,16 +381,18 @@
     pointer-events: none;
   }
 
-  .machine-connection.CONNECTED {
-    stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
+  .machine-connection,
+  .machine-connection :global(path) {
+    stroke-dasharray: 20, 1; /* This should be at least the length of the longest path. */
     stroke-dashoffset: 80; /* Hide the line initially. */
+    stroke-opacity: 1;
+    stroke-width: 12;
+    stroke-linecap: "round";
   }
 
-  .machine-connection.FLOWING {
-    /* stroke: var(--STATE_INACTIVE); */
-    stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
-    stroke-dashoffset: 80; /* Hide the line initially. */
-    animation: flowAnimation 1s forwards infinite;
+  .machine-connection.FLOWING,
+  .machine-connection.FLOWING path {
+    animation: flowAnimation 1s ease forwards infinite;
   }
 
   path {
@@ -410,121 +404,121 @@
       transform: translate(0, 0);
     }
     2.5% {
-      transform: translate(0, -1px);
+      transform: translate(0, -2px);
     } /* Up */
     5% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -2px);
     } /* Right */
     7.5% {
-      transform: translate(1px, 0);
+      transform: translate(2px, 0);
     } /* Down */
     10% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, 2px);
     } /* Down */
     12.5% {
-      transform: translate(0px, 1px);
+      transform: translate(0px, 2px);
     } /* Left */
     15% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 2px);
     } /* Left */
     17.5% {
-      transform: translate(-1px, 0);
+      transform: translate(-2px, 0);
     } /* Up */
     20% {
-      transform: translate(-1px, -1px);
+      transform: translate(-2px, -2px);
     } /* Up */
     22.5% {
-      transform: translate(0px, -1px);
+      transform: translate(0px, -2px);
     } /* Right */
     25% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -2px);
     } /* Down */
     27.5% {
-      transform: translate(1px, 0);
+      transform: translate(2px, 0);
     } /* Right */
     30% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, 2px);
     } /* Down */
     32.5% {
-      transform: translate(0px, 1px);
+      transform: translate(0px, 2px);
     } /* Left */
     35% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 2px);
     } /* Left */
     37.5% {
-      transform: translate(-1px, 0);
+      transform: translate(-2px, 0);
     } /* Up */
     40% {
-      transform: translate(-1px, -1px);
+      transform: translate(-2px, -2px);
     } /* Up */
     42.5% {
-      transform: translate(0px, -1px);
+      transform: translate(0px, -2px);
     } /* Right */
     45% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -2px);
     } /* Right */
     47.5% {
-      transform: translate(1px, 0);
+      transform: translate(2px, 0);
     } /* Down */
     50% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, 2px);
     } /* Left */
     52.5% {
-      transform: translate(0px, 1px);
+      transform: translate(0px, 2px);
     } /* Down */
     55% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 2px);
     } /* Left */
     57.5% {
-      transform: translate(-1px, 0);
+      transform: translate(-2px, 0);
     } /* Up */
     60% {
-      transform: translate(-1px, -1px);
+      transform: translate(-2px, -2px);
     } /* Up */
     62.5% {
-      transform: translate(0px, -1px);
+      transform: translate(0px, -2px);
     } /* Right */
     65% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -2px);
     } /* Right */
     67.5% {
-      transform: translate(1px, 0);
+      transform: translate(2px, 0);
     } /* Down */
     70% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, 2px);
     } /* Down */
     72.5% {
-      transform: translate(0px, 1px);
+      transform: translate(0px, 2px);
     } /* Left */
     75% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 2px);
     } /* Up */
     77.5% {
-      transform: translate(-1px, 0);
+      transform: translate(-2px, 0);
     } /* Left */
     80% {
-      transform: translate(-1px, -1px);
+      transform: translate(-2px, -2px);
     } /* Up */
     82.5% {
-      transform: translate(0px, -1px);
+      transform: translate(0px, -2px);
     } /* Right */
     85% {
-      transform: translate(1px, -1px);
+      transform: translate(2px, -2px);
     } /* Right */
     87.5% {
-      transform: translate(1px, 0);
+      transform: translate(2px, 0);
     } /* Down */
     90% {
-      transform: translate(1px, 1px);
+      transform: translate(2px, 2px);
     } /* Down */
     92.5% {
-      transform: translate(0px, 1px);
+      transform: translate(0px, 2px);
     } /* Left */
     95% {
-      transform: translate(-1px, 1px);
+      transform: translate(-2px, 2px);
     } /* Left */
     97.5% {
-      transform: translate(-1px, 0);
+      transform: translate(-2px, 0);
     } /* Up */
     100% {
       transform: translate(0, 0);
@@ -538,7 +532,7 @@
 
   .node {
     transition: filter 1s ease;
-    filter: grayscale(1) brightness(0.1) contrast(0.5);
+    filter: grayscale(1) brightness(0.2) contrast(0.5);
   }
 
   .node.CONNECTED {
@@ -550,7 +544,7 @@
   }
 
   .node:not(.INLET):not(.OUTLET).FLOWING {
-    animation: vibrate 10s infinite;
+    animation: vibrate 4s infinite;
   }
 
   .MACHINE_NONE {

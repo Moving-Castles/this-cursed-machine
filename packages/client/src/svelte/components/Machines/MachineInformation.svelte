@@ -1,6 +1,7 @@
 <script lang="ts">
   export let address: string
   export let machine: Machine // can be numerical or string
+  import { machineTypeToLabel } from "../../modules/state/convenience"
   import { MaterialType, MachineType } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
 
@@ -12,7 +13,7 @@
 <div class="machine-information">
   {machine.machineType === MachineType.CORE
     ? "YOU (Stump #24719)"
-    : MachineType[machine.machineType]}
+    : machineTypeToLabel(machine.machineType)}
   <p class="muted">
     {machineLore}<br />
     -------------------

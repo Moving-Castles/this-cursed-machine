@@ -36,6 +36,9 @@
 </div>
 
 <style>
+  .material-information {
+    pointer-events: none;
+  }
   .flex {
     display: flex;
   }

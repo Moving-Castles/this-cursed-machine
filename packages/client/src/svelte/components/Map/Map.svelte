@@ -3,8 +3,12 @@
   // import { urlFor } from "../../modules/content/sanity"
   import { playSound } from "../../modules/sound"
   import { showMap } from "../../modules/ui/stores"
-  // console.log($staticContent)
+  const onKeyDown = ({ key }) => {
+    if (key === "Escape") showMap.set(false)
+  }
 </script>
+
+<svelte:window on:keydown={onKeyDown} />
 
 <div class="map-container">
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
