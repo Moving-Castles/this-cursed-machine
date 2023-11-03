@@ -3,6 +3,7 @@
   export let machine: Machine // can be numerical or string
   import { MaterialType, MachineType } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
+
   // List contents etc
 
   const machineLore = MACHINE_LORE[machine.machineType]

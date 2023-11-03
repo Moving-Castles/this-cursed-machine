@@ -50,6 +50,7 @@
     zoom,
   }
 
+  let align = "center"
   let svg
   let width = 0
   let height = 0
@@ -82,8 +83,15 @@
       links = [...links]
     })
 
-  const onNodeOrConnectionMouseEnter = (e, d, a) => {
-    inspecting = { ...d, address: a }
+  const onNodeOrConnectionMouseEnter = (e, entry, a) => {
+    align = "center"
+    if (entry.entityType === EntityType.MACHINE) {
+      if (entry.machineType === MachineType.INLET) align = "left"
+      if (entry.machineType === MachineType.OUTLET) align = "right"
+    }
+
+    console.log("ALIGN: ", align)
+    inspecting = { ...entry, address: a }
   }
 
   const groupScale = node => {
@@ -191,7 +199,7 @@
 <svelte:window on:resize={resize} />
 
 {#if inspecting}
-  <Tooltip>
+  <Tooltip {align}>
     {#if inspecting?.entityType === EntityType.MACHINE}
       <MachineInformation address={inspecting.address} machine={inspecting} />
     {/if}
@@ -281,6 +289,10 @@
             />
           {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
             <rect
+              on:mouseenter={e => {
+                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
+              }}
+              on:mouseleave={() => (inspecting = null)}
               class="{ConnectionState[
                 machineState(d.address)
               ]} MACHINE_{MachineType[d.entry.machineType]}"
@@ -335,11 +347,17 @@
     pointer-events: none;
   }
 
+  .machine-connection.CONNECTED {
+    /* transform: scale(20); */
+    animation: flowAnimation 1s forwards, colorChangeAnimation 1s forwards;
+  }
+
   .machine-connection.FLOWING {
     /* stroke: var(--STATE_INACTIVE); */
     stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
     stroke-dashoffset: 80; /* Hide the line initially. */
-    animation: flowAnimation 1s forwards, colorChangeAnimation 1s forwards;
+    animation: flowAnimation 1s forwards infinite,
+      colorChangeAnimation 1s forwards;
   }
 
   @keyframes flowAnimation {

@@ -1,6 +1,24 @@
 <script lang="ts">
-  import { fly } from "svelte/transition"
+  export let align: "center" | "left" | "right" = "center"
+
   let [h, x, y] = [0, 0, 0]
+
+  let alignTransformation = ""
+
+  $: {
+    console.log(align)
+    switch (align) {
+      case "left":
+        alignTransformation = "translate(-20px, -20px)"
+        break
+      case "right":
+        alignTransformation = "translate(-100%, -20px) translateX(20px)"
+        break
+      case "center":
+        alignTransformation = "translate(-50%, -20px)"
+        break
+    }
+  }
 
   const onMouseMove = ({ clientX, clientY }) => {
     x = clientX
@@ -12,7 +30,7 @@
 
 <!-- style:transform="translate(-50%, -20px) translate({x}px, {h - y}px)" -->
 <div
-  style:transform="translate({x}px, {-h + y}px) translate(-50%, -20px)"
+  style:transform="translate({x}px, {-h + y}px) {alignTransformation}"
   class="box"
 >
   <!-- in:fly={{ y: 20, duration: 60 }} -->
