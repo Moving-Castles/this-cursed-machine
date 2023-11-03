@@ -101,13 +101,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Register the table with its config (using the specified store).
-   */
-  function register(IStore _store) internal {
-    _store.registerTable(_tableId, _fieldLayout, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
-  }
-
-  /**
    * @notice Get coolDown.
    */
   function getCoolDown() internal view returns (uint32 coolDown) {
@@ -128,16 +121,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Get coolDown (using the specified store).
-   */
-  function getCoolDown(IStore _store) internal view returns (uint32 coolDown) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
    * @notice Set coolDown.
    */
   function setCoolDown(uint32 coolDown) internal {
@@ -153,15 +136,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set coolDown (using the specified store).
-   */
-  function setCoolDown(IStore _store, uint32 coolDown) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((coolDown)), _fieldLayout);
   }
 
   /**
@@ -185,16 +159,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Get connectionCost (using the specified store).
-   */
-  function getConnectionCost(IStore _store) internal view returns (uint32 connectionCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
    * @notice Set connectionCost.
    */
   function setConnectionCost(uint32 connectionCost) internal {
@@ -210,15 +174,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((connectionCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set connectionCost (using the specified store).
-   */
-  function setConnectionCost(IStore _store, uint32 connectionCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((connectionCost)), _fieldLayout);
   }
 
   /**
@@ -242,16 +197,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Get buildCost (using the specified store).
-   */
-  function getBuildCost(IStore _store) internal view returns (uint32 buildCost) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
    * @notice Set buildCost.
    */
   function setBuildCost(uint32 buildCost) internal {
@@ -267,15 +212,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((buildCost)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set buildCost (using the specified store).
-   */
-  function setBuildCost(IStore _store, uint32 buildCost) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((buildCost)), _fieldLayout);
   }
 
   /**
@@ -299,20 +235,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
-      _tableId,
-      _keyTuple,
-      _fieldLayout
-    );
-    return decode(_staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
-   * @notice Get the full data (using the specified store).
-   */
-  function get(IStore _store) internal view returns (GameConfigData memory _table) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = _store.getRecord(
       _tableId,
       _keyTuple,
       _fieldLayout
@@ -349,20 +271,6 @@ library GameConfig {
   }
 
   /**
-   * @notice Set the full data using individual values (using the specified store).
-   */
-  function set(IStore _store, uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
-    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
-
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
-
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
-  }
-
-  /**
    * @notice Set the full data using the data struct.
    */
   function set(GameConfigData memory _table) internal {
@@ -388,20 +296,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
-  }
-
-  /**
-   * @notice Set the full data using the data struct (using the specified store).
-   */
-  function set(IStore _store, GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
-
-    PackedCounter _encodedLengths;
-    bytes memory _dynamicData;
-
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
 
   /**
@@ -447,15 +341,6 @@ library GameConfig {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
-  }
-
-  /**
-   * @notice Delete all data for given keys (using the specified store).
-   */
-  function deleteRecord(IStore _store) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.deleteRecord(_tableId, _keyTuple);
   }
 
   /**
