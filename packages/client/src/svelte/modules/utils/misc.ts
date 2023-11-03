@@ -143,29 +143,28 @@ export function deepClone<T>(obj: T): T {
   return copy as T
 }
 
-
 /**
- * Ensure that a number is not negative. 
+ * Ensure that a number is not negative.
  * If the input number is negative, the function returns 0; otherwise, it returns the input number.
- * 
+ *
  * @param num - The number to cap at 0. If it is negative, the function returns 0.
- * 
+ *
  * @returns A number which is either the input number (if it is non-negative) or 0 (if the input number is negative).
  */
 export function capAtZero(num: number): number {
   // Ensure that the input is not negative
-  return Math.max(0, num);
+  return Math.max(0, num)
 }
 
 /**
  * Generate a unique identifier for a pair of `number` values.
- * 
+ *
  * @notice This function uses the Cantor pairing function to produce a unique
  * identifier from two `number` values. The order of input values does not affect
  * the generated identifier, meaning that (a, b) will produce the same output
  * as (b, a). Note that the input values should represent valid `MATERIAL_TYPE`
  * enum values to ensure consistent behavior.
- * 
+ *
  * @param a First `number` value representing a `MATERIAL_TYPE`.
  * @param b Second `number` value representing a `MATERIAL_TYPE`.
  * @returns A unique identifier derived from the inputs (a, b).
@@ -173,8 +172,13 @@ export function capAtZero(num: number): number {
 export function getUniqueIdentifier(a: number, b: number): number {
   // Ensure a is always smaller than or equal to b
   if (a > b) {
-    [a, b] = [b, a];
+    ;[a, b] = [b, a]
   }
 
-  return ((a + b) * (a + b + 1)) / 2 + b;
+  return ((a + b) * (a + b + 1)) / 2 + b
 }
+
+export const lerp = (x, y, a) => x * (1 - a) + y * a
+export const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a))
+export const invlerp = (x, y, a) => clamp((a - x) / (y - x))
+export const range = (x1, y1, x2, y2, a) => lerp(x2, y2, invlerp(x1, y1, a))

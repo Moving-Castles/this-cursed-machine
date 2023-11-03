@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import Tooltip from "../../Tooltip/Tooltip.svelte"
   import { fade } from "svelte/transition"
+  import { range } from "../../../modules/utils/misc"
   import ConnectionInformation from "../../Connections/ConnectionInformation.svelte"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
   import {
@@ -62,7 +63,7 @@
   const linkForce = d3
     .forceLink()
     .id(d => d.id || d)
-    .distance(MACHINE_SIZE * 1.5)
+    .distance(MACHINE_SIZE * 2.5)
   const chargeForce = d3.forceManyBody().strength(-800)
   const xForce = d3.forceX()
   const yForce = d3.forceY()
@@ -188,7 +189,10 @@
 
     // Update simulation with new nodes and links
     simulation.nodes(nodes)
-    linkForce.links(links)
+    // Distance should be a function of the amount of nodes in the network, with the max being 3 machines wide, and min 1 machine wide.
+    linkForce
+      .links(links)
+      .distance(range(3, 30, MACHINE_SIZE * 3, MACHINE_SIZE, nodes.length))
     simulation.alpha(1).restart()
   }
 
@@ -251,7 +255,13 @@
 
       <!-- NODES -->
       {#each nodes as d (d.id)}
-        <g out:fade class="node" id={d.id}>
+        <g
+          out:fade
+          class="node {ConnectionState[machineState(d.address)]} {MachineType[
+            d.entry.machineType
+          ]}"
+          id={d.id}
+        >
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           {#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
             <rect
@@ -348,8 +358,7 @@
   }
 
   .machine-connection.CONNECTED {
-    /* transform: scale(20); */
-    animation: flowAnimation 1s forwards, colorChangeAnimation 1s forwards;
+    animation: flowAnimation 10s forwards, colorChangeAnimation 1s forwards;
   }
 
   .machine-connection.FLOWING {
@@ -358,6 +367,42 @@
     stroke-dashoffset: 80; /* Hide the line initially. */
     animation: flowAnimation 1s forwards infinite,
       colorChangeAnimation 1s forwards;
+  }
+
+  @keyframes vibrate {
+    0% {
+      transform: translate(0, 0);
+    }
+    5% {
+      transform: translate(1px, 1px);
+    }
+    15% {
+      transform: translate(-1px, 1px);
+    }
+    24% {
+      transform: translate(1px, 2px);
+    }
+    33% {
+      transform: translate(2px, -1px);
+    }
+    44% {
+      transform: translate(-1px, -1px);
+    }
+    55% {
+      transform: translate(1px, 0);
+    }
+    66% {
+      transform: translate(-1px, 1px);
+    }
+    77% {
+      transform: translate(1px, -1px);
+    }
+    88% {
+      transform: translate(1px, 1px);
+    }
+    97% {
+      transform: translate(1px, 0px);
+    }
   }
 
   @keyframes flowAnimation {
@@ -373,6 +418,23 @@
     to {
       stroke: currentColor;
     }
+  }
+
+  .node {
+    transition: filter 1s ease;
+    filter: grayscale(1) brightness(0.1) contrast(0.5);
+  }
+
+  .node.CONNECTED {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .node.FLOWING {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .node:not(.INLET):not(.OUTLET).FLOWING {
+    animation: vibrate 2s infinite;
   }
 
   .MACHINE_NONE {
