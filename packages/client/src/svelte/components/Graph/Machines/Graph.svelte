@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import Tooltip from "../../Tooltip/Tooltip.svelte"
-  import { fade } from "svelte/transition"
+  import { draw, fade } from "svelte/transition"
+  import { range } from "../../../modules/utils/misc"
   import ConnectionInformation from "../../Connections/ConnectionInformation.svelte"
   import MachineInformation from "../../Machines/MachineInformation.svelte"
   import {
@@ -50,6 +51,7 @@
     zoom,
   }
 
+  let align = "center"
   let svg
   let width = 0
   let height = 0
@@ -61,7 +63,7 @@
   const linkForce = d3
     .forceLink()
     .id(d => d.id || d)
-    .distance(MACHINE_SIZE * 1.5)
+    .distance(MACHINE_SIZE * 2.5)
   const chargeForce = d3.forceManyBody().strength(-800)
   const xForce = d3.forceX()
   const yForce = d3.forceY()
@@ -82,8 +84,15 @@
       links = [...links]
     })
 
-  const onNodeOrConnectionMouseEnter = (e, d, a) => {
-    inspecting = { ...d, address: a }
+  const onNodeOrConnectionMouseEnter = (e, entry, a) => {
+    align = "center"
+    if (entry.entityType === EntityType.MACHINE) {
+      if (entry.machineType === MachineType.INLET) align = "left"
+      if (entry.machineType === MachineType.OUTLET) align = "right"
+    }
+
+    console.log("ALIGN: ", align)
+    inspecting = { ...entry, address: a }
   }
 
   const groupScale = node => {
@@ -114,11 +123,20 @@
   }
 
   const linkColor = entry => {
-    // console.log(entry.inputs, entry.outputs, entry.product)
-    // console.log("LINK COLOR")
-    // console.log(entry.inputs[0].inputs)
     if (entry?.inputs) {
       return `var(--${
+        entry.product?.materialType
+          ? MaterialType[entry.product?.materialType]
+          : "STATE_INACTIVE"
+      })`
+    } else {
+      return "var(--STATE_INACTIVE)"
+    }
+  }
+
+  const linkGradient = entry => {
+    if (entry?.inputs) {
+      return `url(#gradient-${
         entry.product?.materialType
           ? MaterialType[entry.product?.materialType]
           : "STATE_INACTIVE"
@@ -180,7 +198,10 @@
 
     // Update simulation with new nodes and links
     simulation.nodes(nodes)
-    linkForce.links(links)
+    // Distance should be a function of the amount of nodes in the network, with the max being 3 machines wide, and min 1 machine wide.
+    linkForce
+      .links(links)
+      .distance(range(3, 30, MACHINE_SIZE * 3, MACHINE_SIZE, nodes.length))
     simulation.alpha(1).restart()
   }
 
@@ -191,7 +212,7 @@
 <svelte:window on:resize={resize} />
 
 {#if inspecting}
-  <Tooltip>
+  <Tooltip {align}>
     {#if inspecting?.entityType === EntityType.MACHINE}
       <MachineInformation address={inspecting.address} machine={inspecting} />
     {/if}
@@ -211,6 +232,20 @@
     style:height="{height}px"
     viewBox={[-width / 2, -height / 2, width, height]}
   >
+    <defs>
+      {#each Object.keys(MaterialType).filter(t => typeof parseInt(t) === "number") as type}
+        <linearGradient
+          id="gradient-{MaterialType[type]}"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop offset="0%" stop-color="var(--{MaterialType[type]})" />
+          <stop offset="100%" stop-color="var(--STATE_INACTIVE)" />
+        </linearGradient>
+      {/each}
+    </defs>
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
       {#each links as link (link.id)}
@@ -224,17 +259,25 @@
             connectionState(link.entry)
           ]}"
           style:color={linkColor(link.entry)}
-          stroke={linkColor(link.entry)}
           stroke-opacity="1"
           stroke-width={12}
           stroke-dasharray="1,7"
           stroke-linecap="round"
         >
-          <line
-            x1={x1(links, link)}
-            y1={y1(links, link, d3yScale)}
-            x2={x2(links, link)}
-            y2={y2(links, link, d3yScale)}
+          <path
+            class="path"
+            in:draw={{ duration: 700 }}
+            out:draw={{ duration: 300 }}
+            d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
+              links,
+              link
+            )} ${y2(links, link, d3yScale)}`}
+            fill="none"
+            stroke={linkColor(link.entry)}
+            stroke-opacity="1"
+            stroke-width={12}
+            stroke-dasharray="1,7"
+            stroke-linecap="round"
             transform="translate(0 {height}) scale(1 -1)"
           />
         </g>
@@ -243,7 +286,14 @@
 
       <!-- NODES -->
       {#each nodes as d (d.id)}
-        <g out:fade class="node" id={d.id}>
+        <g
+          out:fade
+          class="node {ConnectionState[machineState(d.address)]} {MachineType[
+            d.entry.machineType
+          ]}"
+          style:animation-delay="{Math.random() * -10}s"
+          id={d.id}
+        >
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           {#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
             <rect
@@ -281,6 +331,10 @@
             />
           {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
             <rect
+              on:mouseenter={e => {
+                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
+              }}
+              on:mouseleave={() => (inspecting = null)}
               class="{ConnectionState[
                 machineState(d.address)
               ]} MACHINE_{MachineType[d.entry.machineType]}"
@@ -335,26 +389,168 @@
     pointer-events: none;
   }
 
+  .machine-connection.CONNECTED {
+    stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
+    stroke-dashoffset: 80; /* Hide the line initially. */
+  }
+
   .machine-connection.FLOWING {
     /* stroke: var(--STATE_INACTIVE); */
     stroke-dasharray: 8, 8; /* This should be at least the length of the longest path. */
     stroke-dashoffset: 80; /* Hide the line initially. */
-    animation: flowAnimation 1s forwards, colorChangeAnimation 1s forwards;
+    animation: flowAnimation 1s forwards infinite;
   }
 
+  path {
+    transition: stroke 0.3s ease;
+  }
+
+  @keyframes vibrate {
+    0% {
+      transform: translate(0, 0);
+    }
+    2.5% {
+      transform: translate(0, -1px);
+    } /* Up */
+    5% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    7.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    10% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    12.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    15% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    17.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    20% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    22.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    25% {
+      transform: translate(1px, -1px);
+    } /* Down */
+    27.5% {
+      transform: translate(1px, 0);
+    } /* Right */
+    30% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    32.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    35% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    37.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    40% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    42.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    45% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    47.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    50% {
+      transform: translate(1px, 1px);
+    } /* Left */
+    52.5% {
+      transform: translate(0px, 1px);
+    } /* Down */
+    55% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    57.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    60% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    62.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    65% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    67.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    70% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    72.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    75% {
+      transform: translate(-1px, 1px);
+    } /* Up */
+    77.5% {
+      transform: translate(-1px, 0);
+    } /* Left */
+    80% {
+      transform: translate(-1px, -1px);
+    } /* Up */
+    82.5% {
+      transform: translate(0px, -1px);
+    } /* Right */
+    85% {
+      transform: translate(1px, -1px);
+    } /* Right */
+    87.5% {
+      transform: translate(1px, 0);
+    } /* Down */
+    90% {
+      transform: translate(1px, 1px);
+    } /* Down */
+    92.5% {
+      transform: translate(0px, 1px);
+    } /* Left */
+    95% {
+      transform: translate(-1px, 1px);
+    } /* Left */
+    97.5% {
+      transform: translate(-1px, 0);
+    } /* Up */
+    100% {
+      transform: translate(0, 0);
+    } /* Right */
+  }
   @keyframes flowAnimation {
     to {
       stroke-dashoffset: 0; /* Reveal the line. */
     }
   }
 
-  @keyframes colorChangeAnimation {
-    from {
-      stroke: var(--STATE_INACTIVE);
-    }
-    to {
-      stroke: currentColor;
-    }
+  .node {
+    transition: filter 1s ease;
+    filter: grayscale(1) brightness(0.1) contrast(0.5);
+  }
+
+  .node.CONNECTED {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .node.FLOWING {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .node:not(.INLET):not(.OUTLET).FLOWING {
+    animation: vibrate 10s infinite;
   }
 
   .MACHINE_NONE {

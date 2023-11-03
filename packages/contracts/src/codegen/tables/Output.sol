@@ -96,6 +96,13 @@ library Output {
   }
 
   /**
+   * @notice Register the table with its config (using the specified store).
+   */
+  function register(IStore _store) internal {
+    _store.registerTable(_tableId, _fieldLayout, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
+  }
+
+  /**
    * @notice Get value.
    */
   function getValue(bytes32 key) internal view returns (MATERIAL_TYPE value) {
@@ -114,6 +121,17 @@ library Output {
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Get value (using the specified store).
+   */
+  function getValue(IStore _store, bytes32 key) internal view returns (MATERIAL_TYPE value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -140,6 +158,17 @@ library Output {
   }
 
   /**
+   * @notice Get value (using the specified store).
+   */
+  function get(IStore _store, bytes32 key) internal view returns (MATERIAL_TYPE value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = _store.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+  }
+
+  /**
    * @notice Set value.
    */
   function setValue(bytes32 key, MATERIAL_TYPE value) internal {
@@ -157,6 +186,16 @@ library Output {
     _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set value (using the specified store).
+   */
+  function setValue(IStore _store, bytes32 key, MATERIAL_TYPE value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
   }
 
   /**
@@ -180,6 +219,16 @@ library Output {
   }
 
   /**
+   * @notice Set value (using the specified store).
+   */
+  function set(IStore _store, bytes32 key, MATERIAL_TYPE value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+  }
+
+  /**
    * @notice Delete all data for given keys.
    */
   function deleteRecord(bytes32 key) internal {
@@ -197,6 +246,16 @@ library Output {
     _keyTuple[0] = key;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
+  }
+
+  /**
+   * @notice Delete all data for given keys (using the specified store).
+   */
+  function deleteRecord(IStore _store, bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.deleteRecord(_tableId, _keyTuple);
   }
 
   /**
