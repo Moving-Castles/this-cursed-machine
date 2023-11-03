@@ -53,7 +53,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
 
     await writeToTerminal(type, str[0], false, symbol, delay)
     for (let i = 1; i < str.length; i++) {
-        // playSound("tcm", "cant");
+        playSound("tcm2", "cant");
         await writeToTerminal(type, str.substring(0, i + 1), true, symbol, delay)
     }
 

@@ -15,13 +15,6 @@ export const fx = writable([new Howl({ src: [""] })]);
  * @returns {void}
  */
 export function initSound() {
-  for (const key in soundLibrary.tcm) {
-    soundLibrary.tcm[key].sound = new Howl({
-      src: [soundLibrary.tcm[key].src],
-      volume: soundLibrary.tcm[key].volume,
-      preload: true
-    })
-  }
   for (const key in soundLibrary.tcm2) {
     soundLibrary.tcm2[key].sound = new Howl({
       src: [soundLibrary.tcm2[key].src],

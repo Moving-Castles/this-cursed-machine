@@ -74,6 +74,7 @@ export const narrative = [
         const action = spawn()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
+        playSound("tcm2", "TRX_yes")
         // Spawn complete
         await writeNarrativeSuccess("On-boarding complete")
         await writeNarrative("Congratulations Stump #24719")
@@ -87,6 +88,7 @@ export const narrative = [
         const action = transfer()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
+        playSound("tcm2", "TRX_yes")
         await writeNarrativeSuccess("Transfer complete")
     },
 ]

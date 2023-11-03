@@ -389,7 +389,7 @@
         border: none;
         padding: 0;
         position: relative; /* To position the pseudo-element */
-        caret-color: transparent;
+        // caret-color: transparent;
 
         &:focus {
           border: none;

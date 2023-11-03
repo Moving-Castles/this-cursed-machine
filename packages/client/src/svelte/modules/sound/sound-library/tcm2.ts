@@ -53,4 +53,12 @@ export const tcm2: SoundAssets = {
         src: "./sounds/tcm2/typing_pos-hit_02.mp3",
         volume: 1,
     },
+    cant: {
+        src: "./sounds/tcm2/CANT.mp3",
+        volume: 1,
+    },
+    singleHeartbeat: {
+        src: "./sounds/tcm2/single-heartbeat.mp3",
+        volume: 1,
+    },
 }
