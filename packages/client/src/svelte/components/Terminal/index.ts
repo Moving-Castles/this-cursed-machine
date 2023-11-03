@@ -110,9 +110,6 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
 }
 
 export const FULL_MACHINES = [
-  MachineType.INLET,
-  MachineType.OUTLET,
-  MachineType.CORE,
   MachineType.SPLITTER,
   MachineType.MIXER,
   MachineType.DRYER,
