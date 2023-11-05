@@ -2,9 +2,11 @@
   import { createEventDispatcher } from "svelte"
   import { staticContent } from "../../modules/content"
   import { animateContent, typeWriter } from "./typewriter"
-  import { ready } from "../../modules/network"
+  import { ready, loadingMessage } from "../../modules/network"
 
   const dispatch = createEventDispatcher()
+
+  $: console.log("LOADING PROGRESS =>", $loadingMessage)
 
   let introDone = false
   let introStarted = false
@@ -48,13 +50,27 @@
   }
 </script>
 
-<div>
-  <div class="loading">
-    <div class="loading-message" bind:this={loadingMessageElement} />
-  </div>
+<div class="loading-percentage">{$loadingMessage}</div>
+
+<div class="loading">
+  <div class="loading-message" bind:this={loadingMessageElement} />
 </div>
 
 <style lang="scss">
+  .loading-percentage {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 2em;
+    width: 80px;
+    background: var(--color-alert);
+    color: var(--black);
+    z-index: 10000;
+    line-height: 2em;
+    text-align: center;
+    font-size: 12px;
+  }
+
   .loading {
     position: fixed;
     top: 0;
