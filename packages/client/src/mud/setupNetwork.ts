@@ -15,7 +15,7 @@ import { world } from "./world"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import {
   createBurnerAccount,
-  createContract,
+  getContract,
   transportObserver,
   ContractWrite,
 } from "@latticexyz/common"
@@ -42,7 +42,7 @@ export async function setupNetwork() {
   })
 
   const write$ = new Subject<ContractWrite>()
-  const worldContract = createContract({
+  const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
     publicClient,
@@ -53,7 +53,6 @@ export async function setupNetwork() {
   const {
     components,
     latestBlock$,
-    blockStorageOperations$,
     waitForTransaction,
   } = await syncToRecs({
     world,
@@ -97,7 +96,6 @@ export async function setupNetwork() {
     publicClient,
     walletClient: burnerWalletClient,
     latestBlock$,
-    blockStorageOperations$,
     waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),

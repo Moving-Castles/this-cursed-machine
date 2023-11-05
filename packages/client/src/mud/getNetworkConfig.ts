@@ -25,8 +25,8 @@ export async function getNetworkConfig() {
     privateKey: getBurnerPrivateKey(),
     chainId,
     chain,
+    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
     worldAddress,
-    initialBlockNumber,
-    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl
+    initialBlockNumber
   };
 }

@@ -43,6 +43,7 @@
     await typeWriter(loadingMessageElement, "Syncing network", 10)
     await new Promise(res => setTimeout(res, 300))
     loadingInterval = setInterval(() => {
+      if (!loadingMessageElement) return
       loadingMessageElement.innerHTML += "  *"
       // Scroll to bottom
       loadingMessageElement.scrollTop = loadingMessageElement.scrollHeight

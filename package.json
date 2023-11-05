@@ -8,18 +8,19 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "dev": "concurrently -n contracts,client -c cyan,magenta 'pnpm run dev:contracts' 'pnpm run dev:client'",
+    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
     "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-next.12",
+    "@latticexyz/cli": "2.0.0-next.13",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
-    "eslint": "8.52.0",
+    "eslint": "8.53.0",
     "rimraf": "^5.0.5",
+    "mprocs": "^0.6.4",
     "typescript": "^5.2.2"
   },
   "engines": {
