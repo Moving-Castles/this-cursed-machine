@@ -18,31 +18,29 @@
 </script>
 
 <div class="completed-level">
-  <div class="level-title">◊ COMPLETED order #{$playerBox.level}</div>
+  <div class="text-content">
+    <div class="level-title">◊ COMPLETED order #{$playerBox.level}</div>
 
-  <!-- {#each Object.entries($boxOutput) as [type, amount] (type)}
-    <span class={MaterialType[type]}>
-      {materialTypeToLabel(type)}: {amount}
-    </span><br />
-  {/each} -->
-  <!-- <div class="level-description">Level description does here</div> -->
-  <!-- <div class="level-goals">
-    Production quota:
-    <br />
-   {#each getGoalTypes() as goal, i}
-        <div class={goalTypes[i]}>
-          {goalTypes[i]} = {goal.amount}
-        </div>
-      {/each}
-  </div> -->
-  <div class="terminal-container">
-    <Terminal
-      on:commandExecuted={handleCommand}
-      noOutput
-      inputActive
-      placeholder="blink"
-    />
+    <div class="terminal-container">
+      <Terminal
+        on:commandExecuted={handleCommand}
+        noOutput
+        inputActive
+        placeholder="blink"
+      />
+    </div>
   </div>
+
+  <div class="level-gradient level-background" />
+
+  {#if $playerBox.level > 3}
+    <img src="/images/rewards/1-.png" class="level-background" />
+  {:else}
+    <img
+      src="/images/rewards/{$playerBox.level}-.png"
+      class="level-background"
+    />
+  {/if}
 
   <!-- <div class="button-container">
     <button class="btn" on:click={handleClick}>Next job</button>
@@ -55,13 +53,36 @@
   }
   .completed-level {
     height: 100%;
+  }
+
+  .level-gradient {
+    z-index: -1 !important;
+    background: linear-gradient(
+      to bottom,
+      black 0%,
+      black 120px,
+      rgba(0, 0, 0, 0.2) 140px,
+      rgba(0, 0, 0, 0.2) calc(100% - 140px),
+      black calc(100% - 120px),
+      black 100%
+    );
+  }
+  .level-background {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  .text-content {
+    height: 100%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-
-    button {
-      font-size: 48px;
-    }
+    // mix-blend-mode: screen;
   }
 
   .terminal-container {

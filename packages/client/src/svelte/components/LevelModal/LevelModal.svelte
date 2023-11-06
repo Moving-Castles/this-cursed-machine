@@ -54,7 +54,7 @@
     padding: 2rem;
     background: var(--terminal-background);
     border: var(--terminal-border);
-    font-size: 48px;
+    font-size: 32px;
 
     .loading-message {
       width: 100%;
