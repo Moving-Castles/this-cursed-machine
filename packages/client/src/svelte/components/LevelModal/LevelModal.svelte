@@ -10,6 +10,7 @@
   let loading = false
 
   const handleTransfer = async () => {
+    console.log("we want to transfer")
     loading = true
     // Initiate transfer
     await waitForCompletion(transfer())
@@ -24,18 +25,27 @@
   })
 </script>
 
-<div class="level-modal">
-  {#if loading}
-    <div class="loading">Receiving new order</div>
-  {:else}
-    <CompletedLevel on:transfer={handleTransfer} />
-  {/if}
+<div class="level-modal-container">
+  <div class="level-modal">
+    {#if loading}
+      <div class="loading-message">
+        <div class="loading">Receiving new order</div>
+      </div>
+    {:else}
+      <CompletedLevel on:transfer={handleTransfer} />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
-  .level-modal {
+  .level-modal-container {
     position: fixed;
     z-index: 50000;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .level-modal {
+    position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -45,9 +55,14 @@
     background: var(--terminal-background);
     border: var(--terminal-border);
     font-size: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    .loading-message {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     .loading {
       animation: pulseOpacity 1s infinite;

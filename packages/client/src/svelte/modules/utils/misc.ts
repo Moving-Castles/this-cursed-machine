@@ -182,3 +182,23 @@ export const lerp = (x, y, a) => x * (1 - a) + y * a
 export const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a))
 export const invlerp = (x, y, a) => clamp((a - x) / (y - x))
 export const range = (x1, y1, x2, y2, a) => lerp(x2, y2, invlerp(x1, y1, a))
+
+export function stepsEasing(t: number, steps: number = 4, direction = "start") {
+  // Normalize the input time.
+  t = Math.min(Math.max(t, 0), 1)
+
+  // Calculate the current step based on the direction.
+  let progress
+  if (direction === "start") {
+    // If the direction is 'start', the change happens at the beginning of the step.
+    progress = Math.floor(t * steps) / steps
+  } else {
+    // If the direction is 'end' (or not specified), the change happens at the end of the step.
+    // Here we use `ceil` to ensure we move to the next step at the very end of the previous step.
+    progress = Math.ceil(t * steps) / steps
+    // This is to ensure we never exceed 1.
+    progress = Math.min(progress, 1)
+  }
+
+  return progress
+}

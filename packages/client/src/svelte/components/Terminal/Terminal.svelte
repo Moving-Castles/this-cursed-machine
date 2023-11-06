@@ -25,13 +25,14 @@
 
   let inputElement: HTMLInputElement
   let userInput = ""
-  let inputActive = false
   let selectContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
+  let inputActive = false
 
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
   export let setBlink = false
+  export let noOutput = false
 
   const dispatch = createEventDispatcher()
 
@@ -81,7 +82,7 @@
       await writeToTerminal(
         OutputType.ERROR,
         "Command not found",
-        false,
+        noOutput,
         SYMBOLS[5]
       )
       resetInput()
@@ -306,17 +307,19 @@
 
 <svelte:window on:keydown={focusInput} />
 
-<div id="terminal" class="terminal">
+<div id="terminal" class="terminal" class:noOutput>
   <!-- OUTPUT -->
-  {#each $terminalOutput as output, index (index)}
-    <TerminalOutput {output} />
-  {/each}
+  {#if !noOutput}
+    {#each $terminalOutput as output, index (index)}
+      <TerminalOutput {output} />
+    {/each}
+  {/if}
 
   <!-- SELECT -->
   <div class="select-container" bind:this={selectContainerElement} />
 
   <!-- INPUT -->
-  {#if inputActive}
+  {#if inputActive || noOutput}
     <form on:submit|preventDefault={onSubmit}>
       <span class="prompt-symbol">
         {SYMBOLS[0]}
@@ -341,17 +344,19 @@
 <style lang="scss">
   .terminal {
     font-family: var(--font-family);
-    padding: 0.5em;
     overflow: hidden;
     color: var(--terminal-color);
     background: var(--terminal-background);
     width: 100%;
     position: relative;
-    height: 100vh;
     white-space: pre-line;
-    padding-bottom: 4em;
     line-height: 1.2em;
     max-width: 69ch;
+
+    &:not(.noOutput) {
+      height: 100vh;
+      padding: 0.5em 0.5em 4em;
+    }
 
     form {
       color: var(--terminal-color);

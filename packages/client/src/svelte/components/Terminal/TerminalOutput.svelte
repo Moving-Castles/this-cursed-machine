@@ -40,20 +40,20 @@
       color: var(--color-success);
     }
     &.HELP {
-      color: #534bce;
+      color: var(--color-help);
     }
 
     &.SPECIAL {
-      color: #d013d0;
+      color: var(--color-special);
     }
 
     &.SPECIALINV {
       color: #000;
-      background: #d013d0;
+      background: var(--color-special);
     }
 
     &.INFO {
-      color: #50908e;
+      color: var(--color-info);
     }
   }
 </style>

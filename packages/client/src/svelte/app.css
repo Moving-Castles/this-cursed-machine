@@ -9,10 +9,12 @@
   --foreground: rgb(var(--white));
   --terminal-background: black;
   --terminal-color: var(--white);
-  --color-info: #3131e4;
+  --color-info: #50908e;
   --color-alert: #effb04;
   --color-success: #3bb13b;
   --color-failure: #ff4000;
+  --color-help: #534bce;
+  --color-special: #d013d0;
 
   /* Sizing */
   --padding-button: 6px 12px;

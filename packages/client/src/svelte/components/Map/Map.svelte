@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fly } from "svelte/transition"
+  import { stepsEasing } from "../../modules/utils/misc"
   // import { staticContent } from "../../modules/content"
   // import { urlFor } from "../../modules/content/sanity"
   import { playSound } from "../../modules/sound"
@@ -10,7 +12,11 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="map-container">
+<div
+  in:fly={{ y: -40, duration: 200, easing: stepsEasing }}
+  out:fly={{ y: 40, duration: 200, easing: stepsEasing }}
+  class="map-container"
+>
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <img
