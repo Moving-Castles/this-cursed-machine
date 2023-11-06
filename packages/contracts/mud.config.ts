@@ -19,6 +19,7 @@ export default mudConfig({
         Name: "string",
         Energy: "uint32",
         CarriedBy: "bytes32",
+        CreatedBy: "bytes32",
         Amount: "uint32",
         SourcePort: "bytes32",
         TargetPort: "bytes32",

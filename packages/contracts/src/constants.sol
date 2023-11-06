@@ -2,6 +2,8 @@
 pragma solidity >=0.8.21;
 import { MATERIAL_TYPE } from "./codegen/common.sol";
 
+bytes32 constant WAREHOUSE_KEY = "0xF001";
+
 struct Product {
   bytes32 machineId;
   MATERIAL_TYPE materialType;

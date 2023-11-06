@@ -5,6 +5,8 @@ import { EntityType, EntityTypeTableId, Level, LevelTableId, MaterialType, Amoun
 import { ENTITY_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibBox } from "./LibBox.sol";
+import { LibMaterial } from "./LibMaterial.sol";
+import { WAREHOUSE_KEY } from "../constants.sol";
 
 library LibGoal {
   /**
@@ -72,5 +74,14 @@ library LibGoal {
     fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encodeStatic(_level));
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
+  }
+
+  function transferToWarehouse(bytes32 _coreEntity) internal {
+    bytes32[][] memory goals = getGoals(Level.get(_coreEntity));
+    for (uint i; i < goals.length; i++) {
+      if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
+      // Create new material in warehouse
+      LibMaterial.create(MaterialType.get(goals[i][0]), Amount.get(goals[i][0]), WAREHOUSE_KEY, _coreEntity);
+    }
   }
 }

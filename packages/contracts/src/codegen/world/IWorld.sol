@@ -12,6 +12,7 @@ import { IInit2System } from "./IInit2System.sol";
 import { IInitSystem } from "./IInitSystem.sol";
 import { INameSystem } from "./INameSystem.sol";
 import { IResolutionSystem } from "./IResolutionSystem.sol";
+import { IRestartSystem } from "./IRestartSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { ITransferSystem } from "./ITransferSystem.sol";
 
@@ -30,6 +31,7 @@ interface IWorld is
   IInitSystem,
   INameSystem,
   IResolutionSystem,
+  IRestartSystem,
   ISpawnSystem,
   ITransferSystem
 {

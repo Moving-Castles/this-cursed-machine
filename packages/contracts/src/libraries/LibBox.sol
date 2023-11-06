@@ -6,16 +6,14 @@ import { GameConfig, GameConfigData, Level, LevelTableId, EntityType, LastResolv
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
+import { LibMaterial } from "./LibMaterial.sol";
 
 library LibBox {
   /**
    * @dev Creates a new box entity with the provided properties.
-   *
    * The function generates a random key for the box entity and assigns the given attributes to it. The current block number
    * is used to record the block at which the box was created.
-   *
    * @param _level The level assigned to the box.
-   *
    * @return Returns the randomly generated key associated with the newly created box entity.
    */
   function create(uint32 _level) internal returns (bytes32) {
@@ -29,11 +27,8 @@ library LibBox {
 
   /**
    * @dev Retrieves boxes based on the specified level.
-   *
    * This function forms a query using the provided level and the constant box entity type to search for matching boxes.
-   *
    * @param _level The level of the boxes to retrieve.
-   *
    * @return boxes An array of byte keys associated with boxes that match the specified level.
    */
   function getBoxesByLevel(uint32 _level) internal view returns (bytes32[][] memory boxes) {
@@ -143,18 +138,12 @@ library LibBox {
     uint32 scaledAmount = _output.amount * uint32(_blocksSinceLastResolution);
     // Check if there alreads is a material of the same type in the box
     bytes32 materialEntity = getMaterialOfTypeByBox(_boxEntity, _output.materialType);
-
     // If yes, add new amount to it
     if (materialEntity != bytes32(0)) {
       Amount.set(materialEntity, Amount.get(materialEntity) + scaledAmount);
     } else {
       // If no, create new material
-      materialEntity = LibUtils.getRandomKey();
-      EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
-      CreationBlock.set(materialEntity, block.number);
-      CarriedBy.set(materialEntity, _boxEntity);
-      MaterialType.set(materialEntity, _output.materialType);
-      Amount.set(materialEntity, scaledAmount);
+      LibMaterial.create(_output.materialType, scaledAmount, _boxEntity, bytes32(0));
     }
   }
 
