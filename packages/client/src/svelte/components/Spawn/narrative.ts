@@ -1,7 +1,7 @@
 import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
 import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
-import { spawn, transfer } from "../../modules/action"
+import { spawn, restart } from "../../modules/action"
 import { waitForCompletion, waitForTransaction } from "../Terminal/functions/helpers"
 import { playSound } from "../../modules/sound"
 
@@ -85,7 +85,7 @@ export const narrative = [
     async () => {
         await writeNarrativeInfo("Transferring worker to pod...")
         // Send spawn
-        const action = transfer()
+        const action = restart()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
         playSound("tcm2", "TRX_yes")

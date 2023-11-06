@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { Level, CarriedBy, Energy, EntityType, CreationBlock, MaterialType, Amount } from "../codegen/index.sol";
 import { PORT_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial } from "../libraries/Libraries.sol";
+import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial, LibConnection } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
   /**
@@ -14,6 +14,11 @@ contract TransferSystem is System {
    */
   function transfer() public returns (bytes32) {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+
+    uint32 newLevel = Level.get(coreEntity) + 1;
+
+    // New level needs to be in range 2 to 8
+    require(newLevel > 1 && newLevel < 9, "illegal level");
 
     // Resolve network if we are in pod
     if (CarriedBy.get(coreEntity) != bytes32(0)) {
@@ -35,51 +40,33 @@ contract TransferSystem is System {
     }
 
     // Level up core entity
-    uint32 newLevel = Level.get(coreEntity) + 1;
     Level.set(coreEntity, newLevel);
 
-    if (newLevel == 1) {
-      // Core is at level 1, enter the pod
-
-      // Set initial energy
-      bytes32 levelEntity = LibLevel.getLevel(newLevel);
-      Energy.set(coreEntity, Energy.get(levelEntity));
-
-      // Create box entity
-      bytes32 boxEntity = LibBox.create(newLevel);
-
-      // Create Inlet
-      bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
-      CarriedBy.set(inletEntity, boxEntity);
-      LibPort.create(inletEntity, PORT_TYPE.OUTPUT);
-
-      // Place core in box
-      CarriedBy.set(coreEntity, boxEntity);
-
-      // Create ports on core
-      LibPort.create(coreEntity, PORT_TYPE.INPUT);
-      LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
-      LibPort.create(coreEntity, PORT_TYPE.OUTPUT);
-
-      // Create Outlet
-      bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
-      CarriedBy.set(outletEntity, boxEntity);
-      LibPort.create(outletEntity, PORT_TYPE.INPUT);
-
-      // Return box
-      return boxEntity;
-    } else if (newLevel == 8) {
+    if (newLevel == 8) {
       // Core is at level 8, progression done
       // Remove core from box
       CarriedBy.deleteRecord(coreEntity);
       // @todo Destroy old box
-      // @todo Transfer materials to warehouse
+
       // Return null-pod
       return bytes32(0);
     } else {
-      // Core is at level 2-8
+      // Core is at level 2-7
       // Level up box
       Level.set(CarriedBy.get(coreEntity), newLevel);
+      // Disconnect outlet
+      // Get outlet entity
+      bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+      // Get incoming connection
+      if (outletEntities[0][0] != bytes32(0)) {
+        // Get input port
+        bytes32[][] memory outletEntitiesInputPorts = LibPort.getPorts(outletEntities[0][0], PORT_TYPE.INPUT);
+        // Get incoming connection
+        bytes32 incomingConnection = LibConnection.getIncoming(outletEntitiesInputPorts[0][0]);
+        // Destroy connection
+        LibConnection.destroy(incomingConnection);
+      }
+
       // Return box
       return CarriedBy.get(coreEntity);
     }
