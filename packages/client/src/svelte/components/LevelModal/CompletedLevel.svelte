@@ -1,20 +1,13 @@
 <script lang="ts">
   import { playerBox } from "../../modules/state"
   import { createEventDispatcher } from "svelte"
+  import Terminal from "../Terminal/Terminal.svelte"
 
   const dispatch = createEventDispatcher()
 
   const handleClick = () => {
     dispatch("transfer")
   }
-
-  // const getGoalTypes = () => {
-  //   return $playerGoals.map(goal => {
-  //     return MaterialType[goal.materialType] === "NONE"
-  //       ? "ENERGY"
-  //       : MaterialType[goal.materialType]
-  //   })
-  // }
 </script>
 
 <div class="completed-level">

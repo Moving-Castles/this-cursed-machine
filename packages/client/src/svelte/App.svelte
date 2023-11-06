@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
+  import { writable } from "svelte/store"
   import { setup } from "../mud/setup"
   import {
     createComponentSystem,
@@ -21,6 +22,8 @@
   import Death from "./components/Death/Death.svelte"
   import Completed from "./components/Completed/Completed.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
+
+  let unsubscribe: ReturnType<typeof writable>
 
   const restart = () => {
     clearTerminalOutput()
@@ -74,13 +77,15 @@
     createSyncProgressSystem()
 
     // Simulate state changes
-    initStateSimulator()
+    unsubscribe = initStateSimulator()
 
     // Preload sounds
     initSound()
 
     // playSound("tcm", "inner", true, false)
   })
+
+  onDestroy(unsubscribe)
 </script>
 
 <main>

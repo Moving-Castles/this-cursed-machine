@@ -23,34 +23,48 @@ import {
  * @see {@link patches} For applying patches or updates to the state.
  */
 export async function initStateSimulator() {
-  blockNumber.subscribe(async blockNumber => {
+  const unsubscribe = blockNumber.subscribe(async blockNumber => {
+    const playerCoreValue = get(playerCore)
+    const playerBoxValue = get(playerBox)
+    const localResolvedValue = get(localResolved)
+    const lastCompletedBlockValue = get(lastCompletedBlock)
+    const showLevelValue = get(showLevelModal)
+
     // Player is not spawned yet
-    if (!get(playerCore)) return
+    if (!playerCoreValue) return
 
     // Play heartbeat on new block if player is in pod
-    if (get(playerCore).carriedBy && get(UIState) === UI.READY) {
+    if (playerCoreValue.carriedBy && get(UIState) === UI.READY) {
       playSound("tcm2", "singleHeartbeat")
     }
 
     // Network was resolved onchain
-    if (get(playerBox).lastResolved !== get(localResolved)) {
+    if (playerBoxValue.lastResolved !== localResolvedValue) {
       // Resolve output
-      patches.set(resolve(get(playerCore).carriedBy))
+      patches.set(resolve(playerCoreValue.carriedBy))
       // Update localResolved
-      localResolved.set(get(playerBox).lastResolved)
+      localResolved.set(playerBoxValue.lastResolved)
     }
 
     // !hack: Wait to allow the changes to propagate
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(r => setTimeout(r, 100))
 
     // Check if level goals have been reached
     // @hack: Wait 10 blocks from last completion to avoid duplicate modals bug
     if (
-      checkLevelGoals(get(playerCore).level) &&
-      get(showLevelModal) === false &&
-      blockNumber > get(lastCompletedBlock) + 10
+      checkLevelGoals(playerCoreValue.level) &&
+      showLevelValue === false &&
+      blockNumber > lastCompletedBlockValue + 10
     ) {
+      console.log(
+        "level, ",
+        playerCoreValue.level,
+        " reached at block nr. ",
+        blockNumber
+      )
       showLevelModal.set(true)
     }
   })
+
+  return unsubscribe
 }
