@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { Level, CarriedBy, Energy, EntityType, CreationBlock, MaterialType, Amount } from "../codegen/index.sol";
 import { PORT_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial } from "../libraries/Libraries.sol";
+import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial, LibConnection } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
   /**
@@ -73,13 +73,26 @@ contract TransferSystem is System {
       // Remove core from box
       CarriedBy.deleteRecord(coreEntity);
       // @todo Destroy old box
-      // @todo Transfer materials to warehouse
+
       // Return null-pod
       return bytes32(0);
     } else {
       // Core is at level 2-8
       // Level up box
       Level.set(CarriedBy.get(coreEntity), newLevel);
+      // Disconnect outlet
+      // Get outlet entity
+      bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+      // Get incoming connection
+      if (outletEntities[0][0] != bytes32(0)) {
+        // Get input port
+        bytes32[][] memory outletEntitiesInputPorts = LibPort.getPorts(outletEntities[0][0], PORT_TYPE.INPUT);
+        // Get incoming connection
+        bytes32 incomingConnection = LibConnection.getIncoming(outletEntitiesInputPorts[0][0]);
+        // Destroy connection
+        LibConnection.destroy(incomingConnection);
+      }
+
       // Return box
       return CarriedBy.get(coreEntity);
     }
