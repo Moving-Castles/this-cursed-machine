@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { alignTooltip } from "../../modules/ui/stores"
+  import { alignTooltip, mouseX, mouseY } from "../../modules/ui/stores"
   import { onMount, onDestroy } from "svelte"
-  import { strobe } from "../../modules/ui/transitions"
 
-  let [h, x, y] = [0, 0, 0]
+  let h = 0
 
   let alignTransformation = ""
 
@@ -21,11 +20,6 @@
     }
   }
 
-  const onMouseMove = ({ clientX, clientY }) => {
-    x = clientX
-    y = clientY
-  }
-
   onMount(() => {
     document.body.classList.add("cursor-none")
   })
@@ -34,11 +28,10 @@
   })
 </script>
 
-<svelte:window bind:innerHeight={h} on:mousemove={onMouseMove} />
+<svelte:window bind:innerHeight={h} />
 
 <div
-  in:strobe
-  style:transform="translate({x}px, {-h + y}px) {alignTransformation}"
+  style:transform="translate({$mouseX}px, {-h + $mouseY}px) {alignTransformation}"
   class="box"
 >
   <div class="inner">

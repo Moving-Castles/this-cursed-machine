@@ -1,7 +1,8 @@
 <script lang="ts">
   import { ConnectionState } from "../../../modules/state/enums"
   import { graphPulse } from "../../../modules/ui/stores"
-  import { spring } from "svelte/motion"
+  import { tweened } from "svelte/motion"
+  import { expoIn } from "svelte/easing"
   import { draw } from "svelte/transition"
   import { get } from "svelte/store"
   export let d: string
@@ -9,10 +10,10 @@
   export let state: string
   export let transform: string
 
-  const [STROKE, GAP] = [20, 50]
+  const [STROKE, GAP] = [16, 50]
 
-  let localPulse = spring(0, { stiffness: 0.1, damping: 0.2 })
-  let freeze = 0
+  let localPulse = tweened(0, { duration: 1000, easing: expoIn })
+  let freeze = get(graphPulse)
 
   $: {
     $localPulse = state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze
@@ -20,6 +21,17 @@
 
   $: if (state !== ConnectionState.FLOWING) freeze = get(graphPulse) * GAP
 </script>
+
+<path
+  class="path"
+  in:draw={{ duration: 300 }}
+  out:draw={{ duration: 300 }}
+  {d}
+  fill="none"
+  stroke="var(--STATE_INACTIVE)"
+  stroke-width="12"
+  {transform}
+/>
 
 <path
   class="path"

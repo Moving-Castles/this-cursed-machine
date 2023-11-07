@@ -1,30 +1,32 @@
 <script lang="ts">
-  import { onMount } from "svelte"
-  import Connection from "../Connections/Connection.svelte"
-  import { draw, fade } from "svelte/transition"
-  import { range } from "../../../modules/utils/misc"
+  import Connection from "./Connections/Connection.svelte"
+  import Machine from "./Machines/Machine.svelte"
+  import MaterialGradients from "./MaterialGradients/MaterialGradients.svelte"
 
+  import { onMount } from "svelte"
+  import { draw, fade } from "svelte/transition"
+  import { range } from "../../modules/utils/misc"
   import {
     EntityType,
     MaterialType,
     ConnectionState,
-  } from "../../../modules/state/enums"
+  } from "../../modules/state/enums"
   import {
     simulatedMachines,
     simulatedConnections,
     simulatedPorts,
-  } from "../../../modules/simulator"
+  } from "../../modules/simulator"
   import {
     connectionState,
     machineState,
-  } from "../../../modules/state/convenience"
-  import { inspecting, alignTooltip } from "../../../modules/ui/stores"
-  import { MachineType } from "../../../modules/state/types"
+  } from "../../modules/state/convenience"
+  import { inspecting, alignTooltip } from "../../modules/ui/stores"
+  import { MachineType } from "../../modules/state/types"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
   import { select, selectAll } from "d3-selection"
   import { drag } from "d3-drag"
-  import { MACHINE_SIZE, data, x1, y1, x2, y2 } from "./index"
+  import { MACHINE_SIZE, data, x1, y1, x2, y2 } from "./Machines/index"
   import { zoom } from "d3-zoom"
   import {
     forceSimulation,
@@ -139,14 +141,6 @@
     }
   }
 
-  const inletOutletOrCore = d => {
-    return (
-      d.entry.machineType === MachineType.INLET ||
-      d.entry.machineType === MachineType.OUTLET ||
-      d.entry.machineType === MachineType.CORE
-    )
-  }
-
   const linkColor = entry => {
     if (entry?.inputs) {
       return `var(--${
@@ -160,8 +154,6 @@
   }
 
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
-
-  // $: if ($blockNumber) $t -= 20
 
   $: {
     const graph = data(
@@ -233,20 +225,7 @@
     style:height="{height}px"
     viewBox={[-width / 2, -height / 2, width, height]}
   >
-    <defs>
-      {#each Object.keys(MaterialType).filter(t => typeof parseInt(t) === "number") as type}
-        <linearGradient
-          id="gradient-{MaterialType[type]}"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="0%"
-        >
-          <stop offset="0%" stop-color="var(--{MaterialType[type]})" />
-          <stop offset="100%" stop-color="var(--STATE_INACTIVE)" />
-        </linearGradient>
-      {/each}
-    </defs>
+    <MaterialGradients />
 
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
@@ -262,19 +241,6 @@
           ]}"
           style:color={linkColor(link.entry)}
         >
-          <path
-            class="path"
-            in:draw={{ duration: 300 }}
-            out:draw={{ duration: 300 }}
-            d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
-              links,
-              link
-            )} ${y2(links, link, d3yScale)}`}
-            fill="none"
-            stroke="var(--STATE_INACTIVE)"
-            stroke-width="12"
-            transform="translate(0 {height}) scale(1 -1)"
-          />
           <Connection
             d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
               links,
@@ -289,92 +255,23 @@
       <!-- END LINKS -->
 
       <!-- NODES -->
-      {#each nodes as d (d.id)}
+      {#each nodes as node (node.id)}
         <g
           out:fade
-          class="node {ConnectionState[machineState(d.address)]} {MachineType[
-            d.entry.machineType
-          ]}"
-          style:animation-delay="{Math.random() * -10}s"
-          id={d.id}
+          class="node {ConnectionState[
+            machineState(node.address)
+          ]} {MachineType[node.entry.machineType]}"
+          id={node.id}
         >
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          {#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
-            <rect
-              class="node-rect {ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              fill="black"
-            />
-            <image
-              class="node-image {ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              href="/images/machines/{MachineType[d.entry.machineType]}.png"
-            />
-            <rect
-              class="node-rect {ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              on:mouseenter={e => {
-                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
-              }}
-              on:mouseleave={() => ($inspecting = null)}
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              stroke={connectionState(d.entry) === ConnectionState.CONNECTED ||
-              connectionState(d.entry) === ConnectionState.FLOWING
-                ? "white"
-                : "var(--STATE_INACTIVE)"}
-              stroke-width="2"
-              fill="transparent"
-            />
-          {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
-            <rect
-              on:mouseenter={e => {
-                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
-              }}
-              on:mouseleave={() => ($inspecting = null)}
-              class="{ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              x={d.x - 20}
-              y={d.y - 20}
-              width={40}
-              height={40}
-              fill="var(--{$simulatedMachines[d.address]?.product?.materialType
-                ? MaterialType[
-                    $simulatedMachines[d.address]?.product?.materialType
-                  ]
-                : 'STATE_INACTIVE'})"
-              stroke="white"
-              stroke-width="2"
-            />
-          {/if}
-
-          {#if d.entry.buildIndex}
-            <rect
-              fill="white"
-              x={d.x + 16}
-              y={d.y + 15}
-              width="20"
-              height="20"
-            />
-            <text fill="black" font-size="12px" x={d.x + 18} y={d.y + 30}>
-              #{d.entry.buildIndex}
-            </text>
-          {/if}
-          <!-- <title>{MachineType[d.entry.machineType]}</title> -->
+          <Machine
+            on:mouseenter={e => {
+              onNodeOrConnectionMouseEnter(e, node.entry, node.address)
+            }}
+            on:mouseleave={() => ($inspecting = null)}
+            {MACHINE_SIZE}
+            d={node}
+            state={machineState(node.address)}
+          />
         </g>
       {/each}
       <!-- END NODES -->
@@ -562,16 +459,6 @@
     }
   }
 
-  @keyframes inletOutletAnimation {
-    0%,
-    100% {
-      transform: scale(1, 1);
-    }
-    50% {
-      transform: scale(1.2, 1);
-    }
-  }
-
   svg .node,
   svg .node-image,
   svg .rect,
@@ -593,32 +480,11 @@
     filter: grayscale(0) brightness(1) contrast(1);
   }
 
-  .node.CORE.FLOWING {
-    animation: growAnimation 1s infinite;
-  }
-
-  .node-rect:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING,
-  .node-image:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING {
-    animation: rotateAnimation 0.1s infinite alternate linear;
-  }
-
   .MACHINE_NONE {
     background-image: url("/images/machines/NONE.png");
   }
   .MACHINE_INLET {
     background-image: url("/images/machines/INLET.png");
-  }
-
-  .MACHINE_INLET.FLOWING {
-    transform-origin: left; /* or transform-origin: 50% */
-    transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
-  }
-
-  .MACHINE_OUTLET.FLOWING {
-    transform-origin: right; /* or transform-origin: 50% */
-    transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
   }
 
   .MACHINE_OUTLET {

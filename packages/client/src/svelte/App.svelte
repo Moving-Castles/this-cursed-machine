@@ -14,7 +14,7 @@
   import { restart as sendRestart } from "./modules/action"
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
-  import { UIState, UI } from "./modules/ui/stores"
+  import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -22,6 +22,11 @@
   import Death from "./components/Death/Death.svelte"
   import Completed from "./components/Completed/Completed.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
+
+  const onMouseMove = e => {
+    $mouseX = e.clientX
+    $mouseY = e.clientY
+  }
 
   let unsubscribe: ReturnType<typeof writable>
 
@@ -87,6 +92,8 @@
 
   onDestroy(unsubscribe)
 </script>
+
+<svelte:window on:mousemove={onMouseMove} />
 
 <main>
   {#if $UIState === UI.LOADING}

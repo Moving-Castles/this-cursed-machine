@@ -1,7 +1,7 @@
 import { fly } from "svelte/transition"
 import { stepsEasing } from "../../utils/misc"
 import { get } from "svelte/store"
-import { linear, linear } from "svelte/easing"
+import { linear, expoIn } from "svelte/easing"
 import { graphPulse } from "../../ui/stores"
 
 export const steppedFlyTop = node => {
@@ -34,6 +34,20 @@ export function strobe(node, { duration = 344, steps = 2, easing = linear }) {
         node.style.opacity = 1
       }
     },
+  }
+}
+
+export function scale(node, { duration = 1000, delay = 0 }) {
+  const style = getComputedStyle(node)
+  const transform = style.transform === "none" ? "" : style.transform
+
+  return {
+    delay,
+    duration,
+    easing: expoIn,
+    css: (t, u) => `
+      transform: ${transform} scale(${1 + t * 0.2}, ${1 + u * 0.2});
+    `,
   }
 }
 
