@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import Tooltip from "../../Tooltip/Tooltip.svelte"
+  import Connection from "../Connections/Connection.svelte"
   import { draw, fade } from "svelte/transition"
   import { range } from "../../../modules/utils/misc"
-  import ConnectionInformation from "../../Connections/ConnectionInformation.svelte"
-  import MachineInformation from "../../Machines/MachineInformation.svelte"
+
   import {
     EntityType,
     MaterialType,
@@ -19,6 +18,7 @@
     connectionState,
     machineState,
   } from "../../../modules/state/convenience"
+  import { inspecting, alignTooltip } from "../../../modules/ui/stores"
   import { MachineType } from "../../../modules/state/types"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
@@ -51,11 +51,9 @@
     zoom,
   }
 
-  let align = "center"
   let svg
   let width = 0
   let height = 0
-  let inspecting = null
 
   let [nodes, links] = [[], []]
 
@@ -85,17 +83,39 @@
     })
 
   const onNodeOrConnectionMouseEnter = (e, entry, a) => {
-    align = "center"
+    $alignTooltip = "center"
     if (entry.entityType === EntityType.MACHINE) {
-      if (entry.machineType === MachineType.INLET) align = "left"
-      if (entry.machineType === MachineType.OUTLET) align = "right"
+      if (entry.machineType === MachineType.INLET) $alignTooltip = "left"
+      if (entry.machineType === MachineType.OUTLET) $alignTooltip = "right"
     }
 
-    console.log("ALIGN: ", align)
-    inspecting = { ...entry, address: a }
+    $inspecting = { ...entry, address: a }
+  }
+
+  const distributeGaps = (node, dashSize = 20) => {
+    // Calculate the total length of the path
+    const totalLength = node.getTotalLength()
+
+    // Calculate the number of dashes that can fit into the path
+    const dashCount = Math.floor(totalLength / (dashSize * 2))
+
+    // Calculate the size of the gaps to distribute the remaining space
+    const gapSize = (totalLength - dashSize * dashCount) / dashCount
+
+    // Apply the stroke-dasharray
+    node.setAttribute("stroke-dasharray", `${dashSize} ${gapSize}`)
+
+    // Cleanup function
+    return {
+      destroy() {
+        // Remove the stroke-dasharray when the element is destroyed
+        node.removeAttribute("stroke-dasharray")
+      },
+    }
   }
 
   const groupScale = node => {
+    let scale = 1
     const check = () => {
       node.style.transform = ""
       const { width: w, height: h } = node.getBoundingClientRect()
@@ -104,7 +124,12 @@
       const ratioW = (parentW - MACHINE_SIZE) / w
       const ratioH = (parentH - MACHINE_SIZE) / h
 
-      node.style.transform = `scale(${Math.min(ratioW, ratioH)})`
+      const newScale = Math.min(ratioW, ratioH)
+
+      if (scale - newScale > 0.1 || newScale - scale <= -0.1) {
+        node.style.transform = `scale(${newScale})`
+      }
+      scale = newScale
     }
     let tickscale = setInterval(check)
     return {
@@ -134,19 +159,9 @@
     }
   }
 
-  const linkGradient = entry => {
-    if (entry?.inputs) {
-      return `url(#gradient-${
-        entry.product?.materialType
-          ? MaterialType[entry.product?.materialType]
-          : "STATE_INACTIVE"
-      })`
-    } else {
-      return "var(--STATE_INACTIVE)"
-    }
-  }
-
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
+
+  // $: if ($blockNumber) $t -= 20
 
   $: {
     const graph = data(
@@ -211,20 +226,6 @@
 
 <svelte:window on:resize={resize} />
 
-{#if inspecting}
-  <Tooltip {align}>
-    {#if inspecting?.entityType === EntityType.MACHINE}
-      <MachineInformation address={inspecting.address} machine={inspecting} />
-    {/if}
-    {#if inspecting?.entityType === EntityType.CONNECTION}
-      <ConnectionInformation
-        address={inspecting.address}
-        connection={inspecting}
-      />
-    {/if}
-  </Tooltip>
-{/if}
-
 <div class="wrapper" bind:clientWidth={width} bind:clientHeight={height}>
   <svg
     bind:this={svg}
@@ -246,6 +247,7 @@
         </linearGradient>
       {/each}
     </defs>
+
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
       {#each links as link (link.id)}
@@ -254,7 +256,7 @@
           on:mouseenter={e => {
             onNodeOrConnectionMouseEnter(e, link.entry, link.address)
           }}
-          on:mouseleave={() => (inspecting = null)}
+          on:mouseleave={() => ($inspecting = null)}
           class="machine-connection {ConnectionState[
             connectionState(link.entry)
           ]}"
@@ -262,13 +264,23 @@
         >
           <path
             class="path"
-            in:draw={{ duration: 700 }}
+            in:draw={{ duration: 300 }}
             out:draw={{ duration: 300 }}
             d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
               links,
               link
             )} ${y2(links, link, d3yScale)}`}
             fill="none"
+            stroke="var(--STATE_INACTIVE)"
+            stroke-width="12"
+            transform="translate(0 {height}) scale(1 -1)"
+          />
+          <Connection
+            d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
+              links,
+              link
+            )} ${y2(links, link, d3yScale)}`}
+            state={connectionState(link.entry)}
             stroke={linkColor(link.entry)}
             transform="translate(0 {height}) scale(1 -1)"
           />
@@ -289,6 +301,9 @@
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           {#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
             <rect
+              class="node-rect {ConnectionState[
+                machineState(d.address)
+              ]} MACHINE_{MachineType[d.entry.machineType]}"
               x={d.x - MACHINE_SIZE / 2}
               y={d.y - MACHINE_SIZE / 2}
               width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
@@ -296,7 +311,7 @@
               fill="black"
             />
             <image
-              class="{ConnectionState[
+              class="node-image {ConnectionState[
                 machineState(d.address)
               ]} MACHINE_{MachineType[d.entry.machineType]}"
               x={d.x - MACHINE_SIZE / 2}
@@ -306,10 +321,13 @@
               href="/images/machines/{MachineType[d.entry.machineType]}.png"
             />
             <rect
+              class="node-rect {ConnectionState[
+                machineState(d.address)
+              ]} MACHINE_{MachineType[d.entry.machineType]}"
               on:mouseenter={e => {
                 onNodeOrConnectionMouseEnter(e, d.entry, d.address)
               }}
-              on:mouseleave={() => (inspecting = null)}
+              on:mouseleave={() => ($inspecting = null)}
               x={d.x - MACHINE_SIZE / 2}
               y={d.y - MACHINE_SIZE / 2}
               width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
@@ -326,7 +344,7 @@
               on:mouseenter={e => {
                 onNodeOrConnectionMouseEnter(e, d.entry, d.address)
               }}
-              on:mouseleave={() => (inspecting = null)}
+              on:mouseleave={() => ($inspecting = null)}
               class="{ConnectionState[
                 machineState(d.address)
               ]} MACHINE_{MachineType[d.entry.machineType]}"
@@ -381,22 +399,16 @@
     pointer-events: none;
   }
 
-  .machine-connection,
-  .machine-connection :global(path) {
-    stroke-dasharray: 20, 1; /* This should be at least the length of the longest path. */
-    stroke-dashoffset: 80; /* Hide the line initially. */
-    stroke-opacity: 1;
-    stroke-width: 12;
-    stroke-linecap: "round";
+  .node-image.FLOWING {
+    /* animation: flowAnimation 1s ease forwards infinite; */
   }
-
   .machine-connection.FLOWING,
   .machine-connection.FLOWING path {
-    animation: flowAnimation 1s ease forwards infinite;
+    /* animation: flowAnimation 1s ease forwards infinite; */
   }
 
   path {
-    transition: stroke 0.3s ease;
+    /* transition: stroke 0.3s ease; */
   }
 
   @keyframes vibrate {
@@ -537,8 +549,35 @@
       transform: scale(1);
     }
     40% {
-      transform: scale(1.1);
+      transform: scale(1.01);
     }
+  }
+
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(-12deg);
+    }
+    100% {
+      transform: rotate(12deg);
+    }
+  }
+
+  @keyframes inletOutletAnimation {
+    0%,
+    100% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1.2, 1);
+    }
+  }
+
+  svg .node,
+  svg .node-image,
+  svg .rect,
+  svg .node-rect {
+    transform-origin: center; /* or transform-origin: 50% */
+    transform-box: fill-box;
   }
 
   .node {
@@ -554,8 +593,13 @@
     filter: grayscale(0) brightness(1) contrast(1);
   }
 
-  .node:not(.INLET):not(.OUTLET).FLOWING {
-    animation: vibrate 4s infinite, growAnimation 1s infinite;
+  .node.CORE.FLOWING {
+    animation: growAnimation 1s infinite;
+  }
+
+  .node-rect:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING,
+  .node-image:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING {
+    animation: rotateAnimation 0.1s infinite alternate linear;
   }
 
   .MACHINE_NONE {
@@ -564,6 +608,19 @@
   .MACHINE_INLET {
     background-image: url("/images/machines/INLET.png");
   }
+
+  .MACHINE_INLET.FLOWING {
+    transform-origin: left; /* or transform-origin: 50% */
+    transform-box: fill-box;
+    animation: inletOutletAnimation 1s infinite;
+  }
+
+  .MACHINE_OUTLET.FLOWING {
+    transform-origin: right; /* or transform-origin: 50% */
+    transform-box: fill-box;
+    animation: inletOutletAnimation 1s infinite;
+  }
+
   .MACHINE_OUTLET {
     background-image: url("/images/machines/OUTLET.png");
   }

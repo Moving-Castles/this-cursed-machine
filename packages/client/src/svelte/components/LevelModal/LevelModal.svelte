@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { playSound } from "../../modules/sound"
+  import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
   import { transfer } from "../../modules/action"
   import { showLevelModal, lastCompletedBlock } from "../../modules/ui/stores"
   import { waitForCompletion } from "../Terminal/functions/helpers"
@@ -21,12 +22,12 @@
   }
 
   onMount(() => {
-    // playSound("tcm", "alarm")
+    playSound("tcm2", "TRX_yes")
   })
 </script>
 
 <div class="level-modal-container">
-  <div class="level-modal">
+  <div in:steppedFlyTop out:steppedFlyBottom class="level-modal">
     {#if loading}
       <div class="loading-message">
         <div class="loading">Receiving new order</div>
@@ -55,6 +56,7 @@
     background: var(--terminal-background);
     border: var(--terminal-border);
     font-size: 32px;
+    z-index: 999999;
 
     .loading-message {
       width: 100%;

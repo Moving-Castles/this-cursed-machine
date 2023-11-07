@@ -45,3 +45,6 @@ export const showLevelModal = writable(false)
 export const localLevel = writable(0)
 export const lastCompletedBlock = writable(0)
 export const cursorCharacter = writable("")
+export const inspecting = writable(null)
+export const alignTooltip = writable("center") // "center" | "left" | "right" = "center"
+export const graphPulse = writable(0)

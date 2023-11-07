@@ -1,14 +1,14 @@
 <script lang="ts">
-  export let align: "center" | "left" | "right" = "center"
+  import { alignTooltip } from "../../modules/ui/stores"
   import { onMount, onDestroy } from "svelte"
+  import { strobe } from "../../modules/ui/transitions"
 
   let [h, x, y] = [0, 0, 0]
 
   let alignTransformation = ""
 
   $: {
-    console.log(align)
-    switch (align) {
+    switch ($alignTooltip) {
       case "left":
         alignTransformation = "translate(-20px, 50%)"
         break
@@ -36,12 +36,11 @@
 
 <svelte:window bind:innerHeight={h} on:mousemove={onMouseMove} />
 
-<!-- style:transform="translate(-50%, -20px) translate({x}px, {h - y}px)" -->
 <div
+  in:strobe
   style:transform="translate({x}px, {-h + y}px) {alignTransformation}"
   class="box"
 >
-  <!-- in:fly={{ y: 20, duration: 60 }} -->
   <div class="inner">
     <slot />
   </div>

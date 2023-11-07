@@ -5,6 +5,7 @@ import { playerBox, playerCore } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
+import { pulseGraph } from "../../ui/transitions"
 import {
   UIState,
   UI,
@@ -36,6 +37,7 @@ export async function initStateSimulator() {
     // Play heartbeat on new block if player is in pod
     if (playerCoreValue.carriedBy && get(UIState) === UI.READY) {
       playSound("tcm2", "singleHeartbeat")
+      pulseGraph()
     }
 
     // Network was resolved onchain

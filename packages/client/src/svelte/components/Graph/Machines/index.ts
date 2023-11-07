@@ -50,7 +50,7 @@ export function x1(links: any[], d) {
 
   if (linksWithSource.length > 1) {
     OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
-    OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+    OFFSET = OFFSET * 25 - (linksWithSource.length * 10) / 2
   }
 
   return d.source.group === EntityType.PORT &&
@@ -66,7 +66,7 @@ export function y1(links: any, d, d3yScale) {
 
   if (linksWithSource.length > 1) {
     OFFSET = linksWithSource.map(l => l.id).indexOf(d.id)
-    OFFSET = OFFSET * 20 - (linksWithSource.length * 10) / 2
+    OFFSET = OFFSET * 25 - (linksWithSource.length * 10) / 2
   }
 
   return d3yScale(
@@ -83,7 +83,7 @@ export function x2(links: any, d) {
 
   if (linksWithTarget.length > 1) {
     OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
-    OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+    OFFSET = OFFSET * 25 - (linksWithTarget.length * 10) / 2
   }
 
   return d?.target?.group === EntityType.MACHINE
@@ -98,7 +98,7 @@ export function y2(links: any, d, d3yScale) {
 
   if (linksWithTarget.length > 1) {
     OFFSET = linksWithTarget.map(l => l.id).indexOf(d.id)
-    OFFSET = OFFSET * 20 - (linksWithTarget.length * 10) / 2
+    OFFSET = OFFSET * 25 - (linksWithTarget.length * 10) / 2
   }
 
   return d3yScale(

@@ -1,32 +1,25 @@
 <script lang="ts">
-  import { fly } from "svelte/transition"
-  import { stepsEasing } from "../../modules/utils/misc"
-  // import { staticContent } from "../../modules/content"
-  // import { urlFor } from "../../modules/content/sanity"
-  import { playSound } from "../../modules/sound"
+  import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
   import { showMap } from "../../modules/ui/stores"
+  import { playSound } from "../../modules/sound"
+
   const onKeyDown = ({ key }) => {
-    if (key === "Escape") showMap.set(false)
+    if (key === "Escape") {
+      hide()
+    }
+  }
+  const hide = () => {
+    playSound("tcm2", "selectionEsc")
+    showMap.set(false)
   }
 </script>
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div
-  in:fly={{ y: -40, duration: 200, easing: stepsEasing }}
-  out:fly={{ y: 40, duration: 200, easing: stepsEasing }}
-  class="map-container"
->
+<div in:steppedFlyTop out:steppedFlyBottom class="map-container">
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <img
-    src="/images/map.png"
-    alt="map"
-    on:click={() => {
-      // playSound("tcm", "buzzer")
-      showMap.set(false)
-    }}
-  />
+  <img src="/images/map.png" alt="map" on:click={hide} />
   <!-- <img src={urlFor($staticContent.map.image.asset).url()} alt="map" /> -->
 </div>
 
