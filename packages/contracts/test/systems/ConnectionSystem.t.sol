@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
