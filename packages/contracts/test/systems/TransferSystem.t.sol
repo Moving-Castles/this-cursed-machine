@@ -25,17 +25,9 @@ contract TransferSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     assertEq(Level.get(coreEntity), 1);
-
-    // @todo test whole transfer progression, fullfilling goals
-    // vm.startPrank(alice);
-    // bytes32 transferBoxEntity = world.transfer();
-    // vm.stopPrank();
-
-    // assertEq(Level.get(coreEntity), 2);
-    // assert(spawnBoxEntity != transferBoxEntity);
   }
 }

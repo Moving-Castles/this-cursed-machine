@@ -36,8 +36,7 @@ export async function initStateSimulator() {
 
     // Play heartbeat on new block if player is in pod
     if (playerCoreValue.carriedBy && get(UIState) === UI.READY) {
-      playSound("tcm2", "singleHeartbeat")
-      pulseGraph()
+      playSound("tcm", "singleHeartbeat100")
     }
 
     // Network was resolved onchain

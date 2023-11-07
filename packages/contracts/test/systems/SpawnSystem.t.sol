@@ -35,12 +35,12 @@ contract SpawnSystemTest is MudTest {
     assertEq(ReadyBlock.get(coreEntity), block.number);
   }
 
-  function testSpawnAndTransfer() public {
+  function testSpawnAndStart() public {
     setUp();
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    bytes32 boxEntity = world.transfer();
+    bytes32 boxEntity = world.restart();
     vm.stopPrank();
 
     assertEq(CarriedBy.get(coreEntity), boxEntity);

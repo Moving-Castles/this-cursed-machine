@@ -53,7 +53,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
 
     await writeToTerminal(type, str[0], false, symbol, delay)
     for (let i = 1; i < str.length; i++) {
-        playSound("tcm2", "cant");
+        playSound("tcm", "cant");
         await writeToTerminal(type, str.substring(0, i + 1), true, symbol, delay)
     }
 
@@ -71,7 +71,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
  */
 export async function loadingLine(index: number): Promise<void> {
     const CHARACTER = "."
-    playSound("tcm2", "TRX_wait_b");
+    playSound("tcm", "TRX_wait_b");
     if (index === 1) {
         await writeToTerminal(OutputType.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
     } else {
@@ -87,7 +87,7 @@ export async function loadingLine(index: number): Promise<void> {
 export async function loadingSpinner(index: number): Promise<void> {
     const GLYPHS = ["/", "–", "\\", "|"];
     const currentGlyph = GLYPHS[index % GLYPHS.length];
-    playSound("tcm2", "TRX_wait_b_07");
+    playSound("tcm", "TRX_wait_b_07");
     if (index === 1) {
         await writeToTerminal(OutputType.NORMAL, currentGlyph, false, SYMBOLS[2], 0);
     } else {

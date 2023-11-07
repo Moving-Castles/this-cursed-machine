@@ -25,7 +25,7 @@ contract MachineSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // Create a new entity
@@ -51,7 +51,7 @@ contract MachineSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // Create a new entity

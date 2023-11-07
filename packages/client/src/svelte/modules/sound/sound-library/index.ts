@@ -1,7 +1,7 @@
 import type { SoundLibrary } from "../types";
 
-import { tcm2 } from "./tcm2";
+import { tcm } from "./tcm";
 
 export const soundLibrary: SoundLibrary = {
-  tcm2,
+  tcm,
 };

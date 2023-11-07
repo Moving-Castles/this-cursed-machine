@@ -4,7 +4,7 @@ import { COMMAND, TerminalType } from "../types";
 import { playSound } from "../../../modules/sound";
 
 async function execute(terminalType: TerminalType) {
-    playSound("tcm2", "blink")
+    playSound("tcm", "blink")
     await flashEffect()
     return;
 }
