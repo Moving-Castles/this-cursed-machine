@@ -39,7 +39,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // console.log("%%%%%%%%%");
@@ -114,7 +114,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // console.log("%%%%%%%%%");
@@ -169,7 +169,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // console.log("%%%%%%%%%");
@@ -229,7 +229,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // 2. Wait 10 blocks
@@ -249,7 +249,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // Get inlet entity
@@ -288,7 +288,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     // console.log("%%%%%%%%%");
@@ -381,7 +381,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
@@ -475,7 +475,7 @@ contract ResolutionSystemTest is MudTest {
     // 1. Spawn core
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    world.transfer();
+    world.restart();
     vm.stopPrank();
 
     console.log("%%%%%%%%%");
