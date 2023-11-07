@@ -1,0 +1,78 @@
+---
+PRE
+---
+Spawn core
+Restart (to transfer to pod)
+
+-------
+LEVEL 1
+_ GOALS: 
+- 101 core energy
+-------
+Connect inlet to core
+* Wait 10 block
+Transfer
+Assert: level == 2
+
+-------
+LEVEL 2
+_ GOALS: 
+- 1000 piss
+- 1000 blood
+-------
+Connect inlet to core
+Connect core piss port to outlet
+* Wait 11 blocks
+Disconnect piss connection
+Connect core blood port to outlet
+* Wait 11 blocks
+Transfer
+Assert: level == 3
+
+-------
+LEVEL 3
+_ GOALS
+- 1000 CAFFEIN SLUSHY
+- 1000 CLUB MATE
+-------
+Connect inlet to core
+Build mixer
+Connect core piss port to mixer
+Connect core blood port to mixer
+Connect mixer to outlet
+* Wait 11 blocks
+Disconnect mixer to outlet
+Build Cooler
+Connect mixer to Cooler
+Connect Cooler to outlet
+* Wait 11 blocks
+Transfer
+Assert: level == 4
+
+-------
+LEVEL 4
+_ GOALS
+- 1000 MONSTER
+- 1000 PRIME
+-------
+Build splitter #1
+Connect inlet to splitter #1
+Connect splitter to core
+Build boiler #1
+Connect Splitter to boiler
+Connect boiler to outlet
+* Wait 11 block for monster to be produced
+Build mixer #1
+Connect core piss to mixer #1
+Connect core blood to mixer #1
+Build boiler #2
+Build boiler #3
+Connect mixer to boiler #2
+Connect boiler to boiler #3
+Connect boiler #3 to outlet
+* Wait 11 blocks for Prime to be produced
+Transfer
+Assert: level == 5
+
+
+.... TODO: rest of the levels

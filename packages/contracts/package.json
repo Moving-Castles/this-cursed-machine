@@ -14,7 +14,8 @@
     "lint": "pnpm run prettier && pnpm run solhint",
     "prettier": "prettier --write 'src/**/*.sol'",
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
-    "test": "mud test"
+    "test": "mud test",
+    "test-levels": "mud test --forgeOptions='--match-contract LevelsTest'"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
@@ -26,6 +27,7 @@
     "@latticexyz/store": "2.0.0-next.13",
     "@latticexyz/world": "2.0.0-next.13",
     "@latticexyz/world-modules": "2.0.0-next.13",
+    "@latticexyz/gas-report": "2.0.0-next.13",
     "@typechain/ethers-v5": "^11.0.0",
     "@types/node": "^20.4.4",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
