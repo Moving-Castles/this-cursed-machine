@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
   import { playerCore, levels } from "../../modules/state"
+  import { showLevelModal, showMap } from "../../modules/ui/stores"
+  import { simulatedPlayerEnergy } from "../../modules/simulator"
+  import { playSound } from "../../modules/sound"
+  
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/Machines/Graph.svelte"
   import LevelModal from "../LevelModal/LevelModal.svelte"
   import Map from "../Map/Map.svelte"
-  import { showLevelModal, showMap } from "../../modules/ui/stores"
-  import { simulatedPlayerEnergy } from "../../modules/simulator"
 
   const dispatch = createEventDispatcher()
 
@@ -26,7 +28,7 @@
   }
 
   onMount(() => {
-    // playSound("tcm", "background", true, false)
+    playSound("tcm", "podBg", true, false)
   })
 </script>
 

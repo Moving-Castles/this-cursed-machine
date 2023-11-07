@@ -14,7 +14,7 @@ async function execute() {
     // ...
     writeToTerminal(OutputType.NORMAL, "Sending restart transaction...")
     await waitForCompletion(action, loadingLine);
-    playSound("tcm2", "TRX_yes")
+    playSound("tcm", "TRX_yes")
     await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;

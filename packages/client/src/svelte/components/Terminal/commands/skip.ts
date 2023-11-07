@@ -13,14 +13,14 @@ async function execute() {
     const spawnAction = spawn()
     await waitForTransaction(spawnAction, loadingSpinner)
     await waitForCompletion(spawnAction, loadingLine);
-    playSound("tcm2", "TRX_yes")
+    playSound("tcm", "TRX_yes")
     writeToTerminal(OutputType.SUCCESS, "Spawn done")
 
     writeToTerminal(OutputType.NORMAL, "Transferring")
     const restartAction = restart()
     await waitForTransaction(restartAction, loadingSpinner);
     await waitForCompletion(restartAction, loadingLine);
-    playSound("tcm2", "TRX_yes")
+    playSound("tcm", "TRX_yes")
     writeToTerminal(OutputType.SUCCESS, "Transfer done")
 
     return;

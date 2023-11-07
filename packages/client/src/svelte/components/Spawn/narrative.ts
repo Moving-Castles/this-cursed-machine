@@ -63,18 +63,18 @@ export const narrative = [
     },
     async () => {
         await writeNarrative("Your consent is important to us.")
-        playSound("tcm2", "TRX_wait_a")
+        playSound("tcm", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing contract (life-time term)")
-        playSound("tcm2", "TRX_wait_a")
+        playSound("tcm", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing non liability agreement (extreme coverage)")
-        playSound("tcm2", "TRX_wait_a")
+        playSound("tcm", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
         await writeNarrativeInfo("On-boarding in progress...")
         // Send spawn
         const action = spawn()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
-        playSound("tcm2", "TRX_yes")
+        playSound("tcm", "TRX_yes")
         // Spawn complete
         await writeNarrativeSuccess("On-boarding complete")
         await writeNarrative("Congratulations Stump #24719")
@@ -88,7 +88,7 @@ export const narrative = [
         const action = restart()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
-        playSound("tcm2", "TRX_yes")
+        playSound("tcm", "enteredPod")
         await writeNarrativeSuccess("Transfer complete")
     },
 ]

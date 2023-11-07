@@ -15,6 +15,7 @@
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI } from "./modules/ui/stores"
+  import { playSound } from "./modules/sound"
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -24,6 +25,7 @@
   import Toasts from "./components/Toast/Toasts.svelte"
 
   let unsubscribe: ReturnType<typeof writable>
+  let introSound: Howl | undefined
 
   const restart = () => {
     clearTerminalOutput()
@@ -82,10 +84,20 @@
     // Preload sounds
     initSound()
 
-    // playSound("tcm", "inner", true, false)
+    introSound = playSound("tcm", "introBg", true, true)
   })
 
   onDestroy(unsubscribe)
+
+  // Fade out intro sound when ready
+  $: if ($UIState === UI.READY) {
+    if (introSound) {
+      introSound.fade(1, 0, 1000)
+      setTimeout(() => {
+        introSound?.stop()
+      }, 1000)
+    }
+  }
 </script>
 
 <main>

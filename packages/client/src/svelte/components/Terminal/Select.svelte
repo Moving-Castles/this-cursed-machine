@@ -41,21 +41,27 @@
     switch (key) {
       case "ArrowUp":
         // Navigate to the previous option
-        playSound("tcm2", "selectionScroll")
+        playSound("tcm", "selectionScroll")
         selectedIndex = Math.max(selectedIndex - 1, 0)
         break
       case "ArrowDown":
         // Navigate to the next option
-        playSound("tcm2", "selectionScroll")
+        playSound("tcm", "selectionScroll")
         selectedIndex = Math.min(selectedIndex + 1, selectOptions.length - 1)
         break
       case "Enter":
-        playSound("tcm2", "selectionEnter")
+        if (selectOptions[selectedIndex]?.value === null) {
+          playSound("tcm", "selectionEsc")
+          // Close the options list without making a selection
+          returnValue(null)
+          break
+        }
+        playSound("tcm", "selectionEnter")
         // Select the current highlighted option
         returnValue(selectOptions[selectedIndex]?.value || null)
         break
       case "Escape":
-        playSound("tcm2", "selectionEsc")
+        playSound("tcm", "selectionEsc")
         // Close the options list without making a selection
         returnValue(null)
         break

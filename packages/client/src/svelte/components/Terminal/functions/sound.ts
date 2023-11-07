@@ -7,13 +7,13 @@ import { playSound } from "../../../modules/sound"
  */
 export function playInputSound(e: KeyboardEvent) {
     if (e.key === "Backspace") {
-        playSound("tcm2", "typingNeg")
+        playSound("tcm", "typingNeg")
     } else if (e.key === "Enter") {
-        playSound("tcm2", "typingEnter")
+        playSound("tcm", "typingEnter")
     } else {
         // Check if the key represents a single, printable character.
         if (e.key.length === 1 && e.key >= ' ' && e.key <= '~') {
-            playSound("tcm2", "typingPos2")
+            playSound("tcm", "typingPos2")
         }
     }
 }

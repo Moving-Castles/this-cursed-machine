@@ -23,7 +23,7 @@ async function execute(machineEntity: string) {
     await waitForTransaction(action, loadingSpinner)
     // ...
     await waitForCompletion(action, loadingLine);
-    playSound("tcm2", "TRX_yes")
+    playSound("tcm", "TRX_yes")
     await writeToTerminal(OutputType.SUCCESS, "Done")
     // ...
     return;
