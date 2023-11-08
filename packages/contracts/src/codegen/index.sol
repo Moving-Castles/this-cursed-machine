@@ -12,7 +12,6 @@ import { CarriedBy, CarriedByTableId } from "./tables/CarriedBy.sol";
 import { CreatedBy, CreatedByTableId } from "./tables/CreatedBy.sol";
 import { Amount, AmountTableId } from "./tables/Amount.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";
-import { ReadyBlock, ReadyBlockTableId } from "./tables/ReadyBlock.sol";
 import { BuildIndex, BuildIndexTableId } from "./tables/BuildIndex.sol";
 import { Level, LevelTableId } from "./tables/Level.sol";
 import { LastResolved, LastResolvedTableId } from "./tables/LastResolved.sol";

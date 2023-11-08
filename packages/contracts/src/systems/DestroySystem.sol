@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType, MachinesInPod } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, Energy, CarriedBy, EntityType, MachinesInPod } from "../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibEntity, LibNetwork } from "../libraries/Libraries.sol";
 
@@ -12,7 +12,6 @@ contract DestroySystem is System {
    */
   function destroy(bytes32 _machineEntity) public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(EntityType.get(_machineEntity) == ENTITY_TYPE.MACHINE, "not machine");
 
     LibNetwork.resolve(coreEntity);

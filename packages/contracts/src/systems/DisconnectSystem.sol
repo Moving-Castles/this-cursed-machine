@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { ReadyBlock, Energy, EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
+import { Energy, EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../libraries/Libraries.sol";
 
@@ -13,7 +13,6 @@ contract DisconnectSystem is System {
    */
   function disconnect(bytes32 _sourceMachine, PORT_INDEX _portIndex) public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
 
     // Resolve network
     LibNetwork.resolve(coreEntity);

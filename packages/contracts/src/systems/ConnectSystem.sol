@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { ReadyBlock, Energy, EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
+import { Energy, EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../libraries/Libraries.sol";
 
@@ -14,7 +14,6 @@ contract ConnectSystem is System {
    */
   function connect(bytes32 _sourceMachine, bytes32 _targetMachine, PORT_INDEX _portIndex) public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(EntityType.get(_sourceMachine) == ENTITY_TYPE.MACHINE, "source not machine");
     require(EntityType.get(_targetMachine) == ENTITY_TYPE.MACHINE, "target not machine");
 

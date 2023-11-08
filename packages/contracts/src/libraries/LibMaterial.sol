@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 import { EntityType, CreationBlock, CarriedBy, CreatedBy, MaterialType, Amount } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
-import { LibBox } from "./LibBox.sol";
+import { LibPod } from "./LibPod.sol";
 
 library LibMaterial {
   /**
@@ -47,7 +47,7 @@ library LibMaterial {
 
   // function getAmount(bytes32 _podEntity) internal view returns (uint32) {
   //   uint32 amount = 0;
-  //   bytes32[][] memory materials = LibBox.getMaterialsByBox(_podEntity);
+  //   bytes32[][] memory materials = LibPod.getMaterialsByBox(_podEntity);
   //   for (uint256 i = 0; i < materials.length; i++) {
   //     amount += Amount.get(materials[i][0]);
   //   }

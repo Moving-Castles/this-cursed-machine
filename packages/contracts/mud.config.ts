@@ -21,7 +21,6 @@ export default mudConfig({
         CreatedBy: "bytes32",
         Amount: "uint32",
         CreationBlock: "uint256",
-        ReadyBlock: "uint256",
         BuildIndex: "uint32",
         Level: "uint32",
         LastResolved: "uint256",
