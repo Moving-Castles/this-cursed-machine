@@ -5,6 +5,7 @@ import { playerBox, playerCore } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
+import { pulseGraph } from "../../ui/transitions"
 import {
   UIState,
   UI,

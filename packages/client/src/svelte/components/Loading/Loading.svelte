@@ -49,11 +49,15 @@
       loadingMessageElement.scrollTop = loadingMessageElement.scrollHeight
     }, 100)
   }
+
+  const onClick = () => {
+    if (import.meta.env && $ready) done()
+  }
 </script>
 
 <div class="loading-percentage">{$loadingMessage}</div>
 
-<div class="loading">
+<div on:click={onClick} class="loading">
   <div class="loading-message" bind:this={loadingMessageElement} />
 </div>
 

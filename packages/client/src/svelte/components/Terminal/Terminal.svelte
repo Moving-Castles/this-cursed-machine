@@ -294,6 +294,7 @@
 
   onMount(() => {
     cursorCharacter.set("█")
+    inputElement?.focus()
     // if (setBlink)
     //   interval = setInterval(
     //     () => cursorCharacter.set($cursorCharacter === "" ? "█" : ""),

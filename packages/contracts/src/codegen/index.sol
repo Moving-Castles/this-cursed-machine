@@ -22,4 +22,6 @@ import { OutgoingConnections, OutgoingConnectionsTableId } from "./tables/Outgoi
 import { IncomingConnections, IncomingConnectionsTableId } from "./tables/IncomingConnections.sol";
 import { MachinesInPod, MachinesInPodTableId } from "./tables/MachinesInPod.sol";
 import { MaterialsInPod, MaterialsInPodTableId } from "./tables/MaterialsInPod.sol";
+import { PerformanceRatings, PerformanceRatingsTableId } from "./tables/PerformanceRatings.sol";
+import { CompletionTime, CompletionTimeTableId } from "./tables/CompletionTime.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";

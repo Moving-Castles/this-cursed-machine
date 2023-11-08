@@ -1,14 +1,13 @@
 <script lang="ts">
-  export let align: "center" | "left" | "right" = "center"
+  import { alignTooltip, mouseX, mouseY } from "../../modules/ui/stores"
   import { onMount, onDestroy } from "svelte"
 
-  let [h, x, y] = [0, 0, 0]
+  let h = 0
 
   let alignTransformation = ""
 
   $: {
-    console.log(align)
-    switch (align) {
+    switch ($alignTooltip) {
       case "left":
         alignTransformation = "translate(-20px, 50%)"
         break
@@ -21,11 +20,6 @@
     }
   }
 
-  const onMouseMove = ({ clientX, clientY }) => {
-    x = clientX
-    y = clientY
-  }
-
   onMount(() => {
     document.body.classList.add("cursor-none")
   })
@@ -34,14 +28,12 @@
   })
 </script>
 
-<svelte:window bind:innerHeight={h} on:mousemove={onMouseMove} />
+<svelte:window bind:innerHeight={h} />
 
-<!-- style:transform="translate(-50%, -20px) translate({x}px, {h - y}px)" -->
 <div
-  style:transform="translate({x}px, {-h + y}px) {alignTransformation}"
+  style:transform="translate({$mouseX}px, {-h + $mouseY}px) {alignTransformation}"
   class="box"
 >
-  <!-- in:fly={{ y: 20, duration: 60 }} -->
   <div class="inner">
     <slot />
   </div>

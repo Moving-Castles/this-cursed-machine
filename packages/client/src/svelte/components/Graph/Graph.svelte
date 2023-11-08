@@ -1,30 +1,32 @@
 <script lang="ts">
+  import Connection from "./Connections/Connection.svelte"
+  import Machine from "./Machines/Machine.svelte"
+  import MaterialGradients from "./MaterialGradients/MaterialGradients.svelte"
+
   import { onMount } from "svelte"
-  import Tooltip from "../../Tooltip/Tooltip.svelte"
   import { draw, fade } from "svelte/transition"
-  import { range } from "../../../modules/utils/misc"
-  import ConnectionInformation from "../../Connections/ConnectionInformation.svelte"
-  import MachineInformation from "../../Machines/MachineInformation.svelte"
+  import { range } from "../../modules/utils/misc"
   import {
     EntityType,
     MaterialType,
     ConnectionState,
-  } from "../../../modules/state/enums"
+  } from "../../modules/state/enums"
   import {
     simulatedMachines,
     simulatedConnections,
     simulatedPorts,
-  } from "../../../modules/simulator"
+  } from "../../modules/simulator"
   import {
     connectionState,
     machineState,
-  } from "../../../modules/state/convenience"
-  import { MachineType } from "../../../modules/state/types"
+  } from "../../modules/state/convenience"
+  import { inspecting, alignTooltip } from "../../modules/ui/stores"
+  import { MachineType } from "../../modules/state/types"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
   import { select, selectAll } from "d3-selection"
   import { drag } from "d3-drag"
-  import { MACHINE_SIZE, data, x1, y1, x2, y2 } from "./index"
+  import { MACHINE_SIZE, data, x1, y1, x2, y2 } from "./Machines/index"
   import { zoom } from "d3-zoom"
   import {
     forceSimulation,
@@ -51,11 +53,9 @@
     zoom,
   }
 
-  let align = "center"
   let svg
   let width = 0
   let height = 0
-  let inspecting = null
 
   let [nodes, links] = [[], []]
 
@@ -85,17 +85,39 @@
     })
 
   const onNodeOrConnectionMouseEnter = (e, entry, a) => {
-    align = "center"
+    $alignTooltip = "center"
     if (entry.entityType === EntityType.MACHINE) {
-      if (entry.machineType === MachineType.INLET) align = "left"
-      if (entry.machineType === MachineType.OUTLET) align = "right"
+      if (entry.machineType === MachineType.INLET) $alignTooltip = "left"
+      if (entry.machineType === MachineType.OUTLET) $alignTooltip = "right"
     }
 
-    console.log("ALIGN: ", align)
-    inspecting = { ...entry, address: a }
+    $inspecting = { ...entry, address: a }
+  }
+
+  const distributeGaps = (node, dashSize = 20) => {
+    // Calculate the total length of the path
+    const totalLength = node.getTotalLength()
+
+    // Calculate the number of dashes that can fit into the path
+    const dashCount = Math.floor(totalLength / (dashSize * 2))
+
+    // Calculate the size of the gaps to distribute the remaining space
+    const gapSize = (totalLength - dashSize * dashCount) / dashCount
+
+    // Apply the stroke-dasharray
+    node.setAttribute("stroke-dasharray", `${dashSize} ${gapSize}`)
+
+    // Cleanup function
+    return {
+      destroy() {
+        // Remove the stroke-dasharray when the element is destroyed
+        node.removeAttribute("stroke-dasharray")
+      },
+    }
   }
 
   const groupScale = node => {
+    let scale = 1
     const check = () => {
       node.style.transform = ""
       const { width: w, height: h } = node.getBoundingClientRect()
@@ -104,7 +126,12 @@
       const ratioW = (parentW - MACHINE_SIZE) / w
       const ratioH = (parentH - MACHINE_SIZE) / h
 
-      node.style.transform = `scale(${Math.min(ratioW, ratioH)})`
+      const newScale = Math.min(ratioW, ratioH)
+
+      if (scale - newScale > 0.1 || newScale - scale <= -0.1) {
+        node.style.transform = `scale(${newScale})`
+      }
+      scale = newScale
     }
     let tickscale = setInterval(check)
     return {
@@ -114,29 +141,9 @@
     }
   }
 
-  const inletOutletOrCore = d => {
-    return (
-      d.entry.machineType === MachineType.INLET ||
-      d.entry.machineType === MachineType.OUTLET ||
-      d.entry.machineType === MachineType.CORE
-    )
-  }
-
   const linkColor = entry => {
     if (entry?.inputs) {
       return `var(--${
-        entry.product?.materialType
-          ? MaterialType[entry.product?.materialType]
-          : "STATE_INACTIVE"
-      })`
-    } else {
-      return "var(--STATE_INACTIVE)"
-    }
-  }
-
-  const linkGradient = entry => {
-    if (entry?.inputs) {
-      return `url(#gradient-${
         entry.product?.materialType
           ? MaterialType[entry.product?.materialType]
           : "STATE_INACTIVE"
@@ -211,20 +218,6 @@
 
 <svelte:window on:resize={resize} />
 
-{#if inspecting}
-  <Tooltip {align}>
-    {#if inspecting?.entityType === EntityType.MACHINE}
-      <MachineInformation address={inspecting.address} machine={inspecting} />
-    {/if}
-    {#if inspecting?.entityType === EntityType.CONNECTION}
-      <ConnectionInformation
-        address={inspecting.address}
-        connection={inspecting}
-      />
-    {/if}
-  </Tooltip>
-{/if}
-
 <div class="wrapper" bind:clientWidth={width} bind:clientHeight={height}>
   <svg
     bind:this={svg}
@@ -232,20 +225,8 @@
     style:height="{height}px"
     viewBox={[-width / 2, -height / 2, width, height]}
   >
-    <defs>
-      {#each Object.keys(MaterialType).filter(t => typeof parseInt(t) === "number") as type}
-        <linearGradient
-          id="gradient-{MaterialType[type]}"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="0%"
-        >
-          <stop offset="0%" stop-color="var(--{MaterialType[type]})" />
-          <stop offset="100%" stop-color="var(--STATE_INACTIVE)" />
-        </linearGradient>
-      {/each}
-    </defs>
+    <MaterialGradients />
+
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
       {#each links as link (link.id)}
@@ -254,21 +235,18 @@
           on:mouseenter={e => {
             onNodeOrConnectionMouseEnter(e, link.entry, link.address)
           }}
-          on:mouseleave={() => (inspecting = null)}
+          on:mouseleave={() => ($inspecting = null)}
           class="machine-connection {ConnectionState[
             connectionState(link.entry)
           ]}"
           style:color={linkColor(link.entry)}
         >
-          <path
-            class="path"
-            in:draw={{ duration: 700 }}
-            out:draw={{ duration: 300 }}
+          <Connection
             d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
               links,
               link
             )} ${y2(links, link, d3yScale)}`}
-            fill="none"
+            state={connectionState(link.entry)}
             stroke={linkColor(link.entry)}
             transform="translate(0 {height}) scale(1 -1)"
           />
@@ -277,86 +255,23 @@
       <!-- END LINKS -->
 
       <!-- NODES -->
-      {#each nodes as d (d.id)}
+      {#each nodes as node (node.id)}
         <g
           out:fade
-          class="node {ConnectionState[machineState(d.address)]} {MachineType[
-            d.entry.machineType
-          ]}"
-          style:animation-delay="{Math.random() * -10}s"
-          id={d.id}
+          class="node {ConnectionState[
+            machineState(node.address)
+          ]} {MachineType[node.entry.machineType]}"
+          id={node.id}
         >
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          {#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
-            <rect
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              fill="black"
-            />
-            <image
-              class="{ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              href="/images/machines/{MachineType[d.entry.machineType]}.png"
-            />
-            <rect
-              on:mouseenter={e => {
-                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
-              }}
-              on:mouseleave={() => (inspecting = null)}
-              x={d.x - MACHINE_SIZE / 2}
-              y={d.y - MACHINE_SIZE / 2}
-              width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-              stroke={connectionState(d.entry) === ConnectionState.CONNECTED ||
-              connectionState(d.entry) === ConnectionState.FLOWING
-                ? "white"
-                : "var(--STATE_INACTIVE)"}
-              stroke-width="2"
-              fill="transparent"
-            />
-          {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
-            <rect
-              on:mouseenter={e => {
-                onNodeOrConnectionMouseEnter(e, d.entry, d.address)
-              }}
-              on:mouseleave={() => (inspecting = null)}
-              class="{ConnectionState[
-                machineState(d.address)
-              ]} MACHINE_{MachineType[d.entry.machineType]}"
-              x={d.x - 20}
-              y={d.y - 20}
-              width={40}
-              height={40}
-              fill="var(--{$simulatedMachines[d.address]?.product?.materialType
-                ? MaterialType[
-                    $simulatedMachines[d.address]?.product?.materialType
-                  ]
-                : 'STATE_INACTIVE'})"
-              stroke="white"
-              stroke-width="2"
-            />
-          {/if}
-
-          {#if d.entry.buildIndex}
-            <rect
-              fill="white"
-              x={d.x + 16}
-              y={d.y + 15}
-              width="20"
-              height="20"
-            />
-            <text fill="black" font-size="12px" x={d.x + 18} y={d.y + 30}>
-              #{d.entry.buildIndex}
-            </text>
-          {/if}
-          <!-- <title>{MachineType[d.entry.machineType]}</title> -->
+          <Machine
+            on:mouseenter={e => {
+              onNodeOrConnectionMouseEnter(e, node.entry, node.address)
+            }}
+            on:mouseleave={() => ($inspecting = null)}
+            {MACHINE_SIZE}
+            d={node}
+            state={machineState(node.address)}
+          />
         </g>
       {/each}
       <!-- END NODES -->
@@ -381,22 +296,16 @@
     pointer-events: none;
   }
 
-  .machine-connection,
-  .machine-connection :global(path) {
-    stroke-dasharray: 20, 1; /* This should be at least the length of the longest path. */
-    stroke-dashoffset: 80; /* Hide the line initially. */
-    stroke-opacity: 1;
-    stroke-width: 12;
-    stroke-linecap: "round";
+  .node-image.FLOWING {
+    /* animation: flowAnimation 1s ease forwards infinite; */
   }
-
   .machine-connection.FLOWING,
   .machine-connection.FLOWING path {
-    animation: flowAnimation 1s ease forwards infinite;
+    /* animation: flowAnimation 1s ease forwards infinite; */
   }
 
   path {
-    transition: stroke 0.3s ease;
+    /* transition: stroke 0.3s ease; */
   }
 
   @keyframes vibrate {
@@ -537,8 +446,25 @@
       transform: scale(1);
     }
     40% {
-      transform: scale(1.1);
+      transform: scale(1.01);
     }
+  }
+
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(-12deg);
+    }
+    100% {
+      transform: rotate(12deg);
+    }
+  }
+
+  svg .node,
+  svg .node-image,
+  svg .rect,
+  svg .node-rect {
+    transform-origin: center; /* or transform-origin: 50% */
+    transform-box: fill-box;
   }
 
   .node {
@@ -554,16 +480,13 @@
     filter: grayscale(0) brightness(1) contrast(1);
   }
 
-  .node:not(.INLET):not(.OUTLET).FLOWING {
-    animation: vibrate 4s infinite, growAnimation 1s infinite;
-  }
-
   .MACHINE_NONE {
     background-image: url("/images/machines/NONE.png");
   }
   .MACHINE_INLET {
     background-image: url("/images/machines/INLET.png");
   }
+
   .MACHINE_OUTLET {
     background-image: url("/images/machines/OUTLET.png");
   }
