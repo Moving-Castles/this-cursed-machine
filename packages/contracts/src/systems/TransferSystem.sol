@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MaterialType, Amount } from "../codegen/index.sol";
+import { Level, CarriedBy, Energy, EntityType, CreationBlock, MaterialType, Amount, CompletionTime, PerformanceRatings } from "../codegen/index.sol";
 import { PORT_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial, LibConnection } from "../libraries/Libraries.sol";
 
@@ -31,7 +31,22 @@ contract TransferSystem is System {
     // Transfer goal materials to warehouse
     LibGoal.transferToWarehouse(coreEntity);
 
-    // @todo: calculate performance score
+    // Calculate performance score
+    // 100 - ((goal material amount - produced material amount) / 20)
+    // uint32 goalMaterialAmount = LibGoal.getAmount(Level.get(coreEntity));
+    // uint32 producedMaterialAmount = LibMaterial.getAmount(CarriedBy.get(coreEntity));
+    // uint32 modidfier = goalMaterialAmount > producedMaterialAmount
+    //   ? 0
+    //   : (goalMaterialAmount - producedMaterialAmount) / 20;
+    // uint32 performanceRating = 100 - modidfier;
+    // uint32 performanceRating = 100;
+    // uint32[] memory currentPerformanceRatings = PerformanceRatings.get(coreEntity);
+    // uint32[] memory newPerformanceRatings = new uint32[](currentPerformanceRatings.length + 1);
+    // for (uint256 i = 0; i < currentPerformanceRatings.length; i++) {
+    //   newPerformanceRatings[i] = currentPerformanceRatings[i];
+    // }
+    // newPerformanceRatings[newPerformanceRatings.length - 1] = performanceRating;
+    // PerformanceRatings.set(coreEntity, newPerformanceRatings);
 
     // Destroy all output in box
     bytes32[][] memory boxOutputs = LibBox.getMaterialsByBox(CarriedBy.get(coreEntity));
@@ -44,8 +59,13 @@ contract TransferSystem is System {
 
     if (newLevel == 8) {
       // Core is at level 8, progression done
+
+      // Set completion time
+      CompletionTime.set(coreEntity, block.timestamp - CreationBlock.get(CarriedBy.get(coreEntity)));
+
       // Remove core from box
       CarriedBy.deleteRecord(coreEntity);
+
       // @todo Destroy old box
 
       // Return null-pod

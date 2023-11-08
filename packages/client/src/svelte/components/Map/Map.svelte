@@ -9,7 +9,7 @@
     }
   }
   const hide = () => {
-    playSound("tcm2", "selectionEsc")
+    playSound("tcm", "selectionEsc")
     showMap.set(false)
   }
 </script>

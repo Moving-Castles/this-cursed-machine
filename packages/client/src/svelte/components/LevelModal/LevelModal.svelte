@@ -22,7 +22,7 @@
   }
 
   onMount(() => {
-    playSound("tcm2", "TRX_yes")
+    playSound("tcm", "TRX_yes")
   })
 </script>
 
