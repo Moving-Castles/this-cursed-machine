@@ -106,27 +106,15 @@ library LibMachine {
   function mixer(Product[] memory _inputs) internal view returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](1);
 
-    // console.log("_______ mixer");
-    // console.log("_inputs.length");
-    // console.log(_inputs.length);
-
     if (_inputs.length != 2) {
       // console.log("ERROR: mixer requires 2 inputs");
       return outputs;
     }
 
-    // console.log("material 1");
-    // console.log(uint256(_inputs[0].materialType));
-    // console.log("material 2");
-    // console.log(uint256(_inputs[1].materialType));
-
     MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
-
-    // console.log("resultMaterialType");
-    // console.log(uint256(resultMaterialType));
 
     outputs[0] = Product({
       machineId: _inputs[0].machineId,

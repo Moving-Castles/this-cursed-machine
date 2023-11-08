@@ -110,4 +110,57 @@ library LibUtils {
 
     return ((a + b) * (a + b + 1)) / 2 + b;
   }
+
+  /**
+   * @dev Adds a new `bytes32` element to an existing array of `bytes32` elements and returns a new array with the added element.
+   * @param array The original array of `bytes32` elements.
+   * @param element The `bytes32` element to be added to the array.
+   * @return newArray The new array containing all elements of the original array plus the new element added at the end.
+   */
+  function addToArray(bytes32[] memory array, bytes32 element) internal pure returns (bytes32[] memory) {
+    bytes32[] memory newArray = new bytes32[](array.length + 1);
+    for (uint256 i = 0; i < array.length; i++) {
+      newArray[i] = array[i];
+    }
+    newArray[array.length] = element;
+    return newArray;
+  }
+
+  /**
+   * @dev Removes an element from an array of `bytes32` if it exists and returns the new array.
+   * @param array The original array of `bytes32` elements.
+   * @param element The `bytes32` element to be removed from the array.
+   * @return newArray The new array containing all elements of the original array except for the removed element.
+   */
+  function removeFromArray(bytes32[] memory array, bytes32 element) internal pure returns (bytes32[] memory) {
+    // Determine if the element exists and the index of the element to be removed
+    bool found = false;
+    uint256 foundIndex = 0;
+    for (uint256 i = 0; i < array.length; i++) {
+      if (array[i] == element) {
+        found = true;
+        foundIndex = i;
+        break;
+      }
+    }
+
+    // If the element was not found, return the original array
+    if (!found) {
+      return array;
+    }
+
+    // Create a new array of length `array.length - 1` to store the result
+    bytes32[] memory newArray = new bytes32[](array.length - 1);
+
+    // Copy elements from the original array to the new array, skipping the removed element
+    uint256 j = 0;
+    for (uint256 i = 0; i < array.length; i++) {
+      if (i != foundIndex) {
+        newArray[j] = array[i];
+        j++;
+      }
+    }
+
+    return newArray;
+  }
 }

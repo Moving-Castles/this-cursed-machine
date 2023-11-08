@@ -10,20 +10,20 @@ library LibMaterial {
    * @dev Generates a unique identifier for the material, setting its properties and linking it to box and core entities
    * @param _materialType The type of material to create
    * @param _scaledAmount The scaled amount of the material
-   * @param _boxEntity The identifier of the box entity that will carry the material
+   * @param _podEntity The identifier of the box entity that will carry the material
    * @param _coreEntity The identifier of the core entity responsible for creating the material
    * @return materialEntity The unique identifier for the newly created material entity
    */
   function create(
     MATERIAL_TYPE _materialType,
     uint32 _scaledAmount,
-    bytes32 _boxEntity,
+    bytes32 _podEntity,
     bytes32 _coreEntity
   ) internal returns (bytes32) {
     bytes32 materialEntity = LibUtils.getRandomKey();
     EntityType.set(materialEntity, ENTITY_TYPE.MATERIAL);
     CreationBlock.set(materialEntity, block.number);
-    CarriedBy.set(materialEntity, _boxEntity);
+    CarriedBy.set(materialEntity, _podEntity);
     CreatedBy.set(materialEntity, _coreEntity);
     MaterialType.set(materialEntity, _materialType);
     Amount.set(materialEntity, _scaledAmount);

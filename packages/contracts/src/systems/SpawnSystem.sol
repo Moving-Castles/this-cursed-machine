@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { CarriedBy, GameConfig, GameConfigData } from "../codegen/index.sol";
 import { LibUtils, LibCore } from "../libraries/Libraries.sol";
 
 contract SpawnSystem is System {

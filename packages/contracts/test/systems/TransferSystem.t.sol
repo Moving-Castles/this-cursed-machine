@@ -4,7 +4,7 @@ import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, PORT_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE } from "../../src/codegen/common.sol";
 
 contract TransferSystemTest is MudTest {
   IWorld world;

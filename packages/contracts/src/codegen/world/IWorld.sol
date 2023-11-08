@@ -6,12 +6,13 @@ pragma solidity >=0.8.21;
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
 import { IBuildSystem } from "./IBuildSystem.sol";
-import { IConnectionSystem } from "./IConnectionSystem.sol";
+import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
+import { IDisconnectSystem } from "./IDisconnectSystem.sol";
 import { IInit2System } from "./IInit2System.sol";
 import { IInitSystem } from "./IInitSystem.sol";
 import { INameSystem } from "./INameSystem.sol";
-import { IResolutionSystem } from "./IResolutionSystem.sol";
+import { IResolveSystem } from "./IResolveSystem.sol";
 import { IRestartSystem } from "./IRestartSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { ITransferSystem } from "./ITransferSystem.sol";
@@ -25,12 +26,13 @@ import { ITransferSystem } from "./ITransferSystem.sol";
 interface IWorld is
   IBaseWorld,
   IBuildSystem,
-  IConnectionSystem,
+  IConnectSystem,
   IDestroySystem,
+  IDisconnectSystem,
   IInit2System,
   IInitSystem,
   INameSystem,
-  IResolutionSystem,
+  IResolveSystem,
   IRestartSystem,
   ISpawnSystem,
   ITransferSystem

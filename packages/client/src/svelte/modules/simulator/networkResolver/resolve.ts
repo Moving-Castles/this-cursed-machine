@@ -11,9 +11,9 @@ import { playerEnergyMod } from ".."
  * This function simulates a process within a system of machines that interact with each other.
  * It processes the materials through the network of machines until all machines are resolved.
  *
- * @param _boxEntity - Identifier for the box entity to be resolved.
+ * @param _podEntity - Identifier for the box entity to be resolved.
  */
-export function resolve(_boxEntity: string) {
+export function resolve(_podEntity: string) {
   // console.log('############################')
   // console.log('############################')
 

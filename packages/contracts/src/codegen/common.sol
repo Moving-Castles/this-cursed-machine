@@ -10,9 +10,7 @@ enum ENTITY_TYPE {
   GOAL,
   BOX,
   MACHINE,
-  CONNECTION,
-  MATERIAL,
-  PORT
+  MATERIAL
 }
 
 enum MACHINE_TYPE {
@@ -50,8 +48,7 @@ enum MATERIAL_TYPE {
   ERASERBABY
 }
 
-enum PORT_TYPE {
-  NONE,
-  INPUT,
-  OUTPUT
+enum PORT_INDEX {
+  FIRST,
+  SECOND
 }

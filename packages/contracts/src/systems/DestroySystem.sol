@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType } from "../codegen/index.sol";
-import { PORT_TYPE, MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibEntity, LibPort, LibNetwork, LibConnection } from "../libraries/Libraries.sol";
+import { ReadyBlock, GameConfig, GameConfigData, Energy, CarriedBy, EntityType, MachinesInPod } from "../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
+import { LibUtils, LibEntity, LibNetwork } from "../libraries/Libraries.sol";
 
 contract DestroySystem is System {
   /**
@@ -15,39 +15,16 @@ contract DestroySystem is System {
     require(ReadyBlock.get(coreEntity) <= block.number, "core in cooldown");
     require(EntityType.get(_machineEntity) == ENTITY_TYPE.MACHINE, "not machine");
 
-    LibNetwork.resolve(CarriedBy.get(coreEntity));
+    LibNetwork.resolve(coreEntity);
 
     // Destroy machine entity
     LibEntity.destroy(_machineEntity);
 
-    // Get ports of machine
-    bytes32[][] memory inputPorts = LibPort.getPorts(_machineEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory outputPorts = LibPort.getPorts(_machineEntity, PORT_TYPE.OUTPUT);
+    bytes32 podEntity = CarriedBy.get(coreEntity);
 
-    // Input ports
-    for (uint i; i < inputPorts.length; i++) {
-      // Destroy port
-      LibPort.destroy(inputPorts[i][0]);
+    // Remove it from the list of machines
+    MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));
 
-      bytes32 incomingConnection = LibConnection.getIncoming(inputPorts[i][0]);
-
-      if (incomingConnection != bytes32(0)) {
-        // Destroy connection
-        LibConnection.destroy(incomingConnection);
-      }
-    }
-
-    // Output ports
-    for (uint i; i < outputPorts.length; i++) {
-      // Destroy port
-      LibPort.destroy(outputPorts[i][0]);
-
-      bytes32 outgoingConnection = LibConnection.getOutgoing(outputPorts[i][0]);
-
-      if (outgoingConnection != bytes32(0)) {
-        // Destroy connection
-        LibConnection.destroy(outgoingConnection);
-      }
-    }
+    // @todo remove enity from incomingconnections on other machines
   }
 }

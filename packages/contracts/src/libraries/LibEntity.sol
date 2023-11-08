@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { PortType, CarriedBy, EntityType, MachineType, BuildIndex } from "../codegen/index.sol";
+import { EntityType, MachineType, BuildIndex, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
@@ -14,6 +14,27 @@ library LibEntity {
     bytes32 entity = LibUtils.getRandomKey();
     EntityType.set(entity, ENTITY_TYPE.MACHINE);
     MachineType.set(entity, _machineType);
+
+    // Set ports on machine
+    // - - - - - - - - - - - -
+    // SPLITTER:  1 IN, 2 OUT
+    // MIXER:     2 IN, 1 OUT
+    // WETTER:    1 IN, 1 OUT
+    // DRYER:     1 IN, 1 OUT
+    // BOILER:    1 IN, 1 OUT
+    // COOLER:    1 IN, 1 OUT
+
+    if (_machineType == MACHINE_TYPE.SPLITTER) {
+      IncomingConnections.set(entity, new bytes32[](1));
+      OutgoingConnections.set(entity, new bytes32[](2));
+    } else if (_machineType == MACHINE_TYPE.MIXER) {
+      IncomingConnections.set(entity, new bytes32[](2));
+      OutgoingConnections.set(entity, new bytes32[](1));
+    } else {
+      IncomingConnections.set(entity, new bytes32[](1));
+      OutgoingConnections.set(entity, new bytes32[](1));
+    }
+
     return entity;
   }
 
@@ -25,6 +46,8 @@ library LibEntity {
     EntityType.deleteRecord(_entity);
     MachineType.deleteRecord(_entity);
     BuildIndex.deleteRecord(_entity);
+    IncomingConnections.deleteRecord(_entity);
+    OutgoingConnections.deleteRecord(_entity);
   }
 
   /**
