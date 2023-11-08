@@ -27,8 +27,8 @@ declare global {
     incomingConnections?: string[]
     machinesInPod?: string[]
     materialsInPod?: string[]
-    performanceRatings?: number[],
-    completionTime?: number,
+    LevelStartBlock?: number
+    completionTimes?: number[]
     gameConfig?: GameConfig
   }
 
@@ -86,8 +86,8 @@ declare global {
     carriedBy: string
     incomingConnections: string[]
     outgoingConnections: string[]
-    performanceRatings?: number[],
-    completionTime?: number
+    LevelStartBlock: number
+    completionTimes: number[]
   }
 
   type Machine = {

@@ -44,13 +44,4 @@ library LibMaterial {
     MaterialType.deleteRecord(_materialEntity);
     Amount.deleteRecord(_materialEntity);
   }
-
-  // function getAmount(bytes32 _podEntity) internal view returns (uint32) {
-  //   uint32 amount = 0;
-  //   bytes32[][] memory materials = LibPod.getMaterialsByBox(_podEntity);
-  //   for (uint256 i = 0; i < materials.length; i++) {
-  //     amount += Amount.get(materials[i][0]);
-  //   }
-  //   return amount;
-  // }
 }

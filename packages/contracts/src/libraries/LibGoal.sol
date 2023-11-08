@@ -61,15 +61,15 @@ library LibGoal {
     return true;
   }
 
-  // function getAmount(uint32 _level) internal view returns (uint32) {
-  //   bytes32[][] memory goals = getGoals(_level);
-  //   uint32 amount;
-  //   for (uint i; i < goals.length; i++) {
-  //     if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
-  //     amount += Amount.get(goals[i][0]);
-  //   }
-  //   return amount;
-  // }
+  function getAmount(uint32 _level) internal view returns (uint32) {
+    bytes32[][] memory goals = getGoals(_level);
+    uint32 amount;
+    for (uint i; i < goals.length; i++) {
+      if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
+      amount += Amount.get(goals[i][0]);
+    }
+    return amount;
+  }
 
   /**
    * @notice Retrieves the goal entities associated with a specified level.

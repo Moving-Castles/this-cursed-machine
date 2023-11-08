@@ -30,8 +30,8 @@ export default mudConfig({
         IncomingConnections: "bytes32[]",
         MachinesInPod: "bytes32[]",
         MaterialsInPod: "bytes32[]",
-        PerformanceRatings: "uint32[]",
-        CompletionTime: "uint256",
+        CompletionTimes: "uint256[]",
+        LevelStartBlock: "uint256",
         GameConfig: {
             keySchema: {},
             valueSchema: {

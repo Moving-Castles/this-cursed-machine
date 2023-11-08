@@ -120,6 +120,9 @@ contract LevelsTest is MudTest, GasReporter {
 
     startGasReport("Test level 2");
 
+    // Warp to level
+    world.warp(2);
+
     // Connect inlet to core
     world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
     // Connect core piss port to outlet
@@ -157,8 +160,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 3
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 3);
+    assertEq(Level.get(coreEntity), 3);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -180,6 +182,9 @@ contract LevelsTest is MudTest, GasReporter {
     vm.startPrank(alice);
 
     startGasReport("Test level 3");
+
+    // Warp to level
+    world.warp(3);
 
     // Connect inlet to core
     world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
@@ -228,8 +233,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 4
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 4);
+    assertEq(Level.get(coreEntity), 4);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -251,6 +255,9 @@ contract LevelsTest is MudTest, GasReporter {
     vm.startPrank(alice);
 
     startGasReport("Test level 4");
+
+    // Warp to level
+    world.warp(4);
 
     // Build splitter #1
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
@@ -312,8 +319,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 5
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 5);
+    assertEq(Level.get(coreEntity), 5);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -335,6 +341,9 @@ contract LevelsTest is MudTest, GasReporter {
     vm.startPrank(alice);
 
     startGasReport("Test level 5");
+
+    // Warp to level
+    world.warp(5);
 
     // Build mixer #1
     bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
@@ -398,7 +407,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 6
-    // assertEq(Level.get(coreEntity), 6);
+    assertEq(Level.get(coreEntity), 6);
 
     endGasReport();
 
@@ -418,6 +427,9 @@ contract LevelsTest is MudTest, GasReporter {
     vm.startPrank(alice);
 
     startGasReport("Test level 6");
+
+    // Warp to level
+    world.warp(6);
 
     // Build splitter #1
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
@@ -495,7 +507,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 6
-    // assertEq(Level.get(coreEntity), 6);
+    assertEq(Level.get(coreEntity), 7);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -516,6 +528,9 @@ contract LevelsTest is MudTest, GasReporter {
     vm.startPrank(alice);
 
     startGasReport("Test level 7");
+
+    // Warp to level
+    world.warp(7);
 
     // Build splitter #1
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
@@ -611,10 +626,10 @@ contract LevelsTest is MudTest, GasReporter {
     // * * * * * * * * * * * * * * * * * * *
 
     // Transfer
-    world.transfer();
+    world.complete();
 
     // Assert: level == 8
-    // assertEq(Level.get(coreEntity), 8);
+    assertEq(Level.get(coreEntity), 8);
 
     // * * * * * * * * * * * * * * * * * * *
 

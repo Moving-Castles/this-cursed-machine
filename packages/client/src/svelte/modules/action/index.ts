@@ -5,6 +5,7 @@ export enum WorldFunctions {
   Spawn = "spawn",
   Restart = "restart",
   Transfer = "transfer",
+  Complete = "complete",
   Connect = "connect",
   Disconnect = "disconnect",
   Build = "build",
@@ -25,6 +26,10 @@ export function restart() {
 
 export function transfer() {
   return addToSequencer(WorldFunctions.Transfer, [])
+}
+
+export function complete() {
+  return addToSequencer(WorldFunctions.Complete, [])
 }
 
 export function connect(

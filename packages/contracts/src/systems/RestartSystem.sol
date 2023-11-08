@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod } from "../codegen/index.sol";
+import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock } from "../codegen/index.sol";
 import { MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity } from "../libraries/Libraries.sol";
 
@@ -36,6 +36,9 @@ contract RestartSystem is System {
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), outletEntity));
+
+    // Set level start block
+    LevelStartBlock.set(coreEntity, block.number);
 
     return podEntity;
   }
