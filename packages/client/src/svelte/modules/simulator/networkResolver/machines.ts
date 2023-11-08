@@ -25,7 +25,7 @@ const EMPTY_PRODUCT: Product = {
  * @param {Product[]} inputs - An array of products to be processed.
  * @returns {Product[]} An array containing the processed products.
  */
-export function process(machineType: MachineType, inputs: Product[]) {
+export function process(machineType: MachineType, inputs: Product[]): Product[] {
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MachineType.CORE) {
     return core(inputs)

@@ -17,8 +17,8 @@ library LibPod {
    */
   function create() internal returns (bytes32) {
     bytes32 podEntity = LibUtils.getRandomKey();
-    CreationBlock.set(podEntity, block.number);
     EntityType.set(podEntity, ENTITY_TYPE.BOX);
+    CreationBlock.set(podEntity, block.number);
     LastResolved.set(podEntity, block.number);
     return podEntity;
   }

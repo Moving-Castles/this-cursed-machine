@@ -31,7 +31,7 @@ library LibNetwork {
     // Counter for the number of iterations over the network
     uint32 counter;
 
-    // Get all machines in the box
+    // Get all machines in the pod
     bytes32[] memory machines = MachinesInPod.get(podEntity);
 
     // List to keep track of nodes (machines) that have processed their inputs

@@ -1,4 +1,4 @@
-import { MachineType } from "../state/enums"
+import { MachineType, PortIndex } from "../state/enums"
 import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
@@ -28,17 +28,19 @@ export function transfer() {
 }
 
 export function connect(
-  sourcePort: string,
-  targetPort: string
+  sourceMachine: string,
+  targetMachine: string,
+  portIndex: PortIndex
 ) {
   return addToSequencer(WorldFunctions.Connect, [
-    sourcePort,
-    targetPort,
+    sourceMachine,
+    targetMachine,
+    portIndex
   ])
 }
 
-export function disconnect(connectionEntity: string) {
-  return addToSequencer(WorldFunctions.Disconnect, [connectionEntity])
+export function disconnect(sourceMachine: string, portIndex: PortIndex) {
+  return addToSequencer(WorldFunctions.Disconnect, [sourceMachine, portIndex])
 }
 
 export function build(machineType: MachineType) {

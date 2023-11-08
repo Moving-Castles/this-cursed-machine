@@ -1,12 +1,9 @@
 import { get } from "svelte/store"
 import {
-  simulatedMachines,
-  simulatedConnections,
-  simulatedPorts,
+  simulatedMachines
 } from "../simulator"
-import { connections } from "./index"
 import { ConnectionState, MaterialType } from "../state/enums"
-import { MachineType, PortType } from "./types"
+import { MachineType } from "./types"
 
 /**
  * Get the machine this connection runs from
@@ -101,46 +98,6 @@ export const machinePorts = (machineId: string, portType?: PortType) => {
   const availablePorts = sourcePorts.filter(([id, _]) => !isPortOccupied(id))
 
   return [occupiedPorts, availablePorts]
-}
-
-/**
- * Check if the port belongs to this box
- *
- * @param port Port
- * @param boxAddress address
- * @returns
- */
-export const portBelongsToBox = (port: Port, boxAddress: string) => {
-  // Checks if the source port is on a machine that is in that box
-  const machines = get(simulatedMachines)
-
-  const sourceMachine = machines[port?.carriedBy]
-  return sourceMachine?.carriedBy === boxAddress
-}
-
-/**
- * Check if the connection belongs to this box
- *
- * @param connection Connection
- * @param boxAddress address
- * @returns
- */
-export const connectionBelongsToBox = (
-  connection: Connection,
-  boxAddress: string
-) => {
-  // Checks if the source port is on a machine that is in that box
-  const ports = get(simulatedPorts)
-  const machines = get(simulatedMachines)
-
-  const sourcePort = ports[connection.sourcePort]
-
-  if (sourcePort) {
-    const sourceMachine = machines[sourcePort?.carriedBy]
-    return sourceMachine?.carriedBy === boxAddress
-  }
-
-  return false
 }
 
 const dfs = (
