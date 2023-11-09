@@ -58,8 +58,6 @@
 
   let [nodes, links] = [[], []]
 
-  $: console.log($simulatedConnections)
-
   // Initialize forces
   const linkForce = d3
     .forceLink()
@@ -157,7 +155,7 @@
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
 
   $: {
-    const graph = data($simulatedMachines)
+    const graph = data($simulatedMachines, $simulatedConnections)
 
     // Update nodes
     graph.nodes.forEach(newNode => {
@@ -187,6 +185,7 @@
 
     // Update links
     graph.links.forEach(newLink => {
+      console.log("NEW LINK ", newLink)
       const existingLink = links.find(link => link.id === newLink.id)
       if (existingLink) {
         Object.assign(existingLink, newLink) // Update existing link

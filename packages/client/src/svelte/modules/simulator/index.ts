@@ -6,9 +6,10 @@ import { EMPTY_CONNECTION } from "../state"
 import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
+import { v4 as uuid } from "uuid"
 import { entities, playerBox, playerEntityId, playerCore } from "../state"
 import { blockNumber } from "../network"
-import type { SimulatedEntities, BoxOutputs } from "./types"
+import type { SimulatedEntities, BoxOutputs, Connection } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -130,20 +131,23 @@ export const simulatedMachines = derived(
   }
 )
 
-/** Connections */
+/** Connections @returns Connection[] */
 export const simulatedConnections = derived(
   [simulatedMachines],
   ([$simulatedMachines]) => {
     let connections: Connection[] = []
 
-    Object.entries($simulatedMachines).forEach(([address, machine]) => {
-      console.log("Machine")
-      console.log(address, machine)
-
-      machine.outgoingConnections?.forEach(address => {
-        if (address === EMPTY_CONNECTION) return
-        const targetMachine = $simulatedMachines[address]
-        console.log("targeting machine", targetMachine)
+    Object.entries($simulatedMachines).forEach(([sourceAddress, machine]) => {
+      machine.outgoingConnections?.forEach((targetAddress, i) => {
+        if (targetAddress === EMPTY_CONNECTION) return
+        const sourceMachine = $simulatedMachines[sourceAddress]
+        const product = sourceMachine?.outputs[i]
+        connections.push({
+          id: uuid(),
+          sourceMachine: sourceAddress,
+          targetMachine: targetAddress,
+          product,
+        })
       })
     })
 

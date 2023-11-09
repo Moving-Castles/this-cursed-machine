@@ -1,8 +1,12 @@
 import { EntityType } from "../../../modules/state/enums"
+import type { Connection } from "../../../modules/simulator/types"
 
 export const MACHINE_SIZE = 80
 
-export function data(simulatedMachines: Entity[]) {
+export function data(
+  simulatedMachines: Entity[],
+  simulatedConnections: Connection[]
+) {
   return {
     nodes: [
       ...Object.entries(simulatedMachines).map(([key, entry]) => ({
@@ -12,7 +16,14 @@ export function data(simulatedMachines: Entity[]) {
         group: EntityType.MACHINE,
       })),
     ],
-    links: [],
+    links: simulatedConnections.map(entry => ({
+      id: `Connection-${entry.id}`,
+      address: entry.id,
+      entry,
+      source: `Machine-${entry.sourceMachine}`,
+      target: `Machine-${entry.targetMachine}`,
+      group: EntityType.CONNECTION,
+    })),
   }
 }
 
