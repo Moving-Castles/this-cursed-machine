@@ -63,23 +63,25 @@ const dfs = (
     return flowingConnections
   }
 
-  for (const connection of connections) {
-    const nextMachineUID = connection.targetMachine
-    const subFlowingConnections = dfs(
-      nextMachineUID,
-      visited,
-      machinesMap,
-      connections
-    )
-    if (
-      subFlowingConnections.size > 0 ||
-      machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
-    ) {
-      flowingConnections.add(
-        connection.sourceMachine + "->" + connection.targetMachine
+  for (const connection of [...currentMachine!.incomingConnections, ...currentMachine!.outgoingConnections]) {
+    if (connection !== EMPTY_CONNECTION) {
+      const nextMachineUID = connection
+      const subFlowingConnections = dfs(
+        nextMachineUID,
+        visited,
+        machinesMap,
+        connections
       )
-      for (const conn of subFlowingConnections) {
-        flowingConnections.add(conn)
+      if (
+        subFlowingConnections.size > 0 ||
+        machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+      ) {
+        flowingConnections.add(
+          currentMachineUID + "->" + nextMachineUID
+        )
+        for (const conn of subFlowingConnections) {
+          flowingConnections.add(conn)
+        }
       }
     }
   }
@@ -113,30 +115,33 @@ const dfsFlowingEntities = (
     return { flowingMachines, flowingConnections }
   }
 
-  for (const connection of connections) {
-    const nextMachineUID = connection.targetMachine
-    const {
-      flowingMachines: nextFlowingMachines,
-      flowingConnections: nextFlowingConnections,
-    } = dfsFlowingEntities(nextMachineUID, visited, machinesMap, connections)
+  for (const connection of [...currentMachine!.incomingConnections, ...currentMachine!.outgoingConnections]) {
+    if (connection !== EMPTY_CONNECTION) {
+      const nextMachineUID = connection
+      const {
+        flowingMachines: nextFlowingMachines,
+        flowingConnections: nextFlowingConnections,
+      } = dfsFlowingEntities(nextMachineUID, visited, machinesMap, connections)
 
-    if (
-      nextFlowingMachines.size > 0 ||
-      machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
-    ) {
-      flowingConnections.add(
-        connection.sourceMachine + "->" + connection.targetMachine
-      )
-      flowingMachines.add(currentMachineUID)
+      if (
+        nextFlowingMachines.size > 0 ||
+        machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+      ) {
+        flowingConnections.add(
+          currentMachineUID + "->" + nextMachineUID
+        )
+        flowingMachines.add(currentMachineUID)
 
-      for (const conn of nextFlowingConnections) {
-        flowingConnections.add(conn)
-      }
-      for (const machine of nextFlowingMachines) {
-        flowingMachines.add(machine)
+        for (const conn of nextFlowingConnections) {
+          flowingConnections.add(conn)
+        }
+        for (const machine of nextFlowingMachines) {
+          flowingMachines.add(machine)
+        }
       }
     }
   }
+
 
   return { flowingMachines, flowingConnections }
 }
@@ -166,9 +171,6 @@ const getFlowingEntities = (
       }
     }
   }
-
-  console.log("flowingMachines", "flowingConnections")
-  console.log(flowingMachines, flowingConnections)
 
   return { flowingMachines, flowingConnections }
 }

@@ -46,7 +46,7 @@ export function scale(node, { duration = 1000, delay = 0 }) {
     duration,
     easing: expoIn,
     css: (t, u) => `
-      transform: ${transform} scale(${1 + t * 0.2}, ${1 + u * 0.2});
+      transform: ${transform} scale(${1 + t * 0.2}, 1);
     `,
   }
 }
@@ -55,6 +55,7 @@ export function scale(node, { duration = 1000, delay = 0 }) {
  * Tick this
  */
 export const pulseGraph = () => {
+  console.log("PULSE!")
   const graphPulseValue = get(graphPulse)
   graphPulse.set(graphPulseValue - 1)
 }

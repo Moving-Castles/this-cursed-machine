@@ -15,6 +15,8 @@
   let localPulse = tweened(0, { duration: 1000, easing: expoIn })
   let freeze = get(graphPulse)
 
+  $: console.log($graphPulse)
+
   $: {
     $localPulse = state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze
   }

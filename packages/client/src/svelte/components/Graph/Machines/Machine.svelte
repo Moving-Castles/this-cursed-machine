@@ -113,13 +113,11 @@
   .MACHINE_INLET.FLOWING {
     transform-origin: left; /* or transform-origin: 50% */
     transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
   }
 
   .MACHINE_OUTLET.FLOWING {
     transform-origin: right; /* or transform-origin: 50% */
     transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
   }
 
   @keyframes growAnimation {
