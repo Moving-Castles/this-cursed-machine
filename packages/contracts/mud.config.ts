@@ -30,6 +30,8 @@ export default mudConfig({
         LastResolved: "uint256",
         Input: "uint256",
         Output: "MATERIAL_TYPE",
+        PerformanceRatings: "uint32[]",
+        CompletionTime: "uint256",
         // ...
         GameConfig: {
             keySchema: {},

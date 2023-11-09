@@ -24,7 +24,9 @@ declare global {
     input?: number
     output?: MaterialType
     amount?: number
-    lastResolved?: number
+    lastResolved?: number,
+    performanceRatings?: number[],
+    completionTime?: number,
   }
 
   type BuildableEntity = {
@@ -60,6 +62,8 @@ declare global {
     readyBlock: number
     level: number
     carriedBy: string
+    performanceRatings?: number[],
+    completionTime?: number
   }
 
   type Connection = {

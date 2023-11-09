@@ -21,4 +21,6 @@ import { Level, LevelTableId } from "./tables/Level.sol";
 import { LastResolved, LastResolvedTableId } from "./tables/LastResolved.sol";
 import { Input, InputTableId } from "./tables/Input.sol";
 import { Output, OutputTableId } from "./tables/Output.sol";
+import { PerformanceRatings, PerformanceRatingsTableId } from "./tables/PerformanceRatings.sol";
+import { CompletionTime, CompletionTimeTableId } from "./tables/CompletionTime.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";
