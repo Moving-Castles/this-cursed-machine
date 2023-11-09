@@ -10,7 +10,7 @@
   const close = () => dispatch("end", toast)
 
   onMount(() => {
-    // setTimeout(close, 3000)
+    setTimeout(close, 3000)
   })
 </script>
 
@@ -34,7 +34,6 @@
     text-align: center;
     background: red;
     font-size: 14px;
-    margin-top: 10px;
     /* @keyframes duration | easing-function | delay |
   iteration-count | direction | fill-mode | play-state | name */
     // animation: fly-up steps(16, end) 3s forwards, side-to-side steps(5, end) 4s forwards;
