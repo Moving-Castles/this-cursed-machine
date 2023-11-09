@@ -2,7 +2,6 @@ import { EntityType, MaterialType, MachineType } from "./enums"
 export { EntityType, MaterialType, MachineType } from "./enums"
 
 declare global {
-
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
@@ -20,11 +19,11 @@ declare global {
     creationBlock?: number
     buildIndex?: number
     level?: number
-    lastResolved?: number,
+    lastResolved?: number
     input?: number
     output?: MaterialType
-    outgoingConnections?: string[]
-    incomingConnections?: string[]
+    outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
+    incomingConnections?: string[] // try to base everything off of the outgoing connections
     machinesInPod?: string[]
     materialsInPod?: string[]
     LevelStartBlock?: number

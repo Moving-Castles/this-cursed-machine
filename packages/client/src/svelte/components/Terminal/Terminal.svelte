@@ -7,15 +7,15 @@
   import { playInputSound } from "./functions/sound"
   import {
     MachineType,
-    PortType,
+    // PortType,
     MaterialType,
   } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
   import TerminalOutput from "./TerminalOutput.svelte"
-  import { getMachinePorts, scrollToEnd } from "./functions/helpers"
-  import { simulatedMachines, simulatedPorts } from "../../modules/simulator"
+  import { scrollToEnd } from "./functions/helpers"
+  import { simulatedMachines } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
   import { playerCore } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
@@ -130,8 +130,8 @@
       // %%%%%%%%%%%%%%%%%%%%%%%%
 
       let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        PortType.OUTPUT
+        COMMAND.CONNECT
+        // PortType.OUTPUT
       )
 
       // @todo: Does the machine have multiple output ports?
@@ -174,8 +174,8 @@
       // %%%%%%%%%%%%%%%%%%%%%%%%
 
       let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        PortType.INPUT
+        COMMAND.CONNECT
+        // PortType.INPUT
       )
 
       // @todo: Does the machine have multiple input ports?
@@ -213,43 +213,11 @@
         SYMBOLS[14]
       )
 
-      // %%%%%%%%%%%%%%%
-      // %% Get ports %%
-      // %%%%%%%%%%%%%%%
-
-      let sourcePorts =
-        getMachinePorts(String(sourceMachine), PortType.OUTPUT) || []
-      let targetPorts =
-        getMachinePorts(String(targetMachine), PortType.INPUT) || []
-
-      if (sourcePorts.length === 0 || targetPorts.length === 0) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "Could not connect machines",
-          false,
-          SYMBOLS[5]
-        )
-        resetInput()
-        return
-      }
-
       // If the source machine is the core:
       // Allow selecting the output port
       if (sourceMachineEntity.machineType === MachineType.CORE) {
         await writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
-
-        for (let i = 0; i < sourcePorts.length; i++) {
-          let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
-          sourcePortOptions.push({
-            label: `Port #${i + 1}: ${
-              MaterialType[
-                currentPortEntity.product?.materialType || MaterialType.NONE
-              ]
-            }`,
-            value: sourcePorts[i][0],
-          })
-        }
 
         let sourcePort = await renderSelect(
           selectContainerElement,
