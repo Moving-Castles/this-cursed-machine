@@ -1,14 +1,19 @@
 <script lang="ts">
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
-  import { COMMAND, OutputType, TerminalType } from "./types"
-  import type { SelectOption } from "./types"
+  import {
+    COMMAND,
+    OutputType,
+    TerminalType,
+    DIRECTION,
+    type SelectOption,
+  } from "./types"
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
   import {
     MachineType,
-    // PortType,
     MaterialType,
+    PortIndex,
   } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
@@ -124,28 +129,30 @@
 
       // Push the value to parameters
       parameters = [value]
+    } else if (command.id === COMMAND.DISCONNECT) {
+      // @todo handle disconnect
+      console.log("disconnect")
     } else if (command.id === COMMAND.CONNECT) {
       // %%%%%%%%%%%%%%%%%%%%%%%%
       // %% Get source machine %%
       // %%%%%%%%%%%%%%%%%%%%%%%%
 
+      // Get machines with available outgoing connection slots
       let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT
-        // PortType.OUTPUT
+        COMMAND.CONNECT,
+        DIRECTION.OUTGOING
       )
-
-      // @todo: Does the machine have multiple output ports?
 
       await writeToTerminal(OutputType.NORMAL, "From:")
 
-      let sourceMachine = await renderSelect(
+      let sourceMachineKey = await renderSelect(
         selectContainerElement,
         Select,
         sourceSelectOptions
       )
 
       // Abort if nothing selected
-      if (!sourceMachine) {
+      if (!sourceMachineKey) {
         await writeToTerminal(
           OutputType.ERROR,
           "No source machine",
@@ -156,7 +163,7 @@
         return
       }
 
-      let sourceMachineEntity = $simulatedMachines[sourceMachine]
+      let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
 
       writeToTerminal(
         OutputType.SPECIAL,
@@ -173,23 +180,22 @@
       // %% Get target machine %%
       // %%%%%%%%%%%%%%%%%%%%%%%%
 
+      // Get machines with available incoming connection slots
       let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT
-        // PortType.INPUT
+        COMMAND.CONNECT,
+        DIRECTION.INCOMING
       )
-
-      // @todo: Does the machine have multiple input ports?
 
       await writeToTerminal(OutputType.NORMAL, "TO:")
 
-      let targetMachine = await renderSelect(
+      let targetMachineKey = await renderSelect(
         selectContainerElement,
         Select,
         targetSelectOptions
       )
 
       // Abort if nothing selected
-      if (!targetMachine) {
+      if (!targetMachineKey) {
         await writeToTerminal(
           OutputType.ERROR,
           "No target machine",
@@ -200,7 +206,7 @@
         return
       }
 
-      let targetMachineEntity = $simulatedMachines[targetMachine]
+      let targetMachineEntity = $simulatedMachines[targetMachineKey]
 
       await writeToTerminal(
         OutputType.SPECIAL,
@@ -214,37 +220,49 @@
       )
 
       // If the source machine is the core:
-      // Allow selecting the output port
+      // Allow selecting the port index
       if (sourceMachineEntity.machineType === MachineType.CORE) {
-        await writeToTerminal(OutputType.NORMAL, "Select source port:")
-        let sourcePortOptions: SelectOption[] = []
+        // await writeToTerminal(OutputType.NORMAL, "Select source port:")
+        // let sourcePortOptions: SelectOption[] = []
 
-        let sourcePort = await renderSelect(
-          selectContainerElement,
-          Select,
-          sourcePortOptions
-        )
+        // for (let i = 0; i < sourcePorts.length; i++) {
+        //   let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
+        //   sourcePortOptions.push({
+        //     label: `Port #${i + 1}: ${
+        //       MaterialType[
+        //         currentPortEntity.product?.materialType || MaterialType.NONE
+        //       ]
+        //     }`,
+        //     value: sourcePorts[i][0],
+        //   })
+        // }
 
-        // Abort if nothing selected
-        if (!sourcePort) {
-          await writeToTerminal(
-            OutputType.ERROR,
-            "No port selected",
-            false,
-            SYMBOLS[5]
-          )
-          resetInput()
-          return
-        }
+        // let sourcePort = await renderSelect(
+        //   selectContainerElement,
+        //   Select,
+        //   sourcePortOptions
+        // )
 
-        parameters = [sourcePort, targetPorts[0][0]]
+        // // Abort if nothing selected
+        // if (!sourcePort) {
+        //   await writeToTerminal(
+        //     OutputType.ERROR,
+        //     "No port selected",
+        //     false,
+        //     SYMBOLS[5]
+        //   )
+        //   resetInput()
+        //   return
+        // }
+
+        parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
       } else {
         // Use the first one available
-        parameters = [sourcePorts[0][0], targetPorts[0][0]]
+        parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
       }
     }
 
-    // The two commands allowed at spawn (blink and help) take ther terminal type as parameter
+    // The two commands allowed at spawn (blink and help) take the terminal type as parameter
     if (terminalType === TerminalType.SPAWN) {
       parameters = [terminalType]
     }
@@ -302,7 +320,6 @@
         bind:value={userInput}
       />
       <!-- style:width="{userInput.length}ch" -->
-
       <!-- <span>
         {$cursorCharacter}
       </span> -->

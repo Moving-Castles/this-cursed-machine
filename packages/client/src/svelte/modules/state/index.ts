@@ -7,6 +7,7 @@ import { writable, derived } from "svelte/store"
 import { network } from "../network"
 
 export const GAME_CONFIG_ID = "0x"
+export const EMPTY_CONNECTION = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES

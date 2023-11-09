@@ -1,15 +1,15 @@
 import type { Command } from "../types";
-import { COMMAND } from "../types";
+import { COMMAND, OutputType } from "../types";
 import { connect as sendConnect } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../functions/helpers";
-import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
+import { PortIndex } from "../../../modules/state/enums";
 
-async function execute(sourcePort: string, targetPort: string) {
+async function execute(sourceMachine: string, targetMachine: string, portIndex: PortIndex) {
     writeToTerminal(OutputType.NORMAL, "Allocating pipe...")
     // ...
-    const action = sendConnect(sourcePort, targetPort)
+    const action = sendConnect(sourceMachine, targetMachine, portIndex)
     // ...
     await waitForTransaction(action, loadingSpinner)
     // ...
@@ -21,11 +21,11 @@ async function execute(sourcePort: string, targetPort: string) {
     return;
 }
 
-export const connect: Command<[sourcePort: string, targetPort: string]> = {
+export const connect: Command<[sourceMachine: string, targetMachine: string, portIndex: PortIndex]> = {
     id: COMMAND.CONNECT,
     public: true,
     name: "connect",
     alias: "c",
-    description: "Connect machine",
+    description: "Connect machines",
     fn: execute,
 }

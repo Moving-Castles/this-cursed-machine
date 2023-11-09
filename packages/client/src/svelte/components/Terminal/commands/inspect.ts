@@ -12,7 +12,7 @@ async function execute(machineEntity: string) {
 
   await writeToTerminal(
     OutputType.INFO,
-    `Inspecting ${MachineType[machine.machineType]}`,
+    `Inspecting ${MachineType[machine.machineType || MachineType.NONE]}`,
     false,
     SYMBOLS[6],
     20
