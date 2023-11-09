@@ -280,8 +280,6 @@
           value: p.portIndex,
         }))
 
-        console.log(sourcePortOptions)
-
         let sourcePort = await renderSelect(
           selectContainerElement,
           Select,

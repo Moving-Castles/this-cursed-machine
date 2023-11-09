@@ -137,7 +137,7 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   selectOptions = connections.map(connection => {
     const sourceMachine = machines[connection.sourceMachine]
     const targetMachine = machines[connection.targetMachine]
-    const label = `From ${machineTypeToLabel(sourceMachine.machineType)}${
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${
       sourceMachine?.buildIndex ?? ""
     } to ${machineTypeToLabel(targetMachine.machineType)} ${
       targetMachine?.buildIndex ?? ""

@@ -435,16 +435,6 @@
     }
   }
 
-  @keyframes growAnimation {
-    10%,
-    50% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1.01);
-    }
-  }
-
   @keyframes rotateAnimation {
     0% {
       transform: rotate(-12deg);
