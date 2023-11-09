@@ -1,13 +1,11 @@
 <script lang="ts">
-  // import { playerCore, playerBox } from "../../modules/state"
+  import { playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
-  import { MaterialType } from "../../modules/state/enums"
+  import Delivered from "../Deliveries/Delivered.svelte"
   import {
     simulatedPlayerCore,
     simulatedPlayerEnergy,
-    boxOutput,
   } from "../../modules/simulator"
-  import { playerCore } from "../../modules/state"
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -28,7 +26,10 @@
   <div class="column">
     <p class="muted">SENT TO WAREHOUSE:</p>
     <p class="muted">-------------------</p>
-    <p>
+    {#key $playerBox.level}
+      <Delivered />
+    {/key}
+    <!-- <p>
       {#if Object.entries($boxOutput).length > 0}
         {#each Object.entries($boxOutput) as [type, amount] (type)}
           <span class={MaterialType[type]}>
@@ -36,7 +37,7 @@
           </span><br />
         {/each}
       {/if}
-    </p>
+    </p> -->
   </div>
 </div>
 

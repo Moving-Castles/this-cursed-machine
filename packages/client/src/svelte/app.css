@@ -79,6 +79,12 @@
   padding: 0;
 }
 
+.dotted {
+  background-image: radial-gradient(currentColor 1px, transparent 0);
+  background-size: 7px 7px;
+  background-position: -3px -3px;
+}
+
 .cursor-none {
   cursor: none;
 }
