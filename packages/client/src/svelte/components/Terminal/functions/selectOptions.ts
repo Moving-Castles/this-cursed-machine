@@ -1,24 +1,22 @@
-import { SelectOption, COMMAND } from "../types"
-import { MachineType, PortType } from "../../../modules/state/enums"
+import { SelectOption, COMMAND, DIRECTION } from "../types"
+import { MachineType } from "../../../modules/state/enums"
 import {
-    simulatedMachines,
-    readableConnections,
+    simulatedMachines
 } from "../../../modules/simulator"
 import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
-import { connectionMachineSort, getMachinesWithAvailablePorts } from "./helpers"
+import { connectionMachineSort } from "./helpers"
 import { machineTypeToLabel } from "../../../modules/state/convenience"
 
 /**
  * Generates select options based on the provided command type and port type.
  * @param {COMMAND} commandType - The type of command for which the select options are generated.
- * @param {PortType} [portType] - Optional. The type of port, used especially when the command type is `COMMAND.CONNECT`.
  * @returns {SelectOption[]} An array of select options appropriate for the given command and port type.
  */
 export function createSelectOptions(
     commandType: COMMAND,
-    portType: PortType = PortType.NONE
+    direction: DIRECTION = DIRECTION.OUTGOING
 ): SelectOption[] {
     switch (commandType) {
         case COMMAND.BUILD:
@@ -26,11 +24,7 @@ export function createSelectOptions(
         case COMMAND.DESTROY:
             return createSelectOptionsDestroy()
         case COMMAND.CONNECT:
-            if (portType === PortType.NONE) {
-                return [] as SelectOption[]
-            } else {
-                return createSelectOptionsConnect(portType)
-            }
+            return createSelectOptionsConnect(direction)
         case COMMAND.DISCONNECT:
             return createSelectOptionsDisconnect()
         case COMMAND.INSPECT:
@@ -70,31 +64,13 @@ function createSelectOptionsDestroy(): SelectOption[] {
     // All machines except core, inlet, outlet
     Object.entries(get(simulatedMachines))
         .forEach(([machineId, machine]) => {
-            if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
+            if (!FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)) {
                 selectOptions.push({
                     label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
                     value: machineId,
                 })
             }
         })
-
-    return selectOptions
-}
-
-/**
- * Generates select options for disconnecting existing connections.
- * This function returns select options for all available connections.
- * @returns {SelectOption[]} An array of select options representing various connections to disconnect, using a generic "Connection" label and the connection ID as the value.
- */
-function createSelectOptionsDisconnect(): SelectOption[] {
-    let selectOptions: SelectOption[] = []
-
-    get(readableConnections).forEach(({ id, label }) => {
-        selectOptions.push({
-            label,
-            value: id,
-        })
-    })
 
     return selectOptions
 }
@@ -120,21 +96,49 @@ function createSelectOptionsInspect(): SelectOption[] {
 
 /**
  * Creates an array of select options based on machines with available ports of a specified type.
- * @param {PortType} portType - The type of port to look for (e.g., 'input', 'output').
  * @returns {SelectOption[]} An array of select options containing machine types as labels and machine IDs as values.
  */
-function createSelectOptionsConnect(portType: PortType): SelectOption[] {
+function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
     let selectOptions: SelectOption[] = []
 
-    // Get all machines with available ports of type
-    const machines = getMachinesWithAvailablePorts(portType)
+    console.log("direction", direction)
 
-    Object.entries(machines).forEach(([machineId, machine]) => {
-        selectOptions.push({
-            label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
-            value: machineId,
-        })
-    })
+    // Get all machines available to connect
+    // – if DIRECTION == DIRECTION.OUTGOING, get all machines with available outgoing ports
+    // – if DIRECTION == DIRECTION.INCOMING, get all machines with available incoming ports
+
+    // @todo fix getMachinesWithAvailablePorts
+
+    // Get all machines with available ports of type
+    // const machines = getMachinesWithAvailablePorts(portType)
+
+    // Object.entries(machines).forEach(([machineId, machine]) => {
+    //     selectOptions.push({
+    //         label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
+    //         value: machineId,
+    //     })
+    // })
 
     return connectionMachineSort(selectOptions)
+}
+
+/**
+ * Generates select options for disconnecting existing connections.
+ * This function returns select options for all available connections.
+ * @returns {SelectOption[]} An array of select options representing various connections to disconnect, using a generic "Connection" label and the connection ID as the value.
+ */
+function createSelectOptionsDisconnect(): SelectOption[] {
+    let selectOptions: SelectOption[] = []
+
+    // Get all connections, return readable labels
+
+    // @todo Fix readable connections
+    // get(readableConnections).forEach(({ id, label }) => {
+    //     selectOptions.push({
+    //         label,
+    //         value: id,
+    //     })
+    // })
+
+    return selectOptions
 }

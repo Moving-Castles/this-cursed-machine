@@ -5,6 +5,11 @@ export enum TerminalType {
     SPAWN
 }
 
+export enum DIRECTION {
+    OUTGOING,
+    INCOMING
+}
+
 export enum OutputType {
     ERROR,
     COMMAND,
@@ -30,7 +35,8 @@ export enum COMMAND {
     MAP,
     ORDERS,
     SKIP,
-    RESTART
+    RESTART,
+    COMPLETE
 }
 
 export type Command<T extends any[] = any[]> = {
