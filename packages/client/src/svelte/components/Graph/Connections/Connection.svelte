@@ -12,16 +12,11 @@
 
   const [STROKE, GAP] = [16, 50]
 
-  let localPulse = tweened(0, { duration: 1000, easing: expoIn })
-  let freeze = get(graphPulse)
+  let freeze = get(graphPulse) * GAP
+  const localPulse = tweened(freeze, { duration: 500, easing: expoIn })
 
-  $: console.log($graphPulse)
-
-  $: {
-    $localPulse = state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze
-  }
-
-  $: if (state !== ConnectionState.FLOWING) freeze = get(graphPulse) * GAP
+  $: $localPulse =
+    state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze * GAP
 </script>
 
 <path
