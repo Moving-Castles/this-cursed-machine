@@ -1,7 +1,7 @@
 import type { SimulatedEntity } from "../simulator/types"
 
 import { get } from "svelte/store"
-import { simulatedMachines } from "../simulator"
+import { simulatedMachines, simulatedConnections } from "../simulator"
 
 import { EMPTY_CONNECTION } from "../state"
 import { ConnectionState, MaterialType, PortIndex } from "../state/enums"

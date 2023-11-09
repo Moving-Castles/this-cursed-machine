@@ -12,6 +12,7 @@
   import { playInputSound } from "./functions/sound"
   import {
     MachineType,
+    // PortType,
     MaterialType,
     PortIndex,
   } from "../../modules/state/enums"
@@ -171,8 +172,8 @@
 
       // Get machines with available outgoing connection slots
       let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.OUTGOING
+        COMMAND.CONNECT
+        // PortType.OUTPUT
       )
 
       await writeToTerminal(OutputType.NORMAL, "From:")
@@ -214,8 +215,8 @@
 
       // Get machines with available incoming connection slots
       let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.INCOMING
+        COMMAND.CONNECT
+        // PortType.INPUT
       )
 
       // Abort if no available targets
@@ -266,27 +267,23 @@
       if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-        parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
-        await writeToTerminal(OutputType.NORMAL, "Select source port:")
-        let sourcePortOptions: SelectOption[] = []
+        // for (let i = 0; i < sourcePorts.length; i++) {
+        //   let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
+        //   sourcePortOptions.push({
+        //     label: `Port #${i + 1}: ${
+        //       MaterialType[
+        //         currentPortEntity.product?.materialType || MaterialType.NONE
+        //       ]
+        //     }`,
+        //     value: sourcePorts[i][0],
+        //   })
+        // }
 
-        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
-        const portLabel = p =>
-          `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
-        sourcePortOptions = ports.map(p => ({
-          label: portLabel(p),
-          value: p.portIndex,
-        }))
-
-        console.log(sourcePortOptions)
-
-        let sourcePort = await renderSelect(
-          selectContainerElement,
-          Select,
-          sourcePortOptions
-        )
+        // let sourcePort = await renderSelect(
+        //   selectContainerElement,
+        //   Select,
+        //   sourcePortOptions
+        // )
 
         console.log(sourcePort)
 

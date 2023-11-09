@@ -44,4 +44,12 @@ library LibMaterial {
     MaterialType.deleteRecord(_materialEntity);
     Amount.deleteRecord(_materialEntity);
   }
+
+  /**
+   * @dev Removes material from the box without really destroying it
+   * @param _materialEntity The unique identifier of the material entity to be destroyed
+   */
+  function trash(bytes32 _materialEntity) internal {
+    CarriedBy.deleteRecord(_materialEntity);
+  }
 }

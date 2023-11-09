@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.21;
+import { console } from "forge-std/console.sol";
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE } from "../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
 contract TransferSystemTest is MudTest {
   IWorld world;
@@ -29,5 +30,49 @@ contract TransferSystemTest is MudTest {
     vm.stopPrank();
 
     assertEq(Level.get(coreEntity), 1);
+  }
+
+  function testDisconnectOutletOnTransfer() public {
+    setUp();
+
+    vm.startPrank(alice);
+    bytes32 coreEntity = world.spawn();
+    world.restart();
+
+    // Get inlet entity
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32 inletEntity = inletEntities[0][0];
+
+    // Get outlet entity
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32 outletEntity = outletEntities[0][0];
+
+    assertEq(IncomingConnections.get(outletEntity).length, 1);
+
+    // Connect core to outlet
+    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Connect inlet to core
+    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+
+    // Wait 10 blocks
+    vm.roll(block.number + 10);
+
+    // Transfer
+    world.transfer();
+
+    assertEq(Level.get(coreEntity), 2);
+
+    // Check that the outlet is disconnected
+    bytes32[] memory outletIncomingConnections = IncomingConnections.get(outletEntity);
+    assertEq(outletIncomingConnections.length, 1);
+    assertEq(outletIncomingConnections[0], bytes32(0));
+
+    // Check that the core is disconnected from the outlet
+    bytes32[] memory coreOutgoingConnections = OutgoingConnections.get(coreEntity);
+    assertEq(coreOutgoingConnections.length, 2);
+    assertEq(coreOutgoingConnections[0], bytes32(0));
+
+    vm.stopPrank();
   }
 }

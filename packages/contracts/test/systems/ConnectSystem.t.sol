@@ -37,10 +37,8 @@ contract ConnectSystemTest is MudTest {
     vm.stopPrank();
 
     // Check that the connection was created
-    bytes32[] memory coreOutgoingConnections = OutgoingConnections.get(coreEntity);
-    bytes32[] memory splitterIncomingConnections = IncomingConnections.get(splitterEntity);
-    assertEq(coreOutgoingConnections[0], splitterEntity);
-    assertEq(splitterIncomingConnections[0], coreEntity);
+    assertEq(OutgoingConnections.get(coreEntity)[0], splitterEntity);
+    assertEq(IncomingConnections.get(splitterEntity)[0], coreEntity);
   }
 
   function testRevertNoInputs() public {
