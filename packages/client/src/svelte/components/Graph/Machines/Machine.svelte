@@ -72,12 +72,12 @@
 {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
   {#key $graphPulse}
     <rect
-      in:scale
       on:mouseenter
       on:mouseleave
-      class="{ConnectionState[state]} MACHINE_{MachineType[
+      class="{ConnectionState[state]} MACHINE MACHINE_{MachineType[
         d.entry.machineType
       ]}"
+      style:transform="scale(1.5,1)"
       x={d.x - 20}
       y={d.y - 20}
       width={40}

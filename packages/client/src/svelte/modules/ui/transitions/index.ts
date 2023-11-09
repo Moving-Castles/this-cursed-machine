@@ -37,7 +37,11 @@ export function strobe(node, { duration = 344, steps = 2, easing = linear }) {
   }
 }
 
-export function scale(node, { duration = 1000, delay = 0 }) {
+export function scale(node, { duration = 1000, delay = 0, disabled = false }) {
+  if (disabled) return {}
+
+  console.log("Scale")
+
   const style = getComputedStyle(node)
   const transform = style.transform === "none" ? "" : style.transform
 
@@ -46,7 +50,7 @@ export function scale(node, { duration = 1000, delay = 0 }) {
     duration,
     easing: expoIn,
     css: (t, u) => `
-      transform: ${transform} scale(${1 + t * 0.2}, 1);
+      transform: ${transform} scale(${1 + t * 2}, 1);
     `,
   }
 }
