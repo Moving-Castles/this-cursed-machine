@@ -141,7 +141,7 @@
   }
 
   const linkColor = entry => {
-    if (entry?.inputs) {
+    if (entry?.product) {
       return `var(--${
         entry.product?.materialType
           ? MaterialType[entry.product?.materialType]
@@ -444,10 +444,10 @@
     }
   }
 
-  svg .node,
-  svg .node-image,
-  svg .rect,
-  svg .node-rect {
+  svg :global(.node),
+  svg :global(.node-image),
+  svg :global(.rect),
+  svg :global(.node-rect) {
     transform-origin: center; /* or transform-origin: 50% */
     transform-box: fill-box;
   }
