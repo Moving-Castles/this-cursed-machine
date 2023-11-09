@@ -88,4 +88,19 @@ contract ConnectSystemTest is MudTest {
 
     vm.stopPrank();
   }
+
+  function testSelfConnect() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    bytes32 coreEntity = world.spawn();
+    world.restart();
+
+    // Connect dryer to splitter
+    vm.expectRevert("source and target are same");
+    world.connect(coreEntity, coreEntity, PORT_INDEX.FIRST);
+
+    vm.stopPrank();
+  }
 }
