@@ -10,11 +10,7 @@
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
-  import {
-    MachineType,
-    MaterialType,
-    PortIndex,
-  } from "../../modules/state/enums"
+  import { MachineType, PortIndex } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
@@ -28,7 +24,7 @@
   import { playerCore } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
-  import { writeNewLevel } from "./functions/writeNewLevel"
+  import { writeLevel } from "./functions/writeLevel"
   import {
     machineTypeToLabel,
     availablePorts,
@@ -61,7 +57,7 @@
     await new Promise(resolve => setTimeout(resolve, 500))
     console.log("level change detected")
     clearTerminalOutput()
-    await writeNewLevel(level)
+    await writeLevel(level)
     resetInput()
     inputActive = true
   }

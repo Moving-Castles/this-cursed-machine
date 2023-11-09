@@ -33,7 +33,7 @@ export enum COMMAND {
     RESOLVE,
     TRANSFER,
     MAP,
-    ORDERS,
+    ORDER,
     SKIP,
     RESTART,
     COMPLETE

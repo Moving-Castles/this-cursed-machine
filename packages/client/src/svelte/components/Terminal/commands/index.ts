@@ -11,7 +11,7 @@ import { inspect } from "./inspect";
 import { transfer } from "./transfer";
 import { resolve } from "./resolve";
 import { map } from "./map";
-import { orders } from "./orders";
+import { order } from "./order";
 import { skip } from "./skip";
 import { restart } from "./restart";
 
@@ -21,7 +21,7 @@ export const commands: Command[] = [
     connect,
     disconnect,
     inspect,
-    orders,
+    order,
     map,
     blink,
     clear,
