@@ -6,7 +6,7 @@ import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
-contract ConnectSystemTest is MudTest {
+contract DiconnectSystemTest is MudTest {
   IWorld world;
   address internal alice;
   address internal bob;
@@ -20,7 +20,7 @@ contract ConnectSystemTest is MudTest {
     bob = address(222);
   }
 
-  function testConnect() public {
+  function testDisconnect() public {
     setUp();
 
     vm.startPrank(alice);
@@ -34,57 +34,52 @@ contract ConnectSystemTest is MudTest {
     // Connect core (first output == piss) to splitter
     world.connect(coreEntity, splitterEntity, PORT_INDEX.FIRST);
 
-    vm.stopPrank();
-
     // Check that the connection was created
     assertEq(OutgoingConnections.get(coreEntity)[0], splitterEntity);
     assertEq(IncomingConnections.get(splitterEntity)[0], coreEntity);
-  }
 
-  function testRevertNoInputs() public {
-    setUp();
+    // Disconnect core from splitter
+    world.disconnect(coreEntity, PORT_INDEX.FIRST);
 
-    vm.startPrank(alice);
-
-    bytes32 coreEntity = world.spawn();
-    world.restart();
-
-    // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
-
-    // Build a dryer
-    bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
-
-    // Connect core to splitter
-    world.connect(coreEntity, splitterEntity, PORT_INDEX.FIRST);
-
-    // Connect dryer to splitter
-    vm.expectRevert("no available incoming ports");
-    world.connect(dryerEntity, splitterEntity, PORT_INDEX.FIRST);
+    // Check that the connection was destroyed
+    assertEq(OutgoingConnections.get(coreEntity)[0], bytes32(0));
+    assertEq(IncomingConnections.get(splitterEntity)[0], bytes32(0));
 
     vm.stopPrank();
   }
 
-  function testRevertNoOutputs() public {
+  function testRevertNoConnection() public {
     setUp();
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    world.spawn();
     world.restart();
 
     // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    world.build(MACHINE_TYPE.SPLITTER);
 
     // Build a dryer
     bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
 
     // Connect dryer to splitter
-    world.connect(dryerEntity, splitterEntity, PORT_INDEX.FIRST);
+    vm.expectRevert("no connection to disconnect");
+    world.disconnect(dryerEntity, PORT_INDEX.FIRST);
 
-    // Connect dryer to core (dryer only has one output)
-    vm.expectRevert("outgoing port already occupied");
-    world.connect(dryerEntity, coreEntity, PORT_INDEX.FIRST);
+    vm.stopPrank();
+  }
+
+  function testRevertInvalidMachine() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    world.spawn();
+    world.restart();
+
+    // Disconnect null machine
+    vm.expectRevert("outgoing index out of bounds");
+    world.disconnect(bytes32(0), PORT_INDEX.FIRST);
 
     vm.stopPrank();
   }
