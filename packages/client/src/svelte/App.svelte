@@ -34,7 +34,6 @@
     $mouseY = e.clientY
   }
 
-  let unsubscribe: ReturnType<typeof writable>
   let introSound: Howl | undefined
 
   const restart = () => {
@@ -88,15 +87,13 @@
     createSyncProgressSystem()
 
     // Simulate state changes
-    unsubscribe = initStateSimulator()
+    initStateSimulator()
 
     // Preload sounds
     initSound()
 
     introSound = playSound("tcm", "introBg", true, true)
   })
-
-  onDestroy(unsubscribe)
 
   // Fade out intro sound when ready
   $: if ($UIState === UI.READY) {
