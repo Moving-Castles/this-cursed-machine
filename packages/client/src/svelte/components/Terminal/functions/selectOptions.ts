@@ -1,13 +1,18 @@
 import { SelectOption, COMMAND, DIRECTION } from "../types"
 import { MachineType } from "../../../modules/state/enums"
 import {
-  simulatedMachines
+  simulatedMachines,
+  simulatedConnections,
 } from "../../../modules/simulator"
 import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
-import { machineTypeToLabel } from "../../../modules/state/convenience"
+import {
+  machineTypeToLabel,
+  materialTypeToLabel,
+  availableMachines,
+} from "../../../modules/state/convenience"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -63,15 +68,18 @@ function createSelectOptionsDestroy(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   // All machines except core, inlet, outlet
-  Object.entries(get(simulatedMachines))
-    .forEach(([machineId, machine]) => {
-      if (!FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)) {
-        selectOptions.push({
-          label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
-          value: machineId,
-        })
-      }
-    })
+  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
+    if (
+      !FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)
+    ) {
+      selectOptions.push({
+        label: `${machineTypeToLabel(machine.machineType)} #${
+          machine.buildIndex
+        }`,
+        value: machineId,
+      })
+    }
+  })
 
   return selectOptions
 }
@@ -104,23 +112,12 @@ function createSelectOptionsInspect(): SelectOption[] {
 function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  console.log("direction", direction)
+  const machines = availableMachines(direction)
 
-  // Get all machines available to connect
-  // – if DIRECTION == DIRECTION.OUTGOING, get all machines with available outgoing ports
-  // – if DIRECTION == DIRECTION.INCOMING, get all machines with available incoming ports
-
-  // @todo fix getMachinesWithAvailablePorts
-
-  // Get all machines with available ports of type
-  // const machines = getMachinesWithAvailablePorts(portType)
-
-  // Object.entries(machines).forEach(([machineId, machine]) => {
-  //     selectOptions.push({
-  //         label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
-  //         value: machineId,
-  //     })
-  // })
+  selectOptions = machines.map(([address, machine]) => ({
+    label: machineTypeToLabel(machine.machineType),
+    value: address,
+  }))
 
   return connectionMachineSort(selectOptions)
 }
@@ -133,15 +130,29 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
 function createSelectOptionsDisconnect(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  // Get all connections, return readable labels
+  const machines = get(simulatedMachines)
+  const connections = get(simulatedConnections)
 
-  // @todo Fix readable connections
-  // get(readableConnections).forEach(({ id, label }) => {
-  //     selectOptions.push({
-  //         label,
-  //         value: id,
-  //     })
-  // })
+  selectOptions = connections.map(connection => {
+    const sourceMachine = machines[connection.sourceMachine]
+    const targetMachine = machines[connection.targetMachine]
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${
+      sourceMachine?.buildIndex ?? ""
+    } to ${machineTypeToLabel(targetMachine.machineType)} ${
+      targetMachine?.buildIndex ?? ""
+    } ${
+      connection?.product
+        ? `(${materialTypeToLabel(connection.product.materialType)})`
+        : ""
+    }`
+
+    return {
+      label,
+      value: connection.id,
+    }
+  })
+
+  console.log(selectOptions)
 
   return selectOptions
 }

@@ -58,8 +58,6 @@
 
   let [nodes, links] = [[], []]
 
-  $: console.log($simulatedConnections)
-
   // Initialize forces
   const linkForce = d3
     .forceLink()
@@ -157,7 +155,7 @@
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
 
   $: {
-    const graph = data($simulatedMachines)
+    const graph = data($simulatedMachines, $simulatedConnections)
 
     // Update nodes
     graph.nodes.forEach(newNode => {
@@ -434,16 +432,6 @@
   @keyframes flowAnimation {
     to {
       stroke-dashoffset: 0; /* Reveal the line. */
-    }
-  }
-
-  @keyframes growAnimation {
-    10%,
-    50% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1.01);
     }
   }
 

@@ -1,23 +1,29 @@
-
-import { MaterialType } from "../state/enums";
+import { MaterialType } from "../state/enums"
 
 export type Product = {
-    machineId: string;
-    materialType: MaterialType;
-    amount: number;
+  machineId: string
+  materialType: MaterialType
+  amount: number
+}
+
+export type Connection = {
+  id: string
+  sourceMachine: string
+  targetMachine: string
+  product: Product
 }
 
 type IntermediaryState = {
-    inputs?: Product[];
-    outputs?: Product[];
+  inputs?: Product[]
+  outputs?: Product[]
 }
 
-export type SimulatedEntity = Entity & IntermediaryState;
+export type SimulatedEntity = Entity & IntermediaryState
 
 export type SimulatedEntities = {
-    [key: string]: SimulatedEntity;
+  [key: string]: SimulatedEntity
 }
 
 export type BoxOutputs = {
-    [key in MaterialType]: number;
-};
+  [key in MaterialType]: number
+}

@@ -1,13 +1,9 @@
 import { tick } from "svelte"
-import type { Action } from "../../../modules/action/actionSequencer";
-// import { SimulatedEntities } from "../../../modules/simulator/types";
-// import { simulatedMachines } from "../../../modules/simulator";
-// import { get } from "svelte/store";
+import type { Action } from "../../../modules/action/actionSequencer"
 import { COMMAND, SelectOption } from "../types"
 import { COMMANDS_BY_LEVEL, terminalOutput } from ".."
 import { machineTypeToLabel } from "../../../modules/state/convenience"
 import { MachineType } from "../../../modules/state/enums"
-
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -139,149 +135,10 @@ export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
   // ... All other machines in alphabetical order
   // OUTLET
   return array.sort((a, b) => {
-    if (a.label === machineTypeToLabel(MachineType.INLET)) return -1;
-    if (b.label === machineTypeToLabel(MachineType.INLET)) return 1;
-    if (a.label === machineTypeToLabel(MachineType.OUTLET)) return 1;
-    if (b.label === machineTypeToLabel(MachineType.OUTLET)) return -1;
-    return a.label.localeCompare(b.label);
-  });
+    if (a.label === machineTypeToLabel(MachineType.INLET)) return -1
+    if (b.label === machineTypeToLabel(MachineType.INLET)) return 1
+    if (a.label === machineTypeToLabel(MachineType.OUTLET)) return 1
+    if (b.label === machineTypeToLabel(MachineType.OUTLET)) return -1
+    return a.label.localeCompare(b.label)
+  })
 }
-
-/**
- * Retrieves available ports for a given machine based on an optional port type.
- * @param {string} machineId - The ID of the machine.
- * @param {PortType} [portType] - A port type to filter by.
- * @returns {Array} An array of available ports.
- */
-// export const getMachinePorts = (machineId: string, portType: PortType): any[] => {
-//   // Get machine entity
-//   const machine = Object.entries(get(simulatedMachines)).find(
-//     ([key, _]) => key === machineId
-//   )
-
-//   if (!machine) return [];
-
-//   // Retrieve ports based on the source machine and filter by portType
-//   const ports = Object.entries(get(simulatedPorts)).filter(
-//     ([_, entity]) => entity?.carriedBy === machine[0] && entity.portType === portType
-//   )
-
-//   const isPortOccupied = (id: string) => {
-//     const connectionsUsingPort = Object.values(get(simulatedConnections)).filter(
-//       connection => connection.sourcePort === id || connection.targetPort === id
-//     )
-//     return connectionsUsingPort.length > 0;
-//   }
-
-//   const availablePorts = ports.filter(([id, _]) => !isPortOccupied(id));
-
-//   return availablePorts;
-// }
-
-/**
- * Gets machines that have available ports of a specified type.
- * @param {PortType} portType - The type of port to look for (e.g., 'input', 'output').
- * @returns {SimulatedEntities} An object containing machines with available ports of the specified type.
- */
-// export function getMachinesWithAvailablePorts(portType: PortType): SimulatedEntities {
-//   let availableMachines: SimulatedEntities = {}
-
-//   // For each machine...
-//   for (let [machineKey, machine] of Object.entries(get(simulatedMachines))) {
-//     // Get all ports of type
-//     const portsOnMachine = Object.fromEntries(
-//       Object.entries(get(simulatedPorts)).filter(
-//         ([, entity]) => entity.carriedBy === machineKey && entity.portType === portType
-//       )
-//     )
-
-//     // console.log('portsOnMachine', portsOnMachine)
-
-//     let occupiedPorts = 0
-
-//     // For each port ...
-//     for (let portKey of Object.keys(portsOnMachine)) {
-//       // Check if there is  connection going to or from that port
-//       let connectionToPort = Object.values(get(simulatedConnections)).filter(
-//         (entity) => entity.sourcePort === portKey || entity.targetPort === portKey
-//       )
-//       // Connection(s) found
-//       if (connectionToPort.length > 0) {
-//         occupiedPorts++
-//       }
-//     }
-
-//     // If the ports are not fully occupied, add the machine to the list
-//     if (occupiedPorts < Object.values(portsOnMachine).length) {
-//       availableMachines[machineKey] = machine
-//     }
-//   }
-
-//   // Finally, return available machines
-//   return availableMachines
-// }
-
-
-
-/**
- * Derives a readable list of connections based on the input stores.
- *
- * Given the current connections, ports, machines, and playerCore, this function
- * will filter, map, and transform the connections to a more readable format
- * showcasing the relationship between source machines and target machines.
- * @param {Array} - Array of svelte stores: [connections, ports, machines, playerCore]
- * @returns {Array} - An array of transformed connection objects which includes the id,
- *                    connection details, and a human-readable label for each connection.
-//  */
-// export const readableConnections = derived(
-//   [simulatedConnections, ports, machines, playerCore],
-//   ([$simulatedConnections, $ports, $machines, $playerCore]) => {
-//     return (
-//       Object.entries($simulatedConnections)
-//         // Filter connections to only those that belong to the current box carried by player
-//         .filter(([_, entry]) =>
-//           connectionBelongsToBox(entry, $playerCore.carriedBy)
-//         )
-//         .map(([id, connection]) => {
-//           // Get the material being transported
-//           const materialType = connection.product?.materialType
-
-//           // Extract the source and target ports for the current connection
-//           const sP = connection?.sourcePort
-//           const tP = connection?.targetPort
-
-//           if (sP && tP) {
-//             const ssP = $ports[sP]
-//             const ttP = $ports[tP]
-
-//             if (ssP && ttP) {
-//               // Fetch the machine types and indices for source and target
-//               const sourceMachine = machineTypeToLabel($machines[ssP?.carriedBy]?.machineType)
-//               const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-//               const targetMachine = machineTypeToLabel($machines[ttP?.carriedBy]?.machineType)
-//               const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
-
-//               if (sourceMachine && targetMachine) {
-//                 // Construct a label showcasing the source to target machine connection
-
-//                 return {
-//                   id,
-//                   connection,
-//                   label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-//                     } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
-//                     } ${sourceMachine === "CORE"
-//                       ? `(${MaterialType[materialType]})`
-//                       : ""
-//                     }`,
-//                 }
-//               }
-//             }
-//           }
-
-//           return false
-//         })
-//         // Filter out any invalid or non-transformed entries
-//         .filter(ent => ent)
-//     )
-//   }
-// )

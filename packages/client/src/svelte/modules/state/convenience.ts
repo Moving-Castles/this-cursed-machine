@@ -1,54 +1,90 @@
+import type { SimulatedEntity, Connection } from "../simulator/types"
+
 import { get } from "svelte/store"
-import { simulatedMachines } from "../simulator"
-import { ConnectionState, MaterialType } from "../state/enums"
+import { simulatedMachines, simulatedConnections } from "../simulator"
+
+import { EMPTY_CONNECTION } from "../state"
+import { ConnectionState, MaterialType, PortIndex } from "../state/enums"
 import { MachineType } from "./types"
+import { DIRECTION } from "../../components/Terminal/types"
+
+/**
+ *
+ * @param direction
+ * @returns Machine[]
+ */
+export const availableMachines = (direction: DIRECTION) => {
+  const machines = Object.entries(get(simulatedMachines))
+
+  return machines.filter(([_, machine]) => {
+    return (
+      machine[
+        direction === DIRECTION.OUTGOING
+          ? "outgoingConnections"
+          : "incomingConnections"
+      ].filter(connection => connection === EMPTY_CONNECTION).length > 0
+    )
+  })
+}
+
+/**
+ *
+ * @param direction
+ * @returns PortDefinition
+ */
+export const availablePorts = (machine: Machine, direction: DIRECTION) => {
+  return machine[
+    direction === DIRECTION.OUTGOING
+      ? "outgoingConnections"
+      : "incomingConnections"
+  ]
+    .map((address, i) => ({
+      portIndex: i,
+      machine,
+      address,
+    }))
+    .filter(connection => connection.address === EMPTY_CONNECTION)
+    .flat()
+}
 
 const dfs = (
   currentMachineUID: string,
   visited: Set<string>,
-  machinesMap: Map<string, Machine>
+  machinesMap: Map<string, Machine>,
+  connections: Connection[]
 ): Set<string> => {
-  return []
-  // if (visited.has(currentMachineUID)) return new Set()
-  // visited.add(currentMachineUID)
+  if (visited.has(currentMachineUID)) return new Set()
+  visited.add(currentMachineUID)
 
-  // const currentMachine = machinesMap.get(currentMachineUID)
-  // const flowingConnections = new Set<string>()
+  const currentMachine = machinesMap.get(currentMachineUID)
+  const flowingConnections = new Set<string>()
 
-  // if (currentMachine!.machineType === MachineType.OUTLET) {
-  //   return flowingConnections
-  // }
+  if (currentMachine!.machineType === MachineType.OUTLET) {
+    return flowingConnections
+  }
 
-  // for (const connection of connections) {
-  //   let nextPortUID: string | null = null
-  //   if (portsMap.get(connection.sourcePort)!.carriedBy === currentMachineUID) {
-  //     nextPortUID = connection.targetPort
-  //   }
+  for (const connection of connections) {
+    const nextMachineUID = connection.targetMachine
+    const subFlowingConnections = dfs(
+      nextMachineUID,
+      visited,
+      machinesMap,
+      connections
+    )
+    if (
+      subFlowingConnections.size > 0 ||
+      machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+    ) {
+      flowingConnections.add(
+        connection.sourceMachine + "->" + connection.targetMachine
+      )
+      for (const conn of subFlowingConnections) {
+        flowingConnections.add(conn)
+      }
+    }
+  }
 
-  //   if (nextPortUID) {
-  //     const nextMachineUID = portsMap.get(nextPortUID)!.carriedBy
-  //     const subFlowingConnections = dfs(
-  //       nextMachineUID,
-  //       visited,
-  //       machinesMap,
-  //       portsMap,
-  //       connections
-  //     )
-  //     if (
-  //       subFlowingConnections.size > 0 ||
-  //       machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
-  //     ) {
-  //       flowingConnections.add(
-  //         connection.sourcePort + "->" + connection.targetPort
-  //       )
-  //       for (const conn of subFlowingConnections) {
-  //         flowingConnections.add(conn)
-  //       }
-  //     }
-  //   }
-  // }
-
-  // return flowingConnections
+  return flowingConnections
 }
 
 const dfsFlowingEntities = (
@@ -57,59 +93,52 @@ const dfsFlowingEntities = (
   machinesMap: Map<string, Machine>,
   connections: Connection[]
 ): { flowingMachines: Set<string>; flowingConnections: Set<string> } => {
-  return { flowingMachines: new Set(), flowingConnections: new Set() }
-  // if (visited.has(currentMachineUID))
-  //   return { flowingMachines: new Set(), flowingConnections: new Set() }
-  // visited.add(currentMachineUID)
+  // We already been here; return emp
+  if (visited.has(currentMachineUID))
+    return { flowingMachines: new Set(), flowingConnections: new Set() }
 
-  // const currentMachine = machinesMap.get(currentMachineUID)
-  // let flowingMachines = new Set<string>()
-  // let flowingConnections = new Set<string>()
+  // Add visited
+  visited.add(currentMachineUID)
 
-  // if (currentMachine!.machineType === MachineType.OUTLET) {
-  //   flowingMachines.add(currentMachineUID)
-  //   return { flowingMachines, flowingConnections }
-  // }
+  // Get machine
+  const currentMachine = machinesMap.get(currentMachineUID)
 
-  // for (const connection of connections) {
-  //   let nextPortUID: string | null = null
-  //   if (portsMap.get(connection.sourcePort)!.carriedBy === currentMachineUID) {
-  //     nextPortUID = connection.targetPort
-  //   }
+  // Make a set
+  let flowingMachines = new Set<string>()
+  let flowingConnections = new Set<string>()
 
-  //   if (nextPortUID) {
-  //     const nextMachineUID = portsMap.get(nextPortUID)!.carriedBy
-  //     const {
-  //       flowingMachines: nextFlowingMachines,
-  //       flowingConnections: nextFlowingConnections,
-  //     } = dfsFlowingEntities(
-  //       nextMachineUID,
-  //       visited,
-  //       machinesMap,
-  //       portsMap,
-  //       connections
-  //     )
+  // Stopping statement
+  if (currentMachine!.machineType === MachineType.OUTLET) {
+    flowingMachines.add(currentMachineUID)
+    return { flowingMachines, flowingConnections }
+  }
 
-  //     if (
-  //       nextFlowingMachines.size > 0 ||
-  //       machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
-  //     ) {
-  //       flowingConnections.add(
-  //         connection.sourcePort + "->" + connection.targetPort
-  //       )
-  //       flowingMachines.add(currentMachineUID)
+  for (const connection of connections) {
+    const nextMachineUID = connection.targetMachine
+    const {
+      flowingMachines: nextFlowingMachines,
+      flowingConnections: nextFlowingConnections,
+    } = dfsFlowingEntities(nextMachineUID, visited, machinesMap, connections)
 
-  //       for (const conn of nextFlowingConnections) {
-  //         flowingConnections.add(conn)
-  //       }
-  //       for (const machine of nextFlowingMachines) {
-  //         flowingMachines.add(machine)
-  //       }
-  //     }
-  //   }
-  // }
+    if (
+      nextFlowingMachines.size > 0 ||
+      machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+    ) {
+      flowingConnections.add(
+        connection.sourceMachine + "->" + connection.targetMachine
+      )
+      flowingMachines.add(currentMachineUID)
 
-  // return { flowingMachines, flowingConnections }
+      for (const conn of nextFlowingConnections) {
+        flowingConnections.add(conn)
+      }
+      for (const machine of nextFlowingMachines) {
+        flowingMachines.add(machine)
+      }
+    }
+  }
+
+  return { flowingMachines, flowingConnections }
 }
 
 const getFlowingEntities = (
@@ -119,37 +148,29 @@ const getFlowingEntities = (
   let flowingMachines = new Set<string>()
   let flowingConnections = new Set<string>()
 
+  const machinesMap = new Map<string, Machine>(machinesEntries)
+  const visited = new Set<string>()
+
+  for (const [machineUID, machine] of machinesMap) {
+    if (machine.machineType === MachineType.INLET && !visited.has(machineUID)) {
+      const {
+        flowingMachines: nextFlowingMachines,
+        flowingConnections: nextFlowingConnections,
+      } = dfsFlowingEntities(machineUID, visited, machinesMap, allConnections)
+
+      for (const conn of nextFlowingConnections) {
+        flowingConnections.add(conn)
+      }
+      for (const machine of nextFlowingMachines) {
+        flowingMachines.add(machine)
+      }
+    }
+  }
+
+  console.log("flowingMachines", "flowingConnections")
+  console.log(flowingMachines, flowingConnections)
+
   return { flowingMachines, flowingConnections }
-  // const machinesMap = new Map<string, Machine>(machinesEntries)
-  // const portsMap = new Map<string, Port>(portsEntries)
-  // const visited = new Set<string>()
-
-  // let flowingMachines = new Set<string>()
-  // let flowingConnections = new Set<string>()
-
-  // for (const [machineUID, machine] of machinesMap) {
-  //   if (machine.machineType === MachineType.INLET && !visited.has(machineUID)) {
-  //     const {
-  //       flowingMachines: nextFlowingMachines,
-  //       flowingConnections: nextFlowingConnections,
-  //     } = dfsFlowingEntities(
-  //       machineUID,
-  //       visited,
-  //       machinesMap,
-  //       portsMap,
-  //       allConnections
-  //     )
-
-  //     for (const conn of nextFlowingConnections) {
-  //       flowingConnections.add(conn)
-  //     }
-  //     for (const machine of nextFlowingMachines) {
-  //       flowingMachines.add(machine)
-  //     }
-  //   }
-  // }
-
-  // return { flowingMachines, flowingConnections }
 }
 
 const determineMachineState = (
@@ -165,18 +186,16 @@ const determineMachineState = (
   if (flowingMachines.has(machineUID)) {
     return ConnectionState.FLOWING
   } else {
-    return ConnectionState.NONE
-    // const portsOfMachine = Array.from(portsEntries)
-    //   .filter(([, port]) => port.carriedBy === machineUID)
-    //   .map(([uid]) => uid)
+    const machineEntry = machinesEntries.find(([id, _]) => id === machineUID)
 
-    // const isConnected = allConnections.some(
-    //   connection =>
-    //     portsOfMachine.includes(connection.sourcePort) ||
-    //     portsOfMachine.includes(connection.targetPort)
-    // )
+    const connectedPorts = [
+      ...machineEntry[1].incomingConnections,
+      ...machineEntry[1].outgoingConnections,
+    ].filter(address => address !== EMPTY_CONNECTION)
 
-    // return isConnected ? ConnectionState.CONNECTED : ConnectionState.NONE
+    return connectedPorts.length > 0
+      ? ConnectionState.CONNECTED
+      : ConnectionState.NONE
   }
 }
 
@@ -190,29 +209,25 @@ const determineConnectionState = (
     allConnections
   )
   return flowingConnections.has(
-    connection.sourcePort + "->" + connection.targetPort
+    connection.sourceMachine + "->" + connection.targetMachine
   )
     ? ConnectionState.FLOWING
     : ConnectionState.CONNECTED
 }
 
 export const connectionState = (connection: Connection) => {
-  return ConnectionState.NONE
   return determineConnectionState(
     connection,
     Object.entries(get(simulatedMachines)),
-    Object.entries(get(simulatedPorts)),
-    Object.values(get(simulatedConnections))
+    get(simulatedConnections)
   )
 }
 
 export const machineState = (machineId: string) => {
-  return ConnectionState.NONE
   return determineMachineState(
     machineId,
     Object.entries(get(simulatedMachines)),
-    Object.entries(get(simulatedPorts)),
-    Object.values(get(simulatedConnections))
+    get(simulatedConnections)
   )
 }
 
