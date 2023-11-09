@@ -47,19 +47,14 @@ async function writeNarrativeSuccess(text: string) {
 
 export const narrative = [
     async () => {
-        await writeNarrative("welcome Stump #24719")
+        await writeNarrative("welcome stump")
         await writeNarrativeAction("blink if you can hear me")
     },
     async () => {
         await writeNarrative("congratulations on qualifying for a position at TCM’s newest fulfillment centre.")
-        await writeNarrative("I am your company assigned Supply Chain Unit Manager (SCUM).")
-        await writeNarrative("As is mandatory for your position, all your limbs have been surgically removed to improve capital flow through your biomass.")
-        await writeNarrativeAction("blink if the anaesthesia has worn off.")
-    },
-    async () => {
-        await writeNarrative("We are starting the brain-machine-interface calibration process.")
-        await writeNarrative("At the end you will receive your first badge.")
-        await writeNarrativeAction("Blink again if you understood")
+        await writeNarrative("I am your company assigned Supply Chain Unit Manager (S.C.U.M).")
+        await writeNarrative("I will help you through the on-boarding process.")
+        await writeNarrativeAction("blink to begin")
     },
     async () => {
         await writeNarrative("Your consent is important to us.")
@@ -69,21 +64,29 @@ export const narrative = [
         await writeNarrativeInfo("Auto-signing non liability agreement (extreme coverage)")
         playSound("tcm", "TRX_wait_a")
         await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
-        await writeNarrativeInfo("On-boarding in progress...")
+        await writeNarrativeInfo("Beginning surgery...")
         // Send spawn
         const action = spawn()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
         playSound("tcm", "TRX_yes")
         // Spawn complete
-        await writeNarrativeSuccess("On-boarding complete")
-        await writeNarrative("Congratulations Stump #24719")
-        await writeNarrative("Brain-machine-interface is now calibrated.")
-        await writeNarrative("Blood and piss is being pumped from your body.")
+        await writeNarrativeInfo("all limbs removed")
+        await writeNarrativeInfo("capital flow through biomass improved")
+        await writeNarrativeInfo("straitjacket applied")
+        await writeNarrativeInfo("brain-machine-interface calibrated")
+        await writeNarrativeAction("blink when the anaesthesia has worn off")
+    },
+    async () => {
+        await writeNarrative("From now on,")
+        await writeNarrative("you will eat the bugs,")
+        await writeNarrative("you will live in the pod,")
+        await writeNarrative("you will fulfill your orders.")
+        await writeNarrative("Do not disappoint me.")
         await writeNarrativeAction("Blink to enter the pod.")
     },
     async () => {
-        await writeNarrativeInfo("Transferring worker to pod...")
+        await writeNarrativeInfo("Transferring stump to pod...")
         // Send spawn
         const action = restart()
         await waitForTransaction(action, loadingSpinner);

@@ -23,4 +23,5 @@ import { MachinesInPod, MachinesInPodTableId } from "./tables/MachinesInPod.sol"
 import { MaterialsInPod, MaterialsInPodTableId } from "./tables/MaterialsInPod.sol";
 import { CompletionTimes, CompletionTimesTableId } from "./tables/CompletionTimes.sol";
 import { LevelStartBlock, LevelStartBlockTableId } from "./tables/LevelStartBlock.sol";
+import { OutletEntity, OutletEntityTableId } from "./tables/OutletEntity.sol";
 import { GameConfig, GameConfigData, GameConfigTableId } from "./tables/GameConfig.sol";

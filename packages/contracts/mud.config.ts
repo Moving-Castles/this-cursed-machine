@@ -32,6 +32,7 @@ export default mudConfig({
         MaterialsInPod: "bytes32[]",
         CompletionTimes: "uint256[]",
         LevelStartBlock: "uint256",
+        OutletEntity: "bytes32",
         GameConfig: {
             keySchema: {},
             valueSchema: {
