@@ -267,23 +267,19 @@
       if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-        // for (let i = 0; i < sourcePorts.length; i++) {
-        //   let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
-        //   sourcePortOptions.push({
-        //     label: `Port #${i + 1}: ${
-        //       MaterialType[
-        //         currentPortEntity.product?.materialType || MaterialType.NONE
-        //       ]
-        //     }`,
-        //     value: sourcePorts[i][0],
-        //   })
-        // }
+        const portLabel = p =>
+          `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
 
-        // let sourcePort = await renderSelect(
-        //   selectContainerElement,
-        //   Select,
-        //   sourcePortOptions
-        // )
+        const sourcePortOptions = ports.map(p => ({
+          label: portLabel(p),
+          value: p.portIndex,
+        }))
+
+        let sourcePort = await renderSelect(
+          selectContainerElement,
+          Select,
+          sourcePortOptions
+        )
 
         console.log(sourcePort)
 
