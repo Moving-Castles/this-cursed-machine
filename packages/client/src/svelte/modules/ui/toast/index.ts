@@ -16,7 +16,7 @@ export function toastMessage(message: string, toastOptions?: { type?: ToastType,
     message,
     type: toastOptions?.type || "warning",
     timestamp: performance.now(),
-    disappear: toastOptions?.disappear || false
+    disappear: toastOptions?.disappear || true
   }
   toasts.set([...get(toasts), toast])
 }
