@@ -48,6 +48,49 @@ contract DiconnectSystemTest is MudTest {
     vm.stopPrank();
   }
 
+  function testDisconnectSecondConnection() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    bytes32 coreEntity = world.spawn();
+    world.restart();
+
+    // Build a mixer
+    bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
+
+    // Connect core (first output == piss) to mixer
+    world.connect(coreEntity, mixerEntity, PORT_INDEX.FIRST);
+    // Connect core (second output == blood) to mixer
+    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
+
+    // Check that the connections were created
+    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(coreEntity)[1], mixerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[0], coreEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+
+    // Disconnect core from mixer (blood)
+    world.disconnect(coreEntity, PORT_INDEX.SECOND);
+
+    // Check that the connection was destroyed
+    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(coreEntity)[1], bytes32(0));
+    assertEq(IncomingConnections.get(mixerEntity)[0], bytes32(0));
+    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+
+    // Connect core (second output == blood) to mixer, again
+    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
+
+    // Check that the connections were created
+    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(coreEntity)[1], mixerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[0], coreEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+
+    vm.stopPrank();
+  }
+
   function testRevertNoConnection() public {
     setUp();
 
