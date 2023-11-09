@@ -104,6 +104,9 @@
       color: #fff;
       margin-left: 2ch;
       height: 1.1em;
+      white-space: nowrap; /* Ensure no line breaks inside the element */
+      overflow: hidden; /* Hide the overflow text */
+      text-overflow: ellipsis; /* Add ellipses at the end of the text */
 
       &.active {
         color: #000;
