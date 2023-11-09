@@ -14,7 +14,6 @@
   import {
     simulatedMachines,
     simulatedConnections,
-    simulatedPorts,
   } from "../../modules/simulator"
   import {
     connectionState,
@@ -58,6 +57,8 @@
   let height = 0
 
   let [nodes, links] = [[], []]
+
+  $: console.log($simulatedConnections)
 
   // Initialize forces
   const linkForce = d3
@@ -156,11 +157,7 @@
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
 
   $: {
-    const graph = data(
-      $simulatedMachines,
-      $simulatedConnections,
-      $simulatedPorts
-    )
+    const graph = data($simulatedMachines)
 
     // Update nodes
     graph.nodes.forEach(newNode => {

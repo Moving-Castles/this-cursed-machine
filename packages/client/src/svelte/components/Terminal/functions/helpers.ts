@@ -5,8 +5,8 @@ import type { Action } from "../../../modules/action/actionSequencer";
 // import { get } from "svelte/store";
 import { COMMAND, SelectOption } from "../types"
 import { COMMANDS_BY_LEVEL, terminalOutput } from ".."
-import { machineTypeToLabel } from "../../../modules/state/convenience";
-import { MachineType } from "../../../modules/state/enums";
+import { machineTypeToLabel } from "../../../modules/state/convenience"
+import { MachineType } from "../../../modules/state/enums"
 
 
 /**
@@ -29,15 +29,18 @@ export async function scrollToEnd(): Promise<void> {
  * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once its transaction is set, or rejects after a certain number of retries.
  */
-export const waitForTransaction = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
+export const waitForTransaction = (
+  action: Action,
+  loadingFunction?: (index: number) => {}
+): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100
     let attempts = 0
     let index = 0
 
     const checkTransaction = () => {
-      index++;
-      if (loadingFunction) loadingFunction(index);
+      index++
+      if (loadingFunction) loadingFunction(index)
       if (action.tx) {
         // check if tx is set (i.e., it has a truthy value)
         resolve(action)
@@ -62,15 +65,18 @@ export const waitForTransaction = (action: Action, loadingFunction?: (index: num
  * @param {function} [loadingFunction] - An optional function to call while waiting for completion.
  * @returns {Promise<Action>} - A promise that resolves with the action once it's completed, or rejects after a certain number of retries.
  */
-export const waitForCompletion = (action: Action, loadingFunction?: (index: number) => {}): Promise<Action> => {
+export const waitForCompletion = (
+  action: Action,
+  loadingFunction?: (index: number) => {}
+): Promise<Action> => {
   return new Promise((resolve, reject) => {
     const maxRetries = 100 // just an example, set to however many retries you want
     let attempts = 0
     let index = 0
 
     const checkCompletion = () => {
-      index++;
-      if (loadingFunction) loadingFunction(index);
+      index++
+      if (loadingFunction) loadingFunction(index)
       if (action.completed) {
         resolve(action)
       } else if (action.failed) {
@@ -89,31 +95,31 @@ export const waitForCompletion = (action: Action, loadingFunction?: (index: numb
 }
 
 export function levelCommandFilter(level: number, commandId: COMMAND): boolean {
-  return COMMANDS_BY_LEVEL[level].includes(commandId) ? true : false;
+  return COMMANDS_BY_LEVEL[level].includes(commandId) ? true : false
 }
 
 /**
  * Display a full-screen flash effect that lasts for 100ms.
- * 
+ *
  * @returns {Promise<void>} Resolves once the flash effect completes.
  */
 export async function flashEffect(): Promise<void> {
   return new Promise(resolve => {
     // Create a new div element
-    const flashDiv = document.createElement('div');
+    const flashDiv = document.createElement("div")
 
     // Assign the 'flash-effect' class to it
-    flashDiv.className = 'flash';
+    flashDiv.className = "flash"
 
     // Append it to the body
-    document.body.appendChild(flashDiv);
+    document.body.appendChild(flashDiv)
 
     // Remove the div after 100ms and resolve the promise
     setTimeout(() => {
-      document.body.removeChild(flashDiv);
-      resolve();
-    }, 50);
-  });
+      document.body.removeChild(flashDiv)
+      resolve()
+    }, 50)
+  })
 }
 
 export function clearTerminalOutput() {
@@ -121,7 +127,7 @@ export function clearTerminalOutput() {
 }
 
 /**
- * Orders an array of SelectOption objects with 'inlet' first, 'outlet' last, 
+ * Orders an array of SelectOption objects with 'inlet' first, 'outlet' last,
  * and the rest in alphabetical order by the 'label' property.
  * @param {SelectOption[]} array - The array of SelectOption objects to be sorted.
  * @returns {SelectOption[]} - The sorted array.

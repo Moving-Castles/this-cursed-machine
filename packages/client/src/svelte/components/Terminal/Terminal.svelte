@@ -12,6 +12,7 @@
   import { playInputSound } from "./functions/sound"
   import {
     MachineType,
+    // PortType,
     MaterialType,
     PortIndex,
   } from "../../modules/state/enums"
@@ -139,8 +140,8 @@
 
       // Get machines with available outgoing connection slots
       let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.OUTGOING
+        COMMAND.CONNECT
+        // PortType.OUTPUT
       )
 
       await writeToTerminal(OutputType.NORMAL, "From:")
@@ -182,8 +183,8 @@
 
       // Get machines with available incoming connection slots
       let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.INCOMING
+        COMMAND.CONNECT
+        // PortType.INPUT
       )
 
       await writeToTerminal(OutputType.NORMAL, "TO:")

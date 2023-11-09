@@ -2,11 +2,7 @@ import { EntityType } from "../../../modules/state/enums"
 
 export const MACHINE_SIZE = 80
 
-export function data(
-  simulatedMachines: Entity[],
-  simulatedConnections: Entity[],
-  simulatedPorts: Entity[]
-) {
+export function data(simulatedMachines: Entity[]) {
   return {
     nodes: [
       ...Object.entries(simulatedMachines).map(([key, entry]) => ({
@@ -16,28 +12,7 @@ export function data(
         group: EntityType.MACHINE,
       })),
     ],
-    links: [
-      // Connect ports to each other
-      ...Object.entries(simulatedConnections)
-        .map(([key, entry]) => {
-          // Connect the source machine to the target machine
-          const sP = simulatedPorts[entry.sourcePort]
-          const tP = simulatedPorts[entry.targetPort]
-
-          if (sP && tP) {
-            return {
-              id: `Connection-${key}`,
-              entry,
-              address: key,
-              group: EntityType.CONNECTION,
-              source: `Machine-${sP.carriedBy}`,
-              target: `Machine-${tP.carriedBy}`,
-            }
-          }
-          return false
-        })
-        .filter(thing => thing), // check if they are all valid links
-    ],
+    links: [],
   }
 }
 

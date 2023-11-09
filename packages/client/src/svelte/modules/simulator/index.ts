@@ -134,6 +134,25 @@ export const simulatedMachines = derived(
   }
 )
 
+/** Connections */
+export const simulatedConnections = derived(
+  [simulatedMachines],
+  ([$simulatedMachines]) => {
+    console.log("START sim connections")
+    let connections: Connection[] = []
+
+    Object.entries($simulatedMachines).forEach(([address, machine]) => {
+      console.log("Machine")
+      console.log(address, machine)
+    })
+
+    console.log("END sim connections")
+    console.log(connections)
+
+    return connections
+  }
+)
+
 /** Materials */
 export const simulatedMaterials = derived(simulated, $simulated => {
   return Object.fromEntries(
