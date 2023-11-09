@@ -141,12 +141,15 @@ export const simulatedConnections = derived(
       machine.outgoingConnections?.forEach((targetAddress, i) => {
         if (targetAddress === EMPTY_CONNECTION) return
         const sourceMachine = $simulatedMachines[sourceAddress]
-        const product = sourceMachine?.outputs[i]
+        const product = sourceMachine?.outputs
+          ? sourceMachine?.outputs[i]
+          : null
         connections.push({
           id: uuid(),
           sourceMachine: sourceAddress,
           targetMachine: targetAddress,
-          product,
+          portIndex: i,
+          product: product,
         })
       })
     })

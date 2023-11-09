@@ -1,13 +1,17 @@
 import type { PortDefinition } from "../../../modules/state/types"
 import { SelectOption, COMMAND, DIRECTION } from "../types"
 import { MachineType } from "../../../modules/state/enums"
-import { simulatedMachines } from "../../../modules/simulator"
+import {
+  simulatedMachines,
+  simulatedConnections,
+} from "../../../modules/simulator"
 import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
 import {
   machineTypeToLabel,
+  materialTypeToLabel,
   availableMachines,
 } from "../../../modules/state/convenience"
 
@@ -127,15 +131,29 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
 function createSelectOptionsDisconnect(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  // Get all connections, return readable labels
+  const machines = get(simulatedMachines)
+  const connections = get(simulatedConnections)
 
-  // @todo Fix readable connections
-  // get(readableConnections).forEach(({ id, label }) => {
-  //     selectOptions.push({
-  //         label,
-  //         value: id,
-  //     })
-  // })
+  selectOptions = connections.map(connection => {
+    const sourceMachine = machines[connection.sourceMachine]
+    const targetMachine = machines[connection.targetMachine]
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)}${
+      sourceMachine?.buildIndex ?? ""
+    } to ${machineTypeToLabel(targetMachine.machineType)} ${
+      targetMachine?.buildIndex ?? ""
+    } ${
+      connection?.product
+        ? `(${materialTypeToLabel(connection.product.materialType)})`
+        : ""
+    }`
+
+    return {
+      label,
+      value: connection.id,
+    }
+  })
+
+  console.log(selectOptions)
 
   return selectOptions
 }

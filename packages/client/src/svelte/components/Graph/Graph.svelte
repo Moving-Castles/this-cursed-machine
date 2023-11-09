@@ -185,7 +185,6 @@
 
     // Update links
     graph.links.forEach(newLink => {
-      console.log("NEW LINK ", newLink)
       const existingLink = links.find(link => link.id === newLink.id)
       if (existingLink) {
         Object.assign(existingLink, newLink) // Update existing link

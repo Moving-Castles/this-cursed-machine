@@ -20,7 +20,10 @@
   import Select from "./Select.svelte"
   import TerminalOutput from "./TerminalOutput.svelte"
   import { scrollToEnd } from "./functions/helpers"
-  import { simulatedMachines } from "../../modules/simulator"
+  import {
+    simulatedMachines,
+    simulatedConnections,
+  } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
   import { playerCore } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
@@ -133,8 +136,38 @@
       // Push the value to parameters
       parameters = [value]
     } else if (command.id === COMMAND.DISCONNECT) {
-      // @todo handle disconnect
-      console.log("disconnect")
+      let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
+
+      const connectionId = await renderSelect(
+        selectContainerElement,
+        Select,
+        disconnectOptions
+      )
+
+      // Get the port index that this connection belongs to
+
+      // Abort if nothing selected
+      if (
+        !connectionId ||
+        !$simulatedConnections.find(c => c.id === connectionId)
+      ) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "No connection",
+          false,
+          SYMBOLS[5]
+        )
+        resetInput()
+        return
+      }
+
+      const connection = $simulatedConnections.find(c => c.id === connectionId)
+
+      console.log(connection)
+
+      console.log(connection.sourceMachine, connection.portIndex)
+
+      parameters = [connection.sourceMachine, connection.portIndex]
     } else if (command.id === COMMAND.CONNECT) {
       // %%%%%%%%%%%%%%%%%%%%%%%%
       // %% Get source machine %%
@@ -190,7 +223,7 @@
       )
 
       // Abort if no available targets
-      if(targetSelectOptions.length === 0) {
+      if (targetSelectOptions.length === 0) {
         await writeToTerminal(
           OutputType.ERROR,
           "No machines available",

@@ -7,6 +7,7 @@ export type Product = {
 }
 
 export type Connection = {
+  id: string
   sourceMachine: string
   targetMachine: string
   product: Product
