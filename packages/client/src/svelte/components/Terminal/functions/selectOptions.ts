@@ -1,3 +1,4 @@
+import type { PortDefinition } from "../../../modules/state/types"
 import { SelectOption, COMMAND, DIRECTION } from "../types"
 import { MachineType } from "../../../modules/state/enums"
 import {

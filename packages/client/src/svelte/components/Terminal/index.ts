@@ -80,33 +80,31 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.TRANSFER,
     COMMAND.COMPLETE
   ],
-  1: FULL_COMMANDS,
-  2: FULL_COMMANDS,
-  // 1: [
-  //   COMMAND.CONNECT,
-  //   COMMAND.DISCONNECT,
-  //   COMMAND.HELP,
-  //   COMMAND.ORDERS,
-  //   COMMAND.BLINK,
-  //   // ... Hidden
-  //   COMMAND.RESTART,
-  //   COMMAND.RESOLVE,
-  //   COMMAND.TRANSFER,
-  //   COMMAND.COMPLETE
-  // ],
-  // 2: [
-  //   COMMAND.CLEAR,
-  //   COMMAND.CONNECT,
-  //   COMMAND.DISCONNECT,
-  //   COMMAND.HELP,
-  //   COMMAND.ORDERS,
-  //   COMMAND.BLINK,
-  //   // ... Hidden
-  //   COMMAND.RESTART,
-  //   COMMAND.RESOLVE,
-  //   COMMAND.TRANSFER,
-  //   COMMAND.COMPLETE
-  // ],
+  1: [
+    COMMAND.CONNECT,
+    COMMAND.DISCONNECT,
+    COMMAND.HELP,
+    COMMAND.ORDERS,
+    COMMAND.BLINK,
+    // ... Hidden
+    COMMAND.RESTART,
+    COMMAND.RESOLVE,
+    COMMAND.TRANSFER,
+    COMMAND.COMPLETE
+  ],
+  2: [
+    COMMAND.CLEAR,
+    COMMAND.CONNECT,
+    COMMAND.DISCONNECT,
+    COMMAND.HELP,
+    COMMAND.ORDERS,
+    COMMAND.BLINK,
+    // ... Hidden
+    COMMAND.RESTART,
+    COMMAND.RESOLVE,
+    COMMAND.TRANSFER,
+    COMMAND.COMPLETE
+  ],
   3: [
     COMMAND.CLEAR,
     COMMAND.CONNECT,
@@ -154,8 +152,8 @@ export const FULL_MACHINES = [
 ]
 
 export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
-  0: FULL_MACHINES,
-  1: FULL_MACHINES,
+  0: [],
+  1: [],
   2: [],
   3: [
     MachineType.MIXER,
