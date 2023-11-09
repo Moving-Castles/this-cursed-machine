@@ -147,6 +147,7 @@ declare global {
   // * * * * * * * * * * * * * * * * *
   // MISC TYPES
   // * * * * * * * * * * * * * * * * *
+
   type Coord = {
     x: number
     y: number
