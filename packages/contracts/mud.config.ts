@@ -2,10 +2,10 @@ import { mudConfig } from "@latticexyz/world/register";
 import { resolveTableId } from "@latticexyz/config";
 
 export const enums = {
-    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "LEVEL", "GOAL", "BOX", "MACHINE", "CONNECTION", "MATERIAL", "PORT"],
+    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "LEVEL", "GOAL", "BOX", "MACHINE", "MATERIAL"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "CORE", "SPLITTER", "MIXER", "DRYER", "WETTER", "BOILER", "COOLER"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "SLUDGE", "DIRT", "BLOOD_LIPIDS", "PLANT", "CAFFEINE_SLUSHY", "CLUB_MATE", "DIET_RED_BULL", "PRIME", "M150", "FIVE_HOUR_ENERGY", "MONSTER", "E_LIQUID", "TOBACCO", "CIGARETTE_JUICE", "ERASERBABY"],
-    PORT_TYPE: ["NONE", "INPUT", "OUTPUT"]
+    PORT_INDEX: ["FIRST", "SECOND"]
 }
 
 export default mudConfig({
@@ -15,24 +15,24 @@ export default mudConfig({
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
         MaterialType: "MATERIAL_TYPE",
-        PortType: "PORT_TYPE",
         Name: "string",
         Energy: "uint32",
         CarriedBy: "bytes32",
         CreatedBy: "bytes32",
         Amount: "uint32",
-        SourcePort: "bytes32",
-        TargetPort: "bytes32",
         CreationBlock: "uint256",
-        ReadyBlock: "uint256",
         BuildIndex: "uint32",
         Level: "uint32",
         LastResolved: "uint256",
         Input: "uint256",
         Output: "MATERIAL_TYPE",
-        PerformanceRatings: "uint32[]",
-        CompletionTime: "uint256",
-        // ...
+        OutgoingConnections: "bytes32[]",
+        IncomingConnections: "bytes32[]",
+        MachinesInPod: "bytes32[]",
+        MaterialsInPod: "bytes32[]",
+        CompletionTimes: "uint256[]",
+        LevelStartBlock: "uint256",
+        OutletEntity: "bytes32",
         GameConfig: {
             keySchema: {},
             valueSchema: {
@@ -68,21 +68,6 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("CarriedBy")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("PortType")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("SourcePort")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("TargetPort")],
         },
         {
             name: "KeysWithValueModule",

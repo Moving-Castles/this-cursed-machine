@@ -32,7 +32,8 @@ contract SpawnSystemTest is MudTest {
     assertEq(uint8(MachineType.get(coreEntity)), uint8(MACHINE_TYPE.CORE));
     assertEq(Level.get(coreEntity), 0);
     assertEq(CreationBlock.get(coreEntity), block.number);
-    assertEq(ReadyBlock.get(coreEntity), block.number);
+    assertEq(IncomingConnections.get(coreEntity).length, 1);
+    assertEq(OutgoingConnections.get(coreEntity).length, 2);
   }
 
   function testSpawnAndStart() public {
@@ -40,11 +41,10 @@ contract SpawnSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 coreEntity = world.spawn();
-    bytes32 boxEntity = world.restart();
+    bytes32 podEntity = world.restart();
     vm.stopPrank();
 
-    assertEq(CarriedBy.get(coreEntity), boxEntity);
+    assertEq(CarriedBy.get(coreEntity), podEntity);
     assertEq(Level.get(coreEntity), 1);
-    assertEq(Level.get(boxEntity), 1);
   }
 }

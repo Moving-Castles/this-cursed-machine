@@ -21,15 +21,15 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
 ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("PerformanceRatin")))
+  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("MaterialsInPod")))
 );
-ResourceId constant PerformanceRatingsTableId = _tableId;
+ResourceId constant MaterialsInPodTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
   0x0000000100000000000000000000000000000000000000000000000000000000
 );
 
-library PerformanceRatings {
+library MaterialsInPod {
   /**
    * @notice Get the table values' field layout.
    * @return _fieldLayout The field layout for the table.
@@ -55,7 +55,7 @@ library PerformanceRatings {
    */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](1);
-    _valueSchema[0] = SchemaType.UINT32_ARRAY;
+    _valueSchema[0] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -95,51 +95,51 @@ library PerformanceRatings {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 key) internal view returns (uint32[] memory value) {
+  function getValue(bytes32 key) internal view returns (bytes32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 key) internal view returns (uint32[] memory value) {
+  function _getValue(bytes32 key) internal view returns (bytes32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 key) internal view returns (uint32[] memory value) {
+  function get(bytes32 key) internal view returns (bytes32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 key) internal view returns (uint32[] memory value) {
+  function _get(bytes32 key) internal view returns (bytes32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 key, uint32[] memory value) internal {
+  function setValue(bytes32 key, bytes32[] memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -149,7 +149,7 @@ library PerformanceRatings {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 key, uint32[] memory value) internal {
+  function _setValue(bytes32 key, bytes32[] memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -159,7 +159,7 @@ library PerformanceRatings {
   /**
    * @notice Set value.
    */
-  function set(bytes32 key, uint32[] memory value) internal {
+  function set(bytes32 key, bytes32[] memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -169,7 +169,7 @@ library PerformanceRatings {
   /**
    * @notice Set value.
    */
-  function _set(bytes32 key, uint32[] memory value) internal {
+  function _set(bytes32 key, bytes32[] memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -185,7 +185,7 @@ library PerformanceRatings {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 4;
+      return _byteLength / 32;
     }
   }
 
@@ -198,7 +198,7 @@ library PerformanceRatings {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 4;
+      return _byteLength / 32;
     }
   }
 
@@ -211,7 +211,7 @@ library PerformanceRatings {
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 4;
+      return _byteLength / 32;
     }
   }
 
@@ -224,7 +224,7 @@ library PerformanceRatings {
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
-      return _byteLength / 4;
+      return _byteLength / 32;
     }
   }
 
@@ -232,13 +232,13 @@ library PerformanceRatings {
    * @notice Get an item of value.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemValue(bytes32 key, uint256 _index) internal view returns (uint32) {
+  function getItemValue(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
     }
   }
 
@@ -246,13 +246,13 @@ library PerformanceRatings {
    * @notice Get an item of value.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemValue(bytes32 key, uint256 _index) internal view returns (uint32) {
+  function _getItemValue(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
     }
   }
 
@@ -260,13 +260,13 @@ library PerformanceRatings {
    * @notice Get an item of value.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItem(bytes32 key, uint256 _index) internal view returns (uint32) {
+  function getItem(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
     }
   }
 
@@ -274,20 +274,20 @@ library PerformanceRatings {
    * @notice Get an item of value.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItem(bytes32 key, uint256 _index) internal view returns (uint32) {
+  function _getItem(bytes32 key, uint256 _index) internal view returns (bytes32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
-      return (uint32(bytes4(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 32, (_index + 1) * 32);
+      return (bytes32(_blob));
     }
   }
 
   /**
    * @notice Push an element to value.
    */
-  function pushValue(bytes32 key, uint32 _element) internal {
+  function pushValue(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -297,7 +297,7 @@ library PerformanceRatings {
   /**
    * @notice Push an element to value.
    */
-  function _pushValue(bytes32 key, uint32 _element) internal {
+  function _pushValue(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -307,7 +307,7 @@ library PerformanceRatings {
   /**
    * @notice Push an element to value.
    */
-  function push(bytes32 key, uint32 _element) internal {
+  function push(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -317,7 +317,7 @@ library PerformanceRatings {
   /**
    * @notice Push an element to value.
    */
-  function _push(bytes32 key, uint32 _element) internal {
+  function _push(bytes32 key, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -331,7 +331,7 @@ library PerformanceRatings {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 32);
   }
 
   /**
@@ -341,7 +341,7 @@ library PerformanceRatings {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 32);
   }
 
   /**
@@ -351,7 +351,7 @@ library PerformanceRatings {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 32);
   }
 
   /**
@@ -361,58 +361,58 @@ library PerformanceRatings {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 4);
+    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 32);
   }
 
   /**
    * @notice Update an element of value at `_index`.
    */
-  function updateValue(bytes32 key, uint256 _index, uint32 _element) internal {
+  function updateValue(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of value at `_index`.
    */
-  function _updateValue(bytes32 key, uint256 _index, uint32 _element) internal {
+  function _updateValue(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of value at `_index`.
    */
-  function update(bytes32 key, uint256 _index, uint32 _element) internal {
+  function update(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of value at `_index`.
    */
-  function _update(bytes32 key, uint256 _index, uint32 _element) internal {
+  function _update(bytes32 key, uint256 _index, bytes32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 32), uint40(_encoded.length), _encoded);
     }
   }
 
@@ -440,10 +440,10 @@ library PerformanceRatings {
    * @notice Tightly pack dynamic data lengths using this table's schema.
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
-  function encodeLengths(uint32[] memory value) internal pure returns (PackedCounter _encodedLengths) {
+  function encodeLengths(bytes32[] memory value) internal pure returns (PackedCounter _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(value.length * 4);
+      _encodedLengths = PackedCounterLib.pack(value.length * 32);
     }
   }
 
@@ -451,7 +451,7 @@ library PerformanceRatings {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(uint32[] memory value) internal pure returns (bytes memory) {
+  function encodeDynamic(bytes32[] memory value) internal pure returns (bytes memory) {
     return abi.encodePacked(EncodeArray.encode((value)));
   }
 
@@ -461,7 +461,7 @@ library PerformanceRatings {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint32[] memory value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  function encode(bytes32[] memory value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData;
     PackedCounter _encodedLengths = encodeLengths(value);
     bytes memory _dynamicData = encodeDynamic(value);

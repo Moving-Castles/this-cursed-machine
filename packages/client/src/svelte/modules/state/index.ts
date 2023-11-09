@@ -2,16 +2,16 @@
  *  Central store for all entities in the game.
  *
  */
-import { EntityType, MachineType, PortType } from "./enums"
+import { EntityType, MachineType } from "./enums"
 import { writable, derived } from "svelte/store"
-import { network, blockNumber } from "../network"
-import { NULL_COORDINATE } from "../utils/space"
-
-// --- CONSTANTS --------------------------------------------------------------
+import { network } from "../network"
 
 export const GAME_CONFIG_ID = "0x"
+export const EMPTY_CONNECTION = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
-// --- STORES -----------------------------------------------------------------
+// * * * * * * * * * * * * * * * * *
+// DEFAULT ENTITY TYPES
+// * * * * * * * * * * * * * * * * *
 
 /**
  * Mirror of the full on chain state.
@@ -20,8 +20,13 @@ export const GAME_CONFIG_ID = "0x"
  */
 export const entities = writable({} as Entities)
 
+
+// * * * * * * * * * * * * * * * * *
+// GAME CONFIG ENTITY TYPES
+// * * * * * * * * * * * * * * * * *
+
 /**
- * Global config entity
+ * Game config
  */
 export const gameConfig = derived(
   entities,
@@ -61,6 +66,10 @@ export const goals = derived(entities, $entities => {
   ) as Goals
 })
 
+// * * * * * * * * * * * * * * * * *
+// GAME PLAY ENTITY TYPES
+// * * * * * * * * * * * * * * * * *
+
 /**
  * Boxes
  */
@@ -84,7 +93,7 @@ export const materials = derived(entities, $entities => {
 })
 
 /**
- * Machines are in the box and convert their inputs to outputs.
+ * Machines
  */
 export const machines = derived(entities, $entities => {
   return Object.fromEntries(
@@ -95,57 +104,19 @@ export const machines = derived(entities, $entities => {
 })
 
 /**
- * Cores are the agents of the player.
+ * Cores
  */
-export const cores = derived(machines, $machines => {
+export const cores = derived(entities, $entities => {
   return Object.fromEntries(
-    Object.entries($machines).filter(
-      ([, machine]) => machine.machineType === MachineType.CORE
+    Object.entries($entities).filter(
+      ([, entity]) => entity.machineType === MachineType.CORE
     )
   ) as Cores
 })
 
-/**
- * Connections bind cores and organs together.
- */
-export const connections = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.CONNECTION
-    )
-  ) as Connections
-})
-
-/**
- * Ports are the entry and exit points
- */
-export const ports = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.PORT
-    )
-  ) as Ports
-})
-
-// Port inputs
-export const inputs = derived(ports, $ports => {
-  return Object.fromEntries(
-    Object.entries($ports).filter(
-      ([, port]) => port.portType === PortType.INPUT
-    )
-  ) as Ports
-})
-
-// Port outputs
-export const outputs = derived(ports, $ports => {
-  return Object.fromEntries(
-    Object.entries($ports).filter(
-      ([, port]) => port.portType === PortType.OUTPUT
-    )
-  ) as Ports
-})
-
-// *** PLAYER -----------------------------------------------------------------
+// * * * * * * * * * * * * * * * * *
+// CORE STORES
+// * * * * * * * * * * * * * * * * *
 
 export const playerAddress = derived(
   network,
@@ -165,11 +136,6 @@ export const playerCore = derived(
   ([$cores, $playerEntityId]) => $cores[$playerEntityId]
 )
 
-export const playerInCooldown = derived(
-  [playerCore, blockNumber],
-  ([$playerCore, $blockNumber]) => $playerCore.readyBlock > $blockNumber
-)
-
 export const playerBox = derived(
   [entities, playerCore],
   ([$entities, $playerCore]) => {
@@ -178,39 +144,6 @@ export const playerBox = derived(
     } else {
       return {} as Box
     }
-  }
-)
-
-export const entitiesInBox = derived(
-  [entities, playerCore],
-  ([$entities, $playerCore]) => {
-    return Object.fromEntries(
-      Object.entries($entities).filter(
-        ([, entity]) => entity.carriedBy === $playerCore.carriedBy
-      )
-    ) as Entities
-  }
-)
-
-export const playerCorePorts = derived(
-  [entities, playerEntityId],
-  ([$entities, $playerEntityId]) => {
-    return Object.fromEntries(
-      Object.entries($entities).filter(
-        ([, entity]) =>
-          entity.type === EntityType.PORT &&
-          entity.carriedBy === $playerEntityId
-      )
-    ) as Ports
-  }
-)
-
-export const coresInPlayerBox = derived(
-  [cores, playerCore],
-  ([$cores, $playerCore]) => {
-    return Object.values($cores).filter(core => {
-      return core.carriedBy == $playerCore.carriedBy
-    }) as Core[]
   }
 )
 
@@ -225,75 +158,9 @@ export const machinesInPlayerBox = derived(
   }
 )
 
-export const playerCalculatedEnergy = derived(
-  [blockNumber, playerCore],
-  ([$blockNumber, $playerCore]) => {
-    if ($playerCore) {
-      return $playerCore.energy
-      // return Number($playerCore.readyBlock) - Number($blockNumber)
-    } else {
-      return 0
-    }
-  }
-)
-
-// Will be deprecated
-export const dragOrigin = writable(NULL_COORDINATE as Coord)
-export const dropDestination = writable(NULL_COORDINATE as Coord)
-export const hoverDestination = writable(NULL_COORDINATE as Coord)
-
-// Initially set on spawn
-export const originAddress = writable("")
-export const destinationAddress = writable("")
-
-/**
- * Can the player afford resource for this organ?
- * @param coord Coordinate of the tile one tries to connect to
- * @returns derived store with boolean
- */
-export const playerCanAffordMachine = (cost: number) =>
-  derived([playerCalculatedEnergy], ([$playerCalculatedEnergy]) => {
-    // Get the distance between the coordinate and the player
-    return cost <= $playerCalculatedEnergy
-  })
-
-/**
- * Get the inputs on given entity's address
- * @param address string
- * @returns Port[]
- */
-export const inputsForEntity = (address: string) =>
-  derived([entities], ([$entities]) => {
-    return Object.fromEntries(
-      Object.entries($entities).filter(
-        ([_, entity]) =>
-          entity.entityType === EntityType.PORT &&
-          entity.carriedBy === address &&
-          entity?.portType === PortType.INPUT
-      )
-    ) as Ports
-  })
-
-/**
- * Get the outputs on given entity's address
- * @param address string
- * @returns Port[]
- */
-export const outputsForEntity = (address: string) =>
-  derived([entities], ([$entities]) => {
-    return Object.fromEntries(
-      Object.entries($entities).filter(
-        ([_, entity]) =>
-          entity.entityType === EntityType.PORT &&
-          entity.carriedBy === address &&
-          entity?.portType === PortType.OUTPUT
-      )
-    ) as Ports
-  })
-
 export const playerGoals = derived(
-  [playerBox, goals],
-  ([$playerBox, $goals]) => {
-    return Object.values($goals).filter(g => g?.level === $playerBox.level)
+  [playerCore, goals],
+  ([$playerCore, $goals]) => {
+    return Object.values($goals).filter(g => g.level === $playerCore.level)
   }
 )

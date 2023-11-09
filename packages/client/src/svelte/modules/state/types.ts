@@ -1,99 +1,42 @@
-import { EntityType, MaterialType, PortType, MachineType } from "./enums"
-
-export { EntityType, MaterialType, PortType, MachineType } from "./enums"
+import type { SimulatedEntity } from "../simulator/types"
+import { EMPTY_CONNECTION } from "./index"
+import { EntityType, MaterialType, MachineType } from "./enums"
+export { EntityType, MaterialType, MachineType } from "./enums"
 
 declare global {
-  // Default type with all potential properties.
+  // * * * * * * * * * * * * * * * * *
+  // DEFAULT ENTITY TYPES
+  // * * * * * * * * * * * * * * * * *
+
   type Entity = {
     [key: string]: any
-    gameConfig?: GameConfig
-    type?: EntityType
+    entityType?: EntityType
     machineType?: MachineType
     materialType?: MaterialType
-    portType?: PortType
-    // ...
-    creationBlock?: number
     name?: string
     energy?: number
-    readyBlock?: number
-    level?: number
     carriedBy?: string
-    sourcePort?: string
-    targetPort?: string
-    buildIndex: number
+    createdBy?: string
+    amount?: number
+    creationBlock?: number
+    buildIndex?: number
+    level?: number
+    lastResolved?: number
     input?: number
     output?: MaterialType
-    amount?: number
-    lastResolved?: number,
-    performanceRatings?: number[],
-    completionTime?: number,
+    outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
+    incomingConnections?: string[] // try to base everything off of the outgoing connections
+    machinesInPod?: string[]
+    materialsInPod?: string[]
+    LevelStartBlock?: number
+    completionTimes?: number[]
+    outletEntity?: string
+    gameConfig?: GameConfig
   }
 
-  type BuildableEntity = {
-    type: EntityType.MACHINE
-    name: string
-    cost: number
-  }
-
-  type BuildableMachine = {
-    type: MachineType
-    name: string
-    cost: number
-  }
-
-  type Box = {
-    type: EntityType.BOX
-    creationBlock: number
-    level: number
-    lastResolved: number
-  }
-
-  type Level = {
-    type: EntityType.LEVEL
-    level: number
-  }
-
-  type Core = {
-    type: EntityType.MACHINE
-    machineType: MachineType.CORE
-    name: string
-    creationBlock: number
-    energy: number
-    readyBlock: number
-    level: number
-    carriedBy: string
-    performanceRatings?: number[],
-    completionTime?: number
-  }
-
-  type Connection = {
-    type: EntityType.CONNECTION
-    sourcePort: string
-    targetPort: string
-  }
-
-  type Machine = {
-    type: EntityType.MACHINE
-    machineType: MachineType
-    creationBlock: number
-    carriedBy: string
-    buildIndex: number
-    name?: string
-    energy?: number
-    readyBlock?: number
-    level?: number
-  }
-
-  type Port = {
-    type: EntityType.PORT
-    portType: PortType
-    carriedBy: string
-  }
-
-  type Material = {
-    type: EntityType.MATERIAL
-    amount: number
-  }
+  // * * * * * * * * * * * * * * * * *
+  // GAME CONFIG ENTITY TYPES
+  // * * * * * * * * * * * * * * * * *
 
   type GameConfig = {
     coolDown: number
@@ -101,44 +44,79 @@ declare global {
     buildCost: number
   }
 
+  type Level = {
+    entityType: EntityType.LEVEL
+    level: number
+    energy: number
+  }
+
   type Recipe = {
-    type: EntityType.RECIPE
+    entityType: EntityType.RECIPE
     machineType: MachineType
     input: number
     output: MaterialType
   }
 
   type Goal = {
-    type: EntityType.GOAL
+    entityType: EntityType.GOAL
     level: number
     materialType: MaterialType
     amount: number
   }
 
-  // ---
+  // * * * * * * * * * * * * * * * * *
+  // GAME PLAY ENTITY TYPES
+  // * * * * * * * * * * * * * * * * *
+
+  // aka. pod
+  type Box = {
+    entityType: EntityType.BOX
+    creationBlock: number
+    lastResolved: number
+    outletEntity: string
+    machinesInPod: string[]
+    materialsInPod: string[]
+  }
+
+  // aka. stump
+  type Core = {
+    entityType: EntityType.MACHINE
+    machineType: MachineType.CORE
+    creationBlock: number
+    name?: string
+    energy: number
+    level: number
+    carriedBy: string
+    incomingConnections: string[]
+    outgoingConnections: string[]
+    LevelStartBlock: number
+    completionTimes: number[]
+  }
+
+  type Machine = {
+    entityType: EntityType.MACHINE
+    machineType: MachineType
+    carriedBy: string
+    buildIndex: number
+    incomingConnections: string[]
+    outgoingConnections: string[]
+  }
+
+  type Material = {
+    entityType: EntityType.MATERIAL
+    creationBlock: number
+    carriedBy: string
+    createdBy: string
+    materialType: MaterialType
+    amount: number
+  }
+
+  // * * * * * * * * * * * * * * * * *
+  // GAME PLAY ENTITY TYPES
+  // * * * * * * * * * * * * * * * * *
 
   type Entities = {
     [index: string]: Entity
-  }
-
-  type Cores = {
-    [index: string]: Core
-  }
-
-  type Connections = {
-    [index: string]: Connection
-  }
-
-  type Ports = {
-    [index: string]: Port
-  }
-
-  type Machines = {
-    [index: string]: Machine
-  }
-
-  type Boxes = {
-    [index: string]: Box
   }
 
   type Levels = {
@@ -153,28 +131,35 @@ declare global {
     [index: string]: Goal
   }
 
+  type Cores = {
+    [index: string]: Core
+  }
+
+  type Machines = {
+    [index: string]: Machine
+  }
+
+  type Boxes = {
+    [index: string]: Box
+  }
+
   type Materials = {
     [index: string]: Material
   }
 
-  // ---
+  // * * * * * * * * * * * * * * * * *
+  // MISC TYPES
+  // * * * * * * * * * * * * * * * * *
 
   type Coord = {
     x: number
     y: number
   }
 
-  type CalculatedEnergies = {
-    [index: string]: number
-  }
-
-  interface GridTile {
-    id: string
-    coordinates: Coord
-  }
-
-  type EntityStoreEntry = {
-    address: string
-    entity: Entity
+  type PortDefinition = {
+    portIndex: number
+    machineAddress: string
+    machine: SimulatedEntity
+    address: typeof EMPTY_CONNECTION
   }
 }

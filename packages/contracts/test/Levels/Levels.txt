@@ -10,7 +10,7 @@ _ GOALS:
 - 101 core energy
 -------
 Connect inlet to core
-* Wait 10 block
+* Wait 1 block
 Transfer
 Assert: level == 2
 
@@ -22,10 +22,10 @@ _ GOALS:
 -------
 Connect inlet to core
 Connect core piss port to outlet
-* Wait 11 blocks
+* Wait 20 blocks
 Disconnect piss Connection
 Connect core blood port to outlet
-* Wait 11 blocks
+* Wait 20 blocks
 Transfer
 Assert: level == 3
 
@@ -40,12 +40,12 @@ Build mixer
 Connect core piss port to mixer
 Connect core blood port to mixer
 Connect mixer to outlet
-* Wait 11 blocks
+* Wait 20 blocks
 Disconnect mixer to outlet
 Build Cooler
 Connect mixer to Cooler
 Connect Cooler to outlet
-* Wait 11 blocks
+* Wait 20 blocks
 Transfer
 Assert: level == 4
 
@@ -61,7 +61,7 @@ Connect splitter to core
 Build boiler #1
 Connect Splitter to boiler
 Connect boiler to outlet
-* Wait 11 block for monster to be produced
+* Wait 20 block for monster to be produced
 Build mixer #1
 Connect core piss to mixer #1
 Connect core blood to mixer #1
@@ -70,7 +70,7 @@ Build boiler #3
 Connect mixer to boiler #2
 Connect boiler to boiler #3
 Connect boiler #3 to outlet
-* Wait 11 blocks for Prime to be produced
+* Wait 40 blocks for Prime to be produced
 Transfer
 Assert: level == 5
 
@@ -89,14 +89,15 @@ Mixer #1 to dryer #1
 Build wetter #1
 Connect dryer #1 to wetter #1
 Connect wetter #1 to outlet
-* Wait 11 blocks to produce plant
+* Wait 20 blocks to produce plant
 Build boiler #1
 Build boiler #2
 Disconnect dryer #1 to wetter #1
+Disconnect wetter #1 to outlet
 Connect dryer #1 to boiler #1
 Connect boiler #1 to boiler #2
 Connect boiler #2 to outlet
-* Wait 11 blocks to produce sludge
+* Wait 20 blocks to produce sludge
 Transfer
 Assert: level == 6
 
@@ -104,12 +105,11 @@ Assert: level == 6
 * LEVEL 6:
 _ GOALS
 - 1000 Cigarette Juice
-- 1000  MD-150
+- 1000 M150
 -------
 Build splitter #1
 Connect inlet to splitter #1
 Connect splitter #1 to core
-Build mixer #1
 Build splitter #2
 Connect core piss to splitter #2
 Build boiler #1
@@ -118,7 +118,7 @@ Build mixer #2
 Connect boiler #1 to mixer #2
 Connect splitter #2 to mixer #2
 Connect mixer #2 to outlet
-* Wait 11 blocks to produce MD-150
+* Wait 20 blocks to produce M150
 Build boiler #2
 Connect core (blood) to boiler #2
 Build dryer #1
@@ -130,7 +130,7 @@ Build dryer #2
 Connect wetter #1 to dryer #2
 Connect dryer #2 to wetter #2
 Connect wetter #2 to outlet
-* Wait 11 blocks to produce Cigarette Juice
+* Wait 20 blocks to produce Cigarette Juice
 
 -------
 * LEVEL 7:
@@ -173,4 +173,4 @@ Build mixer #4
 Connect mixer #3 to mixer #4
 Connect mixer #2 to mixer #4
 Connect mixer #4 to outlet
-* Wait 11 blocks to produce Eraserbaby
+* Wait 170 blocks to produce Eraserbaby

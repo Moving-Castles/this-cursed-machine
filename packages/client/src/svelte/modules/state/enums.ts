@@ -6,9 +6,7 @@ export enum EntityType {
   GOAL,
   BOX,
   MACHINE,
-  CONNECTION,
   MATERIAL,
-  PORT,
 }
 
 export enum MachineType {
@@ -46,10 +44,9 @@ export enum MaterialType {
   ERASERBABY,
 }
 
-export enum PortType {
-  NONE,
-  INPUT,
-  OUTPUT,
+export enum PortIndex {
+  FIRST,
+  SECOND
 }
 
 export enum ConnectionState {

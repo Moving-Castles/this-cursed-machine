@@ -1,7 +1,10 @@
 <script lang="ts">
+  // import { playerCore, playerBox } from "../../modules/state"
+  import { MaterialType } from "../../modules/state/enums"
   import { playerBox } from "../../modules/state"
   import { onWheel } from "../../modules/ui/events"
   import Delivered from "../Deliveries/Delivered.svelte"
+
   import {
     simulatedPlayerCore,
     simulatedPlayerEnergy,
@@ -9,7 +12,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="box-stats" use:onWheel>
+<div class="box-stats">
   <!-- RIGHT COLUMN -->
   <div class="column">
     <!-- ({$playerCore.level}) -->

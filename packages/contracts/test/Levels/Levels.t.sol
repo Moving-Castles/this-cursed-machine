@@ -6,7 +6,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { GasReporter } from "@latticexyz/gas-report/src/GasReporter.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, PORT_TYPE } from "../../src/codegen/common.sol";
+import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
 contract LevelsTest is MudTest, GasReporter {
   IWorld world;
@@ -16,11 +16,18 @@ contract LevelsTest is MudTest, GasReporter {
   bytes32 coreEntity;
   bytes32 inletEntity;
   bytes32 outletEntity;
-  bytes32 inletOutputPort;
-  bytes32 coreInputPort;
-  bytes32 corePissPort;
-  bytes32 coreBloodPort;
-  bytes32 outletInputPort;
+
+  function logMaterials(bytes32[][] memory _materials) internal view {
+    // console.log("Material length");
+    // console.log(_materials.length);
+    // for (uint i = 0; i < _materials.length; i++) {
+    //   console.log("MaterialType");
+    //   console.log(uint8(MaterialType.get(_materials[i][0])));
+    //   console.log("Amount");
+    //   console.log(Amount.get(_materials[i][0]));
+    //   console.log("-------");
+    // }
+  }
 
   function setUp() public override {
     super.setUp();
@@ -31,9 +38,9 @@ contract LevelsTest is MudTest, GasReporter {
 
     vm.startPrank(alice);
 
-    // ---
+    // * * * * * * * * * * * * * * * * * * *
     // PRE
-    // ---
+    // * * * * * * * * * * * * * * * * * * *
     // Spawn core
     coreEntity = world.spawn();
     // Restart (to transfer to pod)
@@ -42,27 +49,12 @@ contract LevelsTest is MudTest, GasReporter {
     vm.stopPrank();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
     inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
     outletEntity = outletEntities[0][0];
-
-    // Get inlet output ports
-    bytes32[][] memory inletOutputPorts = LibPort.getPorts(inletEntity, PORT_TYPE.OUTPUT);
-    inletOutputPort = inletOutputPorts[0][0];
-
-    // Get core ports
-    bytes32[][] memory coreInputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.INPUT);
-    coreInputPort = coreInputPorts[0][0];
-    bytes32[][] memory coreOutputPorts = LibPort.getPorts(coreEntity, PORT_TYPE.OUTPUT);
-    corePissPort = coreOutputPorts[0][0];
-    coreBloodPort = coreOutputPorts[1][0];
-
-    // Get outlet input ports
-    bytes32[][] memory outletInputPorts = LibPort.getPorts(outletEntity, PORT_TYPE.INPUT);
-    outletInputPort = outletInputPorts[0][0];
   }
 
   function testLevel1() public {
@@ -79,11 +71,31 @@ contract LevelsTest is MudTest, GasReporter {
     startGasReport("Test level 1");
 
     // Connect inlet to core
-    world.connect(inletOutputPort, coreInputPort);
-    // * Wait 10 block
-    vm.roll(block.number + 10);
+    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // * Wait 1 block
+    vm.roll(block.number + 1);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Assert: core energy == 101
+    assertEq(uint8(Energy.get(coreEntity)), 101);
+    // Nothing should be produced
+    assertEq(materials.length, 0);
+
+    // * * * * * * * * * * * * * * * * * * *
+
     // Transfer
     world.transfer();
+
     // Assert: core level == 2
     assertEq(Level.get(coreEntity), 2);
 
@@ -108,24 +120,47 @@ contract LevelsTest is MudTest, GasReporter {
 
     startGasReport("Test level 2");
 
+    // Warp to level
+    world.warp(2);
+
     // Connect inlet to core
-    world.connect(inletOutputPort, coreInputPort);
+    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
     // Connect core piss port to outlet
-    bytes32 pissConnection = world.connect(corePissPort, outletInputPort);
+    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
     // * Wait 11 blocks
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 20);
     // Disconnect piss connection
-    world.disconnect(pissConnection);
+    world.disconnect(coreEntity, PORT_INDEX.FIRST);
     // Connect core blood port to outlet
-    world.connect(coreBloodPort, outletInputPort);
+    world.connect(coreEntity, outletEntity, PORT_INDEX.SECOND);
     // * Wait 11 blocks
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 20);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Products should be 1000 piss and 1000 blood
+    assertEq(materials.length, 2);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.PISS));
+    assertEq(Amount.get(materials[0][0]), 1000);
+    assertEq(uint8(MaterialType.get(materials[1][0])), uint8(MATERIAL_TYPE.BLOOD));
+    assertEq(Amount.get(materials[1][0]), 1000);
+
+    // * * * * * * * * * * * * * * * * * * *
+
     // Transfer
     world.transfer();
+
     // Assert: level == 3
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 3);
-    // @todo Check that goal materials have in fact been produced
+    assertEq(Level.get(coreEntity), 3);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -148,38 +183,57 @@ contract LevelsTest is MudTest, GasReporter {
 
     startGasReport("Test level 3");
 
+    // Warp to level
+    world.warp(3);
+
     // Connect inlet to core
-    world.connect(inletOutputPort, coreInputPort);
+    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
     // Build mixer
     bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
-    // Get mixer ports
-    bytes32[][] memory mixerInputPorts = LibPort.getPorts(mixerEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory mixerOutputPorts = LibPort.getPorts(mixerEntity, PORT_TYPE.OUTPUT);
     // Connect core piss port to mixer
-    world.connect(corePissPort, mixerInputPorts[0][0]);
+    world.connect(coreEntity, mixerEntity, PORT_INDEX.FIRST);
     // Connect core blood port to mixer
-    world.connect(corePissPort, mixerInputPorts[1][0]);
+    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
     // Connect mixer to outlet
-    bytes32 mixerConnection = world.connect(mixerOutputPorts[0][0], outletInputPort);
+    world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
     // Wait 11 blocks
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 20);
     // Disconnect mixer connection
-    world.disconnect(mixerConnection);
+    world.disconnect(mixerEntity, PORT_INDEX.FIRST);
     // Build Cooler
     bytes32 coolerEntity = world.build(MACHINE_TYPE.COOLER);
-    bytes32[][] memory coolerInputPorts = LibPort.getPorts(coolerEntity, PORT_TYPE.INPUT);
-    bytes32[][] memory coolerOutputPorts = LibPort.getPorts(coolerEntity, PORT_TYPE.OUTPUT);
     // Connect mixer to Cooler
-    world.connect(mixerOutputPorts[0][0], coolerInputPorts[0][0]);
+    world.connect(mixerEntity, coolerEntity, PORT_INDEX.FIRST);
     // Connect Cooler to outlet
-    world.connect(coolerOutputPorts[0][0], outletInputPort);
+    world.connect(coolerEntity, outletEntity, PORT_INDEX.FIRST);
     // * Wait 11 blocks
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 20);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Products should be 100 CAFFEIN SLUSHY and 1000 CLUB MATE
+    assertEq(materials.length, 2);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.CAFFEINE_SLUSHY));
+    assertEq(Amount.get(materials[0][0]), 1000);
+    assertEq(uint8(MaterialType.get(materials[1][0])), uint8(MATERIAL_TYPE.CLUB_MATE));
+    assertEq(Amount.get(materials[1][0]), 1000);
+
+    // * * * * * * * * * * * * * * * * * * *
+
     // Transfer
     world.transfer();
+
     // Assert: level == 4
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 4);
+    assertEq(Level.get(coreEntity), 4);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -202,59 +256,70 @@ contract LevelsTest is MudTest, GasReporter {
 
     startGasReport("Test level 4");
 
+    // Warp to level
+    world.warp(4);
+
     // Build splitter #1
-    bytes32 splitterEntity1 = world.build(MACHINE_TYPE.SPLITTER);
-    // Get splitter ports
-    bytes32[][] memory splitterInputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory splitterOutputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.OUTPUT);
+    bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
-    world.connect(inletOutputPort, splitterInputPorts1[0][0]);
+    world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
     // Connect splitter to core
-    world.connect(splitterOutputPorts1[0][0], coreInputPort);
+    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
     // Build boiler #1
-    bytes32 boilerEntity1 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler ports
-    bytes32[][] memory boilerInputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect Splitter to boiler #1
-    world.connect(splitterOutputPorts1[1][0], boilerInputPorts1[0][0]);
+    world.connect(splitter1Entity, boiler1Entity, PORT_INDEX.SECOND);
     // Connect boiler #1 to outlet
-    world.connect(boilerOutputPorts1[0][0], outletInputPort);
+    world.connect(boiler1Entity, outletEntity, PORT_INDEX.FIRST);
     // Wait 11 blocks for monster to be produced
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 20);
+
+    // Disconnect boiler #1 from outlet
+    world.disconnect(boiler1Entity, PORT_INDEX.FIRST);
     // Build mixer #1
-    bytes32 mixerEntity1 = world.build(MACHINE_TYPE.MIXER);
-    // Get mixer ports
-    bytes32[][] memory mixerInputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory mixerOutputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.OUTPUT);
-    // Connect core piss port to mixer #1
-    world.connect(corePissPort, mixerInputPorts1[0][0]);
-    // Connect core blood port to mixer #1
-    world.connect(coreBloodPort, mixerInputPorts1[1][0]);
+    bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
+    // Connect core piss to mixer #1
+    world.connect(coreEntity, mixer1Entity, PORT_INDEX.FIRST);
+    // Connect core blood to mixer #1
+    world.connect(coreEntity, mixer1Entity, PORT_INDEX.SECOND);
     // Build boiler #2
-    bytes32 boilerEntity2 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #2 ports
-    bytes32[][] memory boilerInputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.OUTPUT);
-    // Build boiler #3
-    bytes32 boilerEntity3 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #3 ports
-    bytes32[][] memory boilerInputPorts3 = LibPort.getPorts(boilerEntity3, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts3 = LibPort.getPorts(boilerEntity3, PORT_TYPE.OUTPUT);
+    bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect mixer to boiler #2
-    world.connect(mixerOutputPorts1[0][0], boilerInputPorts2[0][0]);
+    world.connect(mixer1Entity, boiler2Entity, PORT_INDEX.FIRST);
+    // Build boiler #3
+    bytes32 boiler3Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect boiler #2 to boiler #3
-    world.connect(boilerOutputPorts2[0][0], boilerInputPorts3[0][0]);
+    world.connect(boiler2Entity, boiler3Entity, PORT_INDEX.FIRST);
     // Connect boiler #3 to outlet
-    world.connect(boilerOutputPorts3[0][0], outletInputPort);
+    world.connect(boiler3Entity, outletEntity, PORT_INDEX.FIRST);
     // Wait 11 blocks for Prime to be produced
-    vm.roll(block.number + 11);
+    vm.roll(block.number + 40);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Products should be 1000 MONSTER and 1000 PRIME
+    assertEq(materials.length, 2);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.MONSTER));
+    assertEq(Amount.get(materials[0][0]), 1000);
+    assertEq(uint8(MaterialType.get(materials[1][0])), uint8(MATERIAL_TYPE.PRIME));
+    assertEq(Amount.get(materials[1][0]), 1000);
+
+    // * * * * * * * * * * * * * * * * * * *
+
     // Transfer
     world.transfer();
+
     // Assert: level == 5
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 5);
-    // @todo Check that goal materials have in fact been produced
+    assertEq(Level.get(coreEntity), 5);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -277,63 +342,72 @@ contract LevelsTest is MudTest, GasReporter {
 
     startGasReport("Test level 5");
 
+    // Warp to level
+    world.warp(5);
+
     // Build mixer #1
-    bytes32 mixerEntity1 = world.build(MACHINE_TYPE.MIXER);
-    // Get mixer ports
-    bytes32[][] memory mixerInputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory mixerOutputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
     // Connect inlet to core
-    world.connect(inletOutputPort, coreInputPort);
+    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
     // Connect core piss to mixer #1
-    world.connect(corePissPort, mixerInputPorts1[0][0]);
+    world.connect(coreEntity, mixer1Entity, PORT_INDEX.FIRST);
     // Connect core blood to mixer #1
-    world.connect(coreBloodPort, mixerInputPorts1[1][0]);
+    world.connect(coreEntity, mixer1Entity, PORT_INDEX.SECOND);
     // Build dryer #1
-    bytes32 dryerEntity1 = world.build(MACHINE_TYPE.DRYER);
-    // Get dryer ports
-    bytes32[][] memory dryerInputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory dryerOutputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
     // Connect mixer #1 to dryer #1
-    world.connect(mixerOutputPorts1[0][0], dryerInputPorts1[0][0]);
+    world.connect(mixer1Entity, dryer1Entity, PORT_INDEX.FIRST);
     // Build wetter #1
-    bytes32 wetterEntity1 = world.build(MACHINE_TYPE.WETTER);
-    // Get wetter ports
-    bytes32[][] memory wetterInputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory wetterOutputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.OUTPUT);
+    bytes32 wetter1Entity = world.build(MACHINE_TYPE.WETTER);
     // Connect dryer #1 to wetter #1
-    bytes32 dryerToWetterConnection = world.connect(dryerOutputPorts1[0][0], wetterInputPorts1[0][0]);
+    world.connect(dryer1Entity, wetter1Entity, PORT_INDEX.FIRST);
     // Connect wetter #1 to outlet
-    world.connect(wetterOutputPorts1[0][0], outletInputPort);
-    // Wait 11 blocks to produce plant
-    vm.roll(block.number + 11);
+    world.connect(wetter1Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 20 blocks to produce plant
+    vm.roll(block.number + 20);
+
+    // Disconnect dryer #1 from wetter #1
+    world.disconnect(dryer1Entity, PORT_INDEX.FIRST);
+    // Disconnect wetter #1 from outlet
+    world.disconnect(wetter1Entity, PORT_INDEX.FIRST);
     // Build boiler #1
-    bytes32 boilerEntity1 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #1 ports
-    bytes32[][] memory boilerInputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Build boiler #2
-    bytes32 boilerEntity2 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #2 ports
-    bytes32[][] memory boilerInputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.OUTPUT);
-    // Disconnect dryer #1 to wetter #1
-    world.disconnect(dryerToWetterConnection);
+    bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect dryer #1 to boiler #1
-    world.connect(dryerOutputPorts1[0][0], boilerInputPorts1[0][0]);
+    world.connect(dryer1Entity, boiler1Entity, PORT_INDEX.FIRST);
     // Connect boiler #1 to boiler #2
-    world.connect(boilerOutputPorts1[0][0], boilerInputPorts2[0][0]);
+    world.connect(boiler1Entity, boiler2Entity, PORT_INDEX.FIRST);
     // Connect boiler #2 to outlet
-    world.connect(boilerOutputPorts2[0][0], outletInputPort);
-    // Wait 11 blocks to produce sludge
-    vm.roll(block.number + 11);
-    // Transfer
-    world.transfer();
-    // Assert: level == 6
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 6);
-    // @todo Check that goal materials have in fact been produced
+    world.connect(boiler2Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 20 blocks to produce sludge
+    vm.roll(block.number + 20);
 
     // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Products should be 1000 Plant and 1000 Sludge
+    assertEq(materials.length, 2);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.PLANT));
+    assertEq(Amount.get(materials[0][0]), 1000);
+    assertEq(uint8(MaterialType.get(materials[1][0])), uint8(MATERIAL_TYPE.SLUDGE));
+    assertEq(Amount.get(materials[1][0]), 1000);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Transfer
+    world.transfer();
+
+    // Assert: level == 6
+    assertEq(Level.get(coreEntity), 6);
 
     endGasReport();
 
@@ -347,107 +421,93 @@ contract LevelsTest is MudTest, GasReporter {
     // * LEVEL 6
     // _ GOALS
     // - 1000 Cigarette Juice
-    // - 1000 MD-150
+    // - 1000 M150
     // * * * * * * * * * * * * * * * * * * *
 
     vm.startPrank(alice);
 
     startGasReport("Test level 6");
 
+    // Warp to level
+    world.warp(6);
+
     // Build splitter #1
-    bytes32 splitterEntity1 = world.build(MACHINE_TYPE.SPLITTER);
-    // Get splitter #1 ports
-    bytes32[][] memory splitterInputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory splitterOutputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.OUTPUT);
+    bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
-    world.connect(inletOutputPort, splitterInputPorts1[0][0]);
+    world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
     // Connect splitter #1 to core
-    world.connect(splitterOutputPorts1[0][0], coreInputPort);
-
-    // Build mixer #1
-    bytes32 mixerEntity1 = world.build(MACHINE_TYPE.MIXER);
+    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
     // Build splitter #2
-    bytes32 splitterEntity2 = world.build(MACHINE_TYPE.SPLITTER);
-    // Get splitter #2 ports
-    bytes32[][] memory splitterInputPorts2 = LibPort.getPorts(splitterEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory splitterOutputPorts2 = LibPort.getPorts(splitterEntity2, PORT_TYPE.OUTPUT);
+    bytes32 splitter2Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect core piss to splitter #2
-    world.connect(corePissPort, splitterInputPorts2[0][0]);
-
+    world.connect(coreEntity, splitter2Entity, PORT_INDEX.FIRST);
     // Build boiler #1
-    bytes32 boilerEntity1 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #1 ports
-    bytes32[][] memory boilerInputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect splitter #1 to boiler #1
-    world.connect(splitterOutputPorts1[1][0], boilerInputPorts1[0][0]);
-
+    world.connect(splitter1Entity, boiler1Entity, PORT_INDEX.SECOND);
     // Build mixer #2
-    bytes32 mixerEntity2 = world.build(MACHINE_TYPE.MIXER);
-    // Get mixer #2 ports
-    bytes32[][] memory mixerInputPorts2 = LibPort.getPorts(mixerEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory mixerOutputPorts2 = LibPort.getPorts(mixerEntity2, PORT_TYPE.OUTPUT);
+    bytes32 mixer2Entity = world.build(MACHINE_TYPE.MIXER);
     // Connect boiler #1 to mixer #2
-    world.connect(boilerOutputPorts1[0][0], mixerInputPorts2[0][0]);
+    world.connect(boiler1Entity, mixer2Entity, PORT_INDEX.FIRST);
     // Connect splitter #2 to mixer #2
-    world.connect(splitterOutputPorts2[0][0], mixerInputPorts2[1][0]);
+    world.connect(splitter2Entity, mixer2Entity, PORT_INDEX.FIRST);
     // Connect mixer #2 to outlet
-    world.connect(mixerOutputPorts2[0][0], outletInputPort);
-    // Wait 11 blocks to produce MD-150
-    vm.roll(block.number + 11);
+    world.connect(mixer2Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 20 blocks to produce M150
+    vm.roll(block.number + 20);
 
+    // Disconnect mixer #2 from outlet
+    world.disconnect(mixer2Entity, PORT_INDEX.FIRST);
     // Build boiler #2
-    bytes32 boilerEntity2 = world.build(MACHINE_TYPE.BOILER);
-    // Get boiler #2 ports
-    bytes32[][] memory boilerInputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory boilerOutputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.OUTPUT);
+    bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect core blood to boiler #2
-    world.connect(coreBloodPort, boilerInputPorts2[0][0]);
-
+    world.connect(coreEntity, boiler2Entity, PORT_INDEX.SECOND);
     // Build dryer #1
-    bytes32 dryerEntity1 = world.build(MACHINE_TYPE.DRYER);
-    // Get dryer #1 ports
-    bytes32[][] memory dryerInputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory dryerOutputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.OUTPUT);
+    bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
     // Connect boiler #2 to dryer #1
-    world.connect(boilerOutputPorts2[0][0], dryerInputPorts1[0][0]);
-
+    world.connect(boiler2Entity, dryer1Entity, PORT_INDEX.FIRST);
     // Build wetter #1
-    bytes32 wetterEntity1 = world.build(MACHINE_TYPE.WETTER);
-    // Get wetter #1 ports
-    bytes32[][] memory wetterInputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.INPUT);
-    bytes32[][] memory wetterOutputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.OUTPUT);
-
-    // Build wetter #2
-    bytes32 wetterEntity2 = world.build(MACHINE_TYPE.WETTER);
-    // Get wetter #2 ports
-    bytes32[][] memory wetterInputPorts2 = LibPort.getPorts(wetterEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory wetterOutputPorts2 = LibPort.getPorts(wetterEntity2, PORT_TYPE.OUTPUT);
-
+    bytes32 wetter1Entity = world.build(MACHINE_TYPE.WETTER);
     // Connect dryer #1 to wetter #1
-    world.connect(dryerOutputPorts1[0][0], wetterInputPorts1[0][0]);
-
+    world.connect(dryer1Entity, wetter1Entity, PORT_INDEX.FIRST);
     // Build dryer #2
-    bytes32 dryerEntity2 = world.build(MACHINE_TYPE.DRYER);
-    // Get dryer #2 ports
-    bytes32[][] memory dryerInputPorts2 = LibPort.getPorts(dryerEntity2, PORT_TYPE.INPUT);
-    bytes32[][] memory dryerOutputPorts2 = LibPort.getPorts(dryerEntity2, PORT_TYPE.OUTPUT);
-
+    bytes32 dryer2Entity = world.build(MACHINE_TYPE.DRYER);
     // Connect wetter #1 to dryer #2
-    world.connect(wetterOutputPorts1[0][0], dryerInputPorts2[0][0]);
+    world.connect(wetter1Entity, dryer2Entity, PORT_INDEX.FIRST);
+    // Build wetter #2
+    bytes32 wetter2Entity = world.build(MACHINE_TYPE.WETTER);
     // Connect dryer #2 to wetter #2
-    world.connect(dryerOutputPorts2[0][0], wetterInputPorts2[0][0]);
+    world.connect(dryer2Entity, wetter2Entity, PORT_INDEX.FIRST);
     // Connect wetter #2 to outlet
-    world.connect(wetterOutputPorts2[0][0], outletInputPort);
-    // Wait 11 blocks to produce Cigarette Juice
-    vm.roll(block.number + 11);
+    world.connect(wetter2Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 40 blocks to produce Cigarette Juice
+    vm.roll(block.number + 40);
+
+    // * * * * * * * * * * * * * * * * * * *
+
+    // Resolve
+    world.resolve();
+
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+
+    // Log materials
+    logMaterials(materials);
+
+    // Products should be 1000 M150 and 1000 Cigarette juice
+    assertEq(materials.length, 2);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.M150));
+    assertEq(Amount.get(materials[0][0]), 1000);
+    assertEq(uint8(MaterialType.get(materials[1][0])), uint8(MATERIAL_TYPE.CIGARETTE_JUICE));
+    assertEq(Amount.get(materials[1][0]), 1000);
+
+    // * * * * * * * * * * * * * * * * * * *
 
     // Transfer
     world.transfer();
-    // Assert: level == 7
-    // @todo Fake level to previous one to make transfer work as expected
-    // assertEq(Level.get(coreEntity), 7);
-    // @todo Check that goal materials have in fact been produced
+
+    // Assert: level == 6
+    assertEq(Level.get(coreEntity), 7);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -456,133 +516,125 @@ contract LevelsTest is MudTest, GasReporter {
     vm.stopPrank();
   }
 
-  // Stack too deep
-  // @todo: remove ports globally
-  // function testLevel7() public {
-  //   setUp();
+  function testLevel7() public {
+    setUp();
 
-  //   // * * * * * * * * * * * * * * * * * * *
-  //   // * LEVEL 7
-  //   // _ GOALS
-  //   // - 1000 ERASERBABY
-  //   // * * * * * * * * * * * * * * * * * * *
+    // * * * * * * * * * * * * * * * * * * *
+    // * LEVEL 7:
+    // _ GOALS
+    // - 1000 ERASERBABY
+    // * * * * * * * * * * * * * * * * * * *
 
-  //   vm.startPrank(alice);
+    vm.startPrank(alice);
 
-  //   startGasReport("Test level 7");
+    startGasReport("Test level 7");
 
-  //   // Build and connect splitters
-  //   bytes32 splitterEntity1 = world.build(MACHINE_TYPE.SPLITTER);
-  //   bytes32 splitterEntity2 = world.build(MACHINE_TYPE.SPLITTER);
-  //   bytes32 splitterEntity3 = world.build(MACHINE_TYPE.SPLITTER);
-  //   bytes32 splitterEntity4 = world.build(MACHINE_TYPE.SPLITTER);
+    // Warp to level
+    world.warp(7);
 
-  //   bytes32[][] memory splitterInputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.INPUT);
-  //   bytes32[][] memory splitterOutputPorts1 = LibPort.getPorts(splitterEntity1, PORT_TYPE.OUTPUT);
-  //   world.connect(inletOutputPort, splitterInputPorts1[0][0]);
-  //   world.connect(splitterOutputPorts1[0][0], coreInputPort);
+    // Build splitter #1
+    bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
+    // Build splitter #2
+    bytes32 splitter2Entity = world.build(MACHINE_TYPE.SPLITTER);
+    // Build splitter #3
+    bytes32 splitter3Entity = world.build(MACHINE_TYPE.SPLITTER);
+    // Connect inlet to splitter #1
+    world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
+    // Connect splitter #1 to core
+    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
+    // Build boiler #1
+    bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
+    // Connect splitter #1 to boiler #1
+    world.connect(splitter1Entity, boiler1Entity, PORT_INDEX.SECOND);
+    // Connect core piss to splitter #2
+    world.connect(coreEntity, splitter2Entity, PORT_INDEX.FIRST);
+    // Build mixer #1
+    bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
+    // Connect splitter #2 to mixer #1
+    world.connect(splitter2Entity, mixer1Entity, PORT_INDEX.FIRST);
+    // Connect boiler #1 to mixer #1
+    world.connect(boiler1Entity, mixer1Entity, PORT_INDEX.FIRST);
+    // Connect splitter #2 to splitter #3
+    world.connect(splitter2Entity, splitter3Entity, PORT_INDEX.SECOND);
+    // Build mixer #2
+    bytes32 mixer2Entity = world.build(MACHINE_TYPE.MIXER);
+    // Connect splitter #3 to mixer #2
+    world.connect(splitter3Entity, mixer2Entity, PORT_INDEX.FIRST);
+    // Connect mixer #1 to mixer #2
+    world.connect(mixer1Entity, mixer2Entity, PORT_INDEX.FIRST);
+    // Build splitter #4
+    bytes32 splitter4Entity = world.build(MACHINE_TYPE.SPLITTER);
+    // Build boiler #2
+    bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
+    // Build dryer #1
+    bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
+    // Connect core blood to splitter #4
+    world.connect(coreEntity, splitter4Entity, PORT_INDEX.SECOND);
+    // Connect splitter #4 to boiler #2
+    world.connect(splitter4Entity, boiler2Entity, PORT_INDEX.FIRST);
+    // Connect boiler #2 to dryer #1
+    world.connect(boiler2Entity, dryer1Entity, PORT_INDEX.FIRST);
+    // Build wetter #1
+    bytes32 wetter1Entity = world.build(MACHINE_TYPE.WETTER);
+    // Build dryer #2
+    bytes32 dryer2Entity = world.build(MACHINE_TYPE.DRYER);
+    // Build wetter #2
+    bytes32 wetter2Entity = world.build(MACHINE_TYPE.WETTER);
+    // Connect dryer #1 to wetter #1
+    world.connect(dryer1Entity, wetter1Entity, PORT_INDEX.FIRST);
+    // Connect wetter #1 to dryer #2
+    world.connect(wetter1Entity, dryer2Entity, PORT_INDEX.FIRST);
+    // Connect dryer #2 to wetter #2
+    world.connect(dryer2Entity, wetter2Entity, PORT_INDEX.FIRST);
+    // Build boiler #3
+    bytes32 boiler3Entity = world.build(MACHINE_TYPE.BOILER);
+    // Connect splitter #4 to boiler #3
+    world.connect(splitter4Entity, boiler3Entity, PORT_INDEX.SECOND);
+    // Build mixer #3
+    bytes32 mixer3Entity = world.build(MACHINE_TYPE.MIXER);
+    // Connect boiler #3 to mixer #3
+    world.connect(boiler3Entity, mixer3Entity, PORT_INDEX.FIRST);
+    // Connect wetter #2 to mixer #3
+    world.connect(wetter2Entity, mixer3Entity, PORT_INDEX.FIRST);
+    // Build mixer #4
+    bytes32 mixer4Entity = world.build(MACHINE_TYPE.MIXER);
+    // Connect mixer #3 to mixer #4
+    world.connect(mixer3Entity, mixer4Entity, PORT_INDEX.FIRST);
+    // Connect mixer #2 to mixer #4
+    world.connect(mixer2Entity, mixer4Entity, PORT_INDEX.FIRST);
+    // Connect mixer #4 to outlet
+    world.connect(mixer4Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 170 blocks to produce Eraserbaby
+    vm.roll(block.number + 170);
 
-  //   // Build boiler #1 and connect
-  //   bytes32 boilerEntity1 = world.build(MACHINE_TYPE.BOILER);
-  //   bytes32[][] memory boilerInputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.INPUT);
-  //   bytes32[][] memory boilerOutputPorts1 = LibPort.getPorts(boilerEntity1, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts1[1][0], boilerInputPorts1[0][0]);
+    // * * * * * * * * * * * * * * * * * * *
 
-  //   // Connect core piss to splitter #2
-  //   bytes32[][] memory splitterInputPorts2 = LibPort.getPorts(splitterEntity2, PORT_TYPE.INPUT);
-  //   bytes32[][] memory splitterOutputPorts2 = LibPort.getPorts(splitterEntity2, PORT_TYPE.OUTPUT);
-  //   world.connect(corePissPort, splitterInputPorts2[0][0]);
+    // Resolve
+    world.resolve();
 
-  //   // Build mixer #1 and connect
-  //   bytes32 mixerEntity1 = world.build(MACHINE_TYPE.MIXER);
-  //   bytes32[][] memory mixerInputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.INPUT);
-  //   bytes32[][] memory mixerOutputPorts1 = LibPort.getPorts(mixerEntity1, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts2[0][0], mixerInputPorts1[0][0]);
-  //   world.connect(boilerOutputPorts1[0][0], mixerInputPorts1[1][0]);
+    // Get materials
+    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
 
-  //   // Connect splitter #2 to splitter #3
-  //   bytes32[][] memory splitterInputPorts3 = LibPort.getPorts(splitterEntity3, PORT_TYPE.INPUT);
-  //   bytes32[][] memory splitterOutputPorts3 = LibPort.getPorts(splitterEntity3, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts2[1][0], splitterInputPorts3[0][0]);
+    // Log materials
+    logMaterials(materials);
 
-  //   // Build mixer #2 and connect
-  //   bytes32 mixerEntity2 = world.build(MACHINE_TYPE.MIXER);
-  //   bytes32[][] memory mixerInputPorts2 = LibPort.getPorts(mixerEntity2, PORT_TYPE.INPUT);
-  //   bytes32[][] memory mixerOutputPorts2 = LibPort.getPorts(mixerEntity2, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts3[0][0], mixerInputPorts2[0][0]);
-  //   world.connect(mixerOutputPorts1[0][0], mixerInputPorts2[1][0]);
+    // Products should be 1020 ERASERBABY
+    assertEq(materials.length, 1);
+    assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.ERASERBABY));
+    assertEq(Amount.get(materials[0][0]), 1020);
 
-  //   // Connect core blood to splitter #4
-  //   bytes32[][] memory splitterInputPorts4 = LibPort.getPorts(splitterEntity4, PORT_TYPE.INPUT);
-  //   bytes32[][] memory splitterOutputPorts4 = LibPort.getPorts(splitterEntity4, PORT_TYPE.OUTPUT);
-  //   world.connect(coreBloodPort, splitterInputPorts4[0][0]);
+    // * * * * * * * * * * * * * * * * * * *
 
-  //   // Build boiler #2 and connect
-  //   bytes32 boilerEntity2 = world.build(MACHINE_TYPE.BOILER);
-  //   bytes32[][] memory boilerInputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.INPUT);
-  //   bytes32[][] memory boilerOutputPorts2 = LibPort.getPorts(boilerEntity2, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts4[0][0], boilerInputPorts2[0][0]);
+    // Transfer
+    world.complete();
 
-  //   // Build dryer #1 and connect
-  //   bytes32 dryerEntity1 = world.build(MACHINE_TYPE.DRYER);
-  //   bytes32[][] memory dryerInputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.INPUT);
-  //   bytes32[][] memory dryerOutputPorts1 = LibPort.getPorts(dryerEntity1, PORT_TYPE.OUTPUT);
-  //   world.connect(boilerOutputPorts2[0][0], dryerInputPorts1[0][0]);
+    // Assert: level == 8
+    assertEq(Level.get(coreEntity), 8);
 
-  //   // Build and connect wetter #1 and #2
-  //   bytes32 wetterEntity1 = world.build(MACHINE_TYPE.WETTER);
-  //   bytes32 wetterEntity2 = world.build(MACHINE_TYPE.WETTER);
-  //   bytes32[][] memory wetterInputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.INPUT);
-  //   bytes32[][] memory wetterOutputPorts1 = LibPort.getPorts(wetterEntity1, PORT_TYPE.OUTPUT);
-  //   bytes32[][] memory wetterInputPorts2 = LibPort.getPorts(wetterEntity2, PORT_TYPE.INPUT);
-  //   bytes32[][] memory wetterOutputPorts2 = LibPort.getPorts(wetterEntity2, PORT_TYPE.OUTPUT);
-  //   world.connect(dryerOutputPorts1[0][0], wetterInputPorts1[0][0]);
+    // * * * * * * * * * * * * * * * * * * *
 
-  //   // Build dryer #2 and connect
-  //   bytes32 dryerEntity2 = world.build(MACHINE_TYPE.DRYER);
-  //   bytes32[][] memory dryerInputPorts2 = LibPort.getPorts(dryerEntity2, PORT_TYPE.INPUT);
-  //   bytes32[][] memory dryerOutputPorts2 = LibPort.getPorts(dryerEntity2, PORT_TYPE.OUTPUT);
-  //   world.connect(wetterOutputPorts1[0][0], dryerInputPorts2[0][0]);
-  //   world.connect(dryerOutputPorts2[0][0], wetterInputPorts2[0][0]);
+    endGasReport();
 
-  //   // Build boiler #3 and connect
-  //   bytes32 boilerEntity3 = world.build(MACHINE_TYPE.BOILER);
-  //   bytes32[][] memory boilerInputPorts3 = LibPort.getPorts(boilerEntity3, PORT_TYPE.INPUT);
-  //   bytes32[][] memory boilerOutputPorts3 = LibPort.getPorts(boilerEntity3, PORT_TYPE.OUTPUT);
-  //   world.connect(splitterOutputPorts4[1][0], boilerInputPorts3[0][0]);
-
-  //   // Build mixer #3 and connect
-  //   bytes32 mixerEntity3 = world.build(MACHINE_TYPE.MIXER);
-  //   bytes32[][] memory mixerInputPorts3 = LibPort.getPorts(mixerEntity3, PORT_TYPE.INPUT);
-  //   bytes32[][] memory mixerOutputPorts3 = LibPort.getPorts(mixerEntity3, PORT_TYPE.OUTPUT);
-  //   world.connect(boilerOutputPorts3[0][0], mixerInputPorts3[0][0]);
-  //   world.connect(wetterOutputPorts2[0][0], mixerInputPorts3[1][0]);
-
-  //   // Build mixer #4 and connect
-  //   bytes32 mixerEntity4 = world.build(MACHINE_TYPE.MIXER);
-  //   bytes32[][] memory mixerInputPorts4 = LibPort.getPorts(mixerEntity4, PORT_TYPE.INPUT);
-  //   bytes32[][] memory mixerOutputPorts4 = LibPort.getPorts(mixerEntity4, PORT_TYPE.OUTPUT);
-  //   world.connect(mixerOutputPorts3[0][0], mixerInputPorts4[0][0]);
-  //   world.connect(mixerOutputPorts2[0][0], mixerInputPorts4[1][0]);
-
-  //   // Final connection to outlet
-  //   world.connect(mixerOutputPorts4[0][0], outletInputPort);
-
-  //   // Wait 11 blocks to produce Eraserbaby
-  //   vm.roll(block.number + 11);
-
-  //   // Transfer
-  //   world.transfer();
-
-  //   // Assert: level == 8
-  //   // @todo Fake level to previous one to make transfer work as expected
-  //   // assertEq(Level.get(coreEntity), 8);
-  //   // @todo Check that goal materials have in fact been produced
-
-  //   // * * * * * * * * * * * * * * * * * * *
-
-  //   endGasReport();
-
-  //   vm.stopPrank();
-  // }
+    vm.stopPrank();
+  }
 }

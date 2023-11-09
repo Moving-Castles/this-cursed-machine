@@ -2,25 +2,14 @@
  *  Simulates the changing state of the game
  *
  */
-import { EntityType, MachineType, PortType, MaterialType } from "../state/enums"
+import { EMPTY_CONNECTION } from "../state"
+import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
-import {
-  portBelongsToBox,
-  connectionBelongsToBox,
-} from "../state/convenience"
-import {
-  entities,
-  playerBox,
-  playerEntityId,
-  playerCore,
-  ports,
-  machines,
-  playerGoals,
-} from "../state"
+import { v4 as uuid } from "uuid"
+import { entities, playerBox, playerEntityId, playerCore } from "../state"
 import { blockNumber } from "../network"
-import type { SimulatedEntities, BoxOutputs } from "./types"
-import { machineTypeToLabel } from "../state/convenience"
+import type { SimulatedEntities, BoxOutputs, Connection } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -31,10 +20,21 @@ export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
 // --- STORES -----------------------------------------------------------------
 
 /**
+ * Output of the the network resolver.
+ */
+export const patches = writable({} as SimulatedEntities)
+
+/**
  * Block on which the network was last resolved locally.
  * Used to check against the on-chain lastResolved value.
  */
 export const localResolved = writable(0)
+
+/**
+ * Set depending on whether the core is connected to the inlet.
+ * Can be 1 or -1
+ */
+export const playerEnergyMod = writable(-1)
 
 /**
  * Current block number - lastResolved
@@ -45,11 +45,6 @@ export const blocksSinceLastResolution = derived(
     return $blockNumber - Number($playerBox.lastResolved)
   }
 )
-
-/**
- * Output of the the network resolver.
- */
-export const patches = writable({} as SimulatedEntities)
 
 /**
  * Generates a derived on-chain state by applying local patches to entities each block.
@@ -136,18 +131,30 @@ export const simulatedMachines = derived(
   }
 )
 
-/** Connections */
+/** Connections @returns Connection[] */
 export const simulatedConnections = derived(
-  [simulated, playerCore],
-  ([$simulated, $playerCore]) => {
-    if (!$playerCore) return {}
-    return Object.fromEntries(
-      Object.entries($simulated)
-        .filter(([_, entry]) => entry.entityType === EntityType.CONNECTION)
-        .filter(([_, entry]) =>
-          connectionBelongsToBox(entry, $playerCore.carriedBy)
-        )
-    )
+  [simulatedMachines],
+  ([$simulatedMachines]) => {
+    let connections: Connection[] = []
+
+    Object.entries($simulatedMachines).forEach(([sourceAddress, machine]) => {
+      machine.outgoingConnections?.forEach((targetAddress, i) => {
+        if (targetAddress === EMPTY_CONNECTION) return
+        const sourceMachine = $simulatedMachines[sourceAddress]
+        const product = sourceMachine?.outputs
+          ? sourceMachine?.outputs[i]
+          : null
+        connections.push({
+          id: uuid(),
+          sourceMachine: sourceAddress,
+          targetMachine: targetAddress,
+          portIndex: i,
+          product: product,
+        })
+      })
+    })
+
+    return connections
   }
 )
 
@@ -159,82 +166,6 @@ export const simulatedMaterials = derived(simulated, $simulated => {
     )
   )
 })
-
-/** Ports */
-export const simulatedPorts = derived(
-  [simulated, playerCore],
-  ([$simulated, $playerCore]) => {
-    if (!$playerCore) return {}
-    return Object.fromEntries(
-      Object.entries($simulated)
-        .filter(([_, entry]) => entry.entityType === EntityType.PORT)
-        .filter(([_, entry]) => portBelongsToBox(entry, $playerCore.carriedBy))
-    )
-  }
-)
-
-/**
- * Derives a readable list of connections based on the input stores.
- *
- * Given the current connections, ports, machines, and playerCore, this function
- * will filter, map, and transform the connections to a more readable format
- * showcasing the relationship between source machines and target machines.
- * @param {Array} - Array of svelte stores: [connections, ports, machines, playerCore]
- * @returns {Array} - An array of transformed connection objects which includes the id,
- *                    connection details, and a human-readable label for each connection.
- */
-export const readableConnections = derived(
-  [simulatedConnections, ports, machines, playerCore],
-  ([$simulatedConnections, $ports, $machines, $playerCore]) => {
-    return (
-      Object.entries($simulatedConnections)
-        // Filter connections to only those that belong to the current box carried by player
-        .filter(([_, entry]) =>
-          connectionBelongsToBox(entry, $playerCore.carriedBy)
-        )
-        .map(([id, connection]) => {
-          // Get the material being transported
-          const materialType = connection.product?.materialType
-
-          // Extract the source and target ports for the current connection
-          const sP = connection?.sourcePort
-          const tP = connection?.targetPort
-
-          if (sP && tP) {
-            const ssP = $ports[sP]
-            const ttP = $ports[tP]
-
-            if (ssP && ttP) {
-              // Fetch the machine types and indices for source and target
-              const sourceMachine = machineTypeToLabel($machines[ssP?.carriedBy]?.machineType)
-              const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-              const targetMachine = machineTypeToLabel($machines[ttP?.carriedBy]?.machineType)
-              const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
-
-              if (sourceMachine && targetMachine) {
-                // Construct a label showcasing the source to target machine connection
-
-                return {
-                  id,
-                  connection,
-                  label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                    } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                    } ${sourceMachine === "CORE"
-                      ? `(${MaterialType[materialType]})`
-                      : ""
-                    }`,
-                }
-              }
-            }
-          }
-
-          return false
-        })
-        // Filter out any invalid or non-transformed entries
-        .filter(ent => ent)
-    )
-  }
-)
 
 export const readableMachines = derived(
   simulatedMachines,
@@ -327,8 +258,6 @@ export const boxOutput = derived(
 
 // --- MISC ----------------------------------------------
 
-export const playerEnergyMod = writable(-1)
-
 export const simulatedPlayerEnergy = derived(
   [simulatedPlayerCore, playerEnergyMod, blocksSinceLastResolution],
   ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
@@ -336,23 +265,5 @@ export const simulatedPlayerEnergy = derived(
       ($simulatedPlayerCore?.energy || 0) +
       $playerEnergyMod * $blocksSinceLastResolution
     )
-  }
-)
-
-// Return the number of the last solved level
-export const goalsSatisfied = derived(
-  [playerGoals, boxOutput, simulatedPlayerEnergy],
-  ([$playerGoals, $boxOutput, $simulatedPlayerEnergy]) => {
-    const achieved = $playerGoals.map(goal => {
-      if (goal?.materialType === 0) {
-        return $simulatedPlayerEnergy >= goal?.amount
-      }
-
-      const pooledMaterial = $boxOutput[goal.materialType]
-
-      return pooledMaterial && pooledMaterial >= goal?.amount
-    })
-
-    return achieved.every(v => v === true)
   }
 )

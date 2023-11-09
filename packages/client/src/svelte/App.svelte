@@ -16,6 +16,11 @@
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
   import { playSound } from "./modules/sound"
+  import { entities, cores, machines } from "./modules/state"
+
+  $: console.log("Entities", $entities)
+  $: console.log("Cores", $cores)
+  $: console.log("Machines", $machines)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -29,7 +34,6 @@
     $mouseY = e.clientY
   }
 
-  let unsubscribe: ReturnType<typeof writable>
   let introSound: Howl | undefined
 
   const restart = () => {
@@ -75,7 +79,6 @@
     initBlockListener()
 
     // Create systems to listen to changes to components in our namespace
-    // filterByNamespace($network.components, "mc")
     for (const componentKey of Object.keys($network.components)) {
       createComponentSystem(componentKey)
     }
@@ -84,15 +87,13 @@
     createSyncProgressSystem()
 
     // Simulate state changes
-    unsubscribe = initStateSimulator()
+    initStateSimulator()
 
     // Preload sounds
     initSound()
 
     introSound = playSound("tcm", "introBg", true, true)
   })
-
-  onDestroy(unsubscribe)
 
   // Fade out intro sound when ready
   $: if ($UIState === UI.READY) {

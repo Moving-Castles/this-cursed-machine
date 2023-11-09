@@ -24,7 +24,7 @@ import {
  * @see {@link patches} For applying patches or updates to the state.
  */
 export async function initStateSimulator() {
-  const unsubscribe = blockNumber.subscribe(async blockNumber => {
+  blockNumber.subscribe(async blockNumber => {
     const playerCoreValue = get(playerCore)
     const playerBoxValue = get(playerBox)
     const localResolvedValue = get(localResolved)
@@ -37,6 +37,7 @@ export async function initStateSimulator() {
     // Play heartbeat on new block if player is in pod
     if (playerCoreValue.carriedBy && get(UIState) === UI.READY) {
       playSound("tcm", "singleHeartbeat100")
+      pulseGraph()
     }
 
     // Network was resolved onchain
@@ -66,6 +67,4 @@ export async function initStateSimulator() {
       showLevelModal.set(true)
     }
   })
-
-  return unsubscribe
 }

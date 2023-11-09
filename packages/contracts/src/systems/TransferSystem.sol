@@ -1,29 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MaterialType, Amount, CompletionTime, PerformanceRatings } from "../codegen/index.sol";
-import { PORT_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibBox, LibPort, LibEntity, LibLevel, LibGoal, LibNetwork, LibMaterial, LibConnection } from "../libraries/Libraries.sol";
+import { Level, CarriedBy, MaterialType, Amount, MaterialsInPod, CompletionTimes, LevelStartBlock, OutletEntity, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
+import { MACHINE_TYPE } from "../codegen/common.sol";
+import { LibUtils, LibGoal, LibNetwork, LibMaterial } from "../libraries/Libraries.sol";
 
 contract TransferSystem is System {
   /**
    * @notice Transfers, levels up the core entity, and rearranges entities within a new box configuration.
-   * @return boxEntity The identifier of the newly created box entity.
+   * @return podEntity The identifier of the newly created box entity.
    * @dev Ensure the proper deletion of the old box in future versions.
    */
   function transfer() public returns (bytes32) {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 podEntity = CarriedBy.get(coreEntity);
 
-    uint32 newLevel = Level.get(coreEntity) + 1;
+    // Level needs to be in range 1 to 6
+    require(Level.get(coreEntity) > 0 && Level.get(coreEntity) < 7, "illegal level");
 
-    // New level needs to be in range 2 to 8
-    require(newLevel > 1 && newLevel < 9, "illegal level");
-
-    // Resolve network if we are in pod
-    if (CarriedBy.get(coreEntity) != bytes32(0)) {
-      LibNetwork.resolve(CarriedBy.get(coreEntity));
-    }
+    // Resolve network
+    LibNetwork.resolve(coreEntity);
 
     // Check goals
     require(LibGoal.goalsAreAchived(coreEntity), "goals not achieved");
@@ -31,64 +27,44 @@ contract TransferSystem is System {
     // Transfer goal materials to warehouse
     LibGoal.transferToWarehouse(coreEntity);
 
-    // Calculate performance score
-    // 100 - ((goal material amount - produced material amount) / 20)
-    // uint32 goalMaterialAmount = LibGoal.getAmount(Level.get(coreEntity));
-    // uint32 producedMaterialAmount = LibMaterial.getAmount(CarriedBy.get(coreEntity));
-    // uint32 modidfier = goalMaterialAmount > producedMaterialAmount
-    //   ? 0
-    //   : (goalMaterialAmount - producedMaterialAmount) / 20;
-    // uint32 performanceRating = 100 - modidfier;
-    // uint32 performanceRating = 100;
-    // uint32[] memory currentPerformanceRatings = PerformanceRatings.get(coreEntity);
-    // uint32[] memory newPerformanceRatings = new uint32[](currentPerformanceRatings.length + 1);
-    // for (uint256 i = 0; i < currentPerformanceRatings.length; i++) {
-    //   newPerformanceRatings[i] = currentPerformanceRatings[i];
-    // }
-    // newPerformanceRatings[newPerformanceRatings.length - 1] = performanceRating;
-    // PerformanceRatings.set(coreEntity, newPerformanceRatings);
-
-    // Destroy all output in box
-    bytes32[][] memory boxOutputs = LibBox.getMaterialsByBox(CarriedBy.get(coreEntity));
-    for (uint256 i = 0; i < boxOutputs.length; i++) {
-      LibMaterial.destroy(boxOutputs[i][0]);
+    // Destroy all output in pod
+    bytes32[] memory materialsInPod = MaterialsInPod.get(podEntity);
+    MaterialsInPod.set(podEntity, new bytes32[](0));
+    for (uint256 i = 0; i < materialsInPod.length; i++) {
+      LibMaterial.trash(materialsInPod[i]);
     }
+
+    // Store completion time
+    uint256[] memory currentCompletionTimes = CompletionTimes.get(coreEntity);
+    uint256[] memory newCompletionTimes = new uint256[](currentCompletionTimes.length + 1);
+    for (uint256 i = 0; i < currentCompletionTimes.length; i++) {
+      newCompletionTimes[i] = currentCompletionTimes[i];
+    }
+    newCompletionTimes[newCompletionTimes.length - 1] = block.number - LevelStartBlock.get(coreEntity);
+    CompletionTimes.set(coreEntity, newCompletionTimes);
+    LevelStartBlock.set(coreEntity, block.number);
 
     // Level up core entity
-    Level.set(coreEntity, newLevel);
+    Level.set(coreEntity, Level.get(coreEntity) + 1);
 
-    if (newLevel == 8) {
-      // Core is at level 8, progression done
-
-      // Set completion time
-      CompletionTime.set(coreEntity, block.timestamp - CreationBlock.get(CarriedBy.get(coreEntity)));
-
-      // Remove core from box
-      CarriedBy.deleteRecord(coreEntity);
-
-      // @todo Destroy old box
-
-      // Return null-pod
-      return bytes32(0);
-    } else {
-      // Core is at level 2-7
-      // Level up box
-      Level.set(CarriedBy.get(coreEntity), newLevel);
-      // Disconnect outlet
-      // Get outlet entity
-      bytes32[][] memory outletEntities = LibBox.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
-      // Get incoming connection
-      if (outletEntities[0][0] != bytes32(0)) {
-        // Get input port
-        bytes32[][] memory outletEntitiesInputPorts = LibPort.getPorts(outletEntities[0][0], PORT_TYPE.INPUT);
-        // Get incoming connection
-        bytes32 incomingConnection = LibConnection.getIncoming(outletEntitiesInputPorts[0][0]);
-        // Destroy connection
-        LibConnection.destroy(incomingConnection);
+    // Disconnect outlet
+    // Get outlet entity
+    bytes32 outletEntity = OutletEntity.get(podEntity);
+    // Get machine referenced in incoming connections of the outlet
+    bytes32[] memory outletIncomingConnections = IncomingConnections.get(outletEntity);
+    bytes32[] memory sourceOutgoingConnections = OutgoingConnections.get(outletIncomingConnections[0]);
+    for (uint256 j = 0; j < sourceOutgoingConnections.length; j++) {
+      if (sourceOutgoingConnections[j] == outletEntity) {
+        // Remove the connection from source machine's outgoing connections
+        sourceOutgoingConnections[j] = bytes32(0);
+        // Update the source machine's outgoing connections
+        OutgoingConnections.set(outletIncomingConnections[0], sourceOutgoingConnections);
+        break;
       }
-
-      // Return box
-      return CarriedBy.get(coreEntity);
     }
+    // Clear outlet's incoming connections
+    IncomingConnections.set(outletEntity, new bytes32[](1));
+
+    return podEntity;
   }
 }

@@ -4,7 +4,7 @@ import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/m
 import { EntityType, EntityTypeTableId, Level, LevelTableId, MaterialType, Amount, CarriedBy, Energy } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
-import { LibBox } from "./LibBox.sol";
+import { LibPod } from "./LibPod.sol";
 import { LibMaterial } from "./LibMaterial.sol";
 import { WAREHOUSE_KEY } from "../constants.sol";
 
@@ -37,9 +37,9 @@ library LibGoal {
    */
   function goalsAreAchived(bytes32 _coreEntity) internal view returns (bool) {
     // Get box of core entity
-    bytes32 boxEntity = CarriedBy.get(_coreEntity);
+    bytes32 podEntity = CarriedBy.get(_coreEntity);
     // Get goals for level
-    bytes32[][] memory goals = getGoals(Level.get(boxEntity));
+    bytes32[][] memory goals = getGoals(Level.get(podEntity));
 
     // Iterate over goals
     for (uint i; i < goals.length; i++) {
@@ -52,7 +52,7 @@ library LibGoal {
       }
 
       // Check if require materials are produced
-      bytes32 material = LibBox.getMaterialOfTypeByBox(boxEntity, materialType);
+      bytes32 material = LibPod.getMaterialOfTypeByBox(podEntity, materialType);
       if (material == bytes32(0)) return false;
       if (Amount.get(material) < Amount.get(goals[i][0])) return false;
     }
@@ -61,15 +61,15 @@ library LibGoal {
     return true;
   }
 
-  // function getAmount(uint32 _level) internal view returns (uint32) {
-  //   bytes32[][] memory goals = getGoals(_level);
-  //   uint32 amount;
-  //   for (uint i; i < goals.length; i++) {
-  //     if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
-  //     amount += Amount.get(goals[i][0]);
-  //   }
-  //   return amount;
-  // }
+  function getAmount(uint32 _level) internal view returns (uint32) {
+    bytes32[][] memory goals = getGoals(_level);
+    uint32 amount;
+    for (uint i; i < goals.length; i++) {
+      if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
+      amount += Amount.get(goals[i][0]);
+    }
+    return amount;
+  }
 
   /**
    * @notice Retrieves the goal entities associated with a specified level.

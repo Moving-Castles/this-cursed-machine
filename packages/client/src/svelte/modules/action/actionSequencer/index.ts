@@ -8,7 +8,7 @@ import { writable, get } from "svelte/store"
 import { network, blockNumber } from "../../network"
 import { toastMessage } from "../../ui/toast"
 import { v4 as uuid } from "uuid"
-import { timeout, clearActionTimer, startActionTimer } from "./timeoutHandler"
+import { clearActionTimer, startActionTimer } from "./timeoutHandler"
 
 // --- TYPES -----------------------------------------------------------------
 

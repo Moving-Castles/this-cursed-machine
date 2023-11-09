@@ -18,19 +18,9 @@
     address: string
   }
 
-  const inletOutletScale = tweened(1, { easing: expoIn })
+  // const inletOutletScale = tweened(1, { easing: expoIn })
 
   $: state = machineState(d.address)
-
-  // $: {
-  //   if (Math.abs($graphPulse) > 0) {
-  //     console.log("s", performance.now(), d.id)
-  //     $inletOutletScale = 1
-  //     setTimeout(() => {
-  //       $inletOutletScale = 1.2
-  //     }, 200)
-  //   }
-  // }
 
   const inletOutletOrCore = dd => {
     return (
@@ -111,7 +101,7 @@
 <!-- <title>{MachineType[d.entry.machineType]}</title> -->
 
 <style lang="scss">
-  .node.CORE.FLOWING {
+  .FLOWING {
     animation: growAnimation 1s infinite;
   }
 
@@ -123,12 +113,20 @@
   .MACHINE_INLET.FLOWING {
     transform-origin: left; /* or transform-origin: 50% */
     transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
   }
 
   .MACHINE_OUTLET.FLOWING {
     transform-origin: right; /* or transform-origin: 50% */
     transform-box: fill-box;
-    animation: inletOutletAnimation 1s infinite;
+  }
+
+  @keyframes growAnimation {
+    10%,
+    50% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.01);
+    }
   }
 </style>

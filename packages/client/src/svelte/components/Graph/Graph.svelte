@@ -14,7 +14,6 @@
   import {
     simulatedMachines,
     simulatedConnections,
-    simulatedPorts,
   } from "../../modules/simulator"
   import {
     connectionState,
@@ -142,7 +141,7 @@
   }
 
   const linkColor = entry => {
-    if (entry?.inputs) {
+    if (entry?.product) {
       return `var(--${
         entry.product?.materialType
           ? MaterialType[entry.product?.materialType]
@@ -156,11 +155,7 @@
   $: d3yScale = scaleLinear().domain([0, height]).range([height, 0])
 
   $: {
-    const graph = data(
-      $simulatedMachines,
-      $simulatedConnections,
-      $simulatedPorts
-    )
+    const graph = data($simulatedMachines, $simulatedConnections)
 
     // Update nodes
     graph.nodes.forEach(newNode => {
@@ -440,16 +435,6 @@
     }
   }
 
-  @keyframes growAnimation {
-    10%,
-    50% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1.01);
-    }
-  }
-
   @keyframes rotateAnimation {
     0% {
       transform: rotate(-12deg);
@@ -459,10 +444,10 @@
     }
   }
 
-  svg .node,
-  svg .node-image,
-  svg .rect,
-  svg .node-rect {
+  svg :global(.node),
+  svg :global(.node-image),
+  svg :global(.rect),
+  svg :global(.node-rect) {
     transform-origin: center; /* or transform-origin: 50% */
     transform-box: fill-box;
   }

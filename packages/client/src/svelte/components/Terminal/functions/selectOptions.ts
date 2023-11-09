@@ -1,43 +1,42 @@
-import { SelectOption, COMMAND } from "../types"
-import { MachineType, PortType } from "../../../modules/state/enums"
+import { SelectOption, COMMAND, DIRECTION } from "../types"
+import { MachineType } from "../../../modules/state/enums"
 import {
-    simulatedMachines,
-    readableConnections,
+  simulatedMachines,
+  simulatedConnections,
 } from "../../../modules/simulator"
 import { playerCore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
-import { connectionMachineSort, getMachinesWithAvailablePorts } from "./helpers"
-import { machineTypeToLabel } from "../../../modules/state/convenience"
+import { connectionMachineSort } from "./helpers"
+import {
+  machineTypeToLabel,
+  materialTypeToLabel,
+  availableMachines,
+} from "../../../modules/state/convenience"
 
 /**
  * Generates select options based on the provided command type and port type.
  * @param {COMMAND} commandType - The type of command for which the select options are generated.
- * @param {PortType} [portType] - Optional. The type of port, used especially when the command type is `COMMAND.CONNECT`.
  * @returns {SelectOption[]} An array of select options appropriate for the given command and port type.
  */
 export function createSelectOptions(
-    commandType: COMMAND,
-    portType: PortType = PortType.NONE
+  commandType: COMMAND,
+  direction: DIRECTION = DIRECTION.OUTGOING
 ): SelectOption[] {
-    switch (commandType) {
-        case COMMAND.BUILD:
-            return createSelectOptionsBuild()
-        case COMMAND.DESTROY:
-            return createSelectOptionsDestroy()
-        case COMMAND.CONNECT:
-            if (portType === PortType.NONE) {
-                return [] as SelectOption[]
-            } else {
-                return createSelectOptionsConnect(portType)
-            }
-        case COMMAND.DISCONNECT:
-            return createSelectOptionsDisconnect()
-        case COMMAND.INSPECT:
-            return createSelectOptionsInspect()
-        default:
-            return [] as SelectOption[]
-    }
+  switch (commandType) {
+    case COMMAND.BUILD:
+      return createSelectOptionsBuild()
+    case COMMAND.DESTROY:
+      return createSelectOptionsDestroy()
+    case COMMAND.CONNECT:
+      return createSelectOptionsConnect(direction)
+    case COMMAND.DISCONNECT:
+      return createSelectOptionsDisconnect()
+    case COMMAND.INSPECT:
+      return createSelectOptionsInspect()
+    default:
+      return [] as SelectOption[]
+  }
 }
 
 /**
@@ -46,17 +45,18 @@ export function createSelectOptions(
  * @returns {SelectOption[]} An array of select options representing various machine types.
  */
 function createSelectOptionsBuild(): SelectOption[] {
-    let selectOptions: SelectOption[] = []
-    let availableMachines: MachineType[] = MACHINES_BY_LEVEL[get(playerCore)?.level || 0]
+  let selectOptions: SelectOption[] = []
+  let availableMachines: MachineType[] =
+    MACHINES_BY_LEVEL[get(playerCore)?.level || 0]
 
-    for (let i = 0; i < availableMachines.length; i++) {
-        selectOptions.push({
-            label: MachineType[availableMachines[i]],
-            value: availableMachines[i],
-        })
-    }
+  for (let i = 0; i < availableMachines.length; i++) {
+    selectOptions.push({
+      label: MachineType[availableMachines[i]],
+      value: availableMachines[i],
+    })
+  }
 
-    return selectOptions
+  return selectOptions
 }
 
 /**
@@ -65,38 +65,23 @@ function createSelectOptionsBuild(): SelectOption[] {
  * @returns {SelectOption[]} An array of select options representing various machines to destroy, using their machine type as a label and their ID as the value.
  */
 function createSelectOptionsDestroy(): SelectOption[] {
-    let selectOptions: SelectOption[] = []
+  let selectOptions: SelectOption[] = []
 
-    // All machines except core, inlet, outlet
-    Object.entries(get(simulatedMachines))
-        .forEach(([machineId, machine]) => {
-            if (!FIXED_MACHINE_TYPES.includes(machine.machineType)) {
-                selectOptions.push({
-                    label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
-                    value: machineId,
-                })
-            }
-        })
+  // All machines except core, inlet, outlet
+  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
+    if (
+      !FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)
+    ) {
+      selectOptions.push({
+        label: `${machineTypeToLabel(machine.machineType)} #${
+          machine.buildIndex
+        }`,
+        value: machineId,
+      })
+    }
+  })
 
-    return selectOptions
-}
-
-/**
- * Generates select options for disconnecting existing connections.
- * This function returns select options for all available connections.
- * @returns {SelectOption[]} An array of select options representing various connections to disconnect, using a generic "Connection" label and the connection ID as the value.
- */
-function createSelectOptionsDisconnect(): SelectOption[] {
-    let selectOptions: SelectOption[] = []
-
-    get(readableConnections).forEach(({ id, label }) => {
-        selectOptions.push({
-            label,
-            value: id,
-        })
-    })
-
-    return selectOptions
+  return selectOptions
 }
 
 /**
@@ -105,36 +90,69 @@ function createSelectOptionsDisconnect(): SelectOption[] {
  * @returns {SelectOption[]} An array of select options representing various machines to inspect, using their machine type as a label and their ID as the value.
  */
 function createSelectOptionsInspect(): SelectOption[] {
-    let selectOptions: SelectOption[] = []
+  let selectOptions: SelectOption[] = []
 
-    // All machines
-    Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
-        selectOptions.push({
-            label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
-            value: machineId,
-        })
+  // All machines
+  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
+    selectOptions.push({
+      label:
+        machineTypeToLabel(machine.machineType) +
+        (machine.buildIndex ? " #" + machine.buildIndex : ""),
+      value: machineId,
     })
+  })
 
-    return selectOptions
+  return selectOptions
 }
 
 /**
  * Creates an array of select options based on machines with available ports of a specified type.
- * @param {PortType} portType - The type of port to look for (e.g., 'input', 'output').
  * @returns {SelectOption[]} An array of select options containing machine types as labels and machine IDs as values.
  */
-function createSelectOptionsConnect(portType: PortType): SelectOption[] {
-    let selectOptions: SelectOption[] = []
+function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
+  let selectOptions: SelectOption[] = []
 
-    // Get all machines with available ports of type
-    const machines = getMachinesWithAvailablePorts(portType)
+  const machines = availableMachines(direction)
 
-    Object.entries(machines).forEach(([machineId, machine]) => {
-        selectOptions.push({
-            label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? " #" + machine.buildIndex : ""),
-            value: machineId,
-        })
-    })
+  selectOptions = machines.map(([address, machine]) => ({
+    label: machineTypeToLabel(machine.machineType),
+    value: address,
+  }))
 
-    return connectionMachineSort(selectOptions)
+  return connectionMachineSort(selectOptions)
+}
+
+/**
+ * Generates select options for disconnecting existing connections.
+ * This function returns select options for all available connections.
+ * @returns {SelectOption[]} An array of select options representing various connections to disconnect, using a generic "Connection" label and the connection ID as the value.
+ */
+function createSelectOptionsDisconnect(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const machines = get(simulatedMachines)
+  const connections = get(simulatedConnections)
+
+  selectOptions = connections.map(connection => {
+    const sourceMachine = machines[connection.sourceMachine]
+    const targetMachine = machines[connection.targetMachine]
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${
+      sourceMachine?.buildIndex ?? ""
+    } to ${machineTypeToLabel(targetMachine.machineType)} ${
+      targetMachine?.buildIndex ?? ""
+    } ${
+      connection?.product
+        ? `(${materialTypeToLabel(connection.product.materialType)})`
+        : ""
+    }`
+
+    return {
+      label,
+      value: connection.id,
+    }
+  })
+
+  console.log(selectOptions)
+
+  return selectOptions
 }

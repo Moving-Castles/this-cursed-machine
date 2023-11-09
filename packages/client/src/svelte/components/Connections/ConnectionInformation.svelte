@@ -1,20 +1,9 @@
 <script lang="ts">
   export let address: string
   export let connection: Connection
-  // import {
-  //   connectionSourceMachine,
-  //   connectionTargetMachine,
-  // } from "../../modules/state/convenience"
-  import { MachineType, MaterialType } from "../../modules/state/enums"
+
+  import { MaterialType } from "../../modules/state/enums"
   import { materialTypeToLabel } from "../../modules/state/convenience"
-  // import { MATERIAL_LORE, MATERIAL_IMAGES } from "../../modules/content/lore"
-
-  // List contents etc
-
-  // $: connectionLore = MATERIAL_LORE[connection?.product?.materialType]
-  // $: connectionImage = MATERIAL_IMAGES[connection?.product?.materialType]
-  // $: fromMachine = connectionSourceMachine(address)
-  // $: toMachine = connectionTargetMachine(address)
 </script>
 
 <div class="material-information">
