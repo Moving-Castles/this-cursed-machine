@@ -17,6 +17,10 @@ library LibEntity {
 
     // Set ports on machine
     // - - - - - - - - - - - -
+    // NONE:      0 IN, 0 OUT
+    // INLET:     0 IN, 1 OUT
+    // OUTLET:    1 IN, 0 OUT
+    // CORE:      1 IN, 2 OUT (created in spawn)
     // SPLITTER:  1 IN, 2 OUT
     // MIXER:     2 IN, 1 OUT
     // WETTER:    1 IN, 1 OUT
@@ -24,7 +28,13 @@ library LibEntity {
     // BOILER:    1 IN, 1 OUT
     // COOLER:    1 IN, 1 OUT
 
-    if (_machineType == MACHINE_TYPE.SPLITTER) {
+    if (_machineType == MACHINE_TYPE.INLET) {
+      IncomingConnections.set(entity, new bytes32[](0));
+      OutgoingConnections.set(entity, new bytes32[](1));
+    } else if (_machineType == MACHINE_TYPE.OUTLET) {
+      IncomingConnections.set(entity, new bytes32[](1));
+      OutgoingConnections.set(entity, new bytes32[](0));
+    } else if (_machineType == MACHINE_TYPE.SPLITTER) {
       IncomingConnections.set(entity, new bytes32[](1));
       OutgoingConnections.set(entity, new bytes32[](2));
     } else if (_machineType == MACHINE_TYPE.MIXER) {
