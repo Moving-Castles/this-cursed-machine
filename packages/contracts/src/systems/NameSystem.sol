@@ -16,5 +16,7 @@ contract NameSystem is System {
     // require(keccak256(abi.encodePacked(Name.get(coreEntity))) != keccak256(abi.encodePacked("")), "already named");
     require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked("")), "name empty");
     Name.set(coreEntity, _name);
+    // Level up core entity
+    Level.set(coreEntity, 9);
   }
 }

@@ -12,6 +12,7 @@
   import { playInputSound } from "./functions/sound"
   import {
     MachineType,
+    // PortType,
     MaterialType,
     PortIndex,
   } from "../../modules/state/enums"
@@ -171,8 +172,8 @@
 
       // Get machines with available outgoing connection slots
       let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.OUTGOING
+        COMMAND.CONNECT
+        // PortType.OUTPUT
       )
 
       await writeToTerminal(OutputType.NORMAL, "From:")
@@ -214,8 +215,8 @@
 
       // Get machines with available incoming connection slots
       let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.INCOMING
+        COMMAND.CONNECT
+        // PortType.INPUT
       )
 
       // Abort if no available targets
@@ -266,16 +267,10 @@
       if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-        parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
-        await writeToTerminal(OutputType.NORMAL, "Select source port:")
-        let sourcePortOptions: SelectOption[] = []
-
-        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
         const portLabel = p =>
           `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
-        sourcePortOptions = ports.map(p => ({
+
+        const sourcePortOptions = ports.map(p => ({
           label: portLabel(p),
           value: p.portIndex,
         }))

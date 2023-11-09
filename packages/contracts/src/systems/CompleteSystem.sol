@@ -8,10 +8,9 @@ import { LibUtils, LibGoal, LibNetwork, LibMaterial } from "../libraries/Librari
 contract CompleteSystem is System {
   function complete() public {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    uint32 newLevel = Level.get(coreEntity) + 1;
 
-    // New level needs to be 8
-    require(newLevel == 8, "not final level");
+    // Level needs to be 7
+    require(Level.get(coreEntity) == 7, "not final level");
 
     // Resolve network
     LibNetwork.resolve(coreEntity);
@@ -33,7 +32,7 @@ contract CompleteSystem is System {
     LevelStartBlock.set(coreEntity, block.number);
 
     // Level up core entity
-    Level.set(coreEntity, newLevel);
+    Level.set(coreEntity, 8);
 
     // Remove core from box
     CarriedBy.deleteRecord(coreEntity);

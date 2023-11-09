@@ -25,6 +25,7 @@
   }
 
   const handleCommand = async (e: any) => {
+    if (!terminalComponent) return
     terminalComponent.resetInput()
   }
 
@@ -54,8 +55,6 @@
       </div>
       {#if $playerCore}
         <div class="right-col">
-          <!-- <div class="scanlines" /> -->
-          <!-- <div class="scanlines2" /> -->
           <div class="stats">
             <BoxStats />
           </div>
