@@ -1,3 +1,5 @@
+import type { SimulatedEntity } from "../simulator/types"
+import { EMPTY_CONNECTION } from "./index"
 import { EntityType, MaterialType, MachineType } from "./enums"
 export { EntityType, MaterialType, MachineType } from "./enums"
 
@@ -149,5 +151,12 @@ declare global {
   type Coord = {
     x: number
     y: number
+  }
+
+  type PortDefinition = {
+    portIndex: number
+    machineAddress: string
+    machine: SimulatedEntity
+    address: typeof EMPTY_CONNECTION
   }
 }

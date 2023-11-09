@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { playerBox } from "../../modules/state"
+  import { playerCore } from "../../modules/state"
   import { createEventDispatcher } from "svelte"
   import Terminal from "../Terminal/Terminal.svelte"
-  // import { boxOutput } from "../../modules/simulator"
-  // import { MaterialType } from "../../modules/state/enums"
-  // import { materialTypeToLabel } from "../../modules/state/convenience"
   import { COMMAND } from "../Terminal/types"
 
   const dispatch = createEventDispatcher()
@@ -19,7 +16,7 @@
 
 <div class="completed-level">
   <div class="text-content">
-    <div class="level-title">◊ COMPLETED order #{$playerBox.level}</div>
+    <div class="level-title">◊ COMPLETED order #{$playerCore.level}</div>
 
     <div class="terminal-container">
       <Terminal
@@ -33,11 +30,11 @@
 
   <div class="level-gradient level-background" />
 
-  {#if $playerBox.level > 3}
+  {#if $playerCore.level > 3}
     <img src="/images/rewards/1-.png" class="level-background" />
   {:else}
     <img
-      src="/images/rewards/{$playerBox.level}-.png"
+      src="/images/rewards/{$playerCore.level}-.png"
       class="level-background"
     />
   {/if}

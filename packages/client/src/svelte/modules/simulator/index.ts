@@ -2,6 +2,7 @@
  *  Simulates the changing state of the game
  *
  */
+import { EMPTY_CONNECTION } from "../state"
 import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
@@ -133,16 +134,18 @@ export const simulatedMachines = derived(
 export const simulatedConnections = derived(
   [simulatedMachines],
   ([$simulatedMachines]) => {
-    console.log("START sim connections")
     let connections: Connection[] = []
 
     Object.entries($simulatedMachines).forEach(([address, machine]) => {
       console.log("Machine")
       console.log(address, machine)
-    })
 
-    console.log("END sim connections")
-    console.log(connections)
+      machine.outgoingConnections?.forEach(address => {
+        if (address === EMPTY_CONNECTION) return
+        const targetMachine = $simulatedMachines[address]
+        console.log("targeting machine", targetMachine)
+      })
+    })
 
     return connections
   }

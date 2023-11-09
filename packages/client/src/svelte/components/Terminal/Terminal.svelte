@@ -26,7 +26,10 @@
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeNewLevel } from "./functions/writeNewLevel"
-  import { machineTypeToLabel } from "../../modules/state/convenience"
+  import {
+    machineTypeToLabel,
+    availablePorts,
+  } from "../../modules/state/convenience"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -186,6 +189,18 @@
         DIRECTION.INCOMING
       )
 
+      // Abort if no available targets
+      if(targetSelectOptions.length === 0) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "No machines available",
+          false,
+          SYMBOLS[5]
+        )
+        resetInput()
+        return
+      }
+
       await writeToTerminal(OutputType.NORMAL, "TO:")
 
       let targetMachineKey = await renderSelect(
@@ -219,43 +234,46 @@
         SYMBOLS[14]
       )
 
-      // If the source machine is the core:
-      // Allow selecting the port index
-      if (sourceMachineEntity.machineType === MachineType.CORE) {
-        // await writeToTerminal(OutputType.NORMAL, "Select source port:")
-        // let sourcePortOptions: SelectOption[] = []
+      if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
+        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-        // for (let i = 0; i < sourcePorts.length; i++) {
-        //   let currentPortEntity = $simulatedPorts[sourcePorts[i][0]]
-        //   sourcePortOptions.push({
-        //     label: `Port #${i + 1}: ${
-        //       MaterialType[
-        //         currentPortEntity.product?.materialType || MaterialType.NONE
-        //       ]
-        //     }`,
-        //     value: sourcePorts[i][0],
-        //   })
-        // }
+        parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
+      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
+        await writeToTerminal(OutputType.NORMAL, "Select source port:")
+        let sourcePortOptions: SelectOption[] = []
 
-        // let sourcePort = await renderSelect(
-        //   selectContainerElement,
-        //   Select,
-        //   sourcePortOptions
-        // )
+        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-        // // Abort if nothing selected
-        // if (!sourcePort) {
-        //   await writeToTerminal(
-        //     OutputType.ERROR,
-        //     "No port selected",
-        //     false,
-        //     SYMBOLS[5]
-        //   )
-        //   resetInput()
-        //   return
-        // }
+        const portLabel = p =>
+          `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
+        sourcePortOptions = ports.map(p => ({
+          label: portLabel(p),
+          value: p.portIndex,
+        }))
 
-        parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
+        console.log(sourcePortOptions)
+
+        let sourcePort = await renderSelect(
+          selectContainerElement,
+          Select,
+          sourcePortOptions
+        )
+
+        console.log(sourcePort)
+
+        // Abort if nothing selected
+        if (!sourcePort) {
+          await writeToTerminal(
+            OutputType.ERROR,
+            "No port selected",
+            false,
+            SYMBOLS[5]
+          )
+          resetInput()
+          return
+        }
+
+        parameters = [sourceMachineKey, targetMachineKey, sourcePort]
       } else {
         // Use the first one available
         parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]

@@ -1,7 +1,51 @@
+import type { SimulatedEntity } from "../simulator/types"
+
 import { get } from "svelte/store"
 import { simulatedMachines } from "../simulator"
-import { ConnectionState, MaterialType } from "../state/enums"
+
+import { EMPTY_CONNECTION } from "../state"
+import { ConnectionState, MaterialType, PortIndex } from "../state/enums"
 import { MachineType } from "./types"
+import { DIRECTION } from "../../components/Terminal/types"
+
+/**
+ *
+ * @param direction
+ * @returns Machine[]
+ */
+export const availableMachines = (direction: DIRECTION) => {
+  const machines = Object.entries(get(simulatedMachines))
+
+  return machines.filter(([_, machine]) => {
+    return (
+      machine[
+        direction === DIRECTION.OUTGOING
+          ? "outgoingConnections"
+          : "incomingConnections"
+      ].filter(connection => connection === EMPTY_CONNECTION).length > 0
+    )
+  })
+}
+
+/**
+ *
+ * @param direction
+ * @returns PortDefinition
+ */
+export const availablePorts = (machine: Machine, direction: DIRECTION) => {
+  return machine[
+    direction === DIRECTION.OUTGOING
+      ? "outgoingConnections"
+      : "incomingConnections"
+  ]
+    .map((address, i) => ({
+      portIndex: i,
+      machine,
+      address,
+    }))
+    .filter(connection => connection.address === EMPTY_CONNECTION)
+    .flat()
+}
 
 const dfs = (
   currentMachineUID: string,
