@@ -28,6 +28,7 @@ declare global {
     materialsInPod?: string[]
     LevelStartBlock?: number
     completionTimes?: number[]
+    outletEntity?: string
     gameConfig?: GameConfig
   }
 
@@ -70,6 +71,7 @@ declare global {
     entityType: EntityType.BOX
     creationBlock: number
     lastResolved: number
+    outletEntity: string
     machinesInPod: string[]
     materialsInPod: string[]
   }

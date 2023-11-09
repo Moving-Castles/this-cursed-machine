@@ -7,7 +7,7 @@ import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
-contract ResolutionSystemTest is MudTest {
+contract ResolveSystemTest is MudTest {
   IWorld world;
   address internal alice;
   address internal bob;
