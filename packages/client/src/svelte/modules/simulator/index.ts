@@ -10,11 +10,9 @@ import {
   playerBox,
   playerEntityId,
   playerCore,
-  machines,
 } from "../state"
 import { blockNumber } from "../network"
 import type { SimulatedEntities, BoxOutputs } from "./types"
-import { machineTypeToLabel } from "../state/convenience"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -144,70 +142,6 @@ export const simulatedMaterials = derived(simulated, $simulated => {
     )
   )
 })
-
-
-/**
- * Derives a readable list of connections based on the input stores.
- *
- * Given the current connections, ports, machines, and playerCore, this function
- * will filter, map, and transform the connections to a more readable format
- * showcasing the relationship between source machines and target machines.
- * @param {Array} - Array of svelte stores: [connections, ports, machines, playerCore]
- * @returns {Array} - An array of transformed connection objects which includes the id,
- *                    connection details, and a human-readable label for each connection.
- */
-export const readableConnections = derived(
-  [simulatedConnections, ports, machines, playerCore],
-  ([$simulatedConnections, $ports, $machines, $playerCore]) => {
-    return (
-      Object.entries($simulatedConnections)
-        // Filter connections to only those that belong to the current box carried by player
-        .filter(([_, entry]) =>
-          connectionBelongsToBox(entry, $playerCore.carriedBy)
-        )
-        .map(([id, connection]) => {
-          // Get the material being transported
-          const materialType = connection.product?.materialType
-
-          // Extract the source and target ports for the current connection
-          const sP = connection?.sourcePort
-          const tP = connection?.targetPort
-
-          if (sP && tP) {
-            const ssP = $ports[sP]
-            const ttP = $ports[tP]
-
-            if (ssP && ttP) {
-              // Fetch the machine types and indices for source and target
-              const sourceMachine = machineTypeToLabel($machines[ssP?.carriedBy]?.machineType)
-              const sourceMachineIndex = $machines[ssP?.carriedBy]?.buildIndex
-              const targetMachine = machineTypeToLabel($machines[ttP?.carriedBy]?.machineType)
-              const targetMachineIndex = $machines[ttP?.carriedBy]?.buildIndex
-
-              if (sourceMachine && targetMachine) {
-                // Construct a label showcasing the source to target machine connection
-
-                return {
-                  id,
-                  connection,
-                  label: `From ${sourceMachine}${sourceMachineIndex ? ` #${sourceMachineIndex}` : ""
-                    } To ${targetMachine}${targetMachineIndex ? ` #${targetMachineIndex}` : ""
-                    } ${sourceMachine === "CORE"
-                      ? `(${MaterialType[materialType]})`
-                      : ""
-                    }`,
-                }
-              }
-            }
-          }
-
-          return false
-        })
-        // Filter out any invalid or non-transformed entries
-        .filter(ent => ent)
-    )
-  }
-)
 
 export const readableMachines = derived(
   simulatedMachines,
