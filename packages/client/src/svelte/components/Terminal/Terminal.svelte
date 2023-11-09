@@ -163,10 +163,6 @@
 
       const connection = $simulatedConnections.find(c => c.id === connectionId)
 
-      console.log(connection)
-
-      console.log(connection.sourceMachine, connection.portIndex)
-
       parameters = [connection.sourceMachine, connection.portIndex]
     } else if (command.id === COMMAND.CONNECT) {
       // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -295,7 +291,7 @@
         console.log(sourcePort)
 
         // Abort if nothing selected
-        if (!sourcePort) {
+        if (!sourcePort && sourcePort !== 0) {
           await writeToTerminal(
             OutputType.ERROR,
             "No port selected",
