@@ -1,7 +1,7 @@
 import { terminalOutput, SYMBOLS } from ".."
 import { OutputType, type Output } from "../types"
 import { scrollToEnd } from "./helpers"
-import { playSound } from "../../../modules/sound"
+import { playSound, randomPitch } from "../../../modules/sound"
 
 /**
  * Writes a given string to the terminal output. Optionally replaces the previous output.
@@ -53,7 +53,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
 
     await writeToTerminal(type, str[0], false, symbol, delay)
     for (let i = 1; i < str.length; i++) {
-        playSound("tcm", "cant");
+        playSound("tcm", "cant", false, false, randomPitch());
         await writeToTerminal(type, str.substring(0, i + 1), true, symbol, delay)
     }
 

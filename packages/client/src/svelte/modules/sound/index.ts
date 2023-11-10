@@ -32,9 +32,10 @@ export function initSound(): void {
  * @param {string} id - The id of the sound within the category.
  * @param {boolean} [loop=false] - Determines if the sound should loop.
  * @param {boolean} [fade=false] - Determines if the sound should have fade in/out effects.
+ * @param {number} [pitch=1] - The pitch of the sound.
  * @returns {Howl | undefined} - The Howl object of the sound.
  */
-export function playSound(category: string, id: string, loop: boolean = false, fade: boolean = false): Howl | undefined {
+export function playSound(category: string, id: string, loop: boolean = false, fade: boolean = false, pitch: number = 1): Howl | undefined {
 
   const sound = soundLibrary[category][id].sound
 
@@ -49,6 +50,7 @@ export function playSound(category: string, id: string, loop: boolean = false, f
     const FADE_TIME = 2000;
 
     // Init
+    sound.rate(pitch)
     sound.play();
     sound.fade(0, 1, FADE_TIME);
     sound.on("load", function () {
@@ -58,8 +60,17 @@ export function playSound(category: string, id: string, loop: boolean = false, f
       }, FADE_OUT_TIME);
     });
   } else {
+    sound.rate(pitch)
     sound.play();
   }
 
   return sound
+}
+/**
+ * @returns {number} - A random pitch 
+ */
+export function randomPitch(): number {
+  const max = 1.2;
+  const min = 0.9;
+  return Math.random() * (max - min) + min;
 }
