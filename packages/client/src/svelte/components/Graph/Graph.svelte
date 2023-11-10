@@ -207,6 +207,28 @@
     simulation.alpha(1).restart()
   }
 
+  // Only for checking in animation loop
+  let connectionStates = {}
+
+  $: {
+    links.forEach(link => {
+      let newState = connectionState(link.id)
+      console.log(newState)
+
+      // Equalize ConnectionState.CONNECTED and ConnectionState.FLOWING so they don't trigger updates when moving between those two
+      if (
+        newState === ConnectionState.CONNECTED ||
+        newState === ConnectionState.FLOWING
+      ) {
+        newState = ConnectionState.CONNECTED
+      }
+
+      connectionStates[link.id] = newState
+    })
+
+    console.log(connectionStates)
+  }
+
   // GO ON THEN
   onMount(resize)
 </script>
@@ -224,7 +246,7 @@
 
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
-      {#each links as link (link.id)}
+      {#each links as link, i (`${link.id}-${connectionStates[link.id]}`)}
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <g
           on:mouseenter={e => {
@@ -289,159 +311,6 @@
 
   .machine-text {
     pointer-events: none;
-  }
-
-  .node-image.FLOWING {
-    /* animation: flowAnimation 1s ease forwards infinite; */
-  }
-  .machine-connection.FLOWING,
-  .machine-connection.FLOWING path {
-    /* animation: flowAnimation 1s ease forwards infinite; */
-  }
-
-  path {
-    /* transition: stroke 0.3s ease; */
-  }
-
-  @keyframes vibrate {
-    0% {
-      transform: translate(0, 0);
-    }
-    2.5% {
-      transform: translate(0, -2px);
-    } /* Up */
-    5% {
-      transform: translate(2px, -2px);
-    } /* Right */
-    7.5% {
-      transform: translate(2px, 0);
-    } /* Down */
-    10% {
-      transform: translate(2px, 2px);
-    } /* Down */
-    12.5% {
-      transform: translate(0px, 2px);
-    } /* Left */
-    15% {
-      transform: translate(-2px, 2px);
-    } /* Left */
-    17.5% {
-      transform: translate(-2px, 0);
-    } /* Up */
-    20% {
-      transform: translate(-2px, -2px);
-    } /* Up */
-    22.5% {
-      transform: translate(0px, -2px);
-    } /* Right */
-    25% {
-      transform: translate(2px, -2px);
-    } /* Down */
-    27.5% {
-      transform: translate(2px, 0);
-    } /* Right */
-    30% {
-      transform: translate(2px, 2px);
-    } /* Down */
-    32.5% {
-      transform: translate(0px, 2px);
-    } /* Left */
-    35% {
-      transform: translate(-2px, 2px);
-    } /* Left */
-    37.5% {
-      transform: translate(-2px, 0);
-    } /* Up */
-    40% {
-      transform: translate(-2px, -2px);
-    } /* Up */
-    42.5% {
-      transform: translate(0px, -2px);
-    } /* Right */
-    45% {
-      transform: translate(2px, -2px);
-    } /* Right */
-    47.5% {
-      transform: translate(2px, 0);
-    } /* Down */
-    50% {
-      transform: translate(2px, 2px);
-    } /* Left */
-    52.5% {
-      transform: translate(0px, 2px);
-    } /* Down */
-    55% {
-      transform: translate(-2px, 2px);
-    } /* Left */
-    57.5% {
-      transform: translate(-2px, 0);
-    } /* Up */
-    60% {
-      transform: translate(-2px, -2px);
-    } /* Up */
-    62.5% {
-      transform: translate(0px, -2px);
-    } /* Right */
-    65% {
-      transform: translate(2px, -2px);
-    } /* Right */
-    67.5% {
-      transform: translate(2px, 0);
-    } /* Down */
-    70% {
-      transform: translate(2px, 2px);
-    } /* Down */
-    72.5% {
-      transform: translate(0px, 2px);
-    } /* Left */
-    75% {
-      transform: translate(-2px, 2px);
-    } /* Up */
-    77.5% {
-      transform: translate(-2px, 0);
-    } /* Left */
-    80% {
-      transform: translate(-2px, -2px);
-    } /* Up */
-    82.5% {
-      transform: translate(0px, -2px);
-    } /* Right */
-    85% {
-      transform: translate(2px, -2px);
-    } /* Right */
-    87.5% {
-      transform: translate(2px, 0);
-    } /* Down */
-    90% {
-      transform: translate(2px, 2px);
-    } /* Down */
-    92.5% {
-      transform: translate(0px, 2px);
-    } /* Left */
-    95% {
-      transform: translate(-2px, 2px);
-    } /* Left */
-    97.5% {
-      transform: translate(-2px, 0);
-    } /* Up */
-    100% {
-      transform: translate(0, 0);
-    } /* Right */
-  }
-
-  @keyframes flowAnimation {
-    to {
-      stroke-dashoffset: 0; /* Reveal the line. */
-    }
-  }
-
-  @keyframes rotateAnimation {
-    0% {
-      transform: rotate(-12deg);
-    }
-    100% {
-      transform: rotate(12deg);
-    }
   }
 
   svg :global(.node),

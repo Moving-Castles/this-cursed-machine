@@ -59,3 +59,34 @@ export const pulseGraph = () => {
   const graphPulseValue = get(graphPulse)
   graphPulse.set(graphPulseValue - 1)
 }
+
+/** Extended version of Svelte's draw */
+export function draw(
+  node,
+  { delay = 0, speed, duration, easing = expoIn, dasharray = "" } = {}
+) {
+  let len = node.getTotalLength()
+  const style = getComputedStyle(node)
+  if (style.strokeLinecap !== "butt") {
+    len += parseInt(style.strokeWidth)
+  }
+  if (duration === undefined) {
+    if (speed === undefined) {
+      duration = 800
+    } else {
+      duration = len / speed
+    }
+  } else if (typeof duration === "function") {
+    duration = duration(len)
+  }
+  console.log(len)
+  return {
+    delay,
+    duration,
+    easing,
+    css: (_, u) => `
+			stroke-dasharray: ${len};
+			stroke-dashoffset: ${u * len};
+		`,
+  }
+}

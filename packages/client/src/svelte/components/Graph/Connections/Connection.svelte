@@ -3,7 +3,8 @@
   import { graphPulse } from "../../../modules/ui/stores"
   import { tweened } from "svelte/motion"
   import { expoIn } from "svelte/easing"
-  import { draw } from "svelte/transition"
+  import { fade } from "svelte/transition"
+  import { draw } from "../../../modules/ui/transitions"
   import { get } from "svelte/store"
   export let d: string
   export let stroke: string
@@ -12,22 +13,17 @@
 
   const [STROKE, GAP] = [16, 50]
 
-  let localPulse = tweened(0, { duration: 1000, easing: expoIn })
-  let freeze = get(graphPulse)
+  let freeze = get(graphPulse) * GAP
+  const localPulse = tweened(freeze, { duration: 500, easing: expoIn })
 
-  $: console.log($graphPulse)
-
-  $: {
-    $localPulse = state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze
-  }
-
-  $: if (state !== ConnectionState.FLOWING) freeze = get(graphPulse) * GAP
+  $: $localPulse =
+    state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze * GAP
 </script>
 
 <path
   class="path"
-  in:draw={{ duration: 300 }}
-  out:draw={{ duration: 300 }}
+  in:draw={{ duration: 500 }}
+  out:draw={{ duration: 100 }}
   {d}
   fill="none"
   stroke="var(--STATE_INACTIVE)"
@@ -35,7 +31,11 @@
   {transform}
 />
 
+<!-- in:draw={{ duration: 10000, dasharray: `${STROKE}, ${GAP};` }} -->
+<!-- out:draw={{ duration: 10000, dasharray: `${STROKE}, ${GAP};` }} -->
 <path
+  in:fade={{ duration: 200, delay: 500 }}
+  out:fade={{ duration: 100 }}
   class="path"
   {d}
   {stroke}
