@@ -1,0 +1,117 @@
+= = = = =
++ RECIPES
+= = = = =
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+------
+# CORE
+------
+BUG => PISS, BLOOD
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+----------
+# SPLITTER
+----------
+X => X/2, X/2
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+-------
+# MIXER
+-------
+PISS + BLOOD => CAFFEINE_SLUSHY
+MONSTER + PISS => M150
+M150 + PISS => 5_HOUR_ENERGY
+PRIME + M150 => 5_HOUR_ENERGY
+BLOOD_LIPIDS + CIGARETTE_JUICE => E_LIQUID
+DIET_RED_BULL + CIGARETTE_JUICE => E_LIQUID
+5_HOUR_ENERGY + E_LIQUID => ERASERBABY
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+-------
+# DRYER
+-------
+MONSTER => DIRT
+PISS => SLUDGE
+5_HOUR_ENERGY => SLUDGE
+CAFFEINE_SLUSHY => DIRT
+CLUB_MATE => DIRT
+BLOOD_LIPIDS => DIRT
+SLUDGE => DIRT
+PLANT => TOBACCO
+E_LIQUID => TOBACCO
+CIGARETTE_JUICE => TOBACCO
+DIET_RED_BULL => SLUDGE
+ERASERBABY => SLUDGE
+PRIME => SLUDGE
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+--------
+# WETTER
+--------
+BUG => SLUDGE
+DIRT => PLANT
+BLOOD_LIPIDS => SLUDGE
+M150 => PRIME
+PLANT => CLUB_MATE
+E_LIQUID => SLUDGE
+TOBACCO => CIGARETTE_JUICE
+CIGARETTE_JUICE => SLUDGE
+ERASERBABY => SLUDGE
+5_HOUR_ENERGY => SLUDGE
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+--------
+# BOILER
+--------
+BUG => MONSTER
+PISS => SLUDGE
+BLOOD => BLOOD_LIPIDS
+DIRT => BLOOD_LIPIDS
+BLOOD_LIPIDS => SLUDGE
+CAFFEINE_SLUSHY => PRIME
+PLANT => CLUB_MATE
+CLUB_MATE => DIET_RED_BULL
+PRIME => M150
+5_HOUR_ENERGY => SLUDGE
+DIET_RED_BULL => PRIME
+TOBACCO => CIGARETTE_JUICE
+CIGARETTE_JUICE => SLUDGE
+ERASERBABY => SLUDGE
+E_LIQUID => SLUDGE
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+--------
+# COOLER
+--------
+MONSTER => BUGS
+BLOOD_LIPIDS => BLOOD
+M150 => PRIME
+PRIME => DIET_RED_BULL
+CAFFEINE_SLUSHY => CLUB_MATE
+DIET_RED_BULL => CLUB_MATE
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
