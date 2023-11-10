@@ -10,6 +10,18 @@ export const GAME_CONFIG_ID = "0x"
 export const EMPTY_CONNECTION = "0x0000000000000000000000000000000000000000000000000000000000000000"
 export const WAREHOUSE_ID = "0xf001000000000000000000000000000000000000000000000000000000000000"
 
+export const LEVEL_PAR_TIMES = {
+  1: 100,
+  2: 100,
+  3: 100,
+  4: 100,
+  5: 100,
+  6: 100,
+  7: 100
+}
+
+export const PROGRESSION_PAR_TIME = Object.values(LEVEL_PAR_TIMES).reduce((total, current) => total + current, 0);
+
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
 // * * * * * * * * * * * * * * * * *
