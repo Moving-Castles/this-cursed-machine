@@ -67,7 +67,19 @@
     UIState.set(UI.NAMED)
   }
 
+  const dashboard = () => {
+    const urlParams = new URLSearchParams(new URL(window.location.href).search)
+    console.log("urlParams", urlParams)
+    console.log('urlParams.get("dashboard")', urlParams.get("dashboard"))
+    if (urlParams.get("dashboard") !== null) {
+      UIState.set(UI.DASHBOARD)
+    }
+  }
+
   onMount(async () => {
+    //Check if we should skip to the dashboard
+    dashboard()
+
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
@@ -131,7 +143,7 @@
     <Naming on:named={named} />
   {/if}
 
-  {#if $UIState === UI.NAMED}
+  {#if $UIState === UI.NAMED || $UIState === UI.DASHBOARD}
     <Dashboard />
   {/if}
 
