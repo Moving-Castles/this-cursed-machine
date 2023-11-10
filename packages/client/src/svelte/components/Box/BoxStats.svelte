@@ -6,7 +6,6 @@
     simulatedPlayerEnergy,
     boxOutput,
   } from "../../modules/simulator"
-  import { playerCore } from "../../modules/state"
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -46,7 +45,7 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 0.5em;
+    padding: 15px;
     overflow: scroll;
     text-align: left;
     display: flex;

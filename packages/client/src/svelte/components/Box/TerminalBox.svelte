@@ -72,54 +72,13 @@
 <Tooltips />
 
 <style lang="scss">
-  .box {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 40px;
-    height: calc(100vh - 20px);
-    width: calc(100vw - 20px);
-    background-color: #444;
-    font-size: var(--font-size-normal);
-    z-index: 1000;
-  }
-
-  .scanlines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-    // background: url(/images/scanlines.gif);
-    background: url(/images/vhs.webp);
-    background-size: 100% 100%;
-    mix-blend-mode: lighten;
-    z-index: 1010000000;
-  }
-
-  .scanlines2 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-    background: url(/images/scanlines.gif);
-    // background: url(/images/vhs.webp);
-    background-size: 100% 100%;
-    mix-blend-mode: multiply;
-    z-index: 1010000000;
-  }
-
   .split-screen {
     // Display properties are set in app.css
 
     .left-col {
-      height: calc(100vh - 20px);
+      height: 100vh;
       overflow: hidden;
-      border: 1px solid #fff;
-      margin: 10px;
+      border-right: 5px double var(--color-border);
     }
 
     .right-col {
@@ -128,61 +87,16 @@
       grid-template-rows: 250px 1fr;
       overflow: hidden;
       position: relative;
-      margin: 10px;
-      margin-left: 0;
 
       .stats {
         grid-column: 1 / 7;
-        border: 1px solid white;
+        border-bottom: 5px double var(--color-border);
       }
     }
-  }
-
-  .icon {
-    height: 50px;
-    width: 50px;
-  }
-
-  .flowchart-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 2rem;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--terminal-background);
   }
 
   .graph {
     grid-column: 1 / 7;
     position: relative;
-    // background: red;
-  }
-
-  .graph-container {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: rgba(0, 0, 0, 0.8);
-  }
-
-  .inline-flowchart {
-    padding: 100px;
-  }
-
-  .esc {
-    position: fixed;
-    z-index: 9999;
-    margin: 2rem;
-    top: 0;
-    right: 0;
-    font-family: var(--font-family);
-    cursor: pointer;
-    color: var(--terminal-color);
   }
 </style>

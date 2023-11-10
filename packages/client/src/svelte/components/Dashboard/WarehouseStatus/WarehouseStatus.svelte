@@ -90,7 +90,7 @@
     .listing {
       padding-top: 1em;
       padding-left: 20px;
-      border-top: 5px double white;
+      border-top: 5px double var(--color-border);
     }
   }
 </style>

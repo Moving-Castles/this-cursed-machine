@@ -393,7 +393,7 @@
 
     &:not(.noOutput) {
       height: 100vh;
-      padding: 0.5em 0.5em 4em;
+      padding: 15px 15px 4em;
     }
 
     form {
