@@ -49,11 +49,12 @@ Connect Cooler to outlet
 Transfer
 Assert: level == 4
 
+!!!! FAILING
 -------
 LEVEL 4
 _ GOALS
 - 1000 MONSTER
-- 1000 PRIME
+- 1000 PRIME    !!!! Test produces M150 (type 12) instead of PRIME (type 11)
 -------
 Build splitter #1
 Connect inlet to splitter #1
@@ -74,11 +75,12 @@ Connect boiler #3 to outlet
 Transfer
 Assert: level == 5
 
+!!!! Failing
 -------
 * LEVEL 5:
 _ GOALS
-- 1000 Plant
-- 1000 Sludge
+- 1000 Plant 
+- 1000 Sludge   !!!! Test produces DIRT (type 5) instead of SLUDGE (type 4)
 -------
 Build mixer #1
 Connect inlet to core
