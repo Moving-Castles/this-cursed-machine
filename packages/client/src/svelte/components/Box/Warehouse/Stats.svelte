@@ -40,8 +40,8 @@
           <span class="label">
             {materialTypeToLabel(MaterialType[goal])}:
           </span>
-          {#key goalCompletions[MaterialType[goal]].overflow}<span
-              style:color={goalCompletions[MaterialType[goal]].overflow > 0
+          {#key goalCompletions[MaterialType[goal]]?.overflow}<span
+              style:color={goalCompletions[MaterialType[goal]]?.overflow > 0
                 ? "red"
                 : "currentColor"}
               in:strobe>{goalCompletions[MaterialType[goal]].value}</span
@@ -89,15 +89,17 @@
     display: flex;
     gap: 1ch;
   }
+
   .label {
     display: inline-block;
     width: 10ch;
   }
+
   .goals {
     display: flex;
     flex-flow: column nowrap;
-    gap: 0.5rem;
   }
+
   .bar {
     width: 15ch;
     height: 26px;
@@ -105,6 +107,7 @@
     border-style: solid;
     position: relative;
   }
+
   .bar-fill {
     position: absolute;
     width: 0;

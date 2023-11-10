@@ -55,6 +55,8 @@
 
 <div class="loading-percentage">{$loadingMessage}</div>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div on:click={onClick} class="loading">
   <div class="loading-message" bind:this={loadingMessageElement} />
 </div>
