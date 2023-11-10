@@ -15,12 +15,6 @@
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
   import { playSound } from "./modules/sound"
-  import { entities, cores, machines, warehouse } from "./modules/state"
-
-  $: console.log("Entities", $entities)
-  $: console.log("Cores", $cores)
-  $: console.log("Machines", $machines)
-  $: console.log("Warehouse", $warehouse)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -67,7 +61,17 @@
     UIState.set(UI.NAMED)
   }
 
+  const dashboard = () => {
+    const urlParams = new URLSearchParams(new URL(window.location.href).search)
+    if (urlParams.get("dashboard") !== null) {
+      UIState.set(UI.DASHBOARD)
+    }
+  }
+
   onMount(async () => {
+    //Check if we should skip to the dashboard
+    dashboard()
+
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
@@ -131,7 +135,7 @@
     <Naming on:named={named} />
   {/if}
 
-  {#if $UIState === UI.NAMED}
+  {#if $UIState === UI.NAMED || $UIState === UI.DASHBOARD}
     <Dashboard />
   {/if}
 

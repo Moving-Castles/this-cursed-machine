@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte"
   export let address: string
   export let machine: Machine // can be numerical or string
   import {
@@ -7,10 +8,29 @@
   } from "../../modules/state/convenience"
   import { MaterialType, MachineType } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
+  import { machineState } from "../../modules/state/convenience"
+  import { playSound } from "../../modules/sound"
 
-  // List contents etc
+  let sound: Howl
 
   const machineLore = MACHINE_LORE[machine.machineType]
+
+  const mapping = {
+    0: "machineInactive",
+    1: "machineIdle",
+    2: "machineFlowing",
+  }
+
+  onMount(() => {
+    console.log(machineState(address))
+    sound = playSound("tcm", mapping[machineState(address)], true, true)
+  })
+  onDestroy(() => {
+    sound.fade(1, 0, 3000)
+    setTimeout(() => {
+      sound?.stop()
+    }, 3000)
+  })
 </script>
 
 <div class="machine-information">

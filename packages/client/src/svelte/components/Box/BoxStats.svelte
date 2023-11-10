@@ -15,7 +15,7 @@
   <div class="column">
     <!-- ({$playerCore.level}) -->
     <p>Stump #24719</p>
-    <p class="muted">-------------------</p>
+    <p class="muted">************</p>
     <p>
       {#key $simulatedPlayerCore.energy}
         <span class="green">ENERGY:{$simulatedPlayerEnergy}</span>
@@ -25,8 +25,8 @@
 
   <!-- LEFT COLUMN -->
   <div class="column">
-    <p class="muted">SENT TO WAREHOUSE:</p>
-    <p class="muted">-------------------</p>
+    <p class="muted">SENT TO WAREHOUSE</p>
+    <p class="muted">*****************</p>
     {#if !$showLevelModal}
       <p>
         {#key $playerCore.level}

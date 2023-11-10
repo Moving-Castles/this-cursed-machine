@@ -3,8 +3,6 @@
   import WarehouseHeader from "./WarehouseHeader.svelte"
   import WarehouseItem from "./WarehouseItem.svelte"
 
-  $: console.log("Warehouse Materials", $warehouseMaterials)
-
   function consolidateWarehouse(materials: Material[]): Material[] {
     const consolidatedMaterials: { [key: string]: Material } = {}
 

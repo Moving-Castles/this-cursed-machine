@@ -63,7 +63,7 @@
     padding: 2rem;
     background: var(--terminal-background);
     border: var(--terminal-border);
-    font-size: 32px;
+    // font-size: 32px;
     z-index: 999999;
 
     .loading-message {

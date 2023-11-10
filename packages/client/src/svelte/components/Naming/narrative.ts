@@ -64,7 +64,6 @@ export const narrative = [
         await writeNarrativeAction("Enter your name (Must include at least one numeral and one special character).")
     },
     async (str: string) => {
-        console.log('str', str)
         await writeNarrativeInfo("Permanently erasing old identity...")
         await writeNarrativeError("WARNING: THIS CAN NOT BE UNDONE")
         await writeNarrativeInfo("Assigning new name...")

@@ -3,8 +3,7 @@
   import { completedCores } from ".."
   import LeaderboardItem from "./LeaderboardItem.svelte"
   import LeaderboardHeader from "./LeaderboardHeader.svelte"
-
-  const PROGRESSION_PAR = 100
+  import { PROGRESSION_PAR_TIME } from "../../../modules/state"
 
   const calculateLeaderBoard = (cores: Cores): ExtendedCore[] => {
     let orderedList: ExtendedCore[] = []
@@ -24,11 +23,13 @@
 
       extendedCore.totalCompletionTime = totalCompletionTime
 
-      // Calculate the percentage over PROGRESSION_PAR
+      // Calculate the percentage over PROGRESSION_PAR_TIME
       let percentageOverPar = 0
-      if (totalCompletionTime > PROGRESSION_PAR) {
+      if (totalCompletionTime > PROGRESSION_PAR_TIME) {
         percentageOverPar =
-          ((totalCompletionTime - PROGRESSION_PAR) / PROGRESSION_PAR) * 100
+          ((totalCompletionTime - PROGRESSION_PAR_TIME) /
+            PROGRESSION_PAR_TIME) *
+          100
       }
 
       // Calculate the score
@@ -66,7 +67,7 @@
   <div class="warning">
     <div>
       <div>
-        <span>Expected completion time: {PROGRESSION_PAR}</span>
+        <span>Expected completion time: {PROGRESSION_PAR_TIME}</span>
       </div>
     </div>
   </div>

@@ -55,7 +55,7 @@ export function scale(node, { duration = 1000, delay = 0 }) {
  * Tick this
  */
 export const pulseGraph = () => {
-  console.log("PULSE!")
+  // console.log("PULSE!")
   const graphPulseValue = get(graphPulse)
   graphPulse.set(graphPulseValue - 1)
 }
@@ -79,7 +79,7 @@ export function draw(
   } else if (typeof duration === "function") {
     duration = duration(len)
   }
-  console.log(len)
+  // console.log(len)
   return {
     delay,
     duration,

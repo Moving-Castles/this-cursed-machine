@@ -27,8 +27,6 @@
   }
 
   const handleCommand = async (e: any) => {
-    console.log(e.detail.userInput)
-
     if (e.detail?.userInput && isValidName(e.detail.userInput)) {
       await narrative[1](e.detail.userInput)
       dispatch("named")

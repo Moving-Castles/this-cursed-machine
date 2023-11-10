@@ -6,8 +6,6 @@
 
   const dispatch = createEventDispatcher()
 
-  $: console.log("LOADING PROGRESS =>", $loadingMessage)
-
   let introDone = false
   let introStarted = false
   let loadingMessageElement: HTMLDivElement

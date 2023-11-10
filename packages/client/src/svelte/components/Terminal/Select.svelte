@@ -43,17 +43,14 @@
         // Navigate to the previous option
         playSound("tcm", "selectionScroll")
         selectedIndex = Math.max(selectedIndex - 1, 0)
-        console.log(selectOptions, selectedIndex)
         break
       case "ArrowDown":
         // Navigate to the next option
         playSound("tcm", "selectionScroll")
         selectedIndex = Math.min(selectedIndex + 1, selectOptions.length - 1)
-        console.log(selectOptions, selectedIndex)
         break
       case "Enter":
         if (selectOptions[selectedIndex]?.value === null) {
-          console.log(selectOptions, selectedIndex)
           playSound("tcm", "selectionEsc")
           // Close the options list without making a selection
           returnValue(null)

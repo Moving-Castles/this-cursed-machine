@@ -55,7 +55,6 @@
     localLevel.set(level)
     inputActive = false
     await new Promise(resolve => setTimeout(resolve, 500))
-    console.log("level change detected")
     clearTerminalOutput()
     await writeLevel(level)
     resetInput()
