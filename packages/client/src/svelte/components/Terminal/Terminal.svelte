@@ -10,11 +10,7 @@
   import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
-  import {
-    MachineType,
-    MaterialType,
-    PortIndex,
-  } from "../../modules/state/enums"
+  import { MachineType, PortIndex } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
@@ -28,7 +24,7 @@
   import { playerCore } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
-  import { writeNewLevel } from "./functions/writeNewLevel"
+  import { writeLevel } from "./functions/writeLevel"
   import {
     machineTypeToLabel,
     availablePorts,
@@ -61,7 +57,7 @@
     await new Promise(resolve => setTimeout(resolve, 500))
     console.log("level change detected")
     clearTerminalOutput()
-    await writeNewLevel(level)
+    await writeLevel(level)
     resetInput()
     inputActive = true
   }
@@ -213,10 +209,11 @@
       // %%%%%%%%%%%%%%%%%%%%%%%%
 
       // Get machines with available incoming connection slots
+      // Remove the source machine from the list
       let targetSelectOptions = createSelectOptions(
         COMMAND.CONNECT,
         DIRECTION.INCOMING
-      )
+      ).filter(option => option.value !== sourceMachineKey)
 
       // Abort if no available targets
       if (targetSelectOptions.length === 0) {
@@ -263,11 +260,15 @@
         SYMBOLS[14]
       )
 
+      // Handle splitter port selection
       if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
+        // Use the first available one
         parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
+      }
+
+      // Handle core port selection
+      if (sourceMachineEntity.machineType === MachineType.CORE) {
         await writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
 
@@ -275,6 +276,7 @@
 
         const portLabel = p =>
           `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
+
         sourcePortOptions = ports.map(p => ({
           label: portLabel(p),
           value: p.portIndex,
@@ -285,8 +287,6 @@
           Select,
           sourcePortOptions
         )
-
-        console.log(sourcePort)
 
         // Abort if nothing selected
         if (!sourcePort && sourcePort !== 0) {
@@ -302,7 +302,7 @@
 
         parameters = [sourceMachineKey, targetMachineKey, sourcePort]
       } else {
-        // Use the first one available
+        // Use the first one
         parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
       }
     }

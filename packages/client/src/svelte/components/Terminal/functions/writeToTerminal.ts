@@ -1,7 +1,7 @@
 import { terminalOutput, SYMBOLS } from ".."
 import { OutputType, type Output } from "../types"
 import { scrollToEnd } from "./helpers"
-import { playSound } from "../../../modules/sound"
+import { playSound, randomPitch } from "../../../modules/sound"
 
 /**
  * Writes a given string to the terminal output. Optionally replaces the previous output.
@@ -53,7 +53,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
 
     await writeToTerminal(type, str[0], false, symbol, delay)
     for (let i = 1; i < str.length; i++) {
-        playSound("tcm", "cant");
+        playSound("tcm", "cant", false, false, randomPitch());
         await writeToTerminal(type, str.substring(0, i + 1), true, symbol, delay)
     }
 
@@ -70,7 +70,7 @@ export async function typeWriteToTerminal(type: OutputType, str: string, symbol:
  * @returns {Promise<void>} A promise that resolves when the loading line has been written to the terminal.
  */
 export async function loadingLine(index: number): Promise<void> {
-    const CHARACTER = "."
+    const CHARACTER = "·"
     playSound("tcm", "TRX_wait_b");
     if (index === 1) {
         await writeToTerminal(OutputType.NORMAL, CHARACTER, false, SYMBOLS[2], 0)

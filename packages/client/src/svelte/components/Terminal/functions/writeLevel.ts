@@ -37,18 +37,18 @@ async function writeAction(text: string) {
     )
 }
 
-async function writeNormal(text: string) {
+async function writeGoal(text: string) {
     await writeToTerminal(
         OutputType.NORMAL,
         text,
         false,
-        SYMBOLS[7],
+        SYMBOLS[9],
         400
     )
 }
 
 
-export const writeNewLevel = async (level: number) => {
+export const writeLevel = async (level: number, short: boolean = false) => {
     const currentLevelContent = get(staticContent).levels.find(l => l.level === level)
     let text: string[] = []
     if (currentLevelContent.short_content_start && currentLevelContent.short_content_start.content) {
@@ -58,18 +58,23 @@ export const writeNewLevel = async (level: number) => {
     await write("********************")
     await write(`Order #${level}`)
 
-    for (let i = 0; i < text.length; i++) {
-        await typeWrite(text[i])
+    if (!short) {
+        for (let i = 0; i < text.length; i++) {
+            await typeWrite(text[i])
+        }
+
+        await write("WAREHOUSE GOALS:")
     }
 
-    await write("WAREHOUSE GOALS:")
     const currentGoals = get(playerGoals)
     for (let i = 0; i < currentGoals.length; i++) {
-        await writeNormal(`${currentGoals[i].materialType === MaterialType.NONE ? "Energy" : MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
+        await writeGoal(`${currentGoals[i].materialType === MaterialType.NONE ? "Energy" : MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
     }
-    if (level === 1) {
+
+    if (level === 1 && !short) {
         await write("********************")
         await writeAction("TYPE HELP TO GET STARTED")
     }
+
     await write("********************")
 }

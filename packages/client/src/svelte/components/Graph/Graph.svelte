@@ -323,7 +323,7 @@
     background-image: url("/images/machines/OUTLET.png");
   }
   .MACHINE_CORE {
-    background-image: url("/images/machines/CORE.png");
+    background-image: url("/images/machines/CORE4.png");
   }
   .MACHINE_SPLITTER {
     background-image: url("/images/machines/SPLITTER.png");

@@ -16,6 +16,7 @@ contract ConnectSystem is System {
     bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
     require(EntityType.get(_sourceMachine) == ENTITY_TYPE.MACHINE, "source not machine");
     require(EntityType.get(_targetMachine) == ENTITY_TYPE.MACHINE, "target not machine");
+    require(_sourceMachine != _targetMachine, "source and target are same");
 
     // Resolve network
     LibNetwork.resolve(coreEntity);

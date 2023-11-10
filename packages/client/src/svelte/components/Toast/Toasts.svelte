@@ -30,7 +30,6 @@
     right: 10px;
     display: flex;
     flex-direction: column-reverse;
-    pointer-events: none;
     width: 400px;
     text-align: center;
   }
