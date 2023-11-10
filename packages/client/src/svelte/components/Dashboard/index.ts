@@ -18,7 +18,6 @@ export const completedCores = derived(cores, $cores => {
  * Warehouse materials
  */
 export const warehouseMaterials = derived(materials, $materials => {
-    console.log($materials)
     return Object.fromEntries(
         Object.entries($materials).filter(
             ([, material]) => material.carriedBy === WAREHOUSE_ID

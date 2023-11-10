@@ -213,7 +213,7 @@
   $: {
     links.forEach(link => {
       let newState = connectionState(link.id)
-      console.log(newState)
+      // console.log(newState)
 
       // Equalize ConnectionState.CONNECTED and ConnectionState.FLOWING so they don't trigger updates when moving between those two
       if (
@@ -226,7 +226,7 @@
       connectionStates[link.id] = newState
     })
 
-    console.log(connectionStates)
+    // console.log(connectionStates)
   }
 
   // GO ON THEN

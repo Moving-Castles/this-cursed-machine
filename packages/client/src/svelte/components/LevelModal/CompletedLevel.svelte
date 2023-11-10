@@ -7,7 +7,6 @@
   const dispatch = createEventDispatcher()
 
   const handleCommand = async (e: any) => {
-    console.log(e.detail.command.id)
     if (e.detail.command.id === COMMAND.BLINK) {
       dispatch("transfer")
     }
@@ -31,11 +30,16 @@
   <div class="level-gradient level-background" />
 
   {#if $playerCore.level > 3}
-    <img src="/images/rewards/1-.png" class="level-background" />
+    <img
+      src="/images/rewards/1-.png"
+      class="level-background"
+      alt="level reward"
+    />
   {:else}
     <img
       src="/images/rewards/{$playerCore.level}-.png"
       class="level-background"
+      alt="level reward"
     />
   {/if}
 

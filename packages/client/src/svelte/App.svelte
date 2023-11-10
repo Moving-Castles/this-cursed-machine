@@ -15,12 +15,6 @@
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
   import { playSound } from "./modules/sound"
-  import { entities, cores, machines, warehouse } from "./modules/state"
-
-  $: console.log("Entities", $entities)
-  $: console.log("Cores", $cores)
-  $: console.log("Machines", $machines)
-  $: console.log("Warehouse", $warehouse)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
@@ -69,8 +63,6 @@
 
   const dashboard = () => {
     const urlParams = new URLSearchParams(new URL(window.location.href).search)
-    console.log("urlParams", urlParams)
-    console.log('urlParams.get("dashboard")', urlParams.get("dashboard"))
     if (urlParams.get("dashboard") !== null) {
       UIState.set(UI.DASHBOARD)
     }

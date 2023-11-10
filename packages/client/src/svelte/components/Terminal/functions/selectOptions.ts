@@ -74,9 +74,8 @@ function createSelectOptionsDestroy(): SelectOption[] {
       !FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)
     ) {
       selectOptions.push({
-        label: `${machineTypeToLabel(machine.machineType)} #${
-          machine.buildIndex
-        }`,
+        label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex
+          }`,
         value: machineId,
       })
     }
@@ -137,23 +136,18 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   selectOptions = connections.map(connection => {
     const sourceMachine = machines[connection.sourceMachine]
     const targetMachine = machines[connection.targetMachine]
-    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${
-      sourceMachine?.buildIndex ?? ""
-    } to ${machineTypeToLabel(targetMachine.machineType)} ${
-      targetMachine?.buildIndex ?? ""
-    } ${
-      connection?.product
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${sourceMachine?.buildIndex ?? ""
+      } to ${machineTypeToLabel(targetMachine.machineType)} ${targetMachine?.buildIndex ?? ""
+      } ${connection?.product
         ? `(${materialTypeToLabel(connection.product.materialType)})`
         : ""
-    }`
+      }`
 
     return {
       label,
       value: connection.id,
     }
   })
-
-  console.log(selectOptions)
 
   return selectOptions
 }
