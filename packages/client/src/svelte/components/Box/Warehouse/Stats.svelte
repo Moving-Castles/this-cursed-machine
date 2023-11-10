@@ -44,8 +44,8 @@
               style:color={goalCompletions[MaterialType[goal]]?.overflow > 0
                 ? "red"
                 : "currentColor"}
-              in:strobe>{goalCompletions[MaterialType[goal]].value}</span
-            >{/key} / {goalCompletions[MaterialType[goal]].target}
+              in:strobe>{goalCompletions[MaterialType[goal]]?.value}</span
+            >{/key} / {goalCompletions[MaterialType[goal]]?.target}
           <!-- <div style:border-color="var(--{goal})" class="bar dotted">
             <div
               class="bar-fill"
