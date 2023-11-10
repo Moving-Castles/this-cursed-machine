@@ -263,15 +263,15 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
     world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
-    // Connect splitter to core
+    // Connect splitter #1 to core
     world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
     // Build boiler #1
     bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
-    // Connect Splitter to boiler #1
+    // Connect Splitter #1 to boiler #1
     world.connect(splitter1Entity, boiler1Entity, PORT_INDEX.SECOND);
     // Connect boiler #1 to outlet
     world.connect(boiler1Entity, outletEntity, PORT_INDEX.FIRST);
-    // Wait 11 blocks for monster to be produced
+    // Wait 20 blocks for monster to be produced
     vm.roll(block.number + 20);
 
     // Disconnect boiler #1 from outlet
@@ -286,13 +286,9 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect mixer to boiler #2
     world.connect(mixer1Entity, boiler2Entity, PORT_INDEX.FIRST);
-    // Build boiler #3
-    bytes32 boiler3Entity = world.build(MACHINE_TYPE.BOILER);
-    // Connect boiler #2 to boiler #3
-    world.connect(boiler2Entity, boiler3Entity, PORT_INDEX.FIRST);
-    // Connect boiler #3 to outlet
-    world.connect(boiler3Entity, outletEntity, PORT_INDEX.FIRST);
-    // Wait 11 blocks for Prime to be produced
+    // Connect boiler #2 to outlet
+    world.connect(boiler2Entity, outletEntity, PORT_INDEX.FIRST);
+    // Wait 40 blocks for Prime to be produced
     vm.roll(block.number + 40);
 
     // * * * * * * * * * * * * * * * * * * *
@@ -366,10 +362,10 @@ contract LevelsTest is MudTest, GasReporter {
     // Wait 20 blocks to produce plant
     vm.roll(block.number + 20);
 
-    // Disconnect dryer #1 from wetter #1
-    world.disconnect(dryer1Entity, PORT_INDEX.FIRST);
     // Disconnect wetter #1 from outlet
     world.disconnect(wetter1Entity, PORT_INDEX.FIRST);
+    // Disconnect dryer #1 from wetter #1
+    world.disconnect(dryer1Entity, PORT_INDEX.FIRST);
     // Build boiler #1
     bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Build boiler #2
