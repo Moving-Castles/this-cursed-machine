@@ -207,6 +207,28 @@
     simulation.alpha(1).restart()
   }
 
+  // Only for checking in animation loop
+  let connectionStates = {}
+
+  $: {
+    links.forEach(link => {
+      let newState = connectionState(link.id)
+      console.log(newState)
+
+      // Equalize ConnectionState.CONNECTED and ConnectionState.FLOWING so they don't trigger updates when moving between those two
+      if (
+        newState === ConnectionState.CONNECTED ||
+        newState === ConnectionState.FLOWING
+      ) {
+        newState = ConnectionState.CONNECTED
+      }
+
+      connectionStates[link.id] = newState
+    })
+
+    console.log(connectionStates)
+  }
+
   // GO ON THEN
   onMount(resize)
 </script>
@@ -224,7 +246,7 @@
 
     <g use:groupScale class="all-nodes">
       <!-- LINKS -->
-      {#each links as link (link.id)}
+      {#each links as link, i (`${link.id}-${connectionStates[link.id]}`)}
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <g
           on:mouseenter={e => {
