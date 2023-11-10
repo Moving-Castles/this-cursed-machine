@@ -145,7 +145,7 @@ export const simulatedConnections = derived(
           ? sourceMachine?.outputs[i]
           : null
         connections.push({
-          id: `${sourceAddress}-${targetAddress}`,
+          id: `${sourceAddress}-${targetAddress}-${i}`,
           sourceMachine: sourceAddress,
           targetMachine: targetAddress,
           portIndex: i,

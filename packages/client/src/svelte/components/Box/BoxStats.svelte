@@ -6,6 +6,8 @@
     simulatedPlayerEnergy,
     boxOutput,
   } from "../../modules/simulator"
+  import Stats from "../../components/Box/Warehouse/Stats.svelte"
+  import { showLevelModal, showMap } from "../../modules/ui/stores"
   import { playerCore } from "../../modules/state"
 </script>
 
@@ -27,15 +29,13 @@
   <div class="column">
     <p class="muted">SENT TO WAREHOUSE:</p>
     <p class="muted">-------------------</p>
-    <p>
-      {#if Object.entries($boxOutput).length > 0}
-        {#each Object.entries($boxOutput) as [type, amount] (type)}
-          <span class={MaterialType[type]}>
-            {MaterialType[type].split("_").join(" ")}: {amount}
-          </span><br />
-        {/each}
-      {/if}
-    </p>
+    {#if !$showLevelModal}
+      <p>
+        {#key $playerCore.level}
+          <Stats />
+        {/key}
+      </p>
+    {/if}
   </div>
 </div>
 
