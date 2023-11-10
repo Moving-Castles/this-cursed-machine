@@ -83,7 +83,7 @@
   .leaderboard {
     width: 50%;
     height: 100vh;
-    border-right: 5px double white;
+    border-right: 5px double var(--color-border);
 
     .header {
       padding-top: 20px;
@@ -115,7 +115,7 @@
       padding-left: 20px;
       height: 100vh;
       overflow: hidden;
-      border-top: 5px double white;
+      border-top: 5px double var(--color-border);
     }
   }
 </style>

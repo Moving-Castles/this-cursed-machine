@@ -15,6 +15,8 @@
   --color-failure: #ff4000;
   --color-help: #534bce;
   --color-special: #d013d0;
+  
+  --color-border: #7a7a7a;
 
   /* Sizing */
   --padding-button: 6px 12px;
@@ -37,7 +39,7 @@
   --muted-opacity: 0.7;
   --backdrop: blur(10px);
   --outer-border: 1px solid rgba(var(--foreground), var(--muted-opacity));
-  --terminal-border: 1px solid #666;
+  --terminal-border: 5px double var(--color-border);
 
   /* Materials */
   --BUG: #9be97c;

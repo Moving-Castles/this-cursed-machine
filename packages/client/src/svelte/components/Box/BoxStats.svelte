@@ -1,13 +1,11 @@
 <script lang="ts">
   // import { playerCore, playerBox } from "../../modules/state"
-  import { MaterialType } from "../../modules/state/enums"
   import {
     simulatedPlayerCore,
     simulatedPlayerEnergy,
-    boxOutput,
   } from "../../modules/simulator"
   import Stats from "../../components/Box/Warehouse/Stats.svelte"
-  import { showLevelModal, showMap } from "../../modules/ui/stores"
+  import { showLevelModal } from "../../modules/ui/stores"
   import { playerCore } from "../../modules/state"
 </script>
 
@@ -46,7 +44,7 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 0.5em;
+    padding: 15px;
     overflow: scroll;
     text-align: left;
     display: flex;

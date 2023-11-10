@@ -43,7 +43,7 @@
   .filtered {
     width: 128px;
     margin: 1ch auto;
-    border: 1px solid white;
+    border: 1px solid var(--color-border);
   }
 
   .connection-image {
