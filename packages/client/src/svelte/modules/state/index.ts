@@ -8,6 +8,7 @@ import { network } from "../network"
 
 export const GAME_CONFIG_ID = "0x"
 export const EMPTY_CONNECTION = "0x0000000000000000000000000000000000000000000000000000000000000000"
+export const WAREHOUSE_ID = "0xf001000000000000000000000000000000000000000000000000000000000000"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
@@ -69,6 +70,17 @@ export const goals = derived(entities, $entities => {
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITY TYPES
 // * * * * * * * * * * * * * * * * *
+
+/**
+ * Warehouse (singleton)
+ */
+export const warehouse = derived(entities, $entities => {
+  return Object.fromEntries(
+    Object.entries($entities).filter(
+      ([, entity]) => entity.entityType === EntityType.WAREHOUSE
+    )
+  )[0] as Warehouse
+})
 
 /**
  * Boxes

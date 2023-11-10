@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, GameConfigData } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, EntityType } from "../codegen/index.sol";
 import { LibLevel, LibUtils, LibGoal } from "../libraries/Libraries.sol";
-import { LevelDefinition } from "../constants.sol";
-import { MATERIAL_TYPE } from "../codegen/common.sol";
+import { LevelDefinition, WAREHOUSE_KEY } from "../constants.sol";
+import { MATERIAL_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 
 contract InitSystem is System {
   /**
@@ -16,6 +16,10 @@ contract InitSystem is System {
 
     // Set game config
     GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0 }));
+
+    // Create warehouse
+    bytes32 warehouseEntity = LibUtils.getRandomKey();
+    EntityType.set(warehouseEntity, ENTITY_TYPE.WAREHOUSE);
 
     // Create levels
     LevelDefinition[7] memory levels = [

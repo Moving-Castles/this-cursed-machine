@@ -67,6 +67,11 @@ declare global {
   // GAME PLAY ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
 
+  // warehouse
+  type Warehouse = {
+    entityType: EntityType.WAREHOUSE
+  }
+
   // aka. pod
   type Box = {
     entityType: EntityType.BOX

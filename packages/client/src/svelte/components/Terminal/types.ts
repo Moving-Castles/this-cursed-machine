@@ -2,7 +2,8 @@ import { MachineType } from "../../modules/state/enums";
 
 export enum TerminalType {
     FULL,
-    SPAWN
+    SPAWN,
+    NAMING
 }
 
 export enum DIRECTION {

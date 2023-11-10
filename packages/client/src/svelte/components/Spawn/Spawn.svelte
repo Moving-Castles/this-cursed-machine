@@ -35,10 +35,10 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    if ($playerCore && $playerCore.level === Object.keys($levels).length + 1) {
+    if ($playerCore && $playerCore.level > Object.keys($levels).length) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
-        `Welcome back ${$playerCore.name ? $playerCore.name : "employee"}...`,
+        `Welcome back ${$playerCore.name ? $playerCore.name : "stump"}...`,
         SYMBOLS[7],
         10,
         1000

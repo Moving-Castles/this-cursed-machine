@@ -140,6 +140,8 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
   5: FULL_COMMANDS,
   6: FULL_COMMANDS,
   7: FULL_COMMANDS,
+  8: [],
+  9: []
 }
 
 export const FULL_MACHINES = [
@@ -168,6 +170,8 @@ export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
   5: FULL_MACHINES,
   6: FULL_MACHINES,
   7: FULL_MACHINES,
+  8: [],
+  9: []
 }
 
 export const FIXED_MACHINE_TYPES = [MachineType.CORE, MachineType.INLET, MachineType.OUTLET]

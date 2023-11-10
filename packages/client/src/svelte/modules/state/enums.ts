@@ -4,6 +4,7 @@ export enum EntityType {
   RECIPE,
   LEVEL,
   GOAL,
+  WAREHOUSE,
   BOX,
   MACHINE,
   MATERIAL,

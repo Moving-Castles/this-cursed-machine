@@ -20,7 +20,8 @@
     dispatch("dead")
   }
 
-  $: if ($playerCore.level === Object.keys($levels).length + 1) {
+  // Levels are done, show the dashboard
+  $: if ($playerCore.level > Object.keys($levels).length) {
     dispatch("completed")
   }
 

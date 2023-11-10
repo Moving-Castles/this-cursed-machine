@@ -3,7 +3,8 @@ pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Level, CarriedBy, MaterialType, Amount, MaterialsInPod, CompletionTimes, LevelStartBlock, OutletEntity, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
 import { MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibGoal, LibNetwork, LibMaterial } from "../libraries/Libraries.sol";
+import { LibUtils, LibGoal, LibNetwork } from "../libraries/Libraries.sol";
+import { WAREHOUSE_KEY } from "../constants.sol";
 
 contract TransferSystem is System {
   /**
@@ -24,15 +25,13 @@ contract TransferSystem is System {
     // Check goals
     require(LibGoal.goalsAreAchived(coreEntity), "goals not achieved");
 
-    // Transfer goal materials to warehouse
-    LibGoal.transferToWarehouse(coreEntity);
-
-    // Destroy all output in pod
+    // Move all output to warehouse
+    // @todo consolidate materials in warehouse
     bytes32[] memory materialsInPod = MaterialsInPod.get(podEntity);
-    MaterialsInPod.set(podEntity, new bytes32[](0));
     for (uint256 i = 0; i < materialsInPod.length; i++) {
-      LibMaterial.trash(materialsInPod[i]);
+      CarriedBy.set(materialsInPod[i], WAREHOUSE_KEY);
     }
+    MaterialsInPod.set(podEntity, new bytes32[](0));
 
     // Store completion time
     uint256[] memory currentCompletionTimes = CompletionTimes.get(coreEntity);

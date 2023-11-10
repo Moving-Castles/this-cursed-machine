@@ -81,6 +81,12 @@
     // Write input to terminal
     await writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
 
+    // Return the input and abort if this is the naming terminal
+    if (terminalType === TerminalType.NAMING) {
+      dispatch("commandExecuted", { userInput })
+      return
+    }
+
     // Evaluate input
     const command = evaluate(userInput)
 
@@ -89,7 +95,7 @@
       await writeToTerminal(
         OutputType.ERROR,
         "Command not found",
-        noOutput,
+        false,
         SYMBOLS[5]
       )
       resetInput()
@@ -332,6 +338,7 @@
     //     400
     //   )
   })
+
   onDestroy(() => {
     if (setBlink) clearInterval(interval)
   })

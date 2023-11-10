@@ -2,19 +2,26 @@
   import { onMount } from "svelte"
   import { playSound } from "../../modules/sound"
   import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
-  import { transfer } from "../../modules/action"
+  import { transfer, complete } from "../../modules/action"
   import { showLevelModal, lastCompletedBlock } from "../../modules/ui/stores"
   import { waitForCompletion } from "../Terminal/functions/helpers"
   import CompletedLevel from "./CompletedLevel.svelte"
   import { blockNumber } from "../../modules/network"
+  import { playerCore } from "../../modules/state"
 
   let loading = false
+  let loadingMessage = ""
 
   const handleTransfer = async () => {
-    console.log("we want to transfer")
-    loading = true
-    // Initiate transfer
-    await waitForCompletion(transfer())
+    if ($playerCore.level === 7) {
+      loadingMessage = "Completing worker evaluation"
+      loading = true
+      await waitForCompletion(complete())
+    } else {
+      loadingMessage = "Receiving new order"
+      loading = true
+      await waitForCompletion(transfer())
+    }
     // Close modal
     showLevelModal.set(false)
     // Used to avoid double completion bug
@@ -30,7 +37,7 @@
   <div in:steppedFlyTop out:steppedFlyBottom class="level-modal">
     {#if loading}
       <div class="loading-message">
-        <div class="loading">Receiving new order</div>
+        <div class="loading">{loadingMessage}</div>
       </div>
     {:else}
       <CompletedLevel on:transfer={handleTransfer} />

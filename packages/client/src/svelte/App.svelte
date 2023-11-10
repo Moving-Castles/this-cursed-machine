@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
-  import { writable } from "svelte/store"
+  import { onMount } from "svelte"
   import { setup } from "../mud/setup"
   import {
     createComponentSystem,
@@ -16,17 +15,19 @@
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
   import { playSound } from "./modules/sound"
-  import { entities, cores, machines } from "./modules/state"
+  import { entities, cores, machines, warehouse } from "./modules/state"
 
   $: console.log("Entities", $entities)
   $: console.log("Cores", $cores)
   $: console.log("Machines", $machines)
+  $: console.log("Warehouse", $warehouse)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Death from "./components/Death/Death.svelte"
-  import Completed from "./components/Completed/Completed.svelte"
+  import Dashboard from "./components/Dashboard/Dashboard.svelte"
+  import Naming from "./components/Naming/Naming.svelte"
   import Toasts from "./components/Toast/Toasts.svelte"
 
   const onMouseMove = e => {
@@ -59,6 +60,11 @@
   const completed = () => {
     clearTerminalOutput()
     UIState.set(UI.COMPLETED)
+  }
+
+  const named = () => {
+    clearTerminalOutput()
+    UIState.set(UI.NAMED)
   }
 
   onMount(async () => {
@@ -121,12 +127,16 @@
     <TerminalBox on:dead={dead} on:completed={completed} />
   {/if}
 
-  {#if $UIState === UI.DEAD}
-    <Death on:restart={restart} />
+  {#if $UIState === UI.COMPLETED}
+    <Naming on:named={named} />
   {/if}
 
-  {#if $UIState === UI.COMPLETED}
-    <Completed />
+  {#if $UIState === UI.NAMED}
+    <Dashboard />
+  {/if}
+
+  {#if $UIState === UI.DEAD}
+    <Death on:restart={restart} />
   {/if}
 </main>
 

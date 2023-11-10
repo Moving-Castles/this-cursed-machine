@@ -35,6 +35,7 @@ export enum UI {
   DEAD,
   READY,
   COMPLETED,
+  NAMED
 }
 
 export const UIState = writable(UI.LOADING)
