@@ -115,7 +115,7 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   const machines = availableMachines(direction)
 
   selectOptions = machines.map(([address, machine]) => ({
-    label: machineTypeToLabel(machine.machineType),
+    label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? "#" + machine.buildIndex : ""),
     value: address,
   }))
 
@@ -136,12 +136,13 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   selectOptions = connections.map(connection => {
     const sourceMachine = machines[connection.sourceMachine]
     const targetMachine = machines[connection.targetMachine]
-    const label = `From ${machineTypeToLabel(sourceMachine.machineType)} ${sourceMachine?.buildIndex ?? ""
+    const label = `From ${machineTypeToLabel(sourceMachine.machineType)
+      } ${sourceMachine?.buildIndex ?? ""
       } to ${machineTypeToLabel(targetMachine.machineType)} ${targetMachine?.buildIndex ?? ""
       } ${connection?.product
         ? `(${materialTypeToLabel(connection.product.materialType)})`
         : ""
-      }`
+      } `
 
     return {
       label,

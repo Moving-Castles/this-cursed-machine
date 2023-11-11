@@ -119,6 +119,7 @@ Connect boiler #1 to mixer #2
 Connect splitter #2 to mixer #2
 Connect mixer #2 to outlet
 * Wait 20 blocks to produce M150
+
 Build boiler #2
 Connect core (blood) to boiler #2
 Build dryer #1

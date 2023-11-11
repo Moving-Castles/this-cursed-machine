@@ -39,7 +39,7 @@
       orderedList.push(extendedCore)
     })
 
-    // Sorting the list in ascending order based on totalCompletionTime
+    // Sort the list in ascending order based on totalCompletionTime
     orderedList.sort((a, b) => a.totalCompletionTime - b.totalCompletionTime)
 
     return orderedList
@@ -85,6 +85,7 @@
     width: 50%;
     height: 100vh;
     border-right: 5px double var(--color-border);
+    overflow-y: scroll;
 
     .header {
       padding-top: 20px;

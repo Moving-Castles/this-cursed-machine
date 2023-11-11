@@ -3,19 +3,34 @@
   import WarehouseHeader from "./WarehouseHeader.svelte"
   import WarehouseItem from "./WarehouseItem.svelte"
 
+  /**
+   * Consolidates an array of materials based on their type and sorts them in ascending order by amount.
+   *
+   * @param {Material[]} materials - An array of Material objects to be consolidated.
+   * @returns {Material[]} A sorted array of consolidated Material objects.
+   */
   function consolidateWarehouse(materials: Material[]): Material[] {
+    // Create an object to hold consolidated materials.
     const consolidatedMaterials: { [key: string]: Material } = {}
 
+    // Iterate over each material in the input array.
     materials.forEach(material => {
       const type = material.materialType
+
+      // If the material type already exists in consolidatedMaterials, add to its amount.
       if (consolidatedMaterials[type]) {
         consolidatedMaterials[type].amount += material.amount
-      } else {
+      }
+      // If the material type is not yet in consolidatedMaterials, add it.
+      else {
         consolidatedMaterials[type] = { ...material }
       }
     })
 
-    return Object.values(consolidatedMaterials)
+    // Convert the object to an array and sort the array by the amount in ascending order.
+    return Object.values(consolidatedMaterials).sort(
+      (a, b) => a.amount - b.amount
+    )
   }
 
   let consolidatedMaterials: Material[] = consolidateWarehouse(
@@ -55,6 +70,7 @@
   .warehouse-status {
     width: 50%;
     height: 100vh;
+    overflow-y: scroll;
 
     .header {
       padding-top: 20px;
