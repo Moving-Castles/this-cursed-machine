@@ -22,7 +22,6 @@
   }
 
   onMount(() => {
-    console.log(machineState(address))
     sound = playSound("tcm", mapping[machineState(address)], true, true)
   })
   onDestroy(() => {

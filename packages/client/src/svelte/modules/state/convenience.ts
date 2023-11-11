@@ -33,18 +33,20 @@ export const availableMachines = (direction: DIRECTION) => {
  * @returns PortDefinition
  */
 export const availablePorts = (machine: Machine, direction: DIRECTION) => {
-  return machine[
-    direction === DIRECTION.OUTGOING
-      ? "outgoingConnections"
-      : "incomingConnections"
-  ]
-    .map((address, i) => ({
-      portIndex: i,
-      machine,
-      address,
-    }))
-    .filter(connection => connection.address === EMPTY_CONNECTION)
-    .flat()
+  let ports =
+    machine[
+      direction === DIRECTION.OUTGOING
+        ? "outgoingConnections"
+        : "incomingConnections"
+    ]
+  ports = ports.map((address, i) => ({
+    portIndex: i,
+    machine,
+    address,
+  }))
+  ports = ports.filter(connection => connection.address === EMPTY_CONNECTION)
+  ports = ports.flat()
+  return ports
 }
 
 const dfs = (
@@ -63,7 +65,10 @@ const dfs = (
     return flowingConnections
   }
 
-  for (const connection of [...currentMachine!.incomingConnections, ...currentMachine!.outgoingConnections]) {
+  for (const connection of [
+    ...currentMachine!.incomingConnections,
+    ...currentMachine!.outgoingConnections,
+  ]) {
     if (connection !== EMPTY_CONNECTION) {
       const nextMachineUID = connection
       const subFlowingConnections = dfs(
@@ -76,9 +81,7 @@ const dfs = (
         subFlowingConnections.size > 0 ||
         machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
       ) {
-        flowingConnections.add(
-          currentMachineUID + "->" + nextMachineUID
-        )
+        flowingConnections.add(currentMachineUID + "->" + nextMachineUID)
         for (const conn of subFlowingConnections) {
           flowingConnections.add(conn)
         }
@@ -115,7 +118,10 @@ const dfsFlowingEntities = (
     return { flowingMachines, flowingConnections }
   }
 
-  for (const connection of [...currentMachine!.incomingConnections, ...currentMachine!.outgoingConnections]) {
+  for (const connection of [
+    ...currentMachine!.incomingConnections,
+    ...currentMachine!.outgoingConnections,
+  ]) {
     if (connection !== EMPTY_CONNECTION) {
       const nextMachineUID = connection
       const {
@@ -127,9 +133,7 @@ const dfsFlowingEntities = (
         nextFlowingMachines.size > 0 ||
         machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
       ) {
-        flowingConnections.add(
-          currentMachineUID + "->" + nextMachineUID
-        )
+        flowingConnections.add(currentMachineUID + "->" + nextMachineUID)
         flowingMachines.add(currentMachineUID)
 
         for (const conn of nextFlowingConnections) {
@@ -141,7 +145,6 @@ const dfsFlowingEntities = (
       }
     }
   }
-
 
   return { flowingMachines, flowingConnections }
 }

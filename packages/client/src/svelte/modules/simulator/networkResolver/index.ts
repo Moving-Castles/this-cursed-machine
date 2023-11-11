@@ -58,12 +58,6 @@ export async function initStateSimulator() {
       showLevelValue === false &&
       blockNumber > lastCompletedBlockValue + 10
     ) {
-      console.log(
-        "level, ",
-        playerCoreValue.level,
-        " reached at block nr. ",
-        blockNumber
-      )
       showLevelModal.set(true)
     }
   })

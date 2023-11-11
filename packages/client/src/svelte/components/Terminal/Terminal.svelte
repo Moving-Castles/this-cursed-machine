@@ -265,15 +265,14 @@
         SYMBOLS[14]
       )
 
+      /** Exceptions first */
+
       // Handle splitter port selection
       if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
         // Use the first available one
         parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      }
-
-      // Handle core port selection
-      if (sourceMachineEntity.machineType === MachineType.CORE) {
+      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
         await writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
 
