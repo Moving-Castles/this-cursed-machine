@@ -107,6 +107,7 @@ library LibPod {
     // Scale by number of blocks since last resolution
     uint32 scaledAmount = _output.amount * uint32(_blocksSinceLastResolution);
     // Check if there alreads is a material of the same type in the box
+    // @todo replace query with iterating over MaterialsInPod
     bytes32 materialEntity = getMaterialOfTypeByBox(_podEntity, _output.materialType);
     // If yes, add new amount to it
     if (materialEntity != bytes32(0)) {

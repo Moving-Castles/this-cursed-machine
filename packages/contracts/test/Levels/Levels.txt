@@ -57,19 +57,18 @@ _ GOALS
 -------
 Build splitter #1
 Connect inlet to splitter #1
-Connect splitter to core
+Connect splitter #1 to core
 Build boiler #1
-Connect Splitter to boiler
-Connect boiler to outlet
+Connect splitter # to boiler #1
+Connect boiler #1 to outlet
 * Wait 20 block for monster to be produced
+Disconnect boiler #1 from outlet
 Build mixer #1
 Connect core piss to mixer #1
 Connect core blood to mixer #1
 Build boiler #2
-Build boiler #3
 Connect mixer to boiler #2
-Connect boiler to boiler #3
-Connect boiler #3 to outlet
+Connect boiler #2 to outlet
 * Wait 40 blocks for Prime to be produced
 Transfer
 Assert: level == 5
@@ -77,7 +76,7 @@ Assert: level == 5
 -------
 * LEVEL 5:
 _ GOALS
-- 1000 Plant
+- 1000 Plant 
 - 1000 Sludge
 -------
 Build mixer #1
@@ -85,15 +84,16 @@ Connect inlet to core
 Connect core piss to mixer #1
 Connect core blood to mixer #1
 Build dryer #1
-Mixer #1 to dryer #1 
+Connect Mixer #1 to dryer #1 
 Build wetter #1
 Connect dryer #1 to wetter #1
 Connect wetter #1 to outlet
 * Wait 20 blocks to produce plant
+
+Disconnect wetter #1 from outlet
+Disconnect dryer #1 from wetter #1
 Build boiler #1
 Build boiler #2
-Disconnect dryer #1 to wetter #1
-Disconnect wetter #1 to outlet
 Connect dryer #1 to boiler #1
 Connect boiler #1 to boiler #2
 Connect boiler #2 to outlet
