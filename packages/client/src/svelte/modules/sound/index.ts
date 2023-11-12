@@ -52,13 +52,7 @@ export function playSound(category: string, id: string, loop: boolean = false, f
     // Init
     sound.rate(pitch)
     sound.play();
-    sound.fade(0, 1, FADE_TIME);
-    sound.on("load", function () {
-      const FADE_OUT_TIME = sound.duration() * 1000 - sound.seek() - FADE_TIME;
-      setTimeout(function () {
-        sound.fade(1, 0, FADE_TIME);
-      }, FADE_OUT_TIME);
-    });
+    sound.fade(0, soundLibrary[category][id].volume, FADE_TIME);
   } else {
     sound.rate(pitch)
     sound.play();
@@ -70,7 +64,7 @@ export function playSound(category: string, id: string, loop: boolean = false, f
  * @returns {number} - A random pitch 
  */
 export function randomPitch(): number {
-  const max = 1.2;
-  const min = 0.9;
+  const max = 2;
+  const min = 0.8;
   return Math.random() * (max - min) + min;
 }
