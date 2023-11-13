@@ -1,9 +1,5 @@
 import type { SoundAssets } from "../types.js"
 
-// selection_esc-hit_01c.mp3
-// selection_esc-hit_01short.mp3
-// selection_scroll-hit_03.mp3
-
 export const tcm: SoundAssets = {
   blink: {
     src: "./sounds/tcm/blink-sfx_01.mp3",
@@ -38,7 +34,7 @@ export const tcm: SoundAssets = {
     volume: 1,
   },
   TRX_yes: {
-    src: "./sounds/tcm/TRX_yes-sfx_01b.mp3",
+    src: "./sounds/tcm/TRX_yes-sfx_03.mp3",
     volume: 1,
   },
   typingEnter: {
@@ -57,10 +53,6 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/typing_pos-hit_02.mp3",
     volume: 1,
   },
-  cant: {
-    src: "./sounds/tcm/CANT.mp3",
-    volume: 1,
-  },
   singleHeartbeat100: {
     src: "./sounds/tcm/player_nrg100-sfx.mp3",
     volume: 1,
@@ -75,15 +67,15 @@ export const tcm: SoundAssets = {
   },
   introBg: {
     src: "./sounds/tcm/intro_bg-loop_01.mp3",
-    volume: 0.8,
+    volume: 0.7,
   },
   enteredPod: {
     src: "./sounds/tcm/player_enterPod-sfx_01.mp3",
     volume: 1,
   },
   podBg: {
-    src: "./sounds/tcm/pod_bg-loop_01.mp3",
-    volume: 1,
+    src: "./sounds/tcm/pod_bg-loop_01noclick.mp3",
+    volume: 0.7,
   },
   machineIdle: {
     src: "./sounds/tcm/machineIdle.mp3",
@@ -99,6 +91,22 @@ export const tcm: SoundAssets = {
   },
   typingCant: {
     src: "./sounds/tcm/scum_typing-hit_drug_03.mp3",
+    volume: 1,
+  },
+  listPrint: {
+    src: "./sounds/tcm/list_print-hit_01.mp3",
+    volume: 1,
+  },
+  mapClose: {
+    src: "./sounds/tcm/map_close-sfx_01.mp3",
+    volume: 1,
+  },
+  mapPop: {
+    src: "./sounds/tcm/map_pop-sfx_01.mp3",
+    volume: 0.8,
+  },
+  playerLvlend: {
+    src: "./sounds/tcm/player_lvlend-sfx_02.mp3",
     volume: 1,
   },
 }

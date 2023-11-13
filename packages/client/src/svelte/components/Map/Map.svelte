@@ -1,7 +1,12 @@
 <script lang="ts">
   import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
-  import { showMap } from "../../modules/ui/stores"
+  import { showMap, showLevelModal } from "../../modules/ui/stores"
   import { playSound } from "../../modules/sound"
+
+  // Hid map when level modal is shown
+  $: if ($showLevelModal) {
+    showMap.set(false)
+  }
 
   const onKeyDown = ({ key }) => {
     if (key === "Escape") {
@@ -9,7 +14,7 @@
     }
   }
   const hide = () => {
-    playSound("tcm", "selectionEsc")
+    playSound("tcm", "mapClose")
     showMap.set(false)
   }
 </script>
