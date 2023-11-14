@@ -4,10 +4,12 @@ import { COMMAND } from "../types";
 import { writeToTerminal } from "../functions/writeToTerminal";
 import { showMap } from "../../../modules/ui/stores";
 import { SYMBOLS } from "..";
+import { playSound } from "../../../modules/sound";
 
 async function execute() {
     showMap.set(true)
     await writeToTerminal(OutputType.NORMAL, "Loading material map...", false, SYMBOLS[5], 100)
+    playSound("tcm", "mapPop")
     return;
 }
 
