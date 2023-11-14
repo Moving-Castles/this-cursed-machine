@@ -2,7 +2,7 @@ import { typeWriteToTerminal, writeToTerminal } from "./writeToTerminal"
 import { OutputType } from "../types"
 import { SYMBOLS } from ".."
 import { get } from "svelte/store"
-import { playerGoals } from "../../../modules/state"
+import { playerGoals, playerCore, LEVEL_PAR_TIMES } from "../../../modules/state"
 import { MaterialType } from "../../../modules/state/enums"
 import { staticContent } from "../../../modules/content"
 import { extractTexts } from "../../../modules/content/sanity"
@@ -49,14 +49,40 @@ async function writeGoal(text: string) {
 
 
 export const writeLevel = async (level: number, short: boolean = false) => {
+    console.log("level score")
     const currentLevelContent = get(staticContent).levels.find(l => l.level === level)
+    const $playerCore = get(playerCore)
+
     let text: string[] = []
     if (currentLevelContent.short_content_start && currentLevelContent.short_content_start.content) {
         text = extractTexts(currentLevelContent.short_content_start)
     }
 
+
+    if (level - 1 > 0) {
+      const time = Number($playerCore.completionTimes[level - 2])
+
+      const par = LEVEL_PAR_TIMES[level - 1]
+
+      // Calculate the percentage over PROGRESSION_PAR_TIME
+      let percentageOverPar = 0
+
+      if (time > par) {
+        percentageOverPar =
+          ((time - par) /
+            par) *
+          100
+      }
+
+      await write(`Order #${level - 1} results:`)
+      await writeGoal(`Speed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${time}`)
+      await writeGoal(`Efficiency:&nbsp;&nbsp;${percentageOverPar} / ${par}`)
+
+    }
+
     await write("********************")
     await write(`Order #${level}`)
+
 
     if (!short) {
         for (let i = 0; i < text.length; i++) {
