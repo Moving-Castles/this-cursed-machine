@@ -75,7 +75,7 @@ export const writeLevel = async (level: number, short: boolean = false) => {
       }
 
       await write(`Order #${level - 1} results:`)
-      await writeGoal(`Speed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${time}`)
+      // await writeGoal(`Speed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${time}`)
       await writeGoal(`Efficiency:&nbsp;&nbsp;${percentageOverPar} / ${par}`)
 
     }
