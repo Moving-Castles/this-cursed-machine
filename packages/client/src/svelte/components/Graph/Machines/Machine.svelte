@@ -118,9 +118,13 @@
       pullAnimation 500ms linear 500ms;
   }
 
+  .MACHINE_OUTLET {
+    transition: transform 0.2s ease;
+  }
   .MACHINE_OUTLET.FLOWING {
     transform-origin: right; /* or transform-origin: 50% */
     transform-box: fill-box;
+    transform: scale(1.2, 1);
     animation: pullAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
       pushAnimation 500ms linear 500ms;
   }
