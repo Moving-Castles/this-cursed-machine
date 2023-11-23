@@ -86,27 +86,38 @@
     const mudLayer = await setup()
     network.set(mudLayer)
 
-    // Modules responsible for sending transactions
-    initActionSequencer()
+    console.log("$network", $network)
 
-    // Write block numbers to svelte store and alert on lost connection
-    initBlockListener()
+    $network.useStore.subscribe((state, prevState) => {
+      console.log("state", state)
+      // const record = state.getRecord($network.tables.MessageTable, {})
+      // if (record && record !== prevState.records[record.id]) {
+      //   document.getElementById("chat-output")!.innerHTML +=
+      //     `${new Date().toLocaleString()}: ${record?.value.value}\n`
+      // }
+    })
 
-    // Create systems to listen to changes to components in our namespace
-    for (const componentKey of Object.keys($network.components)) {
-      createComponentSystem(componentKey)
-    }
+    // // Modules responsible for sending transactions
+    // initActionSequencer()
 
-    // Listen to changes to the SyncProgresscomponent
-    createSyncProgressSystem()
+    // // Write block numbers to svelte store and alert on lost connection
+    // initBlockListener()
 
-    // Simulate state changes
-    initStateSimulator()
+    // // Create systems to listen to changes to components in our namespace
+    // for (const componentKey of Object.keys($network.components)) {
+    //   createComponentSystem(componentKey)
+    // }
 
-    // Preload sounds
-    initSound()
+    // // Listen to changes to the SyncProgresscomponent
+    // createSyncProgressSystem()
 
-    introSound = playSound("tcm", "introBg", true, true)
+    // // Simulate state changes
+    // initStateSimulator()
+
+    // // Preload sounds
+    // initSound()
+
+    // introSound = playSound("tcm", "introBg", true, true)
   })
 
   // Fade out intro sound when ready

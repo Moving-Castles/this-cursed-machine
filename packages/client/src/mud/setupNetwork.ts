@@ -9,9 +9,10 @@ import {
   ClientConfig,
 } from "viem"
 import { createFaucetService } from "@latticexyz/services/faucet"
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { syncToZustand } from "@latticexyz/store-sync/zustand";
+// import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+// import { world } from "./world"
 import { getNetworkConfig } from "./getNetworkConfig"
-import { world } from "./world"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
 import {
   createBurnerAccount,
@@ -50,17 +51,24 @@ export async function setupNetwork() {
     onWrite: write => write$.next(write),
   })
 
-  const {
-    components,
-    latestBlock$,
-    waitForTransaction,
-  } = await syncToRecs({
-    world,
+  // const {
+  //   components,
+  //   latestBlock$,
+  //   waitForTransaction,
+  // } = await syncToRecs({
+  //   world,
+  //   config: mudConfig,
+  //   address: networkConfig.worldAddress as Hex,
+  //   publicClient,
+  //   startBlock: BigInt(networkConfig.initialBlockNumber),
+  // })
+
+  const { tables, useStore, latestBlock$, storedBlockLogs$, waitForTransaction } = await syncToZustand({
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
-  })
+  });
 
   // Request drip from faucet
   if (networkConfig.faucetServiceUrl) {
@@ -87,15 +95,12 @@ export async function setupNetwork() {
   }
 
   return {
-    world,
-    components,
-    playerEntity: encodeEntity(
-      { address: "address" },
-      { address: burnerWalletClient.account.address }
-    ),
+    tables,
+    useStore,
     publicClient,
     walletClient: burnerWalletClient,
     latestBlock$,
+    storedBlockLogs$,
     waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),
