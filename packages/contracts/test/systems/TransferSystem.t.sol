@@ -32,47 +32,23 @@ contract TransferSystemTest is MudTest {
     assertEq(Level.get(coreEntity), 1);
   }
 
-  //  function testMoveProductsToWarehouse() public {
-  //   setUp();
+  function testRevertGoalsNotAchived() public {
+    setUp();
 
-  //   vm.startPrank(alice);
+    vm.startPrank(alice);
+    bytes32 coreEntity = world.spawn();
+    world.restart();
 
-  //   // Spawn core
-  //   bytes32 coreEntity = world.spawn();
-  //   world.restart();
+    assertEq(Level.get(coreEntity), 1);
 
-  //   // Get inlet entity
-  //   bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
-  //   bytes32 inletEntity = inletEntities[0][0];
+    // Warp to level
+    world.warp(2);
 
-  //   // Get outlet entity
-  //   bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
-  //   bytes32 outletEntity = outletEntities[0][0];
+    vm.expectRevert("goals not achieved");
+    world.transfer();
 
-  //   // Connect inlet to core
-  //   world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
-
-  //   // Connect core (piss port) to outlet
-  //   world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
-
-  //   // Wait 10 blocks
-  //   vm.roll(block.number + 10);
-
-  //   // Resolve
-  //   world.resolve();
-
-  //   vm.stopPrank();
-
-  //   // Get materials
-  //   bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
-
-  //   // Log materials
-  //   logMaterials(materials);
-
-  //   // Product should be 500 piss
-  //   assertEq(uint8(MaterialType.get(materials[0][0])), uint8(MATERIAL_TYPE.PISS));
-  //   assertEq(Amount.get(materials[0][0]), 500);
-  // }
+    vm.stopPrank();
+  }
 
   function testDisconnectOutletOnTransfer() public {
     setUp();

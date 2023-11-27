@@ -35,10 +35,8 @@ library LibGoal {
    * @return A boolean value: true if all goals are achieved, otherwise false.
    */
   function goalsAreAchived(bytes32 _coreEntity) internal view returns (bool) {
-    // Get box of core entity
-    bytes32 podEntity = CarriedBy.get(_coreEntity);
     // Get goals for level
-    bytes32[][] memory goals = getGoals(Level.get(podEntity));
+    bytes32[][] memory goals = getGoals(Level.get(_coreEntity));
 
     // Iterate over goals
     for (uint i; i < goals.length; i++) {
@@ -51,7 +49,7 @@ library LibGoal {
       }
 
       // Check if require materials are produced
-      bytes32 material = LibPod.getMaterialOfTypeByBox(podEntity, materialType);
+      bytes32 material = LibPod.getMaterialOfTypeByBox(CarriedBy.get(_coreEntity), materialType);
       if (material == bytes32(0)) return false;
       if (Amount.get(material) < Amount.get(goals[i][0])) return false;
     }
@@ -84,13 +82,4 @@ library LibGoal {
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
-
-  // function transferToWarehouse(bytes32 _coreEntity) internal {
-  //   bytes32[][] memory goals = getGoals(Level.get(_coreEntity));
-  //   for (uint i; i < goals.length; i++) {
-  //     if (MaterialType.get(goals[i][0]) == MATERIAL_TYPE.NONE) continue;
-  //     // Create new material in warehouse
-  //     LibMaterial.create(MaterialType.get(goals[i][0]), Amount.get(goals[i][0]), WAREHOUSE_KEY, _coreEntity);
-  //   }
-  // }
 }
