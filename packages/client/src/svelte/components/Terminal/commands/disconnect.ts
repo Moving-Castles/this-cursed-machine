@@ -12,18 +12,25 @@ import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound"
 
 async function execute(sourceMachine: string, portIndex: PortIndex) {
-  writeToTerminal(OutputType.NORMAL, "Approval pending")
-  // ...
-  const action = sendDisconnect(sourceMachine, portIndex)
-  // ...
-  await waitForTransaction(action, loadingSpinner)
-  // ...
-  writeToTerminal(OutputType.NORMAL, "Disconnecting...")
-  await waitForCompletion(action, loadingLine)
-  playSound("tcm", "TRX_yes")
-  await writeToTerminal(OutputType.SUCCESS, "Done")
-  // ...
-  return
+  try {
+    writeToTerminal(OutputType.NORMAL, "Approval pending")
+    // ...
+    const action = sendDisconnect(sourceMachine, portIndex)
+    // ...
+    await waitForTransaction(action, loadingSpinner)
+    // ...
+    writeToTerminal(OutputType.NORMAL, "Disconnecting...")
+    await waitForCompletion(action, loadingLine)
+    playSound("tcm", "TRX_yes")
+    await writeToTerminal(OutputType.SUCCESS, "Done")
+    // ...
+    return
+  } catch (error) {
+    console.error(error)
+    playSound("tcm", "TRX_no")
+    await writeToTerminal(OutputType.ERROR, "Command failed")
+    return
+  }
 }
 
 export const disconnect: Command<[connectionEntiy: string]> = {

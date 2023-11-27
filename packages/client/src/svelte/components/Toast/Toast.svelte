@@ -34,7 +34,9 @@
     text-align: center;
     background: red;
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 10px;
+    overflow: hidden;
+    word-break: break-all;
   }
 
   .error {

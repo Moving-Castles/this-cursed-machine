@@ -14,6 +14,7 @@ import { map } from "./map";
 import { order } from "./order";
 import { skip } from "./skip";
 import { restart } from "./restart";
+import { fail } from "./fail";
 
 export const commands: Command[] = [
     build,
@@ -29,5 +30,6 @@ export const commands: Command[] = [
     resolve,
     transfer,
     skip,
-    restart
+    restart,
+    fail
 ]

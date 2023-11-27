@@ -37,7 +37,8 @@ export enum COMMAND {
     ORDER,
     SKIP,
     RESTART,
-    COMPLETE
+    COMPLETE,
+    FAIL
 }
 
 export type Command<T extends any[] = any[]> = {

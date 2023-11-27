@@ -8,18 +8,25 @@ import { MachineType } from "../../../modules/state/enums"
 import { playSound } from "../../../modules/sound";
 
 async function execute(machineType: MachineType) {
-  writeToTerminal(OutputType.NORMAL, "Requesting material")
+  try {
+    writeToTerminal(OutputType.NORMAL, "Requesting material")
 
-  const action = sendBuild(machineType)
-  // ...
-  await waitForTransaction(action, loadingSpinner)
-  writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
-  // ...
-  await waitForCompletion(action, loadingLine)
-  playSound("tcm", "TRX_yes")
-  await writeToTerminal(OutputType.SUCCESS, "Done")
-  // ...
-  return
+    const action = sendBuild(machineType)
+    // ...
+    await waitForTransaction(action, loadingSpinner)
+    writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
+    // ...
+    await waitForCompletion(action, loadingLine)
+    playSound("tcm", "TRX_yes")
+    await writeToTerminal(OutputType.SUCCESS, "Done")
+    // ...
+    return
+  } catch (error) {
+    console.error(error)
+    playSound("tcm", "TRX_no")
+    await writeToTerminal(OutputType.ERROR, "Command failed")
+    return
+  }
 }
 
 export const build: Command<[machineType: MachineType]> = {

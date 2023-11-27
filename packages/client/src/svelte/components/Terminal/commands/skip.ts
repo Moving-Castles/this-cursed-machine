@@ -7,23 +7,30 @@ import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
 
 async function execute() {
-    writeToTerminal(OutputType.NORMAL, "Skipping intro...")
+    try {
+        writeToTerminal(OutputType.NORMAL, "Skipping intro...")
 
-    writeToTerminal(OutputType.NORMAL, "Spawning")
-    const spawnAction = spawn()
-    await waitForTransaction(spawnAction, loadingSpinner)
-    await waitForCompletion(spawnAction, loadingLine);
-    playSound("tcm", "TRX_yes")
-    writeToTerminal(OutputType.SUCCESS, "Spawn done")
+        writeToTerminal(OutputType.NORMAL, "Spawning")
+        const spawnAction = spawn()
+        await waitForTransaction(spawnAction, loadingSpinner)
+        await waitForCompletion(spawnAction, loadingLine);
+        playSound("tcm", "TRX_yes")
+        writeToTerminal(OutputType.SUCCESS, "Spawn done")
 
-    writeToTerminal(OutputType.NORMAL, "Transferring")
-    const restartAction = restart()
-    await waitForTransaction(restartAction, loadingSpinner);
-    await waitForCompletion(restartAction, loadingLine);
-    playSound("tcm", "TRX_yes")
-    writeToTerminal(OutputType.SUCCESS, "Transfer done")
+        writeToTerminal(OutputType.NORMAL, "Transferring")
+        const restartAction = restart()
+        await waitForTransaction(restartAction, loadingSpinner);
+        await waitForCompletion(restartAction, loadingLine);
+        playSound("tcm", "TRX_yes")
+        writeToTerminal(OutputType.SUCCESS, "Transfer done")
 
-    return;
+        return;
+    } catch (error) {
+        console.error(error)
+        playSound("tcm", "TRX_no")
+        await writeToTerminal(OutputType.ERROR, "Command failed")
+        return
+    }
 }
 
 export const skip: Command<[]> = {

@@ -24,7 +24,7 @@ export type Action = {
   tx?: string
   timestamp?: number
   completed: boolean
-  failed: boolean
+  error: any
 }
 
 // --- STORES -----------------------------------------------------------------
@@ -49,7 +49,7 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     systemId: systemId,
     params: params || [],
     completed: false,
-    failed: false,
+    error: undefined
   }
 
   queuedActions.update(queuedActions => {
@@ -137,22 +137,21 @@ async function execute() {
         // Clear action timeout
         clearActionTimer()
       } else {
-        // Set to failed
-        action.failed = true
         handleError(receipt, action)
       }
     } else {
       clearActionTimer()
     }
   } catch (e) {
-    action.failed = true
     handleError(e, action)
   }
 }
 
 function handleError(error: any, action: Action) {
-  console.error(error)
-  toastMessage("Something went wrong", { type: "error" })
+  // Update action status
+  action.error = error
+  // Trigger toast
+  toastMessage(error, { type: "error" })
   // Add action to failed list
   failedActions.update(failedActions => [action, ...failedActions])
   // Clear active list

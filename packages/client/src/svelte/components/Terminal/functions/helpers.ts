@@ -30,7 +30,7 @@ export const waitForTransaction = (
   loadingFunction?: (index: number) => {}
 ): Promise<Action> => {
   return new Promise((resolve, reject) => {
-    const maxRetries = 100
+    const maxRetries = 50
     let attempts = 0
     let index = 0
 
@@ -40,6 +40,8 @@ export const waitForTransaction = (
       if (action.tx) {
         // check if tx is set (i.e., it has a truthy value)
         resolve(action)
+      } else if (action.error) {
+        reject(new Error(action.error))
       } else if (attempts < maxRetries) {
         attempts++
         // wait for some time before checking again
@@ -75,8 +77,8 @@ export const waitForCompletion = (
       if (loadingFunction) loadingFunction(index)
       if (action.completed) {
         resolve(action)
-      } else if (action.failed) {
-        reject(new Error("Action failed."))
+      } else if (action.error) {
+        reject(new Error(action.error))
       } else if (attempts < maxRetries) {
         attempts++
         // wait for some time before checking again
