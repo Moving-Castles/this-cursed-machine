@@ -17,6 +17,11 @@
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
+  import { entities } from "./modules/state"
+
+  $: console.log("$network", $network)
+  $: console.log("$entities", $entities)
+
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"

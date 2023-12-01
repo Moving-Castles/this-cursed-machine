@@ -1,6 +1,10 @@
 {
   "extends": [
-    "solhint:recommended"
+    "solhint:recommended",
+    "mud"
+  ],
+  "plugins": [
+    "mud"
   ],
   "rules": {
     "compiler-version": [

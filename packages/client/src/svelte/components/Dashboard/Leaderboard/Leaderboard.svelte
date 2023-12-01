@@ -18,7 +18,7 @@
       // Calculate the total completion time
       let totalCompletionTime = extendedCore.completionTimes.reduce(
         (acc, curr) => acc + Number(curr),
-        0
+        0,
       )
 
       extendedCore.totalCompletionTime = totalCompletionTime

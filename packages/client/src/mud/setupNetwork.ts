@@ -60,6 +60,8 @@ export async function setupNetwork() {
     address: networkConfig.worldAddress as Hex,
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
+    // startBlock: BigInt(31744148),
+    // filters: [{ tableId: "0x74620000000000000000000000000000456e6572677900000000000000000000" }],
   })
 
   // Request drip from faucet
