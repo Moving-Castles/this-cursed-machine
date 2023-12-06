@@ -2,7 +2,7 @@ import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { resolve as sendResolve } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
-import { waitForCompletion, waitForTransaction } from "../functions/helpers";
+import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound";
 

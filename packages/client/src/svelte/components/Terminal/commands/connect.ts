@@ -2,7 +2,7 @@ import type { Command } from "../types";
 import { COMMAND, OutputType } from "../types";
 import { connect as sendConnect } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
-import { waitForCompletion, waitForTransaction } from "../functions/helpers";
+import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
 import { PortIndex } from "../../../modules/state/enums";
 

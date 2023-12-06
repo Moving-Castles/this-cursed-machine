@@ -4,7 +4,7 @@
   import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
   import { transfer, complete } from "../../modules/action"
   import { showLevelModal, lastCompletedBlock } from "../../modules/ui/stores"
-  import { waitForCompletion } from "../Terminal/functions/helpers"
+  import { waitForCompletion } from "../../modules/action/actionSequencer/utils"
   import CompletedLevel from "./CompletedLevel.svelte"
   import { blockNumber } from "../../modules/network"
   import { playerCore } from "../../modules/state"

@@ -7,7 +7,7 @@ import {
   loadingSpinner,
   writeToTerminal,
 } from "../functions/writeToTerminal"
-import { waitForCompletion, waitForTransaction } from "../functions/helpers"
+import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound"
 
@@ -33,7 +33,7 @@ async function execute(sourceMachine: string, portIndex: PortIndex) {
   }
 }
 
-export const disconnect: Command<[connectionEntiy: string]> = {
+export const disconnect: Command<[connectionEntiy: string, portIndex: PortIndex]> = {
   id: COMMAND.DISCONNECT,
   public: true,
   name: "disconnect",

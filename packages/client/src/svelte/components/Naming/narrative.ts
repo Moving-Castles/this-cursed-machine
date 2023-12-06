@@ -2,7 +2,7 @@ import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } fro
 import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
 import { name } from "../../modules/action"
-import { waitForCompletion, waitForTransaction } from "../Terminal/functions/helpers"
+import { waitForCompletion, waitForTransaction } from "../../modules/action/actionSequencer/utils"
 import { playSound } from "../../modules/sound"
 
 async function writeNarrative(text: string) {

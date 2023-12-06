@@ -135,7 +135,6 @@ export async function setupNetwork() {
     }
 
     requestDrip()
-    // Request a drip every 20 seconds
     setInterval(requestDrip, 20000)
   }
 
