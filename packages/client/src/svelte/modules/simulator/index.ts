@@ -6,7 +6,6 @@ import { EMPTY_CONNECTION } from "../state"
 import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
-import { v4 as uuid } from "uuid"
 import { entities, playerBox, playerEntityId, playerCore } from "../state"
 import { blockNumber } from "../network"
 import type { SimulatedEntities, BoxOutputs, Connection } from "./types"
@@ -231,9 +230,9 @@ export const boxOutput = derived(
       // @todo: possibly handle multiple outputs
       let patchValue =
         patchesOnOutlet &&
-        patchesOnOutlet.outputs &&
-        patchesOnOutlet.outputs[0] &&
-        patchesOnOutlet.outputs[0].materialType === material.materialType
+          patchesOnOutlet.outputs &&
+          patchesOnOutlet.outputs[0] &&
+          patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType || MaterialType.NONE] =
@@ -263,7 +262,7 @@ export const simulatedPlayerEnergy = derived(
   ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
       ($simulatedPlayerCore?.energy || 0) +
-        $playerEnergyMod * $blocksSinceLastResolution
+      $playerEnergyMod * $blocksSinceLastResolution
     )
   }
 )

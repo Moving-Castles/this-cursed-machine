@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import type { Toast } from "../../modules/ui/toast"
+  import type { Toast } from "."
   import { createEventDispatcher } from "svelte"
 
   const dispatch = createEventDispatcher<{ end: Toast }>()

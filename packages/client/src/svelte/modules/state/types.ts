@@ -25,7 +25,7 @@ declare global {
     input?: number
     output?: MaterialType
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
-    incomingConnections?: string[] // try to base everything off of the outgoing connections
+    incomingConnections?: string[]
     machinesInPod?: string[]
     materialsInPod?: string[]
     LevelStartBlock?: number

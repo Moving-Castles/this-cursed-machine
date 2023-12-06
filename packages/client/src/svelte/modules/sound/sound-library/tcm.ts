@@ -86,7 +86,7 @@ export const tcm: SoundAssets = {
     volume: 0.3,
   },
   machineInactive: {
-    src: "./sounds/tcm/machineInActive.mp3",
+    src: "./sounds/tcm/machineInactive.mp3",
     volume: 0.3,
   },
   typingCant: {

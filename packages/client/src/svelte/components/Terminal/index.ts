@@ -83,6 +83,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.ORDER,
     COMMAND.BLINK,
+    COMMAND.MAP,
     // ... Hidden
     COMMAND.RESTART,
     COMMAND.RESOLVE,
@@ -97,6 +98,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.HELP,
     COMMAND.ORDER,
     COMMAND.BLINK,
+    COMMAND.MAP,
     // ... Hidden
     COMMAND.RESTART,
     COMMAND.RESOLVE,

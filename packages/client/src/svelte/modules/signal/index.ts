@@ -52,6 +52,7 @@ export function initSignalNetwork() {
 }
 
 async function sendVerification() {
+    // @todo: update
     const signature = await get(network).network.signer.value_.signMessage(MESSAGE)
     const message = JSON.stringify({
         topic: "verify",

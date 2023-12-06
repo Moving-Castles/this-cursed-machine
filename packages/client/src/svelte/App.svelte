@@ -17,18 +17,13 @@
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
-  import { entities } from "./modules/state"
-
-  $: console.log("$network", $network)
-  $: console.log("$entities", $entities)
-
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
   import Death from "./components/Death/Death.svelte"
   import Dashboard from "./components/Dashboard/Dashboard.svelte"
   import Naming from "./components/Naming/Naming.svelte"
-  import Toasts from "./components/Toast/Toasts.svelte"
+  import Toasts from "./modules/ui/toast/Toasts.svelte"
 
   const onMouseMove = e => {
     $mouseX = e.clientX

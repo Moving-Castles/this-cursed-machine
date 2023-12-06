@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { COMMAND, TerminalType, OutputType } from "../Terminal/types"
+  import { TerminalType, OutputType } from "../Terminal/types"
   import { SYMBOLS } from "../Terminal"
   import {
     typeWriteToTerminal,
@@ -37,7 +37,7 @@
       OutputType.ERROR,
       "Name must include at least one numeral and one special character. Maximum 24 characters long.",
       false,
-      SYMBOLS[5]
+      SYMBOLS[5],
     )
     terminalComponent.resetInput()
   }
@@ -50,7 +50,7 @@
         `Loading dashboard...`,
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("named")
     } else {

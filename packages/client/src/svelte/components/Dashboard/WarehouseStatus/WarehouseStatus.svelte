@@ -29,15 +29,15 @@
 
     // Convert the object to an array and sort the array by the amount in ascending order.
     return Object.values(consolidatedMaterials).sort(
-      (a, b) => a.amount - b.amount
+      (a, b) => a.amount - b.amount,
     )
   }
 
   let consolidatedMaterials: Material[] = consolidateWarehouse(
-    Object.values($warehouseMaterials)
+    Object.values($warehouseMaterials),
   )
   $: consolidatedMaterials = consolidateWarehouse(
-    Object.values($warehouseMaterials)
+    Object.values($warehouseMaterials),
   )
 </script>
 
@@ -76,8 +76,6 @@
       padding-top: 20px;
       padding-left: 20px;
       padding-bottom: 1em;
-      // background: var(--color-special);
-      // color: black;
       div {
         span {
           display: inline-block;
@@ -90,8 +88,6 @@
     .warning {
       padding-bottom: 1em;
       padding-left: 20px;
-      // background: var(--color-alert);
-      // color: black;
       div {
         span {
           display: inline-block;

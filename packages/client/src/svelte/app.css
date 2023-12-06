@@ -38,7 +38,6 @@
   /* Deco */
   --muted-opacity: 0.7;
   --backdrop: blur(10px);
-  --outer-border: 1px solid rgba(var(--foreground), var(--muted-opacity));
   --terminal-border: 5px double var(--color-border);
 
   /* Materials */
@@ -81,6 +80,10 @@
   padding: 0;
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
 .cursor-none {
   cursor: none;
 }
@@ -92,57 +95,68 @@
 .BUG {
   color: var(--BUG);
 }
+
 .PISS {
   color: var(--PISS);
 }
+
 .BLOOD_LIPIDS,
 .BLOOD {
   color: var(--BLOOD);
 }
+
 .SLUDGE {
   color: var(--SLUDGE);
 }
+
 .DIRT {
   color: var(--DIRT);
 }
+
 .ENERGY,
 .PLANT {
   color: var(--ENERGY);
 }
+
 .CAFFEINE_SLUSHY,
 .CLUB_MATE {
   color: var(--CAFFEINE_SLUSHY);
 }
+
 .DIET_RED_BULL {
   color: var(--DIET_RED_BULL);
 }
+
 .PRIME {
   color: var(--PRIME);
 }
+
 .M150 {
   color: var(--M150);
 }
+
 .FIVE_HOUR_ENERGY {
   color: var(--FIVE_HOUR_ENERGY);
 }
+
 .MONSTER {
   color: var(--MONSTER);
 }
+
 .E_LIQUID {
   color: var(--E_LIQUID);
 }
+
 .TOBACCO {
   color: var(--TOBACCO);
 }
+
 .CIGARETTE_JUICE {
   color: var(--CIGARETTE_JUICE);
 }
+
 .ERASERBABY {
   color: var(--ERASERBABY);
-}
-
-*::-webkit-scrollbar {
-  display: none;
 }
 
 .flash {
@@ -174,22 +188,6 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%) translateX(-6vh);
-}
-
-.text-stroke-red {
-  text-shadow:
-    -1px -1px 0 red,
-    1px -1px 0 red,
-    -1px 1px 0 red,
-    1px 1px 0 red;
-}
-
-.text-stroke-white {
-  text-shadow:
-    -1px -1px 0 var(--white),
-    1px -1px 0 var(--white),
-    -1px 1px 0 var(--white),
-    1px 1px 0 var(--white);
 }
 
 .race > span:nth-child(3n) {
@@ -311,9 +309,9 @@ button {
   letter-spacing: 5px;
 }
 
-/* .loading-message span {
-  display: block;
-} */
+.loading-message div {
+  margin-bottom: 1em;
+}
 
 pre {
   display: block;
@@ -321,10 +319,6 @@ pre {
   text-wrap: nowrap;
   margin: 0;
   text-indent: 0;
-}
-
-.loading-message div {
-  margin-bottom: 1em;
 }
 
 .flash {

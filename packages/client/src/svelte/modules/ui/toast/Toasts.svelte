@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Toast } from "../../modules/ui/toast"
-  import { toasts, toastMessage } from "../../modules/ui/toast"
+  import type { Toast } from "."
+  import { toasts } from "."
   import ToastComponent from "./Toast.svelte"
   import { fade } from "svelte/transition"
   import { flip } from "svelte/animate"

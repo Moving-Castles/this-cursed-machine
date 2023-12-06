@@ -2,6 +2,8 @@
   import { steppedFlyTop, steppedFlyBottom } from "../../modules/ui/transitions"
   import { showMap, showLevelModal } from "../../modules/ui/stores"
   import { playSound } from "../../modules/sound"
+  import { urlFor } from "../../modules/content/sanity"
+  import { staticContent } from "../../modules/content"
 
   // Hid map when level modal is shown
   $: if ($showLevelModal) {
@@ -24,8 +26,11 @@
 <div in:steppedFlyTop out:steppedFlyBottom class="map-container">
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <img src="/images/map.png" alt="map" on:click={hide} />
-  <!-- <img src={urlFor($staticContent.map.image.asset).url()} alt="map" /> -->
+  <img
+    src={urlFor($staticContent.map.image.asset).url()}
+    on:click={hide}
+    alt="map"
+  />
 </div>
 
 <style lang="scss">

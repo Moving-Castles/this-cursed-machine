@@ -11,7 +11,6 @@ const machineInformation = {
   WETTER: "Wets materials",
   BOILER: "Heats materials",
   COOLER: "Cools materials",
-  // COMBI_GATE: "Combines materials with governance applied",
 }
 
 const materialInformation = {
@@ -58,12 +57,9 @@ const materialImages = {
   DIET_RED_BULL: "",
   PRIME: "",
   M150: "",
-  FIVE_HOUR_ENERGY:
-    "Five hours? More like five minutes of delusional hope before reality sets in.",
-  MONSTER:
-    "Monstrously overrated. But hey, at least it matches the void inside.",
-  E_LIQUID:
-    "Electronic despair in liquid form, because breathing wasn't sad enough.",
+  FIVE_HOUR_ENERGY: "",
+  MONSTER: "",
+  E_LIQUID: "",
   TOBACCO: "",
   CIGARETTE_JUICE: "",
   ERASERBABY: "",
