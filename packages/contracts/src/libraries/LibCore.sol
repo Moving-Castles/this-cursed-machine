@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
-import { Level, CreationBlock, EntityType, MachineType, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
+import { Level, Points, CreationBlock, EntityType, MachineType, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 
 library LibCore {
@@ -12,6 +12,7 @@ library LibCore {
     EntityType.set(_coreEntity, ENTITY_TYPE.MACHINE);
     MachineType.set(_coreEntity, MACHINE_TYPE.CORE);
     CreationBlock.set(_coreEntity, block.number);
+    Points.set(_coreEntity, 1000);
     Level.set(_coreEntity, 0);
     // Core has 1 input and 2 outputs
     IncomingConnections.set(_coreEntity, new bytes32[](1));

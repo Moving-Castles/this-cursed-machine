@@ -17,8 +17,13 @@
     <p>Stump #24719</p>
     <p class="muted">************</p>
     <p>
-      {#key $simulatedPlayerCore.energy}
+      {#key $simulatedPlayerEnergy}
         <span class="green">ENERGY:{$simulatedPlayerEnergy}</span>
+      {/key}
+    </p>
+    <p>
+      {#key $simulatedPlayerCore.points}
+        <span>POINTS:{$simulatedPlayerCore.points}</span>
       {/key}
     </p>
   </div>

@@ -23,13 +23,13 @@ contract InitSystem is System {
 
     // Create levels
     LevelDefinition[7] memory levels = [
-      LevelDefinition({ level: 1, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 2, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 3, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 4, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 5, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 6, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 7, initialCoreEnergy: 100 })
+      LevelDefinition({ level: 1, bounty: 1000 }),
+      LevelDefinition({ level: 2, bounty: 2000 }),
+      LevelDefinition({ level: 3, bounty: 3000 }),
+      LevelDefinition({ level: 4, bounty: 4000 }),
+      LevelDefinition({ level: 5, bounty: 5000 }),
+      LevelDefinition({ level: 6, bounty: 6000 }),
+      LevelDefinition({ level: 7, bounty: 7000 })
     ];
 
     for (uint256 i = 0; i < levels.length; i++) {

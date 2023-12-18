@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, MaterialType, Amount, MaterialsInPod, CompletionTimes, LevelStartBlock, OutletEntity, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
+import { Level, Points, CarriedBy, MaterialType, Amount, MaterialsInPod, CompletionTimes, LevelStartBlock, OutletEntity, OutgoingConnections, IncomingConnections } from "../codegen/index.sol";
 import { MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibGoal, LibNetwork } from "../libraries/Libraries.sol";
 import { WAREHOUSE_KEY } from "../constants.sol";
@@ -45,6 +45,10 @@ contract TransferSystem is System {
 
     // Level up core entity
     Level.set(coreEntity, Level.get(coreEntity) + 1);
+
+    // Add points
+    // @todo: add points based on level bounty
+    Points.set(coreEntity, Points.get(coreEntity) + 1000);
 
     // Disconnect outlet
     // Get outlet entity

@@ -15,12 +15,14 @@ declare global {
     materialType?: MaterialType
     name?: string
     energy?: number
+    points?: number
     carriedBy?: string
     createdBy?: string
     amount?: number
     creationBlock?: number
     buildIndex?: number
     level?: number
+    bounty?: number
     lastResolved?: number
     input?: number
     output?: MaterialType
@@ -46,7 +48,7 @@ declare global {
   type Level = {
     entityType: EntityType.LEVEL
     level: number
-    energy: number
+    bounty: number
   }
 
   type Recipe = {
@@ -88,6 +90,7 @@ declare global {
     creationBlock: number
     name?: string
     energy: number
+    points: number
     level: number
     carriedBy: string
     incomingConnections: string[]

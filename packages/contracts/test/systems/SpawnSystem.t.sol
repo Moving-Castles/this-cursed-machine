@@ -31,6 +31,7 @@ contract SpawnSystemTest is MudTest {
     assertEq(uint8(EntityType.get(coreEntity)), uint8(ENTITY_TYPE.MACHINE));
     assertEq(uint8(MachineType.get(coreEntity)), uint8(MACHINE_TYPE.CORE));
     assertEq(Level.get(coreEntity), 0);
+    assertEq(Points.get(coreEntity), 1000);
     assertEq(CreationBlock.get(coreEntity), block.number);
     assertEq(IncomingConnections.get(coreEntity).length, 1);
     assertEq(OutgoingConnections.get(coreEntity).length, 2);
