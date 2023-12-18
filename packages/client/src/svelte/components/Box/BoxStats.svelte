@@ -44,7 +44,7 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 15px;
+    padding: var(--default-padding);
     overflow: scroll;
     text-align: left;
     display: flex;

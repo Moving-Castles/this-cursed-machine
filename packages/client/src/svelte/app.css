@@ -19,6 +19,7 @@
   --color-border: #7a7a7a;
 
   /* Sizing */
+  --default-padding: 1ch;
   --padding-button: 6px 12px;
   --col-gap: 1rem;
   --row-gap: 2rem;

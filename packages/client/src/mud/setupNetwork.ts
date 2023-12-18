@@ -98,7 +98,6 @@ export async function setupNetwork() {
     world,
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
-    // indexerUrl: "http://127.0.0.0:3001",
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     // filters: Object.entries(mudConfig.tables).map(([, table]) => {

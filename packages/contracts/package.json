@@ -18,14 +18,14 @@
     "test-levels": "mud test --forgeOptions='--match-contract LevelsTest'"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-main-c8ffd09f",
-    "@latticexyz/config": "2.0.0-main-c8ffd09f",
-    "@latticexyz/faucet": "2.0.0-main-c8ffd09f",
-    "@latticexyz/schema-type": "2.0.0-main-c8ffd09f",
-    "@latticexyz/store": "2.0.0-main-c8ffd09f",
-    "@latticexyz/world": "2.0.0-main-c8ffd09f",
-    "@latticexyz/world-modules": "2.0.0-main-c8ffd09f",
-    "@latticexyz/gas-report": "2.0.0-main-c8ffd09f",
+    "@latticexyz/cli": "2.0.0-main-66728380",
+    "@latticexyz/config": "2.0.0-main-66728380",
+    "@latticexyz/faucet": "2.0.0-main-66728380",
+    "@latticexyz/schema-type": "2.0.0-main-66728380",
+    "@latticexyz/store": "2.0.0-main-66728380",
+    "@latticexyz/world": "2.0.0-main-66728380",
+    "@latticexyz/world-modules": "2.0.0-main-66728380",
+    "@latticexyz/gas-report": "2.0.0-main-66728380",
     "@typechain/ethers-v5": "^11.0.0",
     "@types/node": "^20.4.4",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
@@ -34,8 +34,8 @@
     "prettier": "^3.0.0",
     "prettier-plugin-solidity": "^1.1.3",
     "solhint": "^3.4.1",
-    "solhint-config-mud": "2.0.0-main-c8ffd09f",
-    "solhint-plugin-mud": "2.0.0-main-c8ffd09f",
+    "solhint-config-mud": "2.0.0-main-66728380",
+    "solhint-plugin-mud": "2.0.0-main-66728380",
     "typechain": "^8.3.1",
     "ts-node": "^10.9.1"
   }

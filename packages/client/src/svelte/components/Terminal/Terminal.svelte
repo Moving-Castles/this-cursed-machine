@@ -95,7 +95,7 @@
         OutputType.ERROR,
         "Command not found",
         false,
-        SYMBOLS[5]
+        SYMBOLS[5],
       )
       resetInput()
       return
@@ -119,7 +119,7 @@
       let value = await renderSelect(
         selectContainerElement,
         Select,
-        selectOptions
+        selectOptions,
       )
 
       // Abort if nothing selected
@@ -128,7 +128,7 @@
           OutputType.ERROR,
           "Nothing selected",
           false,
-          SYMBOLS[5]
+          SYMBOLS[5],
         )
         resetInput()
         return
@@ -142,7 +142,7 @@
       const connectionId = await renderSelect(
         selectContainerElement,
         Select,
-        disconnectOptions
+        disconnectOptions,
       )
 
       // Get the port index that this connection belongs to
@@ -156,7 +156,7 @@
           OutputType.ERROR,
           "No connection",
           false,
-          SYMBOLS[5]
+          SYMBOLS[5],
         )
         resetInput()
         return
@@ -173,7 +173,7 @@
       // Get machines with available outgoing connection slots
       let sourceSelectOptions = createSelectOptions(
         COMMAND.CONNECT,
-        DIRECTION.OUTGOING
+        DIRECTION.OUTGOING,
       )
 
       await writeToTerminal(OutputType.NORMAL, "From:")
@@ -181,7 +181,7 @@
       let sourceMachineKey = await renderSelect(
         selectContainerElement,
         Select,
-        sourceSelectOptions
+        sourceSelectOptions,
       )
 
       // Abort if nothing selected
@@ -190,7 +190,7 @@
           OutputType.ERROR,
           "No source machine",
           false,
-          SYMBOLS[5]
+          SYMBOLS[5],
         )
         resetInput()
         return
@@ -206,7 +206,7 @@
             ? " #" + sourceMachineEntity.buildIndex
             : ""),
         true,
-        SYMBOLS[11]
+        SYMBOLS[11],
       )
 
       // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -217,7 +217,7 @@
       // Remove the source machine from the list
       let targetSelectOptions = createSelectOptions(
         COMMAND.CONNECT,
-        DIRECTION.INCOMING
+        DIRECTION.INCOMING,
       ).filter(option => option.value !== sourceMachineKey)
 
       // Abort if no available targets
@@ -226,7 +226,7 @@
           OutputType.ERROR,
           "No machines available",
           false,
-          SYMBOLS[5]
+          SYMBOLS[5],
         )
         resetInput()
         return
@@ -237,7 +237,7 @@
       let targetMachineKey = await renderSelect(
         selectContainerElement,
         Select,
-        targetSelectOptions
+        targetSelectOptions,
       )
 
       // Abort if nothing selected
@@ -246,7 +246,7 @@
           OutputType.ERROR,
           "No target machine",
           false,
-          SYMBOLS[5]
+          SYMBOLS[5],
         )
         resetInput()
         return
@@ -262,7 +262,7 @@
             ? " #" + targetMachineEntity.buildIndex
             : ""),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       /** Exceptions first */
@@ -289,7 +289,7 @@
         let sourcePort = await renderSelect(
           selectContainerElement,
           Select,
-          sourcePortOptions
+          sourcePortOptions,
         )
 
         // Abort if nothing selected
@@ -298,7 +298,7 @@
             OutputType.ERROR,
             "No port selected",
             false,
-            SYMBOLS[5]
+            SYMBOLS[5],
           )
           resetInput()
           return
@@ -391,7 +391,8 @@
 
     &:not(.noOutput) {
       height: 100vh;
-      padding: 15px 15px 4em;
+      padding: var(--default-padding);
+      padding-bottom: 4ch;
     }
 
     form {

@@ -54,6 +54,26 @@ export async function getNetworkConfig() {
    */
   const chainIndex = supportedChains.findIndex((c) => c.id === chainId);
   const chain = supportedChains[chainIndex];
+
+  // chain.rpcUrls = {
+  //   default: {
+  //     http: [
+  //       "https://miner.testnet-chain.linfra.xyz"
+  //     ],
+  //     webSocket: [
+  //       "wss://miner.testnet-chain.linfra.xyz"
+  //     ]
+  //   },
+  //   public: {
+  //     http: [
+  //       "https://miner.testnet-chain.linfra.xyz"
+  //     ],
+  //     webSocket: [
+  //       "wss://miner.testnet-chain.linfra.xyz"
+  //     ]
+  //   }
+  // }
+
   if (!chain) {
     throw new Error(`Chain ${chainId} not found`);
   }
