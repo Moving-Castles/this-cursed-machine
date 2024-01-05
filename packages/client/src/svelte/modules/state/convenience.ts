@@ -35,9 +35,9 @@ export const availableMachines = (direction: DIRECTION) => {
 export const availablePorts = (machine: Machine, direction: DIRECTION) => {
   let ports =
     machine[
-      direction === DIRECTION.OUTGOING
-        ? "outgoingConnections"
-        : "incomingConnections"
+    direction === DIRECTION.OUTGOING
+      ? "outgoingConnections"
+      : "incomingConnections"
     ]
   ports = ports.map((address, i) => ({
     portIndex: i,
@@ -242,6 +242,7 @@ export const machineState = (machineId: string) => {
  * @returns {string} The string label corresponding to the provided machine type.
  */
 export function machineTypeToLabel(machineType: MachineType | undefined) {
+  if (!machineType) return ""
   switch (machineType || MachineType.NONE) {
     case MachineType.INLET:
       return "BUG DISPENSER"

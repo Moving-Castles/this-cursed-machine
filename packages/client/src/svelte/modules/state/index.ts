@@ -3,6 +3,7 @@
  *
  */
 import { EntityType, MachineType } from "./enums"
+import { filterByEntitytype, filterByMachinetype } from "./utils"
 import { writable, derived } from "svelte/store"
 import { network } from "../network"
 
@@ -33,132 +34,32 @@ export const PROGRESSION_PAR_TIME = Object.values(LEVEL_PAR_TIMES).reduce((total
  */
 export const entities = writable({} as Entities)
 
-
 // * * * * * * * * * * * * * * * * *
-// GAME CONFIG ENTITY TYPES
-// * * * * * * * * * * * * * * * * *
-
-/**
- * Game config
- */
-export const gameConfig = derived(
-  entities,
-  $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig
-)
-
-/**
- * Levels
- */
-export const levels = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.LEVEL
-    )
-  ) as Levels
-})
-
-/**
- * Recipes
- */
-export const recipes = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.RECIPE
-    )
-  ) as Recipes
-})
-
-/**
- * Goals
- */
-export const goals = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.GOAL
-    )
-  ) as Goals
-})
-
-// * * * * * * * * * * * * * * * * *
-// GAME PLAY ENTITY TYPES
+// GAME CONFIG ENTITIES
 // * * * * * * * * * * * * * * * * *
 
-/**
- * Warehouse (singleton)
- */
-export const warehouse = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.WAREHOUSE
-    )
-  )[0] as Warehouse
-})
-
-/**
- * Boxes
- */
-export const boxes = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.BOX
-    )
-  ) as Boxes
-})
-
-/**
- * Materials
- */
-export const materials = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.MATERIAL
-    )
-  ) as Materials
-})
-
-/**
- * Machines
- */
-export const machines = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.entityType === EntityType.MACHINE
-    )
-  ) as Machines
-})
-
-/**
- * Cores
- */
-export const cores = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => entity.machineType === MachineType.CORE
-    )
-  ) as Cores
-})
+export const gameConfig = derived(entities, $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig)
+export const levels = derived(entities, $entities => filterByEntitytype($entities, EntityType.LEVEL) as Levels)
+export const recipes = derived(entities, $entities => filterByEntitytype($entities, EntityType.RECIPE) as Recipes)
+export const goals = derived(entities, $entities => filterByEntitytype($entities, EntityType.GOAL) as Goals)
 
 // * * * * * * * * * * * * * * * * *
-// CORE STORES
+// GAME PLAY ENTITIES
 // * * * * * * * * * * * * * * * * *
 
-export const playerAddress = derived(
-  network,
-  $network => $network.walletClient?.account.address || "0x0"
-)
+export const warehouse = derived(entities, $entities => filterByEntitytype($entities, EntityType.WAREHOUSE)[0] as Warehouse)
+export const boxes = derived(entities, $entities => filterByEntitytype($entities, EntityType.BOX) as Boxes)
+export const materials = derived(entities, $entities => filterByEntitytype($entities, EntityType.MATERIAL) as Materials)
+export const machines = derived(entities, $entities => filterByEntitytype($entities, EntityType.MACHINE) as Machines)
+export const cores = derived(entities, $entities => filterByMachinetype($entities, MachineType.CORE) as Cores)
 
-/**
- * Entity Id is a 32 byte hex string (64 characters long) of the player address
- */
-export const playerEntityId = derived(
-  network,
-  $network => $network.playerEntity || "0x0"
-)
+// * * * * * * * * * * * * * * * * *
+// PLAYER STORES
+// * * * * * * * * * * * * * * * * *
 
-export const playerCore = derived(
-  [cores, playerEntityId],
-  ([$cores, $playerEntityId]) => $cores[$playerEntityId]
-)
+export const playerAddress = derived(network, $network => $network.walletClient?.account.address || "0x0" as string)
+export const playerEntityId = derived(network, $network => $network.playerEntity || "0x0" as string)
+export const playerCore = derived([entities, playerEntityId], ([$entities, $playerEntityId]) => $entities[$playerEntityId] as Core)
 
 export const playerBox = derived(
   [entities, playerCore],
