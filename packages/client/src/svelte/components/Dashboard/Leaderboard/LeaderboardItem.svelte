@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { ExtendedCore } from "../types"
+  import type { ExtendedPlayer } from "../types"
   export let index: number
-  export let core: ExtendedCore
+  export let player: ExtendedPlayer
   export let self: boolean = false
 </script>
 
 <div class="leaderboard-item" class:self>
   <div class="index">#{index + 1}</div>
-  <div class="name">{core.name}</div>
-  <div class="time">{core.totalCompletionTime}</div>
-  <div class="score">{core.score}</div>
+  <div class="name">{player.name}</div>
+  <div class="time">{player.totalCompletionTime}</div>
+  <div class="score">{player.score}</div>
 </div>
 
 <style lang="scss">
@@ -38,7 +38,7 @@
       width: 25%;
     }
 
-    .score {
+    .splayer {
       width: 25%;
       color: var(--color-success);
     }

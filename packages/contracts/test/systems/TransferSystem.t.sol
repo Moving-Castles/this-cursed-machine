@@ -25,21 +25,21 @@ contract TransferSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
     vm.stopPrank();
 
-    assertEq(Level.get(coreEntity), 1);
+    assertEq(Level.get(playerEntity), 1);
   }
 
   function testRevertGoalsNotAchived() public {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
-    assertEq(Level.get(coreEntity), 1);
+    assertEq(Level.get(playerEntity), 1);
 
     // Warp to level
     world.warp(2);
@@ -54,24 +54,24 @@ contract TransferSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
     assertEq(IncomingConnections.get(outletEntity).length, 1);
 
-    // Connect core to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
+    // Connect player to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
     // Wait 10 blocks
     vm.roll(block.number + 10);
@@ -79,17 +79,17 @@ contract TransferSystemTest is MudTest {
     // Transfer
     world.transfer();
 
-    assertEq(Level.get(coreEntity), 2);
+    assertEq(Level.get(playerEntity), 2);
 
     // Check that the outlet is disconnected
     bytes32[] memory outletIncomingConnections = IncomingConnections.get(outletEntity);
     assertEq(outletIncomingConnections.length, 1);
     assertEq(outletIncomingConnections[0], bytes32(0));
 
-    // Check that the core is disconnected from the outlet
-    bytes32[] memory coreOutgoingConnections = OutgoingConnections.get(coreEntity);
-    assertEq(coreOutgoingConnections.length, 2);
-    assertEq(coreOutgoingConnections[0], bytes32(0));
+    // Check that the player is disconnected from the outlet
+    bytes32[] memory playerOutgoingConnections = OutgoingConnections.get(playerEntity);
+    assertEq(playerOutgoingConnections.length, 2);
+    assertEq(playerOutgoingConnections[0], bytes32(0));
 
     vm.stopPrank();
   }

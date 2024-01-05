@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { goals } from "../../state"
 import { MaterialType } from "../../state/enums"
-import { simulatedPlayerEnergy, boxOutput } from ".."
+import { simulatedPlayerEnergy, podOutput } from ".."
 
 /**
  * Checks if all player level goals have been met.
@@ -27,7 +27,7 @@ export function checkLevelGoals(level: number): boolean {
       return get(simulatedPlayerEnergy) >= goal.amount
     }
 
-    const pooledMaterialAmount = get(boxOutput)[goal.materialType]
+    const pooledMaterialAmount = get(podOutput)[goal.materialType]
 
     // Do we have the required amount of the material?
     return pooledMaterialAmount && pooledMaterialAmount >= goal.amount

@@ -33,7 +33,7 @@
 </script>
 
 <div class="machine-information">
-  {machine.machineType === MachineType.CORE
+  {machine.machineType === MachineType.PLAYER
     ? "YOU (Stump #24719)"
     : machineTypeToLabel(machine.machineType)}
   <p class="muted">

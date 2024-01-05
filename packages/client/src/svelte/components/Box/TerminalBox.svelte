@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
-  import { playerCore, levels } from "../../modules/state"
+  import { playerEntity, levels } from "../../modules/state"
   import { playSound } from "../../modules/sound"
 
   import Terminal from "../Terminal/Terminal.svelte"
@@ -16,12 +16,12 @@
 
   let terminalComponent: any
 
-  $: if ($playerCore && $simulatedPlayerEnergy === 0) {
+  $: if ($playerEntity && $simulatedPlayerEnergy === 0) {
     dispatch("dead")
   }
 
   // Levels are done, show the dashboard
-  $: if ($playerCore.level > Object.keys($levels).length) {
+  $: if ($playerEntity.level > Object.keys($levels).length) {
     dispatch("completed")
   }
 
@@ -42,7 +42,7 @@
   <Map />
 {/if}
 
-{#if $playerCore.carriedBy}
+{#if $playerEntity.carriedBy}
   <div class="bg">
     <div class="split-screen">
       <div class="left-col">
@@ -53,7 +53,7 @@
           placeholder="HELP"
         />
       </div>
-      {#if $playerCore}
+      {#if $playerEntity}
         <div class="right-col">
           <div class="stats">
             <BoxStats />

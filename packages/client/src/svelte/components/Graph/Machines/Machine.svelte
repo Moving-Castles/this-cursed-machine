@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { tweened } from "svelte/motion"
-  import { scale } from "../../../modules/ui/transitions"
+  import { MaterialType } from "../../../modules/state/enums"
   import { simulatedMachines } from "../../../modules/simulator"
   import { graphPulse } from "../../../modules/ui/stores"
   import {
@@ -8,7 +7,6 @@
     machineState,
   } from "../../../modules/state/convenience"
   import { ConnectionState, MachineType } from "../../../modules/state/enums"
-  import { expoIn } from "svelte/easing"
   export let MACHINE_SIZE: number
   export let d: {
     entry: Machine
@@ -22,11 +20,11 @@
 
   $: state = machineState(d.address)
 
-  const inletOutletOrCore = dd => {
+  const inletOutletOrPlayer = dd => {
     return (
       dd.entry.machineType === MachineType.INLET ||
       dd.entry.machineType === MachineType.OUTLET ||
-      dd.entry.machineType === MachineType.CORE
+      dd.entry.machineType === MachineType.PLAYER
     )
   }
 </script>
@@ -39,8 +37,8 @@
       ]}"
       x={d.x - MACHINE_SIZE / 2}
       y={d.y - MACHINE_SIZE / 2}
-      width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-      height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      width={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      height={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
       fill="black"
     />
     <image
@@ -49,10 +47,11 @@
       ]}"
       x={d.x - MACHINE_SIZE / 2}
       y={d.y - MACHINE_SIZE / 2}
-      width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-      height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      width={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      height={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
       href="/images/machines/{MachineType[d.entry.machineType]}.png"
     />
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <rect
       class="node-rect {ConnectionState[state]} MACHINE_{MachineType[
         d.entry.machineType
@@ -61,8 +60,8 @@
       on:mouseleave
       x={d.x - MACHINE_SIZE / 2}
       y={d.y - MACHINE_SIZE / 2}
-      width={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-      height={inletOutletOrCore(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      width={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
+      height={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
       stroke={connectionState(d.entry) === ConnectionState.CONNECTED ||
       connectionState(d.entry) === ConnectionState.FLOWING
         ? "white"
@@ -73,6 +72,8 @@
   {/key}
 {:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
   {#key $graphPulse}
+    <!-- svelte-ignore missing-declaration -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <rect
       on:mouseenter
       on:mouseleave
@@ -106,15 +107,16 @@
     transform-box: fill-box;
   }
 
-  .node-rect:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING,
-  .node-image:not(.INLET):not(.OUTLET):not(.MACHINE_CORE).FLOWING {
+  .node-rect:not(.INLET):not(.OUTLET):not(.MACHINE_PLAYER).FLOWING,
+  .node-image:not(.INLET):not(.OUTLET):not(.MACHINE_PLAYER).FLOWING {
     animation: rotateAnimation 0.1s infinite alternate linear;
   }
 
   .MACHINE_INLET.FLOWING {
     transform-origin: left; /* or transform-origin: 50% */
     transform-box: fill-box;
-    animation: pushAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
+    animation:
+      pushAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
       pullAnimation 500ms linear 500ms;
   }
 
@@ -125,16 +127,18 @@
     transform-origin: right; /* or transform-origin: 50% */
     transform-box: fill-box;
     transform: scale(1.2, 1);
-    animation: pullAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
+    animation:
+      pullAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
       pushAnimation 500ms linear 500ms;
   }
 
-  .MACHINE_CORE.FLOWING {
-    animation: growAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
+  .MACHINE_PLAYER.FLOWING {
+    animation:
+      growAnimation 500ms cubic-bezier(0.95, 0.05, 0.795, 0.035),
       shrinkAnimation 500ms linear 500ms;
   }
 
-  .FLOWING:not(.MACHINE_CORE):not(.MACHINE_INLET):not(.MACHINE_OUTLET) {
+  .FLOWING:not(.MACHINE_PLAYER):not(.MACHINE_INLET):not(.MACHINE_OUTLET) {
     animation: rotateAnimation 500ms linear;
   }
 

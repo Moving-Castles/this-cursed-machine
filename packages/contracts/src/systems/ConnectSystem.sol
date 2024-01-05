@@ -13,16 +13,16 @@ contract ConnectSystem is System {
    * @param _portIndex The port index on the source machine which determines the position (FIRST or SECOND) to write in the outgoing connections array.
    */
   function connect(bytes32 _sourceMachine, bytes32 _targetMachine, PORT_INDEX _portIndex) public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(EntityType.get(_sourceMachine) == ENTITY_TYPE.MACHINE, "source not machine");
     require(EntityType.get(_targetMachine) == ENTITY_TYPE.MACHINE, "target not machine");
     require(_sourceMachine != _targetMachine, "source and target are same");
 
     // Resolve network
-    LibNetwork.resolve(coreEntity);
+    LibNetwork.resolve(playerEntity);
 
     // Check energy after resolving network
-    // require(Energy.get(coreEntity) >= GameConfig.get().connectionCost, "insufficient energy");
+    // require(Energy.get(playerEntity) >= GameConfig.get().connectionCost, "insufficient energy");
 
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToWrite = _portIndex == PORT_INDEX.FIRST ? 0 : 1;
@@ -55,6 +55,6 @@ contract ConnectSystem is System {
     IncomingConnections.set(_targetMachine, incomingConnections);
 
     // Deduct energy
-    // Energy.set(coreEntity, Energy.get(coreEntity) - GameConfig.get().connectionCost);
+    // Energy.set(playerEntity, Energy.get(playerEntity) - GameConfig.get().connectionCost);
   }
 }

@@ -5,7 +5,7 @@ import {
   simulatedMachines,
   simulatedConnections,
 } from "../../../modules/simulator"
-import { playerCore } from "../../../modules/state"
+import { playerEntity } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
@@ -42,13 +42,13 @@ export function createSelectOptions(
 
 /**
  * Generates select options for building machine types.
- * This function returns select options for all machine types except core, inlet, and outlet.
+ * This function returns select options for all machine types except player, inlet, and outlet.
  * @returns {SelectOption[]} An array of select options representing various machine types.
  */
 function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
   let availableMachines: MachineType[] =
-    MACHINES_BY_LEVEL[get(playerCore)?.level || 0]
+    MACHINES_BY_LEVEL[get(playerEntity)?.level || 0]
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
@@ -62,13 +62,13 @@ function createSelectOptionsBuild(): SelectOption[] {
 
 /**
  * Generates select options for destroying machines
- * This function returns select options for all machines, excluding the core, inlet, and outlet types.
+ * This function returns select options for all machines, excluding the player, inlet, and outlet types.
  * @returns {SelectOption[]} An array of select options representing various machines to destroy, using their machine type as a label and their ID as the value.
  */
 function createSelectOptionsDestroy(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  // All machines except core, inlet, outlet
+  // All machines except player, inlet, outlet
   Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
     if (
       !FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)

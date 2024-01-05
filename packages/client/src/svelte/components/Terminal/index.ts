@@ -177,7 +177,7 @@ export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
   9: []
 }
 
-export const FIXED_MACHINE_TYPES = [MachineType.CORE, MachineType.INLET, MachineType.OUTLET]
+export const FIXED_MACHINE_TYPES = [MachineType.PLAYER, MachineType.INLET, MachineType.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g
 export const BETWEEN_BRACKETS = /(?<=\().+?(?=\))/g
 export const BETWEEN_CARETS = /(?<=\>).+?(?=\<)/g

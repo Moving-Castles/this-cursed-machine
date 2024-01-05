@@ -36,8 +36,8 @@ contract ResolveSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Wait 10 blocks
@@ -49,7 +49,7 @@ contract ResolveSystemTest is MudTest {
     vm.stopPrank();
 
     // Energy should be 100 - 10 = 90
-    assertEq(uint8(Energy.get(coreEntity)), 90);
+    assertEq(uint8(Energy.get(playerEntity)), 90);
   }
 
   function testBugsToEnergy() public {
@@ -57,16 +57,16 @@ contract ResolveSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
     // Wait 100 blocks
     vm.roll(block.number + 40);
@@ -80,7 +80,7 @@ contract ResolveSystemTest is MudTest {
     // Connection cost : 0
     // 40 blocks: 40 bugs => 40 energy
     // == 140 energy
-    assertEq(uint8(Energy.get(coreEntity)), 140);
+    assertEq(uint8(Energy.get(playerEntity)), 140);
   }
 
   function testMakePiss() public {
@@ -88,23 +88,23 @@ contract ResolveSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
-    // Connect core (piss port) to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
+    // Connect player (piss port) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
     // Wait 10 blocks
     vm.roll(block.number + 10);
@@ -115,7 +115,7 @@ contract ResolveSystemTest is MudTest {
     vm.stopPrank();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -130,23 +130,23 @@ contract ResolveSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
-    // Connect core (blood port) to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.SECOND);
+    // Connect player (blood port) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
 
     // Wait 10 blocks
     vm.roll(block.number + 10);
@@ -157,7 +157,7 @@ contract ResolveSystemTest is MudTest {
     vm.stopPrank();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -171,20 +171,20 @@ contract ResolveSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
     vm.roll(block.number + 100);
 
@@ -193,8 +193,8 @@ contract ResolveSystemTest is MudTest {
     // Build a dryer
     bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
 
-    // Connect core (piss port) to dryer
-    world.connect(coreEntity, dryerEntity, PORT_INDEX.FIRST);
+    // Connect player (piss port) to dryer
+    world.connect(playerEntity, dryerEntity, PORT_INDEX.FIRST);
 
     // Connect dryer to outlet
     world.connect(dryerEntity, outletEntity, PORT_INDEX.FIRST);
@@ -210,7 +210,7 @@ contract ResolveSystemTest is MudTest {
     // @todo Check outlet pool
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -223,28 +223,28 @@ contract ResolveSystemTest is MudTest {
   function testMakeCaffeineSlushy() public {
     setUp();
 
-    // 1. Spawn core
+    // 1. Spawn player
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
-    // Connect inlet output to core input
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet output to player input
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
     // Build a mixer
     bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
 
-    // Connect core (both ports) to mixer
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.FIRST);
+    // Connect player (both ports) to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.FIRST);
 
     // Connect mixer to outlet
     world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
@@ -258,7 +258,7 @@ contract ResolveSystemTest is MudTest {
     vm.stopPrank();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -273,23 +273,23 @@ contract ResolveSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    // Spawn core
-    bytes32 coreEntity = world.spawn();
+    // Spawn player
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     bytes32 inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     bytes32 outletEntity = outletEntities[0][0];
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
 
-    // Connect core (piss port) to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
+    // Connect player (piss port) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
     // Wait 10 blocks
     vm.roll(block.number + 10);
@@ -306,7 +306,7 @@ contract ResolveSystemTest is MudTest {
     vm.stopPrank();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);

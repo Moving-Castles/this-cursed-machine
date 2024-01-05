@@ -4,7 +4,7 @@ const machineInformation = {
   NONE: "Does not exist",
   INLET: "Puts resources into grid",
   OUTLET: "Lets resources output from grid",
-  CORE: "TCM fulfillment centre operators, surgically made to a short blunt shape to optimise capital flow through their biomass. ",
+  PLAYER: "TCM fulfillment centre operators, surgically made to a short blunt shape to optimise capital flow through their biomass. ",
   SPLITTER: "Splits a material into more outputs",
   MIXER: "Blends two or more materials together",
   DRYER: "Dries materials",

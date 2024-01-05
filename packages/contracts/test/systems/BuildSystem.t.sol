@@ -25,7 +25,7 @@ contract BuildSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Create a new entity
@@ -35,7 +35,7 @@ contract BuildSystemTest is MudTest {
 
     // Check that the machine was created
     assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(CarriedBy.get(machineEntity), CarriedBy.get(coreEntity));
+    assertEq(CarriedBy.get(machineEntity), CarriedBy.get(playerEntity));
   }
 
   function testRevertNotBuildable() public {
@@ -48,7 +48,7 @@ contract BuildSystemTest is MudTest {
 
     // Create a new entity
     vm.expectRevert("not buildable");
-    world.build(MACHINE_TYPE.CORE);
+    world.build(MACHINE_TYPE.PLAYER);
 
     vm.stopPrank();
   }

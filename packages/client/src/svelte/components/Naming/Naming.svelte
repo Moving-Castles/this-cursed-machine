@@ -7,7 +7,7 @@
     writeToTerminal,
   } from "../Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { playerCore } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
 
   const dispatch = createEventDispatcher()
 
@@ -44,7 +44,7 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    if ($playerCore && $playerCore.level > 8) {
+    if ($playerEntity && $playerEntity.level > 8) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
         `Loading dashboard...`,

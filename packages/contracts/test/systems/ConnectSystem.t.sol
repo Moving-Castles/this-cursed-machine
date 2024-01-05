@@ -25,20 +25,20 @@ contract ConnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Build a splitter
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
 
-    // Connect core (first output == piss) to splitter
-    world.connect(coreEntity, splitterEntity, PORT_INDEX.FIRST);
+    // Connect player (first output == piss) to splitter
+    world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
 
     vm.stopPrank();
 
     // Check that the connection was created
-    assertEq(OutgoingConnections.get(coreEntity)[0], splitterEntity);
-    assertEq(IncomingConnections.get(splitterEntity)[0], coreEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[0], splitterEntity);
+    assertEq(IncomingConnections.get(splitterEntity)[0], playerEntity);
   }
 
   function testRevertNoInputs() public {
@@ -46,7 +46,7 @@ contract ConnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Build a splitter
@@ -55,8 +55,8 @@ contract ConnectSystemTest is MudTest {
     // Build a dryer
     bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
 
-    // Connect core to splitter
-    world.connect(coreEntity, splitterEntity, PORT_INDEX.FIRST);
+    // Connect player to splitter
+    world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
 
     // Connect dryer to splitter
     vm.expectRevert("no available incoming ports");
@@ -70,7 +70,7 @@ contract ConnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Build a splitter
@@ -82,9 +82,9 @@ contract ConnectSystemTest is MudTest {
     // Connect dryer to splitter
     world.connect(dryerEntity, splitterEntity, PORT_INDEX.FIRST);
 
-    // Connect dryer to core (dryer only has one output)
+    // Connect dryer to player (dryer only has one output)
     vm.expectRevert("outgoing port already occupied");
-    world.connect(dryerEntity, coreEntity, PORT_INDEX.FIRST);
+    world.connect(dryerEntity, playerEntity, PORT_INDEX.FIRST);
 
     vm.stopPrank();
   }
@@ -94,12 +94,12 @@ contract ConnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Connect dryer to splitter
     vm.expectRevert("source and target are same");
-    world.connect(coreEntity, coreEntity, PORT_INDEX.FIRST);
+    world.connect(playerEntity, playerEntity, PORT_INDEX.FIRST);
 
     vm.stopPrank();
   }

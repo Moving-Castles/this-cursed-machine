@@ -20,7 +20,7 @@ library LibEntity {
     // NONE:      0 IN, 0 OUT
     // INLET:     0 IN, 1 OUT
     // OUTLET:    1 IN, 0 OUT
-    // CORE:      1 IN, 2 OUT (created in spawn)
+    // PLAYER:    1 IN, 2 OUT (created at spawn)
     // SPLITTER:  1 IN, 2 OUT
     // MIXER:     2 IN, 1 OUT
     // WETTER:    1 IN, 1 OUT

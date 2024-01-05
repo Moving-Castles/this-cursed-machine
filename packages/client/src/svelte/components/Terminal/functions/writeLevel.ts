@@ -2,7 +2,7 @@ import { typeWriteToTerminal, writeToTerminal } from "./writeToTerminal"
 import { OutputType } from "../types"
 import { SYMBOLS } from ".."
 import { get } from "svelte/store"
-import { playerGoals, playerCore, LEVEL_PAR_TIMES } from "../../../modules/state"
+import { playerGoals, playerEntity, LEVEL_PAR_TIMES } from "../../../modules/state"
 import { MaterialType } from "../../../modules/state/enums"
 import { staticContent } from "../../../modules/content"
 import { extractTexts } from "../../../modules/content/sanity"
@@ -51,7 +51,7 @@ async function writeGoal(text: string) {
 export const writeLevel = async (level: number, short: boolean = false) => {
     // console.log("level score")
     const currentLevelContent = get(staticContent).levels.find(l => l.level === level)
-    // const $playerCore = get(playerCore)
+    // const $playerEntity = get(playerEntity)
 
     let text: string[] = []
     if (currentLevelContent.short_content_start && currentLevelContent.short_content_start.content) {
@@ -60,7 +60,7 @@ export const writeLevel = async (level: number, short: boolean = false) => {
 
 
     // if (level - 1 > 0) {
-    //   const time = Number($playerCore.completionTimes[level - 2])
+    //   const time = Number($playerEntity.completionTimes[level - 2])
 
     //   const par = LEVEL_PAR_TIMES[level - 1]
 

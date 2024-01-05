@@ -12,10 +12,10 @@ contract DisconnectSystem is System {
    * @param _portIndex The port index on the source machine which determines which connection to disconnect.
    */
   function disconnect(bytes32 _sourceMachine, PORT_INDEX _portIndex) public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // Resolve network
-    LibNetwork.resolve(coreEntity);
+    LibNetwork.resolve(playerEntity);
 
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToDisconnect = _portIndex == PORT_INDEX.FIRST ? 0 : 1;

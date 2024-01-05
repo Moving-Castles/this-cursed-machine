@@ -48,10 +48,10 @@ export const goals = derived(entities, $entities => filterByEntitytype($entities
 // * * * * * * * * * * * * * * * * *
 
 export const warehouse = derived(entities, $entities => filterByEntitytype($entities, EntityType.WAREHOUSE)[0] as Warehouse)
-export const boxes = derived(entities, $entities => filterByEntitytype($entities, EntityType.BOX) as Boxes)
+export const pods = derived(entities, $entities => filterByEntitytype($entities, EntityType.POD) as Pods)
 export const materials = derived(entities, $entities => filterByEntitytype($entities, EntityType.MATERIAL) as Materials)
 export const machines = derived(entities, $entities => filterByEntitytype($entities, EntityType.MACHINE) as Machines)
-export const cores = derived(entities, $entities => filterByMachinetype($entities, MachineType.CORE) as Cores)
+export const players = derived(entities, $entities => filterByMachinetype($entities, MachineType.PLAYER) as Players)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES
@@ -59,33 +59,33 @@ export const cores = derived(entities, $entities => filterByMachinetype($entitie
 
 export const playerAddress = derived(network, $network => $network.walletClient?.account.address || "0x0" as string)
 export const playerEntityId = derived(network, $network => $network.playerEntity || "0x0" as string)
-export const playerCore = derived([entities, playerEntityId], ([$entities, $playerEntityId]) => $entities[$playerEntityId] as Core)
+export const playerEntity = derived([entities, playerEntityId], ([$entities, $playerEntityId]) => $entities[$playerEntityId] as Player)
 
-export const playerBox = derived(
-  [entities, playerCore],
-  ([$entities, $playerCore]) => {
-    if ($playerCore && $playerCore.carriedBy) {
-      return $entities[$playerCore.carriedBy] as Box
+export const playerPod = derived(
+  [entities, playerEntity],
+  ([$entities, $playerEntity]) => {
+    if ($playerEntity && $playerEntity.carriedBy) {
+      return $entities[$playerEntity.carriedBy] as Pod
     } else {
-      return {} as Box
+      return {} as Pod
     }
   }
 )
 
-export const machinesInPlayerBox = derived(
-  [machines, playerCore],
-  ([$machines, $playerCore]) => {
+export const machinesInPlayerPod = derived(
+  [machines, playerEntity],
+  ([$machines, $playerEntity]) => {
     return Object.fromEntries(
       Object.entries($machines).filter(
-        ([, entity]) => entity.carriedBy === $playerCore.carriedBy
+        ([, entity]) => entity.carriedBy === $playerEntity.carriedBy
       )
     ) as Machines
   }
 )
 
 export const playerGoals = derived(
-  [playerCore, goals],
-  ([$playerCore, $goals]) => {
-    return Object.values($goals).filter(g => g.level === $playerCore.level)
+  [playerEntity, goals],
+  ([$playerEntity, $goals]) => {
+    return Object.values($goals).filter(g => g.level === $playerEntity.level)
   }
 )

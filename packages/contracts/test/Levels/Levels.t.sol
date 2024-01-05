@@ -13,7 +13,7 @@ contract LevelsTest is MudTest, GasReporter {
   address internal alice;
   address internal bob;
   GameConfigData gameConfig;
-  bytes32 coreEntity;
+  bytes32 playerEntity;
   bytes32 inletEntity;
   bytes32 outletEntity;
 
@@ -41,19 +41,19 @@ contract LevelsTest is MudTest, GasReporter {
     // * * * * * * * * * * * * * * * * * * *
     // PRE
     // * * * * * * * * * * * * * * * * * * *
-    // Spawn core
-    coreEntity = world.spawn();
+    // Spawn player
+    playerEntity = world.spawn();
     // Restart (to transfer to pod)
     world.restart();
 
     vm.stopPrank();
 
     // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.INLET);
+    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
     inletEntity = inletEntities[0][0];
 
     // Get outlet entity
-    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByBox(CarriedBy.get(coreEntity), MACHINE_TYPE.OUTLET);
+    bytes32[][] memory outletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.OUTLET);
     outletEntity = outletEntities[0][0];
   }
 
@@ -63,15 +63,15 @@ contract LevelsTest is MudTest, GasReporter {
     // * * * * * * * * * * * * * * * * * * *
     // * LEVEL 1
     // _ GOALS:
-    // - 101 core energy
+    // - 101 player energy
     // * * * * * * * * * * * * * * * * * * *
 
     vm.startPrank(alice);
 
     startGasReport("Test level 1");
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
     // * Wait 1 block
     vm.roll(block.number + 1);
 
@@ -81,13 +81,13 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
 
-    // Assert: core energy == 101
-    assertEq(uint8(Energy.get(coreEntity)), 101);
+    // Assert: player energy == 101
+    assertEq(uint8(Energy.get(playerEntity)), 101);
     // Nothing should be produced
     assertEq(materials.length, 0);
 
@@ -96,8 +96,8 @@ contract LevelsTest is MudTest, GasReporter {
     // Transfer
     world.transfer();
 
-    // Assert: core level == 2
-    assertEq(Level.get(coreEntity), 2);
+    // Assert: player level == 2
+    assertEq(Level.get(playerEntity), 2);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -123,16 +123,16 @@ contract LevelsTest is MudTest, GasReporter {
     // Warp to level
     world.warp(2);
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
-    // Connect core piss port to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    // Connect player piss port to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
     // * Wait 11 blocks
     vm.roll(block.number + 20);
     // Disconnect piss connection
-    world.disconnect(coreEntity, PORT_INDEX.FIRST);
-    // Connect core blood port to outlet
-    world.connect(coreEntity, outletEntity, PORT_INDEX.SECOND);
+    world.disconnect(playerEntity, PORT_INDEX.FIRST);
+    // Connect player blood port to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
     // * Wait 11 blocks
     vm.roll(block.number + 20);
 
@@ -142,7 +142,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -160,7 +160,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 3
-    assertEq(Level.get(coreEntity), 3);
+    assertEq(Level.get(playerEntity), 3);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -186,14 +186,14 @@ contract LevelsTest is MudTest, GasReporter {
     // Warp to level
     world.warp(3);
 
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
     // Build mixer
     bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
-    // Connect core piss port to mixer
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.FIRST);
-    // Connect core blood port to mixer
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
+    // Connect player piss port to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.FIRST);
+    // Connect player blood port to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
     // Connect mixer to outlet
     world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
     // Wait 11 blocks
@@ -215,7 +215,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -233,7 +233,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 4
-    assertEq(Level.get(coreEntity), 4);
+    assertEq(Level.get(playerEntity), 4);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -263,8 +263,8 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
     world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
-    // Connect splitter #1 to core
-    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
+    // Connect splitter #1 to player
+    world.connect(splitter1Entity, playerEntity, PORT_INDEX.FIRST);
     // Build boiler #1
     bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect Splitter #1 to boiler #1
@@ -278,10 +278,10 @@ contract LevelsTest is MudTest, GasReporter {
     world.disconnect(boiler1Entity, PORT_INDEX.FIRST);
     // Build mixer #1
     bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
-    // Connect core piss to mixer #1
-    world.connect(coreEntity, mixer1Entity, PORT_INDEX.FIRST);
-    // Connect core blood to mixer #1
-    world.connect(coreEntity, mixer1Entity, PORT_INDEX.SECOND);
+    // Connect player piss to mixer #1
+    world.connect(playerEntity, mixer1Entity, PORT_INDEX.FIRST);
+    // Connect player blood to mixer #1
+    world.connect(playerEntity, mixer1Entity, PORT_INDEX.SECOND);
     // Build boiler #2
     bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect mixer to boiler #2
@@ -297,7 +297,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -315,7 +315,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 5
-    assertEq(Level.get(coreEntity), 5);
+    assertEq(Level.get(playerEntity), 5);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -343,12 +343,12 @@ contract LevelsTest is MudTest, GasReporter {
 
     // Build mixer #1
     bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
-    // Connect inlet to core
-    world.connect(inletEntity, coreEntity, PORT_INDEX.FIRST);
-    // Connect core piss to mixer #1
-    world.connect(coreEntity, mixer1Entity, PORT_INDEX.FIRST);
-    // Connect core blood to mixer #1
-    world.connect(coreEntity, mixer1Entity, PORT_INDEX.SECOND);
+    // Connect inlet to player
+    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    // Connect player piss to mixer #1
+    world.connect(playerEntity, mixer1Entity, PORT_INDEX.FIRST);
+    // Connect player blood to mixer #1
+    world.connect(playerEntity, mixer1Entity, PORT_INDEX.SECOND);
     // Build dryer #1
     bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
     // Connect mixer #1 to dryer #1
@@ -385,7 +385,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -403,7 +403,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 6
-    assertEq(Level.get(coreEntity), 6);
+    assertEq(Level.get(playerEntity), 6);
 
     endGasReport();
 
@@ -431,12 +431,12 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 splitter1Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
     world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
-    // Connect splitter #1 to core
-    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
+    // Connect splitter #1 to player
+    world.connect(splitter1Entity, playerEntity, PORT_INDEX.FIRST);
     // Build splitter #2
     bytes32 splitter2Entity = world.build(MACHINE_TYPE.SPLITTER);
-    // Connect core piss to splitter #2
-    world.connect(coreEntity, splitter2Entity, PORT_INDEX.FIRST);
+    // Connect player piss to splitter #2
+    world.connect(playerEntity, splitter2Entity, PORT_INDEX.FIRST);
     // Build boiler #1
     bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect splitter #1 to boiler #1
@@ -456,8 +456,8 @@ contract LevelsTest is MudTest, GasReporter {
     world.disconnect(mixer2Entity, PORT_INDEX.FIRST);
     // Build boiler #2
     bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
-    // Connect core blood to boiler #2
-    world.connect(coreEntity, boiler2Entity, PORT_INDEX.SECOND);
+    // Connect player blood to boiler #2
+    world.connect(playerEntity, boiler2Entity, PORT_INDEX.SECOND);
     // Build dryer #1
     bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
     // Connect boiler #2 to dryer #1
@@ -485,7 +485,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -503,7 +503,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.transfer();
 
     // Assert: level == 6
-    assertEq(Level.get(coreEntity), 7);
+    assertEq(Level.get(playerEntity), 7);
 
     // * * * * * * * * * * * * * * * * * * *
 
@@ -536,14 +536,14 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 splitter3Entity = world.build(MACHINE_TYPE.SPLITTER);
     // Connect inlet to splitter #1
     world.connect(inletEntity, splitter1Entity, PORT_INDEX.FIRST);
-    // Connect splitter #1 to core
-    world.connect(splitter1Entity, coreEntity, PORT_INDEX.FIRST);
+    // Connect splitter #1 to player
+    world.connect(splitter1Entity, playerEntity, PORT_INDEX.FIRST);
     // Build boiler #1
     bytes32 boiler1Entity = world.build(MACHINE_TYPE.BOILER);
     // Connect splitter #1 to boiler #1
     world.connect(splitter1Entity, boiler1Entity, PORT_INDEX.SECOND);
-    // Connect core piss to splitter #2
-    world.connect(coreEntity, splitter2Entity, PORT_INDEX.FIRST);
+    // Connect player piss to splitter #2
+    world.connect(playerEntity, splitter2Entity, PORT_INDEX.FIRST);
     // Build mixer #1
     bytes32 mixer1Entity = world.build(MACHINE_TYPE.MIXER);
     // Connect splitter #2 to mixer #1
@@ -564,8 +564,8 @@ contract LevelsTest is MudTest, GasReporter {
     bytes32 boiler2Entity = world.build(MACHINE_TYPE.BOILER);
     // Build dryer #1
     bytes32 dryer1Entity = world.build(MACHINE_TYPE.DRYER);
-    // Connect core blood to splitter #4
-    world.connect(coreEntity, splitter4Entity, PORT_INDEX.SECOND);
+    // Connect player blood to splitter #4
+    world.connect(playerEntity, splitter4Entity, PORT_INDEX.SECOND);
     // Connect splitter #4 to boiler #2
     world.connect(splitter4Entity, boiler2Entity, PORT_INDEX.FIRST);
     // Connect boiler #2 to dryer #1
@@ -609,7 +609,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.resolve();
 
     // Get materials
-    bytes32[][] memory materials = LibPod.getMaterialsByBox(CarriedBy.get(coreEntity));
+    bytes32[][] memory materials = LibPod.getMaterialsByPod(CarriedBy.get(playerEntity));
 
     // Log materials
     logMaterials(materials);
@@ -625,7 +625,7 @@ contract LevelsTest is MudTest, GasReporter {
     world.complete();
 
     // Assert: level == 8
-    assertEq(Level.get(coreEntity), 8);
+    assertEq(Level.get(playerEntity), 8);
 
     // * * * * * * * * * * * * * * * * * * *
 

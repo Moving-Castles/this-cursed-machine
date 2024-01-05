@@ -23,13 +23,13 @@ contract InitSystem is System {
 
     // Create levels
     LevelDefinition[7] memory levels = [
-      LevelDefinition({ level: 1, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 2, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 3, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 4, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 5, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 6, initialCoreEnergy: 100 }),
-      LevelDefinition({ level: 7, initialCoreEnergy: 100 })
+      LevelDefinition({ level: 1, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 2, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 3, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 4, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 5, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 6, initialPlayerEnergy: 100 }),
+      LevelDefinition({ level: 7, initialPlayerEnergy: 100 })
     ];
 
     for (uint256 i = 0; i < levels.length; i++) {
@@ -37,7 +37,7 @@ contract InitSystem is System {
     }
 
     // Create goals for levels
-    // ** 1 (MATERIAL_TYPE.NONE => Core energy check)
+    // ** 1 (MATERIAL_TYPE.NONE => Player energy check)
     LibGoal.create(1, MATERIAL_TYPE.NONE, 101);
     // ** 2
     LibGoal.create(2, MATERIAL_TYPE.PISS, 1000);

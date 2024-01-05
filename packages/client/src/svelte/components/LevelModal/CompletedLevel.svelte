@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playerCore } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
   import { createEventDispatcher } from "svelte"
   import Terminal from "../Terminal/Terminal.svelte"
   import { COMMAND } from "../Terminal/types"
@@ -15,7 +15,7 @@
 
 <div class="completed-level">
   <div class="text-content">
-    <div class="level-title">◊ COMPLETED order #{$playerCore.level}</div>
+    <div class="level-title">◊ COMPLETED order #{$playerEntity.level}</div>
 
     <div class="terminal-container">
       <Terminal
@@ -29,7 +29,7 @@
 
   <!-- <div class="level-gradient level-background" /> -->
 
-  {#if $playerCore.level > 3}
+  {#if $playerEntity.level > 3}
     <img
       src="/images/rewards/1-.png"
       class="level-background"
@@ -37,7 +37,7 @@
     />
   {:else}
     <img
-      src="/images/rewards/{$playerCore.level}-.png"
+      src="/images/rewards/{$playerEntity.level}-.png"
       class="level-background"
       alt="level reward"
     />

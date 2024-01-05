@@ -1,15 +1,15 @@
 ---
 PRE
 ---
-Spawn core
+Spawn player
 Restart (to transfer to pod)
 
 -------
 LEVEL 1
 _ GOALS: 
-- 101 core energy
+- 101 player energy
 -------
-Connect inlet to core
+Connect inlet to player
 * Wait 1 block
 Transfer
 Assert: level == 2
@@ -20,11 +20,11 @@ _ GOALS:
 - 1000 piss
 - 1000 blood
 -------
-Connect inlet to core
-Connect core piss port to outlet
+Connect inlet to player
+Connect player piss port to outlet
 * Wait 20 blocks
 Disconnect piss Connection
-Connect core blood port to outlet
+Connect player blood port to outlet
 * Wait 20 blocks
 Transfer
 Assert: level == 3
@@ -35,10 +35,10 @@ _ GOALS
 - 1000 CAFFEIN SLUSHY
 - 1000 CLUB MATE
 -------
-Connect inlet to core
+Connect inlet to player
 Build mixer
-Connect core piss port to mixer
-Connect core blood port to mixer
+Connect player piss port to mixer
+Connect player blood port to mixer
 Connect mixer to outlet
 * Wait 20 blocks
 Disconnect mixer to outlet
@@ -57,15 +57,15 @@ _ GOALS
 -------
 Build splitter #1
 Connect inlet to splitter #1
-Connect splitter #1 to core
+Connect splitter #1 to player
 Build boiler #1
 Connect splitter # to boiler #1
 Connect boiler #1 to outlet
 * Wait 20 block for monster to be produced
 Disconnect boiler #1 from outlet
 Build mixer #1
-Connect core piss to mixer #1
-Connect core blood to mixer #1
+Connect player piss to mixer #1
+Connect player blood to mixer #1
 Build boiler #2
 Connect mixer to boiler #2
 Connect boiler #2 to outlet
@@ -80,9 +80,9 @@ _ GOALS
 - 1000 Sludge
 -------
 Build mixer #1
-Connect inlet to core
-Connect core piss to mixer #1
-Connect core blood to mixer #1
+Connect inlet to player
+Connect player piss to mixer #1
+Connect player blood to mixer #1
 Build dryer #1
 Connect Mixer #1 to dryer #1 
 Build wetter #1
@@ -109,9 +109,9 @@ _ GOALS
 -------
 Build splitter #1
 Connect inlet to splitter #1
-Connect splitter #1 to core
+Connect splitter #1 to player
 Build splitter #2
-Connect core piss to splitter #2
+Connect player piss to splitter #2
 Build boiler #1
 Connect splitter #1 to boiler #1
 Build mixer #2
@@ -121,7 +121,7 @@ Connect mixer #2 to outlet
 * Wait 20 blocks to produce M150
 
 Build boiler #2
-Connect core (blood) to boiler #2
+Connect player (blood) to boiler #2
 Build dryer #1
 Connect boiler #2 to dryer #1
 Build wetter #1
@@ -142,10 +142,10 @@ Build splitter #1
 Build splitter #2
 Build splitter #3
 Connect inlet to splitter #1
-Connect splitter #1 to core
+Connect splitter #1 to player
 Build boiler #1
 Connect splitter #1 to boiler #1
-Connect core piss to splitter #2
+Connect player piss to splitter #2
 Build mixer #1
 Connect splitter #2 to mixer #1
 Connect boiler #1 to mixer #1
@@ -156,7 +156,7 @@ Connect mixer #1 to mixer #2
 Build splitter #4
 Build boiler #2
 Build dryer #1
-Connect core (blood) to splitter #4
+Connect player (blood) to splitter #4
 Connect splitter #4 to boiler #2
 Connect boiler #2 to dryer #1
 Build wetter #1

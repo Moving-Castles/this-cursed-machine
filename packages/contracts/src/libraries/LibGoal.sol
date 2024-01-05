@@ -26,30 +26,30 @@ library LibGoal {
   }
 
   /**
-   * @notice Determines whether all goals related to a core entity have been achieved.
+   * @notice Determines whether all goals related to a player entity have been achieved.
    * @dev Iteratively checks through all goal-related materials and amounts to verify whether
    *      they meet or exceed specified requirements. Also retrieves goals based on the level
-   *      associated with the box entity carrying the core entity. Current implementation
-   *      doesn't check for core energy sufficiency.
-   * @param _coreEntity The entity identifier used to retrieve related goals and verify their achievement status.
+   *      associated with the pod entity carrying the player entity. Current implementation
+   *      doesn't check for player energy sufficiency.
+   * @param _playerEntity The entity identifier used to retrieve related goals and verify their achievement status.
    * @return A boolean value: true if all goals are achieved, otherwise false.
    */
-  function goalsAreAchived(bytes32 _coreEntity) internal view returns (bool) {
+  function goalsAreAchived(bytes32 _playerEntity) internal view returns (bool) {
     // Get goals for level
-    bytes32[][] memory goals = getGoals(Level.get(_coreEntity));
+    bytes32[][] memory goals = getGoals(Level.get(_playerEntity));
 
     // Iterate over goals
     for (uint i; i < goals.length; i++) {
       MATERIAL_TYPE materialType = MaterialType.get(goals[i][0]);
 
-      // If MATERIAL_TYPE.NONE it is a core energy check
+      // If MATERIAL_TYPE.NONE it is a player energy check
       if (materialType == MATERIAL_TYPE.NONE) {
-        if (Energy.get(_coreEntity) < Amount.get(goals[i][0])) return false;
+        if (Energy.get(_playerEntity) < Amount.get(goals[i][0])) return false;
         continue;
       }
 
       // Check if require materials are produced
-      bytes32 material = LibPod.getMaterialOfTypeByBox(CarriedBy.get(_coreEntity), materialType);
+      bytes32 material = LibPod.getMaterialOfTypeByPod(CarriedBy.get(_playerEntity), materialType);
       if (material == bytes32(0)) return false;
       if (Amount.get(material) < Amount.get(goals[i][0])) return false;
     }

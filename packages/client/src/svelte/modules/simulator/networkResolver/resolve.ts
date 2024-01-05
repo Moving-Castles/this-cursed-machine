@@ -1,17 +1,17 @@
 import { get } from "svelte/store"
 import { MachineType, MaterialType } from "../../state/enums"
-import { machinesInPlayerBox } from "../../state"
+import { machinesInPlayerPod } from "../../state"
 import { process } from "./machines"
 import type { Product, SimulatedEntities } from "../types"
 import { deepClone } from "../../utils/misc"
 import { playerEnergyMod } from ".."
 
 /**
- * Resolves the state of a given box entity.
+ * Resolves the state of a given pod entity.
  * This function simulates a process within a system of machines that interact with each other.
  * It processes the materials through the network of machines until all machines are resolved.
  *
- * @param _podEntity - Identifier for the box entity to be resolved.
+ * @param _podEntity - Identifier for the pod entity to be resolved.
  */
 export function resolve(_podEntity: string) {
   // console.log('############################')
@@ -21,7 +21,7 @@ export function resolve(_podEntity: string) {
   let iterationCounter = 0
 
   // Get all the machines in the pod
-  const machines = get(machinesInPlayerBox)
+  const machines = get(machinesInPlayerPod)
 
   // console.log('machines', machines)
 
@@ -75,8 +75,8 @@ export function resolve(_podEntity: string) {
 
       // Skip if node has no input
       if (currentInputs.length === 0) {
-        if (machine.machineType === MachineType.CORE) {
-          // If machine is a core, set energy modifier to -1
+        if (machine.machineType === MachineType.PLAYER) {
+          // If machine is a player, set energy modifier to -1
           playerEnergyMod.set(-1)
         }
         return

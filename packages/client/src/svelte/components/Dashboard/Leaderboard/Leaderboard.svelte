@@ -1,27 +1,27 @@
 <script lang="ts">
-  import type { ExtendedCore } from "../types"
-  import { completedCores } from ".."
+  import type { ExtendedPlayer } from "../types"
+  import { completedplayers } from ".."
   import LeaderboardItem from "./LeaderboardItem.svelte"
   import LeaderboardHeader from "./LeaderboardHeader.svelte"
   import { PROGRESSION_PAR_TIME } from "../../../modules/state"
 
-  const calculateLeaderBoard = (cores: Cores): ExtendedCore[] => {
-    let orderedList: ExtendedCore[] = []
+  const calculateLeaderBoard = (players: Players): ExtendedPlayer[] => {
+    let orderedList: ExtendedPlayer[] = []
 
-    Object.values(cores).forEach(core => {
-      const extendedCore: ExtendedCore = {
-        ...core,
+    Object.values(players).forEach(player => {
+      const extendedPlayer: ExtendedPlayer = {
+        ...player,
         score: 0,
         totalCompletionTime: 0,
       }
 
       // Calculate the total completion time
-      let totalCompletionTime = extendedCore.completionTimes.reduce(
+      let totalCompletionTime = extendedPlayer.completionTimes.reduce(
         (acc, curr) => acc + Number(curr),
         0,
       )
 
-      extendedCore.totalCompletionTime = totalCompletionTime
+      extendedPlayer.totalCompletionTime = totalCompletionTime
 
       // Calculate the percentage over PROGRESSION_PAR_TIME
       let percentageOverPar = 0
@@ -32,11 +32,11 @@
           100
       }
 
-      // Calculate the score
-      extendedCore.score = Math.floor(Math.max(100 - percentageOverPar, 0))
+      // Calculate the splayer
+      extendedPlayer.score = Math.floor(Math.max(100 - percentageOverPar, 0))
 
-      // Add the extendedCore to orderedList
-      orderedList.push(extendedCore)
+      // Add the extendedplayer to orderedList
+      orderedList.push(extendedPlayer)
     })
 
     // Sort the list in ascending order based on totalCompletionTime
@@ -45,8 +45,8 @@
     return orderedList
   }
 
-  let leaderBoard: ExtendedCore[] = calculateLeaderBoard($completedCores)
-  $: leaderBoard = calculateLeaderBoard($completedCores)
+  let leaderBoard: ExtendedPlayer[] = calculateLeaderBoard($completedplayers)
+  $: leaderBoard = calculateLeaderBoard($completedplayers)
 </script>
 
 <div class="leaderboard">
@@ -74,8 +74,8 @@
 
   <div class="listing">
     <LeaderboardHeader />
-    {#each leaderBoard as core, index}
-      <LeaderboardItem {index} {core} />
+    {#each leaderBoard as player, index}
+      <LeaderboardItem {index} {player} />
     {/each}
   </div>
 </div>

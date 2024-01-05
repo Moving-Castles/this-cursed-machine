@@ -9,7 +9,7 @@ enum ENTITY_TYPE {
   LEVEL,
   GOAL,
   WAREHOUSE,
-  BOX,
+  POD,
   MACHINE,
   MATERIAL
 }
@@ -18,7 +18,7 @@ enum MACHINE_TYPE {
   NONE,
   INLET,
   OUTLET,
-  CORE,
+  PLAYER,
   SPLITTER,
   MIXER,
   DRYER,

@@ -1,6 +1,6 @@
 import { get, writable } from "svelte/store"
 import { network } from "../network"
-import { cores } from "../state"
+import { players } from "../state"
 import { getUniqueValues } from "../utils/misc"
 import { padAddress } from "../utils/misc"
 
@@ -37,12 +37,12 @@ export function initSignalNetwork() {
         if (msgObj.topic === "verifiedClients") {
 
             // TODO: do this on server ??
-            // Verified clients changed: dedupe and filter to cores in current world
+            // Verified clients changed: dedupe and filter to players in current world
             verifiedClients.update((verifiedClients) => {
 
                 verifiedClients = getUniqueValues(
                     msgObj.verifiedClients
-                        .filter((client: Client) => get(cores)[padAddress(client.address)])
+                        .filter((client: Client) => get(players)[padAddress(client.address)])
                         .map((client: Client) => padAddress(client.address)))
 
                 return verifiedClients;

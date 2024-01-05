@@ -7,13 +7,13 @@
   import { waitForCompletion } from "../../modules/action/actionSequencer/utils"
   import CompletedLevel from "./CompletedLevel.svelte"
   import { blockNumber } from "../../modules/network"
-  import { playerCore } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
 
   let loading = false
   let loadingMessage = ""
 
   const handleTransfer = async () => {
-    if ($playerCore.level === 7) {
+    if ($playerEntity.level === 7) {
       loadingMessage = "Completing worker evaluation"
       loading = true
       await waitForCompletion(complete())

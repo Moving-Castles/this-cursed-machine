@@ -5,7 +5,7 @@ export enum EntityType {
   LEVEL,
   GOAL,
   WAREHOUSE,
-  BOX,
+  POD,
   MACHINE,
   MATERIAL,
 }
@@ -14,7 +14,7 @@ export enum MachineType {
   NONE,
   INLET,
   OUTLET,
-  CORE,
+  PLAYER,
   SPLITTER,
   MIXER,
   DRYER,

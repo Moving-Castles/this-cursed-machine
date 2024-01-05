@@ -5,13 +5,13 @@ import { commands } from ".";
 import { SYMBOLS } from "..";
 import { OutputType, TerminalType } from "../types"
 import { levelCommandFilter } from "../functions/helpers";
-import { playerCore } from "../../../modules/state";
+import { playerEntity } from "../../../modules/state";
 import { get } from "svelte/store";
 import { playSound } from "../../../modules/sound";
 
 async function execute(terminalType: TerminalType) {
     // Get subset if not full terminal
-    const commandList = commands.filter(command => levelCommandFilter(get(playerCore)?.level || 0, command.id) && command.public)
+    const commandList = commands.filter(command => levelCommandFilter(get(playerEntity)?.level || 0, command.id) && command.public)
 
     // List all available commands
     for (let i = 0; i < commandList.length; i++) {

@@ -5,10 +5,10 @@ import { LibUtils, LibNetwork } from "../libraries/Libraries.sol";
 
 contract ResolveSystem is System {
   /**
-   * @notice Triggers the resolution of the network associated with the sender's core entity.
+   * @notice Triggers the resolution of the network associated with the sender's player entity.
    */
   function resolve() public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    LibNetwork.resolve(coreEntity);
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    LibNetwork.resolve(playerEntity);
   }
 }

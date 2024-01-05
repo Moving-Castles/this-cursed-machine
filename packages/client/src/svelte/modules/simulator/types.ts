@@ -24,6 +24,6 @@ export type SimulatedEntities = {
   [key: string]: SimulatedEntity
 }
 
-export type BoxOutputs = {
+export type PodOutputs = {
   [key in MaterialType]: number
 }

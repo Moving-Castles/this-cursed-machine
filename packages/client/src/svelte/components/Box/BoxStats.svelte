@@ -1,23 +1,23 @@
 <script lang="ts">
-  // import { playerCore, playerBox } from "../../modules/state"
+  // import { playerEntity, playerBox } from "../../modules/state"
   import {
-    simulatedPlayerCore,
+    simulatedPlayerEntity,
     simulatedPlayerEnergy,
   } from "../../modules/simulator"
   import Stats from "../../components/Box/Warehouse/Stats.svelte"
   import { showLevelModal } from "../../modules/ui/stores"
-  import { playerCore } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats">
   <!-- RIGHT COLUMN -->
   <div class="column">
-    <!-- ({$playerCore.level}) -->
+    <!-- ({$playerEntity.level}) -->
     <p>Stump #24719</p>
     <p class="muted">************</p>
     <p>
-      {#key $simulatedPlayerCore.energy}
+      {#key $simulatedPlayerEntity.energy}
         <span class="green">ENERGY:{$simulatedPlayerEnergy}</span>
       {/key}
     </p>
@@ -29,7 +29,7 @@
     <p class="muted">*****************</p>
     {#if !$showLevelModal}
       <p>
-        {#key $playerCore.level}
+        {#key $playerEntity.level}
           <Stats />
         {/key}
       </p>

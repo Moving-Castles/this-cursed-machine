@@ -4,7 +4,7 @@
   import { SYMBOLS } from "../Terminal"
   import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { playerCore, levels } from "../../modules/state"
+  import { playerEntity, levels } from "../../modules/state"
 
   const dispatch = createEventDispatcher()
 
@@ -35,22 +35,22 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    if ($playerCore && $playerCore.level > Object.keys($levels).length) {
+    if ($playerEntity && $playerEntity.level > Object.keys($levels).length) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
-        `Welcome back ${$playerCore.name ? $playerCore.name : "stump"}...`,
+        `Welcome back ${$playerEntity.name ? $playerEntity.name : "stump"}...`,
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("completed")
-    } else if ($playerCore && $playerCore.carriedBy) {
+    } else if ($playerEntity && $playerEntity.carriedBy) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("done")
     } else {

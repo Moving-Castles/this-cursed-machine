@@ -57,7 +57,7 @@ export function clearTerminalOutput() {
 export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
   // Order =>
   // INLET
-  // CORE
+  // PLAYER
   // ... All other machines in alphabetical order
   // OUTLET
   return array.sort((a, b) => {

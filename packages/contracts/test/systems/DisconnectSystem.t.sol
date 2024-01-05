@@ -25,24 +25,24 @@ contract DiconnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Build a splitter
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
 
-    // Connect core (first output == piss) to splitter
-    world.connect(coreEntity, splitterEntity, PORT_INDEX.FIRST);
+    // Connect player (first output == piss) to splitter
+    world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
 
     // Check that the connection was created
-    assertEq(OutgoingConnections.get(coreEntity)[0], splitterEntity);
-    assertEq(IncomingConnections.get(splitterEntity)[0], coreEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[0], splitterEntity);
+    assertEq(IncomingConnections.get(splitterEntity)[0], playerEntity);
 
-    // Disconnect core from splitter
-    world.disconnect(coreEntity, PORT_INDEX.FIRST);
+    // Disconnect player from splitter
+    world.disconnect(playerEntity, PORT_INDEX.FIRST);
 
     // Check that the connection was destroyed
-    assertEq(OutgoingConnections.get(coreEntity)[0], bytes32(0));
+    assertEq(OutgoingConnections.get(playerEntity)[0], bytes32(0));
     assertEq(IncomingConnections.get(splitterEntity)[0], bytes32(0));
 
     vm.stopPrank();
@@ -53,40 +53,40 @@ contract DiconnectSystemTest is MudTest {
 
     vm.startPrank(alice);
 
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     world.restart();
 
     // Build a mixer
     bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
 
-    // Connect core (first output == piss) to mixer
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.FIRST);
-    // Connect core (second output == blood) to mixer
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
+    // Connect player (first output == piss) to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.FIRST);
+    // Connect player (second output == blood) to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
 
     // Check that the connections were created
-    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
-    assertEq(OutgoingConnections.get(coreEntity)[1], mixerEntity);
-    assertEq(IncomingConnections.get(mixerEntity)[0], coreEntity);
-    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[1], mixerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[0], playerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[1], playerEntity);
 
-    // Disconnect core from mixer (blood)
-    world.disconnect(coreEntity, PORT_INDEX.SECOND);
+    // Disconnect player from mixer (blood)
+    world.disconnect(playerEntity, PORT_INDEX.SECOND);
 
     // Check that the connection was destroyed
-    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
-    assertEq(OutgoingConnections.get(coreEntity)[1], bytes32(0));
+    assertEq(OutgoingConnections.get(playerEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[1], bytes32(0));
     assertEq(IncomingConnections.get(mixerEntity)[0], bytes32(0));
-    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[1], playerEntity);
 
-    // Connect core (second output == blood) to mixer, again
-    world.connect(coreEntity, mixerEntity, PORT_INDEX.SECOND);
+    // Connect player (second output == blood) to mixer, again
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
 
     // Check that the connections were created
-    assertEq(OutgoingConnections.get(coreEntity)[0], mixerEntity);
-    assertEq(OutgoingConnections.get(coreEntity)[1], mixerEntity);
-    assertEq(IncomingConnections.get(mixerEntity)[0], coreEntity);
-    assertEq(IncomingConnections.get(mixerEntity)[1], coreEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[0], mixerEntity);
+    assertEq(OutgoingConnections.get(playerEntity)[1], mixerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[0], playerEntity);
+    assertEq(IncomingConnections.get(mixerEntity)[1], playerEntity);
 
     vm.stopPrank();
   }

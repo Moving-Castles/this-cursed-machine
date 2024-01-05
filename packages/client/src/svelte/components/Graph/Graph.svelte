@@ -20,7 +20,7 @@
     machineState,
   } from "../../modules/state/convenience"
   import { inspecting, alignTooltip } from "../../modules/ui/stores"
-  import { MachineType } from "../../modules/state/types"
+  import { MachineType } from "../../modules/state/enums"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
   import { select, selectAll } from "d3-selection"
@@ -180,7 +180,7 @@
 
     // Remove nodes that no longer exist
     nodes = nodes.filter(node =>
-      graph.nodes.some(newNode => newNode.id === node.id)
+      graph.nodes.some(newNode => newNode.id === node.id),
     )
 
     // Update links
@@ -195,7 +195,7 @@
 
     // Remove links that no longer exist
     links = links.filter(link =>
-      graph.links.some(newLink => newLink.id === link.id)
+      graph.links.some(newLink => newLink.id === link.id),
     )
 
     // Update simulation with new nodes and links
@@ -261,7 +261,7 @@
           <Connection
             d={`M ${x1(links, link)} ${y1(links, link, d3yScale)} L ${x2(
               links,
-              link
+              link,
             )} ${y2(links, link, d3yScale)}`}
             state={connectionState(link.entry)}
             stroke={linkColor(link.entry)}
@@ -337,6 +337,7 @@
   .MACHINE_NONE {
     background-image: url("/images/machines/NONE.png");
   }
+
   .MACHINE_INLET {
     background-image: url("/images/machines/INLET.png");
   }
@@ -344,24 +345,31 @@
   .MACHINE_OUTLET {
     background-image: url("/images/machines/OUTLET.png");
   }
-  .MACHINE_CORE {
+
+  .MACHINE_PLAYER {
     background-image: url("/images/machines/CORE4.png");
   }
+
   .MACHINE_SPLITTER {
     background-image: url("/images/machines/SPLITTER.png");
   }
+
   .MACHINE_MIXER {
     background-image: url("/images/machines/MIXER.png");
   }
+
   .MACHINE_DRYER {
     background-image: url("/images/machines/DRYER.png");
   }
+
   .MACHINE_WETTER {
     background-image: url("/images/machines/WETTER.png");
   }
+
   .MACHINE_BOILER {
     background-image: url("/images/machines/BOILER.png");
   }
+
   .MACHINE_COOLER {
     background-image: url("/images/machines/COOLER.png");
   }

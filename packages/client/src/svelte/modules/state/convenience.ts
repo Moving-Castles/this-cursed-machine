@@ -1,11 +1,8 @@
 import type { SimulatedEntity, Connection } from "../simulator/types"
-
 import { get } from "svelte/store"
 import { simulatedMachines, simulatedConnections } from "../simulator"
-
 import { EMPTY_CONNECTION } from "../state"
-import { ConnectionState, MaterialType, PortIndex } from "../state/enums"
-import { MachineType } from "./types"
+import { ConnectionState, MaterialType, MachineType, PortIndex } from "../state/enums"
 import { DIRECTION } from "../../components/Terminal/types"
 
 /**
@@ -180,7 +177,7 @@ const getFlowingEntities = (
 
 const determineMachineState = (
   machineUID: string,
-  machinesEntries: [string, Machine][],
+  machinesEntries: [string, SimulatedEntity][],
   allConnections: Connection[]
 ): ConnectionState => {
   const { flowingMachines } = getFlowingEntities(
@@ -248,7 +245,7 @@ export function machineTypeToLabel(machineType: MachineType | undefined) {
       return "BUG DISPENSER"
     case MachineType.OUTLET:
       return "WAREHOUSE"
-    case MachineType.CORE:
+    case MachineType.PLAYER:
       return "YOU"
     default:
       return MachineType[machineType]

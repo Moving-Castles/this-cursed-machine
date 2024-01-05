@@ -7,18 +7,18 @@ import { LibUtils, LibPod, LibEntity } from "../libraries/Libraries.sol";
 
 contract RestartSystem is System {
   /**
-   * @notice Restarts and reconfigures the core entity, setting it back to level 1 and rearranging associated entities within a new box.
-   * @return podEntity The identifier of the newly created box entity.
-   * @dev Ensure dynamic energy setting based on level and implement the deletion of the old box in future versions.
+   * @notice Restarts and reconfigures the player entity, setting it back to level 1 and rearranging associated entities within a new pod.
+   * @return podEntity The identifier of the newly created pod entity.
+   * @dev Ensure dynamic energy setting based on level and implement the deletion of the old pod in future versions.
    */
   function restart() public returns (bytes32) {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // Go to level 1
-    Level.set(coreEntity, 1);
+    Level.set(playerEntity, 1);
 
     // Set initial energy
-    Energy.set(coreEntity, 100);
+    Energy.set(playerEntity, 100);
 
     // Create pod
     bytes32 podEntity = LibPod.create();
@@ -28,9 +28,9 @@ contract RestartSystem is System {
     CarriedBy.set(inletEntity, podEntity);
     MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), inletEntity));
 
-    // Place core in pod
-    CarriedBy.set(coreEntity, podEntity);
-    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), coreEntity));
+    // Place player in pod
+    CarriedBy.set(playerEntity, podEntity);
+    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), playerEntity));
 
     // Create Outlet
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
@@ -40,7 +40,7 @@ contract RestartSystem is System {
     OutletEntity.set(podEntity, outletEntity);
 
     // Set level start block
-    LevelStartBlock.set(coreEntity, block.number);
+    LevelStartBlock.set(playerEntity, block.number);
 
     return podEntity;
   }

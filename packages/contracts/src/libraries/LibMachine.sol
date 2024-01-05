@@ -15,7 +15,7 @@ library LibMachine {
    * @param _entity The identifier of the entity associated with the process.
    * @param blocksSinceLastResolution The number of blocks since the last network resolution.
    * @return _output An array of resultant products after processing.
-   * @dev Supports various machine types like CORE, SPLITTER, MIXER, etc., each leading to a distinct processing pathway.
+   * @dev Supports various machine types like PLAYER, SPLITTER, MIXER, etc., each leading to a distinct processing pathway.
    */
   function process(
     MACHINE_TYPE _machineType,
@@ -23,9 +23,9 @@ library LibMachine {
     bytes32 _entity,
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _output) {
-    // Core
-    if (_machineType == MACHINE_TYPE.CORE) {
-      return core(_inputs[0], _entity, blocksSinceLastResolution);
+    // player
+    if (_machineType == MACHINE_TYPE.PLAYER) {
+      return player(_inputs[0], _entity, blocksSinceLastResolution);
     }
     // Splitter
     else if (_machineType == MACHINE_TYPE.SPLITTER) {
@@ -45,20 +45,20 @@ library LibMachine {
   }
 
   /**
-   * @dev Processes input products, updates core energy, and generates new products.
+   * @dev Processes input products, updates player energy, and generates new products.
    *
    * The function takes input products and, if a BUG type material is present, it will increase
-   * the energy of the `_coreEntity` and produce PISS and BLOOD products as output, each having
+   * the energy of the `_playerEntity` and produce PISS and BLOOD products as output, each having
    * half the amount of the input BUG product.
    *
    * @param _input Product to be processed.
-   * @param _coreEntity The entity of the core whose energy is to be manipulated.
+   * @param _playerEntity The entity of the player whose energy is to be manipulated.
    * @param blocksSinceLastResolution The number of blocks since the last energy resolution.
-   * @return _outputs An array of products output by the core machine.
+   * @return _outputs An array of products output by the player machine.
    */
-  function core(
+  function player(
     Product memory _input,
-    bytes32 _coreEntity,
+    bytes32 _playerEntity,
     uint256 blocksSinceLastResolution
   ) internal returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
@@ -66,8 +66,8 @@ library LibMachine {
     // Abort if input is not bug
     if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
 
-    // Update core energy (2 per block)
-    Energy.set(_coreEntity, Energy.get(_coreEntity) + 2 * uint32(blocksSinceLastResolution));
+    // Update player energy (2 per block)
+    Energy.set(_playerEntity, Energy.get(_playerEntity) + 2 * uint32(blocksSinceLastResolution));
 
     // Output Piss
     outputs[0] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.PISS, amount: _input.amount / 2 });

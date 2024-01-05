@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { localResolved, patches } from ".."
 import { blockNumber } from "../../network"
-import { playerBox, playerCore } from "../../state"
+import { playerPod, playerEntity } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { checkLevelGoals } from "./checkLevelGoals"
@@ -18,34 +18,34 @@ import {
  *
  * @notice The function subscribes to changes in the block number. When a block number change is detected, the function checks the state of the player and the network's resolution. If the player has been spawned and there's a discrepancy between the last on-chain resolution and the local resolution, the function resolves the output and updates the local resolution.
  * @see {@link blockNumber} For the observable representing block number changes.
- * @see {@link playerCore} For the state of the player.
- * @see {@link playerBox} For the last resolved state on-chain.
+ * @see {@link playerEntity} For the state of the player.
+ * @see {@link playerPod} For the last resolved state on-chain.
  * @see {@link localResolved} For the local resolution state.
  * @see {@link patches} For applying patches or updates to the state.
  */
 export async function initStateSimulator() {
   blockNumber.subscribe(async blockNumber => {
-    const playerCoreValue = get(playerCore)
-    const playerBoxValue = get(playerBox)
+    const playerEntityValue = get(playerEntity)
+    const playerPodValue = get(playerPod)
     const localResolvedValue = get(localResolved)
     const lastCompletedBlockValue = get(lastCompletedBlock)
     const showLevelValue = get(showLevelModal)
 
     // Player is not spawned yet
-    if (!playerCoreValue) return
+    if (!playerEntityValue) return
 
     // Play heartbeat on new block if player is in pod
-    if (playerCoreValue.carriedBy && get(UIState) === UI.READY) {
+    if (playerEntityValue.carriedBy && get(UIState) === UI.READY) {
       playSound("tcm", "singleHeartbeat100")
       pulseGraph()
     }
 
     // Network was resolved onchain
-    if (playerBoxValue.lastResolved !== localResolvedValue) {
+    if (playerPodValue.lastResolved !== localResolvedValue) {
       // Resolve output
-      patches.set(resolve(playerCoreValue.carriedBy))
+      patches.set(resolve(playerEntityValue.carriedBy))
       // Update localResolved
-      localResolved.set(playerBoxValue.lastResolved)
+      localResolved.set(playerPodValue.lastResolved)
     }
 
     // !hack: Wait to allow the changes to propagate
@@ -54,7 +54,7 @@ export async function initStateSimulator() {
     // Check if level goals have been reached
     // @hack: Wait 10 blocks from last completion to avoid duplicate modals bug
     if (
-      checkLevelGoals(playerCoreValue.level) &&
+      checkLevelGoals(playerEntityValue.level) &&
       showLevelValue === false &&
       blockNumber > lastCompletedBlockValue + 10
     ) {

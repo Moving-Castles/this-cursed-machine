@@ -12,21 +12,21 @@ contract BuildSystem is System {
    * @return machineEntity The identifier for the newly created machine entity.
    */
   function build(MACHINE_TYPE _machineType) public returns (bytes32) {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Resolve network
-    // LibNetwork.resolve(coreEntity);
+    // LibNetwork.resolve(playerEntity);
 
     // Check energy after resolving network
-    // require(Energy.get(coreEntity) >= gameConfig.buildCost, "insufficient energy");
+    // require(Energy.get(playerEntity) >= gameConfig.buildCost, "insufficient energy");
 
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);
 
-    bytes32 podEntity = CarriedBy.get(coreEntity);
+    bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    // Place in same pod as the core
+    // Place in same pod as the player
     CarriedBy.set(machineEntity, podEntity);
 
     // Add it to the list of machines
@@ -45,7 +45,7 @@ contract BuildSystem is System {
     BuildIndex.set(buildIndexEntity, newBuildIndex);
 
     // Deduct energy
-    // Energy.set(coreEntity, Energy.get(coreEntity) - gameConfig.buildCost);
+    // Energy.set(playerEntity, Energy.get(playerEntity) - gameConfig.buildCost);
 
     return machineEntity;
   }

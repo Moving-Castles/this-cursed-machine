@@ -6,7 +6,7 @@ import { LibUtils } from "../libraries/Libraries.sol";
 
 contract WarpSystem is System {
   function warp(uint32 _level) public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
-    Level.set(coreEntity, _level);
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    Level.set(playerEntity, _level);
   }
 }

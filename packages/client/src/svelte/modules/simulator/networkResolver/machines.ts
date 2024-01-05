@@ -15,7 +15,7 @@ const EMPTY_PRODUCT: Product = {
  * Processes a list of products based on the specified machine type. It delegates processing to specialized
  * functions based on the machine type provided.
  *
- * - If `machineType` is CORE, the `core` function is used.
+ * - If `machineType` is PLAYER, the `player` function is used.
  * - If `machineType` is SPLITTER, the `splitter` function is used.
  * - If `machineType` is MIXER, the `mixer` function is used.
  * - For machine types between DRYER and COOLER (inclusive), the `simpleMachine` function is used.
@@ -27,8 +27,8 @@ const EMPTY_PRODUCT: Product = {
  */
 export function process(machineType: MachineType, inputs: Product[]): Product[] {
   if (inputs.length === 0) return [EMPTY_PRODUCT]
-  if (machineType === MachineType.CORE) {
-    return core(inputs)
+  if (machineType === MachineType.PLAYER) {
+    return player(inputs)
   } else if (machineType === MachineType.SPLITTER) {
     return splitter(inputs)
   } else if (machineType === MachineType.MIXER) {
@@ -52,7 +52,7 @@ export function process(machineType: MachineType, inputs: Product[]): Product[] 
  * @returns {Product[]} An array containing two products. If the first input product's materialType is BUG, the output contains
  * a product of type PISS and another of type BLOOD. Otherwise, two empty products are returned.
  */
-function core(inputs: Product[]): Product[] {
+function player(inputs: Product[]): Product[] {
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
 
   const input = inputs[0]

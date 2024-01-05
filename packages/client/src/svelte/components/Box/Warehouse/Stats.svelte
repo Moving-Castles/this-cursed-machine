@@ -3,7 +3,7 @@
   import { strobe } from "../../../modules/ui/transitions"
   import { playerGoals } from "../../../modules/state"
   import { MaterialType } from "../../../modules/state/enums"
-  import { boxOutput } from "../../../modules/simulator"
+  import { podOutput } from "../../../modules/simulator"
   import { materialTypeToLabel } from "../../../modules/state/convenience"
   let mounted = false
   const goalTypes = $playerGoals
@@ -14,18 +14,18 @@
   $: goalCompletions = Object.fromEntries(
     $playerGoals.map(goal => {
       const percentage =
-        Math.round(($boxOutput[goal.materialType] / goal?.amount) * 100) || 0
-      const overflow = Math.max(0, $boxOutput[goal.materialType] - goal?.amount)
+        Math.round(($podOutput[goal.materialType] / goal?.amount) * 100) || 0
+      const overflow = Math.max(0, $podOutput[goal.materialType] - goal?.amount)
       return [
         goal.materialType,
         {
           percentage,
-          value: $boxOutput[goal.materialType] ?? 0,
+          value: $podOutput[goal.materialType] ?? 0,
           target: goal?.amount,
           overflow,
         },
       ]
-    })
+    }),
   )
   onMount(() => {
     mounted = true
@@ -66,7 +66,7 @@
           {/if} -->
         </div>
       {/each}
-      {#each Object.entries($boxOutput) as [type, amount] (type)}
+      {#each Object.entries($podOutput) as [type, amount] (type)}
         {#if !goalTypes.includes(MaterialType[type])}
           <div class="goal {MaterialType[type]}">
             <div class="label">

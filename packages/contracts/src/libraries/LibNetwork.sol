@@ -8,25 +8,25 @@ import { Product } from "../constants.sol";
 
 library LibNetwork {
   /**
-   * @dev Resolves the state of the entire network inside a given box entity by sequentially processing machines.
+   * @dev Resolves the state of the entire network inside a given pod entity by sequentially processing machines.
    *
-   * The function loops through all machines inside a box, checking their types and processing inputs/outputs
-   * based on their functionality until all machines in the box have been resolved. For example, an INLET machine
+   * The function loops through all machines inside a pod, checking their types and processing inputs/outputs
+   * based on their functionality until all machines in the pod have been resolved. For example, an INLET machine
    * will be provided an input if it doesn't have one, while an OUTLET machine will write its outputs to the blockchain.
    * Inputs and outputs between connected machines are properly handled and transferred. The state and outputs
    * of each machine are updated based on its logic and the inputs it receives.
    *
-   * @param _coreEntity The entity identifier of the core machine in the box.
+   * @param _playerEntity The entity identifier of the player machine in the pod.
    */
-  function resolve(bytes32 _coreEntity) internal {
+  function resolve(bytes32 _playerEntity) internal {
     // Get pod entity
-    bytes32 podEntity = CarriedBy.get(_coreEntity);
+    bytes32 podEntity = CarriedBy.get(_playerEntity);
 
     // Blocks since last resolution
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(podEntity);
 
-    // Tick down energy for core in box (1 per block)
-    tickDownEnergy(_coreEntity, blocksSinceLastResolution);
+    // Tick down energy for player in pod (1 per block)
+    tickDownEnergy(_playerEntity, blocksSinceLastResolution);
 
     // Counter for the number of iterations over the network
     uint32 counter;
@@ -120,24 +120,24 @@ library LibNetwork {
       }
     }
 
-    // Set LastResolved on box entity
+    // Set LastResolved on pod entity
     LastResolved.set(podEntity, block.number);
   }
 
   /**
-   * @dev Reduces the energy of the core in a given box entity based on elapsed blocks.
-   * Ticks down the energy of the core contained in a specific box entity. The energy
+   * @dev Reduces the energy of the player in a given pod entity based on elapsed blocks.
+   * Ticks down the energy of the player contained in a specific pod entity. The energy
    * is reduced by an amount equivalent to `_blocksSinceLastResolution`. If reducing
    * the energy by this amount would result in negative energy, the energy is set to zero.
-   * @param _coreEntity The entity identifier of the core machine in the box.
-   * @param _blocksSinceLastResolution The number of blocks since the last resolution, indicating the amount to reduce the core’s energy by.
+   * @param _playerEntity The entity identifier of the player machine in the pod.
+   * @param _blocksSinceLastResolution The number of blocks since the last resolution, indicating the amount to reduce the player’s energy by.
    */
-  function tickDownEnergy(bytes32 _coreEntity, uint256 _blocksSinceLastResolution) internal {
-    uint32 currentEnergy = Energy.get(_coreEntity);
+  function tickDownEnergy(bytes32 _playerEntity, uint256 _blocksSinceLastResolution) internal {
+    uint32 currentEnergy = Energy.get(_playerEntity);
     if (currentEnergy < uint32(_blocksSinceLastResolution)) {
-      Energy.set(_coreEntity, 0);
+      Energy.set(_playerEntity, 0);
     } else {
-      Energy.set(_coreEntity, currentEnergy - uint32(_blocksSinceLastResolution));
+      Energy.set(_playerEntity, currentEnergy - uint32(_blocksSinceLastResolution));
     }
   }
 }

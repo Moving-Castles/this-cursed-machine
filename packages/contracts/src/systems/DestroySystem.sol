@@ -11,7 +11,7 @@ contract DestroySystem is System {
    * @param _machineEntity The identifier for the machine entity to be destroyed.
    */
   function destroy(bytes32 _machineEntity) public {
-    bytes32 coreEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(EntityType.get(_machineEntity) == ENTITY_TYPE.MACHINE, "not machine");
 
     // Get outgoing connections
@@ -21,7 +21,7 @@ contract DestroySystem is System {
 
     if (outgoingConnections.length > 0 || incomingConnections.length > 0) {
       // Only resolve if the machine is connected
-      LibNetwork.resolve(coreEntity);
+      LibNetwork.resolve(playerEntity);
 
       // Iterate through each incoming connection
       for (uint256 i = 0; i < incomingConnections.length; i++) {
@@ -67,7 +67,7 @@ contract DestroySystem is System {
     // Destroy machine entity
     LibEntity.destroy(_machineEntity);
 
-    bytes32 podEntity = CarriedBy.get(coreEntity);
+    bytes32 podEntity = CarriedBy.get(playerEntity);
 
     // Remove it from the list of machines
     MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));

@@ -2,10 +2,10 @@ import type { Command } from "../types";
 import { COMMAND } from "../types";
 import { writeLevel } from "../functions/writeLevel";
 import { get } from "svelte/store";
-import { playerCore } from "../../../modules/state";
+import { playerEntity } from "../../../modules/state";
 
 async function execute() {
-    await writeLevel(get(playerCore).level, true)
+    await writeLevel(get(playerEntity).level, true)
     return
 }
 

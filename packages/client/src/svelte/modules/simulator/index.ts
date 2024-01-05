@@ -6,9 +6,9 @@ import { EMPTY_CONNECTION } from "../state"
 import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
-import { entities, playerBox, playerEntityId, playerCore } from "../state"
+import { entities, playerPod, playerEntityId, playerEntity } from "../state"
 import { blockNumber } from "../network"
-import type { SimulatedEntities, BoxOutputs, Connection } from "./types"
+import type { SimulatedEntities, PodOutputs, Connection } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
 export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
@@ -30,7 +30,7 @@ export const patches = writable({} as SimulatedEntities)
 export const localResolved = writable(0)
 
 /**
- * Set depending on whether the core is connected to the inlet.
+ * Set depending on whether the player is connected to the inlet.
  * Can be 1 or -1
  */
 export const playerEnergyMod = writable(-1)
@@ -39,9 +39,9 @@ export const playerEnergyMod = writable(-1)
  * Current block number - lastResolved
  */
 export const blocksSinceLastResolution = derived(
-  [blockNumber, playerBox],
-  ([$blockNumber, $playerBox]) => {
-    return $blockNumber - Number($playerBox.lastResolved)
+  [blockNumber, playerPod],
+  ([$blockNumber, $playerPod]) => {
+    return $blockNumber - Number($playerPod.lastResolved)
   }
 )
 
@@ -98,32 +98,32 @@ export const simulated = derived(
 
 /** Convenience methods for easy access */
 
-/** Core */
-export const simulatedPlayerCore = derived(
+/** Player */
+export const simulatedPlayerEntity = derived(
   [simulated, playerEntityId],
   ([$simulated, $playerEntityId]) => $simulated[$playerEntityId]
 )
 
-/** Boxes */
-export const simulatedBoxes = derived(simulated, $simulated => {
+/** Pods */
+export const simulatedPods = derived(simulated, $simulated => {
   return Object.fromEntries(
     Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.BOX
+      ([_, entry]) => entry.entityType === EntityType.POD
     )
   )
 })
 
 /** Machines */
 export const simulatedMachines = derived(
-  [simulated, playerCore],
-  ([$simulated, $playerCore]) => {
-    if (!$playerCore) return {}
+  [simulated, playerEntity],
+  ([$simulated, $playerEntity]) => {
+    if (!$playerEntity) return {}
     return Object.fromEntries(
       Object.entries($simulated).filter(([_, entry]) => {
         // osn
         return (
           entry.entityType === EntityType.MACHINE &&
-          entry.carriedBy === $playerCore.carriedBy
+          entry.carriedBy === $playerEntity.carriedBy
         )
       })
     )
@@ -181,10 +181,10 @@ export const readableMachines = derived(
  * Calculates the aggregated amount of each material type carried by the player,
  * considering patches on outlets.
  *
- * @function boxOutput
+ * @function podOutput
  * @exports
  * @param {Object} entities - A store containing all in-game entities.
- * @param {Object} playerCore - Store with information about the player's core properties.
+ * @param {Object} playerEntity - Store with information about the player's properties.
  * @param {Number} blocksSinceLastResolution - Count of blockchain blocks since the last resolution.
  * @returns {Object} - An object where each key is a material type and the value is the aggregated amount
  *                     of that material type carried by the player, including patches.
@@ -192,19 +192,19 @@ export const readableMachines = derived(
  * @todo There's a need to handle a potential missing outlet.
  * @todo Consider handling scenarios where there are multiple outputs from patches.
  */
-export const boxOutput = derived(
-  [entities, playerCore, blocksSinceLastResolution],
-  ([$entities, $playerCore, $blocksSinceLastResolution]) => {
-    // Filter entities to retrieve only those which are of type MATERIAL and are in the same box as the player
+export const podOutput = derived(
+  [entities, playerEntity, blocksSinceLastResolution],
+  ([$entities, $playerEntity, $blocksSinceLastResolution]) => {
+    // Filter entities to retrieve only those which are of type MATERIAL and are in the same pod as the player
     const singles = Object.entries($entities).filter(([_, entry]) => {
       return (
         entry.entityType === EntityType.MATERIAL &&
-        entry.carriedBy === $playerCore.carriedBy
+        entry.carriedBy === $playerEntity.carriedBy
       )
     })
 
     // Initialize the result object.
-    let result: BoxOutputs = {}
+    let result: PodOutputs = {}
 
     // !!!
     // VERY hacky way to add patches to outputs
@@ -214,7 +214,7 @@ export const boxOutput = derived(
     const outlet = Object.entries($entities).find(([_, entry]) => {
       return (
         entry.entityType === EntityType.MACHINE &&
-        entry.carriedBy === $playerCore.carriedBy &&
+        entry.carriedBy === $playerEntity.carriedBy &&
         entry.machineType === MachineType.OUTLET
       )
     })
@@ -258,10 +258,10 @@ export const boxOutput = derived(
 // --- MISC ----------------------------------------------
 
 export const simulatedPlayerEnergy = derived(
-  [simulatedPlayerCore, playerEnergyMod, blocksSinceLastResolution],
-  ([$simulatedPlayerCore, $playerEnergyMod, $blocksSinceLastResolution]) => {
+  [simulatedPlayerEntity, playerEnergyMod, blocksSinceLastResolution],
+  ([$simulatedPlayerEntity, $playerEnergyMod, $blocksSinceLastResolution]) => {
     return capAtZero(
-      ($simulatedPlayerCore?.energy || 0) +
+      ($simulatedPlayerEntity?.energy || 0) +
       $playerEnergyMod * $blocksSinceLastResolution
     )
   }

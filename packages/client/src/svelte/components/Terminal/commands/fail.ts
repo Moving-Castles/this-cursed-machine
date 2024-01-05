@@ -12,7 +12,7 @@ async function execute() {
         writeToTerminal(OutputType.NORMAL, "Requesting material")
 
         // Designed to fail
-        const machineType = MachineType.CORE
+        const machineType = MachineType.PLAYER
 
         const action = sendBuild(machineType)
         // ...

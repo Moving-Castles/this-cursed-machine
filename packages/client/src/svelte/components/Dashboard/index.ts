@@ -1,17 +1,17 @@
 import { derived } from "svelte/store"
-import { WAREHOUSE_ID, cores, materials } from "../../modules/state"
+import { WAREHOUSE_ID, players, materials } from "../../modules/state"
 
 const COMPLETED_LEVEL = 9
 
 /**
- * Completed cores
+ * Completed players
  */
-export const completedCores = derived(cores, $cores => {
+export const completedplayers = derived(players, $players => {
     return Object.fromEntries(
-        Object.entries($cores).filter(
-            ([, core]) => core.level === COMPLETED_LEVEL
+        Object.entries($players).filter(
+            ([, player]) => player.level === COMPLETED_LEVEL
         )
-    ) as Cores
+    ) as Players
 })
 
 /**

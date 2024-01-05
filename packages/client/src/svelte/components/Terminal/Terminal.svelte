@@ -21,7 +21,7 @@
     simulatedConnections,
   } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
-  import { playerCore } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeLevel } from "./functions/writeLevel"
@@ -45,10 +45,10 @@
 
   $: if (
     terminalType == TerminalType.FULL &&
-    $playerCore &&
-    $playerCore.level !== $localLevel
+    $playerEntity &&
+    $playerEntity.level !== $localLevel
   ) {
-    handleLevelChange($playerCore.level)
+    handleLevelChange($playerEntity.level)
   }
 
   const handleLevelChange = async (level: number) => {
@@ -272,7 +272,7 @@
         const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
         // Use the first available one
         parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      } else if (sourceMachineEntity.machineType === MachineType.CORE) {
+      } else if (sourceMachineEntity.machineType === MachineType.PLAYER) {
         await writeToTerminal(OutputType.NORMAL, "Select source port:")
         let sourcePortOptions: SelectOption[] = []
 

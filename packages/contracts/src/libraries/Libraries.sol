@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { LibUtils } from "./LibUtils.sol";
 import { LibPod } from "./LibPod.sol";
-import { LibCore } from "./LibCore.sol";
+import { LibPlayer } from "./LibPlayer.sol";
 import { LibEntity } from "./LibEntity.sol";
 import { LibNetwork } from "./LibNetwork.sol";
 import { LibMachine } from "./LibMachine.sol";

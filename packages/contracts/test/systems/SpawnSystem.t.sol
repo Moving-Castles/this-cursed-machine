@@ -24,27 +24,27 @@ contract SpawnSystemTest is MudTest {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     vm.stopPrank();
 
-    // Check that the core was spawned correctly
-    assertEq(uint8(EntityType.get(coreEntity)), uint8(ENTITY_TYPE.MACHINE));
-    assertEq(uint8(MachineType.get(coreEntity)), uint8(MACHINE_TYPE.CORE));
-    assertEq(Level.get(coreEntity), 0);
-    assertEq(CreationBlock.get(coreEntity), block.number);
-    assertEq(IncomingConnections.get(coreEntity).length, 1);
-    assertEq(OutgoingConnections.get(coreEntity).length, 2);
+    // Check that the player was spawned correctly
+    assertEq(uint8(EntityType.get(playerEntity)), uint8(ENTITY_TYPE.MACHINE));
+    assertEq(uint8(MachineType.get(playerEntity)), uint8(MACHINE_TYPE.PLAYER));
+    assertEq(Level.get(playerEntity), 0);
+    assertEq(CreationBlock.get(playerEntity), block.number);
+    assertEq(IncomingConnections.get(playerEntity).length, 1);
+    assertEq(OutgoingConnections.get(playerEntity).length, 2);
   }
 
   function testSpawnAndStart() public {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 coreEntity = world.spawn();
+    bytes32 playerEntity = world.spawn();
     bytes32 podEntity = world.restart();
     vm.stopPrank();
 
-    assertEq(CarriedBy.get(coreEntity), podEntity);
-    assertEq(Level.get(coreEntity), 1);
+    assertEq(CarriedBy.get(playerEntity), podEntity);
+    assertEq(Level.get(playerEntity), 1);
   }
 }

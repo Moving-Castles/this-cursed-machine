@@ -1,7 +1,6 @@
 import type { SimulatedEntity } from "../simulator/types"
 import { EMPTY_CONNECTION } from "./index"
 import { EntityType, MaterialType, MachineType } from "./enums"
-export { EntityType, MaterialType, MachineType } from "./enums"
 
 declare global {
   // * * * * * * * * * * * * * * * * *
@@ -67,24 +66,22 @@ declare global {
   // GAME PLAY ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
 
-  // warehouse
   type Warehouse = {
     entityType: EntityType.WAREHOUSE
   }
 
-  // aka. pod
-  type Box = {
-    entityType: EntityType.BOX
+  type Pod = {
+    entityType: EntityType.POD
     creationBlock: number
     lastResolved: number
     machinesInPod: string[]
     materialsInPod: string[]
   }
 
-  // aka. stump
-  type Core = {
+  // aka. stump (fka. core)
+  type Player = {
     entityType: EntityType.MACHINE
-    machineType: MachineType.CORE
+    machineType: MachineType.PLAYER
     creationBlock: number
     name?: string
     energy: number
@@ -134,16 +131,16 @@ declare global {
     [index: string]: Goal
   }
 
-  type Cores = {
-    [index: string]: Core
+  type Players = {
+    [index: string]: Player
   }
 
   type Machines = {
     [index: string]: Machine
   }
 
-  type Boxes = {
-    [index: string]: Box
+  type Pods = {
+    [index: string]: Pod
   }
 
   type Materials = {
