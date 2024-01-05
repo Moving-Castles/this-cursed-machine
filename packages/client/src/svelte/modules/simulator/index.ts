@@ -5,6 +5,7 @@
 import { EMPTY_CONNECTION } from "../state"
 import { EntityType, MachineType, MaterialType } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
+import type { Writable } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
 import { entities, playerPod, playerEntityId, playerEntity } from "../state"
 import { blockNumber } from "../network"
@@ -31,9 +32,8 @@ export const localResolved = writable(0)
 
 /**
  * Set depending on whether the player is connected to the inlet.
- * Can be 1 or -1
  */
-export const playerEnergyMod = writable(-1)
+export const playerEnergyMod: Writable<1 | -1> = writable(-1)
 
 /**
  * Current block number - lastResolved
@@ -172,7 +172,7 @@ export const readableMachines = derived(
     return Object.entries($simulatedMachines).map(([id, machine]) => ({
       id,
       machine,
-      read: MachineType[machine.machineType],
+      read: MachineType[machine.machineType ?? MachineType.NONE],
     }))
   }
 )
@@ -204,7 +204,7 @@ export const podOutput = derived(
     })
 
     // Initialize the result object.
-    let result: PodOutputs = {}
+    let result: PodOutputs = {} as PodOutputs
 
     // !!!
     // VERY hacky way to add patches to outputs
@@ -236,7 +236,7 @@ export const podOutput = derived(
           ? patchesOnOutlet.outputs[0].amount
           : 0
       result[material.materialType || MaterialType.NONE] =
-        material.amount + patchValue * $blocksSinceLastResolution
+        material?.amount ?? 0 + patchValue * $blocksSinceLastResolution
     })
 
     // Handle patches that are not yet resolved

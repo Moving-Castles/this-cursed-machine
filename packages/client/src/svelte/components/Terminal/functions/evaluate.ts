@@ -7,7 +7,7 @@ import { get } from "svelte/store"
 /**
  * Evaluates the provided input, cleans it, and finds a matching command.
  * @param {string} input - The string to evaluate.
- * @returns {Command|undefined} Returns the matched command object if found, otherwise logs an error and returns undefined.
+ * @returns {Command|undefined} Returns the matched command object if found, otherwise returns undefined.
  */
 export function evaluate(input: string): Command | undefined {
   const cleanInput = input.toLowerCase().trim()
