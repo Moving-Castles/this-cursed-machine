@@ -9,16 +9,17 @@
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
     "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
+    "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
     "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-main-66728380",
-    "@typescript-eslint/eslint-plugin": "5.60.0",
-    "@typescript-eslint/parser": "5.60.0",
-    "eslint": "8.53.0",
+    "@latticexyz/cli": "2.0.0-main-f6f40289",
+    "@typescript-eslint/eslint-plugin": "6.17.0",
+    "@typescript-eslint/parser": "6.17.0",
+    "eslint": "8.56.0",
     "rimraf": "^5.0.5",
     "mprocs": "^0.6.4",
     "typescript": "^5.2.2"

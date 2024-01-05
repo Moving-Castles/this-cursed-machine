@@ -11,8 +11,10 @@ out = "out"
 allow_paths = [
   # pnpm symlinks to the project root's node_modules
   "../../node_modules",
-  # we're also using linked mud packages from the monorepo
-  "../../../../packages"
+  # template uses linked mud packages from within the mud monorepo
+  "../../../../packages",
+  # projects created from this template and using linked mud packages
+  "../../../mud/packages",
 ]
 extra_output_files = [
   "abi",
@@ -21,4 +23,5 @@ extra_output_files = [
 fs_permissions = [{ access = "read", path = "./"}]
 
 [profile.lattice-testnet]
-eth_rpc_url = "https://follower.testnet-chain.linfra.xyz"
+# eth_rpc_url = "https://follower.testnet-chain.linfra.xyz"
+eth_rpc_url = "https://miner.testnet-chain.linfra.xyz"
