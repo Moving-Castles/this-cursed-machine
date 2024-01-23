@@ -31,5 +31,6 @@ contract DeployTest is BaseTest {
     ResourceId tableId = _balancesTableId(systemId.getNamespace());
 
     assertEq(Balances.get(tableId, worldAddress), 1000000);
+    assertEq(IERC20Mintable(token).totalSupply(), 1000000);
   }
 }

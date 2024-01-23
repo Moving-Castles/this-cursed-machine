@@ -15,7 +15,9 @@ contract InitSystem is System {
     require(GameConfig.get().coolDown == 0, "InitSystem: already initialized");
 
     // Set game config
-    GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0, tokenAddress: tokenAddress }));
+    GameConfig.set(
+      GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0, tokenAddress: tokenAddress, globalSpawnIndex: 0 })
+    );
 
     // Create warehouse
     bytes32 warehouseEntity = LibUtils.getRandomKey();

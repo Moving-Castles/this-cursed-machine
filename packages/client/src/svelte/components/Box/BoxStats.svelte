@@ -9,12 +9,10 @@
   import { playerEntity } from "../../modules/state"
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="box-stats">
   <!-- RIGHT COLUMN -->
   <div class="column">
-    <!-- ({$playerEntity.level}) -->
-    <p>Stump #24719</p>
+    <p>Stump #{$playerEntity.spawnIndex}</p>
     <p class="muted">************</p>
     <p>
       {#key $simulatedPlayerEntity.energy}

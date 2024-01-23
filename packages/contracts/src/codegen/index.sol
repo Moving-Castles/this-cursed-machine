@@ -13,6 +13,7 @@ import { CreatedBy, CreatedByTableId } from "./tables/CreatedBy.sol";
 import { Amount, AmountTableId } from "./tables/Amount.sol";
 import { CreationBlock, CreationBlockTableId } from "./tables/CreationBlock.sol";
 import { BuildIndex, BuildIndexTableId } from "./tables/BuildIndex.sol";
+import { SpawnIndex, SpawnIndexTableId } from "./tables/SpawnIndex.sol";
 import { Level, LevelTableId } from "./tables/Level.sol";
 import { LastResolved, LastResolvedTableId } from "./tables/LastResolved.sol";
 import { Input, InputTableId } from "./tables/Input.sol";

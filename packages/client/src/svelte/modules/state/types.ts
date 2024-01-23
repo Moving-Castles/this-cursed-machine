@@ -19,6 +19,7 @@ declare global {
     amount?: number
     creationBlock?: number
     buildIndex?: number
+    spawnIndex?: number
     level?: number
     lastResolved?: number
     input?: number
@@ -39,7 +40,9 @@ declare global {
   type GameConfig = {
     coolDown: number
     connectionCost: number
-    buildCost: number
+    buildCost: number,
+    tokenAddress: string,
+    globalSpawnIndex: number
   }
 
   type Level = {
@@ -83,6 +86,7 @@ declare global {
     entityType: EntityType.MACHINE
     machineType: MachineType.PLAYER
     creationBlock: number
+    spawnIndex: number
     name?: string
     energy: number
     level: number
