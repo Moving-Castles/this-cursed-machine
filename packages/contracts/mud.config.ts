@@ -1,5 +1,4 @@
-import { mudConfig } from "@latticexyz/world/register";
-import { resolveTableId } from "@latticexyz/config";
+import { mudConfig, resolveTableId } from "@latticexyz/world/register";
 
 export const enums = {
     ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "LEVEL", "GOAL", "WAREHOUSE", "POD", "MACHINE", "MATERIAL"],

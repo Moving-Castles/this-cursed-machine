@@ -24,7 +24,6 @@ import {
   getContract,
   transportObserver,
   ContractWrite,
-  // resourceToHex
 } from "@latticexyz/common"
 
 import { Subject, share } from "rxjs"
@@ -57,9 +56,29 @@ export async function setupNetwork() {
   const publicClient = createPublicClient(clientOptions)
 
   /*
-   * Create a temporary wallet and a viem client for it
-   * (see https://viem.sh/docs/clients/wallet.html).
+   * Sync on-chain state into RECS and keeps our client in sync.
+   * Uses the MUD indexer if available, otherwise falls back
+   * to the viem publicClient to make RPC calls to fetch MUD
+   * events from the chain.
    */
+  const {
+    components,
+    latestBlock$,
+    storedBlockLogs$,
+    waitForTransaction,
+  } = await syncToRecs({
+    world,
+    config: mudConfig,
+    address: networkConfig.worldAddress as Hex,
+    publicClient,
+    indexerUrl: networkConfig.indexerUrl,
+    startBlock: BigInt(networkConfig.initialBlockNumber),
+  })
+
+  /*
+ * Create a temporary wallet and a viem client for it
+ * (see https://viem.sh/docs/clients/wallet.html).
+ */
   const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
   const burnerWalletClient = createWalletClient({
     ...clientOptions,
@@ -81,33 +100,6 @@ export async function setupNetwork() {
     publicClient,
     walletClient: burnerWalletClient,
     onWrite: write => write$.next(write),
-  })
-
-  /*
-   * Sync on-chain state into RECS and keeps our client in sync.
-   * Uses the MUD indexer if available, otherwise falls back
-   * to the viem publicClient to make RPC calls to fetch MUD
-   * events from the chain.
-   */
-  const {
-    components,
-    latestBlock$,
-    storedBlockLogs$,
-    waitForTransaction,
-  } = await syncToRecs({
-    world,
-    config: mudConfig,
-    address: networkConfig.worldAddress as Hex,
-    publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber),
-    // filters: Object.entries(mudConfig.tables).map(([, table]) => {
-    //   const tableId = resourceToHex({
-    //     type: table.offchainOnly ? "offchainTable" : "table",
-    //     namespace: mudConfig.namespace,
-    //     name: table.name,
-    //   })
-    //   return { tableId }
-    // }),
   })
 
   /*

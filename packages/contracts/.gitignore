@@ -2,6 +2,7 @@ out/
 /cache/
 node_modules/
 .env
+.redstone-holesky-key
 bindings/
 artifacts/
 deployments
