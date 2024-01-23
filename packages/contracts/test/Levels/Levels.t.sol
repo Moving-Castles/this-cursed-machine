@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.21;
-import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { console } from "forge-std/console.sol";
-import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import { BaseTest } from "../BaseTest.sol";
 import { GasReporter } from "@latticexyz/gas-report/src/GasReporter.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
-contract LevelsTest is MudTest, GasReporter {
-  IWorld world;
-  address internal alice;
-  address internal bob;
-  GameConfigData gameConfig;
+contract LevelsTest is BaseTest, GasReporter {
   bytes32 playerEntity;
   bytes32 inletEntity;
   bytes32 outletEntity;
@@ -31,10 +26,6 @@ contract LevelsTest is MudTest, GasReporter {
 
   function setUp() public override {
     super.setUp();
-    world = IWorld(worldAddress);
-    gameConfig = GameConfig.get();
-    alice = address(111);
-    bob = address(222);
 
     vm.startPrank(alice);
 

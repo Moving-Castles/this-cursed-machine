@@ -1,18 +1,12 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { IWorld } from "../../src/codegen/world/IWorld.sol";
-import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
 
-contract ResolveSystemTest is MudTest {
-  IWorld world;
-  address internal alice;
-  address internal bob;
-  GameConfigData gameConfig;
-
+contract ResolveSystemTest is BaseTest {
   function logMaterials(bytes32[][] memory _materials) internal view {
     for (uint i = 0; i < _materials.length; i++) {
       console.log("MaterialType");
@@ -21,14 +15,6 @@ contract ResolveSystemTest is MudTest {
       console.log(Amount.get(_materials[i][0]));
       console.log("-------");
     }
-  }
-
-  function setUp() public override {
-    super.setUp();
-    world = IWorld(worldAddress);
-    gameConfig = GameConfig.get();
-    alice = address(111);
-    bob = address(222);
   }
 
   function testEnergyTickDown() public {
