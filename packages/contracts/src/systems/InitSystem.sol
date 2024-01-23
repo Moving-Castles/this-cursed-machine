@@ -11,11 +11,11 @@ contract InitSystem is System {
    * @notice Initializes the game configuration and creates initial level definitions.
    * @dev Ensure that the system is not initialized more than once by checking the 'coolDown' in GameConfig.
    */
-  function init() public {
+  function init(address tokenAddress) public {
     require(GameConfig.get().coolDown == 0, "InitSystem: already initialized");
 
     // Set game config
-    GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0 }));
+    GameConfig.set(GameConfigData({ coolDown: 1, connectionCost: 0, buildCost: 0, tokenAddress: tokenAddress }));
 
     // Create warehouse
     bytes32 warehouseEntity = LibUtils.getRandomKey();

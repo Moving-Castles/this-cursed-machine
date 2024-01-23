@@ -38,6 +38,7 @@ export default mudConfig({
                 coolDown: "uint32",
                 connectionCost: "uint32",
                 buildCost: "uint32",
+                tokenAddress: "address",
             },
             dataStruct: true,
         },

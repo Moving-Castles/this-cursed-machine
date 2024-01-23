@@ -26,13 +26,14 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GameConfigTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x000c030004040400000000000000000000000000000000000000000000000000
+  0x0020040004040414000000000000000000000000000000000000000000000000
 );
 
 struct GameConfigData {
   uint32 coolDown;
   uint32 connectionCost;
   uint32 buildCost;
+  address tokenAddress;
 }
 
 library GameConfig {
@@ -59,10 +60,11 @@ library GameConfig {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
     _valueSchema[0] = SchemaType.UINT32;
     _valueSchema[1] = SchemaType.UINT32;
     _valueSchema[2] = SchemaType.UINT32;
+    _valueSchema[3] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -80,10 +82,11 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
+    fieldNames = new string[](4);
     fieldNames[0] = "coolDown";
     fieldNames[1] = "connectionCost";
     fieldNames[2] = "buildCost";
+    fieldNames[3] = "tokenAddress";
   }
 
   /**
@@ -215,6 +218,44 @@ library GameConfig {
   }
 
   /**
+   * @notice Get tokenAddress.
+   */
+  function getTokenAddress() internal view returns (address tokenAddress) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Get tokenAddress.
+   */
+  function _getTokenAddress() internal view returns (address tokenAddress) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set tokenAddress.
+   */
+  function setTokenAddress(address tokenAddress) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((tokenAddress)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set tokenAddress.
+   */
+  function _setTokenAddress(address tokenAddress) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((tokenAddress)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -245,8 +286,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
-    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
+  function set(uint32 coolDown, uint32 connectionCost, uint32 buildCost, address tokenAddress) internal {
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost, tokenAddress);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -259,8 +300,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal {
-    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
+  function _set(uint32 coolDown, uint32 connectionCost, uint32 buildCost, address tokenAddress) internal {
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost, tokenAddress);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -274,7 +315,12 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
+    bytes memory _staticData = encodeStatic(
+      _table.coolDown,
+      _table.connectionCost,
+      _table.buildCost,
+      _table.tokenAddress
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -288,7 +334,12 @@ library GameConfig {
    * @notice Set the full data using the data struct.
    */
   function _set(GameConfigData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.coolDown, _table.connectionCost, _table.buildCost);
+    bytes memory _staticData = encodeStatic(
+      _table.coolDown,
+      _table.connectionCost,
+      _table.buildCost,
+      _table.tokenAddress
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -303,12 +354,14 @@ library GameConfig {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (uint32 coolDown, uint32 connectionCost, uint32 buildCost) {
+  ) internal pure returns (uint32 coolDown, uint32 connectionCost, uint32 buildCost, address tokenAddress) {
     coolDown = (uint32(Bytes.slice4(_blob, 0)));
 
     connectionCost = (uint32(Bytes.slice4(_blob, 4)));
 
     buildCost = (uint32(Bytes.slice4(_blob, 8)));
+
+    tokenAddress = (address(Bytes.slice20(_blob, 12)));
   }
 
   /**
@@ -322,7 +375,7 @@ library GameConfig {
     PackedCounter,
     bytes memory
   ) internal pure returns (GameConfigData memory _table) {
-    (_table.coolDown, _table.connectionCost, _table.buildCost) = decodeStatic(_staticData);
+    (_table.coolDown, _table.connectionCost, _table.buildCost, _table.tokenAddress) = decodeStatic(_staticData);
   }
 
   /**
@@ -347,8 +400,13 @@ library GameConfig {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint32 coolDown, uint32 connectionCost, uint32 buildCost) internal pure returns (bytes memory) {
-    return abi.encodePacked(coolDown, connectionCost, buildCost);
+  function encodeStatic(
+    uint32 coolDown,
+    uint32 connectionCost,
+    uint32 buildCost,
+    address tokenAddress
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(coolDown, connectionCost, buildCost, tokenAddress);
   }
 
   /**
@@ -360,9 +418,10 @@ library GameConfig {
   function encode(
     uint32 coolDown,
     uint32 connectionCost,
-    uint32 buildCost
+    uint32 buildCost,
+    address tokenAddress
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost);
+    bytes memory _staticData = encodeStatic(coolDown, connectionCost, buildCost, tokenAddress);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
