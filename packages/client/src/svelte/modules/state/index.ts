@@ -51,6 +51,7 @@ export const warehouse = derived(entities, $entities => filterByEntitytype($enti
 export const pods = derived(entities, $entities => filterByEntitytype($entities, EntityType.POD) as Pods)
 export const materials = derived(entities, $entities => filterByEntitytype($entities, EntityType.MATERIAL) as Materials)
 export const machines = derived(entities, $entities => filterByEntitytype($entities, EntityType.MACHINE) as Machines)
+export const storages = derived(entities, $entities => filterByEntitytype($entities, EntityType.STORAGE) as Storages)
 export const players = derived(entities, $entities => filterByMachinetype($entities, MachineType.PLAYER) as Players)
 
 // * * * * * * * * * * * * * * * * *

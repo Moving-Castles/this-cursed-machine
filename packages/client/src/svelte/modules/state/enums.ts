@@ -8,6 +8,7 @@ export enum EntityType {
   POD,
   MACHINE,
   MATERIAL,
+  STORAGE
 }
 
 export enum MachineType {

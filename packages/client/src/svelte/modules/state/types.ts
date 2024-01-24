@@ -26,11 +26,15 @@ declare global {
     output?: MaterialType
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
+    storageConnection?: string
     machinesInPod?: string[]
     materialsInPod?: string[]
+    storageInPod?: string[]
     LevelStartBlock?: number
     completionTimes?: number[]
     gameConfig?: GameConfig
+    outletEntity?: string
+    inletEntity?: string
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -79,6 +83,9 @@ declare global {
     lastResolved: number
     machinesInPod: string[]
     materialsInPod: string[]
+    storageInPod: string[]
+    outletEntity: string
+    inletEntity: string
   }
 
   // aka. stump (fka. core)
@@ -104,6 +111,7 @@ declare global {
     buildIndex: number
     incomingConnections: string[]
     outgoingConnections: string[]
+    storageConnection?: string // Only on inlet and outlet
   }
 
   type Material = {
@@ -113,6 +121,14 @@ declare global {
     createdBy: string
     materialType: MaterialType
     amount: number
+  }
+
+  type Storage = {
+    entityType: EntityType.STORAGE,
+    carriedBy: string
+    amount: number
+    materialType: MaterialType
+    storageConnection: string
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -149,6 +165,10 @@ declare global {
 
   type Materials = {
     [index: string]: Material
+  }
+
+  type Storages = {
+    [index: string]: Storages
   }
 
   // * * * * * * * * * * * * * * * * *

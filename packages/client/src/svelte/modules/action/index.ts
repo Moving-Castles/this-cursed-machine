@@ -12,6 +12,9 @@ export enum WorldFunctions {
   Destroy = "destroy",
   Resolve = "resolve",
   Name = "name",
+  ConnectStorage = "connectStorage",
+  DisconnectStorage = "disconnectStorage",
+  ClearStorage = "clearStorage",
 }
 
 // --- API --------------------------------------------------------------
@@ -62,4 +65,19 @@ export function resolve() {
 
 export function name(name: string) {
   return addToSequencer(WorldFunctions.Name, [name])
+}
+
+export function connectStorage(storageEntity: string, machineType: MachineType.INLET | MachineType.OUTLET) {
+  return addToSequencer(WorldFunctions.ConnectStorage, [
+    storageEntity,
+    machineType
+  ])
+}
+
+export function disconnectStorage(machineType: MachineType.INLET | MachineType.OUTLET) {
+  return addToSequencer(WorldFunctions.DisconnectStorage, [machineType])
+}
+
+export function clearStorage(storageEntity: string) {
+  return addToSequencer(WorldFunctions.ClearStorage, [storageEntity])
 }

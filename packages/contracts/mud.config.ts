@@ -1,7 +1,7 @@
 import { mudConfig, resolveTableId } from "@latticexyz/world/register";
 
 export const enums = {
-    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "LEVEL", "GOAL", "WAREHOUSE", "POD", "MACHINE", "MATERIAL"],
+    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "LEVEL", "GOAL", "WAREHOUSE", "POD", "MACHINE", "MATERIAL", "STORAGE"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "PLAYER", "SPLITTER", "MIXER", "DRYER", "WETTER", "BOILER", "COOLER"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "SLUDGE", "DIRT", "BLOOD_LIPIDS", "PLANT", "CAFFEINE_SLUSHY", "CLUB_MATE", "DIET_RED_BULL", "PRIME", "M150", "FIVE_HOUR_ENERGY", "MONSTER", "E_LIQUID", "TOBACCO", "CIGARETTE_JUICE", "ERASERBABY"],
     PORT_INDEX: ["FIRST", "SECOND"]
@@ -28,11 +28,14 @@ export default mudConfig({
         Output: "MATERIAL_TYPE",
         OutgoingConnections: "bytes32[]",
         IncomingConnections: "bytes32[]",
+        StorageConnection: "bytes32",
         MachinesInPod: "bytes32[]",
         MaterialsInPod: "bytes32[]",
+        StorageInPod: "bytes32[]",
         CompletionTimes: "uint256[]",
         LevelStartBlock: "uint256",
         OutletEntity: "bytes32",
+        InletEntity: "bytes32",
         GameConfig: {
             keySchema: {},
             valueSchema: {

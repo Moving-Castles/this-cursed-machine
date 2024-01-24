@@ -11,3 +11,4 @@ import { LibLevel } from "./LibLevel.sol";
 import { LibRecipe } from "./LibRecipe.sol";
 import { LibGoal } from "./LibGoal.sol";
 import { LibMaterial } from "./LibMaterial.sol";
+import { LibStorage } from "./LibStorage.sol";

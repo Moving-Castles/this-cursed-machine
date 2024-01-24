@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity } from "../codegen/index.sol";
+import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity, InletEntity, StorageInPod } from "../codegen/index.sol";
 import { MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity } from "../libraries/Libraries.sol";
+import { LibUtils, LibPod, LibEntity, LibStorage } from "../libraries/Libraries.sol";
 
 contract RestartSystem is System {
   /**
@@ -23,10 +23,18 @@ contract RestartSystem is System {
     // Create pod
     bytes32 podEntity = LibPod.create();
 
+    // Create storage
+    bytes32[] memory storageInPod = new bytes32[](2);
+    storageInPod[0] = LibStorage.create(podEntity);
+    storageInPod[1] = LibStorage.create(podEntity);
+    StorageInPod.set(podEntity, storageInPod);
+
     // Create Inlet
     bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
     CarriedBy.set(inletEntity, podEntity);
     MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), inletEntity));
+    // Save inlet entity
+    InletEntity.set(podEntity, inletEntity);
 
     // Place player in pod
     CarriedBy.set(playerEntity, podEntity);

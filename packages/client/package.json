@@ -24,14 +24,14 @@
     "wait-port": "^1.1.0"
   },
   "dependencies": {
-    "@latticexyz/common": "2.0.0-main-c642ff3a",
-    "@latticexyz/dev-tools": "2.0.0-main-c642ff3a",
-    "@latticexyz/recs": "2.0.0-main-c642ff3a",
-    "@latticexyz/schema-type": "2.0.0-main-c642ff3a",
-    "@latticexyz/services": "2.0.0-main-c642ff3a",
-    "@latticexyz/store-sync": "2.0.0-main-c642ff3a",
-    "@latticexyz/utils": "2.0.0-main-c642ff3a",
-    "@latticexyz/world": "2.0.0-main-c642ff3a",
+    "@latticexyz/common": "2.0.0-main-c40dfb75",
+    "@latticexyz/dev-tools": "2.0.0-main-c40dfb75",
+    "@latticexyz/recs": "2.0.0-main-c40dfb75",
+    "@latticexyz/schema-type": "2.0.0-main-c40dfb75",
+    "@latticexyz/services": "2.0.0-main-c40dfb75",
+    "@latticexyz/store-sync": "2.0.0-main-c40dfb75",
+    "@latticexyz/utils": "2.0.0-main-c40dfb75",
+    "@latticexyz/world": "2.0.0-main-c40dfb75",
     "@rainbow-me/rainbowkit": "^1.3.3",
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.11.1",
@@ -50,6 +50,6 @@
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
     "viem": "1.14.0",
-    "wagmi": "^2.5.0"
+    "wagmi": "^2.5.1"
   }
 }

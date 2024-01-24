@@ -8,13 +8,13 @@ import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../src/
 
 contract ResolveSystemTest is BaseTest {
   function logMaterials(bytes32[][] memory _materials) internal view {
-    for (uint i = 0; i < _materials.length; i++) {
-      console.log("MaterialType");
-      console.log(uint8(MaterialType.get(_materials[i][0])));
-      console.log("Amount");
-      console.log(Amount.get(_materials[i][0]));
-      console.log("-------");
-    }
+    // for (uint i = 0; i < _materials.length; i++) {
+    //   console.log("MaterialType");
+    //   console.log(uint8(MaterialType.get(_materials[i][0])));
+    //   console.log("Amount");
+    //   console.log(Amount.get(_materials[i][0]));
+    //   console.log("-------");
+    // }
   }
 
   function testEnergyTickDown() public {

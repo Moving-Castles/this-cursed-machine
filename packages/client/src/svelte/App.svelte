@@ -17,6 +17,8 @@
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
+  import { storages } from "./modules/state"
+
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import TerminalBox from "./components/Box/TerminalBox.svelte"
@@ -29,6 +31,8 @@
     $mouseX = e.clientX
     $mouseY = e.clientY
   }
+
+  $: console.log("$storages", $storages)
 
   let introSound: Howl | undefined
 
