@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, Energy, OutgoingConnections, MachinesInPod } from "../codegen/index.sol";
+import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, Energy, OutgoingConnections, MachinesInPod, StorageConnection } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibPod, LibMachine } from "./Libraries.sol";
+import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
 library LibNetwork {
@@ -56,9 +56,18 @@ library LibNetwork {
         // Skip if node is already resolved
         if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
 
-        // If the machine is an inlet, provide it with bugs as input.
+        // If the machine is an inlet, get material from connected storage
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          inputs[inputsCount] = Product({ machineId: node, materialType: MATERIAL_TYPE.BUG, amount: 100 });
+          // Get connected storage
+          bytes32 storageEntity = StorageConnection.get(node);
+          // Abort if not connected
+          if (storageEntity == bytes32(0)) return;
+          // Currently have a rate of 100 units per block
+          inputs[inputsCount] = Product({
+            machineId: node,
+            materialType: MaterialType.get(storageEntity),
+            amount: 100
+          });
           inputsCount++;
         }
 
@@ -89,12 +98,15 @@ library LibNetwork {
         resolvedNodes[resolvedCount] = node;
         resolvedCount += 1;
 
-        // If the machine is an outlet, write to chain
+        // If the machine is an outlet, write to storage
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
-          for (uint k; k < currentOutputs.length; k++) {
-            if (currentOutputs[k].materialType == MATERIAL_TYPE.NONE) continue;
-            LibPod.writeOutput(podEntity, blocksSinceLastResolution, currentOutputs[k]);
-          }
+          // Abort if not connected
+          bytes32 storageEntity = StorageConnection.get(node);
+          if (storageEntity == bytes32(0)) return;
+          // Continue if no output
+          if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+          // Write to storage
+          LibStorage.writeToStorage(storageEntity, blocksSinceLastResolution, currentOutputs[0]);
         }
 
         // Get outgoing connections from the machine

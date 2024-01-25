@@ -87,39 +87,6 @@ library LibPod {
   }
 
   /**
-   * @dev Writes the final output(s) to various components.
-   *
-   * The function initializes a new material entity, sets its various attributes,
-   * scales the amount by the number of blocks since the last resolution, and
-   * performs various other write operations related to the output.
-   *
-   * @param _podEntity The entity identifier in which the material is carried.
-   * @param _blocksSinceLastResolution The number of blocks passed since the last resolution.
-   * @param _output A Product struct containing details about the material output (e.g., type and amount).
-   *
-   * Requirements:
-   * - `_blocksSinceLastResolution` should be greater than or equal to 0.
-   * - `_output.amount` must be scaled safely without overflow.
-   *
-   * Note: The actual implementation might need some checks and validations.
-   */
-  function writeOutput(bytes32 _podEntity, uint256 _blocksSinceLastResolution, Product memory _output) internal {
-    // Scale by number of blocks since last resolution
-    uint32 scaledAmount = _output.amount * uint32(_blocksSinceLastResolution);
-    // Check if there alreads is a material of the same type in the pod
-    // @todo replace query with iterating over MaterialsInPod
-    bytes32 materialEntity = getMaterialOfTypeByPod(_podEntity, _output.materialType);
-    // If yes, add new amount to it
-    if (materialEntity != bytes32(0)) {
-      Amount.set(materialEntity, Amount.get(materialEntity) + scaledAmount);
-    } else {
-      // If no, create new material
-      materialEntity = LibMaterial.create(_output.materialType, scaledAmount, _podEntity, bytes32(0));
-      MaterialsInPod.set(_podEntity, LibUtils.addToArray(MaterialsInPod.get(_podEntity), materialEntity));
-    }
-  }
-
-  /**
    * @dev Fetches or creates a build index entity based on the specified pod entity and machine type.
    *
    * Function first queries the existing build index entities based on provided parameters. If there's an existing
