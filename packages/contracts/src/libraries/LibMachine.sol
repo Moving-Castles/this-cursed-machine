@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { Energy, MachineType, MaterialType } from "../codegen/index.sol";
+import { MachineType, MaterialType } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibRecipe } from "./LibRecipe.sol";
@@ -12,20 +12,16 @@ library LibMachine {
    * @notice Processes products based on the specified machine type and returns the resultant products.
    * @param _machineType The type of the machine to process the products.
    * @param _inputs An array of products to be processed.
-   * @param _entity The identifier of the entity associated with the process.
-   * @param blocksSinceLastResolution The number of blocks since the last network resolution.
    * @return _output An array of resultant products after processing.
    * @dev Supports various machine types like PLAYER, SPLITTER, MIXER, etc., each leading to a distinct processing pathway.
    */
   function process(
     MACHINE_TYPE _machineType,
-    Product[] memory _inputs,
-    bytes32 _entity,
-    uint256 blocksSinceLastResolution
-  ) internal returns (Product[] memory _output) {
+    Product[] memory _inputs
+  ) internal view returns (Product[] memory _output) {
     // player
     if (_machineType == MACHINE_TYPE.PLAYER) {
-      return player(_inputs[0], _entity, blocksSinceLastResolution);
+      return player(_inputs[0]);
     }
     // Splitter
     else if (_machineType == MACHINE_TYPE.SPLITTER) {
@@ -45,29 +41,16 @@ library LibMachine {
   }
 
   /**
-   * @dev Processes input products, updates player energy, and generates new products.
-   *
-   * The function takes input products and, if a BUG type material is present, it will increase
-   * the energy of the `_playerEntity` and produce PISS and BLOOD products as output, each having
-   * half the amount of the input BUG product.
+   * @dev Processes input products
    *
    * @param _input Product to be processed.
-   * @param _playerEntity The entity of the player whose energy is to be manipulated.
-   * @param blocksSinceLastResolution The number of blocks since the last energy resolution.
    * @return _outputs An array of products output by the player machine.
    */
-  function player(
-    Product memory _input,
-    bytes32 _playerEntity,
-    uint256 blocksSinceLastResolution
-  ) internal returns (Product[] memory _outputs) {
+  function player(Product memory _input) internal pure returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
 
     // Abort if input is not bug
     if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
-
-    // Update player energy (2 per block)
-    Energy.set(_playerEntity, Energy.get(_playerEntity) + 2 * uint32(blocksSinceLastResolution));
 
     // Output Piss
     outputs[0] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.PISS, amount: _input.amount / 2 });

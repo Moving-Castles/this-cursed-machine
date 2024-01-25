@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, GameConfigData, Energy, CarriedBy, EntityType, MachinesInPod, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, CarriedBy, EntityType, MachinesInPod, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibEntity, LibNetwork } from "../libraries/Libraries.sol";
 

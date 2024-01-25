@@ -4,7 +4,6 @@
   import { playSound } from "../../modules/sound"
 
   import { showLevelModal, showMap } from "../../modules/ui/stores"
-  import { simulatedPlayerEnergy } from "../../modules/simulator"
 
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
@@ -17,10 +16,6 @@
   const dispatch = createEventDispatcher()
 
   let terminalComponent: any
-
-  $: if ($playerEntity && $simulatedPlayerEnergy === 0) {
-    dispatch("dead")
-  }
 
   // Levels are done, show the dashboard
   $: if ($playerEntity.level > Object.keys($levels).length) {

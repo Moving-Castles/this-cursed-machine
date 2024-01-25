@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { goals } from "../../state"
 import { MaterialType } from "../../state/enums"
-import { simulatedPlayerEnergy, podOutput } from ".."
+import { podOutput } from ".."
 
 /**
  * Checks if all player level goals have been met.
@@ -21,11 +21,6 @@ export function checkLevelGoals(level: number): boolean {
   const achieved = currentGoals.map(goal => {
 
     // console.log('goal', goal)
-
-    // MaterialType.NONE => energy check
-    if (goal.materialType === MaterialType.NONE) {
-      return get(simulatedPlayerEnergy) >= goal.amount
-    }
 
     const pooledMaterialAmount = get(podOutput)[goal.materialType]
 

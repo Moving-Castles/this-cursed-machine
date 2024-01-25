@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, Energy, OutgoingConnections, MachinesInPod, StorageConnection } from "../codegen/index.sol";
+import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
@@ -24,9 +24,6 @@ library LibNetwork {
 
     // Blocks since last resolution
     uint256 blocksSinceLastResolution = block.number - LastResolved.get(podEntity);
-
-    // Tick down energy for player in pod (1 per block)
-    tickDownEnergy(_playerEntity, blocksSinceLastResolution);
 
     // Counter for the number of iterations over the network
     uint32 counter;
@@ -92,7 +89,7 @@ library LibNetwork {
 
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = new Product[](2);
-        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs, node, blocksSinceLastResolution);
+        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
 
         // Mark as resolved
         resolvedNodes[resolvedCount] = node;
@@ -134,22 +131,5 @@ library LibNetwork {
 
     // Set LastResolved on pod entity
     LastResolved.set(podEntity, block.number);
-  }
-
-  /**
-   * @dev Reduces the energy of the player in a given pod entity based on elapsed blocks.
-   * Ticks down the energy of the player contained in a specific pod entity. The energy
-   * is reduced by an amount equivalent to `_blocksSinceLastResolution`. If reducing
-   * the energy by this amount would result in negative energy, the energy is set to zero.
-   * @param _playerEntity The entity identifier of the player machine in the pod.
-   * @param _blocksSinceLastResolution The number of blocks since the last resolution, indicating the amount to reduce the player’s energy by.
-   */
-  function tickDownEnergy(bytes32 _playerEntity, uint256 _blocksSinceLastResolution) internal {
-    uint32 currentEnergy = Energy.get(_playerEntity);
-    if (currentEnergy < uint32(_blocksSinceLastResolution)) {
-      Energy.set(_playerEntity, 0);
-    } else {
-      Energy.set(_playerEntity, currentEnergy - uint32(_blocksSinceLastResolution));
-    }
   }
 }

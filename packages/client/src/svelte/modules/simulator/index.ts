@@ -31,11 +31,6 @@ export const patches = writable({} as SimulatedEntities)
 export const localResolved = writable(0)
 
 /**
- * Set depending on whether the player is connected to the inlet.
- */
-export const playerEnergyMod: Writable<1 | -1> = writable(-1)
-
-/**
  * Current block number - lastResolved
  */
 export const blocksSinceLastResolution = derived(
@@ -252,17 +247,5 @@ export const podOutput = derived(
     }
 
     return result
-  }
-)
-
-// --- MISC ----------------------------------------------
-
-export const simulatedPlayerEnergy = derived(
-  [simulatedPlayerEntity, playerEnergyMod, blocksSinceLastResolution],
-  ([$simulatedPlayerEntity, $playerEnergyMod, $blocksSinceLastResolution]) => {
-    return capAtZero(
-      ($simulatedPlayerEntity?.energy || 0) +
-      $playerEnergyMod * $blocksSinceLastResolution
-    )
   }
 )

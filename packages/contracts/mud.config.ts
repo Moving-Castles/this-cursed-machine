@@ -15,7 +15,6 @@ export default mudConfig({
         MachineType: "MACHINE_TYPE",
         MaterialType: "MATERIAL_TYPE",
         Name: "string",
-        Energy: "uint32",
         CarriedBy: "bytes32",
         CreatedBy: "bytes32",
         Amount: "uint32",

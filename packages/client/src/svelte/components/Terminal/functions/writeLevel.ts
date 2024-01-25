@@ -94,7 +94,7 @@ export const writeLevel = async (level: number, short: boolean = false) => {
 
     const currentGoals = get(playerGoals)
     for (let i = 0; i < currentGoals.length; i++) {
-        await writeGoal(`${currentGoals[i].materialType === MaterialType.NONE ? "Energy" : MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
+        await writeGoal(`${MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
     }
 
     if (level === 1 && !short) {

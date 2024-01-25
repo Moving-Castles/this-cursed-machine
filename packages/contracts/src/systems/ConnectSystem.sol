@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Energy, EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
+import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../libraries/Libraries.sol";
 
@@ -20,9 +20,6 @@ contract ConnectSystem is System {
 
     // Resolve network
     LibNetwork.resolve(playerEntity);
-
-    // Check energy after resolving network
-    // require(Energy.get(playerEntity) >= GameConfig.get().connectionCost, "insufficient energy");
 
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToWrite = _portIndex == PORT_INDEX.FIRST ? 0 : 1;
@@ -53,8 +50,5 @@ contract ConnectSystem is System {
 
     // Set the updated array for incoming connections
     IncomingConnections.set(_targetMachine, incomingConnections);
-
-    // Deduct energy
-    // Energy.set(playerEntity, Energy.get(playerEntity) - GameConfig.get().connectionCost);
   }
 }

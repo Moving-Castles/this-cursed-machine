@@ -4,7 +4,6 @@ import { machinesInPlayerPod } from "../../state"
 import { process } from "./machines"
 import type { Product, SimulatedEntities } from "../types"
 import { deepClone } from "../../utils/misc"
-import { playerEnergyMod } from ".."
 
 /**
  * Resolves the state of a given pod entity.
@@ -74,13 +73,7 @@ export function resolve(_podEntity: string) {
       // }
 
       // Skip if node has no input
-      if (currentInputs.length === 0) {
-        if (machine.machineType === MachineType.PLAYER) {
-          // If machine is a player, set energy modifier to -1
-          playerEnergyMod.set(-1)
-        }
-        return
-      }
+      if (currentInputs.length === 0) return
 
       // If this is a mixer and it has less than two inputs:
       // skip without marking as resolved to avoid missing the second input

@@ -17,58 +17,6 @@ contract ResolveSystemTest is BaseTest {
     // }
   }
 
-  function testEnergyTickDown() public {
-    setUp();
-
-    vm.startPrank(alice);
-
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.restart();
-
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
-
-    // Resolve
-    world.resolve();
-
-    vm.stopPrank();
-
-    // Energy should be 100 - 10 = 90
-    assertEq(uint8(Energy.get(playerEntity)), 90);
-  }
-
-  function testBugsToEnergy() public {
-    setUp();
-
-    vm.startPrank(alice);
-
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.restart();
-
-    // Get inlet entity
-    bytes32[][] memory inletEntities = LibPod.getMachinesOfTypeByPod(CarriedBy.get(playerEntity), MACHINE_TYPE.INLET);
-    bytes32 inletEntity = inletEntities[0][0];
-
-    // Connect inlet to player
-    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
-
-    // Wait 100 blocks
-    vm.roll(block.number + 40);
-
-    // Resolve
-    world.resolve();
-
-    vm.stopPrank();
-
-    // Starting energy: 100
-    // Connection cost : 0
-    // 40 blocks: 40 bugs => 40 energy
-    // == 140 energy
-    assertEq(uint8(Energy.get(playerEntity)), 140);
-  }
-
   function testMakePiss() public {
     setUp();
 

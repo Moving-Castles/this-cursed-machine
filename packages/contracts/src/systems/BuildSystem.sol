@@ -1,25 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Energy, CarriedBy, BuildIndex, MachinesInPod } from "../codegen/index.sol";
+import { CarriedBy, BuildIndex, MachinesInPod } from "../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibEntity, LibNetwork, LibPod } from "../libraries/Libraries.sol";
 
 contract BuildSystem is System {
   /**
-   * @notice Creates a new machine entity and configures its ports and energy.
+   * @notice Creates a new machine entity and configures its ports
    * @param _machineType The type of machine to build, specified by the MACHINE_TYPE enum.
    * @return machineEntity The identifier for the newly created machine entity.
    */
   function build(MACHINE_TYPE _machineType) public returns (bytes32) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
-
-    // Resolve network
-    // LibNetwork.resolve(playerEntity);
-
-    // Check energy after resolving network
-    // require(Energy.get(playerEntity) >= gameConfig.buildCost, "insufficient energy");
 
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);
@@ -43,9 +37,6 @@ contract BuildSystem is System {
 
     // Set global build index
     BuildIndex.set(buildIndexEntity, newBuildIndex);
-
-    // Deduct energy
-    // Energy.set(playerEntity, Energy.get(playerEntity) - gameConfig.buildCost);
 
     return machineEntity;
   }

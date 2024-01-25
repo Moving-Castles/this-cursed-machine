@@ -21,7 +21,6 @@ const materialInformation = {
   BLOOD: "Bluten Orangen got nothing on us. Easy to spill.",
   SLUDGE: "Thick, dirty smudging dredge.",
   DIRT: "Salt of the earth. Crushed, like ground up dreams.",
-  ENERGY: "You have it, it makes you more productive.",
   PLANT: "Haven't seen those in a while",
   CAFFEINE_SLUSHY: "... .,.. . .. Google won't tell me",
   CLUB_MATE:
@@ -50,7 +49,6 @@ const materialImages = {
   BLOOD: "",
   SLUDGE: "",
   DIRT: "",
-  ENERGY: "",
   PLANT: "",
   CAFFEINE_SLUSHY: "",
   CLUB_MATE: "",

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity, InletEntity, StorageInPod, MaterialType, Amount } from "../codegen/index.sol";
+import { Level, CarriedBy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity, InletEntity, StorageInPod, MaterialType, Amount } from "../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibStorage } from "../libraries/Libraries.sol";
 
@@ -9,16 +9,12 @@ contract RestartSystem is System {
   /**
    * @notice Restarts and reconfigures the player entity, setting it back to level 1 and rearranging associated entities within a new pod.
    * @return podEntity The identifier of the newly created pod entity.
-   * @dev Ensure dynamic energy setting based on level and implement the deletion of the old pod in future versions.
    */
   function restart() public returns (bytes32) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // Go to level 1
     Level.set(playerEntity, 1);
-
-    // Set initial energy
-    Energy.set(playerEntity, 100);
 
     // Create pod
     bytes32 podEntity = LibPod.create();

@@ -24,39 +24,15 @@ contract InitSystem is System {
     EntityType.set(warehouseEntity, ENTITY_TYPE.WAREHOUSE);
 
     // Create levels
-    LevelDefinition[7] memory levels = [
-      LevelDefinition({ level: 1, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 2, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 3, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 4, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 5, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 6, initialPlayerEnergy: 100 }),
-      LevelDefinition({ level: 7, initialPlayerEnergy: 100 })
-    ];
+    LevelDefinition[2] memory levels = [LevelDefinition({ level: 1 }), LevelDefinition({ level: 2 })];
 
     for (uint256 i = 0; i < levels.length; i++) {
       LibLevel.create(levels[i]);
     }
 
     // Create goals for levels
-    // ** 1 (MATERIAL_TYPE.NONE => Player energy check)
-    LibGoal.create(1, MATERIAL_TYPE.NONE, 101);
+    LibGoal.create(1, MATERIAL_TYPE.PISS, 1000);
     // ** 2
-    LibGoal.create(2, MATERIAL_TYPE.PISS, 1000);
     LibGoal.create(2, MATERIAL_TYPE.BLOOD, 1000);
-    // ** 3
-    LibGoal.create(3, MATERIAL_TYPE.CAFFEINE_SLUSHY, 1000);
-    LibGoal.create(3, MATERIAL_TYPE.CLUB_MATE, 1000);
-    // ** 4
-    LibGoal.create(4, MATERIAL_TYPE.MONSTER, 1000);
-    LibGoal.create(4, MATERIAL_TYPE.PRIME, 1000);
-    // ** 5
-    LibGoal.create(5, MATERIAL_TYPE.PLANT, 1000);
-    LibGoal.create(5, MATERIAL_TYPE.SLUDGE, 1000);
-    // ** 6
-    LibGoal.create(6, MATERIAL_TYPE.CIGARETTE_JUICE, 1000);
-    LibGoal.create(6, MATERIAL_TYPE.M150, 1000);
-    // ** 7
-    LibGoal.create(7, MATERIAL_TYPE.ERASERBABY, 1000);
   }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { EntityType, EntityTypeTableId, Level, LevelTableId, MaterialType, Amount, CarriedBy, Energy } from "../codegen/index.sol";
+import { EntityType, EntityTypeTableId, Level, LevelTableId, MaterialType, Amount, CarriedBy } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { LibPod } from "./LibPod.sol";
@@ -29,8 +29,7 @@ library LibGoal {
    * @notice Determines whether all goals related to a player entity have been achieved.
    * @dev Iteratively checks through all goal-related materials and amounts to verify whether
    *      they meet or exceed specified requirements. Also retrieves goals based on the level
-   *      associated with the pod entity carrying the player entity. Current implementation
-   *      doesn't check for player energy sufficiency.
+   *      associated with the pod entity carrying the player entity.
    * @param _playerEntity The entity identifier used to retrieve related goals and verify their achievement status.
    * @return A boolean value: true if all goals are achieved, otherwise false.
    */
@@ -41,12 +40,6 @@ library LibGoal {
     // Iterate over goals
     for (uint i; i < goals.length; i++) {
       MATERIAL_TYPE materialType = MaterialType.get(goals[i][0]);
-
-      // If MATERIAL_TYPE.NONE it is a player energy check
-      if (materialType == MATERIAL_TYPE.NONE) {
-        if (Energy.get(_playerEntity) < Amount.get(goals[i][0])) return false;
-        continue;
-      }
 
       // Check if require materials are produced
       bytes32 material = LibPod.getMaterialOfTypeByPod(CarriedBy.get(_playerEntity), materialType);

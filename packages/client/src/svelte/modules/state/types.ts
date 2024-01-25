@@ -13,7 +13,6 @@ declare global {
     machineType?: MachineType
     materialType?: MaterialType
     name?: string
-    energy?: number
     carriedBy?: string
     createdBy?: string
     amount?: number
@@ -52,7 +51,6 @@ declare global {
   type Level = {
     entityType: EntityType.LEVEL
     level: number
-    energy: number
   }
 
   type Recipe = {
@@ -95,7 +93,6 @@ declare global {
     creationBlock: number
     spawnIndex: number
     name?: string
-    energy: number
     level: number
     carriedBy: string
     incomingConnections: string[]

@@ -3,7 +3,6 @@ import { recipes } from "../../state"
 import { MachineType, MaterialType } from "../../state/enums"
 import type { Product } from "../types"
 import { deepClone, getUniqueIdentifier } from "../../utils/misc"
-import { playerEnergyMod } from ".."
 
 const EMPTY_PRODUCT: Product = {
   machineId: "",
@@ -56,16 +55,6 @@ function player(inputs: Product[]): Product[] {
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
 
   const input = inputs[0]
-
-  if (!input || input.materialType !== MaterialType.BUG) {
-    // Set energy modifier
-    playerEnergyMod.set(-1)
-    return outputs
-  } else {
-    // Set energy modifier
-    // @todo scale based on amount of bugs
-    playerEnergyMod.set(1)
-  }
 
   const halfAmount = Number(input.amount) / 2
 

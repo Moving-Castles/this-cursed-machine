@@ -48,7 +48,6 @@
   --BLOOD: #ff3333;
   --SLUDGE: #b1ab02;
   --DIRT: #c27800;
-  --ENERGY: #00c224;
   --PLANT: #00c224;
   --CAFFEINE_SLUSHY: #e0bf00;
   --CLUB_MATE: #e0bf00;
@@ -114,9 +113,8 @@
   color: var(--DIRT);
 }
 
-.ENERGY,
 .PLANT {
-  color: var(--ENERGY);
+  color: var(--PLANT);
 }
 
 .CAFFEINE_SLUSHY,

@@ -7,7 +7,6 @@ import { EntityType, EntityTypeTableId } from "./tables/EntityType.sol";
 import { MachineType, MachineTypeTableId } from "./tables/MachineType.sol";
 import { MaterialType, MaterialTypeTableId } from "./tables/MaterialType.sol";
 import { Name, NameTableId } from "./tables/Name.sol";
-import { Energy, EnergyTableId } from "./tables/Energy.sol";
 import { CarriedBy, CarriedByTableId } from "./tables/CarriedBy.sol";
 import { CreatedBy, CreatedByTableId } from "./tables/CreatedBy.sol";
 import { Amount, AmountTableId } from "./tables/Amount.sol";
