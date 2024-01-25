@@ -123,7 +123,7 @@ declare global {
     amount: number
   }
 
-  type Storage = {
+  type Store = {
     entityType: EntityType.STORAGE,
     carriedBy: string
     amount: number
@@ -168,7 +168,7 @@ declare global {
   }
 
   type Storages = {
-    [index: string]: Storages
+    [index: string]: Store
   }
 
   // * * * * * * * * * * * * * * * * *

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity, InletEntity, StorageInPod } from "../codegen/index.sol";
-import { MACHINE_TYPE } from "../codegen/common.sol";
+import { Level, CarriedBy, Energy, EntityType, CreationBlock, MachinesInPod, LevelStartBlock, OutletEntity, InletEntity, StorageInPod, MaterialType, Amount } from "../codegen/index.sol";
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibStorage } from "../libraries/Libraries.sol";
 
 contract RestartSystem is System {
@@ -24,10 +24,15 @@ contract RestartSystem is System {
     bytes32 podEntity = LibPod.create();
 
     // Create storage
-    bytes32[] memory storageInPod = new bytes32[](2);
+    bytes32[] memory storageInPod = new bytes32[](3);
     storageInPod[0] = LibStorage.create(podEntity);
     storageInPod[1] = LibStorage.create(podEntity);
+    storageInPod[2] = LibStorage.create(podEntity);
     StorageInPod.set(podEntity, storageInPod);
+
+    // Add bugs to storage 1
+    MaterialType.set(storageInPod[0], MATERIAL_TYPE.BUG);
+    Amount.set(storageInPod[0], 10000);
 
     // Create Inlet
     bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);

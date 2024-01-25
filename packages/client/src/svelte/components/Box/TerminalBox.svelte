@@ -3,14 +3,16 @@
   import { playerEntity, levels } from "../../modules/state"
   import { playSound } from "../../modules/sound"
 
+  import { showLevelModal, showMap } from "../../modules/ui/stores"
+  import { simulatedPlayerEnergy } from "../../modules/simulator"
+
   import Terminal from "../Terminal/Terminal.svelte"
   import BoxStats from "../Box/BoxStats.svelte"
   import Graph from "../Graph/Graph.svelte"
   import LevelModal from "../LevelModal/LevelModal.svelte"
   import Tooltips from "../Tooltip/Tooltips.svelte"
   import Map from "../Map/Map.svelte"
-  import { showLevelModal, showMap } from "../../modules/ui/stores"
-  import { simulatedPlayerEnergy } from "../../modules/simulator"
+  import StorageBox from "../Storage/StorageBox.svelte"
 
   const dispatch = createEventDispatcher()
 
@@ -41,6 +43,8 @@
 {#if $showMap}
   <Map />
 {/if}
+
+<StorageBox />
 
 {#if $playerEntity.carriedBy}
   <div class="bg">
