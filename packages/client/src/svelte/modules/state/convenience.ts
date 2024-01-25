@@ -242,9 +242,9 @@ export function machineTypeToLabel(machineType: MachineType | undefined) {
   if (!machineType) return ""
   switch (machineType || MachineType.NONE) {
     case MachineType.INLET:
-      return "BUG DISPENSER"
+      return "INLET"
     case MachineType.OUTLET:
-      return "WAREHOUSE"
+      return "OUTLET"
     case MachineType.PLAYER:
       return "YOU"
     default:

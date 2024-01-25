@@ -28,7 +28,7 @@ contract RestartSystem is System {
 
     // Add bugs to storage 1
     MaterialType.set(storageInPod[0], MATERIAL_TYPE.BUG);
-    Amount.set(storageInPod[0], 10000);
+    Amount.set(storageInPod[0], 1000);
 
     // Create Inlet
     bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);

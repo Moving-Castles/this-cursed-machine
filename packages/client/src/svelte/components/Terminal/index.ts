@@ -48,6 +48,7 @@ export const MULTI_INPUT_COMMANDS = [
 ]
 
 export const FULL_COMMANDS = [
+  COMMAND.SKIP,
   COMMAND.BLINK,
   COMMAND.CLEAR,
   COMMAND.HELP,
@@ -65,81 +66,94 @@ export const FULL_COMMANDS = [
   COMMAND.FAIL
 ]
 
+// export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
+//   0: [
+//     COMMAND.HELP,
+//     COMMAND.BLINK,
+//     COMMAND.SKIP,
+//     // ... Hidden
+//     COMMAND.RESTART,
+//     COMMAND.RESOLVE,
+//     COMMAND.TRANSFER,
+//     COMMAND.COMPLETE,
+//     COMMAND.FAIL
+//   ],
+//   1: [
+//     COMMAND.CONNECT,
+//     COMMAND.DISCONNECT,
+//     COMMAND.HELP,
+//     COMMAND.ORDER,
+//     COMMAND.BLINK,
+//     COMMAND.MAP,
+//     // ... Hidden
+//     COMMAND.RESTART,
+//     COMMAND.RESOLVE,
+//     COMMAND.TRANSFER,
+//     COMMAND.COMPLETE,
+//     COMMAND.FAIL
+//   ],
+//   2: [
+//     COMMAND.CLEAR,
+//     COMMAND.CONNECT,
+//     COMMAND.DISCONNECT,
+//     COMMAND.HELP,
+//     COMMAND.ORDER,
+//     COMMAND.BLINK,
+//     COMMAND.MAP,
+//     // ... Hidden
+//     COMMAND.RESTART,
+//     COMMAND.RESOLVE,
+//     COMMAND.TRANSFER,
+//     COMMAND.COMPLETE,
+//     COMMAND.FAIL
+//   ],
+//   3: [
+//     COMMAND.CLEAR,
+//     COMMAND.CONNECT,
+//     COMMAND.DISCONNECT,
+//     COMMAND.BUILD,
+//     COMMAND.DESTROY,
+//     COMMAND.MAP,
+//     COMMAND.HELP,
+//     COMMAND.ORDER,
+//     COMMAND.BLINK,
+//     // ... Hidden
+//     COMMAND.RESTART,
+//     COMMAND.RESOLVE,
+//     COMMAND.TRANSFER,
+//     COMMAND.COMPLETE,
+//     COMMAND.FAIL
+//   ],
+//   4: [
+//     COMMAND.CLEAR,
+//     COMMAND.CONNECT,
+//     COMMAND.DISCONNECT,
+//     COMMAND.BUILD,
+//     COMMAND.DESTROY,
+//     COMMAND.MAP,
+//     COMMAND.HELP,
+//     COMMAND.ORDER,
+//     COMMAND.BLINK,
+//     // ... Hidden
+//     COMMAND.RESTART,
+//     COMMAND.RESOLVE,
+//     COMMAND.TRANSFER,
+//     COMMAND.COMPLETE,
+//     COMMAND.FAIL
+//   ],
+//   5: FULL_COMMANDS,
+//   6: FULL_COMMANDS,
+//   7: FULL_COMMANDS,
+//   8: [],
+//   9: []
+// }
+
 export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
-  0: [
-    COMMAND.HELP,
-    COMMAND.BLINK,
-    COMMAND.SKIP,
-    // ... Hidden
-    COMMAND.RESTART,
-    COMMAND.RESOLVE,
-    COMMAND.TRANSFER,
-    COMMAND.COMPLETE,
-    COMMAND.FAIL
-  ],
-  1: [
-    COMMAND.CONNECT,
-    COMMAND.DISCONNECT,
-    COMMAND.HELP,
-    COMMAND.ORDER,
-    COMMAND.BLINK,
-    COMMAND.MAP,
-    // ... Hidden
-    COMMAND.RESTART,
-    COMMAND.RESOLVE,
-    COMMAND.TRANSFER,
-    COMMAND.COMPLETE,
-    COMMAND.FAIL
-  ],
-  2: [
-    COMMAND.CLEAR,
-    COMMAND.CONNECT,
-    COMMAND.DISCONNECT,
-    COMMAND.HELP,
-    COMMAND.ORDER,
-    COMMAND.BLINK,
-    COMMAND.MAP,
-    // ... Hidden
-    COMMAND.RESTART,
-    COMMAND.RESOLVE,
-    COMMAND.TRANSFER,
-    COMMAND.COMPLETE,
-    COMMAND.FAIL
-  ],
-  3: [
-    COMMAND.CLEAR,
-    COMMAND.CONNECT,
-    COMMAND.DISCONNECT,
-    COMMAND.BUILD,
-    COMMAND.DESTROY,
-    COMMAND.MAP,
-    COMMAND.HELP,
-    COMMAND.ORDER,
-    COMMAND.BLINK,
-    // ... Hidden
-    COMMAND.RESTART,
-    COMMAND.RESOLVE,
-    COMMAND.TRANSFER,
-    COMMAND.COMPLETE,
-    COMMAND.FAIL
-  ],
-  4: [
-    COMMAND.CLEAR,
-    COMMAND.CONNECT,
-    COMMAND.DISCONNECT,
-    COMMAND.BUILD,
-    COMMAND.DESTROY,
-    COMMAND.MAP,
-    COMMAND.HELP,
-    COMMAND.ORDER,
-    COMMAND.BLINK,
-    // ... Hidden
-    COMMAND.RESTART,
-    COMMAND.RESOLVE,
-    COMMAND.TRANSFER,
-    COMMAND.COMPLETE,
-    COMMAND.FAIL
-  ],
+  0: FULL_COMMANDS,
+  1: FULL_COMMANDS,
+  2: FULL_COMMANDS,
+  3: FULL_COMMANDS,
+  4: FULL_COMMANDS,
   5: FULL_COMMANDS,
   6: FULL_COMMANDS,
   7: FULL_COMMANDS,
@@ -157,25 +171,38 @@ export const FULL_MACHINES = [
 ]
 
 export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
-  0: [],
-  1: [],
-  2: [],
-  3: [
-    MachineType.MIXER,
-    MachineType.COOLER,
-  ],
-  4: [
-    MachineType.MIXER,
-    MachineType.COOLER,
-    MachineType.SPLITTER,
-    MachineType.BOILER,
-  ],
+  0: FULL_MACHINES,
+  1: FULL_MACHINES,
+  2: FULL_MACHINES,
+  3: FULL_MACHINES,
+  4: FULL_MACHINES,
   5: FULL_MACHINES,
   6: FULL_MACHINES,
   7: FULL_MACHINES,
   8: [],
   9: []
 }
+
+// export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
+//   0: [],
+//   1: [],
+//   2: [],
+//   3: [
+//     MachineType.MIXER,
+//     MachineType.COOLER,
+//   ],
+//   4: [
+//     MachineType.MIXER,
+//     MachineType.COOLER,
+//     MachineType.SPLITTER,
+//     MachineType.BOILER,
+//   ],
+//   5: FULL_MACHINES,
+//   6: FULL_MACHINES,
+//   7: FULL_MACHINES,
+//   8: [],
+//   9: []
+// }
 
 export const FIXED_MACHINE_TYPES = [MachineType.PLAYER, MachineType.INLET, MachineType.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g

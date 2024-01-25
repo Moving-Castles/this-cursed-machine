@@ -18,7 +18,7 @@ contract StorageSystemTest is BaseTest {
 
     bytes32[] memory storageInPod = StorageInPod.get(podEntity);
 
-    assertEq(storageInPod.length, 2);
+    assertEq(storageInPod.length, 3);
 
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
 

@@ -53,10 +53,20 @@ library LibMachine {
     if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
 
     // Output Piss
-    outputs[0] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.PISS, amount: _input.amount / 2 });
+    outputs[0] = Product({
+      machineId: _input.machineId,
+      materialType: MATERIAL_TYPE.PISS,
+      amount: _input.amount / 2,
+      factor: 2
+    });
 
     // Output blood
-    outputs[1] = Product({ machineId: _input.machineId, materialType: MATERIAL_TYPE.BLOOD, amount: _input.amount / 2 });
+    outputs[1] = Product({
+      machineId: _input.machineId,
+      materialType: MATERIAL_TYPE.BLOOD,
+      amount: _input.amount / 2,
+      factor: 2
+    });
 
     return outputs;
   }
@@ -74,9 +84,19 @@ library LibMachine {
   function splitter(Product memory _input) internal pure returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
     // Output 1
-    outputs[0] = Product({ machineId: _input.machineId, materialType: _input.materialType, amount: _input.amount / 2 });
+    outputs[0] = Product({
+      machineId: _input.machineId,
+      materialType: _input.materialType,
+      amount: _input.amount / 2,
+      factor: _input.factor + 2
+    });
     // Output 2
-    outputs[1] = Product({ machineId: _input.machineId, materialType: _input.materialType, amount: _input.amount / 2 });
+    outputs[1] = Product({
+      machineId: _input.machineId,
+      materialType: _input.materialType,
+      amount: _input.amount / 2,
+      factor: _input.factor + 2
+    });
     return outputs;
   }
 
@@ -102,7 +122,8 @@ library LibMachine {
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
       materialType: resultMaterialType,
-      amount: _inputs[0].amount
+      amount: _inputs[0].amount,
+      factor: _inputs[0].factor
     });
     return outputs;
   }
@@ -120,7 +141,12 @@ library LibMachine {
   ) internal view returns (Product[] memory _outputs) {
     MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(_machineType, uint256(_input.materialType));
     Product[] memory outputs = new Product[](1);
-    outputs[0] = Product({ machineId: _input.machineId, materialType: resultMaterialType, amount: _input.amount });
+    outputs[0] = Product({
+      machineId: _input.machineId,
+      materialType: resultMaterialType,
+      amount: _input.amount,
+      factor: _input.factor
+    });
     return outputs;
   }
 }

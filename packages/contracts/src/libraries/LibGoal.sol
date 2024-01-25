@@ -75,4 +75,12 @@ library LibGoal {
     bytes32[][] memory keyTuples = query(fragments);
     return keyTuples;
   }
+
+  function getGoal(uint32 _level) internal view returns (bytes32 goal) {
+    QueryFragment[] memory fragments = new QueryFragment[](2);
+    fragments[0] = QueryFragment(QueryType.HasValue, EntityTypeTableId, EntityType.encodeStatic(ENTITY_TYPE.GOAL));
+    fragments[1] = QueryFragment(QueryType.HasValue, LevelTableId, Level.encodeStatic(_level));
+    bytes32[][] memory keyTuples = query(fragments);
+    return keyTuples[0][0];
+  }
 }

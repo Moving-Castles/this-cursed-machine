@@ -15,15 +15,16 @@
 
   <!-- LEFT COLUMN -->
   <div class="column">
-    <p class="muted">SENT TO WAREHOUSE</p>
+    <p class="muted">IN PROGRESS</p>
     <p class="muted">*****************</p>
-    {#if !$showLevelModal}
+    <p>TODO!!!</p>
+    <!-- {#if !$showLevelModal}
       <p>
         {#key $playerEntity.level}
           <Stats />
         {/key}
       </p>
-    {/if}
+    {/if} -->
   </div>
 </div>
 

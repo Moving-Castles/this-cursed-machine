@@ -4,7 +4,12 @@
   export let storage: Store
   export let key: string
   export let index: number
-  import { connectStorage, disconnectStorage } from "../../modules/action"
+  import {
+    clearStorage,
+    connectStorage,
+    disconnectStorage,
+    shipStorage,
+  } from "../../modules/action"
 
   const connectToInlet = () => {
     connectStorage(key, MachineType.INLET)
@@ -22,6 +27,14 @@
     disconnectStorage(MachineType.OUTLET)
   }
 
+  const clear = () => {
+    clearStorage(key)
+  }
+
+  const ship = () => {
+    shipStorage(key)
+  }
+
   const getConnectionName = (machineEntity: string) => {
     if (machineEntity === $playerPod.inletEntity) return "Inlet"
     if (machineEntity === $playerPod.outletEntity) return "Outlet"
@@ -30,7 +43,7 @@
 </script>
 
 <div class="storage-item">
-  <div>#{index}</div>
+  <div><strong>#{index}</strong></div>
   <div>M: {MaterialType[storage.materialType]}</div>
   <div>A:{storage.amount}</div>
   <div>C: {getConnectionName(storage.storageConnection)}</div>
@@ -39,6 +52,8 @@
     <button on:click={connectToOutlet}>C to out</button>
     <button on:click={disconnectFromInlet}>X from in</button>
     <button on:click={disconnectFromOutlet}>X from out</button>
+    <button on:click={ship}>Ship</button>
+    <button on:click={clear}>Clear</button>
   </div>
 </div>
 

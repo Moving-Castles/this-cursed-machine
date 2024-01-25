@@ -28,8 +28,8 @@ export async function initStateSimulator() {
     const playerEntityValue = get(playerEntity)
     const playerPodValue = get(playerPod)
     const localResolvedValue = get(localResolved)
-    const lastCompletedBlockValue = get(lastCompletedBlock)
-    const showLevelValue = get(showLevelModal)
+    // const lastCompletedBlockValue = get(lastCompletedBlock)
+    // const showLevelValue = get(showLevelModal)
 
     // Player is not spawned yet
     if (!playerEntityValue) return
@@ -48,17 +48,17 @@ export async function initStateSimulator() {
       localResolved.set(playerPodValue.lastResolved)
     }
 
-    // !hack: Wait to allow the changes to propagate
-    await new Promise(r => setTimeout(r, 100))
+    // // !hack: Wait to allow the changes to propagate
+    // await new Promise(r => setTimeout(r, 100))
 
-    // Check if level goals have been reached
-    // @hack: Wait 10 blocks from last completion to avoid duplicate modals bug
-    if (
-      checkLevelGoals(playerEntityValue.level) &&
-      showLevelValue === false &&
-      blockNumber > lastCompletedBlockValue + 10
-    ) {
-      showLevelModal.set(true)
-    }
+    // // Check if level goals have been reached
+    // // @hack: Wait 10 blocks from last completion to avoid duplicate modals bug
+    // if (
+    //   checkLevelGoals(playerEntityValue.level) &&
+    //   showLevelValue === false &&
+    //   blockNumber > lastCompletedBlockValue + 10
+    // ) {
+    //   showLevelModal.set(true)
+    // }
   })
 }

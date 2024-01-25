@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection } from "../codegen/index.sol";
+import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, InletEntity, OutletEntity } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
@@ -43,6 +43,14 @@ library LibNetwork {
     // Counter for the number of stored inputs
     uint32 inputsCount;
 
+    // Connected storages. 1 => inlet storage, 2 => outlet storage
+    bytes32[] memory connectedStorages = new bytes32[](2);
+    connectedStorages[0] = StorageConnection.get(InletEntity.get(podEntity));
+    connectedStorages[1] = StorageConnection.get(OutletEntity.get(podEntity));
+
+    // Abort if inlet or outlet is not connected to storage
+    if (connectedStorages[0] == bytes32(0) || connectedStorages[1] == bytes32(0)) return;
+
     // Iterate until all machines in the network are resolved
     while (resolvedCount < machines.length) {
       // For each machine in the list
@@ -55,15 +63,12 @@ library LibNetwork {
 
         // If the machine is an inlet, get material from connected storage
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          // Get connected storage
-          bytes32 storageEntity = StorageConnection.get(node);
-          // Abort if not connected
-          if (storageEntity == bytes32(0)) return;
           // Currently have a rate of 100 units per block
           inputs[inputsCount] = Product({
             machineId: node,
-            materialType: MaterialType.get(storageEntity),
-            amount: 100
+            materialType: MaterialType.get(connectedStorages[0]),
+            amount: 100,
+            factor: 0
           });
           inputsCount++;
         }
@@ -97,13 +102,15 @@ library LibNetwork {
 
         // If the machine is an outlet, write to storage
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
-          // Abort if not connected
-          bytes32 storageEntity = StorageConnection.get(node);
-          if (storageEntity == bytes32(0)) return;
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
           // Write to storage
-          LibStorage.writeToStorage(storageEntity, blocksSinceLastResolution, currentOutputs[0]);
+          LibStorage.writeToStorage(
+            connectedStorages[0],
+            connectedStorages[1],
+            blocksSinceLastResolution,
+            currentOutputs[0]
+          );
         }
 
         // Get outgoing connections from the machine

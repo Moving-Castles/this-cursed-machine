@@ -15,6 +15,7 @@ export enum WorldFunctions {
   ConnectStorage = "connectStorage",
   DisconnectStorage = "disconnectStorage",
   ClearStorage = "clearStorage",
+  ShipStorage = "shipStorage"
 }
 
 // --- API --------------------------------------------------------------
@@ -80,4 +81,8 @@ export function disconnectStorage(machineType: MachineType.INLET | MachineType.O
 
 export function clearStorage(storageEntity: string) {
   return addToSequencer(WorldFunctions.ClearStorage, [storageEntity])
+}
+
+export function shipStorage(storageEntity: string) {
+  return addToSequencer(WorldFunctions.ShipStorage, [storageEntity])
 }
