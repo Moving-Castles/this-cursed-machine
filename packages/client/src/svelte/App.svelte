@@ -19,7 +19,7 @@
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
-  import TerminalBox from "./components/Box/TerminalBox.svelte"
+  import Pod from "./components/Pod/Pod.svelte"
   import Death from "./components/Death/Death.svelte"
   import Dashboard from "./components/Dashboard/Dashboard.svelte"
   import Naming from "./components/Naming/Naming.svelte"
@@ -132,7 +132,7 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    <TerminalBox on:dead={dead} on:completed={completed} />
+    <Pod on:dead={dead} on:completed={completed} />
   {/if}
 
   {#if $UIState === UI.COMPLETED}

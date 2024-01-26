@@ -43,31 +43,39 @@
 </script>
 
 <div class="storage-item">
-  <div><strong>#{index}</strong></div>
+  <div><strong>#: {index + 1}</strong></div>
   <div>M: {MaterialType[storage.materialType]}</div>
-  <div>A:{storage.amount}</div>
+  <div>A: {storage.amount}</div>
   <div>C: {getConnectionName(storage.storageConnection)}</div>
-  <div>
+  <!-- <div>
     <button on:click={connectToInlet}>C to in</button>
     <button on:click={connectToOutlet}>C to out</button>
     <button on:click={disconnectFromInlet}>X from in</button>
     <button on:click={disconnectFromOutlet}>X from out</button>
     <button on:click={ship}>Ship</button>
     <button on:click={clear}>Clear</button>
-  </div>
+  </div> -->
 </div>
 
 <style lang="scss">
   .storage-item {
-    border-bottom: 1px solid #fff;
+    border: 1px solid #fff;
+    margin-right: 20px;
+    width: 30%;
     padding-bottom: 5px;
     margin-bottom: 10px;
+    overflow: hidden;
+    padding: 10px;
+    background: #3a6f3a;
+    font-size: 10px;
+    height: 100px;
+    width: 100px;
 
     button {
       font-size: 10px;
       padding: 5px;
       border: 1px solid white;
-      display: block;
+      margin: 1px;
     }
   }
 </style>

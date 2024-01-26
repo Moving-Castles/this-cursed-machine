@@ -12,13 +12,12 @@
 <style lang="scss">
   .storage-box {
     padding: 20px;
-    background: #3a6f3a;
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    width: 100%;
+    height: 100%;
     z-index: 10;
-    font-size: 10px;
     max-height: calc(100vh - 40px);
     overflow-y: scroll;
+    display: flex;
+    align-items: center;
   }
 </style>
