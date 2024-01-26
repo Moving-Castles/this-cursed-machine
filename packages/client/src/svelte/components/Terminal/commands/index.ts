@@ -15,6 +15,9 @@ import { order } from "./order";
 import { skip } from "./skip";
 import { restart } from "./restart";
 import { fail } from "./fail";
+import { connectStorage } from "./connectStorage";
+import { disconnectStorage } from "./disconnectStorage";
+import { clearStorage } from "./clearStorage";
 
 export const commands: Command[] = [
     build,
@@ -31,5 +34,8 @@ export const commands: Command[] = [
     transfer,
     skip,
     restart,
-    fail
+    fail,
+    connectStorage,
+    disconnectStorage,
+    clearStorage
 ]

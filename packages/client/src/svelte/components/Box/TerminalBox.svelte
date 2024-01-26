@@ -18,9 +18,9 @@
   let terminalComponent: any
 
   // Levels are done, show the dashboard
-  $: if ($playerEntity.level > Object.keys($levels).length) {
-    dispatch("completed")
-  }
+  // $: if ($playerEntity.level > Object.keys($levels).length) {
+  //   dispatch("completed")
+  // }
 
   const handleCommand = async (e: any) => {
     terminalComponent.resetInput()

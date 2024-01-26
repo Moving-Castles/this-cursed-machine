@@ -21,7 +21,7 @@
     simulatedConnections,
   } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
-  import { playerEntity } from "../../modules/state"
+  import { playerEntity, storages, playerPod } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeLevel } from "./functions/writeLevel"
@@ -309,11 +309,135 @@
         // Use the first one
         parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
       }
-    }
+    } else if (command.id === COMMAND.CONNECT_STORAGE) {
+      // %%%%%%%%%%%%%%%%%%%%%%%%
+      // %% Get storage %%
+      // %%%%%%%%%%%%%%%%%%%%%%%%
 
-    // The two commands allowed at spawn (blink and help) take the terminal type as parameter
-    if (terminalType === TerminalType.SPAWN) {
-      parameters = [terminalType]
+      console.log($storages[$playerPod.inletEntity]?.storageConnection ?? null)
+      console.log($storages[$playerPod.outletEntity]?.storageConnection ?? null)
+
+      if (
+        ($storages[$playerPod.inletEntity]?.storageConnection ?? null) !==
+          null &&
+        ($storages[$playerPod.outletEntity]?.storageConnection ?? null) !== null
+      ) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "No open point",
+          false,
+          SYMBOLS[5],
+        )
+        resetInput()
+        return
+      }
+
+      // Get stores
+      let sourceSelectOptions = createSelectOptions(COMMAND.CONNECT_STORAGE)
+
+      await writeToTerminal(OutputType.NORMAL, "Store:")
+
+      let storageKey = await renderSelect(
+        selectContainerElement,
+        Select,
+        sourceSelectOptions,
+      )
+
+      // Abort if nothing selected
+      if (!storageKey) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "No storage selected",
+          false,
+          SYMBOLS[5],
+        )
+        resetInput()
+        return
+      }
+
+      let networkPointSelectOptions: SelectOption[] = []
+
+      if (
+        ($storages[$playerPod.inletEntity]?.storageConnection ?? null) == null
+      ) {
+        networkPointSelectOptions.push({
+          label: "Inlet",
+          value: MachineType.INLET,
+        })
+      }
+
+      if (
+        ($storages[$playerPod.outletEntity]?.storageConnection ?? null) == null
+      ) {
+        networkPointSelectOptions.push({
+          label: "Outlet",
+          value: MachineType.OUTLET,
+        })
+      }
+
+      let networkPointType = await renderSelect(
+        selectContainerElement,
+        Select,
+        networkPointSelectOptions,
+      )
+
+      // Abort if nothing selected
+      if (!networkPointType) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "Nothing selected",
+          false,
+          SYMBOLS[5],
+        )
+        resetInput()
+        return
+      }
+
+      parameters = [storageKey, networkPointType]
+    } else if (command.id === COMMAND.DISCONNECT_STORAGE) {
+      if (
+        ($simulatedMachines[$playerPod.inletEntity]?.storageConnection ??
+          null) == null &&
+        ($simulatedMachines[$playerPod.outletEntity]?.storageConnection ??
+          null) == null
+      ) {
+        await writeToTerminal(
+          OutputType.ERROR,
+          "Nothing to disconnect",
+          false,
+          SYMBOLS[5],
+        )
+        resetInput()
+        return
+      }
+
+      let networkPointSelectOptions: SelectOption[] = []
+
+      if (
+        $simulatedMachines[$playerPod.inletEntity]?.storageConnection !== null
+      ) {
+        networkPointSelectOptions.push({
+          label: "Inlet",
+          value: MachineType.INLET,
+        })
+      }
+
+      if (
+        $simulatedMachines[$playerPod.outletEntity]?.storageConnection !== null
+      ) {
+        networkPointSelectOptions.push({
+          label: "Outlet",
+          value: MachineType.OUTLET,
+        })
+      }
+
+      let networkPointType = await renderSelect(
+        selectContainerElement,
+        Select,
+        networkPointSelectOptions,
+      )
+
+      parameters = [networkPointType]
     }
 
     // Execute function

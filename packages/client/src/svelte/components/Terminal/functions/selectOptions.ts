@@ -5,7 +5,7 @@ import {
   simulatedMachines,
   simulatedConnections,
 } from "../../../modules/simulator"
-import { playerEntity } from "../../../modules/state"
+import { playerEntity, storages } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
@@ -35,6 +35,10 @@ export function createSelectOptions(
       return createSelectOptionsDisconnect()
     case COMMAND.INSPECT:
       return createSelectOptionsInspect()
+    case COMMAND.CONNECT_STORAGE:
+      return createSelectOptionsConnectStorage()
+    case COMMAND.CLEAR_STORAGE:
+      return createSelectOptionsClearStorage()
     default:
       return [] as SelectOption[]
   }
@@ -149,6 +153,37 @@ function createSelectOptionsDisconnect(): SelectOption[] {
       value: connection.id,
     }
   })
+
+  return selectOptions
+}
+
+function createSelectOptionsClearStorage(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const stores = get(storages)
+
+  // Filter out stores where storageConnection is not null
+  selectOptions = Object.entries(stores)
+    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+    .map(([address, _], index) => ({
+      label: `Store #${index + 1}`,
+      value: address,
+    }))
+
+  return selectOptions
+}
+
+function createSelectOptionsConnectStorage(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const stores = get(storages)
+
+  selectOptions = Object.entries(stores)
+    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+    .map(([address, _], index) => ({
+      label: `Store #${index + 1}`,
+      value: address,
+    }))
 
   return selectOptions
 }

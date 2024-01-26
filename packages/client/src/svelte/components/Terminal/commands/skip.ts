@@ -37,7 +37,7 @@ export const skip: Command<[]> = {
     id: COMMAND.SKIP,
     public: false,
     name: "skip",
-    alias: "s",
+    alias: "*",
     description: "Skip intro",
     fn: execute,
 }

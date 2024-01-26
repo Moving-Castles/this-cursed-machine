@@ -35,16 +35,17 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    if ($playerEntity && $playerEntity.level > Object.keys($levels).length) {
-      await typeWriteToTerminal(
-        OutputType.SPECIAL,
-        `Welcome back ${$playerEntity.name ? $playerEntity.name : "stump"}...`,
-        SYMBOLS[7],
-        10,
-        1000,
-      )
-      dispatch("completed")
-    } else if ($playerEntity && $playerEntity.carriedBy) {
+    // if ($playerEntity && $playerEntity.level > Object.keys($levels).length) {
+    //   await typeWriteToTerminal(
+    //     OutputType.SPECIAL,
+    //     `Welcome back ${$playerEntity.name ? $playerEntity.name : "stump"}...`,
+    //     SYMBOLS[7],
+    //     10,
+    //     1000,
+    //   )
+    //   dispatch("completed")
+    // } else 
+    if ($playerEntity && $playerEntity.carriedBy) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
         "Welcome back...",
