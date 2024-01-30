@@ -36,7 +36,7 @@ export enum COMMAND {
     MAP,
     ORDER,
     SKIP,
-    RESTART,
+    START,
     COMPLETE,
     FAIL,
     CONNECT_STORAGE,

@@ -12,6 +12,8 @@ import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Ba
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
+import { MATERIAL_TYPE } from "../src/codegen/common.sol";
+
 contract DeployTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
 
@@ -25,12 +27,17 @@ contract DeployTest is BaseTest {
     assertTrue(codeSize > 0);
   }
 
-  function testPoolMint() public {
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
-    assertEq(Balances.get(tableId, worldAddress), 1000000);
-    assertEq(IERC20Mintable(token).totalSupply(), 1000000);
+  function testWorldInit() public {
+    assertEq(TutorialOrders.get().length, 2);
+    assertEq(uint32(MaterialType.get(ResourceEntity.get(TutorialOrders.get()[0]))), uint32(MATERIAL_TYPE.BUG));
   }
+
+  // function testPoolMint() public {
+  //   address token = gameConfig.tokenAddress;
+  //   ResourceId systemId = Puppet(token).systemId();
+  //   ResourceId tableId = _balancesTableId(systemId.getNamespace());
+
+  //   assertEq(Balances.get(tableId, worldAddress), 1000000);
+  //   assertEq(IERC20Mintable(token).totalSupply(), 1000000);
+  // }
 }

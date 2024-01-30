@@ -1,6 +1,6 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
-import { restart as sendRestart } from "../../../modules/action";
+import { start as sendStart } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { OutputType } from "../types"
@@ -8,12 +8,12 @@ import { playSound } from "../../../modules/sound";
 
 async function execute() {
     try {
-        writeToTerminal(OutputType.NORMAL, "Restarting...")
-        const action = sendRestart()
+        writeToTerminal(OutputType.NORMAL, "Starting...")
+        const action = sendStart()
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(OutputType.NORMAL, "Sending restart transaction...")
+        writeToTerminal(OutputType.NORMAL, "Sending start transaction...")
         await waitForCompletion(action, loadingLine);
         playSound("tcm", "TRX_yes")
         await writeToTerminal(OutputType.SUCCESS, "Done")
@@ -27,10 +27,10 @@ async function execute() {
     }
 }
 
-export const restart: Command<[]> = {
-    id: COMMAND.RESTART,
+export const start: Command<[]> = {
+    id: COMMAND.START,
     public: false,
-    name: "restart",
+    name: "start",
     alias: "¬",
     description: "Resolve the network",
     fn: execute,

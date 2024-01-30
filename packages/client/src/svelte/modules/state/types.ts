@@ -14,12 +14,12 @@ declare global {
     materialType?: MaterialType
     name?: string
     carriedBy?: string
-    createdBy?: string
     amount?: number
     creationBlock?: number
     buildIndex?: number
     spawnIndex?: number
-    level?: number
+    tutorialLevel?: number
+    tutorial?: boolean
     lastResolved?: number
     input?: number
     output?: MaterialType
@@ -27,13 +27,12 @@ declare global {
     incomingConnections?: string[]
     storageConnection?: string
     machinesInPod?: string[]
-    materialsInPod?: string[]
     storageInPod?: string[]
-    LevelStartBlock?: number
     completionTimes?: number[]
     gameConfig?: GameConfig
     outletEntity?: string
     inletEntity?: string
+    currentOrder?: string
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -41,16 +40,8 @@ declare global {
   // * * * * * * * * * * * * * * * * *
 
   type GameConfig = {
-    coolDown: number
-    connectionCost: number
-    buildCost: number,
     tokenAddress: string,
     globalSpawnIndex: number
-  }
-
-  type Level = {
-    entityType: EntityType.LEVEL
-    level: number
   }
 
   type Recipe = {
@@ -71,19 +62,16 @@ declare global {
   // GAME PLAY ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
 
-  type Warehouse = {
-    entityType: EntityType.WAREHOUSE
-  }
-
   type Pod = {
     entityType: EntityType.POD
     creationBlock: number
     lastResolved: number
     machinesInPod: string[]
-    materialsInPod: string[]
     storageInPod: string[]
     outletEntity: string
     inletEntity: string
+    currentOrder: string
+    tutorial: boolean
   }
 
   // aka. stump (fka. core)
@@ -93,12 +81,10 @@ declare global {
     creationBlock: number
     spawnIndex: number
     name?: string
-    level: number
     carriedBy: string
     incomingConnections: string[]
     outgoingConnections: string[]
-    LevelStartBlock: number
-    completionTimes: number[]
+    tutorialLevel?: number
   }
 
   type Machine = {
@@ -111,15 +97,6 @@ declare global {
     storageConnection?: string // Only on inlet and outlet
   }
 
-  type Material = {
-    entityType: EntityType.MATERIAL
-    creationBlock: number
-    carriedBy: string
-    createdBy: string
-    materialType: MaterialType
-    amount: number
-  }
-
   type Store = {
     entityType: EntityType.STORAGE,
     carriedBy: string
@@ -128,16 +105,21 @@ declare global {
     storageConnection: string
   }
 
+  type Order = {
+    materialType: EntityType.ORDER
+    completedPlayers: string[]
+  }
+
+  type TutorialOrder = {
+    materialType: EntityType.ORDER
+  }
+
   // * * * * * * * * * * * * * * * * *
   // GAME PLAY ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
 
   type Entities = {
     [index: string]: Entity
-  }
-
-  type Levels = {
-    [index: string]: Level
   }
 
   type Recipes = {
@@ -160,12 +142,12 @@ declare global {
     [index: string]: Pod
   }
 
-  type Materials = {
-    [index: string]: Material
-  }
-
   type Storages = {
     [index: string]: Store
+  }
+
+  type Orders = {
+    [index: string]: Order
   }
 
   // * * * * * * * * * * * * * * * * *

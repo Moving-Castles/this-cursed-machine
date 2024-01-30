@@ -1,7 +1,7 @@
 import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "../Terminal/functions/writeToTerminal"
 import { OutputType } from "../Terminal/types"
 import { SYMBOLS } from "../Terminal"
-import { spawn, restart } from "../../modules/action"
+import { spawn, start } from "../../modules/action"
 import { waitForCompletion, waitForTransaction } from "../../modules/action/actionSequencer/utils"
 import { playSound } from "../../modules/sound"
 
@@ -88,7 +88,7 @@ export const narrative = [
     async () => {
         await writeNarrativeInfo("Transferring stump to pod...")
         // Send spawn
-        const action = restart()
+        const action = start()
         await waitForTransaction(action, loadingSpinner);
         await waitForCompletion(action, loadingLine);
         playSound("tcm", "enteredPod")

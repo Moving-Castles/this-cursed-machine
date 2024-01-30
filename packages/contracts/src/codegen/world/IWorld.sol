@@ -5,20 +5,19 @@ pragma solidity >=0.8.21;
 
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
+import { IWarpSystem } from "./IWarpSystem.sol";
+import { IInit2System } from "./IInit2System.sol";
+import { IInitSystem } from "./IInitSystem.sol";
 import { IBuildSystem } from "./IBuildSystem.sol";
-import { ICompleteSystem } from "./ICompleteSystem.sol";
 import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
 import { IDisconnectSystem } from "./IDisconnectSystem.sol";
-import { IInit2System } from "./IInit2System.sol";
-import { IInitSystem } from "./IInitSystem.sol";
-import { INameSystem } from "./INameSystem.sol";
 import { IResolveSystem } from "./IResolveSystem.sol";
-import { IRestartSystem } from "./IRestartSystem.sol";
-import { ISpawnSystem } from "./ISpawnSystem.sol";
+import { IOrderSystem } from "./IOrderSystem.sol";
 import { IStorageSystem } from "./IStorageSystem.sol";
-import { ITransferSystem } from "./ITransferSystem.sol";
-import { IWarpSystem } from "./IWarpSystem.sol";
+import { INameSystem } from "./INameSystem.sol";
+import { ISpawnSystem } from "./ISpawnSystem.sol";
+import { IStartSystem } from "./IStartSystem.sol";
 
 /**
  * @title IWorld
@@ -28,20 +27,19 @@ import { IWarpSystem } from "./IWarpSystem.sol";
  */
 interface IWorld is
   IBaseWorld,
+  IWarpSystem,
+  IInit2System,
+  IInitSystem,
   IBuildSystem,
-  ICompleteSystem,
   IConnectSystem,
   IDestroySystem,
   IDisconnectSystem,
-  IInit2System,
-  IInitSystem,
-  INameSystem,
   IResolveSystem,
-  IRestartSystem,
-  ISpawnSystem,
+  IOrderSystem,
   IStorageSystem,
-  ITransferSystem,
-  IWarpSystem
+  INameSystem,
+  ISpawnSystem,
+  IStartSystem
 {
 
 }

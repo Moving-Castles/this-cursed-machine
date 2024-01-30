@@ -10,7 +10,7 @@
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
   import { initSound } from "./modules/sound"
-  import { restart as sendRestart } from "./modules/action"
+  import { start as sendStart } from "./modules/action"
   import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
@@ -35,7 +35,7 @@
   const restart = () => {
     clearTerminalOutput()
     localLevel.set(0)
-    sendRestart()
+    sendStart()
     UIState.set(UI.LOADING)
   }
 

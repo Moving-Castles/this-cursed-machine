@@ -3,9 +3,7 @@ import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
   Spawn = "spawn",
-  Restart = "restart",
-  Transfer = "transfer",
-  Complete = "complete",
+  Start = "start",
   Connect = "connect",
   Disconnect = "disconnect",
   Build = "build",
@@ -15,7 +13,8 @@ export enum WorldFunctions {
   ConnectStorage = "connectStorage",
   DisconnectStorage = "disconnectStorage",
   ClearStorage = "clearStorage",
-  ShipStorage = "shipStorage"
+  Fill = "fill",
+  Accept = "accept"
 }
 
 // --- API --------------------------------------------------------------
@@ -24,16 +23,8 @@ export function spawn() {
   return addToSequencer(WorldFunctions.Spawn, [])
 }
 
-export function restart() {
-  return addToSequencer(WorldFunctions.Restart, [])
-}
-
-export function transfer() {
-  return addToSequencer(WorldFunctions.Transfer, [])
-}
-
-export function complete() {
-  return addToSequencer(WorldFunctions.Complete, [])
+export function start() {
+  return addToSequencer(WorldFunctions.Start, [])
 }
 
 export function connect(
@@ -83,6 +74,6 @@ export function clearStorage(storageEntity: string) {
   return addToSequencer(WorldFunctions.ClearStorage, [storageEntity])
 }
 
-export function shipStorage(storageEntity: string) {
-  return addToSequencer(WorldFunctions.ShipStorage, [storageEntity])
+export function fill(storageEntity: string) {
+  return addToSequencer(WorldFunctions.Fill, [storageEntity])
 }

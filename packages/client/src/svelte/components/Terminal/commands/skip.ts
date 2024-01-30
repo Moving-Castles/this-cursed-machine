@@ -1,6 +1,6 @@
 import type { Command } from "../types";
 import { COMMAND } from "../types";
-import { spawn, restart } from "../../../modules/action";
+import { spawn, start } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { OutputType } from "../types"
@@ -18,9 +18,9 @@ async function execute() {
         writeToTerminal(OutputType.SUCCESS, "Spawn done")
 
         writeToTerminal(OutputType.NORMAL, "Transferring")
-        const restartAction = restart()
-        await waitForTransaction(restartAction, loadingSpinner);
-        await waitForCompletion(restartAction, loadingLine);
+        const startAction = start()
+        await waitForTransaction(startAction, loadingSpinner);
+        await waitForCompletion(startAction, loadingLine);
         playSound("tcm", "TRX_yes")
         writeToTerminal(OutputType.SUCCESS, "Transfer done")
 

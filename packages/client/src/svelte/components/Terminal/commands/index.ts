@@ -13,7 +13,7 @@ import { resolve } from "./resolve";
 import { map } from "./map";
 import { order } from "./order";
 import { skip } from "./skip";
-import { restart } from "./restart";
+import { start } from "./start";
 import { fail } from "./fail";
 import { connectStorage } from "./connectStorage";
 import { disconnectStorage } from "./disconnectStorage";
@@ -33,7 +33,7 @@ export const commands: Command[] = [
     resolve,
     transfer,
     skip,
-    restart,
+    start,
     fail,
     connectStorage,
     disconnectStorage,

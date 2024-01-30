@@ -15,6 +15,4 @@ interface IStorageSystem {
   function disconnectStorage(MACHINE_TYPE _machineType) external;
 
   function clearStorage(bytes32 _storageEntity) external;
-
-  function shipStorage(bytes32 _storageEntity) external;
 }

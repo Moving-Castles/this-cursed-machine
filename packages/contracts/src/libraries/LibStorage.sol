@@ -32,11 +32,11 @@ library LibStorage {
     // The factor keeps track of how much the inlet material has been dilluted by the the machines
     uint32 consumedInletAmount = factor * cumulativeAmount;
 
-    // Did we exceed the amount of material the inlet material allows us to produce?
-    bool exceededInletStorage = consumedInletAmount > inletAmount;
+    // Did we exhaust the amount of material the inlet material allows us to produce?
+    bool exhaustedInletStorage = consumedInletAmount >= inletAmount;
 
     // Cap output by the amount in inlet storage
-    cumulativeAmount = exceededInletStorage ? inletAmount / factor : cumulativeAmount;
+    cumulativeAmount = exhaustedInletStorage ? inletAmount / factor : cumulativeAmount;
 
     // Add if material is same
     if (MaterialType.get(_outletStorageEntity) == _output.materialType) {
@@ -47,8 +47,7 @@ library LibStorage {
     }
 
     // Subtract from inlet storage
-
-    if (exceededInletStorage) {
+    if (exhaustedInletStorage) {
       MaterialType.set(_inletStorageEntity, MATERIAL_TYPE.NONE);
       Amount.set(_inletStorageEntity, 0);
     } else {

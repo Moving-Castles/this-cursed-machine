@@ -2,13 +2,11 @@ export enum EntityType {
   NONE,
   BUILD_INDEX,
   RECIPE,
-  LEVEL,
-  GOAL,
-  WAREHOUSE,
+  ORDER,
   POD,
   MACHINE,
-  MATERIAL,
-  STORAGE
+  STORAGE,
+  DISPENSER
 }
 
 export enum MachineType {

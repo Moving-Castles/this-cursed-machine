@@ -152,15 +152,6 @@ export const simulatedConnections = derived(
   }
 )
 
-/** Materials */
-export const simulatedMaterials = derived(simulated, $simulated => {
-  return Object.fromEntries(
-    Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.MATERIAL
-    )
-  )
-})
-
 export const readableMachines = derived(
   simulatedMachines,
   $simulatedMachines => {
