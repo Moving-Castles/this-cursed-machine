@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";

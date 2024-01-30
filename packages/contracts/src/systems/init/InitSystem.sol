@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, GameConfigData, TutorialOrders } from "../../codegen/index.sol";
 import { LibOrder } from "../../libraries/Libraries.sol";

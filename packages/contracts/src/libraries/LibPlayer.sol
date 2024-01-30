@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { TutorialLevel, CreationBlock, EntityType, MachineType, OutgoingConnections, IncomingConnections, GameConfig, SpawnIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 

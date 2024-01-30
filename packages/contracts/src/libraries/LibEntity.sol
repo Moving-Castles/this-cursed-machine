@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { EntityType, MachineType, BuildIndex, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";

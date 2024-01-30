@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CarriedBy, EntityType, CreationBlock, MachinesInPod, OutletEntity, InletEntity, DispenserEntity, StorageInPod, MaterialType, Amount, ResourceEntity, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
