@@ -1,11 +1,10 @@
-import type { PortDefinition } from "../../../modules/state/types"
 import { SelectOption, COMMAND, DIRECTION } from "../types"
 import { MachineType } from "../../../modules/state/enums"
 import {
   simulatedMachines,
   simulatedConnections,
 } from "../../../modules/simulator"
-import { playerEntity, storages } from "../../../modules/state"
+import { playerEntity, playerPod, storages } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
@@ -37,6 +36,8 @@ export function createSelectOptions(
       return createSelectOptionsInspect()
     case COMMAND.CONNECT_STORAGE:
       return createSelectOptionsConnectStorage()
+    case COMMAND.DISCONNECT_STORAGE:
+      return createSelectOptionsDisconnectStorage()
     case COMMAND.CLEAR_STORAGE:
       return createSelectOptionsClearStorage()
     default:
@@ -184,6 +185,30 @@ function createSelectOptionsConnectStorage(): SelectOption[] {
       label: `Store #${index + 1}`,
       value: address,
     }))
+
+  return selectOptions
+}
+
+function createSelectOptionsDisconnectStorage(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  if (
+    get(simulatedMachines)[get(playerPod).inletEntity]?.storageConnection
+  ) {
+    selectOptions.push({
+      label: "Inlet",
+      value: MachineType.INLET,
+    })
+  }
+
+  if (
+    get(simulatedMachines)[get(playerPod).outletEntity]?.storageConnection
+  ) {
+    selectOptions.push({
+      label: "Outlet",
+      value: MachineType.OUTLET,
+    })
+  }
 
   return selectOptions
 }

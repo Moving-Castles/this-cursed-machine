@@ -5,9 +5,15 @@
     OutputType,
     TerminalType,
     DIRECTION,
+    type Command,
     type SelectOption,
   } from "./types"
-  import { SYMBOLS, SINGLE_INPUT_COMMANDS, terminalOutput } from "./index"
+  import {
+    SYMBOLS,
+    NO_INPUT_COMMANDS,
+    SINGLE_INPUT_COMMANDS,
+    terminalOutput,
+  } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
   import { MachineType, PortIndex } from "../../modules/state/enums"
@@ -73,6 +79,254 @@
     focusInput()
   }
 
+  const handleInvalid = async (message: string) => {
+    await writeToTerminal(OutputType.ERROR, message, false, SYMBOLS[5])
+    resetInput()
+  }
+
+  const executeCommand = async (command: Command, parameters: any[]) => {
+    // Execute function
+    await command.fn(...parameters)
+    // Note: It is the parents responsibility to reset the input on this event
+    dispatch("commandExecuted", { command, parameters })
+  }
+
+  const getSingleInputCommandParameters = async (
+    command: Command,
+  ): Promise<any[] | false> => {
+    const selectOptions = createSelectOptions(command.id)
+
+    // Abort if no options
+    if (selectOptions.length === 0) {
+      await handleInvalid("Nothing")
+      return false
+    }
+
+    const value = await renderSelect(
+      selectContainerElement,
+      Select,
+      selectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!value) {
+      await handleInvalid("Nothing selected")
+      return false
+    }
+
+    return [value]
+  }
+
+  const getDisconnectParameters = async (): Promise<any[] | false> => {
+    let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
+
+    const connectionId = await renderSelect(
+      selectContainerElement,
+      Select,
+      disconnectOptions,
+    )
+
+    // Abort if nothing selected
+    if (
+      !connectionId ||
+      !$simulatedConnections.find(c => c.id === connectionId)
+    ) {
+      handleInvalid("No connection")
+      return false
+    }
+
+    const connection = $simulatedConnections.find(c => c.id === connectionId)
+
+    return [connection?.sourceMachine, connection?.portIndex]
+  }
+
+  const getConnectParameters = async (): Promise<any[] | false> => {
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Get source machine %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+
+    // Get machines with available outgoing connection slots
+    let sourceSelectOptions = createSelectOptions(
+      COMMAND.CONNECT,
+      DIRECTION.OUTGOING,
+    )
+
+    await writeToTerminal(OutputType.NORMAL, "From:")
+
+    const sourceMachineKey = await renderSelect(
+      selectContainerElement,
+      Select,
+      sourceSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!sourceMachineKey) {
+      handleInvalid("No source machine")
+      return false
+    }
+
+    let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
+
+    writeToTerminal(
+      OutputType.SPECIAL,
+      "From: " +
+        machineTypeToLabel(sourceMachineEntity.machineType) +
+        (sourceMachineEntity.buildIndex
+          ? " #" + sourceMachineEntity.buildIndex
+          : ""),
+      true,
+      SYMBOLS[11],
+    )
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Get target machine %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+
+    // Get machines with available incoming connection slots
+    // Remove the source machine from the list
+    let targetSelectOptions = createSelectOptions(
+      COMMAND.CONNECT,
+      DIRECTION.INCOMING,
+    ).filter(option => option.value !== sourceMachineKey)
+
+    // Abort if no available targets
+    if (targetSelectOptions.length === 0) {
+      handleInvalid("No machines available")
+      return false
+    }
+
+    await writeToTerminal(OutputType.NORMAL, "TO:")
+
+    let targetMachineKey = await renderSelect(
+      selectContainerElement,
+      Select,
+      targetSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!targetMachineKey) {
+      handleInvalid("No target machine")
+      return false
+    }
+
+    let targetMachineEntity = $simulatedMachines[targetMachineKey]
+
+    await writeToTerminal(
+      OutputType.SPECIAL,
+      "To: " +
+        machineTypeToLabel(targetMachineEntity.machineType) +
+        (targetMachineEntity.buildIndex
+          ? " #" + targetMachineEntity.buildIndex
+          : ""),
+      true,
+      SYMBOLS[14],
+    )
+
+    /** Exceptions first */
+
+    // Handle splitter port selection
+    if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
+      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+      // Use the first available one
+      return [sourceMachineKey, targetMachineKey, ports[0].portIndex]
+    } else if (sourceMachineEntity.machineType === MachineType.PLAYER) {
+      await writeToTerminal(OutputType.NORMAL, "Select source port:")
+      let sourcePortOptions: SelectOption[] = []
+
+      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+
+      const portLabel = p =>
+        `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
+
+      sourcePortOptions = ports.map(p => ({
+        label: portLabel(p),
+        value: p.portIndex,
+      }))
+
+      const sourcePort = await renderSelect(
+        selectContainerElement,
+        Select,
+        sourcePortOptions,
+      )
+
+      // Abort if nothing selected
+      if (!sourcePort && sourcePort !== 0) {
+        handleInvalid("No port selected")
+        return false
+      }
+
+      return [sourceMachineKey, targetMachineKey, sourcePort]
+    } else {
+      // Use the first one
+      return [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
+    }
+  }
+
+  const getConnectStorageParameters = async (): Promise<any[] | false> => {
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Get storage %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+
+    if (
+      ($storages[$playerPod.inletEntity]?.storageConnection ?? null) !== null &&
+      ($storages[$playerPod.outletEntity]?.storageConnection ?? null) !== null
+    ) {
+      handleInvalid("No open point")
+      return false
+    }
+
+    // Get stores
+    let sourceSelectOptions = createSelectOptions(COMMAND.CONNECT_STORAGE)
+
+    await writeToTerminal(OutputType.NORMAL, "Store:")
+
+    const storageKey = await renderSelect(
+      selectContainerElement,
+      Select,
+      sourceSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!storageKey) {
+      handleInvalid("No storage selected")
+      return false
+    }
+
+    let networkPointSelectOptions: SelectOption[] = []
+
+    if (
+      ($storages[$playerPod.inletEntity]?.storageConnection ?? null) == null
+    ) {
+      networkPointSelectOptions.push({
+        label: "Inlet",
+        value: MachineType.INLET,
+      })
+    }
+
+    if (
+      ($storages[$playerPod.outletEntity]?.storageConnection ?? null) == null
+    ) {
+      networkPointSelectOptions.push({
+        label: "Outlet",
+        value: MachineType.OUTLET,
+      })
+    }
+
+    const networkPointType = await renderSelect(
+      selectContainerElement,
+      Select,
+      networkPointSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!networkPointType) {
+      handleInvalid("Nothing selected")
+      return false
+    }
+
+    return [storageKey, networkPointType]
+  }
+
   const onSubmit = async () => {
     // De-activate input-field
     inputActive = false
@@ -91,360 +345,35 @@
 
     // Handle invalid command
     if (!command) {
-      await writeToTerminal(
-        OutputType.ERROR,
-        "Command not found",
-        false,
-        SYMBOLS[5],
-      )
-      resetInput()
+      await handleInvalid("Invalid command")
       return
     }
 
-    // To be filled with required parameter values
-    // @todo: typing
-    let parameters: any[] = []
-
-    // Get required parameter values and execute command
-    if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
-      const selectOptions = createSelectOptions(command.id)
-
-      // Abort if no options
-      if (selectOptions.length === 0) {
-        await writeToTerminal(OutputType.ERROR, "Nothing", false, SYMBOLS[4])
-        resetInput()
-        return
-      }
-
-      let value = await renderSelect(
-        selectContainerElement,
-        Select,
-        selectOptions,
-      )
-
-      // Abort if nothing selected
-      if (!value) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "Nothing selected",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      // Push the value to parameters
-      parameters = [value]
-    } else if (command.id === COMMAND.DISCONNECT) {
-      let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
-
-      const connectionId = await renderSelect(
-        selectContainerElement,
-        Select,
-        disconnectOptions,
-      )
-
-      // Get the port index that this connection belongs to
-
-      // Abort if nothing selected
-      if (
-        !connectionId ||
-        !$simulatedConnections.find(c => c.id === connectionId)
-      ) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No connection",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      const connection = $simulatedConnections.find(c => c.id === connectionId)
-
-      parameters = [connection.sourceMachine, connection.portIndex]
-    } else if (command.id === COMMAND.CONNECT) {
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-      // %% Get source machine %%
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-
-      // Get machines with available outgoing connection slots
-      let sourceSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.OUTGOING,
-      )
-
-      await writeToTerminal(OutputType.NORMAL, "From:")
-
-      let sourceMachineKey = await renderSelect(
-        selectContainerElement,
-        Select,
-        sourceSelectOptions,
-      )
-
-      // Abort if nothing selected
-      if (!sourceMachineKey) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No source machine",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
-
-      writeToTerminal(
-        OutputType.SPECIAL,
-        "From: " +
-          machineTypeToLabel(sourceMachineEntity.machineType) +
-          (sourceMachineEntity.buildIndex
-            ? " #" + sourceMachineEntity.buildIndex
-            : ""),
-        true,
-        SYMBOLS[11],
-      )
-
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-      // %% Get target machine %%
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-
-      // Get machines with available incoming connection slots
-      // Remove the source machine from the list
-      let targetSelectOptions = createSelectOptions(
-        COMMAND.CONNECT,
-        DIRECTION.INCOMING,
-      ).filter(option => option.value !== sourceMachineKey)
-
-      // Abort if no available targets
-      if (targetSelectOptions.length === 0) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No machines available",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      await writeToTerminal(OutputType.NORMAL, "TO:")
-
-      let targetMachineKey = await renderSelect(
-        selectContainerElement,
-        Select,
-        targetSelectOptions,
-      )
-
-      // Abort if nothing selected
-      if (!targetMachineKey) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No target machine",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      let targetMachineEntity = $simulatedMachines[targetMachineKey]
-
-      await writeToTerminal(
-        OutputType.SPECIAL,
-        "To: " +
-          machineTypeToLabel(targetMachineEntity.machineType) +
-          (targetMachineEntity.buildIndex
-            ? " #" + targetMachineEntity.buildIndex
-            : ""),
-        true,
-        SYMBOLS[14],
-      )
-
-      /** Exceptions first */
-
-      // Handle splitter port selection
-      if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
-        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-        // Use the first available one
-        parameters = [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-      } else if (sourceMachineEntity.machineType === MachineType.PLAYER) {
-        await writeToTerminal(OutputType.NORMAL, "Select source port:")
-        let sourcePortOptions: SelectOption[] = []
-
-        const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
-        const portLabel = p =>
-          `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
-
-        sourcePortOptions = ports.map(p => ({
-          label: portLabel(p),
-          value: p.portIndex,
-        }))
-
-        let sourcePort = await renderSelect(
-          selectContainerElement,
-          Select,
-          sourcePortOptions,
-        )
-
-        // Abort if nothing selected
-        if (!sourcePort && sourcePort !== 0) {
-          await writeToTerminal(
-            OutputType.ERROR,
-            "No port selected",
-            false,
-            SYMBOLS[5],
-          )
-          resetInput()
-          return
-        }
-
-        parameters = [sourceMachineKey, targetMachineKey, sourcePort]
-      } else {
-        // Use the first one
-        parameters = [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
-      }
-    } else if (command.id === COMMAND.CONNECT_STORAGE) {
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-      // %% Get storage %%
-      // %%%%%%%%%%%%%%%%%%%%%%%%
-
-      console.log($storages[$playerPod.inletEntity]?.storageConnection ?? null)
-      console.log($storages[$playerPod.outletEntity]?.storageConnection ?? null)
-
-      if (
-        ($storages[$playerPod.inletEntity]?.storageConnection ?? null) !==
-          null &&
-        ($storages[$playerPod.outletEntity]?.storageConnection ?? null) !== null
-      ) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No open point",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      // Get stores
-      let sourceSelectOptions = createSelectOptions(COMMAND.CONNECT_STORAGE)
-
-      await writeToTerminal(OutputType.NORMAL, "Store:")
-
-      let storageKey = await renderSelect(
-        selectContainerElement,
-        Select,
-        sourceSelectOptions,
-      )
-
-      // Abort if nothing selected
-      if (!storageKey) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "No storage selected",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      let networkPointSelectOptions: SelectOption[] = []
-
-      if (
-        ($storages[$playerPod.inletEntity]?.storageConnection ?? null) == null
-      ) {
-        networkPointSelectOptions.push({
-          label: "Inlet",
-          value: MachineType.INLET,
-        })
-      }
-
-      if (
-        ($storages[$playerPod.outletEntity]?.storageConnection ?? null) == null
-      ) {
-        networkPointSelectOptions.push({
-          label: "Outlet",
-          value: MachineType.OUTLET,
-        })
-      }
-
-      let networkPointType = await renderSelect(
-        selectContainerElement,
-        Select,
-        networkPointSelectOptions,
-      )
-
-      // Abort if nothing selected
-      if (!networkPointType) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "Nothing selected",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      parameters = [storageKey, networkPointType]
-    } else if (command.id === COMMAND.DISCONNECT_STORAGE) {
-      if (
-        ($simulatedMachines[$playerPod.inletEntity]?.storageConnection ??
-          null) == null &&
-        ($simulatedMachines[$playerPod.outletEntity]?.storageConnection ??
-          null) == null
-      ) {
-        await writeToTerminal(
-          OutputType.ERROR,
-          "Nothing to disconnect",
-          false,
-          SYMBOLS[5],
-        )
-        resetInput()
-        return
-      }
-
-      let networkPointSelectOptions: SelectOption[] = []
-
-      if (
-        $simulatedMachines[$playerPod.inletEntity]?.storageConnection !== null
-      ) {
-        networkPointSelectOptions.push({
-          label: "Inlet",
-          value: MachineType.INLET,
-        })
-      }
-
-      if (
-        $simulatedMachines[$playerPod.outletEntity]?.storageConnection !== null
-      ) {
-        networkPointSelectOptions.push({
-          label: "Outlet",
-          value: MachineType.OUTLET,
-        })
-      }
-
-      let networkPointType = await renderSelect(
-        selectContainerElement,
-        Select,
-        networkPointSelectOptions,
-      )
-
-      parameters = [networkPointType]
+    // First, simply execute the command if it has no parameters
+    if (NO_INPUT_COMMANDS.includes(command.id)) {
+      await executeCommand(command, [])
+      return
     }
 
-    // Execute function
-    await command.fn(...parameters)
+    // We prompt the user for the information needed to execute the command
 
-    // Note: It is the parents responibility to reset the input on this event
-    dispatch("commandExecuted", { command, parameters })
+    let parameters: any[] | false = false
+
+    if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
+      parameters = await getSingleInputCommandParameters(command)
+    } else if (command.id === COMMAND.CONNECT) {
+      parameters = await getConnectParameters()
+    } else if (command.id === COMMAND.DISCONNECT) {
+      parameters = await getDisconnectParameters()
+    } else if (command.id === COMMAND.CONNECT_STORAGE) {
+      parameters = await getConnectStorageParameters()
+    }
+
+    // Something went wrong in the parameter selection
+    if (!parameters) return
+
+    // Finally, execute the command with the parameters
+    executeCommand(command, parameters)
   }
 
   const onInput = (e: KeyboardEvent) => {
@@ -454,11 +383,6 @@
   onMount(() => {
     cursorCharacter.set("█")
     inputElement?.focus()
-    // if (setBlink)
-    //   interval = setInterval(
-    //     () => cursorCharacter.set($cursorCharacter === "" ? "█" : ""),
-    //     400
-    //   )
   })
 
   onDestroy(() => {
@@ -493,10 +417,6 @@
         bind:this={inputElement}
         bind:value={userInput}
       />
-      <!-- style:width="{userInput.length}ch" -->
-      <!-- <span>
-        {$cursorCharacter}
-      </span> -->
     </form>
   {/if}
 </div>

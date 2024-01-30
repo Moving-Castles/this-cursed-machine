@@ -61,7 +61,7 @@
           <div class="graph">
             <Graph />
           </div>
-          <div class="tab-switch">POD / MAP/ ORDERS / LEADERBOARD / CHAT</div>
+          <div class="tab-switch">POD / MAP / LEADERBOARD / ORDERS / CHAT</div>
         </div>
       {/if}
     </div>
