@@ -7,24 +7,39 @@ import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 
 contract ResolveSystemTest is BaseTest {
+  bytes32 playerEntity;
+  bytes32 podEntity;
+  bytes32 inletEntity;
+  bytes32 outletEntity;
+  bytes32[] storageInPod;
+  bytes32 dispenserEntity;
+
+  function setUp() public override {
+    super.setUp();
+    vm.startPrank(alice);
+
+    // Spawn player
+    playerEntity = world.spawn();
+    world.start();
+
+    podEntity = CarriedBy.get(playerEntity);
+
+    inletEntity = FixedEntities.get(podEntity).inlet;
+    outletEntity = FixedEntities.get(podEntity).outlet;
+
+    storageInPod = StorageInPod.get(podEntity);
+
+    dispenserEntity = FixedEntities.get(podEntity).dispenser;
+
+    vm.stopPrank();
+  }
+
   function testResolve() public {
     setUp();
 
     vm.startPrank(alice);
 
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.start();
-
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    bytes32 inletEntity = InletEntity.get(podEntity);
-    bytes32 outletEntity = OutletEntity.get(podEntity);
-
-    bytes32[] memory storageInPod = StorageInPod.get(podEntity);
-
     // Connect dispenser to inlet
-    bytes32 dispenserEntity = DispenserEntity.get(podEntity);
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 1 to outlet
@@ -47,7 +62,7 @@ contract ResolveSystemTest is BaseTest {
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 100 = 300
     assertEq(Amount.get(storageInPod[1]), 300);
-    assertEq(Amount.get(DispenserEntity.get(podEntity)), 700); // 1000 - 300
+    assertEq(Amount.get(dispenserEntity), 700); // 1000 - 300
   }
 
   function testMachineProcessingLoss() public {
@@ -55,19 +70,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.start();
-
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    bytes32 inletEntity = InletEntity.get(podEntity);
-    bytes32 outletEntity = OutletEntity.get(podEntity);
-
-    bytes32[] memory storageInPod = StorageInPod.get(podEntity);
-
     // Connect dispenser to inlet
-    bytes32 dispenserEntity = DispenserEntity.get(podEntity);
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 1 to outlet
@@ -101,19 +104,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.start();
-
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    bytes32 inletEntity = InletEntity.get(podEntity);
-    bytes32 outletEntity = OutletEntity.get(podEntity);
-
-    bytes32[] memory storageInPod = StorageInPod.get(podEntity);
-
     // Connect dispenser to inlet
-    bytes32 dispenserEntity = DispenserEntity.get(podEntity);
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 2 to outlet
@@ -153,19 +144,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.start();
-
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    bytes32 inletEntity = InletEntity.get(podEntity);
-    bytes32 outletEntity = OutletEntity.get(podEntity);
-
-    bytes32[] memory storageInPod = StorageInPod.get(podEntity);
-
     // Connect dispenser to inlet
-    bytes32 dispenserEntity = DispenserEntity.get(podEntity);
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 2 to outlet

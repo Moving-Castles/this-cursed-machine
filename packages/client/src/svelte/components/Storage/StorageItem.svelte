@@ -36,8 +36,8 @@
   }
 
   const getConnectionName = (machineEntity: string) => {
-    if (machineEntity === $playerPod.inletEntity) return "Inlet"
-    if (machineEntity === $playerPod.outletEntity) return "Outlet"
+    if (machineEntity === $playerPod.fixedEntities?.inletEntity) return "Inlet"
+    if (machineEntity === $playerPod.fixedEntities?.outletEntity) return "Outlet"
     return "none"
   }
 </script>

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
-import { GameConfig, GameConfigData, EntityType, LastResolved, EntityTypeTableId, CreationBlock, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId, BuildIndex } from "../codegen/index.sol";
+import { GameConfig, GameConfigData, EntityType, LastResolved, EntityTypeTableId, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -17,7 +17,6 @@ library LibPod {
   function create() internal returns (bytes32) {
     bytes32 podEntity = LibUtils.getRandomKey();
     EntityType.set(podEntity, ENTITY_TYPE.POD);
-    CreationBlock.set(podEntity, block.number);
     LastResolved.set(podEntity, block.number);
     return podEntity;
   }

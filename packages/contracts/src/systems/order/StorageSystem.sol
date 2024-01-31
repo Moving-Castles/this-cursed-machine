@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, StorageConnection, InletEntity, OutletEntity } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, MachineType, Amount, StorageConnection, FixedEntities } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibNetwork } from "../../libraries/Libraries.sol";
 
@@ -20,8 +20,8 @@ contract StorageSystem is System {
     LibNetwork.resolve(playerEntity);
 
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET
-      ? InletEntity.get(podEntity)
-      : OutletEntity.get(podEntity);
+      ? FixedEntities.get(podEntity).inlet
+      : FixedEntities.get(podEntity).outlet;
 
     require(StorageConnection.get(targetEntity) == bytes32(0), "target already connected");
 
@@ -43,8 +43,8 @@ contract StorageSystem is System {
     LibNetwork.resolve(playerEntity);
 
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET
-      ? InletEntity.get(podEntity)
-      : OutletEntity.get(podEntity);
+      ? FixedEntities.get(podEntity).inlet
+      : FixedEntities.get(podEntity).outlet;
 
     bytes32 _storageEntity = StorageConnection.get(targetEntity);
 

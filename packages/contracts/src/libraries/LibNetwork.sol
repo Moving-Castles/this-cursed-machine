@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, InletEntity, OutletEntity } from "../codegen/index.sol";
+import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
@@ -45,8 +45,8 @@ library LibNetwork {
 
     // Connected storages. 1 => inlet storage, 2 => outlet storage
     bytes32[] memory connectedStorages = new bytes32[](2);
-    connectedStorages[0] = StorageConnection.get(InletEntity.get(podEntity));
-    connectedStorages[1] = StorageConnection.get(OutletEntity.get(podEntity));
+    connectedStorages[0] = StorageConnection.get(FixedEntities.get(podEntity).inlet);
+    connectedStorages[1] = StorageConnection.get(FixedEntities.get(podEntity).outlet);
 
     // Abort if inlet or outlet is not connected to storage
     if (connectedStorages[0] == bytes32(0) || connectedStorages[1] == bytes32(0)) return;

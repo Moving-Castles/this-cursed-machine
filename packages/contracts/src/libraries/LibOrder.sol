@@ -1,40 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { EntityType, MaterialType, Amount, Tutorial, GoalEntity, ResourceEntity, CreationBlock } from "../codegen/index.sol";
+import { EntityType, Order, OrderData, Tutorial } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibOrder {
-  function createTutorialOrder(
-    MATERIAL_TYPE _resourceMaterial,
-    uint32 _resourceAmount,
-    MATERIAL_TYPE _goalMaterial,
-    uint32 _goalAmount
-  ) internal returns (bytes32) {
-    bytes32 orderEntity = LibUtils.getRandomKey();
-    EntityType.set(orderEntity, ENTITY_TYPE.ORDER);
-
-    Tutorial.set(orderEntity, true);
-
-    bytes32 goalEntity = LibUtils.getRandomKey();
-    MaterialType.set(goalEntity, _goalMaterial);
-    Amount.set(goalEntity, _goalAmount);
-
-    bytes32 resourceEntity = LibUtils.getRandomKey();
-    MaterialType.set(resourceEntity, _resourceMaterial);
-    Amount.set(resourceEntity, _resourceAmount);
-
-    GoalEntity.set(orderEntity, goalEntity);
-    ResourceEntity.set(orderEntity, resourceEntity);
-
-    return orderEntity;
-  }
-
   function createOrder(
     MATERIAL_TYPE _resourceMaterial,
     uint32 _resourceAmount,
     MATERIAL_TYPE _goalMaterial,
     uint32 _goalAmount,
+    bool _isTutorial,
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
@@ -42,18 +18,21 @@ library LibOrder {
     bytes32 orderEntity = LibUtils.getRandomKey();
     EntityType.set(orderEntity, ENTITY_TYPE.ORDER);
 
-    CreationBlock.set(orderEntity, block.number);
+    Order.set(
+      orderEntity,
+      OrderData({
+        creationBlock: block.number,
+        resourceMaterialType: _resourceMaterial,
+        resourceAmount: _resourceAmount,
+        goalMaterialType: _goalMaterial,
+        goalAmount: _goalAmount,
+        rewardAmount: _reward,
+        maxPlayers: _maxPlayers,
+        duration: _duration
+      })
+    );
 
-    bytes32 goalEntity = LibUtils.getRandomKey();
-    MaterialType.set(goalEntity, _goalMaterial);
-    Amount.set(goalEntity, _goalAmount);
-
-    bytes32 resourceEntity = LibUtils.getRandomKey();
-    MaterialType.set(resourceEntity, _resourceMaterial);
-    Amount.set(resourceEntity, _resourceAmount);
-
-    GoalEntity.set(orderEntity, goalEntity);
-    ResourceEntity.set(orderEntity, resourceEntity);
+    if (_isTutorial) Tutorial.set(orderEntity, true);
 
     return orderEntity;
   }

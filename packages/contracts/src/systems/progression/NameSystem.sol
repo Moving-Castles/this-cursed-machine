@@ -13,7 +13,7 @@ contract NameSystem is System {
   function name(string memory _name) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(Tutorial.get(playerEntity) != false, "not completed");
-    require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked("")), "name empty");
+    require(!LibUtils.stringEq(_name, ""), "name empty");
     Name.set(playerEntity, _name);
   }
 }

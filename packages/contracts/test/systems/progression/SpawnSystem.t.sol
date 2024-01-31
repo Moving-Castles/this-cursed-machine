@@ -18,7 +18,6 @@ contract SpawnSystemTest is BaseTest {
     assertEq(uint8(MachineType.get(playerEntity)), uint8(MACHINE_TYPE.PLAYER));
     assertEq(TutorialLevel.get(playerEntity), 0);
     assertEq(SpawnIndex.get(playerEntity), 1);
-    assertEq(CreationBlock.get(playerEntity), block.number);
     assertEq(IncomingConnections.get(playerEntity).length, 1);
     assertEq(OutgoingConnections.get(playerEntity).length, 2);
   }
@@ -35,9 +34,9 @@ contract SpawnSystemTest is BaseTest {
     assertEq(TutorialLevel.get(playerEntity), 0);
     assertEq(CurrentOrder.get(podEntity), TutorialOrders.get()[0]);
     assertEq(
-      uint32(MaterialType.get(DispenserEntity.get(podEntity))),
-      uint32(MaterialType.get(ResourceEntity.get(TutorialOrders.get()[0])))
+      uint32(MaterialType.get(FixedEntities.get(podEntity).dispenser)),
+      uint32(Order.get(TutorialOrders.get()[0]).resourceMaterialType)
     );
-    assertEq(Amount.get(DispenserEntity.get(podEntity)), Amount.get(ResourceEntity.get(TutorialOrders.get()[0])));
+    assertEq(Amount.get(FixedEntities.get(podEntity).dispenser), Order.get(TutorialOrders.get()[0]).resourceAmount);
   }
 }

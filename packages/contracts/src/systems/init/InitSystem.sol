@@ -17,8 +17,8 @@ contract InitSystem is System {
 
     // Create tutorial orders
     bytes32[2] memory tutorialOrders = [
-      LibOrder.createTutorialOrder(MATERIAL_TYPE.BUG, 1000, MATERIAL_TYPE.PISS, 500),
-      LibOrder.createTutorialOrder(MATERIAL_TYPE.BUG, 2000, MATERIAL_TYPE.BLOOD, 500)
+      LibOrder.createOrder(MATERIAL_TYPE.BUG, 1000, MATERIAL_TYPE.PISS, 500, true, 0, 0, 0),
+      LibOrder.createOrder(MATERIAL_TYPE.BUG, 2000, MATERIAL_TYPE.BLOOD, 500, true, 0, 0, 0)
     ];
 
     TutorialOrders.set(tutorialOrders);

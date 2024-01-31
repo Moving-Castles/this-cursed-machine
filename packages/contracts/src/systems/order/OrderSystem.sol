@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, EntityType, CarriedBy, MaterialType, Amount, CurrentOrder, StorageConnection, GoalEntity, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, ResourceEntity, DispenserEntity } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, StorageConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder } from "../../libraries/Libraries.sol";
 
@@ -14,12 +14,14 @@ contract OrderSystem is System {
     require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
     require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
     require(StorageConnection.get(_storageEntity) == bytes32(0), "storage connected");
-    require(CurrentOrder.get(podEntity) != bytes32(0), "no order");
+
+    bytes32 currentOrder = CurrentOrder.get(podEntity);
+    require(currentOrder != bytes32(0), "no order");
 
     // Check if order goals are met
     require(
-      MaterialType.get(_storageEntity) == MaterialType.get(GoalEntity.get(CurrentOrder.get(podEntity))) &&
-        Amount.get(_storageEntity) >= Amount.get(GoalEntity.get(CurrentOrder.get(podEntity))),
+      MaterialType.get(_storageEntity) == Order.get(currentOrder).goalMaterialType &&
+        Amount.get(_storageEntity) >= Order.get(currentOrder).goalAmount,
       "order not met"
     );
 
@@ -37,13 +39,10 @@ contract OrderSystem is System {
 
         // Fill dispenser
         MaterialType.set(
-          DispenserEntity.get(podEntity),
-          MaterialType.get(ResourceEntity.get(TutorialOrders.get()[nextTutorialLevel]))
+          FixedEntities.get(podEntity).dispenser,
+          Order.get(CurrentOrder.get(podEntity)).resourceMaterialType
         );
-        Amount.set(
-          DispenserEntity.get(podEntity),
-          Amount.get(ResourceEntity.get(TutorialOrders.get()[nextTutorialLevel]))
-        );
+        Amount.set(FixedEntities.get(podEntity).dispenser, Order.get(CurrentOrder.get(podEntity)).resourceAmount);
       } else {
         // Tutorial done
         Tutorial.set(playerEntity, false);
@@ -58,10 +57,7 @@ contract OrderSystem is System {
     // Not in tutorial mode
 
     // Add player to completedPlayers list
-    CompletedPlayers.set(
-      CurrentOrder.get(podEntity),
-      LibUtils.addToArray(CompletedPlayers.get(podEntity), playerEntity)
-    );
+    CompletedPlayers.set(currentOrder, LibUtils.addToArray(CompletedPlayers.get(currentOrder), playerEntity));
 
     // Clear currentOrder
     CurrentOrder.set(podEntity, bytes32(0));
@@ -101,6 +97,7 @@ contract OrderSystem is System {
       _resourceAmount,
       _goalMaterialType,
       _goalAmount,
+      false, // Not tutorial
       _reward,
       _duration,
       _maxPlayers
@@ -111,5 +108,7 @@ contract OrderSystem is System {
 
   function cancel(bytes32 _orderEntity) public {
     // Todo: Restrict to admin
+    Order.deleteRecord(_orderEntity);
+    CompletedPlayers.deleteRecord(_orderEntity);
   }
 }

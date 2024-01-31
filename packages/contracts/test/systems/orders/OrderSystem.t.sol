@@ -7,24 +7,42 @@ import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
 
 contract OrderSystemTest is BaseTest {
+  bytes32 playerEntity;
+  bytes32 podEntity;
+  bytes32 inletEntity;
+  bytes32 outletEntity;
+  bytes32[] storageInPod;
+  bytes32[] tutorialLevels;
+  bytes32 dispenserEntity;
+
+  function setUp() public override {
+    super.setUp();
+    vm.startPrank(alice);
+
+    // Spawn player
+    playerEntity = world.spawn();
+    world.start();
+
+    podEntity = CarriedBy.get(playerEntity);
+
+    inletEntity = FixedEntities.get(podEntity).inlet;
+    outletEntity = FixedEntities.get(podEntity).outlet;
+
+    storageInPod = StorageInPod.get(podEntity);
+
+    dispenserEntity = FixedEntities.get(podEntity).dispenser;
+
+    tutorialLevels = TutorialOrders.get();
+
+    vm.stopPrank();
+  }
+
   function testFill() public {
     setUp();
 
     vm.startPrank(alice);
 
-    // Spawn player
-    bytes32 playerEntity = world.spawn();
-    world.start();
-
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    bytes32 inletEntity = InletEntity.get(podEntity);
-    bytes32 outletEntity = OutletEntity.get(podEntity);
-
-    bytes32[] memory storageInPod = StorageInPod.get(podEntity);
-
     // Connect dispenser to inlet
-    bytes32 dispenserEntity = DispenserEntity.get(podEntity);
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 1 to outlet
@@ -58,10 +76,10 @@ contract OrderSystemTest is BaseTest {
     assertEq(Amount.get(storageInPod[1]), 0);
 
     // Order is set to second tutorial order
-    assertEq(CurrentOrder.get(podEntity), TutorialOrders.get()[1]);
+    assertEq(CurrentOrder.get(podEntity), tutorialLevels[1]);
 
-    assertEq(uint32(MaterialType.get(dispenserEntity)), uint32(MATERIAL_TYPE.BUG));
-    assertEq(Amount.get(dispenserEntity), 2000);
+    assertEq(uint32(MaterialType.get(dispenserEntity)), uint32(Order.get(tutorialLevels[1]).resourceMaterialType));
+    assertEq(Amount.get(dispenserEntity), Order.get(tutorialLevels[1]).resourceAmount);
 
     vm.stopPrank();
   }

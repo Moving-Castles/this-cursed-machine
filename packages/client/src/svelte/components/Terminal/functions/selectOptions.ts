@@ -202,7 +202,7 @@ function createSelectOptionsDisconnectStorage(): SelectOption[] {
   }
 
   if (
-    get(simulatedMachines)[get(playerPod).outletEntity]?.storageConnection
+    get(simulatedMachines)[get(playerPod).fixedEntities?.outletEntity]?.storageConnection
   ) {
     selectOptions.push({
       label: "Outlet",

@@ -9,17 +9,20 @@ declare global {
 
   type Entity = {
     [key: string]: any
+    gameConfig?: GameConfig
     entityType?: EntityType
     machineType?: MachineType
     materialType?: MaterialType
+    amount?: number
     name?: string
     carriedBy?: string
-    amount?: number
-    creationBlock?: number
     buildIndex?: number
     spawnIndex?: number
-    tutorialLevel?: number
     tutorial?: boolean
+    tutorialLevel?: number
+    tutorialOrders?: string[]
+    order?: OrderData
+    completedPlayers?: string[]
     lastResolved?: number
     input?: number
     output?: MaterialType
@@ -28,21 +31,13 @@ declare global {
     storageConnection?: string
     machinesInPod?: string[]
     storageInPod?: string[]
-    completionTimes?: number[]
-    gameConfig?: GameConfig
-    outletEntity?: string
-    inletEntity?: string
+    fixedEntities?: FixedEntities
     currentOrder?: string
   }
 
   // * * * * * * * * * * * * * * * * *
   // GAME CONFIG ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
-
-  type GameConfig = {
-    tokenAddress: string,
-    globalSpawnIndex: number
-  }
 
   type Recipe = {
     entityType: EntityType.RECIPE
@@ -51,11 +46,26 @@ declare global {
     output: MaterialType
   }
 
-  type Goal = {
-    entityType: EntityType.GOAL
-    level: number
-    materialType: MaterialType
-    amount: number
+  type FixedEntities = {
+    outletEntity?: string
+    inletEntity?: string
+    dispenserEntity?: string
+  }
+
+  type OrderData = {
+    creationBlock: number
+    resourceMaterialType: MaterialType
+    resourceAmount: number
+    goalMaterialType: MaterialType
+    goalAmount: number
+    rewardAmount: number
+    maxPlayers: number
+    duration: number
+  }
+
+  type GameConfig = {
+    tokenAddress: string,
+    globalSpawnIndex: number
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -64,27 +74,24 @@ declare global {
 
   type Pod = {
     entityType: EntityType.POD
-    creationBlock: number
     lastResolved: number
     machinesInPod: string[]
     storageInPod: string[]
-    outletEntity: string
-    inletEntity: string
     currentOrder: string
-    tutorial: boolean
+    fixedEntities?: FixedEntities
   }
 
   // aka. stump (fka. core)
   type Player = {
     entityType: EntityType.MACHINE
     machineType: MachineType.PLAYER
-    creationBlock: number
     spawnIndex: number
     name?: string
     carriedBy: string
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
+    tutorial: boolean // True if player is in training
   }
 
   type Machine = {
@@ -106,12 +113,15 @@ declare global {
   }
 
   type Order = {
-    materialType: EntityType.ORDER
+    entityType: EntityType.ORDER
+    order: OrderData
     completedPlayers: string[]
   }
 
   type TutorialOrder = {
-    materialType: EntityType.ORDER
+    entityType: EntityType.ORDER
+    order: OrderData
+    tutorial: true
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -124,10 +134,6 @@ declare global {
 
   type Recipes = {
     [index: string]: Recipe
-  }
-
-  type Goals = {
-    [index: string]: Goal
   }
 
   type Players = {
@@ -150,9 +156,14 @@ declare global {
     [index: string]: Order
   }
 
+  type TutorialOrders = {
+    [index: string]: TutorialOrder
+  }
+
   // * * * * * * * * * * * * * * * * *
   // MISC TYPES
   // * * * * * * * * * * * * * * * * *
+
   type Coord = {
     x: number
     y: number

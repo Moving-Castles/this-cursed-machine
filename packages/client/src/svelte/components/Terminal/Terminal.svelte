@@ -268,8 +268,8 @@
     // %%%%%%%%%%%%%%%%%%%%%%%%
 
     if (
-      ($storages[$playerPod.inletEntity]?.storageConnection ?? null) !== null &&
-      ($storages[$playerPod.outletEntity]?.storageConnection ?? null) !== null
+      ($storages[$playerPod.fixedEntities?.inletEntity]?.storageConnection ?? null) !== null &&
+      ($storages[$playerPod.fixedEntities?.outletEntity]?.storageConnection ?? null) !== null
     ) {
       handleInvalid("No open point")
       return false

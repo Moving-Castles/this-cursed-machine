@@ -15,7 +15,7 @@ export default mudConfig({
             keySchema: {},
             valueSchema: {
                 tokenAddress: "address",
-                globalSpawnIndex: "uint32",
+                globalSpawnIndex: "uint32", // Global index for all players
             },
             dataStruct: true,
         },
@@ -27,8 +27,7 @@ export default mudConfig({
         // ...
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in
-        CreationBlock: "uint256",
-        BuildIndex: "uint32",
+        BuildIndex: "uint32", // Index of the machines in the pod, used by machine type
         SpawnIndex: "uint32",
         // ...
         Tutorial: "bool",
@@ -39,24 +38,37 @@ export default mudConfig({
                 value: "bytes32[2]"
             }
         },
+        Order: {
+            valueSchema: {
+                creationBlock: "uint256",
+                resourceMaterialType: "MATERIAL_TYPE",
+                resourceAmount: "uint32",
+                goalMaterialType: "MATERIAL_TYPE",
+                goalAmount: "uint32",
+                rewardAmount: "uint32",
+                maxPlayers: "uint32",
+                duration: "uint256",
+            }
+        },
         CompletedPlayers: "bytes32[]",
         // ...
         LastResolved: "uint256",
         Input: "uint256",
         Output: "MATERIAL_TYPE",
         // ...
-        OutgoingConnections: "bytes32[]",
         IncomingConnections: "bytes32[]",
-        // ...
+        OutgoingConnections: "bytes32[]",
         StorageConnection: "bytes32",
         MachinesInPod: "bytes32[]",
         StorageInPod: "bytes32[]",
-        OutletEntity: "bytes32",
-        InletEntity: "bytes32",
-        DispenserEntity: "bytes32",
-        CurrentOrder: "bytes32",
-        GoalEntity: "bytes32",
-        ResourceEntity: "bytes32"
+        FixedEntities: {
+            valueSchema: {
+                outlet: "bytes32",
+                inlet: "bytes32",
+                dispenser: "bytes32"
+            }
+        },
+        CurrentOrder: "bytes32"
     },
     modules: [
         {
