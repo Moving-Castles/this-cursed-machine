@@ -8,7 +8,6 @@ import { connect } from "./connect";
 import { disconnect } from "./disconnect";
 import { destroy } from "./destroy";
 import { inspect } from "./inspect";
-import { transfer } from "./transfer";
 import { resolve } from "./resolve";
 import { map } from "./map";
 import { order } from "./order";
@@ -31,7 +30,6 @@ export const commands: Command[] = [
     clear,
     help,
     resolve,
-    transfer,
     skip,
     start,
     fail,

@@ -186,6 +186,11 @@ function createSelectOptionsConnectStorage(): SelectOption[] {
       value: address,
     }))
 
+  selectOptions.unshift({
+    label: "Dispenser",
+    value: get(playerPod).fixedEntities.dispenser
+  })
+
   return selectOptions
 }
 
@@ -193,7 +198,7 @@ function createSelectOptionsDisconnectStorage(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   if (
-    get(simulatedMachines)[get(playerPod).inletEntity]?.storageConnection
+    get(simulatedMachines)[get(playerPod).fixedEntities.inlet].storageConnection
   ) {
     selectOptions.push({
       label: "Inlet",
@@ -202,7 +207,7 @@ function createSelectOptionsDisconnectStorage(): SelectOption[] {
   }
 
   if (
-    get(simulatedMachines)[get(playerPod).fixedEntities?.outletEntity]?.storageConnection
+    get(simulatedMachines)[get(playerPod).fixedEntities.outlet].storageConnection
   ) {
     selectOptions.push({
       label: "Outlet",

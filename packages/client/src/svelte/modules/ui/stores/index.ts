@@ -32,18 +32,15 @@ export const delayedTweened = (resetToValue, delay) => {
 export enum UI {
   LOADING,
   SPAWNING,
-  DEAD,
   READY,
   COMPLETED,
   NAMED,
-  DASHBOARD
 }
 
 export const UIState = writable(UI.LOADING)
 export const showFlowChart = writable(false)
 export const showGraph = writable(false)
 export const showMap = writable(false)
-export const showLevelModal = writable(false)
 export const localLevel = writable(0)
 export const lastCompletedBlock = writable(0)
 export const cursorCharacter = writable("")

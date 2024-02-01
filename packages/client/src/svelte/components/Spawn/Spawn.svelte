@@ -4,7 +4,7 @@
   import { SYMBOLS } from "../Terminal"
   import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { playerEntity, levels } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
 
   const dispatch = createEventDispatcher()
 
@@ -44,7 +44,7 @@
     //     1000,
     //   )
     //   dispatch("completed")
-    // } else 
+    // } else
     if ($playerEntity && $playerEntity.carriedBy) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,

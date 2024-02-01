@@ -4,12 +4,10 @@ import { blockNumber } from "../../network"
 import { playerPod, playerEntity } from "../../state"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
-import { checkLevelGoals } from "./checkLevelGoals"
 import { pulseGraph } from "../../ui/transitions"
 import {
   UIState,
   UI,
-  showLevelModal,
   lastCompletedBlock,
 } from "../../ui/stores"
 
@@ -29,7 +27,6 @@ export async function initStateSimulator() {
     const playerPodValue = get(playerPod)
     const localResolvedValue = get(localResolved)
     // const lastCompletedBlockValue = get(lastCompletedBlock)
-    // const showLevelValue = get(showLevelModal)
 
     // Player is not spawned yet
     if (!playerEntityValue) return

@@ -1,18 +1,16 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from "svelte"
-  import { playerEntity, levels } from "../../modules/state"
+  import { onMount } from "svelte"
+  import { playerEntity } from "../../modules/state"
   import { playSound } from "../../modules/sound"
 
-  import { showLevelModal, showMap } from "../../modules/ui/stores"
+  import { showMap } from "../../modules/ui/stores"
 
   import Terminal from "../Terminal/Terminal.svelte"
   import Graph from "../Graph/Graph.svelte"
-  import LevelModal from "../LevelModal/LevelModal.svelte"
   import Tooltips from "../Tooltip/Tooltips.svelte"
   import Map from "../Map/Map.svelte"
   import StorageBox from "../Storage/StorageBox.svelte"
-
-  //   const dispatch = createEventDispatcher()
+  import OrderBar from "./OrderBar.svelte"
 
   let terminalComponent: any
 
@@ -29,10 +27,6 @@
     playSound("tcm", "podBg", true, false)
   })
 </script>
-
-{#if $showLevelModal}
-  <LevelModal />
-{/if}
 
 {#if $showMap}
   <Map />
@@ -54,7 +48,9 @@
       </div>
       {#if $playerEntity}
         <div class="right-col">
-          <div class="status-bar">CURRENT ORDER:</div>
+          <div class="status-bar">
+            <OrderBar />
+          </div>
           <div class="stats">
             <StorageBox />
           </div>

@@ -27,7 +27,12 @@
     simulatedConnections,
   } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
-  import { playerEntity, storages, playerPod } from "../../modules/state"
+  import {
+    playerEntity,
+    storages,
+    playerPod,
+    entities,
+  } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeLevel } from "./functions/writeLevel"
@@ -267,13 +272,15 @@
     // %% Get storage %%
     // %%%%%%%%%%%%%%%%%%%%%%%%
 
-    if (
-      ($storages[$playerPod.fixedEntities?.inletEntity]?.storageConnection ?? null) !== null &&
-      ($storages[$playerPod.fixedEntities?.outletEntity]?.storageConnection ?? null) !== null
-    ) {
-      handleInvalid("No open point")
-      return false
-    }
+    // if (
+    //   ($entities[$playerPod.fixedEntities.inlet]?.storageConnection ?? null) !==
+    //     null &&
+    //   ($entities[$playerPod.fixedEntities.outlet]?.storageConnection ??
+    //     null) !== null
+    // ) {
+    //   handleInvalid("No open point")
+    //   return false
+    // }
 
     // Get stores
     let sourceSelectOptions = createSelectOptions(COMMAND.CONNECT_STORAGE)
@@ -294,23 +301,25 @@
 
     let networkPointSelectOptions: SelectOption[] = []
 
-    if (
-      ($storages[$playerPod.inletEntity]?.storageConnection ?? null) == null
-    ) {
-      networkPointSelectOptions.push({
-        label: "Inlet",
-        value: MachineType.INLET,
-      })
-    }
+    // if (
+    //   ($entities[$playerPod.fixedEntities.inlet]?.storageConnection ?? null) ==
+    //   null
+    // ) {
+    networkPointSelectOptions.push({
+      label: "Inlet",
+      value: MachineType.INLET,
+    })
+    // }
 
-    if (
-      ($storages[$playerPod.outletEntity]?.storageConnection ?? null) == null
-    ) {
-      networkPointSelectOptions.push({
-        label: "Outlet",
-        value: MachineType.OUTLET,
-      })
-    }
+    // if (
+    //   ($entities[$playerPod.fixedEntities.outlet]?.storageConnection ?? null) ==
+    //   null
+    // ) {
+    networkPointSelectOptions.push({
+      label: "Outlet",
+      value: MachineType.OUTLET,
+    })
+    // }
 
     const networkPointType = await renderSelect(
       selectContainerElement,

@@ -47,9 +47,9 @@ declare global {
   }
 
   type FixedEntities = {
-    outletEntity?: string
-    inletEntity?: string
-    dispenserEntity?: string
+    outlet: string
+    inlet: string
+    dispenser: string
   }
 
   type OrderData = {
@@ -78,7 +78,7 @@ declare global {
     machinesInPod: string[]
     storageInPod: string[]
     currentOrder: string
-    fixedEntities?: FixedEntities
+    fixedEntities: FixedEntities
   }
 
   // aka. stump (fka. core)
@@ -106,6 +106,14 @@ declare global {
 
   type Store = {
     entityType: EntityType.STORAGE,
+    carriedBy: string
+    amount: number
+    materialType: MaterialType
+    storageConnection: string
+  }
+
+  type Dispenser = {
+    entityType: EntityType.DISPENSER,
     carriedBy: string
     amount: number
     materialType: MaterialType
