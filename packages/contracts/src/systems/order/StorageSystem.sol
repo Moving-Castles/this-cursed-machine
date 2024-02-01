@@ -15,8 +15,15 @@ contract StorageSystem is System {
       EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE || EntityType.get(_storageEntity) == ENTITY_TYPE.DISPENSER,
       "not storage"
     );
+
     require(StorageConnection.get(_storageEntity) == bytes32(0), "storage already connected");
-    require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet"); // Resolve network
+    require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet");
+
+    if (EntityType.get(_storageEntity) == ENTITY_TYPE.DISPENSER && _machineType == MACHINE_TYPE.OUTLET) {
+      revert("dispenser can not connect to outlet");
+    }
+
+    // Resolve network
     LibNetwork.resolve(playerEntity);
 
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET

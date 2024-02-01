@@ -51,6 +51,33 @@ contract StorageSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testConnectDispenser() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
+
+    // Inlet is connected to the first storage
+    assertEq(StorageConnection.get(inletEntity), dispenserEntity);
+
+    // The first storage is connected to the inlet
+    assertEq(StorageConnection.get(dispenserEntity), inletEntity);
+
+    vm.stopPrank();
+  }
+
+  function testRevertDispenserCanNotConnectToOutlet() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    vm.expectRevert("dispenser can not connect to outlet");
+    world.connectStorage(dispenserEntity, MACHINE_TYPE.OUTLET);
+
+    vm.stopPrank();
+  }
+
   function testDisconnectStorage() public {
     setUp();
 
