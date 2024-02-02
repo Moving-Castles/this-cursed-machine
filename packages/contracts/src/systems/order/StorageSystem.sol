@@ -23,17 +23,15 @@ contract StorageSystem is System {
       revert("dispenser can not connect to outlet");
     }
 
-    // Resolve network
-    LibNetwork.resolve(playerEntity);
-
+    // todo: allow connecting to second inlet
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET
-      ? FixedEntities.get(podEntity).inlet
+      ? FixedEntities.get(podEntity).inlets[0]
       : FixedEntities.get(podEntity).outlet;
 
     require(StorageConnection.get(targetEntity) == bytes32(0), "target already connected");
 
     // Resolve network
-    LibNetwork.resolve(playerEntity);
+    LibNetwork.resolve(podEntity);
 
     // Connect on both sides
     StorageConnection.set(targetEntity, _storageEntity);
@@ -47,10 +45,11 @@ contract StorageSystem is System {
     require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet");
 
     // Resolve network
-    LibNetwork.resolve(playerEntity);
+    LibNetwork.resolve(podEntity);
 
+    // todo: allow disconnection from second inlet
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET
-      ? FixedEntities.get(podEntity).inlet
+      ? FixedEntities.get(podEntity).inlets[0]
       : FixedEntities.get(podEntity).outlet;
 
     bytes32 _storageEntity = StorageConnection.get(targetEntity);

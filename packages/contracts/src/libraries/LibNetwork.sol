@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities } from "../codegen/index.sol";
+import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
 library LibNetwork {
+  struct Counters {
+    uint32 iterations; // Number of iterations
+    uint32 resolved; // Number of resolved nodes
+    uint32 inputs; // Number of stored inputs
+  }
+
   /**
    * @dev Resolves the state of the entire network inside a given pod entity by sequentially processing machines.
    *
@@ -16,43 +22,38 @@ library LibNetwork {
    * Inputs and outputs between connected machines are properly handled and transferred. The state and outputs
    * of each machine are updated based on its logic and the inputs it receives.
    *
-   * @param _playerEntity The entity identifier of the player machine in the pod.
    */
-  function resolve(bytes32 _playerEntity) internal {
-    // Get pod entity
-    bytes32 podEntity = CarriedBy.get(_playerEntity);
-
-    // Blocks since last resolution
-    uint256 blocksSinceLastResolution = block.number - LastResolved.get(podEntity);
-
-    // Counter for the number of iterations over the network
-    uint32 counter;
+  function resolve(bytes32 _podEntity) internal {
+    // All counters grouped as a struct
+    Counters memory counter;
 
     // Get all machines in the pod
-    bytes32[] memory machines = MachinesInPod.get(podEntity);
+    bytes32[] memory machines = MachinesInPod.get(_podEntity);
 
     // List to keep track of nodes (machines) that have processed their inputs
     bytes32[] memory resolvedNodes = new bytes32[](machines.length);
 
-    // Counter for the number of resolved nodes
-    uint32 resolvedCount;
-
     // Inputs for machines
     Product[] memory inputs = new Product[](machines.length * 2);
 
-    // Counter for the number of stored inputs
-    uint32 inputsCount;
+    FixedEntitiesData memory fixedEntities = FixedEntities.get(_podEntity);
 
-    // Connected storages. 1 => inlet storage, 2 => outlet storage
-    bytes32[] memory connectedStorages = new bytes32[](2);
-    connectedStorages[0] = StorageConnection.get(FixedEntities.get(podEntity).inlet);
-    connectedStorages[1] = StorageConnection.get(FixedEntities.get(podEntity).outlet);
+    // Connected storages.
+    // 0 => inlet storage one
+    // 1 => inlet storage two
+    // 2 => outlet storage
+    bytes32[] memory connectedStorages = new bytes32[](3);
+    connectedStorages[0] = StorageConnection.get(fixedEntities.inlets[0]);
+    connectedStorages[1] = StorageConnection.get(fixedEntities.inlets[1]);
+    connectedStorages[2] = StorageConnection.get(fixedEntities.outlet);
 
-    // Abort if inlet or outlet is not connected to storage
-    if (connectedStorages[0] == bytes32(0) || connectedStorages[1] == bytes32(0)) return;
+    // Abort if neither inlets are connected to storage or if outlet is not connected to storage
+    if (
+      (connectedStorages[0] == bytes32(0) && connectedStorages[1] == bytes32(0)) || connectedStorages[2] == bytes32(0)
+    ) return;
 
     // Iterate until all machines in the network are resolved
-    while (resolvedCount < machines.length) {
+    while (counter.resolved < machines.length) {
       // For each machine in the list
       for (uint i; i < machines.length; i++) {
         // Current node
@@ -64,19 +65,19 @@ library LibNetwork {
         // If the machine is an inlet, get material from connected storage
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           // Currently have a rate of 100 units per block
-          inputs[inputsCount] = Product({
+          inputs[counter.inputs] = Product({
             machineId: node,
-            materialType: MaterialType.get(connectedStorages[0]),
+            materialType: MaterialType.get(connectedStorages[LibUtils.findInletIndex(fixedEntities.inlets, node)]),
             amount: 100,
             factor: 0
           });
-          inputsCount++;
+          counter.inputs++;
         }
 
         // Gather all the inputs for the current machine.
         uint currentInputsCount;
         Product[] memory currentInputs = new Product[](2);
-        for (uint k; k < inputsCount; k++) {
+        for (uint k; k < counter.inputs; k++) {
           if (inputs[k].machineId == node) {
             currentInputs[currentInputsCount] = inputs[k];
             currentInputsCount++;
@@ -97,8 +98,8 @@ library LibNetwork {
         currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
 
         // Mark as resolved
-        resolvedNodes[resolvedCount] = node;
-        resolvedCount += 1;
+        resolvedNodes[counter.resolved] = node;
+        counter.resolved += 1;
 
         // If the machine is an outlet, write to storage
         if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
@@ -108,7 +109,7 @@ library LibNetwork {
           LibStorage.writeToStorage(
             connectedStorages[0],
             connectedStorages[1],
-            blocksSinceLastResolution,
+            block.number - LastResolved.get(_podEntity), // Blocks since last resolved
             currentOutputs[0]
           );
         }
@@ -120,23 +121,23 @@ library LibNetwork {
         for (uint k; k < outgoingConnectTargets.length; k++) {
           // Fill output
           if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
-            inputs[inputsCount] = currentOutputs[k];
+            inputs[counter.inputs] = currentOutputs[k];
             // Set the machineId to the target machine
-            inputs[inputsCount].machineId = outgoingConnectTargets[k];
-            inputsCount++;
+            inputs[counter.inputs].machineId = outgoingConnectTargets[k];
+            counter.inputs++;
           }
         }
       }
       // Increment the counter.
-      counter += 1;
+      counter.iterations += 1;
       // Break out of the loop if it seems like an infinite loop is occurring.
-      if (counter == machines.length * 2) {
-        LastResolved.set(podEntity, block.number);
+      if (counter.iterations == machines.length * 2) {
+        LastResolved.set(_podEntity, block.number);
         return;
       }
     }
 
     // Set LastResolved on pod entity
-    LastResolved.set(podEntity, block.number);
+    LastResolved.set(_podEntity, block.number);
   }
 }

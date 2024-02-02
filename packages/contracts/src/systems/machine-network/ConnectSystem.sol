@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections } from "../../codegen/index.sol";
+import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
 
@@ -14,12 +14,16 @@ contract ConnectSystem is System {
    */
   function connect(bytes32 _sourceMachine, bytes32 _targetMachine, PORT_INDEX _portIndex) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 podEntity = CarriedBy.get(playerEntity);
+
+    require(CarriedBy.get(_sourceMachine) == podEntity && CarriedBy.get(_targetMachine) == podEntity, "not in pod");
+
     require(EntityType.get(_sourceMachine) == ENTITY_TYPE.MACHINE, "source not machine");
     require(EntityType.get(_targetMachine) == ENTITY_TYPE.MACHINE, "target not machine");
     require(_sourceMachine != _targetMachine, "source and target are same");
 
     // Resolve network
-    LibNetwork.resolve(playerEntity);
+    LibNetwork.resolve(podEntity);
 
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToWrite = _portIndex == PORT_INDEX.FIRST ? 0 : 1;

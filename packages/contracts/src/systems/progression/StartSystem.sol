@@ -13,10 +13,14 @@ contract StartSystem is System {
     // Create pod
     bytes32 podEntity = LibPod.create();
 
-    // Create Inlet
-    bytes32 inletEntity = LibEntity.create(MACHINE_TYPE.INLET);
-    CarriedBy.set(inletEntity, podEntity);
-    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), inletEntity));
+    // Create inlet entities
+    bytes32[] memory inletEntities = new bytes32[](2);
+    inletEntities[0] = LibEntity.create(MACHINE_TYPE.INLET);
+    inletEntities[1] = LibEntity.create(MACHINE_TYPE.INLET);
+    for (uint i; i < inletEntities.length; i++) {
+      CarriedBy.set(inletEntities[i], podEntity);
+      MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), inletEntities[i]));
+    }
 
     // Place player in pod
     CarriedBy.set(playerEntity, podEntity);
@@ -41,7 +45,7 @@ contract StartSystem is System {
     // Save fixed entities
     FixedEntities.set(
       podEntity,
-      FixedEntitiesData({ inlet: inletEntity, outlet: outletEntity, dispenser: dispenserEntity })
+      FixedEntitiesData({ dispenser: dispenserEntity, outlet: outletEntity, inlets: inletEntities })
     );
 
     // Go to first tutorial level

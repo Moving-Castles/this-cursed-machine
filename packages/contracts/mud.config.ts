@@ -63,9 +63,9 @@ export default mudConfig({
         StorageInPod: "bytes32[]",
         FixedEntities: {
             valueSchema: {
+                dispenser: "bytes32",
                 outlet: "bytes32",
-                inlet: "bytes32",
-                dispenser: "bytes32"
+                inlets: "bytes32[]"
             }
         },
         CurrentOrder: "bytes32"

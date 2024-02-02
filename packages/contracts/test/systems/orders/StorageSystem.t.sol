@@ -8,7 +8,7 @@ import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 contract StorageSystemTest is BaseTest {
   bytes32 playerEntity;
   bytes32 podEntity;
-  bytes32 inletEntity;
+  bytes32[] inletEntities;
   bytes32 outletEntity;
   bytes32[] storageInPod;
   bytes32 dispenserEntity;
@@ -23,7 +23,7 @@ contract StorageSystemTest is BaseTest {
 
     podEntity = CarriedBy.get(playerEntity);
 
-    inletEntity = FixedEntities.get(podEntity).inlet;
+    inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
     storageInPod = StorageInPod.get(podEntity);
@@ -43,10 +43,10 @@ contract StorageSystemTest is BaseTest {
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
 
     // Inlet is connected to the first storage
-    assertEq(StorageConnection.get(inletEntity), storageInPod[0]);
+    assertEq(StorageConnection.get(inletEntities[0]), storageInPod[0]);
 
     // The first storage is connected to the inlet
-    assertEq(StorageConnection.get(storageInPod[0]), inletEntity);
+    assertEq(StorageConnection.get(storageInPod[0]), inletEntities[0]);
 
     vm.stopPrank();
   }
@@ -59,10 +59,10 @@ contract StorageSystemTest is BaseTest {
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Inlet is connected to the first storage
-    assertEq(StorageConnection.get(inletEntity), dispenserEntity);
+    assertEq(StorageConnection.get(inletEntities[0]), dispenserEntity);
 
     // The first storage is connected to the inlet
-    assertEq(StorageConnection.get(dispenserEntity), inletEntity);
+    assertEq(StorageConnection.get(dispenserEntity), inletEntities[0]);
 
     vm.stopPrank();
   }
@@ -86,15 +86,15 @@ contract StorageSystemTest is BaseTest {
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
 
     // Inlet is connected to the first storage
-    assertEq(StorageConnection.get(inletEntity), storageInPod[0]);
+    assertEq(StorageConnection.get(inletEntities[0]), storageInPod[0]);
 
     // The first storage is connected to the inlet
-    assertEq(StorageConnection.get(storageInPod[0]), inletEntity);
+    assertEq(StorageConnection.get(storageInPod[0]), inletEntities[0]);
 
     world.disconnectStorage(MACHINE_TYPE.INLET);
 
     // Inlet storage is disconnected
-    assertEq(StorageConnection.get(inletEntity), bytes32(0));
+    assertEq(StorageConnection.get(inletEntities[0]), bytes32(0));
 
     // The first storage is disconnected
     assertEq(StorageConnection.get(storageInPod[0]), bytes32(0));

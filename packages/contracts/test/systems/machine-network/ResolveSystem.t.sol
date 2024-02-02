@@ -9,7 +9,7 @@ import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../../s
 contract ResolveSystemTest is BaseTest {
   bytes32 playerEntity;
   bytes32 podEntity;
-  bytes32 inletEntity;
+  bytes32[] inletEntities;
   bytes32 outletEntity;
   bytes32[] storageInPod;
   bytes32 dispenserEntity;
@@ -24,7 +24,7 @@ contract ResolveSystemTest is BaseTest {
 
     podEntity = CarriedBy.get(playerEntity);
 
-    inletEntity = FixedEntities.get(podEntity).inlet;
+    inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
     storageInPod = StorageInPod.get(podEntity);
@@ -46,7 +46,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to outlet
-    world.connect(inletEntity, outletEntity, PORT_INDEX.FIRST);
+    world.connect(inletEntities[0], outletEntity, PORT_INDEX.FIRST);
 
     // Wait 5 blocks
     vm.roll(block.number + 3);
@@ -77,7 +77,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
-    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
     // Connect player to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
@@ -111,7 +111,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
-    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
     // Build splitter
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
@@ -151,7 +151,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
-    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
     // Connect inlet to player
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);

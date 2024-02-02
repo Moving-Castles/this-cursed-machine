@@ -9,7 +9,7 @@ import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/co
 contract OrderSystemTest is BaseTest {
   bytes32 playerEntity;
   bytes32 podEntity;
-  bytes32 inletEntity;
+  bytes32[] inletEntities;
   bytes32 outletEntity;
   bytes32[] storageInPod;
   bytes32[] tutorialLevels;
@@ -25,7 +25,7 @@ contract OrderSystemTest is BaseTest {
 
     podEntity = CarriedBy.get(playerEntity);
 
-    inletEntity = FixedEntities.get(podEntity).inlet;
+    inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
     storageInPod = StorageInPod.get(podEntity);
@@ -49,7 +49,7 @@ contract OrderSystemTest is BaseTest {
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
-    world.connect(inletEntity, playerEntity, PORT_INDEX.FIRST);
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
     // Connect player to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);

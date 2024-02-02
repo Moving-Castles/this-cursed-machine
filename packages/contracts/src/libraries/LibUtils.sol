@@ -171,4 +171,19 @@ library LibUtils {
       return keccak256(bytes(a)) == keccak256(bytes(b));
     }
   }
+
+  function findInletIndex(bytes32[] memory array, bytes32 value) public pure returns (uint) {
+    // Loop through the array
+    for (uint i = 0; i < array.length; i++) {
+      // Check if the current element is equal to the value
+      if (array[i] == value) {
+        // Return the index if the value is found
+        return i;
+      }
+    }
+
+    // Return a special value indicating the value is not found
+    // todo: check this
+    return 0;
+  }
 }
