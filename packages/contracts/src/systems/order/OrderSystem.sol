@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, StorageConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, StorageConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, StorageInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder } from "../../libraries/Libraries.sol";
 
@@ -37,12 +37,10 @@ contract OrderSystem is System {
         TutorialLevel.set(playerEntity, nextTutorialLevel);
         CurrentOrder.set(podEntity, TutorialOrders.get()[nextTutorialLevel]);
 
-        // Fill dispenser
-        MaterialType.set(
-          FixedEntities.get(podEntity).dispenser,
-          Order.get(CurrentOrder.get(podEntity)).resourceMaterialType
-        );
-        Amount.set(FixedEntities.get(podEntity).dispenser, Order.get(CurrentOrder.get(podEntity)).resourceAmount);
+        // Fill storage with tutorial order
+        // todo: find first empty storage
+        MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
+        Amount.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
       } else {
         // Tutorial done
         Tutorial.set(playerEntity, false);
@@ -77,8 +75,6 @@ contract OrderSystem is System {
     // todo: check that the player has not already completed order
 
     CurrentOrder.set(podEntity, _orderEntity);
-
-    // todo: Fill dispenser
   }
 
   function create(

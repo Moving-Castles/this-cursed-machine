@@ -5,8 +5,7 @@ export enum EntityType {
   ORDER,
   POD,
   MACHINE,
-  STORAGE,
-  DISPENSER
+  STORAGE
 }
 
 export enum MachineType {

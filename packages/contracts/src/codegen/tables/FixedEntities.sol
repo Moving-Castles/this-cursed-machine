@@ -26,11 +26,10 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant FixedEntitiesTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0040020120200000000000000000000000000000000000000000000000000000
+  0x0020010120000000000000000000000000000000000000000000000000000000
 );
 
 struct FixedEntitiesData {
-  bytes32 dispenser;
   bytes32 outlet;
   bytes32[] inlets;
 }
@@ -60,10 +59,9 @@ library FixedEntities {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    SchemaType[] memory _valueSchema = new SchemaType[](2);
     _valueSchema[0] = SchemaType.BYTES32;
-    _valueSchema[1] = SchemaType.BYTES32;
-    _valueSchema[2] = SchemaType.BYTES32_ARRAY;
+    _valueSchema[1] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -82,10 +80,9 @@ library FixedEntities {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
-    fieldNames[0] = "dispenser";
-    fieldNames[1] = "outlet";
-    fieldNames[2] = "inlets";
+    fieldNames = new string[](2);
+    fieldNames[0] = "outlet";
+    fieldNames[1] = "inlets";
   }
 
   /**
@@ -103,55 +100,13 @@ library FixedEntities {
   }
 
   /**
-   * @notice Get dispenser.
-   */
-  function getDispenser(bytes32 key) internal view returns (bytes32 dispenser) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
-  }
-
-  /**
-   * @notice Get dispenser.
-   */
-  function _getDispenser(bytes32 key) internal view returns (bytes32 dispenser) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (bytes32(_blob));
-  }
-
-  /**
-   * @notice Set dispenser.
-   */
-  function setDispenser(bytes32 key, bytes32 dispenser) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((dispenser)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set dispenser.
-   */
-  function _setDispenser(bytes32 key, bytes32 dispenser) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((dispenser)), _fieldLayout);
-  }
-
-  /**
    * @notice Get outlet.
    */
   function getOutlet(bytes32 key) internal view returns (bytes32 outlet) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -162,7 +117,7 @@ library FixedEntities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (bytes32(_blob));
   }
 
@@ -173,7 +128,7 @@ library FixedEntities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((outlet)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((outlet)), _fieldLayout);
   }
 
   /**
@@ -183,7 +138,7 @@ library FixedEntities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((outlet)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((outlet)), _fieldLayout);
   }
 
   /**
@@ -381,8 +336,8 @@ library FixedEntities {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, bytes32 dispenser, bytes32 outlet, bytes32[] memory inlets) internal {
-    bytes memory _staticData = encodeStatic(dispenser, outlet);
+  function set(bytes32 key, bytes32 outlet, bytes32[] memory inlets) internal {
+    bytes memory _staticData = encodeStatic(outlet);
 
     PackedCounter _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);
@@ -396,8 +351,8 @@ library FixedEntities {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, bytes32 dispenser, bytes32 outlet, bytes32[] memory inlets) internal {
-    bytes memory _staticData = encodeStatic(dispenser, outlet);
+  function _set(bytes32 key, bytes32 outlet, bytes32[] memory inlets) internal {
+    bytes memory _staticData = encodeStatic(outlet);
 
     PackedCounter _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);
@@ -412,7 +367,7 @@ library FixedEntities {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, FixedEntitiesData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.dispenser, _table.outlet);
+    bytes memory _staticData = encodeStatic(_table.outlet);
 
     PackedCounter _encodedLengths = encodeLengths(_table.inlets);
     bytes memory _dynamicData = encodeDynamic(_table.inlets);
@@ -427,7 +382,7 @@ library FixedEntities {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, FixedEntitiesData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.dispenser, _table.outlet);
+    bytes memory _staticData = encodeStatic(_table.outlet);
 
     PackedCounter _encodedLengths = encodeLengths(_table.inlets);
     bytes memory _dynamicData = encodeDynamic(_table.inlets);
@@ -441,10 +396,8 @@ library FixedEntities {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 dispenser, bytes32 outlet) {
-    dispenser = (Bytes.slice32(_blob, 0));
-
-    outlet = (Bytes.slice32(_blob, 32));
+  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 outlet) {
+    outlet = (Bytes.slice32(_blob, 0));
   }
 
   /**
@@ -473,7 +426,7 @@ library FixedEntities {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (FixedEntitiesData memory _table) {
-    (_table.dispenser, _table.outlet) = decodeStatic(_staticData);
+    (_table.outlet) = decodeStatic(_staticData);
 
     (_table.inlets) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -502,8 +455,8 @@ library FixedEntities {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bytes32 dispenser, bytes32 outlet) internal pure returns (bytes memory) {
-    return abi.encodePacked(dispenser, outlet);
+  function encodeStatic(bytes32 outlet) internal pure returns (bytes memory) {
+    return abi.encodePacked(outlet);
   }
 
   /**
@@ -532,11 +485,10 @@ library FixedEntities {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    bytes32 dispenser,
     bytes32 outlet,
     bytes32[] memory inlets
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(dispenser, outlet);
+    bytes memory _staticData = encodeStatic(outlet);
 
     PackedCounter _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);

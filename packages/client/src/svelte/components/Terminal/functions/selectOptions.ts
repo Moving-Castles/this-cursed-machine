@@ -186,11 +186,6 @@ function createSelectOptionsConnectStorage(): SelectOption[] {
       value: address,
     }))
 
-  selectOptions.unshift({
-    label: "Dispenser",
-    value: get(playerPod).fixedEntities.dispenser
-  })
-
   return selectOptions
 }
 

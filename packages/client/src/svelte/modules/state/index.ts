@@ -67,9 +67,3 @@ export const machinesInPlayerPod = derived(
     ) as Machines
   }
 )
-
-export const dispenser = derived(
-  [entities, playerPod],
-  ([$entities, $playerPod]) => {
-    return $entities[$playerPod.fixedEntities.dispenser] as Dispenser
-  })

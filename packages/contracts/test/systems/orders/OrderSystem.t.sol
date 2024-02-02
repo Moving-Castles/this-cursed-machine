@@ -13,7 +13,6 @@ contract OrderSystemTest is BaseTest {
   bytes32 outletEntity;
   bytes32[] storageInPod;
   bytes32[] tutorialLevels;
-  bytes32 dispenserEntity;
 
   function setUp() public override {
     super.setUp();
@@ -30,8 +29,6 @@ contract OrderSystemTest is BaseTest {
 
     storageInPod = StorageInPod.get(podEntity);
 
-    dispenserEntity = FixedEntities.get(podEntity).dispenser;
-
     tutorialLevels = TutorialOrders.get();
 
     vm.stopPrank();
@@ -42,8 +39,8 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Connect dispenser to inlet
-    world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
+    // Connect storage 0 to inlet
+    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
 
     // Connect storage 1 to outlet
     world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
@@ -63,8 +60,8 @@ contract OrderSystemTest is BaseTest {
     // 3 blocks passed
     // Inlet material spent => 10 * 100 = 1000
     // Outlet material gained => 10 * 50 = 500
-    assertEq(uint32(MaterialType.get(dispenserEntity)), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(dispenserEntity), 0); // 1000 - 1000 = 0
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 1000 = 0
     assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
     assertEq(Amount.get(storageInPod[1]), 500); // 0 + 500 = 500
 
@@ -78,8 +75,8 @@ contract OrderSystemTest is BaseTest {
     // Order is set to second tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[1]);
 
-    assertEq(uint32(MaterialType.get(dispenserEntity)), uint32(Order.get(tutorialLevels[1]).resourceMaterialType));
-    assertEq(Amount.get(dispenserEntity), Order.get(tutorialLevels[1]).resourceAmount);
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(Order.get(tutorialLevels[1]).resourceMaterialType));
+    assertEq(Amount.get(storageInPod[0]), Order.get(tutorialLevels[1]).resourceAmount);
 
     vm.stopPrank();
   }

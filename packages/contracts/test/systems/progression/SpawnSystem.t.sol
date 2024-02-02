@@ -34,9 +34,9 @@ contract SpawnSystemTest is BaseTest {
     assertEq(TutorialLevel.get(playerEntity), 0);
     assertEq(CurrentOrder.get(podEntity), TutorialOrders.get()[0]);
     assertEq(
-      uint32(MaterialType.get(FixedEntities.get(podEntity).dispenser)),
+      uint32(MaterialType.get(StorageInPod.get(podEntity)[0])),
       uint32(Order.get(TutorialOrders.get()[0]).resourceMaterialType)
     );
-    assertEq(Amount.get(FixedEntities.get(podEntity).dispenser), Order.get(TutorialOrders.get()[0]).resourceAmount);
+    assertEq(Amount.get(StorageInPod.get(podEntity)[0]), Order.get(TutorialOrders.get()[0]).resourceAmount);
   }
 }

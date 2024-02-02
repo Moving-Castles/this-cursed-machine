@@ -1,7 +1,7 @@
 import { mudConfig, resolveTableId } from "@latticexyz/world/register";
 
 export const enums = {
-    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "ORDER", "POD", "MACHINE", "STORAGE", "DISPENSER"],
+    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "ORDER", "POD", "MACHINE", "STORAGE"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "PLAYER", "SPLITTER", "MIXER", "DRYER", "WETTER", "BOILER", "COOLER"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "SLUDGE", "DIRT", "BLOOD_LIPIDS", "PLANT", "CAFFEINE_SLUSHY", "CLUB_MATE", "DIET_RED_BULL", "PRIME", "M150", "FIVE_HOUR_ENERGY", "MONSTER", "E_LIQUID", "TOBACCO", "CIGARETTE_JUICE", "ERASERBABY"],
     PORT_INDEX: ["FIRST", "SECOND"]
@@ -63,7 +63,6 @@ export default mudConfig({
         StorageInPod: "bytes32[]",
         FixedEntities: {
             valueSchema: {
-                dispenser: "bytes32",
                 outlet: "bytes32",
                 inlets: "bytes32[]"
             }

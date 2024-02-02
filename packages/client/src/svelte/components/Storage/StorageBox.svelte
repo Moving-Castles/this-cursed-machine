@@ -1,11 +1,9 @@
 <script lang="ts">
   import { storages } from "../../modules/state"
   import StorageItem from "./StorageItem.svelte"
-  import DispenserItem from "./DispenserItem.svelte"
 </script>
 
 <div class="storage-box">
-  <DispenserItem />
   {#each Object.entries($storages) as [_, storage], index}
     <StorageItem {storage} {index} />
   {/each}

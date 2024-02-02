@@ -49,7 +49,6 @@ declare global {
   type FixedEntities = {
     outlet: string
     inlets: string[]
-    dispenser: string
   }
 
   type OrderData = {
@@ -106,14 +105,6 @@ declare global {
 
   type Store = {
     entityType: EntityType.STORAGE,
-    carriedBy: string
-    amount: number
-    materialType: MaterialType
-    storageConnection: string
-  }
-
-  type Dispenser = {
-    entityType: EntityType.DISPENSER,
     carriedBy: string
     amount: number
     materialType: MaterialType

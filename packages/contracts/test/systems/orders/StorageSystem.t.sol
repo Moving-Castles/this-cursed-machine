@@ -11,7 +11,6 @@ contract StorageSystemTest is BaseTest {
   bytes32[] inletEntities;
   bytes32 outletEntity;
   bytes32[] storageInPod;
-  bytes32 dispenserEntity;
 
   function setUp() public override {
     super.setUp();
@@ -28,8 +27,6 @@ contract StorageSystemTest is BaseTest {
 
     storageInPod = StorageInPod.get(podEntity);
 
-    dispenserEntity = FixedEntities.get(podEntity).dispenser;
-
     vm.stopPrank();
   }
 
@@ -38,7 +35,7 @@ contract StorageSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    assertEq(storageInPod.length, 3);
+    assertEq(storageInPod.length, 6);
 
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
 
@@ -47,33 +44,6 @@ contract StorageSystemTest is BaseTest {
 
     // The first storage is connected to the inlet
     assertEq(StorageConnection.get(storageInPod[0]), inletEntities[0]);
-
-    vm.stopPrank();
-  }
-
-  function testConnectDispenser() public {
-    setUp();
-
-    vm.startPrank(alice);
-
-    world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
-
-    // Inlet is connected to the first storage
-    assertEq(StorageConnection.get(inletEntities[0]), dispenserEntity);
-
-    // The first storage is connected to the inlet
-    assertEq(StorageConnection.get(dispenserEntity), inletEntities[0]);
-
-    vm.stopPrank();
-  }
-
-  function testRevertDispenserCanNotConnectToOutlet() public {
-    setUp();
-
-    vm.startPrank(alice);
-
-    vm.expectRevert("dispenser can not connect to outlet");
-    world.connectStorage(dispenserEntity, MACHINE_TYPE.OUTLET);
 
     vm.stopPrank();
   }

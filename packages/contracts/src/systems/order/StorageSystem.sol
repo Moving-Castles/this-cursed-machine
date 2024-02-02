@@ -11,17 +11,10 @@ contract StorageSystem is System {
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    require(
-      EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE || EntityType.get(_storageEntity) == ENTITY_TYPE.DISPENSER,
-      "not storage"
-    );
+    require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
 
     require(StorageConnection.get(_storageEntity) == bytes32(0), "storage already connected");
     require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet");
-
-    if (EntityType.get(_storageEntity) == ENTITY_TYPE.DISPENSER && _machineType == MACHINE_TYPE.OUTLET) {
-      revert("dispenser can not connect to outlet");
-    }
 
     // todo: allow connecting to second inlet
     bytes32 targetEntity = _machineType == MACHINE_TYPE.INLET
@@ -64,7 +57,7 @@ contract StorageSystem is System {
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    // Has to be storage, not dispenser
+    // Has to be storage
     require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
     // We can not clear the storage if it is connected
     require(StorageConnection.get(_storageEntity) == bytes32(0), "storage connected");

@@ -32,21 +32,14 @@ contract StartSystem is System {
     MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), outletEntity));
 
     // Create storage
-    bytes32[] memory storageInPod = new bytes32[](3);
-    storageInPod[0] = LibStorage.create(podEntity);
-    storageInPod[1] = LibStorage.create(podEntity);
-    storageInPod[2] = LibStorage.create(podEntity);
+    bytes32[] memory storageInPod = new bytes32[](6);
+    for (uint i; i < storageInPod.length; i++) {
+      storageInPod[i] = LibStorage.create(podEntity);
+    }
     StorageInPod.set(podEntity, storageInPod);
 
-    // Create dispenser
-    bytes32 dispenserEntity = LibStorage.create(podEntity);
-    EntityType.set(dispenserEntity, ENTITY_TYPE.DISPENSER);
-
     // Save fixed entities
-    FixedEntities.set(
-      podEntity,
-      FixedEntitiesData({ dispenser: dispenserEntity, outlet: outletEntity, inlets: inletEntities })
-    );
+    FixedEntities.set(podEntity, FixedEntitiesData({ outlet: outletEntity, inlets: inletEntities }));
 
     // Go to first tutorial level
     bytes32 nextTutorialLevel = TutorialOrders.get()[0];
@@ -54,9 +47,9 @@ contract StartSystem is System {
     Tutorial.set(playerEntity, true);
     CurrentOrder.set(podEntity, nextTutorialLevel);
 
-    // Fill dispenser, based on the config of the first tutorial level
-    MaterialType.set(dispenserEntity, Order.get(nextTutorialLevel).resourceMaterialType);
-    Amount.set(dispenserEntity, Order.get(nextTutorialLevel).resourceAmount);
+    // Fill first storage, based on the config of the first tutorial level
+    MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceMaterialType);
+    Amount.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceAmount);
 
     return podEntity;
   }
