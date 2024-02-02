@@ -5,7 +5,7 @@
   export let index: number
 
   const getConnectionName = (machineEntity: string) => {
-    if (machineEntity === $playerPod.fixedEntities.inlet) return "Inlet"
+    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "Inlet"
     if (machineEntity === $playerPod.fixedEntities.outlet) return "Outlet"
     return "none"
   }

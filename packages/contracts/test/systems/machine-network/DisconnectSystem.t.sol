@@ -98,7 +98,7 @@ contract DiconnectSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertInvalidMachine() public {
+  function testRevertNotInPod() public {
     setUp();
 
     vm.startPrank(alice);
@@ -107,7 +107,7 @@ contract DiconnectSystemTest is BaseTest {
     world.start();
 
     // Disconnect null machine
-    vm.expectRevert("outgoing index out of bounds");
+    vm.expectRevert("not in pod");
     world.disconnect(bytes32(0), PORT_INDEX.FIRST);
 
     vm.stopPrank();

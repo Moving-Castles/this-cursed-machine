@@ -172,7 +172,7 @@ library LibUtils {
     }
   }
 
-  function findInletIndex(bytes32[] memory array, bytes32 value) public pure returns (uint) {
+  function findInletIndex(bytes32[] memory array, bytes32 value) internal pure returns (uint) {
     // Loop through the array
     for (uint i = 0; i < array.length; i++) {
       // Check if the current element is equal to the value

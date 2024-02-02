@@ -42,8 +42,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect dispenser to inlet
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect storage 0 to outlet
+    world.connectStorage(storageInPod[0], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to outlet
     world.connect(inletEntities[0], outletEntity, PORT_INDEX.FIRST);
@@ -56,12 +56,12 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.BUG));
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
 
     // 3 blocks passed
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 100 = 300
-    assertEq(Amount.get(storageInPod[1]), 300);
+    assertEq(Amount.get(storageInPod[0]), 300);
     assertEq(Amount.get(dispenserEntity), 700); // 1000 - 300
   }
 
@@ -73,8 +73,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect dispenser to inlet
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect storage 0 to outlet
+    world.connectStorage(storageInPod[0], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -90,12 +90,12 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.PISS));
 
     // 3 blocks passed
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 50 = 150
-    assertEq(Amount.get(storageInPod[1]), 150);
+    assertEq(Amount.get(storageInPod[0]), 150);
     assertEq(Amount.get(dispenserEntity), 700); // 1000 - 300
   }
 
@@ -108,7 +108,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 2 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    world.connectStorage(storageInPod[0], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -130,12 +130,12 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.PISS));
 
     // 3 blocks passed
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 25 = 75
-    assertEq(Amount.get(storageInPod[1]), 75);
+    assertEq(Amount.get(storageInPod[0]), 75);
     assertEq(Amount.get(dispenserEntity), 700); // 1000 - 300
   }
 
@@ -148,7 +148,7 @@ contract ResolveSystemTest is BaseTest {
     world.connectStorage(dispenserEntity, MACHINE_TYPE.INLET);
 
     // Connect storage 2 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    world.connectStorage(storageInPod[0], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -164,12 +164,12 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.PISS));
 
     // 50 blocks passed
-    assertEq(Amount.get(storageInPod[1]), 500); // 500
+    assertEq(Amount.get(storageInPod[0]), 500); // 500
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.PISS));
     assertEq(Amount.get(dispenserEntity), 0); // 1000 - 1000
-
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(uint32(MaterialType.get(dispenserEntity)), uint32(MATERIAL_TYPE.NONE));
   }
 }

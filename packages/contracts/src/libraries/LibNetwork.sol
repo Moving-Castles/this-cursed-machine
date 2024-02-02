@@ -13,16 +13,6 @@ library LibNetwork {
     uint32 inputs; // Number of stored inputs
   }
 
-  /**
-   * @dev Resolves the state of the entire network inside a given pod entity by sequentially processing machines.
-   *
-   * The function loops through all machines inside a pod, checking their types and processing inputs/outputs
-   * based on their functionality until all machines in the pod have been resolved. For example, an INLET machine
-   * will be provided an input if it doesn't have one, while an OUTLET machine will write its outputs to the blockchain.
-   * Inputs and outputs between connected machines are properly handled and transferred. The state and outputs
-   * of each machine are updated based on its logic and the inputs it receives.
-   *
-   */
   function resolve(bytes32 _podEntity) internal {
     // All counters grouped as a struct
     Counters memory counter;
@@ -39,8 +29,8 @@ library LibNetwork {
     FixedEntitiesData memory fixedEntities = FixedEntities.get(_podEntity);
 
     // Connected storages.
-    // 0 => inlet storage one
-    // 1 => inlet storage two
+    // 0 => inlet one storage
+    // 1 => inlet two storage
     // 2 => outlet storage
     bytes32[] memory connectedStorages = new bytes32[](3);
     connectedStorages[0] = StorageConnection.get(fixedEntities.inlets[0]);
@@ -56,21 +46,38 @@ library LibNetwork {
     while (counter.resolved < machines.length) {
       // For each machine in the list
       for (uint i; i < machines.length; i++) {
+        // console.log("resolvedNodes");
+        // console.log("*******");
+        // for (uint j; j < resolvedNodes.length; j++) {
+        //   console.logBytes32(resolvedNodes[j]);
+        // }
+        // console.log("*******");
+
         // Current node
         bytes32 node = machines[i];
 
         // Skip if node is already resolved
         if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
 
-        // If the machine is an inlet, get material from connected storage
+        // console.log("==== unresolved node");
+        // console.logBytes32(node);
+        // console.log(uint32(MachineType.get(node)));
+
+        // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          // Currently have a rate of 100 units per block
-          inputs[counter.inputs] = Product({
-            machineId: node,
-            materialType: MaterialType.get(connectedStorages[LibUtils.findInletIndex(fixedEntities.inlets, node)]),
-            amount: 100,
-            factor: 0
-          });
+          // Is it inlet one or two
+          uint32 storageIndex = node == fixedEntities.inlets[0] ? 0 : 1;
+          // Get material from storage
+          MATERIAL_TYPE materialType = MaterialType.get(connectedStorages[storageIndex]);
+
+          // Mark as resolved and abort if no material
+          if (materialType == MATERIAL_TYPE.NONE) {
+            resolvedNodes[counter.resolved] = node;
+            counter.resolved += 1;
+            continue;
+          }
+
+          inputs[counter.inputs] = Product({ machineId: node, materialType: materialType, amount: 100, factor: 0 });
           counter.inputs++;
         }
 
@@ -101,21 +108,30 @@ library LibNetwork {
         resolvedNodes[counter.resolved] = node;
         counter.resolved += 1;
 
-        // If the machine is an outlet, write to storage
-        if (MachineType.get(node) == MACHINE_TYPE.OUTLET) {
+        // If the machine is the outlet, write to storage
+        if (node == fixedEntities.outlet) {
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
           // Write to storage
           LibStorage.writeToStorage(
             connectedStorages[0],
-            connectedStorages[1],
+            connectedStorages[2],
             block.number - LastResolved.get(_podEntity), // Blocks since last resolved
             currentOutputs[0]
           );
+          // Once we have written to output we are done
+          return;
         }
 
         // Get outgoing connections from the machine
         bytes32[] memory outgoingConnectTargets = OutgoingConnections.get(node);
+
+        // If the machine has no outgoing connections, mark as resolved and continue
+        if (outgoingConnectTargets.length == 0) {
+          resolvedNodes[counter.resolved] = node;
+          counter.resolved += 1;
+          continue;
+        }
 
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {

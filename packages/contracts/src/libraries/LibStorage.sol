@@ -25,11 +25,13 @@ library LibStorage {
   ) internal {
     uint32 cumulativeAmount = _output.amount * uint32(_blocksSinceLastResolution);
 
+    // !!! PROBLEM
+    // We now have two inlets and potentially two inlet storages that affect how much we can produce
     uint32 inletAmount = Amount.get(_inletStorageEntity);
 
     uint32 factor = _output.factor == 0 ? 1 : _output.factor;
 
-    // The factor keeps track of how much the inlet material has been dilluted by the the machines
+    // The factor keeps track of how much the inlet material has been diluted by the machines
     uint32 consumedInletAmount = factor * cumulativeAmount;
 
     // Did we exhaust the amount of material the inlet material allows us to produce?

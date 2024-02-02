@@ -48,7 +48,7 @@ declare global {
 
   type FixedEntities = {
     outlet: string
-    inlet: string
+    inlets: string[]
     dispenser: string
   }
 
