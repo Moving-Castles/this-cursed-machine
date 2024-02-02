@@ -35,7 +35,7 @@ export default mudConfig({
         TutorialOrders: {
             keySchema: {},
             valueSchema: {
-                value: "bytes32[2]"
+                value: "bytes32[]"
             }
         },
         Order: {
@@ -47,7 +47,7 @@ export default mudConfig({
                 goalAmount: "uint32",
                 rewardAmount: "uint32",
                 maxPlayers: "uint32",
-                duration: "uint256",
+                duration: "uint256"
             }
         },
         CompletedPlayers: "bytes32[]",
