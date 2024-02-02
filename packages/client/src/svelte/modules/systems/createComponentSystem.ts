@@ -5,7 +5,6 @@ import { toCamelCase } from "../utils/misc"
 
 export function createComponentSystem(componentKey: string) {
   get(network).components[componentKey].update$.subscribe(update => {
-    // console.log("==>", componentKey, update);
     const [nextValue] = update.value
 
     // Single-value components have a "value" property, structs do not

@@ -146,6 +146,10 @@ importers:
         version: 1.1.0
 
   packages/contracts:
+    dependencies:
+      '@openzeppelin/contracts':
+        specifier: ^5.0.1
+        version: 5.0.1
     devDependencies:
       '@latticexyz/cli':
         specifier: 2.0.0-main-ed05cb31
@@ -3442,6 +3446,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.16.0
     dev: true
+
+  /@openzeppelin/contracts@5.0.1:
+    resolution: {integrity: sha512-yQJaT5HDp9hYOOp4jTYxMsR02gdFZFXhewX5HW9Jo4fsqSVqqyIO/xTHdWDaKX5a3pv1txmf076Lziz+sO7L1w==}
+    dev: false
 
   /@parcel/watcher-android-arm64@2.3.0:
     resolution: {integrity: sha512-f4o9eA3dgk0XRT3XhB0UWpWpLnKgrh1IwNJKJ7UJek7eTYccQ8LR7XUWFKqw6aEq5KUNlCcGvSzKqSX/vtWVVA==}

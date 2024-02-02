@@ -7,10 +7,13 @@
 
   import Terminal from "../Terminal/Terminal.svelte"
   import Graph from "../Graph/Graph.svelte"
-  import Tooltips from "../Tooltip/Tooltips.svelte"
   import Map from "../Map/Map.svelte"
   import StorageBox from "../Storage/StorageBox.svelte"
   import OrderBar from "./OrderBar.svelte"
+  import InfoBar from "./InfoBar.svelte"
+  import ModeBar from "./ModeBar.svelte"
+
+  import Tooltips from "../Tooltip/Tooltips.svelte"
 
   let terminalComponent: any
 
@@ -36,7 +39,9 @@
   <div class="bg">
     <div class="split-screen">
       <div class="left-col">
-        <div class="status-bar"><p>Stump #{$playerEntity.spawnIndex}</p></div>
+        <div class="status-bar">
+          <InfoBar />
+        </div>
         <div class="terminal">
           <Terminal
             bind:this={terminalComponent}
@@ -57,7 +62,9 @@
           <div class="graph">
             <Graph />
           </div>
-          <div class="tab-switch">POD / MAP / LEADERBOARD / ORDERS / CHAT</div>
+          <div class="tab-switch">
+            <ModeBar />
+          </div>
         </div>
       {/if}
     </div>

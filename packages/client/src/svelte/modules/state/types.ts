@@ -33,6 +33,7 @@ declare global {
     storageInPod?: string[]
     fixedEntities?: FixedEntities
     currentOrder?: string
+    tokenBalances?: number
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -90,6 +91,7 @@ declare global {
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
+    tokenBalances?: number
     tutorial: boolean // True if player is in training
   }
 

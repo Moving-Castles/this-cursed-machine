@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, StorageInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity, LibStorage } from "../../libraries/Libraries.sol";
+import { LibUtils, LibPod, LibEntity, LibStorage, LibToken } from "../../libraries/Libraries.sol";
 
 contract StartSystem is System {
   function start() public returns (bytes32) {
@@ -50,6 +50,9 @@ contract StartSystem is System {
     // Fill first storage, based on the config of the first tutorial level
     MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceMaterialType);
     Amount.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceAmount);
+
+    // Give tokens for testing
+    LibToken.send(_msgSender(), 666);
 
     return podEntity;
   }

@@ -1,6 +1,12 @@
 import { getAddress } from "viem"
 
-export const toCamelCase = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
+export function toCamelCase(s: string): string {
+  return s
+    // Remove all underscores and hyphens and convert the following letter to uppercase
+    .replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
+    // Ensure the first character is in lowercase
+    .replace(/^./, (str) => str.toLowerCase());
+}
 
 export function shortenAddress(s: string) {
   return s ? s.slice(0, 8) + "..." + s.slice(-8) : ""
@@ -87,7 +93,7 @@ export function isNumeric(str: any) {
   ) // ...and ensure strings of whitespace fail
 }
 
-export function hexToString(hex) {
+export function hexToString(hex: string) {
   hex = hex.substring(2) // remove the '0x' part
   var string = ""
 
@@ -103,7 +109,7 @@ export function hexToString(hex) {
   return string
 }
 
-export function stringToHex(string) {
+export function stringToHex(string: string) {
   var hex = ""
   for (var i = 0; i < string.length; i++) {
     hex += ((i == 0 ? "" : "000") + string.charCodeAt(i).toString(16)).slice(-4) // get character ascii code and convert to hexa string, adding necessary 0s

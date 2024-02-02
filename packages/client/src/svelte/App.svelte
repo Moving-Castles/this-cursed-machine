@@ -17,16 +17,9 @@
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
-  import { orders, playerPod } from "./modules/state"
-
-  $: console.log("$orders", $orders)
-  $: console.log("$playerPod", $playerPod)
-
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import Pod from "./components/Pod/Pod.svelte"
-  // import Death from "./components/Death/Death.svelte"
-  // import Dashboard from "./components/Dashboard/Dashboard.svelte"
   import Naming from "./components/Naming/Naming.svelte"
   import Toasts from "./modules/ui/toast/Toasts.svelte"
 
@@ -36,17 +29,6 @@
   }
 
   let introSound: Howl | undefined
-
-  const start = () => {
-    clearTerminalOutput()
-    localLevel.set(0)
-    sendStart()
-    UIState.set(UI.LOADING)
-  }
-
-  // const dead = () => {
-  //   UIState.set(UI.DEAD)
-  // }
 
   const loaded = () => {
     UIState.set(UI.SPAWNING)
@@ -67,19 +49,9 @@
     UIState.set(UI.NAMED)
   }
 
-  // const dashboard = () => {
-  //   const urlParams = new URLSearchParams(new URL(window.location.href).search)
-  //   if (urlParams.get("dashboard") !== null) {
-  //     UIState.set(UI.DASHBOARD)
-  //   }
-  // }
-
   onMount(async () => {
     // Output console message
     messageToStumps()
-
-    //Check if we should skip to the dashboard
-    // dashboard()
 
     // Remove preloader
     document.querySelector(".preloader")?.remove()
@@ -104,6 +76,8 @@
 
     // Listen to changes to the SyncProgresscomponent
     createSyncProgressSystem()
+
+    // createTokenBalancesSystem()
 
     // Simulate state changes
     initStateSimulator()

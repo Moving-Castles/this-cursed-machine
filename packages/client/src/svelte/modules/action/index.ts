@@ -14,7 +14,9 @@ export enum WorldFunctions {
   DisconnectStorage = "disconnectStorage",
   ClearStorage = "clearStorage",
   Fill = "fill",
-  Accept = "accept"
+  Accept = "accept",
+  Reward = "reward",
+  Charge = "charge"
 }
 
 // --- API --------------------------------------------------------------
@@ -76,4 +78,14 @@ export function clearStorage(storageEntity: string) {
 
 export function fill(storageEntity: string) {
   return addToSequencer(WorldFunctions.Fill, [storageEntity])
+}
+
+// ...
+
+export function reward() {
+  return addToSequencer(WorldFunctions.Reward, [])
+}
+
+export function charge() {
+  return addToSequencer(WorldFunctions.Charge, [])
 }

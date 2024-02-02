@@ -16,6 +16,7 @@ import { IResolveSystem } from "./IResolveSystem.sol";
 import { IOrderSystem } from "./IOrderSystem.sol";
 import { IStorageSystem } from "./IStorageSystem.sol";
 import { INameSystem } from "./INameSystem.sol";
+import { IRewardSystem } from "./IRewardSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { IStartSystem } from "./IStartSystem.sol";
 
@@ -38,6 +39,7 @@ interface IWorld is
   IOrderSystem,
   IStorageSystem,
   INameSystem,
+  IRewardSystem,
   ISpawnSystem,
   IStartSystem
 {

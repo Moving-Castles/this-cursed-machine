@@ -28,6 +28,8 @@ import {
 
 import { Subject, share } from "rxjs"
 
+import { tables as extraTables } from "./extraTables";
+
 /*
  * Import our MUD config, which includes strong types for
  * our tables and other config options. We use this to generate
@@ -73,6 +75,7 @@ export async function setupNetwork() {
     publicClient,
     indexerUrl: networkConfig.indexerUrl,
     startBlock: BigInt(networkConfig.initialBlockNumber),
+    tables: extraTables
   })
 
   /*

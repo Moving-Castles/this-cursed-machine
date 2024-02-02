@@ -27,16 +27,20 @@ contract PostDeploy is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     // Register and mint ERC20 token
-    // world.installRootModule(new StandardDelegationsModule(), new bytes(0));
-    // world.installModule(new PuppetModule(), new bytes(0));
+    world.installRootModule(new StandardDelegationsModule(), new bytes(0));
+    world.installModule(new PuppetModule(), new bytes(0));
 
-    // IERC20Mintable token = registerERC20(world, "TCM", ERC20MetadataData({ decimals: 18, name: "TCM", symbol: "TCM" }));
+    IERC20Mintable token = registerERC20(
+      world,
+      "Token",
+      ERC20MetadataData({ decimals: 18, name: "TCM", symbol: "TCM" })
+    );
 
-    // token.mint(worldAddress, POOL_SUPPLY);
+    token.mint(worldAddress, POOL_SUPPLY);
 
     // Initialize gameConfig, tutorial levels and goals
-    world.init(worldAddress);
-    // world.init(address(token));
+    // world.init(worldAddress);
+    world.init(address(token));
     // Initialize recipes
     world.init2();
 

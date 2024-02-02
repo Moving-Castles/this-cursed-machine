@@ -1,8 +1,6 @@
 <script lang="ts">
   import { orders, playerPod } from "../../modules/state"
   import { MaterialType } from "../../modules/state/enums"
-
-  $: console.log($orders[$playerPod.currentOrder])
 </script>
 
 <div class="order-bar">
