@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, GameConfigData, TutorialOrders } from "../../codegen/index.sol";
-import { LibOrder } from "../../libraries/Libraries.sol";
+import { LibOrder } from "../LibOrder.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
-contract InitSystem is System {
-  function init(address tokenAddress) public {
+library LibInit {
+  function init(address tokenAddress) internal {
     require(GameConfig.get().tokenAddress == address(0), "InitSystem: already initialized");
 
     // Set game config

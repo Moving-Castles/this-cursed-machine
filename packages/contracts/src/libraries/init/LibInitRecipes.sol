@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { System } from "@latticexyz/world/src/System.sol";
 import { Recipe } from "../../codegen/index.sol";
-import { LibUtils } from "../../libraries/Libraries.sol";
+import { LibUtils } from "../LibUtils.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 
-contract Init2System is System {
-  function init2() public {
+library LibInitRecipes {
+  function init() internal {
     // Cooler recipes
     Recipe.set(MACHINE_TYPE.COOLER, uint256(MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE), MATERIAL_TYPE.PURE_FAT);
 

@@ -11,6 +11,8 @@ import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppe
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
+import { LibInit } from "../src/libraries/init/LibInit.sol";
+import { LibInitRecipes } from "../src/libraries/init/LibInitRecipes.sol";
 
 uint256 constant POOL_SUPPLY = 1_000_000 wei;
 
@@ -39,10 +41,9 @@ contract PostDeploy is Script {
     token.mint(worldAddress, POOL_SUPPLY);
 
     // Initialize gameConfig, tutorial levels and goals
-    // world.init(worldAddress);
-    world.init(address(token));
+    LibInit.init(address(token));
     // Initialize recipes
-    world.init2();
+    LibInitRecipes.init();
 
     vm.stopBroadcast();
   }
