@@ -8,12 +8,6 @@ import { Product } from "../constants.sol";
 import { LibUtils } from "./LibUtils.sol";
 
 library LibPod {
-  /**
-   * @dev Creates a new pod entity with the provided properties.
-   * The function generates a random key for the pod entity and assigns the given attributes to it. The current block number
-   * is used to record the block at which the pod was created.
-   * @return Returns the randomly generated key associated with the newly created pod entity.
-   */
   function create() internal returns (bytes32) {
     bytes32 podEntity = LibUtils.getRandomKey();
     EntityType.set(podEntity, ENTITY_TYPE.POD);

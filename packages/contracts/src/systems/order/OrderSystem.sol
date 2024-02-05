@@ -29,6 +29,7 @@ contract OrderSystem is System {
     MaterialType.set(_storageEntity, MATERIAL_TYPE.NONE);
     Amount.set(_storageEntity, 0);
 
+    // Handle tutorial levels
     if (Tutorial.get(playerEntity)) {
       uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
 

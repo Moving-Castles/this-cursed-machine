@@ -13,11 +13,17 @@ import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol"
 library LibToken {
   using WorldResourceIdInstance for ResourceId;
 
+  /**
+   * @dev Send tokens from world contracrt to an address
+   */
   function send(address _to, uint256 _amount) internal {
     IERC20 token = IERC20(GameConfig.getTokenAddress());
     token.transfer(_to, _amount);
   }
 
+  /**
+   * @dev Get token balance for a given account
+   */
   function getTokenBalance(address account) internal view returns (uint) {
     address token = GameConfig.getTokenAddress();
     ResourceId systemId = Puppet(token).systemId();
@@ -25,6 +31,9 @@ library LibToken {
     return Balances.get(tableId, account);
   }
 
+  /**
+   * @dev Transfer tokens from the caller to another address
+   */
   function transferToken(address worldAddress, address to, uint256 value) internal {
     address token = GameConfig.getTokenAddress();
     ResourceId systemId = Puppet(token).systemId();

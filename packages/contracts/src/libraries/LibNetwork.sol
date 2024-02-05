@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
-import { CarriedBy, MachineType, LastResolved, MaterialType, Amount, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
+import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { Product } from "../constants.sol";
 
@@ -124,7 +123,6 @@ library LibNetwork {
 
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {
-          // Fill output
           if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
             inputs[counter.inputs] = currentOutputs[k];
             // Set the machineId to the target machine
@@ -141,7 +139,7 @@ library LibNetwork {
       }
     }
 
-    // Set LastResolved on pod entity
+    // Update LastResolved on pod entity
     LastResolved.set(_podEntity, block.number);
   }
 }

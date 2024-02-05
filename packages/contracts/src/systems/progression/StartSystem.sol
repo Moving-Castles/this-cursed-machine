@@ -10,6 +10,8 @@ contract StartSystem is System {
   function start() public returns (bytes32) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
+    // todo: check that player is spawned
+
     // Create pod
     bytes32 podEntity = LibPod.create();
 

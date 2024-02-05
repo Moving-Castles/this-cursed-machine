@@ -18,7 +18,7 @@ contract BuildSystem is System {
     // Create machine entity
     bytes32 machineEntity = LibEntity.create(_machineType);
 
-    // Get pod entity
+    // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     // Place in same pod as the player

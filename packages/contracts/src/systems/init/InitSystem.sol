@@ -6,9 +6,6 @@ import { LibOrder } from "../../libraries/Libraries.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
 contract InitSystem is System {
-  /**
-   * @notice Initializes the game configuration and creates initial level definitions.
-   */
   function init(address tokenAddress) public {
     require(GameConfig.get().tokenAddress == address(0), "InitSystem: already initialized");
 

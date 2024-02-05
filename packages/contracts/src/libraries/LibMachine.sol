@@ -11,7 +11,6 @@ library LibMachine {
    * @param _machineType The type of the machine to process the products.
    * @param _inputs An array of products to be processed.
    * @return _output An array of resultant products after processing.
-   * @dev Supports various machine types like PLAYER, SPLITTER, MIXER, etc., each leading to a distinct processing pathway.
    */
   function process(
     MACHINE_TYPE _machineType,
@@ -73,8 +72,7 @@ library LibMachine {
    * @dev Splits a single input product into two output products of equal amount.
    *
    * Takes a single input product and produces two output products, each with half
-   * the amount of the input. The outputs inherit the properties of the input
-   * (i.e., `machineId`, `materialType`).
+   * the amount of the input.
    *
    * @param _input Product to be processed.
    * @return _outputs An array containing two products, each with half the amount of the input.
@@ -128,7 +126,6 @@ library LibMachine {
 
   /**
    * @notice Processes an input product through a specified machine type, creating an output product.
-   * @dev Determines output material type using LibRecipe.getOutput and generates an output product array of length 1.
    * @param _machineType The type of machine to process the input product.
    * @param _input A Product structure detailing the input product's attributes.
    * @return _outputs An array of products representing the output after processing through the machine.
