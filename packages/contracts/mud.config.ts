@@ -81,6 +81,11 @@ export default mudConfig({
             name: "KeysWithValueModule",
             root: true,
             args: [resolveTableId("CarriedBy")],
-        }
+        },
+        {
+            name: "UniqueEntityModule",
+            root: true,
+            args: [],
+        },
     ],
 });

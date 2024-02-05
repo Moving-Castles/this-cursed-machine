@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { EntityType, Order, OrderData, Tutorial } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils } from "./LibUtils.sol";
 
 library LibOrder {
   function createOrder(
@@ -15,7 +15,7 @@ library LibOrder {
     uint32 _duration,
     uint32 _maxPlayers
   ) internal returns (bytes32) {
-    bytes32 orderEntity = LibUtils.getRandomKey();
+    bytes32 orderEntity = getUniqueEntity();
     EntityType.set(orderEntity, ENTITY_TYPE.ORDER);
 
     Order.set(

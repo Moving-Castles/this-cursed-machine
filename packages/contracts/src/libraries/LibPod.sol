@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
+import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { GameConfig, GameConfigData, EntityType, LastResolved, EntityTypeTableId, CarriedBy, CarriedByTableId, MaterialType, MaterialTypeTableId, Amount, MachineType, MachineTypeTableId, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { Product } from "../constants.sol";
-import { LibUtils } from "./LibUtils.sol";
 
 library LibPod {
   /**
@@ -15,7 +15,7 @@ library LibPod {
    * @return Returns the randomly generated key associated with the newly created pod entity.
    */
   function create() internal returns (bytes32) {
-    bytes32 podEntity = LibUtils.getRandomKey();
+    bytes32 podEntity = getUniqueEntity();
     EntityType.set(podEntity, ENTITY_TYPE.POD);
     LastResolved.set(podEntity, block.number);
     return podEntity;
@@ -45,7 +45,7 @@ library LibPod {
       return keyTuples[0][0];
     } else {
       // Create a new build index entity
-      bytes32 buildIndexEntity = LibUtils.getRandomKey();
+      bytes32 buildIndexEntity = getUniqueEntity();
       EntityType.set(buildIndexEntity, ENTITY_TYPE.BUILD_INDEX);
       CarriedBy.set(buildIndexEntity, _podEntity);
       MachineType.set(buildIndexEntity, _machineType);
