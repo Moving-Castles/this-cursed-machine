@@ -7,9 +7,9 @@
   import { draw, fade } from "svelte/transition"
   import { range } from "../../modules/utils/misc"
   import {
-    EntityType,
-    MaterialType,
-    ConnectionState,
+    ENTITY_TYPE,
+    MATERIAL_TYPE,
+    CONNECTION_STATE,
   } from "../../modules/state/enums"
   import {
     simulatedMachines,
@@ -20,7 +20,7 @@
     machineState,
   } from "../../modules/state/convenience"
   import { inspecting, alignTooltip } from "../../modules/ui/stores"
-  import { MachineType } from "../../modules/state/enums"
+  import { MACHINE_TYPE } from "../../modules/state/enums"
   import { scaleLinear, scaleOrdinal } from "d3-scale"
   import { schemeCategory10 } from "d3-scale-chromatic"
   import { select, selectAll } from "d3-selection"
@@ -85,9 +85,9 @@
 
   const onNodeOrConnectionMouseEnter = (e, entry, a) => {
     $alignTooltip = "center"
-    if (entry.entityType === EntityType.MACHINE) {
-      if (entry.machineType === MachineType.INLET) $alignTooltip = "left"
-      if (entry.machineType === MachineType.OUTLET) $alignTooltip = "right"
+    if (entry.entityType === ENTITY_TYPE.MACHINE) {
+      if (entry.machineType === MACHINE_TYPE.INLET) $alignTooltip = "left"
+      if (entry.machineType === MACHINE_TYPE.OUTLET) $alignTooltip = "right"
     }
 
     $inspecting = { ...entry, address: a }
@@ -144,7 +144,7 @@
     if (entry?.product) {
       return `var(--${
         entry.product?.materialType
-          ? MaterialType[entry.product?.materialType]
+          ? MATERIAL_TYPE[entry.product?.materialType]
           : "STATE_INACTIVE"
       })`
     } else {
@@ -160,14 +160,14 @@
     // Update nodes
     graph.nodes.forEach(newNode => {
       if (
-        newNode.entry?.machineType === MachineType.INLET ||
-        newNode.entry?.machineType === MachineType.OUTLET
+        newNode.entry?.machineType === MACHINE_TYPE.INLET ||
+        newNode.entry?.machineType === MACHINE_TYPE.OUTLET
       ) {
         newNode.fx =
-          newNode.entry?.machineType === MachineType.INLET
+          newNode.entry?.machineType === MACHINE_TYPE.INLET
             ? -width / 2 + MACHINE_SIZE
             : width / 2 - MACHINE_SIZE
-        newNode.fy = 0 //newNode.entry?.machineType === MachineType.INLET ? -80 : 80
+        newNode.fy = 0 //newNode.entry?.machineType === MACHINE_TYPE.INLET ? -80 : 80
       }
 
       const existingNode = nodes.find(node => node.id === newNode.id)
@@ -215,12 +215,12 @@
       let newState = connectionState(link.id)
       // console.log(newState)
 
-      // Equalize ConnectionState.CONNECTED and ConnectionState.FLOWING so they don't trigger updates when moving between those two
+      // Equalize CONNECTION_STATE.CONNECTED and CONNECTION_STATE.FLOWING so they don't trigger updates when moving between those two
       if (
-        newState === ConnectionState.CONNECTED ||
-        newState === ConnectionState.FLOWING
+        newState === CONNECTION_STATE.CONNECTED ||
+        newState === CONNECTION_STATE.FLOWING
       ) {
-        newState = ConnectionState.CONNECTED
+        newState = CONNECTION_STATE.CONNECTED
       }
 
       connectionStates[link.id] = newState
@@ -253,7 +253,7 @@
             onNodeOrConnectionMouseEnter(e, link.entry, link.address)
           }}
           on:mouseleave={() => ($inspecting = null)}
-          class="machine-connection {ConnectionState[
+          class="machine-connection {CONNECTION_STATE[
             connectionState(link.entry)
           ]}"
           style:color={linkColor(link.entry)}
@@ -275,9 +275,9 @@
       {#each nodes as node (node.id)}
         <g
           out:fade
-          class="node {ConnectionState[
+          class="node {CONNECTION_STATE[
             machineState(node.address)
-          ]} {MachineType[node.entry.machineType]}"
+          ]} {MACHINE_TYPE[node.entry.machineType]}"
           id={node.id}
         >
           <Machine

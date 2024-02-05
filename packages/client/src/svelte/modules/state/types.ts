@@ -1,6 +1,6 @@
 import type { SimulatedEntity } from "../simulator/types"
 import { EMPTY_CONNECTION } from "./index"
-import { EntityType, MaterialType, MachineType } from "./enums"
+import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "./enums"
 
 declare global {
   // * * * * * * * * * * * * * * * * *
@@ -10,9 +10,9 @@ declare global {
   type Entity = {
     [key: string]: any
     gameConfig?: GameConfig
-    entityType?: EntityType
-    machineType?: MachineType
-    materialType?: MaterialType
+    entityType?: ENTITY_TYPE
+    machineType?: MACHINE_TYPE
+    materialType?: MATERIAL_TYPE
     amount?: number
     name?: string
     carriedBy?: string
@@ -25,7 +25,7 @@ declare global {
     completedPlayers?: string[]
     lastResolved?: number
     input?: number
-    output?: MaterialType
+    output?: MATERIAL_TYPE
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
     storageConnection?: string
@@ -40,13 +40,6 @@ declare global {
   // GAME CONFIG ENTITY TYPES
   // * * * * * * * * * * * * * * * * *
 
-  type Recipe = {
-    entityType: EntityType.RECIPE
-    machineType: MachineType
-    input: number
-    output: MaterialType
-  }
-
   type FixedEntities = {
     outlet: string
     inlets: string[]
@@ -54,9 +47,9 @@ declare global {
 
   type OrderData = {
     creationBlock: number
-    resourceMaterialType: MaterialType
+    resourceMaterialType: MATERIAL_TYPE
     resourceAmount: number
-    goalMaterialType: MaterialType
+    goalMaterialType: MATERIAL_TYPE
     goalAmount: number
     rewardAmount: number
     maxPlayers: number
@@ -73,7 +66,7 @@ declare global {
   // * * * * * * * * * * * * * * * * *
 
   type Pod = {
-    entityType: EntityType.POD
+    entityType: ENTITY_TYPE.POD
     lastResolved: number
     machinesInPod: string[]
     storageInPod: string[]
@@ -83,8 +76,8 @@ declare global {
 
   // aka. stump (fka. core)
   type Player = {
-    entityType: EntityType.MACHINE
-    machineType: MachineType.PLAYER
+    entityType: ENTITY_TYPE.MACHINE
+    machineType: MACHINE_TYPE.PLAYER
     spawnIndex: number
     name?: string
     carriedBy: string
@@ -96,8 +89,8 @@ declare global {
   }
 
   type Machine = {
-    entityType: EntityType.MACHINE
-    machineType: MachineType
+    entityType: ENTITY_TYPE.MACHINE
+    machineType: MACHINE_TYPE
     carriedBy: string
     buildIndex: number
     incomingConnections: string[]
@@ -106,21 +99,21 @@ declare global {
   }
 
   type Store = {
-    entityType: EntityType.STORAGE,
+    entityType: ENTITY_TYPE.STORAGE,
     carriedBy: string
     amount: number
-    materialType: MaterialType
+    materialType: MATERIAL_TYPE
     storageConnection: string
   }
 
   type Order = {
-    entityType: EntityType.ORDER
+    entityType: ENTITY_TYPE.ORDER
     order: OrderData
     completedPlayers: string[]
   }
 
   type TutorialOrder = {
-    entityType: EntityType.ORDER
+    entityType: ENTITY_TYPE.ORDER
     order: OrderData
     tutorial: true
   }
@@ -131,10 +124,6 @@ declare global {
 
   type Entities = {
     [index: string]: Entity
-  }
-
-  type Recipes = {
-    [index: string]: Recipe
   }
 
   type Players = {

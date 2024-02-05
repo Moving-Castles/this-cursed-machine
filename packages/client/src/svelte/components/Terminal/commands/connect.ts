@@ -4,9 +4,9 @@ import { connect as sendConnect } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
-import { PortIndex } from "../../../modules/state/enums";
+import { PORT_INDEX } from "../../../modules/state/enums";
 
-async function execute(sourceMachine: string, targetMachine: string, portIndex: PortIndex) {
+async function execute(sourceMachine: string, targetMachine: string, portIndex: PORT_INDEX) {
     try {
         writeToTerminal(OutputType.NORMAL, "Allocating pipe...")
         // ...
@@ -28,7 +28,7 @@ async function execute(sourceMachine: string, targetMachine: string, portIndex: 
     }
 }
 
-export const connect: Command<[sourceMachine: string, targetMachine: string, portIndex: PortIndex]> = {
+export const connect: Command<[sourceMachine: string, targetMachine: string, portIndex: PORT_INDEX]> = {
     id: COMMAND.CONNECT,
     public: true,
     name: "connect",

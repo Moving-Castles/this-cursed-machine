@@ -1,12 +1,12 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { onMount, createEventDispatcher, tick } from "svelte"
-  import { MachineType } from "../../modules/state/enums"
+  import { MACHINE_TYPE } from "../../modules/state/enums"
   import type { SelectOption } from "./types"
   import { playSound } from "../../modules/sound"
   import { scrollToEnd } from "./functions/helpers"
 
-  type ReturnFunction = (value: string | MachineType | null) => void
+  type ReturnFunction = (value: string | MACHINE_TYPE | null) => void
 
   export let returnFunction: ReturnFunction | null = null
   export let selectOptions: SelectOption[] = []
@@ -19,7 +19,7 @@
   let selectedIndex = 0
   let selectContainerElement: HTMLDivElement
 
-  function returnValue(value: string | MachineType | null) {
+  function returnValue(value: string | MACHINE_TYPE | null) {
     if (returnFunction) {
       // Returns the value to the function that created the component
       returnFunction(value)

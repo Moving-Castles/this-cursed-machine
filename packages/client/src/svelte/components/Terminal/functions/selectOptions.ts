@@ -1,5 +1,5 @@
 import { SelectOption, COMMAND, DIRECTION } from "../types"
-import { MachineType } from "../../../modules/state/enums"
+import { MACHINE_TYPE } from "../../../modules/state/enums"
 import {
   simulatedMachines,
   simulatedConnections,
@@ -52,12 +52,12 @@ export function createSelectOptions(
  */
 function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
-  let availableMachines: MachineType[] =
+  let availableMachines: MACHINE_TYPE[] =
     MACHINES_BY_LEVEL[get(playerEntity)?.level || 0]
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
-      label: MachineType[availableMachines[i]],
+      label: MACHINE_TYPE[availableMachines[i]],
       value: availableMachines[i],
     })
   }
@@ -76,7 +76,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
   // All machines except player, inlet, outlet
   Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
     if (
-      !FIXED_MACHINE_TYPES.includes(machine.machineType || MachineType.NONE)
+      !FIXED_MACHINE_TYPES.includes(machine.machineType || MACHINE_TYPE.NONE)
     ) {
       selectOptions.push({
         label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex
@@ -197,7 +197,7 @@ function createSelectOptionsDisconnectStorage(): SelectOption[] {
   ) {
     selectOptions.push({
       label: "Inlet",
-      value: MachineType.INLET,
+      value: MACHINE_TYPE.INLET,
     })
   }
 
@@ -206,7 +206,7 @@ function createSelectOptionsDisconnectStorage(): SelectOption[] {
   ) {
     selectOptions.push({
       label: "Outlet",
-      value: MachineType.OUTLET,
+      value: MACHINE_TYPE.OUTLET,
     })
   }
 

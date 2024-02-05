@@ -2,7 +2,7 @@ import { tick } from "svelte"
 import { COMMAND, SelectOption } from "../types"
 import { COMMANDS_BY_LEVEL, terminalOutput } from ".."
 import { machineTypeToLabel } from "../../../modules/state/convenience"
-import { MachineType } from "../../../modules/state/enums"
+import { MACHINE_TYPE } from "../../../modules/state/enums"
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -61,10 +61,10 @@ export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
   // ... All other machines in alphabetical order
   // OUTLET
   return array.sort((a, b) => {
-    if (a.label === machineTypeToLabel(MachineType.INLET)) return -1
-    if (b.label === machineTypeToLabel(MachineType.INLET)) return 1
-    if (a.label === machineTypeToLabel(MachineType.OUTLET)) return 1
-    if (b.label === machineTypeToLabel(MachineType.OUTLET)) return -1
+    if (a.label === machineTypeToLabel(MACHINE_TYPE.INLET)) return -1
+    if (b.label === machineTypeToLabel(MACHINE_TYPE.INLET)) return 1
+    if (a.label === machineTypeToLabel(MACHINE_TYPE.OUTLET)) return 1
+    if (b.label === machineTypeToLabel(MACHINE_TYPE.OUTLET)) return -1
     return a.label.localeCompare(b.label)
   })
 }

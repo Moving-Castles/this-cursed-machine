@@ -1,13 +1,13 @@
 <script lang="ts">
   import { orders, playerPod } from "../../modules/state"
-  import { MaterialType } from "../../modules/state/enums"
+  import { MATERIAL_TYPE } from "../../modules/state/enums"
 </script>
 
 <div class="order-bar">
   <div>
     CURRENT ORDER:
     {$orders[$playerPod.currentOrder]?.order.goalAmount}
-    {MaterialType[$orders[$playerPod.currentOrder]?.order.goalMaterialType]}
+    {MATERIAL_TYPE[$orders[$playerPod.currentOrder]?.order.goalMaterialType]}
   </div>
   {#if $orders[$playerPod.currentOrder]?.order.duration > 0}
     <div>REMAINING TIME:</div>

@@ -1,8 +1,8 @@
-import { MaterialType } from "../state/enums"
+import { MATERIAL_TYPE } from "../state/enums"
 
 export type Product = {
   machineId: string
-  materialType: MaterialType
+  materialType: MATERIAL_TYPE
   amount: number
 }
 
@@ -25,5 +25,5 @@ export type SimulatedEntities = {
 }
 
 export type PodOutputs = {
-  [key in MaterialType]: number
+  [key in MATERIAL_TYPE]: number
 }

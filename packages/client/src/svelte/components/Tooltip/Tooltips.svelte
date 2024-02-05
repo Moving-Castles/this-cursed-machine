@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EntityType } from "../../modules/state/enums"
+  import { ENTITY_TYPE } from "../../modules/state/enums"
   import { inspecting } from "../../modules/ui/stores"
   import Tooltip from "../Tooltip/Tooltip.svelte"
   import ConnectionInformation from "../Connections/ConnectionInformation.svelte"
@@ -8,10 +8,10 @@
 
 {#if $inspecting}
   <Tooltip>
-    {#if $inspecting?.entityType === EntityType.MACHINE}
+    {#if $inspecting?.entityType === ENTITY_TYPE.MACHINE}
       <MachineInformation address={$inspecting.address} machine={$inspecting} />
     {/if}
-    {#if $inspecting?.entityType === EntityType.CONNECTION}
+    {#if $inspecting?.entityType === ENTITY_TYPE.CONNECTION}
       <ConnectionInformation
         address={$inspecting.address}
         connection={$inspecting}

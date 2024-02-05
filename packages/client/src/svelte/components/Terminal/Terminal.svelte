@@ -16,7 +16,7 @@
   } from "./index"
   import { evaluate } from "./functions/evaluate"
   import { playInputSound } from "./functions/sound"
-  import { MachineType, PortIndex } from "../../modules/state/enums"
+  import { MACHINE_TYPE, PORT_INDEX } from "../../modules/state/enums"
   import { writeToTerminal } from "./functions/writeToTerminal"
   import { createSelectOptions } from "./functions/selectOptions"
   import Select from "./Select.svelte"
@@ -230,11 +230,11 @@
     /** Exceptions first */
 
     // Handle splitter port selection
-    if (sourceMachineEntity.machineType === MachineType.SPLITTER) {
+    if (sourceMachineEntity.machineType === MACHINE_TYPE.SPLITTER) {
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
       // Use the first available one
       return [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-    } else if (sourceMachineEntity.machineType === MachineType.PLAYER) {
+    } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
       await writeToTerminal(OutputType.NORMAL, "Select source port:")
       let sourcePortOptions: SelectOption[] = []
 
@@ -263,7 +263,7 @@
       return [sourceMachineKey, targetMachineKey, sourcePort]
     } else {
       // Use the first one
-      return [sourceMachineKey, targetMachineKey, PortIndex.FIRST]
+      return [sourceMachineKey, targetMachineKey, PORT_INDEX.FIRST]
     }
   }
 
@@ -307,7 +307,7 @@
     // ) {
     networkPointSelectOptions.push({
       label: "Inlet",
-      value: MachineType.INLET,
+      value: MACHINE_TYPE.INLET,
     })
     // }
 
@@ -317,7 +317,7 @@
     // ) {
     networkPointSelectOptions.push({
       label: "Outlet",
-      value: MachineType.OUTLET,
+      value: MACHINE_TYPE.OUTLET,
     })
     // }
 

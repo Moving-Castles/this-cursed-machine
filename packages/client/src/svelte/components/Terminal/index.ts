@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 import type { Output } from "./types"
 import { COMMAND } from "./types"
-import { MachineType } from "../../modules/state/enums"
+import { MACHINE_TYPE } from "../../modules/state/enums"
 
 // STORES
 export const terminalOutput = writable([] as Output[])
@@ -169,15 +169,15 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
 }
 
 export const FULL_MACHINES = [
-  MachineType.SPLITTER,
-  MachineType.MIXER,
-  MachineType.DRYER,
-  MachineType.WETTER,
-  MachineType.BOILER,
-  MachineType.COOLER,
+  MACHINE_TYPE.SPLITTER,
+  MACHINE_TYPE.MIXER,
+  MACHINE_TYPE.DRYER,
+  MACHINE_TYPE.WETTER,
+  MACHINE_TYPE.BOILER,
+  MACHINE_TYPE.COOLER,
 ]
 
-export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
+export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
   0: FULL_MACHINES,
   1: FULL_MACHINES,
   2: FULL_MACHINES,
@@ -190,19 +190,19 @@ export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
   9: []
 }
 
-// export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
+// export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
 //   0: [],
 //   1: [],
 //   2: [],
 //   3: [
-//     MachineType.MIXER,
-//     MachineType.COOLER,
+//     MACHINE_TYPE.MIXER,
+//     MACHINE_TYPE.COOLER,
 //   ],
 //   4: [
-//     MachineType.MIXER,
-//     MachineType.COOLER,
-//     MachineType.SPLITTER,
-//     MachineType.BOILER,
+//     MACHINE_TYPE.MIXER,
+//     MACHINE_TYPE.COOLER,
+//     MACHINE_TYPE.SPLITTER,
+//     MACHINE_TYPE.BOILER,
 //   ],
 //   5: FULL_MACHINES,
 //   6: FULL_MACHINES,
@@ -211,7 +211,7 @@ export const MACHINES_BY_LEVEL: { [level: number]: MachineType[] } = {
 //   9: []
 // }
 
-export const FIXED_MACHINE_TYPES = [MachineType.PLAYER, MachineType.INLET, MachineType.OUTLET]
+export const FIXED_MACHINE_TYPES = [MACHINE_TYPE.PLAYER, MACHINE_TYPE.INLET, MACHINE_TYPE.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g
 export const BETWEEN_BRACKETS = /(?<=\().+?(?=\))/g
 export const BETWEEN_CARETS = /(?<=\>).+?(?=\<)/g
