@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { console } from "forge-std/console.sol";
-import { MachineType, MaterialType } from "../codegen/index.sol";
+import { MachineType, MaterialType, Recipe } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
-import { LibRecipe } from "./LibRecipe.sol";
 import { Product } from "../constants.sol";
 
 library LibMachine {
@@ -19,7 +17,7 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product[] memory _inputs
   ) internal view returns (Product[] memory _output) {
-    // player
+    // Player
     if (_machineType == MACHINE_TYPE.PLAYER) {
       return player(_inputs[0]);
     }
@@ -109,12 +107,12 @@ library LibMachine {
   function mixer(Product[] memory _inputs) internal view returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](1);
 
+    // Mixer must have 2 inputs
     if (_inputs.length != 2) {
-      // console.log("ERROR: mixer requires 2 inputs");
       return outputs;
     }
 
-    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(
+    MATERIAL_TYPE resultMaterialType = Recipe.get(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
@@ -139,7 +137,7 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product memory _input
   ) internal view returns (Product[] memory _outputs) {
-    MATERIAL_TYPE resultMaterialType = LibRecipe.getOutput(_machineType, uint256(_input.materialType));
+    MATERIAL_TYPE resultMaterialType = Recipe.get(_machineType, uint256(_input.materialType));
     Product[] memory outputs = new Product[](1);
     outputs[0] = Product({
       machineId: _input.machineId,

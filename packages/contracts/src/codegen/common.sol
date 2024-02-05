@@ -5,7 +5,6 @@ pragma solidity >=0.8.24;
 enum ENTITY_TYPE {
   NONE,
   BUILD_INDEX,
-  RECIPE,
   ORDER,
   POD,
   MACHINE,

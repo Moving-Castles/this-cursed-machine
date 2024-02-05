@@ -48,8 +48,8 @@ contract StartSystem is System {
     CurrentOrder.set(podEntity, nextTutorialLevel);
 
     // Fill first storage, based on the config of the first tutorial level
-    MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceMaterialType);
-    Amount.set(StorageInPod.get(podEntity)[0], Order.get(nextTutorialLevel).resourceAmount);
+    MaterialType.set(storageInPod[0], Order.get(nextTutorialLevel).resourceMaterialType);
+    Amount.set(storageInPod[0], Order.get(nextTutorialLevel).resourceAmount);
 
     // Give tokens for testing
     LibToken.send(_msgSender(), 666);

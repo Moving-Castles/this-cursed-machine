@@ -1,6 +1,16 @@
 <script lang="ts">
-  import { storages } from "../../modules/state"
+  import { storages, playerPod, entities } from "../../modules/state"
   import StorageItem from "./StorageItem.svelte"
+
+  $: console.log("$storages", $storages)
+  $: console.log(
+    "$entities[$playerPod.fixedEntities.outlet]",
+    $entities[$playerPod.fixedEntities.outlet],
+  )
+  $: console.log(
+    "$entities[$playerPod.fixedEntities.inlets",
+    $entities[$playerPod.fixedEntities.inlets[0]],
+  )
 </script>
 
 <div class="storage-box">

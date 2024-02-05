@@ -1,7 +1,7 @@
 import { mudConfig, resolveTableId } from "@latticexyz/world/register";
 
 export const enums = {
-    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "RECIPE", "ORDER", "POD", "MACHINE", "STORAGE"],
+    ENTITY_TYPE: ["NONE", "BUILD_INDEX", "ORDER", "POD", "MACHINE", "STORAGE"],
     MACHINE_TYPE: ["NONE", "INLET", "OUTLET", "PLAYER", "SPLITTER", "MIXER", "DRYER", "WETTER", "BOILER", "COOLER"],
     MATERIAL_TYPE: ["NONE", "BUG", "PISS", "BLOOD", "SLUDGE", "DIRT", "BLOOD_LIPIDS", "PLANT", "CAFFEINE_SLUSHY", "CLUB_MATE", "DIET_RED_BULL", "PRIME", "M150", "FIVE_HOUR_ENERGY", "MONSTER", "E_LIQUID", "TOBACCO", "CIGARETTE_JUICE", "ERASERBABY"],
     PORT_INDEX: ["FIRST", "SECOND"]
@@ -67,23 +67,20 @@ export default mudConfig({
                 inlets: "bytes32[]"
             }
         },
-        CurrentOrder: "bytes32"
+        CurrentOrder: "bytes32",
+        Recipe: {
+            keySchema: {
+                machineType: "MACHINE_TYPE",
+                input: "uint256",
+            },
+            valueSchema: "MATERIAL_TYPE"
+        }
     },
     modules: [
         {
             name: "KeysWithValueModule",
             root: true,
-            args: [resolveTableId("MaterialType")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
             args: [resolveTableId("CarriedBy")],
-        },
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("Input")],
-        },
+        }
     ],
 });

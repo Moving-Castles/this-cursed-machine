@@ -10,12 +10,14 @@
   import { initStateSimulator } from "./modules/simulator/networkResolver"
   import { initStaticContent } from "./modules/content"
   import { initSound } from "./modules/sound"
-  import { start as sendStart } from "./modules/action"
-  import { localLevel } from "./modules/ui/stores"
   import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
   import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
+
+  import { entities } from "./modules/state"
+
+  // $: console.log($entities)
 
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"

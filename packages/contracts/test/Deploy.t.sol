@@ -32,12 +32,12 @@ contract DeployTest is BaseTest {
     assertEq(uint32(Order.get(TutorialOrders.get()[0]).resourceMaterialType), uint32(MATERIAL_TYPE.BUG));
   }
 
-  // function testPoolMint() public {
-  //   address token = gameConfig.tokenAddress;
-  //   ResourceId systemId = Puppet(token).systemId();
-  //   ResourceId tableId = _balancesTableId(systemId.getNamespace());
+  function testPoolMint() public {
+    address token = gameConfig.tokenAddress;
+    ResourceId systemId = Puppet(token).systemId();
+    ResourceId tableId = _balancesTableId(systemId.getNamespace());
 
-  //   assertEq(Balances.get(tableId, worldAddress), 1000000);
-  //   assertEq(IERC20Mintable(token).totalSupply(), 1000000);
-  // }
+    assertEq(Balances.get(tableId, worldAddress), 1000000);
+    assertEq(IERC20Mintable(token).totalSupply(), 1000000);
+  }
 }

@@ -1,7 +1,6 @@
 export enum EntityType {
   NONE,
   BUILD_INDEX,
-  RECIPE,
   ORDER,
   POD,
   MACHINE,

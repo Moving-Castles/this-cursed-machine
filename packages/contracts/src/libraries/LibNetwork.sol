@@ -46,31 +46,20 @@ library LibNetwork {
     while (counter.resolved < machines.length) {
       // For each machine in the list
       for (uint i; i < machines.length; i++) {
-        // console.log("resolvedNodes");
-        // console.log("*******");
-        // for (uint j; j < resolvedNodes.length; j++) {
-        //   console.logBytes32(resolvedNodes[j]);
-        // }
-        // console.log("*******");
-
         // Current node
         bytes32 node = machines[i];
 
         // Skip if node is already resolved
         if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
 
-        // console.log("==== unresolved node");
-        // console.logBytes32(node);
-        // console.log(uint32(MachineType.get(node)));
-
         // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          // Is it inlet one or two
+          // Is it inlet one or two?
           uint32 storageIndex = node == fixedEntities.inlets[0] ? 0 : 1;
           // Get material from storage
           MATERIAL_TYPE materialType = MaterialType.get(connectedStorages[storageIndex]);
 
-          // Mark as resolved and abort if no material
+          // Mark as resolved and abort if inlet is empty
           if (materialType == MATERIAL_TYPE.NONE) {
             resolvedNodes[counter.resolved] = node;
             counter.resolved += 1;
@@ -108,7 +97,7 @@ library LibNetwork {
         resolvedNodes[counter.resolved] = node;
         counter.resolved += 1;
 
-        // If the machine is the outlet, write to storage
+        // Handle outlet
         if (node == fixedEntities.outlet) {
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
@@ -144,7 +133,6 @@ library LibNetwork {
           }
         }
       }
-      // Increment the counter.
       counter.iterations += 1;
       // Break out of the loop if it seems like an infinite loop is occurring.
       if (counter.iterations == machines.length * 2) {

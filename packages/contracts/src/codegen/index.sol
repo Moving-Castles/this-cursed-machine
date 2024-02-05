@@ -27,3 +27,4 @@ import { MachinesInPod, MachinesInPodTableId } from "./tables/MachinesInPod.sol"
 import { StorageInPod, StorageInPodTableId } from "./tables/StorageInPod.sol";
 import { FixedEntities, FixedEntitiesData, FixedEntitiesTableId } from "./tables/FixedEntities.sol";
 import { CurrentOrder, CurrentOrderTableId } from "./tables/CurrentOrder.sol";
+import { Recipe, RecipeTableId } from "./tables/Recipe.sol";
