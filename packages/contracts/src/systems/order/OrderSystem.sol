@@ -56,7 +56,7 @@ contract OrderSystem is System {
     // Not in tutorial mode
 
     // Add player to completedPlayers list
-    CompletedPlayers.set(currentOrder, LibUtils.addToArray(CompletedPlayers.get(currentOrder), playerEntity));
+    CompletedPlayers.push(currentOrder, playerEntity);
 
     // Clear currentOrder
     CurrentOrder.set(podEntity, bytes32(0));
