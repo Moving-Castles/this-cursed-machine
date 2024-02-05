@@ -6,8 +6,6 @@ import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
 library LibInit {
   function init(address tokenAddress) internal {
-    require(GameConfig.get().tokenAddress == address(0), "InitSystem: already initialized");
-
     // Set game config
     GameConfig.set(GameConfigData({ tokenAddress: tokenAddress, globalSpawnIndex: 0 }));
 
