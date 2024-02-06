@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { EntityType, MachineType, BuildIndex, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils } from "./LibUtils.sol";
 
 library LibEntity {
   /**
@@ -11,7 +11,7 @@ library LibEntity {
    * @return entity The identifier for the newly created machine entity.
    */
   function create(MACHINE_TYPE _machineType) internal returns (bytes32) {
-    bytes32 entity = LibUtils.getRandomKey();
+    bytes32 entity = getUniqueEntity();
     EntityType.set(entity, ENTITY_TYPE.MACHINE);
     MachineType.set(entity, _machineType);
 

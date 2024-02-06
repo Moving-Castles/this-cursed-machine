@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
+import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { EntityType, CarriedBy, MaterialType, MachineType, Amount, StorageConnection } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils } from "./LibUtils.sol";
 import { Product } from "../constants.sol";
 
 library LibStorage {
   function create(bytes32 podEntity) internal returns (bytes32) {
-    bytes32 storageEntity = LibUtils.getRandomKey();
+    bytes32 storageEntity = getUniqueEntity();
     EntityType.set(storageEntity, ENTITY_TYPE.STORAGE);
     CarriedBy.set(storageEntity, podEntity);
     MaterialType.set(storageEntity, MATERIAL_TYPE.NONE);
