@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
 import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
@@ -49,7 +50,7 @@ library LibNetwork {
         bytes32 node = machines[i];
 
         // Skip if node is already resolved
-        if (LibUtils.isIdPresent(resolvedNodes, node)) continue;
+        if (ArrayLib.includes(resolvedNodes, node)) continue;
 
         // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
