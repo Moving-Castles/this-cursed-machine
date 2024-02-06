@@ -27,12 +27,7 @@
     simulatedConnections,
   } from "../../modules/simulator"
   import { renderSelect } from "./functions/renderSelect"
-  import {
-    playerEntity,
-    storages,
-    playerPod,
-    entities,
-  } from "../../modules/state"
+  import { playerEntity } from "../../modules/state"
   import { localLevel, cursorCharacter } from "../../modules/ui/stores"
   import { clearTerminalOutput } from "./functions/helpers"
   import { writeLevel } from "./functions/writeLevel"
@@ -92,7 +87,7 @@
   const executeCommand = async (command: Command, parameters: any[]) => {
     // Execute function
     await command.fn(...parameters)
-    // Note: It is the parents responsibility to reset the input on this event
+    // Note: It is the parent's responsibility to reset the input on this event
     dispatch("commandExecuted", { command, parameters })
   }
 

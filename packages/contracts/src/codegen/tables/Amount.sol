@@ -18,11 +18,9 @@ import { FieldLayout, FieldLayoutLib } from "@latticexyz/store/src/FieldLayout.s
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
-ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("Amount")))
-);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "Amount", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x74620000000000000000000000000000416d6f756e7400000000000000000000);
 ResourceId constant AmountTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

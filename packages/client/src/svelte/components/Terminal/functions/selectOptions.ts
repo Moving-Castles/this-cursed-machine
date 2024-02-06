@@ -40,6 +40,8 @@ export function createSelectOptions(
       return createSelectOptionsDisconnectStorage()
     case COMMAND.CLEAR_STORAGE:
       return createSelectOptionsClearStorage()
+    case COMMAND.FILL:
+      return createSelectOptionsFill()
     default:
       return [] as SelectOption[]
   }
@@ -189,26 +191,28 @@ function createSelectOptionsConnectStorage(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsDisconnectStorage(): SelectOption[] {
+function createSelectOptionsFill(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  if (
-    get(simulatedMachines)[get(playerPod).fixedEntities.inlet].storageConnection
-  ) {
-    selectOptions.push({
-      label: "Inlet",
-      value: MACHINE_TYPE.INLET,
-    })
-  }
+  const stores = get(storages)
 
-  if (
-    get(simulatedMachines)[get(playerPod).fixedEntities.outlet].storageConnection
-  ) {
-    selectOptions.push({
-      label: "Outlet",
-      value: MACHINE_TYPE.OUTLET,
-    })
-  }
+  selectOptions = Object.entries(stores)
+    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+    .map(([address, _], index) => ({
+      label: `Store #${index + 1}`,
+      value: address,
+    }))
 
+  return selectOptions
+}
+
+function createSelectOptionsDisconnectStorage(): SelectOption[] {
+  let selectOptions: SelectOption[] = [{
+    label: "Inlet",
+    value: MACHINE_TYPE.INLET,
+  }, {
+    label: "Outlet",
+    value: MACHINE_TYPE.OUTLET,
+  }]
   return selectOptions
 }

@@ -6,8 +6,8 @@
   import { showMap } from "../../modules/ui/stores"
 
   import Terminal from "../Terminal/Terminal.svelte"
-  // import Graph from "../Graph/Graph.svelte"
-  import Graph from "../Graph2/Graph.svelte"
+  import Graph from "../Graph/Graph.svelte"
+  // import Graph from "../Graph2/Graph.svelte"
   import Map from "../Map/Map.svelte"
   import StorageBox from "../Storage/StorageBox.svelte"
   import OrderBar from "./OrderBar.svelte"

@@ -40,8 +40,9 @@ contract PostDeploy is Script {
 
     token.mint(worldAddress, POOL_SUPPLY);
 
-    // Initialize gameConfig, tutorial levels and goals
+    // Initialize gameConfig and tutorial levels
     LibInit.init(address(token));
+
     // Initialize recipes
     LibInitRecipes.init();
 

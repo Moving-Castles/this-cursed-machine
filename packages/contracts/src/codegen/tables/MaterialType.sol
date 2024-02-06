@@ -18,14 +18,12 @@ import { FieldLayout, FieldLayoutLib } from "@latticexyz/store/src/FieldLayout.s
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { RESOURCE_TABLE, RESOURCE_OFFCHAIN_TABLE } from "@latticexyz/store/src/storeResourceTypes.sol";
 
 // Import user types
 import { MATERIAL_TYPE } from "./../common.sol";
 
-ResourceId constant _tableId = ResourceId.wrap(
-  bytes32(abi.encodePacked(RESOURCE_TABLE, bytes14(""), bytes16("MaterialType")))
-);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "MaterialType", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d6174657269616c5479706500000000);
 ResourceId constant MaterialTypeTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

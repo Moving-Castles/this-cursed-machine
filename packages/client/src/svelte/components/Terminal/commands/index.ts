@@ -17,6 +17,7 @@ import { fail } from "./fail";
 import { connectStorage } from "./connectStorage";
 import { disconnectStorage } from "./disconnectStorage";
 import { clearStorage } from "./clearStorage";
+import { fill } from "./fill";
 
 export const commands: Command[] = [
     build,
@@ -35,5 +36,6 @@ export const commands: Command[] = [
     fail,
     connectStorage,
     disconnectStorage,
-    clearStorage
+    clearStorage,
+    fill
 ]

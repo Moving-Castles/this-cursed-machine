@@ -41,7 +41,8 @@ export enum COMMAND {
     FAIL,
     CONNECT_STORAGE,
     DISCONNECT_STORAGE,
-    CLEAR_STORAGE
+    CLEAR_STORAGE,
+    FILL
 }
 
 export type Command<T extends any[] = any[]> = {
