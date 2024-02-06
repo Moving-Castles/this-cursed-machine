@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel } from "../../codegen/index.sol";
+import { TutorialLevel, CurrentOrder, TutorialOrders, CarriedBy, StorageInPod, Amount, MaterialType, Order } from "../../codegen/index.sol";
 import { LibUtils } from "../../libraries/Libraries.sol";
 
 contract WarpSystem is System {
@@ -10,6 +10,13 @@ contract WarpSystem is System {
    */
   function warp(uint32 _level) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 podEntity = CarriedBy.get(playerEntity);
+    // Set level
     TutorialLevel.set(playerEntity, _level);
+    // Set current order
+    CurrentOrder.set(podEntity, TutorialOrders.get()[_level]);
+    // Fill storage with tutorial order
+    MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
+    Amount.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
   }
 }

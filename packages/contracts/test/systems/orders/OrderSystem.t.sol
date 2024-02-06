@@ -48,22 +48,22 @@ contract OrderSystemTest is BaseTest {
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
-    // Connect player to outlet
-    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
+    // Connect player (blood) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 4 blocks
+    vm.roll(block.number + 4);
 
     // Disconnect storage and resolve
     world.disconnectStorage(MACHINE_TYPE.OUTLET);
 
-    // 3 blocks passed
-    // Inlet material spent => 10 * 100 = 1000
-    // Outlet material gained => 10 * 50 = 500
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 1000 = 0
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
-    assertEq(Amount.get(storageInPod[1]), 500); // 0 + 500 = 500
+    // 4 blocks passed
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    // Inlet material spent => 4 * 100 = 400
+    assertEq(Amount.get(storageInPod[0]), 1600); // 2000 - 400 = 0
+    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
+    // Outlet material gained => 4 * 50 = 200
+    assertEq(Amount.get(storageInPod[1]), 200); // 0 + 200 = 200
 
     // Order is fullfilled
     world.fill(storageInPod[1]);

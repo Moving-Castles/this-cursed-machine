@@ -8,7 +8,7 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 contract Init2System is System {
   function init2() public {
     // Cooler recipes
-    Recipe.set(MACHINE_TYPE.COOLER, uint256(MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE), MATERIAL_TYPE.PURE_FAT);
+    // ...
 
     // Wetter recipes
     // ...
@@ -16,6 +16,7 @@ contract Init2System is System {
     // Dryer recipes
     Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.BLOOD), MATERIAL_TYPE.BLOOD_MEAL);
     Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.PISS), MATERIAL_TYPE.AMMONIA);
+    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE), MATERIAL_TYPE.PURE_FAT);
 
     // Boiler recipes
     Recipe.set(MACHINE_TYPE.BOILER, uint256(MATERIAL_TYPE.PISS), MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER);

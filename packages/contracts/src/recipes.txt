@@ -38,6 +38,7 @@ AMMONIA + PURE_FAT => AESOP_ORGANIC_HAND_SOAP
 -------
 BLOOD => BLOOD_MEAL
 PISS => AMMONIA
+CSX_INUSTRIAL_GREASE => PURE_FAT
 
 * * * * * * * * * * * * * * * * * * *
 * * * * * * * * * * * * * * * * * * *
@@ -65,7 +66,6 @@ BUGS => CSX_INUSTRIAL_GREASE
 --------
 # COOLER
 --------
-CSX_INUSTRIAL_GREASE => PURE_FAT
 
 * * * * * * * * * * * * * * * * * * *
 * * * * * * * * * * * * * * * * * * *

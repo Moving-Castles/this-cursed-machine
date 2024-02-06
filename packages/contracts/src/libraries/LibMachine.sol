@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { console } from "forge-std/console.sol";
 import { MachineType, MaterialType, Recipe } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 import { LibUtils } from "./LibUtils.sol";
@@ -115,10 +116,11 @@ library LibMachine {
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
 
+    // PROBLEM: factor is off
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
       materialType: resultMaterialType,
-      amount: _inputs[0].amount,
+      amount: _inputs[0].amount + _inputs[1].amount, // Sum of the amounts of the two inputs
       factor: _inputs[0].factor
     });
     return outputs;

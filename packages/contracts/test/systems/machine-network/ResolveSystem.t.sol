@@ -17,7 +17,6 @@ contract ResolveSystemTest is BaseTest {
     super.setUp();
     vm.startPrank(alice);
 
-    // Spawn player
     playerEntity = world.spawn();
     world.start();
 
@@ -58,7 +57,7 @@ contract ResolveSystemTest is BaseTest {
     // 3 blocks passed
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 100 = 300
-    assertEq(Amount.get(storageInPod[0]), 700); // 1000 - 300
+    assertEq(Amount.get(storageInPod[0]), 1700); // 2000 - 300
     assertEq(Amount.get(storageInPod[1]), 300);
   }
 
@@ -92,7 +91,7 @@ contract ResolveSystemTest is BaseTest {
     // 3 blocks passed
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 50 = 150
-    assertEq(Amount.get(storageInPod[0]), 700); // 1000 - 300
+    assertEq(Amount.get(storageInPod[0]), 1700); // 2000 - 300
     assertEq(Amount.get(storageInPod[1]), 150);
   }
 
@@ -133,7 +132,7 @@ contract ResolveSystemTest is BaseTest {
     // Inlet material spent => 3 * 100 = 300
     // Outlet material gained => 3 * 25 = 75
     assertEq(Amount.get(storageInPod[1]), 75);
-    assertEq(Amount.get(storageInPod[0]), 700); // 1000 - 300
+    assertEq(Amount.get(storageInPod[0]), 1700); // 2000 - 300
   }
 
   function testCapAtInletMaterialAmount() public {
@@ -162,9 +161,9 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     // 50 blocks passed
-    assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 1000
+    assertEq(Amount.get(storageInPod[0]), 0); // 2000 - 2000
     assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 500); // 500
+    assertEq(Amount.get(storageInPod[1]), 1000); // 1000
     assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
   }
 
@@ -172,9 +171,6 @@ contract ResolveSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
-
-    assertEq(Amount.get(storageInPod[0]), 1000);
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
 
     // Connect storage 0 to inlet
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
@@ -200,8 +196,8 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 300
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(storageInPod[0]), 1000); // 2000 - 1000
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Outlet material gained => 10 * 100 = 500
     assertEq(Amount.get(storageInPod[1]), 1000);
     assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE));
@@ -211,9 +207,6 @@ contract ResolveSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
-
-    assertEq(Amount.get(storageInPod[0]), 1000);
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
 
     // Connect storage 0 to inlet
     world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
@@ -242,57 +235,10 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 300
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(storageInPod[0]), 1000); // 2000 - 1000
+    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Outlet material gained => 10 * 50 = 500
     assertEq(Amount.get(storageInPod[1]), 500);
     assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER));
   }
-
-  // function testMakeAesopOrganicHandSoap() public {
-  //   setUp();
-
-  //   vm.startPrank(alice);
-
-  //   assertEq(Amount.get(storageInPod[0]), 1000);
-  //   assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
-
-  //   // Connect storage 0 to inlet
-  //   world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
-
-  //   // Connect storage 1 to outlet
-  //   world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
-
-  //   // ...
-
-  //   // Connect inlet to player
-  //   world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
-
-  //   // Build mixer
-  //   bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
-
-  //   // Connect player (piss) to mixer
-  //   world.connect(playerEntity, mixerEntity, PORT_INDEX.FIRST);
-
-  //   // Connect player (blood) to mixer
-  //   world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
-
-  //   // Connect mixer to outlet
-  //   world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
-
-  //   // Wait 10 blocks
-  //   vm.roll(block.number + 10);
-
-  //   // Resolve
-  //   world.resolve();
-
-  //   vm.stopPrank();
-
-  //   // Inlet material spent => 10 * 100 = 1000
-  //   assertEq(Amount.get(storageInPod[0]), 0); // 1000 - 300
-  //   assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
-  //   // Outlet material gained => 10 * 50 = 500
-  //   assertEq(Amount.get(storageInPod[1]), 500);
-  //   assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.CAFFEINE_SLUSHY));
-  // }
 }

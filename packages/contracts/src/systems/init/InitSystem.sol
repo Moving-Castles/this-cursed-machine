@@ -13,15 +13,34 @@ contract InitSystem is System {
     GameConfig.set(GameConfigData({ tokenAddress: tokenAddress, globalSpawnIndex: 0 }));
 
     // Create tutorial orders
-    bytes32[] memory tutorialOrders = new bytes32[](7);
+    MATERIAL_TYPE[] memory goalMaterials = new MATERIAL_TYPE[](5);
+    goalMaterials[0] = MATERIAL_TYPE.BLOOD;
+    goalMaterials[1] = MATERIAL_TYPE.PISS;
+    goalMaterials[2] = MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER;
+    goalMaterials[3] = MATERIAL_TYPE.PURE_FAT;
+    goalMaterials[4] = MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP;
 
-    tutorialOrders[0] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 1000, MATERIAL_TYPE.PISS, 500, true, 0, 0, 0);
-    tutorialOrders[1] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 2000, MATERIAL_TYPE.BLOOD, 500, true, 0, 0, 0);
-    tutorialOrders[2] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 3000, MATERIAL_TYPE.PISS, 1000, true, 0, 0, 0);
-    tutorialOrders[3] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 4000, MATERIAL_TYPE.BLOOD, 1000, true, 0, 0, 0);
-    tutorialOrders[4] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 5000, MATERIAL_TYPE.PISS, 1500, true, 0, 0, 0);
-    tutorialOrders[5] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 6000, MATERIAL_TYPE.BLOOD, 1500, true, 0, 0, 0);
-    tutorialOrders[6] = LibOrder.createOrder(MATERIAL_TYPE.BUG, 7000, MATERIAL_TYPE.PISS, 2000, true, 0, 0, 0);
+    uint32[] memory goalAmounts = new uint32[](5);
+    goalAmounts[0] = 200;
+    goalAmounts[1] = 500;
+    goalAmounts[2] = 500;
+    goalAmounts[3] = 1000;
+    goalAmounts[4] = 500;
+
+    bytes32[] memory tutorialOrders = new bytes32[](5);
+
+    for (uint i; i < 5; i++) {
+      tutorialOrders[i] = LibOrder.createOrder(
+        MATERIAL_TYPE.BUG,
+        2000,
+        goalMaterials[i],
+        goalAmounts[i],
+        true,
+        0,
+        0,
+        0
+      );
+    }
 
     TutorialOrders.set(tutorialOrders);
   }
