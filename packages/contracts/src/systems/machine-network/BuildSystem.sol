@@ -25,7 +25,7 @@ contract BuildSystem is System {
     CarriedBy.set(machineEntity, podEntity);
 
     // Add it to the list of machines
-    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), machineEntity));
+    MachinesInPod.push(podEntity, machineEntity);
 
     // Get build index entity
     bytes32 buildIndexEntity = LibPod.getBuildIndexEntity(podEntity, _machineType);
