@@ -89,8 +89,7 @@ library LibNetwork {
         if (MachineType.get(node) == MACHINE_TYPE.MIXER && currentInputsCount < 2) continue;
 
         // Process the inputs of the machine to get the outputs
-        Product[] memory currentOutputs = new Product[](2);
-        currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
+        Product[] memory currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
 
         // Mark as resolved
         resolvedNodes[counter.resolved] = node;
