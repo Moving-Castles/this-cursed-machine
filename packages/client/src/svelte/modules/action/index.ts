@@ -1,4 +1,4 @@
-import { MachineType, PortIndex } from "../state/enums"
+import { MACHINE_TYPE, PORT_INDEX } from "../state/enums"
 import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
@@ -32,7 +32,7 @@ export function start() {
 export function connect(
   sourceMachine: string,
   targetMachine: string,
-  portIndex: PortIndex
+  portIndex: PORT_INDEX
 ) {
   return addToSequencer(WorldFunctions.Connect, [
     sourceMachine,
@@ -41,11 +41,11 @@ export function connect(
   ])
 }
 
-export function disconnect(sourceMachine: string, portIndex: PortIndex) {
+export function disconnect(sourceMachine: string, portIndex: PORT_INDEX) {
   return addToSequencer(WorldFunctions.Disconnect, [sourceMachine, portIndex])
 }
 
-export function build(machineType: MachineType) {
+export function build(machineType: MACHINE_TYPE) {
   return addToSequencer(WorldFunctions.Build, [machineType])
 }
 
@@ -61,14 +61,14 @@ export function name(name: string) {
   return addToSequencer(WorldFunctions.Name, [name])
 }
 
-export function connectStorage(storageEntity: string, machineType: MachineType.INLET | MachineType.OUTLET) {
+export function connectStorage(storageEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
   return addToSequencer(WorldFunctions.ConnectStorage, [
     storageEntity,
     machineType
   ])
 }
 
-export function disconnectStorage(machineType: MachineType.INLET | MachineType.OUTLET) {
+export function disconnectStorage(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
   return addToSequencer(WorldFunctions.DisconnectStorage, [machineType])
 }
 

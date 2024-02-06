@@ -1,4 +1,4 @@
-import { MachineType } from "../../modules/state/enums";
+import { MACHINE_TYPE } from "../../modules/state/enums";
 
 export enum TerminalType {
     FULL,
@@ -61,5 +61,5 @@ export type Output = {
 
 export type SelectOption = {
     label: string
-    value: string | MachineType | null
+    value: string | MACHINE_TYPE | null
 }

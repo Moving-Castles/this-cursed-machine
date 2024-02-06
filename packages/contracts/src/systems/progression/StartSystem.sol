@@ -10,6 +10,8 @@ contract StartSystem is System {
   function start() public returns (bytes32) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
+    // todo: check that player is spawned
+
     // Create pod
     bytes32 podEntity = LibPod.create();
 
@@ -19,17 +21,17 @@ contract StartSystem is System {
     inletEntities[1] = LibEntity.create(MACHINE_TYPE.INLET);
     for (uint i; i < inletEntities.length; i++) {
       CarriedBy.set(inletEntities[i], podEntity);
-      MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), inletEntities[i]));
+      MachinesInPod.push(podEntity, inletEntities[i]);
     }
 
     // Place player in pod
     CarriedBy.set(playerEntity, podEntity);
-    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), playerEntity));
+    MachinesInPod.push(podEntity, playerEntity);
 
     // Create Outlet
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
     CarriedBy.set(outletEntity, podEntity);
-    MachinesInPod.set(podEntity, LibUtils.addToArray(MachinesInPod.get(podEntity), outletEntity));
+    MachinesInPod.push(podEntity, outletEntity);
 
     // Create storage
     bytes32[] memory storageInPod = new bytes32[](6);

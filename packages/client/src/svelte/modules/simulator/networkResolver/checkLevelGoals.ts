@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { goals } from "../../state"
-import { MaterialType } from "../../state/enums"
+import { MATERIAL_TYPE } from "../../state/enums"
 import { podOutput } from ".."
 
 /**

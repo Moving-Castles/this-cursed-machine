@@ -3,7 +3,7 @@ import { OutputType } from "../types"
 import { SYMBOLS } from ".."
 import { get } from "svelte/store"
 // import { playerGoals } from "../../../modules/state"
-import { MaterialType } from "../../../modules/state/enums"
+import { MATERIAL_TYPE } from "../../../modules/state/enums"
 import { staticContent } from "../../../modules/content"
 import { extractTexts } from "../../../modules/content/sanity"
 
@@ -94,7 +94,7 @@ export const writeLevel = async (level: number, short: boolean = false) => {
 
     // const currentGoals = get(playerGoals)
     // for (let i = 0; i < currentGoals.length; i++) {
-    //     await writeGoal(`${MaterialType[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
+    //     await writeGoal(`${MATERIAL_TYPE[currentGoals[i].materialType]}: ${currentGoals[i].amount}`)
     // }
 
     if (level === 1 && !short) {

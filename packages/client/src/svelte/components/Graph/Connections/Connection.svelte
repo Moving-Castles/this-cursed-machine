@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ConnectionState } from "../../../modules/state/enums"
+  import { CONNECTION_STATE } from "../../../modules/state/enums"
   import { graphPulse } from "../../../modules/ui/stores"
   import { tweened } from "svelte/motion"
   import { expoIn } from "svelte/easing"
@@ -17,7 +17,7 @@
   const localPulse = tweened(freeze, { duration: 500, easing: expoIn })
 
   $: $localPulse =
-    state === ConnectionState.FLOWING ? $graphPulse * GAP : freeze * GAP
+    state === CONNECTION_STATE.FLOWING ? $graphPulse * GAP : freeze * GAP
 </script>
 
 <path

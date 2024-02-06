@@ -1,5 +1,5 @@
 import type { Command } from "../types"
-import { PortIndex } from "../../../modules/state/enums"
+import { PORT_INDEX } from "../../../modules/state/enums"
 import { COMMAND } from "../types"
 import { disconnect as sendDisconnect } from "../../../modules/action"
 import {
@@ -11,7 +11,7 @@ import { waitForCompletion, waitForTransaction } from "../../../modules/action/a
 import { OutputType } from "../types"
 import { playSound } from "../../../modules/sound"
 
-async function execute(sourceMachine: string, portIndex: PortIndex) {
+async function execute(sourceMachine: string, portIndex: PORT_INDEX) {
   try {
     writeToTerminal(OutputType.NORMAL, "Approval pending")
     // ...
@@ -33,7 +33,7 @@ async function execute(sourceMachine: string, portIndex: PortIndex) {
   }
 }
 
-export const disconnect: Command<[connectionEntiy: string, portIndex: PortIndex]> = {
+export const disconnect: Command<[connectionEntiy: string, portIndex: PORT_INDEX]> = {
   id: COMMAND.DISCONNECT,
   public: true,
   name: "disconnect",

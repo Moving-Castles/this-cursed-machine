@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { MachineType, MaterialType } from "../../state/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../../state/enums"
 import { machinesInPlayerPod } from "../../state"
 import { process } from "./machines"
 import type { Product, SimulatedEntities } from "../types"
@@ -42,7 +42,7 @@ export function resolve(_podEntity: string) {
 
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
-      // console.log('___ RESOLVING MACHINE', MachineType[machine.machineType], machine.buildIndex, machine)
+      // console.log('___ RESOLVING MACHINE', MACHINE_TYPE[machine.machineType], machine.buildIndex, machine)
 
       // Skip if node is already resolved
       if (resolvedNodes.includes(machineKey)) {
@@ -51,10 +51,10 @@ export function resolve(_podEntity: string) {
       }
 
       // If the machine is an inlet, provide it with bugs as input.
-      if (machine.machineType === MachineType.INLET) {
+      if (machine.machineType === MACHINE_TYPE.INLET) {
         inputs.push({
           machineId: machineKey,
-          materialType: MaterialType.BUG,
+          materialType: MATERIAL_TYPE.BUG,
           amount: 100,
         })
       }
@@ -66,7 +66,7 @@ export function resolve(_podEntity: string) {
 
       // console.log('___ currentInputs', currentInputs)
 
-      // if (machine.machineType === MachineType.MIXER) {
+      // if (machine.machineType === MACHINE_TYPE.MIXER) {
       //   console.log('!!!! MIXER')
       //   console.log('inputs', inputs)
       //   console.log('currentInputs', currentInputs)
@@ -77,7 +77,7 @@ export function resolve(_podEntity: string) {
 
       // If this is a mixer and it has less than two inputs:
       // skip without marking as resolved to avoid missing the second input
-      if (machine.machineType === MachineType.MIXER && currentInputs.length < 2)
+      if (machine.machineType === MACHINE_TYPE.MIXER && currentInputs.length < 2)
         return
 
       // Save to patchInputs
@@ -104,7 +104,7 @@ export function resolve(_podEntity: string) {
         if (machine.outgoingConnections[k] === "0") continue
 
         // Fill output
-        if (currentOutputs[k]?.materialType !== MaterialType.NONE) {
+        if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
           const output = currentOutputs[k]
           // console.log('___ output', output)
           if (output) {

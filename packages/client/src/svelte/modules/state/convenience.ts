@@ -2,7 +2,7 @@ import type { SimulatedEntity, Connection } from "../simulator/types"
 import { get } from "svelte/store"
 import { simulatedMachines, simulatedConnections } from "../simulator"
 import { EMPTY_CONNECTION } from "../state"
-import { ConnectionState, MaterialType, MachineType, PortIndex } from "../state/enums"
+import { CONNECTION_STATE, MATERIAL_TYPE, MACHINE_TYPE, PORT_INDEX } from "../state/enums"
 import { DIRECTION } from "../../components/Terminal/types"
 
 /**
@@ -58,7 +58,7 @@ const dfs = (
   const currentMachine = machinesMap.get(currentMachineUID)
   const flowingConnections = new Set<string>()
 
-  if (currentMachine!.machineType === MachineType.OUTLET) {
+  if (currentMachine!.machineType === MACHINE_TYPE.OUTLET) {
     return flowingConnections
   }
 
@@ -76,7 +76,7 @@ const dfs = (
       )
       if (
         subFlowingConnections.size > 0 ||
-        machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+        machinesMap.get(nextMachineUID)!.machineType === MACHINE_TYPE.OUTLET
       ) {
         flowingConnections.add(currentMachineUID + "->" + nextMachineUID)
         for (const conn of subFlowingConnections) {
@@ -110,7 +110,7 @@ const dfsFlowingEntities = (
   let flowingConnections = new Set<string>()
 
   // Stopping statement
-  if (currentMachine!.machineType === MachineType.OUTLET) {
+  if (currentMachine!.machineType === MACHINE_TYPE.OUTLET) {
     flowingMachines.add(currentMachineUID)
     return { flowingMachines, flowingConnections }
   }
@@ -128,7 +128,7 @@ const dfsFlowingEntities = (
 
       if (
         nextFlowingMachines.size > 0 ||
-        machinesMap.get(nextMachineUID)!.machineType === MachineType.OUTLET
+        machinesMap.get(nextMachineUID)!.machineType === MACHINE_TYPE.OUTLET
       ) {
         flowingConnections.add(currentMachineUID + "->" + nextMachineUID)
         flowingMachines.add(currentMachineUID)
@@ -157,7 +157,7 @@ const getFlowingEntities = (
   const visited = new Set<string>()
 
   for (const [machineUID, machine] of machinesMap) {
-    if (machine.machineType === MachineType.INLET && !visited.has(machineUID)) {
+    if (machine.machineType === MACHINE_TYPE.INLET && !visited.has(machineUID)) {
       const {
         flowingMachines: nextFlowingMachines,
         flowingConnections: nextFlowingConnections,
@@ -179,14 +179,14 @@ const determineMachineState = (
   machineUID: string,
   machinesEntries: [string, SimulatedEntity][],
   allConnections: Connection[]
-): ConnectionState => {
+): CONNECTION_STATE => {
   const { flowingMachines } = getFlowingEntities(
     machinesEntries,
     allConnections
   )
 
   if (flowingMachines.has(machineUID)) {
-    return ConnectionState.FLOWING
+    return CONNECTION_STATE.FLOWING
   } else {
     const machineEntry = machinesEntries.find(([id, _]) => id === machineUID)
 
@@ -196,8 +196,8 @@ const determineMachineState = (
     ].filter(address => address !== EMPTY_CONNECTION)
 
     return connectedPorts.length > 0
-      ? ConnectionState.CONNECTED
-      : ConnectionState.NONE
+      ? CONNECTION_STATE.CONNECTED
+      : CONNECTION_STATE.NONE
   }
 }
 
@@ -205,7 +205,7 @@ const determineConnectionState = (
   connection: Connection,
   machinesEntries: [string, Machine][],
   allConnections: Connection[]
-): ConnectionState => {
+): CONNECTION_STATE => {
   const { flowingConnections } = getFlowingEntities(
     machinesEntries,
     allConnections
@@ -213,8 +213,8 @@ const determineConnectionState = (
   return flowingConnections.has(
     connection.sourceMachine + "->" + connection.targetMachine
   )
-    ? ConnectionState.FLOWING
-    : ConnectionState.CONNECTED
+    ? CONNECTION_STATE.FLOWING
+    : CONNECTION_STATE.CONNECTED
 }
 
 export const connectionState = (connection: Connection) => {
@@ -234,24 +234,24 @@ export const machineState = (machineId: string) => {
 }
 
 /**
- * Converts a MachineType enum value to a corresponding string label.
- * @param {MachineType} machineType - The machine type to convert.
+ * Converts a MACHINE_TYPE enum value to a corresponding string label.
+ * @param {MACHINE_TYPE} machineType - The machine type to convert.
  * @returns {string} The string label corresponding to the provided machine type.
  */
-export function machineTypeToLabel(machineType: MachineType | undefined) {
+export function machineTypeToLabel(machineType: MACHINE_TYPE | undefined) {
   if (!machineType) return ""
-  switch (machineType || MachineType.NONE) {
-    case MachineType.INLET:
+  switch (machineType || MACHINE_TYPE.NONE) {
+    case MACHINE_TYPE.INLET:
       return "INLET"
-    case MachineType.OUTLET:
+    case MACHINE_TYPE.OUTLET:
       return "OUTLET"
-    case MachineType.PLAYER:
+    case MACHINE_TYPE.PLAYER:
       return "YOU"
     default:
-      return MachineType[machineType]
+      return MACHINE_TYPE[machineType]
   }
 }
 
-export const materialTypeToLabel = (materialType: MaterialType) => {
-  return MaterialType[materialType]?.split("_")?.join(" ")
+export const materialTypeToLabel = (materialType: MATERIAL_TYPE) => {
+  return MATERIAL_TYPE[materialType]?.split("_")?.join(" ")
 }

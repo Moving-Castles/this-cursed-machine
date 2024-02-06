@@ -4,7 +4,7 @@ import { build as sendBuild } from "../../../modules/action"
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal"
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { OutputType } from "../types"
-import { MachineType } from "../../../modules/state/enums"
+import { MACHINE_TYPE } from "../../../modules/state/enums"
 import { playSound } from "../../../modules/sound";
 
 async function execute() {
@@ -12,12 +12,12 @@ async function execute() {
         writeToTerminal(OutputType.NORMAL, "Requesting material")
 
         // Designed to fail
-        const machineType = MachineType.PLAYER
+        const machineType = MACHINE_TYPE.PLAYER
 
         const action = sendBuild(machineType)
         // ...
         await waitForTransaction(action, loadingSpinner)
-        writeToTerminal(OutputType.NORMAL, `Building ${MachineType[machineType]}`)
+        writeToTerminal(OutputType.NORMAL, `Building ${MACHINE_TYPE[machineType]}`)
         // ...
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")

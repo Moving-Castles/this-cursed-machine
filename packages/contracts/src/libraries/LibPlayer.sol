@@ -4,10 +4,6 @@ import { TutorialLevel, EntityType, MachineType, OutgoingConnections, IncomingCo
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 
 library LibPlayer {
-  /**
-   * @notice Initializes a new player machine entity with predefined attributes.
-   * @param _playerEntity The identifier for the player machine entity to be initialized.
-   */
   function spawn(bytes32 _playerEntity) internal {
     EntityType.set(_playerEntity, ENTITY_TYPE.MACHINE);
     MachineType.set(_playerEntity, MACHINE_TYPE.PLAYER);

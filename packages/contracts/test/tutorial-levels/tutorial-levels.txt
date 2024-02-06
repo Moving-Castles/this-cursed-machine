@@ -1,0 +1,89 @@
+#######
+LEVEL 1
+#######
+Resource: 2000 BUG
+Goal: 200 BLOOD
+
+- Connect inlet to player
+- Connect player (blood) to outlet
+- Wait 4 blocks
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+
+#######
+LEVEL 2
+#######
+Resource: 2000 BUG
+Goal: 500 PISS
+
+- Connect inlet to player
+- Connect player (piss) to outlet
+- Wait 10 blocks
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+
+#######
+LEVEL 3
+#######
+Resource: 2000 BUG
+Goal: 500 NESTLE_PURE_LIFE_BOTTLED_WATER
+
+- Connect inlet to player
+- Build boiler
+- Connect player (piss) to boiler
+- Connect boiler to outlet
+- Wait 10 blocks
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+
+#######
+LEVEL 4
+#######
+Resource: 2000 BUG
+Goal: 1000 PURE_FAT
+
+- Build boiler
+- Build dryer
+- Connect inlet to boiler
+- Connect boiler to dryer
+- Connect dryer to outlet
+- Wait 10 blocks
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+
+
+#######
+LEVEL 5
+#######
+Resource: 2000 BUG
+Goal: 500 AESOP_ORGANIC_HAND_SOAP
+
+- Build Splitter
+- Build boiler
+- Build dryer one
+- Build dryer two
+- Build mixer
+- Connect inlet to Splitter
+- Connect splitter to player
+- Connect player (piss) to dryer one
+- Connect dryer one to mixer
+- Connect splitter to boiler
+- Connect boiler to dryer two
+- Connect dryer two to mixer
+- Connect mixer to outlet
+- Wait 20 block
+
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * *

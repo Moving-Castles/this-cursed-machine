@@ -29,6 +29,7 @@ contract OrderSystem is System {
     MaterialType.set(_storageEntity, MATERIAL_TYPE.NONE);
     Amount.set(_storageEntity, 0);
 
+    // Handle tutorial levels
     if (Tutorial.get(playerEntity)) {
       uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
 
@@ -55,7 +56,7 @@ contract OrderSystem is System {
     // Not in tutorial mode
 
     // Add player to completedPlayers list
-    CompletedPlayers.set(currentOrder, LibUtils.addToArray(CompletedPlayers.get(currentOrder), playerEntity));
+    CompletedPlayers.push(currentOrder, playerEntity);
 
     // Clear currentOrder
     CurrentOrder.set(podEntity, bytes32(0));

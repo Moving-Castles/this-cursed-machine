@@ -6,7 +6,7 @@ import { waitForCompletion, waitForTransaction } from "../../../modules/action/a
 import { OutputType } from "../types"
 import { simulatedMachines } from "../../../modules/simulator";
 import { get } from "svelte/store";
-import { MachineType } from "../../../modules/state/enums";
+import { MACHINE_TYPE } from "../../../modules/state/enums";
 import { playSound } from "../../../modules/sound";
 
 async function execute(machineEntity: string) {
@@ -16,7 +16,7 @@ async function execute(machineEntity: string) {
         // @todo: handle this better
         if (!machine || !machine.machineType) return
 
-        writeToTerminal(OutputType.NORMAL, `Destroying ${MachineType[machine.machineType]}`)
+        writeToTerminal(OutputType.NORMAL, `Destroying ${MACHINE_TYPE[machine.machineType]}`)
         // ...
         const action = sendDestroy(machineEntity)
         // ...

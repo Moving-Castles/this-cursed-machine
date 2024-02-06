@@ -3,7 +3,7 @@
  *
  */
 import { EMPTY_CONNECTION } from "../state"
-import { EntityType, MachineType, MaterialType } from "../state/enums"
+import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../state/enums"
 import { get, writable, derived } from "svelte/store"
 import type { Writable } from "svelte/store"
 import { capAtZero } from "../../modules/utils/misc"
@@ -12,9 +12,9 @@ import { blockNumber } from "../network"
 import type { SimulatedEntities, PodOutputs, Connection } from "./types"
 
 // --- CONSTANTS --------------------------------------------------------------
-export const AVAILABLE_MACHINES = Object.values(MachineType).splice(
+export const AVAILABLE_MACHINES = Object.values(MACHINE_TYPE).splice(
   4, // exclude some
-  Object.keys(MachineType).length / 2 - 4
+  Object.keys(MACHINE_TYPE).length / 2 - 4
 )
 
 // --- STORES -----------------------------------------------------------------
@@ -103,7 +103,7 @@ export const simulatedPlayerEntity = derived(
 export const simulatedPods = derived(simulated, $simulated => {
   return Object.fromEntries(
     Object.entries($simulated).filter(
-      ([_, entry]) => entry.entityType === EntityType.POD
+      ([_, entry]) => entry.entityType === ENTITY_TYPE.POD
     )
   )
 })
@@ -117,7 +117,7 @@ export const simulatedMachines = derived(
       Object.entries($simulated).filter(([_, entry]) => {
         // osn
         return (
-          entry.entityType === EntityType.MACHINE &&
+          entry.entityType === ENTITY_TYPE.MACHINE &&
           entry.carriedBy === $playerEntity.carriedBy
         )
       })
@@ -158,7 +158,7 @@ export const readableMachines = derived(
     return Object.entries($simulatedMachines).map(([id, machine]) => ({
       id,
       machine,
-      read: MachineType[machine.machineType ?? MachineType.NONE],
+      read: MACHINE_TYPE[machine.machineType ?? MACHINE_TYPE.NONE],
     }))
   }
 )
@@ -184,7 +184,7 @@ export const podOutput = derived(
     // Filter entities to retrieve only those which are of type MATERIAL and are in the same pod as the player
     const singles = Object.entries($entities).filter(([_, entry]) => {
       return (
-        entry.entityType === EntityType.MATERIAL &&
+        entry.entityType === ENTITY_TYPE.MATERIAL &&
         entry.carriedBy === $playerEntity.carriedBy
       )
     })
@@ -199,9 +199,9 @@ export const podOutput = derived(
     // Get outlet entity
     const outlet = Object.entries($entities).find(([_, entry]) => {
       return (
-        entry.entityType === EntityType.MACHINE &&
+        entry.entityType === ENTITY_TYPE.MACHINE &&
         entry.carriedBy === $playerEntity.carriedBy &&
-        entry.machineType === MachineType.OUTLET
+        entry.machineType === MACHINE_TYPE.OUTLET
       )
     })
 
@@ -221,7 +221,7 @@ export const podOutput = derived(
           patchesOnOutlet.outputs[0].materialType === material.materialType
           ? patchesOnOutlet.outputs[0].amount
           : 0
-      result[material.materialType || MaterialType.NONE] =
+      result[material.materialType || MATERIAL_TYPE.NONE] =
         material?.amount ?? 0 + patchValue * $blocksSinceLastResolution
     })
 

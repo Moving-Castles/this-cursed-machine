@@ -57,7 +57,6 @@ contract StorageSystem is System {
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    // Has to be storage
     require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
     // We can not clear the storage if it is connected
     require(StorageConnection.get(_storageEntity) == bytes32(0), "storage connected");

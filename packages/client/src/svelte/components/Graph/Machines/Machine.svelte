@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { MaterialType } from "../../../modules/state/enums"
+  import { MATERIAL_TYPE } from "../../../modules/state/enums"
   import { simulatedMachines } from "../../../modules/simulator"
   import { graphPulse } from "../../../modules/ui/stores"
   import {
     connectionState,
     machineState,
   } from "../../../modules/state/convenience"
-  import { ConnectionState, MachineType } from "../../../modules/state/enums"
+  import { CONNECTION_STATE, MACHINE_TYPE } from "../../../modules/state/enums"
   export let MACHINE_SIZE: number
   export let d: {
     entry: Machine
@@ -22,17 +22,17 @@
 
   const inletOutletOrPlayer = dd => {
     return (
-      dd.entry.machineType === MachineType.INLET ||
-      dd.entry.machineType === MachineType.OUTLET ||
-      dd.entry.machineType === MachineType.PLAYER
+      dd.entry.machineType === MACHINE_TYPE.INLET ||
+      dd.entry.machineType === MACHINE_TYPE.OUTLET ||
+      dd.entry.machineType === MACHINE_TYPE.PLAYER
     )
   }
 </script>
 
-{#if d.entry.machineType !== MachineType.INLET && d.entry.machineType !== MachineType.OUTLET && d.entry.machineType !== MachineType.NONE}
+{#if d.entry.machineType !== MACHINE_TYPE.INLET && d.entry.machineType !== MACHINE_TYPE.OUTLET && d.entry.machineType !== MACHINE_TYPE.NONE}
   {#key $graphPulse}
     <rect
-      class="node-rect {ConnectionState[state]} MACHINE_{MachineType[
+      class="node-rect {CONNECTION_STATE[state]} MACHINE_{MACHINE_TYPE[
         d.entry.machineType
       ]}"
       x={d.x - MACHINE_SIZE / 2}
@@ -42,18 +42,18 @@
       fill="black"
     />
     <image
-      class="node-image {ConnectionState[state]} MACHINE_{MachineType[
+      class="node-image {CONNECTION_STATE[state]} MACHINE_{MACHINE_TYPE[
         d.entry.machineType
       ]}"
       x={d.x - MACHINE_SIZE / 2}
       y={d.y - MACHINE_SIZE / 2}
       width={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
       height={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-      href="/images/machines/{MachineType[d.entry.machineType]}.png"
+      href="/images/machines/{MACHINE_TYPE[d.entry.machineType]}.png"
     />
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <rect
-      class="node-rect {ConnectionState[state]} MACHINE_{MachineType[
+      class="node-rect {CONNECTION_STATE[state]} MACHINE_{MACHINE_TYPE[
         d.entry.machineType
       ]}"
       on:mouseenter
@@ -62,22 +62,22 @@
       y={d.y - MACHINE_SIZE / 2}
       width={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
       height={inletOutletOrPlayer(d) ? MACHINE_SIZE : MACHINE_SIZE * 0.8}
-      stroke={connectionState(d.entry) === ConnectionState.CONNECTED ||
-      connectionState(d.entry) === ConnectionState.FLOWING
+      stroke={connectionState(d.entry) === CONNECTION_STATE.CONNECTED ||
+      connectionState(d.entry) === CONNECTION_STATE.FLOWING
         ? "white"
         : "var(--STATE_INACTIVE)"}
       stroke-width="2"
       fill="transparent"
     />
   {/key}
-{:else if d.entry.machineType === MachineType.INLET || MachineType.OUTLET}
+{:else if d.entry.machineType === MACHINE_TYPE.INLET || MACHINE_TYPE.OUTLET}
   {#key $graphPulse}
     <!-- svelte-ignore missing-declaration -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <rect
       on:mouseenter
       on:mouseleave
-      class="{ConnectionState[state]} MACHINE_{MachineType[
+      class="{CONNECTION_STATE[state]} MACHINE_{MACHINE_TYPE[
         d.entry.machineType
       ]}"
       x={d.x - 20}
@@ -85,7 +85,7 @@
       width={40}
       height={40}
       fill="var(--{$simulatedMachines[d.address]?.product?.materialType
-        ? MaterialType[$simulatedMachines[d.address]?.product?.materialType]
+        ? MATERIAL_TYPE[$simulatedMachines[d.address]?.product?.materialType]
         : 'STATE_INACTIVE'})"
       stroke="white"
       stroke-width="2"
@@ -100,7 +100,7 @@
   </text>
 {/if}
 
-<!-- <title>{MachineType[d.entry.machineType]}</title> -->
+<!-- <title>{MACHINE_TYPE[d.entry.machineType]}</title> -->
 
 <style lang="scss">
   * {

@@ -2,7 +2,7 @@
   export let address: string
   export let connection: Connection
 
-  import { MaterialType } from "../../modules/state/enums"
+  import { MATERIAL_TYPE } from "../../modules/state/enums"
   import { materialTypeToLabel } from "../../modules/state/convenience"
 </script>
 
@@ -10,7 +10,7 @@
   <p class="muted">
     {#if connection?.product}
       Transporting: <span
-        style:color="var(--{MaterialType[connection?.product?.materialType]})"
+        style:color="var(--{MATERIAL_TYPE[connection?.product?.materialType]})"
         >{materialTypeToLabel(connection?.product?.materialType)}</span
       >
     {:else}

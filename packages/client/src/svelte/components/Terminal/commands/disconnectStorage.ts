@@ -4,9 +4,9 @@ import { disconnectStorage as sendDisconnectStorage } from "../../../modules/act
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
-import { MachineType, } from "../../../modules/state/enums";
+import { MACHINE_TYPE, } from "../../../modules/state/enums";
 
-async function execute(machineType: MachineType.INLET | MachineType.OUTLET) {
+async function execute(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
     try {
         writeToTerminal(OutputType.NORMAL, "Locating storage...")
         // ...
@@ -28,7 +28,7 @@ async function execute(machineType: MachineType.INLET | MachineType.OUTLET) {
     }
 }
 
-export const disconnectStorage: Command<[machineType: MachineType.INLET | MachineType.OUTLET]> = {
+export const disconnectStorage: Command<[machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET]> = {
     id: COMMAND.DISCONNECT_STORAGE,
     public: true,
     name: "disconnectStorage",

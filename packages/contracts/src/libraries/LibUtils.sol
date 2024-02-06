@@ -63,22 +63,6 @@ library LibUtils {
   }
 
   /**
-   * @dev Checks if a given `_id` exists within the provided `_nodes` array.
-   *
-   * @param _nodes The list of node IDs of type bytes32.
-   * @param _id The ID to check for its existence in the `_nodes` list.
-   * @return true if `_id` exists in `_nodes`, false otherwise.
-   */
-  function isIdPresent(bytes32[] memory _nodes, bytes32 _id) internal pure returns (bool) {
-    for (uint i = 0; i < _nodes.length; i++) {
-      if (_nodes[i] == _id) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * @notice Generate a unique identifier for a pair of `uint` values.
    * @dev This function uses the Cantor pairing function to produce a unique
    * identifier from two `uint` values. The order of input values does not affect
@@ -96,21 +80,6 @@ library LibUtils {
     }
 
     return ((a + b) * (a + b + 1)) / 2 + b;
-  }
-
-  /**
-   * @dev Adds a new `bytes32` element to an existing array of `bytes32` elements and returns a new array with the added element.
-   * @param array The original array of `bytes32` elements.
-   * @param element The `bytes32` element to be added to the array.
-   * @return newArray The new array containing all elements of the original array plus the new element added at the end.
-   */
-  function addToArray(bytes32[] memory array, bytes32 element) internal pure returns (bytes32[] memory) {
-    bytes32[] memory newArray = new bytes32[](array.length + 1);
-    for (uint256 i = 0; i < array.length; i++) {
-      newArray[i] = array[i];
-    }
-    newArray[array.length] = element;
-    return newArray;
   }
 
   /**

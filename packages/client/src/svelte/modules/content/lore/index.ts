@@ -1,4 +1,4 @@
-import { MachineType, MaterialType } from "../../state/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../../state/enums"
 
 const machineInformation = {
   NONE: "Does not exist",
@@ -77,16 +77,16 @@ function addNumericKeysFromEnum(e, o) {
 }
 
 export const MACHINE_LORE = addNumericKeysFromEnum(
-  MachineType,
+  MACHINE_TYPE,
   machineInformation
 )
 
 export const MATERIAL_LORE = addNumericKeysFromEnum(
-  MaterialType,
+  MATERIAL_TYPE,
   materialInformation
 )
 
 export const MATERIAL_IMAGES = addNumericKeysFromEnum(
-  MaterialType,
+  MATERIAL_TYPE,
   materialImages
 )

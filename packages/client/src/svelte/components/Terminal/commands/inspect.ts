@@ -4,7 +4,7 @@ import { writeToTerminal } from "../functions/writeToTerminal"
 import { OutputType } from "../types"
 import { simulatedMachines } from "../../../modules/simulator"
 import { get } from "svelte/store"
-import { MachineType, MaterialType } from "../../../modules/state/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../../../modules/state/enums"
 import { SYMBOLS } from ".."
 
 async function execute(machineEntity: string) {
@@ -12,7 +12,7 @@ async function execute(machineEntity: string) {
 
   await writeToTerminal(
     OutputType.INFO,
-    `Inspecting ${MachineType[machine.machineType || MachineType.NONE]}`,
+    `Inspecting ${MachineType[machine.machineType || MACHINE_TYPE.NONE]}`,
     false,
     SYMBOLS[6],
     20
@@ -25,7 +25,7 @@ async function execute(machineEntity: string) {
       let input = machine.inputs[i]
       await writeToTerminal(
         OutputType.INFO,
-        `${MaterialType[input.materialType]}: ${input.amount}/block`,
+        `${MATERIAL_TYPE[input.materialType]}: ${input.amount}/block`,
         false,
         SYMBOLS[6],
         20
@@ -42,7 +42,7 @@ async function execute(machineEntity: string) {
       let output = machine.outputs[i]
       await writeToTerminal(
         OutputType.INFO,
-        `${MaterialType[output.materialType]}: ${output.amount}/block`,
+        `${MATERIAL_TYPE[output.materialType]}: ${output.amount}/block`,
         false,
         SYMBOLS[6],
         20

@@ -2,7 +2,7 @@
  *  Central store for all entities in the game.
  *
  */
-import { EntityType, MachineType } from "./enums"
+import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 import { filterByEntitytype, filterByMachinetype } from "./utils"
 import { writable, derived } from "svelte/store"
 import { network } from "../network"
@@ -26,17 +26,17 @@ export const entities = writable({} as Entities)
 // * * * * * * * * * * * * * * * * *
 
 export const gameConfig = derived(entities, $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig)
-export const recipes = derived(entities, $entities => filterByEntitytype($entities, EntityType.RECIPE) as Recipes)
+export const recipes = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.RECIPE) as Recipes)
 
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITIES
 // * * * * * * * * * * * * * * * * *
 
-export const pods = derived(entities, $entities => filterByEntitytype($entities, EntityType.POD) as Pods)
-export const machines = derived(entities, $entities => filterByEntitytype($entities, EntityType.MACHINE) as Machines)
-export const storages = derived(entities, $entities => filterByEntitytype($entities, EntityType.STORAGE) as Storages)
-export const players = derived(entities, $entities => filterByMachinetype($entities, MachineType.PLAYER) as Players)
-export const orders = derived(entities, $entities => filterByEntitytype($entities, EntityType.ORDER) as Orders)
+export const pods = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.POD) as Pods)
+export const machines = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.MACHINE) as Machines)
+export const storages = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.STORAGE) as Storages)
+export const players = derived(entities, $entities => filterByMachinetype($entities, MACHINE_TYPE.PLAYER) as Players)
+export const orders = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ORDER) as Orders)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MaterialType } from "../../modules/state/enums"
+  import { MATERIAL_TYPE } from "../../modules/state/enums"
   import { playerPod } from "../../modules/state"
   export let storage: Store
   export let index: number
@@ -13,7 +13,7 @@
 
 <div class="storage-item">
   <div><strong>#: {index + 1}</strong></div>
-  <div>M: {MaterialType[storage.materialType]}</div>
+  <div>M: {MATERIAL_TYPE[storage.materialType]}</div>
   <div>A: {storage.amount}</div>
   <div>C: {getConnectionName(storage.storageConnection)}</div>
 </div>

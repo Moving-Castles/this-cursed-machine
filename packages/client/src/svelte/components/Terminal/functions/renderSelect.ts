@@ -1,5 +1,5 @@
 
-import { MachineType } from "../../../modules/state/enums"
+import { MACHINE_TYPE } from "../../../modules/state/enums"
 import { SelectOption } from "../types"
 
 /**
@@ -7,19 +7,19 @@ import { SelectOption } from "../types"
  * @param {SelectOption[]} selectOptions - Array of options for the select component.
  * @param {HTMLDivElement} selectContainerElement - The container element for the select component.
  * @param {any} Select - The select component to render.
- * @returns {Promise<string | MachineType | null>} Resolves to the selected value which can be a string, a MachineType or null
+ * @returns {Promise<string | MACHINE_TYPE | null>} Resolves to the selected value which can be a string, a MACHINE_TYPE or null
  */
 export async function renderSelect(
     selectContainerElement: HTMLDivElement,
     Select: any,
     selectOptions: SelectOption[]
-): Promise<string | MachineType | null> {
+): Promise<string | MACHINE_TYPE | null> {
     return new Promise(resolve => {
         const component = new Select({
             target: selectContainerElement,
             props: {
                 selectOptions,
-                returnFunction: (value: string | MachineType | null) => {
+                returnFunction: (value: string | MACHINE_TYPE | null) => {
                     resolve(value)
                 },
             },

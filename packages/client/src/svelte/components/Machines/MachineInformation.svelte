@@ -6,7 +6,7 @@
     machineTypeToLabel,
     materialTypeToLabel,
   } from "../../modules/state/convenience"
-  import { MaterialType, MachineType } from "../../modules/state/enums"
+  import { MATERIAL_TYPE, MACHINE_TYPE } from "../../modules/state/enums"
   import { MACHINE_LORE } from "../../modules/content/lore"
   import { machineState } from "../../modules/state/convenience"
   import { playSound } from "../../modules/sound"
@@ -33,7 +33,7 @@
 </script>
 
 <div class="machine-information">
-  {machine.machineType === MachineType.PLAYER
+  {machine.machineType === MACHINE_TYPE.PLAYER
     ? "YOU (Stump #24719)"
     : machineTypeToLabel(machine.machineType)}
   <p class="muted">
@@ -47,7 +47,7 @@
           <p class="muted">IN</p>
           {#each machine?.inputs as input}
             <p>
-              <span style:color="var(--{MaterialType[input.materialType]})"
+              <span style:color="var(--{MATERIAL_TYPE[input.materialType]})"
                 >{materialTypeToLabel(input.materialType)}</span
               >: {input.amount}
             </p>
@@ -55,11 +55,11 @@
         {/if}
       </p>
       <div class="outputs">
-        {#if machine?.outputs && machine.machineType !== MachineType.OUTLET}
+        {#if machine?.outputs && machine.machineType !== MACHINE_TYPE.OUTLET}
           <p class="muted">OUT</p>
           {#each machine?.outputs as output}
             <p>
-              <span style:color="var(--{MaterialType[output.materialType]})"
+              <span style:color="var(--{MATERIAL_TYPE[output.materialType]})"
                 >{materialTypeToLabel(output.materialType)}</span
               >: {output.amount}
             </p>

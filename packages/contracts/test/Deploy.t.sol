@@ -28,7 +28,7 @@ contract DeployTest is BaseTest {
   }
 
   function testWorldInit() public {
-    assertEq(TutorialOrders.get().length, 7);
+    assertEq(TutorialOrders.get().length, 5);
     assertEq(uint32(Order.get(TutorialOrders.get()[0]).resourceMaterialType), uint32(MATERIAL_TYPE.BUG));
   }
 
