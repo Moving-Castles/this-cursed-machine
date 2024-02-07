@@ -72,6 +72,26 @@ contract DestroySystem is System {
     LibEntity.destroy(_machineEntity);
 
     // Remove it from the list of machines
-    MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));
+    _swapAndPopMachinesInPod(podEntity, _machineEntity);
+  }
+
+  function _swapAndPopMachinesInPod(bytes32 _podEntity, bytes32 _machineEntity) internal {
+    uint256 length = MachinesInPod.length(_podEntity);
+    if (length == 0) {
+      return;
+    } else {
+      uint256 lastIndex = length - 1;
+
+      for (uint256 i; i < length; i++) {
+        if (_machineEntity == MachinesInPod.getItem(_podEntity, i)) {
+          if (i != lastIndex) {
+            bytes32 entityToSwap = MachinesInPod.getItem(_podEntity, lastIndex);
+            MachinesInPod.update(_podEntity, i, entityToSwap);
+          }
+          MachinesInPod.pop(_podEntity);
+          return;
+        }
+      }
+    }
   }
 }
