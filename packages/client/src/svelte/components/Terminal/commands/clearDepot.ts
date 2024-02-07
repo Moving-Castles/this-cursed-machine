@@ -1,20 +1,19 @@
 import type { Command } from "../types";
 import { COMMAND, OutputType } from "../types";
-import { connectStorage as sendConnectStorage } from "../../../modules/action";
+import { clearDepot as sendClearDepot } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
-import { MACHINE_TYPE, } from "../../../modules/state/enums";
 
-async function execute(storageEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+async function execute(depotEntity: string) {
     try {
-        writeToTerminal(OutputType.NORMAL, "Locating storage...")
+        writeToTerminal(OutputType.NORMAL, "Locating depot...")
         // ...
-        const action = sendConnectStorage(storageEntity, machineType)
+        const action = sendClearDepot(depotEntity,)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(OutputType.NORMAL, "Connection in progress...")
+        writeToTerminal(OutputType.NORMAL, "Clearing depot...")
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(OutputType.SUCCESS, "Done")
@@ -28,11 +27,11 @@ async function execute(storageEntity: string, machineType: MACHINE_TYPE.INLET | 
     }
 }
 
-export const connectStorage: Command<[storageEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET]> = {
-    id: COMMAND.CONNECT_STORAGE,
+export const clearDepot: Command<[depotEntity: string]> = {
+    id: COMMAND.CLEAR_DEPOT,
     public: true,
-    name: "connectStorage",
-    alias: "s",
-    description: "Connect storage",
+    name: "clearDepot",
+    alias: "q",
+    description: "Clear depot",
     fn: execute,
 }

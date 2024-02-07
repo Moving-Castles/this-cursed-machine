@@ -9,7 +9,7 @@
   import Graph from "../Graph/Graph.svelte"
   // import Graph from "../Graph2/Graph.svelte"
   import Map from "../Map/Map.svelte"
-  import StorageBox from "../Storage/StorageBox.svelte"
+  import DepotsBox from "../Depots/DepotsBox.svelte"
   import OrderBar from "./OrderBar.svelte"
   import InfoBar from "./InfoBar.svelte"
   import ModeBar from "./ModeBar.svelte"
@@ -58,7 +58,7 @@
             <OrderBar />
           </div>
           <div class="stats">
-            <StorageBox />
+            <DepotsBox />
           </div>
           <div class="graph">
             <Graph />

@@ -1,20 +1,20 @@
 import type { Command } from "../types";
 import { COMMAND, OutputType } from "../types";
-import { disconnectStorage as sendDisconnectStorage } from "../../../modules/action";
+import { attachDepot as sendAttachDepot } from "../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
 import { MACHINE_TYPE, } from "../../../modules/state/enums";
 
-async function execute(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+async function execute(depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
     try {
-        writeToTerminal(OutputType.NORMAL, "Locating storage...")
+        writeToTerminal(OutputType.NORMAL, "Locating depot...")
         // ...
-        const action = sendDisconnectStorage(machineType)
+        const action = sendAttachDepot(depotEntity, machineType)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(OutputType.NORMAL, "Disconnection in progress...")
+        writeToTerminal(OutputType.NORMAL, "Connection in progress...")
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(OutputType.SUCCESS, "Done")
@@ -28,11 +28,11 @@ async function execute(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
     }
 }
 
-export const disconnectStorage: Command<[machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET]> = {
-    id: COMMAND.DISCONNECT_STORAGE,
+export const attachDepot: Command<[depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET]> = {
+    id: COMMAND.ATTACH_DEPOT,
     public: true,
-    name: "disconnectStorage",
-    alias: "y",
-    description: "Disconnect storage",
+    name: "attachDepot",
+    alias: "s",
+    description: "Attach depot",
     fn: execute,
 }

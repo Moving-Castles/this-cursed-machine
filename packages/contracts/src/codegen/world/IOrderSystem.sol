@@ -10,7 +10,7 @@ import { MATERIAL_TYPE } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IOrderSystem {
-  function fill(bytes32 _storageEntity) external;
+  function fill(bytes32 _depotEntity) external;
 
   function accept(bytes32 _orderEntity) external;
 

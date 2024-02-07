@@ -2,9 +2,9 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, StorageInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity, LibStorage, LibToken } from "../../libraries/Libraries.sol";
+import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
 
 contract StartSystem is System {
   function start() public returns (bytes32) {
@@ -33,12 +33,12 @@ contract StartSystem is System {
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.push(podEntity, outletEntity);
 
-    // Create storage
-    bytes32[] memory storageInPod = new bytes32[](6);
-    for (uint i; i < storageInPod.length; i++) {
-      storageInPod[i] = LibStorage.create(podEntity);
+    // Create depot
+    bytes32[] memory depotsInPod = new bytes32[](6);
+    for (uint i; i < depotsInPod.length; i++) {
+      depotsInPod[i] = LibDepot.create(podEntity);
     }
-    StorageInPod.set(podEntity, storageInPod);
+    DepotsInPod.set(podEntity, depotsInPod);
 
     // Save fixed entities
     FixedEntities.set(podEntity, FixedEntitiesData({ outlet: outletEntity, inlets: inletEntities }));
@@ -49,9 +49,9 @@ contract StartSystem is System {
     Tutorial.set(playerEntity, true);
     CurrentOrder.set(podEntity, nextTutorialLevel);
 
-    // Fill first storage, based on the config of the first tutorial level
-    MaterialType.set(storageInPod[0], Order.get(nextTutorialLevel).resourceMaterialType);
-    Amount.set(storageInPod[0], Order.get(nextTutorialLevel).resourceAmount);
+    // Fill first depot, based on the config of the first tutorial level
+    MaterialType.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceMaterialType);
+    Amount.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceAmount);
 
     // Give tokens for testing
     LibToken.send(_msgSender(), 666);

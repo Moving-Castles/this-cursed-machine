@@ -34,7 +34,7 @@ export const recipes = derived(entities, $entities => filterByEntitytype($entiti
 
 export const pods = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.POD) as Pods)
 export const machines = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.MACHINE) as Machines)
-export const storages = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.STORAGE) as Storages)
+export const depots = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.DEPOT) as Depots)
 export const players = derived(entities, $entities => filterByMachinetype($entities, MACHINE_TYPE.PLAYER) as Players)
 export const orders = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ORDER) as Orders)
 

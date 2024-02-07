@@ -10,9 +10,9 @@ export enum WorldFunctions {
   Destroy = "destroy",
   Resolve = "resolve",
   Name = "name",
-  ConnectStorage = "connectStorage",
-  DisconnectStorage = "disconnectStorage",
-  ClearStorage = "clearStorage",
+  AttachDepot = "attachDepot",
+  DetachDepot = "detachDepot",
+  ClearDepot = "clearDepot",
   Fill = "fill",
   Accept = "accept",
   Reward = "reward",
@@ -61,23 +61,23 @@ export function name(name: string) {
   return addToSequencer(WorldFunctions.Name, [name])
 }
 
-export function connectStorage(storageEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
-  return addToSequencer(WorldFunctions.ConnectStorage, [
-    storageEntity,
+export function attachDepot(depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+  return addToSequencer(WorldFunctions.AttachDepot, [
+    depotEntity,
     machineType
   ])
 }
 
-export function disconnectStorage(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
-  return addToSequencer(WorldFunctions.DisconnectStorage, [machineType])
+export function detachDepot(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+  return addToSequencer(WorldFunctions.DetachDepot, [machineType])
 }
 
-export function clearStorage(storageEntity: string) {
-  return addToSequencer(WorldFunctions.ClearStorage, [storageEntity])
+export function clearDepot(depotEntity: string) {
+  return addToSequencer(WorldFunctions.ClearDepot, [depotEntity])
 }
 
-export function fill(storageEntity: string) {
-  return addToSequencer(WorldFunctions.Fill, [storageEntity])
+export function fill(depotEntity: string) {
+  return addToSequencer(WorldFunctions.Fill, [depotEntity])
 }
 
 // ...

@@ -14,9 +14,9 @@ import { order } from "./order";
 import { skip } from "./skip";
 import { start } from "./start";
 import { fail } from "./fail";
-import { connectStorage } from "./connectStorage";
-import { disconnectStorage } from "./disconnectStorage";
-import { clearStorage } from "./clearStorage";
+import { attachDepot } from "./attachDepot";
+import { detachDepot } from "./detachDepot";
+import { clearDepot } from "./clearDepot";
 import { fill } from "./fill";
 
 export const commands: Command[] = [
@@ -34,8 +34,8 @@ export const commands: Command[] = [
     skip,
     start,
     fail,
-    connectStorage,
-    disconnectStorage,
-    clearStorage,
+    attachDepot,
+    detachDepot,
+    clearDepot,
     fill
 ]

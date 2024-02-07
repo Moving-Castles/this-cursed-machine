@@ -19,15 +19,15 @@ import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "StorageConnectio", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x7462000000000000000000000000000053746f72616765436f6e6e656374696f);
-ResourceId constant StorageConnectionTableId = _tableId;
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "DepotConnection", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004465706f74436f6e6e656374696f6e00);
+ResourceId constant DepotConnectionTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
   0x0020010020000000000000000000000000000000000000000000000000000000
 );
 
-library StorageConnection {
+library DepotConnection {
   /**
    * @notice Get the table values' field layout.
    * @return _fieldLayout The field layout for the table.

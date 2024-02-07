@@ -2,32 +2,32 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, StorageConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, StorageInPod } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder } from "../../libraries/Libraries.sol";
 
 contract OrderSystem is System {
-  function fill(bytes32 _storageEntity) public {
+  function fill(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
-    require(StorageConnection.get(_storageEntity) == bytes32(0), "storage connected");
+    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
+    require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
+    require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
     bytes32 currentOrder = CurrentOrder.get(podEntity);
     require(currentOrder != bytes32(0), "no order");
 
     // Check if order goals are met
     require(
-      MaterialType.get(_storageEntity) == Order.get(currentOrder).goalMaterialType &&
-        Amount.get(_storageEntity) >= Order.get(currentOrder).goalAmount,
+      MaterialType.get(_depotEntity) == Order.get(currentOrder).goalMaterialType &&
+        Amount.get(_depotEntity) >= Order.get(currentOrder).goalAmount,
       "order not met"
     );
 
-    // Clear storage
-    MaterialType.set(_storageEntity, MATERIAL_TYPE.NONE);
-    Amount.set(_storageEntity, 0);
+    // Clear depot
+    MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
+    Amount.set(_depotEntity, 0);
 
     // Handle tutorial levels
     if (Tutorial.get(playerEntity)) {
@@ -38,10 +38,10 @@ contract OrderSystem is System {
         TutorialLevel.set(playerEntity, nextTutorialLevel);
         CurrentOrder.set(podEntity, TutorialOrders.get()[nextTutorialLevel]);
 
-        // Fill storage with tutorial order
-        // todo: find first empty storage
-        MaterialType.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
-        Amount.set(StorageInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
+        // Fill depot with tutorial order
+        // todo: find first empty depot
+        MaterialType.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
+        Amount.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
       } else {
         // Tutorial done
         Tutorial.set(playerEntity, false);

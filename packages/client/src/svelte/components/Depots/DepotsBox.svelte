@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { storages } from "../../modules/state"
-  import StorageItem from "./StorageItem.svelte"
+  import { depots } from "../../modules/state"
+  import Depot from "./Depot.svelte"
 </script>
 
-<div class="storage-box">
-  {#each Object.entries($storages) as [_, storage], index}
-    <StorageItem {storage} {index} />
+<div class="depots-box">
+  {#each Object.entries($depots) as [_, depot], index}
+    <Depot {depot} {index} />
   {/each}
 </div>
 
 <style lang="scss">
-  .storage-box {
+  .depots-box {
     padding: 20px;
     width: 100%;
     height: 100%;

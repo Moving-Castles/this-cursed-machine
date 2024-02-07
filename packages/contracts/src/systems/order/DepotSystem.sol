@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, StorageConnection, FixedEntities } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection, FixedEntities } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibNetwork } from "../../libraries/Libraries.sol";
 
-contract StorageSystem is System {
-  function connectStorage(bytes32 _storageEntity, MACHINE_TYPE _machineType) public {
+contract DepotSystem is System {
+  function attachDepot(bytes32 _depotEntity, MACHINE_TYPE _machineType) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
+    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
+    require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
 
-    require(StorageConnection.get(_storageEntity) == bytes32(0), "storage already connected");
+    require(DepotConnection.get(_depotEntity) == bytes32(0), "depot already connected");
     require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet");
 
     // todo: allow connecting to second inlet
@@ -21,17 +21,17 @@ contract StorageSystem is System {
       ? FixedEntities.get(podEntity).inlets[0]
       : FixedEntities.get(podEntity).outlet;
 
-    require(StorageConnection.get(targetEntity) == bytes32(0), "target already connected");
+    require(DepotConnection.get(targetEntity) == bytes32(0), "target already connected");
 
     // Resolve network
     LibNetwork.resolve(podEntity);
 
     // Connect on both sides
-    StorageConnection.set(targetEntity, _storageEntity);
-    StorageConnection.set(_storageEntity, targetEntity);
+    DepotConnection.set(targetEntity, _depotEntity);
+    DepotConnection.set(_depotEntity, targetEntity);
   }
 
-  function disconnectStorage(MACHINE_TYPE _machineType) public {
+  function detachDepot(MACHINE_TYPE _machineType) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
@@ -45,24 +45,24 @@ contract StorageSystem is System {
       ? FixedEntities.get(podEntity).inlets[0]
       : FixedEntities.get(podEntity).outlet;
 
-    bytes32 _storageEntity = StorageConnection.get(targetEntity);
+    bytes32 _depotEntity = DepotConnection.get(targetEntity);
 
     // Disconnect on both sides
-    StorageConnection.set(targetEntity, bytes32(0));
-    StorageConnection.set(_storageEntity, bytes32(0));
+    DepotConnection.set(targetEntity, bytes32(0));
+    DepotConnection.set(_depotEntity, bytes32(0));
   }
 
-  function clearStorage(bytes32 _storageEntity) public {
+  function clearDepot(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CarriedBy.get(_storageEntity) == podEntity, "not in pod");
-    require(EntityType.get(_storageEntity) == ENTITY_TYPE.STORAGE, "not storage");
-    // We can not clear the storage if it is connected
-    require(StorageConnection.get(_storageEntity) == bytes32(0), "storage connected");
+    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
+    require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
+    // We can not clear the depot if it is connected
+    require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
-    // Clear content of storage
-    MaterialType.set(_storageEntity, MATERIAL_TYPE.NONE);
-    Amount.set(_storageEntity, 0);
+    // Clear content of depot
+    MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
+    Amount.set(_depotEntity, 0);
   }
 }

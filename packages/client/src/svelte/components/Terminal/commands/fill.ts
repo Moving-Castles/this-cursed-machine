@@ -5,11 +5,11 @@ import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/write
 import { waitForCompletion, waitForTransaction } from "../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../modules/sound";
 
-async function execute(storageEntity: string) {
+async function execute(depotEntity: string) {
     try {
         writeToTerminal(OutputType.NORMAL, "Filling order...")
         // ...
-        const action = sendFill(storageEntity)
+        const action = sendFill(depotEntity)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
@@ -27,7 +27,7 @@ async function execute(storageEntity: string) {
     }
 }
 
-export const fill: Command<[storageEntity: string]> = {
+export const fill: Command<[depotEntity: string]> = {
     id: COMMAND.FILL,
     public: true,
     name: "fill",

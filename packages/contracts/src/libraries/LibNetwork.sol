@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
+import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, DepotConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
 import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-// import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
 import { LibPod } from "./LibPod.sol";
 import { LibMachine } from "./LibMachine.sol";
-import { LibStorage } from "./LibStorage.sol";
+import { LibDepot } from "./LibDepot.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { Product, FLOW_RATE } from "../constants.sol";
 
@@ -32,19 +31,18 @@ library LibNetwork {
 
     FixedEntitiesData memory fixedEntities = FixedEntities.get(_podEntity);
 
-    // Connected storages.
-    // 0 => inlet one storage
-    // 1 => inlet two storage
-    // 2 => outlet storage
-    bytes32[] memory connectedStorages = new bytes32[](3);
-    connectedStorages[0] = StorageConnection.get(fixedEntities.inlets[0]);
-    connectedStorages[1] = StorageConnection.get(fixedEntities.inlets[1]);
-    connectedStorages[2] = StorageConnection.get(fixedEntities.outlet);
+    // Connected depots.
+    // 0 => inlet one depot
+    // 1 => inlet two depot
+    // 2 => outlet depot
+    bytes32[] memory connectedDepots = new bytes32[](3);
+    connectedDepots[0] = DepotConnection.get(fixedEntities.inlets[0]);
+    connectedDepots[1] = DepotConnection.get(fixedEntities.inlets[1]);
+    connectedDepots[2] = DepotConnection.get(fixedEntities.outlet);
 
-    // Abort if neither inlets are connected to storage or if outlet is not connected to storage
-    if (
-      (connectedStorages[0] == bytes32(0) && connectedStorages[1] == bytes32(0)) || connectedStorages[2] == bytes32(0)
-    ) return;
+    // Abort if neither inlets are connected to depot or if outlet is not connected to depot
+    if ((connectedDepots[0] == bytes32(0) && connectedDepots[1] == bytes32(0)) || connectedDepots[2] == bytes32(0))
+      return;
 
     // Iterate until all machines in the network are resolved
     while (counter.resolved < machines.length) {
@@ -59,9 +57,9 @@ library LibNetwork {
         // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           // Is it inlet one or two?
-          uint32 storageIndex = node == fixedEntities.inlets[0] ? 0 : 1;
-          // Get material from storage
-          MATERIAL_TYPE materialType = MaterialType.get(connectedStorages[storageIndex]);
+          uint32 depotIndex = node == fixedEntities.inlets[0] ? 0 : 1;
+          // Get material from depot
+          MATERIAL_TYPE materialType = MaterialType.get(connectedDepots[depotIndex]);
 
           // Mark as resolved and abort if inlet is empty
           if (materialType == MATERIAL_TYPE.NONE) {
@@ -109,10 +107,10 @@ library LibNetwork {
         if (node == fixedEntities.outlet) {
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
-          // Write to storage
-          LibStorage.writeToStorage(
-            connectedStorages[0],
-            connectedStorages[2],
+          // Write to depot
+          LibDepot.write(
+            connectedDepots[0],
+            connectedDepots[2],
             block.number - LastResolved.get(_podEntity), // Blocks since last resolved
             currentOutputs[0]
           );

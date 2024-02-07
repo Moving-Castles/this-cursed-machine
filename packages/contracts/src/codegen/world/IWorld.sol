@@ -11,8 +11,8 @@ import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
 import { IDisconnectSystem } from "./IDisconnectSystem.sol";
 import { IResolveSystem } from "./IResolveSystem.sol";
+import { IDepotSystem } from "./IDepotSystem.sol";
 import { IOrderSystem } from "./IOrderSystem.sol";
-import { IStorageSystem } from "./IStorageSystem.sol";
 import { INameSystem } from "./INameSystem.sol";
 import { IRewardSystem } from "./IRewardSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
@@ -32,8 +32,8 @@ interface IWorld is
   IDestroySystem,
   IDisconnectSystem,
   IResolveSystem,
+  IDepotSystem,
   IOrderSystem,
-  IStorageSystem,
   INameSystem,
   IRewardSystem,
   ISpawnSystem,

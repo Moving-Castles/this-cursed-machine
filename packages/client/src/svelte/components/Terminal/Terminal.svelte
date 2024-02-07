@@ -262,59 +262,35 @@
     }
   }
 
-  const getConnectStorageParameters = async (): Promise<any[] | false> => {
-    // %%%%%%%%%%%%%%%%%%%%%%%%
-    // %% Get storage %%
-    // %%%%%%%%%%%%%%%%%%%%%%%%
-
-    // if (
-    //   ($entities[$playerPod.fixedEntities.inlet]?.storageConnection ?? null) !==
-    //     null &&
-    //   ($entities[$playerPod.fixedEntities.outlet]?.storageConnection ??
-    //     null) !== null
-    // ) {
-    //   handleInvalid("No open point")
-    //   return false
-    // }
-
-    // Get stores
-    let sourceSelectOptions = createSelectOptions(COMMAND.CONNECT_STORAGE)
+  const getAttachDepotParameters = async (): Promise<any[] | false> => {
+    // Get depots
+    let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
 
     await writeToTerminal(OutputType.NORMAL, "Store:")
 
-    const storageKey = await renderSelect(
+    const depotKey = await renderSelect(
       selectContainerElement,
       Select,
       sourceSelectOptions,
     )
 
     // Abort if nothing selected
-    if (!storageKey) {
-      handleInvalid("No storage selected")
+    if (!depotKey) {
+      handleInvalid("No depot selected")
       return false
     }
 
     let networkPointSelectOptions: SelectOption[] = []
 
-    // if (
-    //   ($entities[$playerPod.fixedEntities.inlet]?.storageConnection ?? null) ==
-    //   null
-    // ) {
     networkPointSelectOptions.push({
       label: "Inlet",
       value: MACHINE_TYPE.INLET,
     })
-    // }
 
-    // if (
-    //   ($entities[$playerPod.fixedEntities.outlet]?.storageConnection ?? null) ==
-    //   null
-    // ) {
     networkPointSelectOptions.push({
       label: "Outlet",
       value: MACHINE_TYPE.OUTLET,
     })
-    // }
 
     const networkPointType = await renderSelect(
       selectContainerElement,
@@ -328,7 +304,7 @@
       return false
     }
 
-    return [storageKey, networkPointType]
+    return [depotKey, networkPointType]
   }
 
   const onSubmit = async () => {
@@ -369,8 +345,8 @@
       parameters = await getConnectParameters()
     } else if (command.id === COMMAND.DISCONNECT) {
       parameters = await getDisconnectParameters()
-    } else if (command.id === COMMAND.CONNECT_STORAGE) {
-      parameters = await getConnectStorageParameters()
+    } else if (command.id === COMMAND.ATTACH_DEPOT) {
+      parameters = await getAttachDepotParameters()
     }
 
     // Something went wrong in the parameter selection

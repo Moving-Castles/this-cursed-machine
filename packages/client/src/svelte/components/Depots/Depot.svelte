@@ -1,7 +1,7 @@
 <script lang="ts">
   import { MATERIAL_TYPE } from "../../modules/state/enums"
   import { playerPod } from "../../modules/state"
-  export let storage: Store
+  export let depot: Store
   export let index: number
 
   const getConnectionName = (machineEntity: string) => {
@@ -11,15 +11,15 @@
   }
 </script>
 
-<div class="storage-item">
+<div class="depot-item">
   <div><strong>#: {index + 1}</strong></div>
-  <div>M: {MATERIAL_TYPE[storage.materialType]}</div>
-  <div>A: {storage.amount}</div>
-  <div>C: {getConnectionName(storage.storageConnection)}</div>
+  <div>M: {MATERIAL_TYPE[depot.materialType]}</div>
+  <div>A: {depot.amount}</div>
+  <div>C: {getConnectionName(depot.depotConnection)}</div>
 </div>
 
 <style lang="scss">
-  .storage-item {
+  .depot-item {
     border: 1px solid #fff;
     margin-right: 20px;
     width: 30%;

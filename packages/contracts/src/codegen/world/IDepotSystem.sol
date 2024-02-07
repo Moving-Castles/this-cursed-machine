@@ -6,13 +6,13 @@ pragma solidity >=0.8.24;
 import { MACHINE_TYPE } from "./../common.sol";
 
 /**
- * @title IStorageSystem
+ * @title IDepotSystem
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface IStorageSystem {
-  function connectStorage(bytes32 _storageEntity, MACHINE_TYPE _machineType) external;
+interface IDepotSystem {
+  function attachDepot(bytes32 _depotEntity, MACHINE_TYPE _machineType) external;
 
-  function disconnectStorage(MACHINE_TYPE _machineType) external;
+  function detachDepot(MACHINE_TYPE _machineType) external;
 
-  function clearStorage(bytes32 _storageEntity) external;
+  function clearDepot(bytes32 _depotEntity) external;
 }

@@ -11,7 +11,7 @@ contract TutorialLevelsTest is BaseTest {
   bytes32 podEntity;
   bytes32[] inletEntities;
   bytes32 outletEntity;
-  bytes32[] storageInPod;
+  bytes32[] depotsInPod;
   bytes32[] tutorialLevels;
 
   function setUp() public override {
@@ -26,7 +26,7 @@ contract TutorialLevelsTest is BaseTest {
     inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
-    storageInPod = StorageInPod.get(podEntity);
+    depotsInPod = DepotsInPod.get(podEntity);
 
     tutorialLevels = TutorialOrders.get();
 
@@ -42,14 +42,14 @@ contract TutorialLevelsTest is BaseTest {
     OrderData memory currentOrderData = Order.get(tutorialLevels[0]);
     OrderData memory nextOrderData = Order.get(tutorialLevels[1]);
 
-    assertEq(uint(MaterialType.get(storageInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), currentOrderData.resourceAmount);
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -60,32 +60,32 @@ contract TutorialLevelsTest is BaseTest {
     // Wait 4 blocks
     vm.roll(block.number + 4);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check storage 0
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    // Check depot 0
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Inlet material spent => 4 * 100 = 400
-    assertEq(Amount.get(storageInPod[0]), 1600); // 2000 400 = 0
+    assertEq(Amount.get(depotsInPod[0]), 1600); // 2000 400 = 0
 
-    // Check storage 1
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
+    // Check depot 1
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
     // Outlet material gained => 4 * 50 = 200
-    assertEq(Amount.get(storageInPod[1]), 200); // 0 + 200 = 200
+    assertEq(Amount.get(depotsInPod[1]), 200); // 0 + 200 = 200
 
     // Fill the order
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
     // Order is set to next tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[1]);
 
-    // Storage 1 should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
-    // Storage 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), nextOrderData.resourceAmount);
+    // Depot 0 should be filled with next order's material
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
 
     vm.stopPrank();
   }
@@ -100,14 +100,14 @@ contract TutorialLevelsTest is BaseTest {
     OrderData memory currentOrderData = Order.get(tutorialLevels[1]);
     OrderData memory nextOrderData = Order.get(tutorialLevels[2]);
 
-    assertEq(uint(MaterialType.get(storageInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), currentOrderData.resourceAmount);
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -118,32 +118,32 @@ contract TutorialLevelsTest is BaseTest {
     // Wait 10 blocks
     vm.roll(block.number + 10);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check storage 0
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    // Check depot 0
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[0]), 1000); // 1000 1000 = 0
+    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
 
-    // Check storage 1
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PISS));
+    // Check depot 1
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
     // Outlet material gained => 10 * 50 = 500
-    assertEq(Amount.get(storageInPod[1]), 500); // 0 + 500 = 500
+    assertEq(Amount.get(depotsInPod[1]), 500); // 0 + 500 = 500
 
     // Fill the order
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
     // Order is set to next tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[2]);
 
-    // Storage 1 should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
-    // Storage 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), nextOrderData.resourceAmount);
+    // Depot 0 should be filled with next order's material
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
 
     vm.stopPrank();
   }
@@ -158,14 +158,14 @@ contract TutorialLevelsTest is BaseTest {
     OrderData memory currentOrderData = Order.get(tutorialLevels[2]);
     OrderData memory nextOrderData = Order.get(tutorialLevels[3]);
 
-    assertEq(uint(MaterialType.get(storageInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), currentOrderData.resourceAmount);
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -182,32 +182,32 @@ contract TutorialLevelsTest is BaseTest {
     // Wait 10 blocks
     vm.roll(block.number + 10);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check storage 0
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    // Check depot 0
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[0]), 1000); // 1000 1000 = 0
+    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
 
-    // Check storage 1
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER));
+    // Check depot 1
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER));
     // Outlet material gained => 10 * 50 = 500
-    assertEq(Amount.get(storageInPod[1]), 500); // 0 + 500 = 500
+    assertEq(Amount.get(depotsInPod[1]), 500); // 0 + 500 = 500
 
     // Fill the order
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
     // Order is set to next tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[3]);
 
-    // Storage 1 should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
-    // Storage 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), nextOrderData.resourceAmount);
+    // Depot 0 should be filled with next order's material
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
 
     vm.stopPrank();
   }
@@ -222,14 +222,14 @@ contract TutorialLevelsTest is BaseTest {
     OrderData memory currentOrderData = Order.get(tutorialLevels[3]);
     OrderData memory nextOrderData = Order.get(tutorialLevels[4]);
 
-    assertEq(uint(MaterialType.get(storageInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), currentOrderData.resourceAmount);
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Build boiler
     bytes32 boilerOne = world.build(MACHINE_TYPE.BOILER);
@@ -249,32 +249,32 @@ contract TutorialLevelsTest is BaseTest {
     // Wait 10 blocks
     vm.roll(block.number + 10);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check storage 0
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    // Check depot 0
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[0]), 1000); // 1000 1000 = 0
+    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
 
-    // Check storage 1
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    // Check depot 1
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
     // Outlet material gained => 10 * 100 = 1000
-    assertEq(Amount.get(storageInPod[1]), 1000); // 0 + 1000 = 1000
+    assertEq(Amount.get(depotsInPod[1]), 1000); // 0 + 1000 = 1000
 
     // Fill the order
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
     // Order is set to next tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[4]);
 
-    // Storage 1 should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
-    // Storage 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), nextOrderData.resourceAmount);
+    // Depot 0 should be filled with next order's material
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
 
     vm.stopPrank();
   }
@@ -288,14 +288,14 @@ contract TutorialLevelsTest is BaseTest {
     world.warp(4);
     OrderData memory currentOrderData = Order.get(tutorialLevels[4]);
 
-    assertEq(uint(MaterialType.get(storageInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), currentOrderData.resourceAmount);
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Build Splitter
     bytes32 splitter = world.build(MACHINE_TYPE.SPLITTER);
@@ -339,21 +339,21 @@ contract TutorialLevelsTest is BaseTest {
     // Wait 20 blocks
     vm.roll(block.number + 20);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check storage 0
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    // Check depot 0
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.NONE));
     // Inlet material spent => 20 * 100 = 2000
-    assertEq(Amount.get(storageInPod[0]), 0); // 2000 - 2000 = 0
+    assertEq(Amount.get(depotsInPod[0]), 0); // 2000 - 2000 = 0
 
-    // Check storage 1
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
+    // Check depot 1
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
     // Outlet material gained => 20 * 75 = 1500
-    assertEq(Amount.get(storageInPod[1]), 1000); // Capped by input material
+    assertEq(Amount.get(depotsInPod[1]), 1000); // Capped by input material
 
     // Fill the order
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
     // Tutorial is done
     assertEq(Tutorial.get(playerEntity), false);
@@ -361,9 +361,9 @@ contract TutorialLevelsTest is BaseTest {
     // Order is unset
     assertEq(CurrentOrder.get(podEntity), bytes32(0));
 
-    // Storage 1 should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
     vm.stopPrank();
   }

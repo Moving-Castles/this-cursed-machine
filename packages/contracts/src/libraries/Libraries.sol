@@ -7,7 +7,7 @@ import { LibPlayer } from "./LibPlayer.sol";
 import { LibEntity } from "./LibEntity.sol";
 import { LibNetwork } from "./LibNetwork.sol";
 import { LibMachine } from "./LibMachine.sol";
-import { LibStorage } from "./LibStorage.sol";
+import { LibDepot } from "./LibDepot.sol";
 import { LibOrder } from "./LibOrder.sol";
 import { LibToken } from "./LibToken.sol";
 import { LibInit } from "./init/LibInit.sol";

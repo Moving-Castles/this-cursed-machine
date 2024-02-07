@@ -28,9 +28,9 @@ declare global {
     output?: MATERIAL_TYPE
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
-    storageConnection?: string
+    depotConnection?: string
     machinesInPod?: string[]
-    storageInPod?: string[]
+    depotsInPod?: string[]
     fixedEntities?: FixedEntities
     currentOrder?: string
     tokenBalances?: number
@@ -69,7 +69,7 @@ declare global {
     entityType: ENTITY_TYPE.POD
     lastResolved: number
     machinesInPod: string[]
-    storageInPod: string[]
+    depotsInPod: string[]
     currentOrder: string
     fixedEntities: FixedEntities
   }
@@ -95,15 +95,15 @@ declare global {
     buildIndex: number
     incomingConnections: string[]
     outgoingConnections: string[]
-    storageConnection?: string // Only on inlet and outlet
+    depotConnection?: string // Only on inlet and outlet
   }
 
-  type Store = {
-    entityType: ENTITY_TYPE.STORAGE,
+  type Depot = {
+    entityType: ENTITY_TYPE.DEPOT,
     carriedBy: string
     amount: number
     materialType: MATERIAL_TYPE
-    storageConnection: string
+    depotConnection: string
   }
 
   type Order = {
@@ -138,8 +138,8 @@ declare global {
     [index: string]: Pod
   }
 
-  type Storages = {
-    [index: string]: Store
+  type Depots = {
+    [index: string]: Depot
   }
 
   type Orders = {

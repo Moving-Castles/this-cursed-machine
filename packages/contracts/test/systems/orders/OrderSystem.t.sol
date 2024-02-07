@@ -11,7 +11,7 @@ contract OrderSystemTest is BaseTest {
   bytes32 podEntity;
   bytes32[] inletEntities;
   bytes32 outletEntity;
-  bytes32[] storageInPod;
+  bytes32[] depotsInPod;
   bytes32[] tutorialLevels;
 
   function setUp() public override {
@@ -27,7 +27,7 @@ contract OrderSystemTest is BaseTest {
     inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
-    storageInPod = StorageInPod.get(podEntity);
+    depotsInPod = DepotsInPod.get(podEntity);
 
     tutorialLevels = TutorialOrders.get();
 
@@ -39,11 +39,11 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Connect storage 0 to inlet
-    world.connectStorage(storageInPod[0], MACHINE_TYPE.INLET);
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 
-    // Connect storage 1 to outlet
-    world.connectStorage(storageInPod[1], MACHINE_TYPE.OUTLET);
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -54,29 +54,29 @@ contract OrderSystemTest is BaseTest {
     // Wait 4 blocks
     vm.roll(block.number + 4);
 
-    // Disconnect storage and resolve
-    world.disconnectStorage(MACHINE_TYPE.OUTLET);
+    // Disconnect depot and resolve
+    world.detachDepot(MACHINE_TYPE.OUTLET);
 
     // 4 blocks passed
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(MATERIAL_TYPE.BUG));
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
     // Inlet material spent => 4 * 100 = 400
-    assertEq(Amount.get(storageInPod[0]), 1600); // 2000 - 400 = 0
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
+    assertEq(Amount.get(depotsInPod[0]), 1600); // 2000 - 400 = 0
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
     // Outlet material gained => 4 * 50 = 200
-    assertEq(Amount.get(storageInPod[1]), 200); // 0 + 200 = 200
+    assertEq(Amount.get(depotsInPod[1]), 200); // 0 + 200 = 200
 
     // Order is fullfilled
-    world.fill(storageInPod[1]);
+    world.fill(depotsInPod[1]);
 
-    // Storage should be empty
-    assertEq(uint32(MaterialType.get(storageInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(storageInPod[1]), 0);
+    // Depot should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
 
     // Order is set to second tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[1]);
 
-    assertEq(uint32(MaterialType.get(storageInPod[0])), uint32(Order.get(tutorialLevels[1]).resourceMaterialType));
-    assertEq(Amount.get(storageInPod[0]), Order.get(tutorialLevels[1]).resourceAmount);
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(Order.get(tutorialLevels[1]).resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), Order.get(tutorialLevels[1]).resourceAmount);
 
     vm.stopPrank();
   }

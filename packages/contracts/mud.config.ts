@@ -59,9 +59,9 @@ export default mudConfig({
         // ...
         IncomingConnections: "bytes32[]",
         OutgoingConnections: "bytes32[]",
-        StorageConnection: "bytes32",
+        DepotConnection: "bytes32",
         MachinesInPod: "bytes32[]",
-        StorageInPod: "bytes32[]",
+        DepotsInPod: "bytes32[]",
         FixedEntities: {
             valueSchema: {
                 outlet: "bytes32",

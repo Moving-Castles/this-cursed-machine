@@ -4,7 +4,7 @@ import {
   simulatedMachines,
   simulatedConnections,
 } from "../../../modules/simulator"
-import { playerEntity, playerPod, storages } from "../../../modules/state"
+import { playerEntity, depots as depotsStore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
@@ -34,12 +34,12 @@ export function createSelectOptions(
       return createSelectOptionsDisconnect()
     case COMMAND.INSPECT:
       return createSelectOptionsInspect()
-    case COMMAND.CONNECT_STORAGE:
-      return createSelectOptionsConnectStorage()
-    case COMMAND.DISCONNECT_STORAGE:
-      return createSelectOptionsDisconnectStorage()
-    case COMMAND.CLEAR_STORAGE:
-      return createSelectOptionsClearStorage()
+    case COMMAND.ATTACH_DEPOT:
+      return createSelectOptionsAttachDepot()
+    case COMMAND.DETACH_DEPOT:
+      return createSelectOptionsDietachDepot()
+    case COMMAND.CLEAR_DEPOT:
+      return createSelectOptionsClearDepot()
     case COMMAND.FILL:
       return createSelectOptionsFill()
     default:
@@ -160,14 +160,12 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsClearStorage(): SelectOption[] {
+function createSelectOptionsClearDepot(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const stores = get(storages)
+  const depots = get(depotsStore)
 
-  // Filter out stores where storageConnection is not null
-  selectOptions = Object.entries(stores)
-    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+  selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
       label: `Store #${index + 1}`,
       value: address,
@@ -176,13 +174,12 @@ function createSelectOptionsClearStorage(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsConnectStorage(): SelectOption[] {
+function createSelectOptionsAttachDepot(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const stores = get(storages)
+  const depots = get(depotsStore)
 
-  selectOptions = Object.entries(stores)
-    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+  selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
       label: `Store #${index + 1}`,
       value: address,
@@ -194,10 +191,9 @@ function createSelectOptionsConnectStorage(): SelectOption[] {
 function createSelectOptionsFill(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const stores = get(storages)
+  const depots = get(depotsStore)
 
-  selectOptions = Object.entries(stores)
-    // .filter(([_, store]) => !store.storageConnection) // Only unconnected stores
+  selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
       label: `Store #${index + 1}`,
       value: address,
@@ -206,7 +202,7 @@ function createSelectOptionsFill(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsDisconnectStorage(): SelectOption[] {
+function createSelectOptionsDetachDepots(): SelectOption[] {
   let selectOptions: SelectOption[] = [{
     label: "Inlet",
     value: MACHINE_TYPE.INLET,

@@ -8,7 +8,7 @@ enum ENTITY_TYPE {
   ORDER,
   POD,
   MACHINE,
-  STORAGE
+  DEPOT
 }
 
 enum MACHINE_TYPE {
