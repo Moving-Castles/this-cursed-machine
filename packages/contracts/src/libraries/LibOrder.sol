@@ -5,7 +5,7 @@ import { EntityType, Order, OrderData, Tutorial } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 
 library LibOrder {
-  function createOrder(
+  function create(
     MATERIAL_TYPE _resourceMaterial,
     uint32 _resourceAmount,
     MATERIAL_TYPE _goalMaterial,

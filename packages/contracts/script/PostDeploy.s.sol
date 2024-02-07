@@ -11,8 +11,10 @@ import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppe
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { LibInit } from "../src/libraries/init/LibInit.sol";
-import { LibInitRecipes } from "../src/libraries/init/LibInitRecipes.sol";
+
+import { MATERIAL_TYPE } from "../src/codegen/common.sol";
+import { LibOrder, LibInitRecipes, LibInit } from "../src/libraries/Libraries.sol";
+import { ONE_DAY } from "../src/constants.sol";
 
 uint256 constant POOL_SUPPLY = 1_000_000 wei;
 
@@ -45,6 +47,9 @@ contract PostDeploy is Script {
 
     // Initialize recipes
     LibInitRecipes.init();
+
+    // Create test order
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, false, 1000, ONE_DAY, 10);
 
     vm.stopBroadcast();
   }

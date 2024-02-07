@@ -3,8 +3,12 @@ pragma solidity >=0.8.24;
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, StorageConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
 import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
-import { Product } from "../constants.sol";
+// import { LibUtils, LibPod, LibMachine, LibStorage } from "./Libraries.sol";
+import { LibPod } from "./LibPod.sol";
+import { LibMachine } from "./LibMachine.sol";
+import { LibStorage } from "./LibStorage.sol";
+import { LibUtils } from "./LibUtils.sol";
+import { Product, FLOW_RATE } from "../constants.sol";
 
 library LibNetwork {
   struct Counters {
@@ -66,7 +70,12 @@ library LibNetwork {
             continue;
           }
 
-          inputs[counter.inputs] = Product({ machineId: node, materialType: materialType, amount: 100, factor: 0 });
+          inputs[counter.inputs] = Product({
+            machineId: node,
+            materialType: materialType,
+            amount: FLOW_RATE,
+            factor: 0
+          });
           counter.inputs++;
         }
 

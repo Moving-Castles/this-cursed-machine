@@ -27,16 +27,7 @@ library LibInit {
     bytes32[] memory tutorialOrders = new bytes32[](5);
 
     for (uint i; i < 5; i++) {
-      tutorialOrders[i] = LibOrder.createOrder(
-        MATERIAL_TYPE.BUG,
-        2000,
-        goalMaterials[i],
-        goalAmounts[i],
-        true,
-        0,
-        0,
-        0
-      );
+      tutorialOrders[i] = LibOrder.create(MATERIAL_TYPE.BUG, 2000, goalMaterials[i], goalAmounts[i], true, 0, 0, 0);
     }
 
     TutorialOrders.set(tutorialOrders);

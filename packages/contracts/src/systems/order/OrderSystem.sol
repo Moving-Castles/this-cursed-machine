@@ -89,7 +89,7 @@ contract OrderSystem is System {
   ) public returns (bytes32) {
     // Todo: Restrict to admin
     // ...
-    bytes32 orderEntity = LibOrder.createOrder(
+    bytes32 orderEntity = LibOrder.create(
       _resourceMaterialType,
       _resourceAmount,
       _goalMaterialType,

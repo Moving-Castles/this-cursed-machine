@@ -15,10 +15,6 @@
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
-  import { entities } from "./modules/state"
-
-  // $: console.log($entities)
-
   import Loading from "./components/Loading/Loading.svelte"
   import Spawn from "./components/Spawn/Spawn.svelte"
   import Pod from "./components/Pod/Pod.svelte"
