@@ -5,6 +5,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
+import { FLOW_RATE } from "../../../src/constants.sol";
 
 contract OrderSystemTest is BaseTest {
   bytes32 playerEntity;
@@ -51,19 +52,19 @@ contract OrderSystemTest is BaseTest {
     // Connect player (blood) to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
 
-    // Wait 4 blocks
-    vm.roll(block.number + 4);
+    // Wait 40 blocks
+    vm.roll(block.number + 40);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
     // 4 blocks passed
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
-    // Inlet material spent => 4 * 100 = 400
-    assertEq(Amount.get(depotsInPod[0]), 1600); // 2000 - 400 = 0
+    // Inlet material spent => 40 * FLOW_RATE = 400
+    assertEq(Amount.get(depotsInPod[0]), 2000 - (40 * FLOW_RATE)); // 2000 - 400 = 0
     assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
     // Outlet material gained => 4 * 50 = 200
-    assertEq(Amount.get(depotsInPod[1]), 200); // 0 + 200 = 200
+    assertEq(Amount.get(depotsInPod[1]), ((40 * FLOW_RATE) / 2)); // 0 + 200 = 200
 
     // Order is fullfilled
     world.fill(depotsInPod[1]);

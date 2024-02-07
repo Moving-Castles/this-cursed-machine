@@ -57,8 +57,8 @@ contract TutorialLevelsTest is BaseTest {
     // Connect player (blood) to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
 
-    // Wait 4 blocks
-    vm.roll(block.number + 4);
+    // Wait 40 blocks
+    vm.roll(block.number + 40);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
@@ -115,8 +115,8 @@ contract TutorialLevelsTest is BaseTest {
     // Connect player (piss) to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 100 blocks
+    vm.roll(block.number + 100);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
@@ -179,8 +179,8 @@ contract TutorialLevelsTest is BaseTest {
     // Connect boiler to outlet
     world.connect(boilerOne, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 100 blocks
+    vm.roll(block.number + 100);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
@@ -246,8 +246,8 @@ contract TutorialLevelsTest is BaseTest {
     // Connect dryer to outlet
     world.connect(dryerOne, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 100 blocks
+    vm.roll(block.number + 100);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
@@ -336,8 +336,8 @@ contract TutorialLevelsTest is BaseTest {
     // Connect mixer to outlet
     world.connect(mixer, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 20 blocks
-    vm.roll(block.number + 20);
+    // Wait 200 blocks
+    vm.roll(block.number + 200);
 
     // Disconnect depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);

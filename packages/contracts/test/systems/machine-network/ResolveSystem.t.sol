@@ -44,8 +44,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect inlet to outlet
     world.connect(inletEntities[0], outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 5 blocks
-    vm.roll(block.number + 3);
+    // Wait 30 blocks
+    vm.roll(block.number + 30);
 
     // Resolve
     world.resolve();
@@ -78,8 +78,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect player to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 5 blocks
-    vm.roll(block.number + 3);
+    // Wait 30 blocks
+    vm.roll(block.number + 30);
 
     // Resolve
     world.resolve();
@@ -118,8 +118,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect splitter to outlet
     world.connect(splitterEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 5 blocks
-    vm.roll(block.number + 3);
+    // Wait 30 blocks
+    vm.roll(block.number + 30);
 
     // Resolve
     world.resolve();
@@ -129,8 +129,8 @@ contract ResolveSystemTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
 
     // 3 blocks passed
-    // Inlet material spent => 3 * 100 = 300
-    // Outlet material gained => 3 * 25 = 75
+    // Inlet material spent => 30 * 10 = 300
+    // Outlet material gained => 30 * 2,5 = 75
     assertEq(Amount.get(depotsInPod[1]), 75);
     assertEq(Amount.get(depotsInPod[0]), 1700); // 2000 - 300
   }
@@ -152,8 +152,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect player to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 50 blocks
-    vm.roll(block.number + 50);
+    // Wait 500 blocks
+    vm.roll(block.number + 500);
 
     // Resolve
     world.resolve();
@@ -187,8 +187,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect boiler to outlet
     world.connect(boilerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 100 blocks
+    vm.roll(block.number + 100);
 
     // Resolve
     world.resolve();
@@ -226,8 +226,8 @@ contract ResolveSystemTest is BaseTest {
     // Connect boiler to outlet
     world.connect(boilerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 10 blocks
-    vm.roll(block.number + 10);
+    // Wait 100 blocks
+    vm.roll(block.number + 100);
 
     // Resolve
     world.resolve();
