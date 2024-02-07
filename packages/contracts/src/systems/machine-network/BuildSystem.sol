@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { CarriedBy, BuildIndex, MachinesInPod } from "../../codegen/index.sol";
+import { CarriedBy, MachinesInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibEntity, LibPod } from "../../libraries/Libraries.sol";
 
@@ -27,17 +27,8 @@ contract BuildSystem is System {
     // Add it to the list of machines
     MachinesInPod.push(podEntity, machineEntity);
 
-    // Get build index entity
-    bytes32 buildIndexEntity = LibPod.getBuildIndexEntity(podEntity, _machineType);
-
-    // Increment
-    uint32 newBuildIndex = BuildIndex.get(buildIndexEntity) + 1;
-
-    // Set build index on machine
-    BuildIndex.set(machineEntity, newBuildIndex);
-
-    // Set global build index
-    BuildIndex.set(buildIndexEntity, newBuildIndex);
+    // Set global and machine-specific build indexes
+    LibPod.setMachineBuildIndex(podEntity, _machineType, machineEntity);
 
     return machineEntity;
   }
