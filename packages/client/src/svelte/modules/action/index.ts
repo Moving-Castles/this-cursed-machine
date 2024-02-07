@@ -8,15 +8,18 @@ export enum WorldFunctions {
   Disconnect = "disconnect",
   Build = "build",
   Destroy = "destroy",
-  Resolve = "resolve",
   Name = "name",
   AttachDepot = "attachDepot",
   DetachDepot = "detachDepot",
   ClearDepot = "clearDepot",
   Fill = "fill",
   Accept = "accept",
+  // Testing
+  Resolve = "resolve",
   Reward = "reward",
-  Charge = "charge"
+  Charge = "charge",
+  Graduate = "graduate",
+  Buy = "buy"
 }
 
 // --- API --------------------------------------------------------------
@@ -80,6 +83,14 @@ export function fill(depotEntity: string) {
   return addToSequencer(WorldFunctions.Fill, [depotEntity])
 }
 
+export function accept(orderEntity: string) {
+  return addToSequencer(WorldFunctions.Accept, [orderEntity])
+}
+
+export function buy() {
+  return addToSequencer(WorldFunctions.Buy, [])
+}
+
 // ...
 
 export function reward() {
@@ -88,4 +99,8 @@ export function reward() {
 
 export function charge() {
   return addToSequencer(WorldFunctions.Charge, [])
+}
+
+export function graduate() {
+  return addToSequencer(WorldFunctions.Graduate, [])
 }

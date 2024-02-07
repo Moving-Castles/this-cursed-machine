@@ -1,16 +1,28 @@
 <script lang="ts">
+  import { blockNumber } from "../../modules/network"
   import { orders, playerPod } from "../../modules/state"
   import { MATERIAL_TYPE } from "../../modules/state/enums"
+
+  let currentOrder: Order = null
+  $: currentOrder = $orders[$playerPod.currentOrder]
 </script>
 
 <div class="order-bar">
   <div>
-    CURRENT ORDER:
-    {$orders[$playerPod.currentOrder]?.order.goalAmount}
-    {MATERIAL_TYPE[$orders[$playerPod.currentOrder]?.order.goalMaterialType]}
+    {#if !currentOrder}
+      NO ORDER
+    {:else}
+      CURRENT ORDER:
+      {currentOrder?.order.goalAmount}
+      {MATERIAL_TYPE[currentOrder?.order.goalMaterialType]}
+    {/if}
   </div>
-  {#if $orders[$playerPod.currentOrder]?.order.duration > 0}
-    <div>REMAINING TIME:</div>
+  {#if currentOrder?.order.duration > 0}
+    <div>
+      REMAINING TIME: {Number(currentOrder.order.creationBlock) +
+        Number(currentOrder.order.duration) -
+        Number($blockNumber)}
+    </div>
   {/if}
 </div>
 

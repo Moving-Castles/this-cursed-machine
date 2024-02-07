@@ -18,6 +18,9 @@ import { attachDepot } from "./attachDepot";
 import { detachDepot } from "./detachDepot";
 import { clearDepot } from "./clearDepot";
 import { fill } from "./fill";
+import { accept } from "./accept";
+import { buy } from "./buy";
+import { graduate } from "./graduate";
 
 export const commands: Command[] = [
     build,
@@ -37,5 +40,8 @@ export const commands: Command[] = [
     attachDepot,
     detachDepot,
     clearDepot,
-    fill
+    fill,
+    accept,
+    buy,
+    graduate
 ]

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { playerEntity } from "../../modules/state"
-  import { reward, charge } from "../../modules/action"
+  // import { reward, charge } from "../../modules/action"
 
-  const sendReward = () => {
-    reward()
-  }
+  // const sendReward = () => {
+  //   reward()
+  // }
 
-  const sendCharge = () => {
-    charge()
-  }
+  // const sendCharge = () => {
+  //   charge()
+  // }
 </script>
 
 <div class="info-bar">
@@ -21,9 +21,9 @@
   </div>
 
   <div class="tokens">
-    TOKENS: {$playerEntity.tokenBalances}
-    <button on:click={sendReward}>Reward</button>
-    <button on:click={sendCharge}>Charge</button>
+    TOKENS: {$playerEntity.tokenBalances ?? 0}
+    <!-- <button on:click={sendReward}>Reward</button>
+    <button on:click={sendCharge}>Charge</button> -->
   </div>
 </div>
 

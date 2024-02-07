@@ -109,13 +109,8 @@ declare global {
   type Order = {
     entityType: ENTITY_TYPE.ORDER
     order: OrderData
+    tutorial?: boolean
     completedPlayers: string[]
-  }
-
-  type TutorialOrder = {
-    entityType: ENTITY_TYPE.ORDER
-    order: OrderData
-    tutorial: true
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -144,10 +139,6 @@ declare global {
 
   type Orders = {
     [index: string]: Order
-  }
-
-  type TutorialOrders = {
-    [index: string]: TutorialOrder
   }
 
   // * * * * * * * * * * * * * * * * *

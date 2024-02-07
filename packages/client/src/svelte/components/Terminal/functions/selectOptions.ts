@@ -1,10 +1,10 @@
 import { SelectOption, COMMAND, DIRECTION } from "../types"
-import { MACHINE_TYPE } from "../../../modules/state/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../../../modules/state/enums"
 import {
   simulatedMachines,
   simulatedConnections,
 } from "../../../modules/simulator"
-import { playerEntity, depots as depotsStore } from "../../../modules/state"
+import { playerEntity, depots as depotsStore, orders as ordersStore } from "../../../modules/state"
 import { get } from "svelte/store"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from ".."
 import { connectionMachineSort } from "./helpers"
@@ -37,11 +37,13 @@ export function createSelectOptions(
     case COMMAND.ATTACH_DEPOT:
       return createSelectOptionsAttachDepot()
     case COMMAND.DETACH_DEPOT:
-      return createSelectOptionsDietachDepot()
+      return createSelectOptionsDetachDepot()
     case COMMAND.CLEAR_DEPOT:
       return createSelectOptionsClearDepot()
     case COMMAND.FILL:
       return createSelectOptionsFill()
+    case COMMAND.ACCEPT:
+      return createSelectOptionsAccept()
     default:
       return [] as SelectOption[]
   }
@@ -167,7 +169,7 @@ function createSelectOptionsClearDepot(): SelectOption[] {
 
   selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
-      label: `Store #${index + 1}`,
+      label: `Depot #${index + 1}`,
       value: address,
     }))
 
@@ -181,7 +183,7 @@ function createSelectOptionsAttachDepot(): SelectOption[] {
 
   selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
-      label: `Store #${index + 1}`,
+      label: `Depot #${index + 1}`,
       value: address,
     }))
 
@@ -195,14 +197,14 @@ function createSelectOptionsFill(): SelectOption[] {
 
   selectOptions = Object.entries(depots)
     .map(([address, _], index) => ({
-      label: `Store #${index + 1}`,
+      label: `Depot #${index + 1}`,
       value: address,
     }))
 
   return selectOptions
 }
 
-function createSelectOptionsDetachDepots(): SelectOption[] {
+function createSelectOptionsDetachDepot(): SelectOption[] {
   let selectOptions: SelectOption[] = [{
     label: "Inlet",
     value: MACHINE_TYPE.INLET,
@@ -210,5 +212,20 @@ function createSelectOptionsDetachDepots(): SelectOption[] {
     label: "Outlet",
     value: MACHINE_TYPE.OUTLET,
   }]
+  return selectOptions
+}
+
+function createSelectOptionsAccept(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const orders = get(ordersStore)
+
+  selectOptions = Object.entries(orders)
+    .filter(([_, order]) => !order.tutorial)
+    .map(([address, order], index) => ({
+      label: `#${index + 1}: ${order.order.goalAmount} ${MATERIAL_TYPE[order.order.goalMaterialType]}`,
+      value: address,
+    }))
+
   return selectOptions
 }

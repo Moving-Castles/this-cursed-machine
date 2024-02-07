@@ -14,7 +14,7 @@ async function execute(depotEntity: string, machineType: MACHINE_TYPE.INLET | MA
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(OutputType.NORMAL, "Connection in progress...")
+        writeToTerminal(OutputType.NORMAL, "Attachment in progress...")
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(OutputType.SUCCESS, "Done")

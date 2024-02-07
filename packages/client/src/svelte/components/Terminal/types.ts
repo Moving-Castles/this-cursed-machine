@@ -42,7 +42,10 @@ export enum COMMAND {
     ATTACH_DEPOT,
     DETACH_DEPOT,
     CLEAR_DEPOT,
-    FILL
+    FILL,
+    ACCEPT,
+    BUY,
+    GRADUATE
 }
 
 export type Command<T extends any[] = any[]> = {

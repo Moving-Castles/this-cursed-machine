@@ -9,4 +9,6 @@ pragma solidity >=0.8.24;
  */
 interface IWarpSystem {
   function warp(uint32 _level) external;
+
+  function graduate() external;
 }

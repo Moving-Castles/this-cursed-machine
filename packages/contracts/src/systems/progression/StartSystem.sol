@@ -53,9 +53,6 @@ contract StartSystem is System {
     MaterialType.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceMaterialType);
     Amount.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceAmount);
 
-    // Give tokens for testing
-    LibToken.send(_msgSender(), 666);
-
     return podEntity;
   }
 }
