@@ -1,0 +1,8 @@
+[
+  {
+    "file": "test/systems/machine-network/ConnectSystem.t.sol",
+    "test": "testConnect",
+    "name": "Connect player to splitter",
+    "gasUsed": 113444
+  }
+]

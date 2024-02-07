@@ -3,6 +3,8 @@ pragma solidity >=0.8.0;
 
 import "forge-std/Test.sol";
 
+import { GasReporter } from "@latticexyz/gas-report/src/GasReporter.sol";
+
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { ROOT_NAMESPACE, ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
@@ -10,7 +12,7 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 import "../src/codegen/index.sol";
 
-contract BaseTest is MudTest {
+contract BaseTest is MudTest, GasReporter {
   IWorld world;
   GameConfigData gameConfig;
 

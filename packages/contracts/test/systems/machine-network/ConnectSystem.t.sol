@@ -18,7 +18,9 @@ contract ConnectSystemTest is BaseTest {
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
 
     // Connect player (first output == piss) to splitter
+    startGasReport("Connect player to splitter");
     world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
+    endGasReport();
 
     vm.stopPrank();
 
