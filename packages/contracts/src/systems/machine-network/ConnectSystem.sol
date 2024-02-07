@@ -28,31 +28,25 @@ contract ConnectSystem is System {
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToWrite = _portIndex == PORT_INDEX.FIRST ? 0 : 1;
 
-    // Retrieve the existing outgoing connections for the source machine
-    bytes32[] memory outgoingConnections = OutgoingConnections.get(_sourceMachine);
     // Check if the index is within bounds and not occupied
-    require(indexToWrite < outgoingConnections.length, "outgoing index out of bounds");
-    require(outgoingConnections[indexToWrite] == bytes32(0), "outgoing port already occupied");
+    require(indexToWrite < OutgoingConnections.length(_sourceMachine), "outgoing index out of bounds");
+    require(OutgoingConnections.getItem(_sourceMachine, indexToWrite) == bytes32(0), "outgoing port already occupied");
 
     // Insert _targetMachine at the specified index for outgoing connections
-    outgoingConnections[indexToWrite] = _targetMachine;
-    OutgoingConnections.set(_sourceMachine, outgoingConnections);
+    OutgoingConnections.update(_sourceMachine, indexToWrite, _targetMachine);
 
-    // Retrieve the existing incoming connections for the target machine
-    bytes32[] memory incomingConnections = IncomingConnections.get(_targetMachine);
+    // Get the total number of incoming connections for the target machine
+    uint256 incomingConnectionsLength = IncomingConnections.length(_targetMachine);
     bool slotFound = false;
-    // Find the first available slot in incoming connections
-    for (uint i = 0; i < incomingConnections.length; i++) {
-      if (incomingConnections[i] == bytes32(0)) {
-        incomingConnections[i] = _sourceMachine;
+    // Fill the first available slot in incoming connections
+    for (uint i = 0; i < incomingConnectionsLength; i++) {
+      if (IncomingConnections.getItem(_targetMachine, i) == bytes32(0)) {
+        IncomingConnections.update(_targetMachine, i, _sourceMachine);
         slotFound = true;
         break;
       }
     }
     // Revert if no available slot is found
     require(slotFound, "no available incoming ports");
-
-    // Set the updated array for incoming connections
-    IncomingConnections.set(_targetMachine, incomingConnections);
   }
 }
