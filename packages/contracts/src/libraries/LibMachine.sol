@@ -55,7 +55,7 @@ library LibMachine {
       machineId: _input.machineId,
       materialType: MATERIAL_TYPE.PISS,
       amount: _input.amount / 2,
-      factor: 2
+      divisor: _input.divisor + 2
     });
 
     // Output blood
@@ -63,7 +63,7 @@ library LibMachine {
       machineId: _input.machineId,
       materialType: MATERIAL_TYPE.BLOOD,
       amount: _input.amount / 2,
-      factor: 2
+      divisor: _input.divisor + 2
     });
 
     return outputs;
@@ -85,14 +85,14 @@ library LibMachine {
       machineId: _input.machineId,
       materialType: _input.materialType,
       amount: _input.amount / 2,
-      factor: _input.factor + 2
+      divisor: _input.divisor + 2
     });
     // Output 2
     outputs[1] = Product({
       machineId: _input.machineId,
       materialType: _input.materialType,
       amount: _input.amount / 2,
-      factor: _input.factor + 2
+      divisor: _input.divisor + 2
     });
     return outputs;
   }
@@ -116,12 +116,14 @@ library LibMachine {
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
 
-    // PROBLEM: factor is off
+    // Return the lowest amount
+    Product memory lowestAmountProduct = getLowestAmountProduct(_inputs[0], _inputs[1]);
+
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
       materialType: resultMaterialType,
-      amount: _inputs[0].amount + _inputs[1].amount, // Sum of the amounts of the two inputs
-      factor: _inputs[0].factor
+      amount: lowestAmountProduct.amount,
+      divisor: lowestAmountProduct.divisor
     });
     return outputs;
   }
@@ -142,8 +144,15 @@ library LibMachine {
       machineId: _input.machineId,
       materialType: resultMaterialType,
       amount: _input.amount,
-      factor: _input.factor
+      divisor: _input.divisor
     });
     return outputs;
+  }
+
+  function getLowestAmountProduct(
+    Product memory _A,
+    Product memory _B
+  ) internal pure returns (Product memory _lowestAmountProduct) {
+    return _A.amount < _B.amount ? _A : _B;
   }
 }

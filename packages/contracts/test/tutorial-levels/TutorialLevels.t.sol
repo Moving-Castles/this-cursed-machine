@@ -5,6 +5,7 @@ import { BaseTest } from "../BaseTest.sol";
 import "../../src/codegen/index.sol";
 import "../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../src/codegen/common.sol";
+import { FLOW_RATE } from "../../src/constants.sol";
 
 contract TutorialLevelsTest is BaseTest {
   bytes32 playerEntity;
@@ -33,17 +34,99 @@ contract TutorialLevelsTest is BaseTest {
     vm.stopPrank();
   }
 
+  function calculateBlocksToWait(uint flowRate, uint divisor, uint goalAmount) internal pure returns (uint) {
+    // Calculate the effective output per block considering the divisor
+    uint effectiveOutputPerBlock = flowRate / divisor;
+
+    // Calculate the total number of blocks needed to reach the goal amount
+    uint blocksNeeded = goalAmount / effectiveOutputPerBlock;
+
+    return blocksNeeded;
+  }
+
+  function expectedInletdAmount(
+    uint initialResourceAmount,
+    uint blocksWaited,
+    uint flowRate
+  ) internal pure returns (uint) {
+    // Calculate the total amount of material processed after waiting for the given blocks
+    uint totalProcessed = blocksWaited * flowRate;
+
+    // Calculate the remaining amount of material after processing
+    uint remainingAmount = initialResourceAmount > totalProcessed ? initialResourceAmount - totalProcessed : 0;
+
+    return remainingAmount;
+  }
+
+  function checkProcessing(OrderData memory currentOrderData, uint blocksToWait) internal {
+    uint inletAmount = expectedInletdAmount(currentOrderData.resourceAmount, blocksToWait, FLOW_RATE);
+
+    // Check inlet amount and type after processing
+    assertEq(
+      uint32(MaterialType.get(depotsInPod[0])),
+      inletAmount == 0 ? uint32(MATERIAL_TYPE.NONE) : uint32(currentOrderData.resourceMaterialType)
+    );
+    assertEq(Amount.get(depotsInPod[0]), inletAmount);
+
+    // Check outlet amount and type after processing
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(currentOrderData.goalMaterialType));
+    assertEq(Amount.get(depotsInPod[1]), currentOrderData.goalAmount);
+  }
+
+  function fillAndCheckProgression(uint32 levelIndex, OrderData memory nextOrderData) internal {
+    vm.startPrank(alice);
+
+    // Fill the order and perform final checks
+    world.fill(depotsInPod[1]);
+
+    // Order is set to next tutorial order
+    assertEq(CurrentOrder.get(podEntity), tutorialLevels[levelIndex + 1]);
+
+    // Depot 1 should be empty
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[1]), 0);
+
+    // Depot 0 should be filled with next order's material
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
+
+    vm.stopPrank();
+  }
+
+  function setupLevel(
+    uint32 levelIndex
+  ) internal returns (OrderData memory currentOrderData, OrderData memory nextOrderData) {
+    if (levelIndex > 0) {
+      vm.startPrank(alice);
+      world.warp(levelIndex);
+      vm.stopPrank();
+    }
+
+    // Get order data for the current and next level
+    currentOrderData = Order.get(tutorialLevels[levelIndex]);
+    nextOrderData = Order.get(tutorialLevels[levelIndex + 1]);
+
+    // Check that the inlet depot has the correct type and amount of material
+    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
+    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
+
+    return (currentOrderData, nextOrderData);
+  }
+
   function testLevelOne() public {
     setUp();
 
+    uint32 levelIndex = 0;
+
+    (OrderData memory currentOrderData, OrderData memory nextOrderData) = setupLevel(levelIndex);
+
+    /*
+     * + + + + + + + + + + + + +
+     * START: Build the machine
+     * + + + + + + + + + + + + +
+     */
+
     vm.startPrank(alice);
-
-    // Set up level
-    OrderData memory currentOrderData = Order.get(tutorialLevels[0]);
-    OrderData memory nextOrderData = Order.get(tutorialLevels[1]);
-
-    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
@@ -57,51 +140,40 @@ contract TutorialLevelsTest is BaseTest {
     // Connect player (blood) to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
 
-    // Wait 40 blocks
-    vm.roll(block.number + 40);
+    uint divisor = 2; // Material loss
+    uint blocksToWait = calculateBlocksToWait(FLOW_RATE, divisor, currentOrderData.goalAmount);
 
-    // Disconnect depot and resolve
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check depot 0
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
-    // Inlet material spent => 4 * 100 = 400
-    assertEq(Amount.get(depotsInPod[0]), 1600); // 2000 400 = 0
-
-    // Check depot 1
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.BLOOD));
-    // Outlet material gained => 4 * 50 = 200
-    assertEq(Amount.get(depotsInPod[1]), 200); // 0 + 200 = 200
-
-    // Fill the order
-    world.fill(depotsInPod[1]);
-
-    // Order is set to next tutorial order
-    assertEq(CurrentOrder.get(podEntity), tutorialLevels[1]);
-
-    // Depot 1 should be empty
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(depotsInPod[1]), 0);
-
-    // Depot 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
-
     vm.stopPrank();
+
+    /*
+     * + + + + + + + + + + + +
+     * END: Build the machine
+     * + + + + + + + + + + + +
+     */
+
+    checkProcessing(currentOrderData, blocksToWait);
+    fillAndCheckProgression(levelIndex, nextOrderData);
   }
 
   function testLevelTwo() public {
     setUp();
 
+    uint32 levelIndex = 1;
+
+    (OrderData memory currentOrderData, OrderData memory nextOrderData) = setupLevel(levelIndex);
+
+    /*
+     * + + + + + + + + + + + + +
+     * START: Build the machine
+     * + + + + + + + + + + + + +
+     */
+
     vm.startPrank(alice);
-
-    // Set up level
-    world.warp(1);
-    OrderData memory currentOrderData = Order.get(tutorialLevels[1]);
-    OrderData memory nextOrderData = Order.get(tutorialLevels[2]);
-
-    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
@@ -115,51 +187,40 @@ contract TutorialLevelsTest is BaseTest {
     // Connect player (piss) to outlet
     world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 100 blocks
-    vm.roll(block.number + 100);
+    uint divisor = 2;
+    uint blocksToWait = calculateBlocksToWait(FLOW_RATE, divisor, currentOrderData.goalAmount);
 
-    // Disconnect depot and resolve
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check depot 0
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
-    // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
-
-    // Check depot 1
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
-    // Outlet material gained => 10 * 50 = 500
-    assertEq(Amount.get(depotsInPod[1]), 500); // 0 + 500 = 500
-
-    // Fill the order
-    world.fill(depotsInPod[1]);
-
-    // Order is set to next tutorial order
-    assertEq(CurrentOrder.get(podEntity), tutorialLevels[2]);
-
-    // Depot 1 should be empty
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(depotsInPod[1]), 0);
-
-    // Depot 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
-
     vm.stopPrank();
+
+    /*
+     * + + + + + + + + + + + +
+     * END: Build the machine
+     * + + + + + + + + + + + +
+     */
+
+    checkProcessing(currentOrderData, blocksToWait);
+    fillAndCheckProgression(levelIndex, nextOrderData);
   }
 
   function testLevelThree() public {
     setUp();
 
+    uint32 levelIndex = 2;
+
+    (OrderData memory currentOrderData, OrderData memory nextOrderData) = setupLevel(levelIndex);
+
+    /*
+     * + + + + + + + + + + + + +
+     * START: Build the machine
+     * + + + + + + + + + + + + +
+     */
+
     vm.startPrank(alice);
-
-    // Set up level
-    world.warp(2);
-    OrderData memory currentOrderData = Order.get(tutorialLevels[2]);
-    OrderData memory nextOrderData = Order.get(tutorialLevels[3]);
-
-    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
@@ -179,51 +240,40 @@ contract TutorialLevelsTest is BaseTest {
     // Connect boiler to outlet
     world.connect(boilerOne, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 100 blocks
-    vm.roll(block.number + 100);
+    uint divisor = 2; // Material loss
+    uint blocksToWait = calculateBlocksToWait(FLOW_RATE, divisor, currentOrderData.goalAmount);
 
-    // Disconnect depot and resolve
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check depot 0
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
-    // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
-
-    // Check depot 1
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER));
-    // Outlet material gained => 10 * 50 = 500
-    assertEq(Amount.get(depotsInPod[1]), 500); // 0 + 500 = 500
-
-    // Fill the order
-    world.fill(depotsInPod[1]);
-
-    // Order is set to next tutorial order
-    assertEq(CurrentOrder.get(podEntity), tutorialLevels[3]);
-
-    // Depot 1 should be empty
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(depotsInPod[1]), 0);
-
-    // Depot 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
-
     vm.stopPrank();
+
+    /*
+     * + + + + + + + + + + + +
+     * END: Build the machine
+     * + + + + + + + + + + + +
+     */
+
+    checkProcessing(currentOrderData, blocksToWait);
+    fillAndCheckProgression(levelIndex, nextOrderData);
   }
 
   function testLevelFour() public {
     setUp();
 
+    uint32 levelIndex = 3;
+
+    (OrderData memory currentOrderData, OrderData memory nextOrderData) = setupLevel(levelIndex);
+
+    /*
+     * + + + + + + + + + + + + +
+     * START: Build the machine
+     * + + + + + + + + + + + + +
+     */
+
     vm.startPrank(alice);
-
-    // Set up level
-    world.warp(3);
-    OrderData memory currentOrderData = Order.get(tutorialLevels[3]);
-    OrderData memory nextOrderData = Order.get(tutorialLevels[4]);
-
-    assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
@@ -246,50 +296,45 @@ contract TutorialLevelsTest is BaseTest {
     // Connect dryer to outlet
     world.connect(dryerOne, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 100 blocks
-    vm.roll(block.number + 100);
+    uint divisor = 1; // Material loss
+    uint blocksToWait = calculateBlocksToWait(FLOW_RATE, divisor, currentOrderData.goalAmount);
 
-    // Disconnect depot and resolve
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check depot 0
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BUG));
-    // Inlet material spent => 10 * 100 = 1000
-    assertEq(Amount.get(depotsInPod[0]), 1000); // 1000 1000 = 0
-
-    // Check depot 1
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
-    // Outlet material gained => 10 * 100 = 1000
-    assertEq(Amount.get(depotsInPod[1]), 1000); // 0 + 1000 = 1000
-
-    // Fill the order
-    world.fill(depotsInPod[1]);
-
-    // Order is set to next tutorial order
-    assertEq(CurrentOrder.get(podEntity), tutorialLevels[4]);
-
-    // Depot 1 should be empty
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
-    assertEq(Amount.get(depotsInPod[1]), 0);
-
-    // Depot 0 should be filled with next order's material
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
-
     vm.stopPrank();
+
+    /*
+     * + + + + + + + + + + + +
+     * END: Build the machine
+     * + + + + + + + + + + + +
+     */
+
+    checkProcessing(currentOrderData, blocksToWait);
+    fillAndCheckProgression(levelIndex, nextOrderData);
   }
 
   function testLevelFive() public {
     setUp();
 
+    uint32 levelIndex = 4;
+
     vm.startPrank(alice);
 
     // Set up level
-    world.warp(4);
+    world.warp(levelIndex);
     OrderData memory currentOrderData = Order.get(tutorialLevels[4]);
 
     assertEq(uint(MaterialType.get(depotsInPod[0])), uint(currentOrderData.resourceMaterialType));
     assertEq(Amount.get(depotsInPod[0]), currentOrderData.resourceAmount);
+
+    /*
+     * + + + + + + + + + + + + +
+     * START: Build the machine
+     * + + + + + + + + + + + + +
+     */
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
@@ -336,21 +381,21 @@ contract TutorialLevelsTest is BaseTest {
     // Connect mixer to outlet
     world.connect(mixer, outletEntity, PORT_INDEX.FIRST);
 
-    // Wait 200 blocks
-    vm.roll(block.number + 200);
+    uint divisor = 4; // Material loss
+    uint blocksToWait = calculateBlocksToWait(FLOW_RATE, divisor, currentOrderData.goalAmount);
 
-    // Disconnect depot and resolve
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
     world.detachDepot(MACHINE_TYPE.OUTLET);
 
-    // Check depot 0
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.NONE));
-    // Inlet material spent => 20 * 100 = 2000
-    assertEq(Amount.get(depotsInPod[0]), 0); // 2000 - 2000 = 0
+    /*
+     * + + + + + + + + + + + +
+     * END: Build the machine
+     * + + + + + + + + + + + +
+     */
 
-    // Check depot 1
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
-    // Outlet material gained => 20 * 75 = 1500
-    assertEq(Amount.get(depotsInPod[1]), 1000); // Capped by input material
+    checkProcessing(currentOrderData, blocksToWait);
 
     // Fill the order
     world.fill(depotsInPod[1]);

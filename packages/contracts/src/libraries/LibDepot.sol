@@ -29,16 +29,16 @@ library LibDepot {
     // We now have two inlets and potentially two inlet depots that affect how much we can produce
     uint32 inletAmount = Amount.get(_inletDepotEntity);
 
-    uint32 factor = _output.factor == 0 ? 1 : _output.factor;
+    uint32 divisor = _output.divisor == 0 ? 1 : _output.divisor;
 
-    // The factor keeps track of how much the inlet material has been diluted by the machines
-    uint32 consumedInletAmount = factor * cumulativeAmount;
+    // The divisor keeps track of how much the inlet material has been diluted by the machines
+    uint32 consumedInletAmount = divisor * cumulativeAmount;
 
     // Did we exhaust the amount of material the inlet material allows us to produce?
     bool exhaustedInletDepot = consumedInletAmount >= inletAmount;
 
     // Cap output by the amount in inlet depot
-    cumulativeAmount = exhaustedInletDepot ? inletAmount / factor : cumulativeAmount;
+    cumulativeAmount = exhaustedInletDepot ? inletAmount / divisor : cumulativeAmount;
 
     // Add if material is same
     if (MaterialType.get(_outletDepotEntity) == _output.materialType) {

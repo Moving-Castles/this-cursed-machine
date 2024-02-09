@@ -127,4 +127,14 @@ library LibUtils {
       return keccak256(bytes(a)) == keccak256(bytes(b));
     }
   }
+
+  function safeSubtract(uint32 a, uint32 b) internal pure returns (uint32) {
+    if (b > a) {
+      // If b is greater than a, return 0 to prevent underflow
+      return 0;
+    } else {
+      // Otherwise, subtraction is safe, so return the result
+      return a - b;
+    }
+  }
 }

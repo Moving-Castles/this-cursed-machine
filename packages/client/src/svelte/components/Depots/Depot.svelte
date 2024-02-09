@@ -1,7 +1,7 @@
 <script lang="ts">
   import { MATERIAL_TYPE } from "../../modules/state/enums"
   import { playerPod } from "../../modules/state"
-  export let depot: Store
+  export let depot: Depot
   export let index: number
 
   const getConnectionName = (machineEntity: string) => {
@@ -14,7 +14,7 @@
 <div class="depot-item">
   <div><strong>#: {index + 1}</strong></div>
   <div>M: {MATERIAL_TYPE[depot.materialType]}</div>
-  <div>A: {depot.amount}</div>
+  <div>A: {depot.amount / 1000}</div>
   <div>C: {getConnectionName(depot.depotConnection)}</div>
 </div>
 

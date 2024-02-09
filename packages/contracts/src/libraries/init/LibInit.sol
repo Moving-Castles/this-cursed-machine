@@ -18,16 +18,16 @@ library LibInit {
     goalMaterials[4] = MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP;
 
     uint32[] memory goalAmounts = new uint32[](5);
-    goalAmounts[0] = 200;
-    goalAmounts[1] = 500;
-    goalAmounts[2] = 500;
-    goalAmounts[3] = 1000;
-    goalAmounts[4] = 500;
+    goalAmounts[0] = 20000;
+    goalAmounts[1] = 50000;
+    goalAmounts[2] = 50000;
+    goalAmounts[3] = 100000;
+    goalAmounts[4] = 50000;
 
     bytes32[] memory tutorialOrders = new bytes32[](5);
 
     for (uint i; i < 5; i++) {
-      tutorialOrders[i] = LibOrder.create(MATERIAL_TYPE.BUG, 2000, goalMaterials[i], goalAmounts[i], true, 0, 0, 0);
+      tutorialOrders[i] = LibOrder.create(MATERIAL_TYPE.BUG, 200000, goalMaterials[i], goalAmounts[i], true, 0, 0, 0);
     }
 
     TutorialOrders.set(tutorialOrders);

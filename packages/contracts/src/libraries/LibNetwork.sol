@@ -72,7 +72,7 @@ library LibNetwork {
             machineId: node,
             materialType: materialType,
             amount: FLOW_RATE,
-            factor: 0
+            divisor: 0
           });
           counter.inputs++;
         }
