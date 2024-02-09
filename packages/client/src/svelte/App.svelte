@@ -68,7 +68,7 @@
     initBlockListener()
 
     // Create systems to listen to changes to components in our namespace
-    for (const componentKey of Object.keys($network.components)) {
+    for (const componentKey of mudLayer.tableKeys) {
       createComponentSystem(componentKey)
     }
 

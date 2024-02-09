@@ -26,9 +26,11 @@ import {
   ContractWrite,
 } from "@latticexyz/common"
 
-import { Subject, share } from "rxjs"
+import { tables as extraTables, syncFilters as extraSyncFilters } from "./extraTables";
 
-import { tables as extraTables } from "./extraTables";
+import { createSyncFilters } from "./createSyncFilters"
+
+import { Subject, share } from "rxjs"
 
 /*
  * Import our MUD config, which includes strong types for
@@ -57,6 +59,8 @@ export async function setupNetwork() {
 
   const publicClient = createPublicClient(clientOptions)
 
+  const filters = [...createSyncFilters(null), ...extraSyncFilters];
+
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
    * Uses the MUD indexer if available, otherwise falls back
@@ -75,13 +79,14 @@ export async function setupNetwork() {
     publicClient,
     indexerUrl: networkConfig.indexerUrl,
     startBlock: BigInt(networkConfig.initialBlockNumber),
+    filters,
     tables: extraTables
   })
 
   /*
- * Create a temporary wallet and a viem client for it
- * (see https://viem.sh/docs/clients/wallet.html).
- */
+  * Create a temporary wallet and a viem client for it
+  * (see https://viem.sh/docs/clients/wallet.html).
+  */
   const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
   const burnerWalletClient = createWalletClient({
     ...clientOptions,
@@ -132,6 +137,9 @@ export async function setupNetwork() {
     setInterval(requestDrip, 20000)
   }
 
+  // Allows us to to only listen to the game sepcific tables
+  const tableKeys = [...Object.keys(mudConfig.tables), ...Object.keys(extraTables)];
+
   return {
     world,
     components,
@@ -146,5 +154,6 @@ export async function setupNetwork() {
     waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),
+    tableKeys
   }
 }

@@ -39,6 +39,7 @@ export async function getNetworkConfig() {
    * provide it as worldAddress in the query string.
    */
   const world = getWorldFromChainId(chain.id);
+
   const worldAddress = params.get("worldAddress") || world?.address;
   if (!worldAddress) {
     throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`);

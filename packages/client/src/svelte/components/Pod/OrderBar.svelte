@@ -3,7 +3,7 @@
   import { orders, playerPod } from "../../modules/state"
   import { MATERIAL_TYPE } from "../../modules/state/enums"
 
-  let currentOrder: Order = null
+  let currentOrder: Order | null = null
   $: currentOrder = $orders[$playerPod.currentOrder]
 </script>
 
@@ -13,14 +13,14 @@
       NO ORDER
     {:else}
       CURRENT ORDER:
-      {currentOrder?.order.goalAmount}
+      {currentOrder?.order.goalAmount / 1000}
       {MATERIAL_TYPE[currentOrder?.order.goalMaterialType]}
     {/if}
   </div>
-  {#if currentOrder?.order.duration > 0}
+  {#if currentOrder && currentOrder.order.duration > 0}
     <div>
       REMAINING TIME: {Number(currentOrder.order.creationBlock) +
-        Number(currentOrder.order.duration) -
+        Number(currentOrder?.order.duration) -
         Number($blockNumber)}
     </div>
   {/if}
