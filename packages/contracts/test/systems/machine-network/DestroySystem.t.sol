@@ -62,4 +62,25 @@ contract DestroySystemTest is BaseTest {
 
     vm.stopPrank();
   }
+
+  function testDestroyPlayer() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    world.spawn();
+    world.start();
+
+    bytes32 playerEntity = LibUtils.addressToEntityKey(alice);
+
+    // Destroy player
+    world.destroy(playerEntity);
+
+    // Check that the machine was destroyed
+    assertEq(uint8(EntityType.get(playerEntity)), uint8(ENTITY_TYPE.NONE));
+
+    // Build a dryer
+    vm.expectRevert("player not spawned");
+    world.build(MACHINE_TYPE.SPLITTER);
+  }
 }

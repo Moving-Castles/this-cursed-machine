@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../../codegen/common.sol";
-import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DisconnectSystem is System {
   /**
@@ -12,7 +12,7 @@ contract DisconnectSystem is System {
    * @param _portIndex The port index on the source machine which determines which connection to disconnect.
    */
   function disconnect(bytes32 _sourceMachine, PORT_INDEX _portIndex) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_sourceMachine) == podEntity, "not in pod");

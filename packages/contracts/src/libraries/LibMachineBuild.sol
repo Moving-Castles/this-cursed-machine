@@ -1,26 +1,46 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, MachineType, BuildIndex, IncomingConnections, OutgoingConnections } from "../codegen/index.sol";
+import { EntityType, MachineType, BuildIndex, IncomingConnections, OutgoingConnections, TutorialLevel, GameConfig, SpawnIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 
-library LibEntity {
+library LibMachineBuild {
   /**
-   * @notice Creates a new machine entity of the specified type.
+   * @notice Creates a new machine entity of the specified buildable type.
    * @param _machineType The type of machine to create, specified by the MACHINE_TYPE enum.
    * @return entity The identifier for the newly created machine entity.
    */
-  function create(MACHINE_TYPE _machineType) internal returns (bytes32) {
-    bytes32 entity = getUniqueEntity();
-    EntityType.set(entity, ENTITY_TYPE.MACHINE);
-    MachineType.set(entity, _machineType);
+  function build(MACHINE_TYPE _machineType) internal returns (bytes32 entity) {
+    require(isBuildableMachineType(_machineType), "not buildable");
+    entity = getUniqueEntity();
+    create(_machineType, entity);
+  }
+
+  /**
+   * @notice Creates records for a new machine entity of the specified type.
+   * @param _machineType The type of machine to create, specified by the MACHINE_TYPE enum.
+   * @return entity The identifier for the newly created machine entity.
+   */
+  function create(MACHINE_TYPE _machineType) internal returns (bytes32 entity) {
+    entity = getUniqueEntity();
+    create(_machineType, entity);
+  }
+
+  /**
+   * @notice Creates records for a new machine of the specified type, using the provided entity.
+   * @param _machineType The type of machine to create, specified by the MACHINE_TYPE enum.
+   * @param _entity The identifier to be used for the machine entity creation.
+   */
+  function create(MACHINE_TYPE _machineType, bytes32 _entity) internal {
+    EntityType.set(_entity, ENTITY_TYPE.MACHINE);
+    MachineType.set(_entity, _machineType);
 
     // Set ports on machine
     // - - - - - - - - - - - -
     // NONE:      0 IN, 0 OUT
     // INLET:     0 IN, 1 OUT
     // OUTLET:    1 IN, 0 OUT
-    // PLAYER:    1 IN, 2 OUT (created at spawn)
+    // PLAYER:    1 IN, 2 OUT
     // SPLITTER:  1 IN, 2 OUT
     // MIXER:     2 IN, 1 OUT
     // WETTER:    1 IN, 1 OUT
@@ -29,23 +49,21 @@ library LibEntity {
     // COOLER:    1 IN, 1 OUT
 
     if (_machineType == MACHINE_TYPE.INLET) {
-      IncomingConnections.set(entity, new bytes32[](0));
-      OutgoingConnections.set(entity, new bytes32[](1));
+      IncomingConnections.set(_entity, new bytes32[](0));
+      OutgoingConnections.set(_entity, new bytes32[](1));
     } else if (_machineType == MACHINE_TYPE.OUTLET) {
-      IncomingConnections.set(entity, new bytes32[](1));
-      OutgoingConnections.set(entity, new bytes32[](0));
-    } else if (_machineType == MACHINE_TYPE.SPLITTER) {
-      IncomingConnections.set(entity, new bytes32[](1));
-      OutgoingConnections.set(entity, new bytes32[](2));
+      IncomingConnections.set(_entity, new bytes32[](1));
+      OutgoingConnections.set(_entity, new bytes32[](0));
+    } else if (_machineType == MACHINE_TYPE.SPLITTER || _machineType == MACHINE_TYPE.PLAYER) {
+      IncomingConnections.set(_entity, new bytes32[](1));
+      OutgoingConnections.set(_entity, new bytes32[](2));
     } else if (_machineType == MACHINE_TYPE.MIXER) {
-      IncomingConnections.set(entity, new bytes32[](2));
-      OutgoingConnections.set(entity, new bytes32[](1));
+      IncomingConnections.set(_entity, new bytes32[](2));
+      OutgoingConnections.set(_entity, new bytes32[](1));
     } else {
-      IncomingConnections.set(entity, new bytes32[](1));
-      OutgoingConnections.set(entity, new bytes32[](1));
+      IncomingConnections.set(_entity, new bytes32[](1));
+      OutgoingConnections.set(_entity, new bytes32[](1));
     }
-
-    return entity;
   }
 
   /**

@@ -4,21 +4,19 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibPod, LibMachineBuild, LibDepot, LibToken } from "../../libraries/Libraries.sol";
 
 contract StartSystem is System {
   function start() public returns (bytes32) {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-
-    // todo: check that player is spawned
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
 
     // Create pod
     bytes32 podEntity = LibPod.create();
 
     // Create inlet entities
     bytes32[] memory inletEntities = new bytes32[](2);
-    inletEntities[0] = LibEntity.create(MACHINE_TYPE.INLET);
-    inletEntities[1] = LibEntity.create(MACHINE_TYPE.INLET);
+    inletEntities[0] = LibMachineBuild.create(MACHINE_TYPE.INLET);
+    inletEntities[1] = LibMachineBuild.create(MACHINE_TYPE.INLET);
     for (uint i; i < inletEntities.length; i++) {
       CarriedBy.set(inletEntities[i], podEntity);
       MachinesInPod.push(podEntity, inletEntities[i]);
@@ -29,7 +27,7 @@ contract StartSystem is System {
     MachinesInPod.push(podEntity, playerEntity);
 
     // Create Outlet
-    bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
+    bytes32 outletEntity = LibMachineBuild.create(MACHINE_TYPE.OUTLET);
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.push(podEntity, outletEntity);
 

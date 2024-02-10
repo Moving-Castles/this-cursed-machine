@@ -27,6 +27,27 @@ contract ConnectSystemTest is BaseTest {
     assertEq(IncomingConnections.get(splitterEntity)[0], playerEntity);
   }
 
+  function testRevertNotSpawned() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    bytes32 playerEntity = world.spawn();
+    world.start();
+
+    // Build a splitter
+    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+
+    // Destroy player
+    world.destroy(playerEntity);
+
+    // Connect player (first output == piss) to splitter
+    vm.expectRevert("player not spawned");
+    world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
+
+    vm.stopPrank();
+  }
+
   function testRevertNoInputs() public {
     setUp();
 
@@ -83,7 +104,7 @@ contract ConnectSystemTest is BaseTest {
     bytes32 playerEntity = world.spawn();
     world.start();
 
-    // Connect dryer to splitter
+    // Connect player to self
     vm.expectRevert("source and target are same");
     world.connect(playerEntity, playerEntity, PORT_INDEX.FIRST);
 

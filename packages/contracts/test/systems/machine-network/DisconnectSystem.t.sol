@@ -34,6 +34,30 @@ contract DiconnectSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testRevertNotSpawned() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    bytes32 playerEntity = world.spawn();
+    world.start();
+
+    // Build a splitter
+    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+
+    // Connect player (first output == piss) to splitter
+    world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
+
+    // Destroy player
+    world.destroy(playerEntity);
+
+    // Disconnect player from splitter
+    vm.expectRevert("player not spawned");
+    world.disconnect(playerEntity, PORT_INDEX.FIRST);
+
+    vm.stopPrank();
+  }
+
   function testDisconnectSecondConnection() public {
     setUp();
 

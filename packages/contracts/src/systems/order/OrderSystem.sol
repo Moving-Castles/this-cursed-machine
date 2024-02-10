@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibOrder, LibToken } from "../../libraries/Libraries.sol";
 
 contract OrderSystem is System {
   function create(
@@ -33,7 +33,7 @@ contract OrderSystem is System {
   }
 
   function fill(bytes32 _depotEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
@@ -91,7 +91,7 @@ contract OrderSystem is System {
   }
 
   function accept(bytes32 _orderEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CurrentOrder.get(podEntity) == bytes32(0), "order in progress");
@@ -113,7 +113,7 @@ contract OrderSystem is System {
   function buy() public {
     require(LibToken.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
 
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
 

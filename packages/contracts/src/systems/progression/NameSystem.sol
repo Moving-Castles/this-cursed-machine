@@ -2,11 +2,11 @@
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibUtils, LibNetwork, LibPlayer } from "../../libraries/Libraries.sol";
 
 contract NameSystem is System {
   function name(string memory _name) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     // Only allow naming when tutorial is completed
     require(Tutorial.get(playerEntity) != false, "not completed");
     require(!LibUtils.stringEq(_name, ""), "name empty");

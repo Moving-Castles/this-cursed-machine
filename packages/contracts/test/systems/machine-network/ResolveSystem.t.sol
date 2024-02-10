@@ -190,4 +190,19 @@ contract ResolveSystemTest is BaseTest {
 
     checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
   }
+
+  function testRevertNotSpawned() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Destroy player
+    world.destroy(playerEntity);
+
+    // Resolve
+    vm.expectRevert("player not spawned");
+    world.resolve();
+
+    vm.stopPrank();
+  }
 }

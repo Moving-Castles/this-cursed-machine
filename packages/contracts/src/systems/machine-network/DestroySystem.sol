@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, GameConfigData, CarriedBy, EntityType, MachinesInPod, IncomingConnections, OutgoingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibEntity, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibUtils, LibPlayer, LibMachineBuild, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DestroySystem is System {
   /**
@@ -11,7 +11,7 @@ contract DestroySystem is System {
    * @param _machineEntity The identifier for the machine entity to be destroyed.
    */
   function destroy(bytes32 _machineEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_machineEntity) == podEntity, "not in pod");
@@ -69,7 +69,7 @@ contract DestroySystem is System {
     }
 
     // Destroy machine entity
-    LibEntity.destroy(_machineEntity);
+    LibMachineBuild.destroy(_machineEntity);
 
     // Remove it from the list of machines
     MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));

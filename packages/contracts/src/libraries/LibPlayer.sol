@@ -1,20 +1,47 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { WorldContextConsumerLib } from "@latticexyz/world/src/WorldContext.sol";
 import { TutorialLevel, EntityType, MachineType, OutgoingConnections, IncomingConnections, GameConfig, SpawnIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { LibMachineBuild } from "./LibMachineBuild.sol";
+import { LibUtils } from "./LibUtils.sol";
 
 library LibPlayer {
-  function spawn(bytes32 _playerEntity) internal {
-    EntityType.set(_playerEntity, ENTITY_TYPE.MACHINE);
-    MachineType.set(_playerEntity, MACHINE_TYPE.PLAYER);
-    TutorialLevel.set(_playerEntity, 0);
+  /**
+   * @notice Returns the current player entity (based on World's _msgSender)
+   */
+  function _getPlayerEntity() private view returns (bytes32) {
+    return LibUtils.addressToEntityKey(WorldContextConsumerLib._msgSender());
+  }
+
+  /**
+   * @notice Returns whether the records for the player entity have been spawned
+   */
+  function _isPlayerSpawned(bytes32 _playerEntity) private view returns (bool) {
+    return EntityType.get(_playerEntity) != ENTITY_TYPE.NONE;
+  }
+
+  /**
+   * @notice Returns the current player entity (based on World's _msgSender), reverts if plater is not spawned
+   */
+  function getSpawnedPlayerEntity() internal view returns (bytes32 playerEntity) {
+    playerEntity = LibUtils.addressToEntityKey(WorldContextConsumerLib._msgSender());
+    require(_isPlayerSpawned(playerEntity), "player not spawned");
+  }
+
+  /**
+   * @notice Spawns records for the current player entity (based on World's msgSender).
+   * @return playerEntity The identifier for the newly created player entity.
+   */
+  function spawn() internal returns (bytes32 playerEntity) {
+    playerEntity = _getPlayerEntity();
+    require(!_isPlayerSpawned(playerEntity), "player already spawned");
+    LibMachineBuild.create(MACHINE_TYPE.PLAYER, playerEntity);
+
+    TutorialLevel.set(playerEntity, 0);
 
     uint32 newSpawnIndex = GameConfig.getGlobalSpawnIndex() + 1;
     GameConfig.setGlobalSpawnIndex(newSpawnIndex);
-    SpawnIndex.set(_playerEntity, newSpawnIndex);
-
-    // Player has 1 input and 2 outputs
-    IncomingConnections.set(_playerEntity, new bytes32[](1));
-    OutgoingConnections.set(_playerEntity, new bytes32[](2));
+    SpawnIndex.set(playerEntity, newSpawnIndex);
   }
 }
