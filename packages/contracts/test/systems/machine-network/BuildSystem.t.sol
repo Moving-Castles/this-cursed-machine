@@ -24,6 +24,18 @@ contract BuildSystemTest is BaseTest {
     assertEq(CarriedBy.get(machineEntity), CarriedBy.get(playerEntity));
   }
 
+  function testRevertNotSpawned() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Create a new entity
+    vm.expectRevert("player not spawned");
+    world.build(MACHINE_TYPE.SPLITTER);
+
+    vm.stopPrank();
+  }
+
   function testRevertNotBuildable() public {
     setUp();
 
