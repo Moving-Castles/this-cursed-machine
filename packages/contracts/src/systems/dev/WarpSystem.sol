@@ -2,14 +2,14 @@
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, TutorialOrders, CarriedBy, DepotsInPod, Amount, MaterialType, Order, Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibToken } from "../../libraries/Libraries.sol";
 
 contract WarpSystem is System {
   /**
    * @dev Used in testing to fast forward the tutorial level. NOTE: disable for production.
    */
   function warp(uint32 _level) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
     // Set level
     TutorialLevel.set(playerEntity, _level);
@@ -24,7 +24,7 @@ contract WarpSystem is System {
    * @dev Used in testing to skip tutorial levels. NOTE: disable for production.
    */
   function graduate() public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     TutorialLevel.deleteRecord(playerEntity);

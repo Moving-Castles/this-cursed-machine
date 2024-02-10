@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../../codegen/common.sol";
-import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract ConnectSystem is System {
   /**
@@ -13,7 +13,7 @@ contract ConnectSystem is System {
    * @param _portIndex The port index on the source machine which determines the position (FIRST or SECOND) to write in the outgoing connections array.
    */
   function connect(bytes32 _sourceMachine, bytes32 _targetMachine, PORT_INDEX _portIndex) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_sourceMachine) == podEntity && CarriedBy.get(_targetMachine) == podEntity, "not in pod");

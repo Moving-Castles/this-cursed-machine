@@ -3,11 +3,11 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection, FixedEntities } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibPlayer, LibPod, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DepotSystem is System {
   function attachDepot(bytes32 _depotEntity, MACHINE_TYPE _machineType) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
@@ -32,7 +32,7 @@ contract DepotSystem is System {
   }
 
   function detachDepot(MACHINE_TYPE _machineType) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(_machineType == MACHINE_TYPE.INLET || _machineType == MACHINE_TYPE.OUTLET, "not inlet/outlet");
@@ -53,7 +53,7 @@ contract DepotSystem is System {
   }
 
   function clearDepot(bytes32 _depotEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 playerEntity = LibPlayer.getSpawnedPlayerEntity();
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");

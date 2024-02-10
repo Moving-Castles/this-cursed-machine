@@ -6,12 +6,7 @@ import { LibUtils, LibPlayer } from "../../libraries/Libraries.sol";
 
 contract SpawnSystem is System {
   function spawn() public returns (bytes32) {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    // @todo: check if already spawned
-
     // Create player entity
-    LibPlayer.spawn(playerEntity);
-
-    return playerEntity;
+    return LibPlayer.spawn();
   }
 }
