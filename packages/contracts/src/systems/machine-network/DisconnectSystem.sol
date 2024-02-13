@@ -23,34 +23,34 @@ contract DisconnectSystem is System {
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToDisconnect = _portIndex == PORT_INDEX.FIRST ? 0 : 1;
 
-    // Retrieve the existing outgoing connections for the source machine
-    bytes32[] memory outgoingConnections = OutgoingConnections.get(_sourceMachine);
     // Check if the index is within bounds
-    require(indexToDisconnect < outgoingConnections.length, "outgoing index out of bounds");
+    require(indexToDisconnect < OutgoingConnections.length(_sourceMachine), "outgoing index out of bounds");
 
     // Get the target machine from the outgoing connections
-    bytes32 targetMachine = outgoingConnections[indexToDisconnect];
+    bytes32 targetMachine = OutgoingConnections.getItem(_sourceMachine, indexToDisconnect);
     require(targetMachine != bytes32(0), "no connection to disconnect");
 
     // Clear the connection entry in the source machine's outgoing connections
-    outgoingConnections[indexToDisconnect] = bytes32(0);
-
-    // Retrieve the existing incoming connections for the target machine
-    bytes32[] memory incomingConnections = IncomingConnections.get(targetMachine);
+    OutgoingConnections.update(_sourceMachine, indexToDisconnect, bytes32(0));
 
     // Find and clear the corresponding entry in the target machine's incoming connections
-    bool disconnected = false;
-    for (uint i = 0; i < incomingConnections.length; i++) {
-      if (incomingConnections[i] == _sourceMachine) {
-        incomingConnections[i] = bytes32(0);
-        disconnected = true;
-        break;
+    bool disconnected = _removeIncomingConnection(targetMachine, _sourceMachine);
+    require(disconnected, "failed to disconnect");
+  }
+
+  function _removeIncomingConnection(
+    bytes32 _targetMachine,
+    bytes32 _connectedMachine
+  ) internal returns (bool disconnected) {
+    // Iterate through the source machine's incoming connections
+    uint256 length = IncomingConnections.length(_targetMachine);
+    for (uint256 i = 0; i < length; i++) {
+      if (IncomingConnections.getItem(_targetMachine, i) == _connectedMachine) {
+        // Remove the reference to the destroyed machine
+        IncomingConnections.update(_targetMachine, i, bytes32(0));
+        return true;
       }
     }
-    require(disconnected, "failed to disconnect");
-
-    // Update OutgoingConnections and IncomingConnections for both machines
-    OutgoingConnections.set(_sourceMachine, outgoingConnections);
-    IncomingConnections.set(targetMachine, incomingConnections);
+    return false;
   }
 }
