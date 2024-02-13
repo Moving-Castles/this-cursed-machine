@@ -25,7 +25,7 @@ library LibPod {
    * @param _machineType The type of machine being used.
    * @return buildIndexEntity The identifier for the fetched or newly created build index entity.
    */
-  function getBuildIndexEntity(bytes32 _podEntity, MACHINE_TYPE _machineType) internal returns (bytes32) {
+  function _getBuildIndexEntity(bytes32 _podEntity, MACHINE_TYPE _machineType) private returns (bytes32) {
     QueryFragment[] memory fragments = new QueryFragment[](3);
     fragments[0] = QueryFragment(
       QueryType.HasValue,
@@ -46,5 +46,26 @@ library LibPod {
       BuildIndex.set(buildIndexEntity, 0);
       return buildIndexEntity;
     }
+  }
+
+  /**
+   * @dev Increments global (for all machines in the pod) build index, and sets it for the given machine
+   *
+   * @param _podEntity The identifier for the pod entity.
+   * @param _machineType The type of machine being used.
+   * @param _machineEntity The identifier for the machine entity.
+   */
+  function setMachineBuildIndex(bytes32 _podEntity, MACHINE_TYPE _machineType, bytes32 _machineEntity) internal {
+    // Get build index entity
+    bytes32 buildIndexEntity = _getBuildIndexEntity(_podEntity, _machineType);
+
+    // Increment
+    uint32 newBuildIndex = BuildIndex.get(buildIndexEntity) + 1;
+
+    // Set build index on machine
+    BuildIndex.set(_machineEntity, newBuildIndex);
+
+    // Set global build index
+    BuildIndex.set(buildIndexEntity, newBuildIndex);
   }
 }
