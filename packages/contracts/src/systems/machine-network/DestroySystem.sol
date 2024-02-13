@@ -29,42 +29,12 @@ contract DestroySystem is System {
 
       // Iterate through each incoming connection
       for (uint256 i = 0; i < incomingConnections.length; i++) {
-        bytes32 sourceMachine = incomingConnections[i];
-        if (sourceMachine != bytes32(0)) {
-          // Get outgoing connections of the source machine
-          bytes32[] memory sourceOutgoingConnections = OutgoingConnections.get(sourceMachine);
-
-          // Iterate through the target machine's outgoing connections
-          for (uint256 j = 0; j < sourceOutgoingConnections.length; j++) {
-            if (sourceOutgoingConnections[j] == _machineEntity) {
-              // Remove the reference to the destroyed machine
-              sourceOutgoingConnections[j] = bytes32(0);
-              // Update the source machine's outgoing connections
-              OutgoingConnections.set(sourceMachine, sourceOutgoingConnections);
-              break;
-            }
-          }
-        }
+        _removeOutgoingConnection(incomingConnections[i], _machineEntity);
       }
 
       // Iterate through each outgoing connection
       for (uint256 i = 0; i < outgoingConnections.length; i++) {
-        bytes32 targetMachine = outgoingConnections[i];
-        if (targetMachine != bytes32(0)) {
-          // Get incoming connections of the target machine
-          bytes32[] memory targetIncomingConnections = IncomingConnections.get(targetMachine);
-
-          // Iterate through the target machine's incoming connections
-          for (uint256 j = 0; j < targetIncomingConnections.length; j++) {
-            if (targetIncomingConnections[j] == _machineEntity) {
-              // Remove the reference to the destroyed machine
-              targetIncomingConnections[j] = bytes32(0);
-              // Update the target machine's incoming connections
-              IncomingConnections.set(targetMachine, targetIncomingConnections);
-              break;
-            }
-          }
-        }
+        _removeIncomingConnection(outgoingConnections[i], _machineEntity);
       }
     }
 
@@ -73,5 +43,35 @@ contract DestroySystem is System {
 
     // Remove it from the list of machines
     MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));
+  }
+
+  function _removeOutgoingConnection(bytes32 _sourceMachine, bytes32 _connectedMachine) internal {
+    if (_sourceMachine == bytes32(0)) {
+      return;
+    }
+    // Iterate through the source machine's outgoing connections
+    uint256 length = OutgoingConnections.length(_sourceMachine);
+    for (uint256 i = 0; i < length; i++) {
+      if (OutgoingConnections.getItem(_sourceMachine, i) == _connectedMachine) {
+        // Remove the reference to the destroyed machine
+        OutgoingConnections.update(_sourceMachine, i, bytes32(0));
+        break;
+      }
+    }
+  }
+
+  function _removeIncomingConnection(bytes32 _targetMachine, bytes32 _connectedMachine) internal {
+    if (_targetMachine == bytes32(0)) {
+      return;
+    }
+    // Iterate through the source machine's incoming connections
+    uint256 length = IncomingConnections.length(_targetMachine);
+    for (uint256 i = 0; i < length; i++) {
+      if (IncomingConnections.getItem(_targetMachine, i) == _connectedMachine) {
+        // Remove the reference to the destroyed machine
+        IncomingConnections.update(_targetMachine, i, bytes32(0));
+        break;
+      }
+    }
   }
 }
