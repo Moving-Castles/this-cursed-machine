@@ -1,4 +1,4 @@
-import { MACHINE_TYPE, PORT_INDEX } from "../state/enums"
+import { MACHINE_TYPE, PORT_INDEX } from "../state/base/enums"
 import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { COMMAND, TerminalType, OutputType } from "../Terminal/types"
-  import { SYMBOLS } from "../Terminal"
-  import { typeWriteToTerminal } from "../Terminal/functions/writeToTerminal"
+  import { COMMAND, TerminalType, OutputType } from "../Pod/Terminal/types"
+  import { SYMBOLS } from "../Pod/Terminal"
+  import { typeWriteToTerminal } from "../Pod/Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { playerEntity } from "../../modules/state"
+  import { player } from "../../modules/state/base/stores"
 
   const dispatch = createEventDispatcher()
 
-  import Terminal from "../Terminal/Terminal.svelte"
+  import Terminal from "../Pod/Terminal/Terminal.svelte"
 
   let terminalComponent: any
   let narrativeIndex = 0
@@ -35,17 +35,17 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    // if ($playerEntity && $playerEntity.level > Object.keys($levels).length) {
+    // if ($player && $player.level > Object.keys($levels).length) {
     //   await typeWriteToTerminal(
     //     OutputType.SPECIAL,
-    //     `Welcome back ${$playerEntity.name ? $playerEntity.name : "stump"}...`,
+    //     `Welcome back ${$player.name ? $player.name : "stump"}...`,
     //     SYMBOLS[7],
     //     10,
     //     1000,
     //   )
     //   dispatch("completed")
     // } else
-    if ($playerEntity && $playerEntity.carriedBy) {
+    if ($player?.carriedBy) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
         "Welcome back...",

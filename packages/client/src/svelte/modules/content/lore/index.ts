@@ -1,4 +1,4 @@
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../../state/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "../../state/base/enums"
 
 const machineInformation = {
   NONE: "Does not exist",

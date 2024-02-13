@@ -17,6 +17,8 @@ export default mudConfig({
             valueSchema: {
                 tokenAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
+                scaleDown: "uint32", // Used to scale down the amounts in the UI
+                flowRate: "uint32", // Amount flowing from the inlet
             },
             dataStruct: true,
         },

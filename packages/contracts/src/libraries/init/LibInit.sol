@@ -3,11 +3,14 @@ pragma solidity >=0.8.24;
 import { GameConfig, GameConfigData, TutorialOrders } from "../../codegen/index.sol";
 import { LibOrder } from "../LibOrder.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
+import { FLOW_RATE } from "../../constants.sol";
 
 library LibInit {
   function init(address tokenAddress) internal {
     // Set game config
-    GameConfig.set(GameConfigData({ tokenAddress: tokenAddress, globalSpawnIndex: 0 }));
+    GameConfig.set(
+      GameConfigData({ tokenAddress: tokenAddress, globalSpawnIndex: 0, scaleDown: 100, flowRate: FLOW_RATE })
+    );
 
     // Create tutorial orders
     MATERIAL_TYPE[] memory goalMaterials = new MATERIAL_TYPE[](5);
@@ -18,16 +21,16 @@ library LibInit {
     goalMaterials[4] = MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP;
 
     uint32[] memory goalAmounts = new uint32[](5);
-    goalAmounts[0] = 20000;
-    goalAmounts[1] = 50000;
-    goalAmounts[2] = 50000;
-    goalAmounts[3] = 100000;
-    goalAmounts[4] = 50000;
+    goalAmounts[0] = 2000;
+    goalAmounts[1] = 5000;
+    goalAmounts[2] = 5000;
+    goalAmounts[3] = 10000;
+    goalAmounts[4] = 5000;
 
     bytes32[] memory tutorialOrders = new bytes32[](5);
 
     for (uint i; i < 5; i++) {
-      tutorialOrders[i] = LibOrder.create(MATERIAL_TYPE.BUG, 200000, goalMaterials[i], goalAmounts[i], true, 0, 0, 0);
+      tutorialOrders[i] = LibOrder.create(MATERIAL_TYPE.BUG, 20000, goalMaterials[i], goalAmounts[i], true, 0, 0, 0);
     }
 
     TutorialOrders.set(tutorialOrders);

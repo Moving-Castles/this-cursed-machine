@@ -1,19 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { TerminalType, OutputType } from "../Terminal/types"
-  import { SYMBOLS } from "../Terminal"
+  import { TerminalType, OutputType } from "../Pod/Terminal/types"
+  import { SYMBOLS } from "../Pod/Terminal"
   import {
     typeWriteToTerminal,
     writeToTerminal,
-  } from "../Terminal/functions/writeToTerminal"
+  } from "../Pod/Terminal/functions/writeToTerminal"
   import { narrative } from "./narrative"
-  import { playerEntity } from "../../modules/state"
+  import { player } from "../../modules/state/base/stores"
 
   const dispatch = createEventDispatcher()
 
   let terminalComponent: any
 
-  import Terminal from "../Terminal/Terminal.svelte"
+  import Terminal from "../Pod/Terminal/Terminal.svelte"
 
   function isValidName(name: string): boolean {
     // Regex to check for at least one numeral
@@ -44,7 +44,7 @@
 
   onMount(async () => {
     // Skip intro if player is completed or spawned
-    if ($playerEntity && $playerEntity.level > 8) {
+    if ($player && $player.level > 8) {
       await typeWriteToTerminal(
         OutputType.SPECIAL,
         `Loading dashboard...`,

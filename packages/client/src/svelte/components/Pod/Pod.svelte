@@ -1,29 +1,24 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { playerEntity } from "../../modules/state"
+  import { player } from "../../modules/state/base/stores"
   import { playSound } from "../../modules/sound"
 
   import { showMap } from "../../modules/ui/stores"
 
-  import Terminal from "../Terminal/Terminal.svelte"
-  import Graph from "../Graph/Graph.svelte"
-  // import Graph from "../Graph2/Graph.svelte"
-  import Map from "../Map/Map.svelte"
-  import DepotsBox from "../Depots/DepotsBox.svelte"
-  import OrderBar from "./OrderBar.svelte"
-  import InfoBar from "./InfoBar.svelte"
-  import ModeBar from "./ModeBar.svelte"
+  import Terminal from "./Terminal/Terminal.svelte"
+  import Graph from "./Graph/Graph.svelte"
+  // import Graph from "./Graph2/Graph.svelte"
+  import Map from "./Map/Map.svelte"
+  import DepotsBox from "./Depots/DepotsBox.svelte"
+  import OrderBar from "./Bars/OrderBar.svelte"
+  import InfoBar from "./Bars/InfoBar.svelte"
+  import ModeBar from "./Bars/ModeBar.svelte"
 
-  import Tooltips from "../Tooltip/Tooltips.svelte"
+  import Tooltips from "./Tooltip/Tooltips.svelte"
 
   let terminalComponent: any
 
-  // Levels are done, show the dashboard
-  // $: if ($playerEntity.level > Object.keys($levels).length) {
-  //   dispatch("completed")
-  // }
-
-  const handleCommand = async (e: any) => {
+  const handleCommand = async () => {
     terminalComponent.resetInput()
   }
 
@@ -36,7 +31,7 @@
   <Map />
 {/if}
 
-{#if $playerEntity.carriedBy}
+{#if $player?.carriedBy}
   <div class="bg">
     <div class="split-screen">
       <div class="left-col">
@@ -52,7 +47,7 @@
           />
         </div>
       </div>
-      {#if $playerEntity}
+      {#if $player}
         <div class="right-col">
           <div class="status-bar">
             <OrderBar />

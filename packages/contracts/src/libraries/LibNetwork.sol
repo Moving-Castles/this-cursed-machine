@@ -41,8 +41,10 @@ library LibNetwork {
     connectedDepots[2] = DepotConnection.get(fixedEntities.outlet);
 
     // Abort if neither inlets are connected to depot or if outlet is not connected to depot
-    if ((connectedDepots[0] == bytes32(0) && connectedDepots[1] == bytes32(0)) || connectedDepots[2] == bytes32(0))
+    if ((connectedDepots[0] == bytes32(0) && connectedDepots[1] == bytes32(0)) || connectedDepots[2] == bytes32(0)) {
+      LastResolved.set(_podEntity, block.number);
       return;
+    }
 
     // Iterate until all machines in the network are resolved
     while (counter.resolved < machines.length) {
@@ -61,7 +63,7 @@ library LibNetwork {
           // Get material from depot
           MATERIAL_TYPE materialType = MaterialType.get(connectedDepots[depotIndex]);
 
-          // Mark as resolved and abort if inlet is empty
+          // Mark as resolved and continue if inlet is empty
           if (materialType == MATERIAL_TYPE.NONE) {
             resolvedNodes[counter.resolved] = node;
             counter.resolved += 1;
@@ -115,6 +117,8 @@ library LibNetwork {
             currentOutputs[0]
           );
           // Once we have written to output we are done
+          // Update LastResolved on pod entity
+          LastResolved.set(_podEntity, block.number);
           return;
         }
 

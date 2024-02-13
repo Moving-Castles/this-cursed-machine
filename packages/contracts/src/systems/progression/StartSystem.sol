@@ -5,6 +5,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
+import { NUMBER_OF_DEPOTS } from "../../constants.sol";
 
 contract StartSystem is System {
   function start() public returns (bytes32) {
@@ -33,8 +34,8 @@ contract StartSystem is System {
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.push(podEntity, outletEntity);
 
-    // Create depot
-    bytes32[] memory depotsInPod = new bytes32[](6);
+    // Create depots
+    bytes32[] memory depotsInPod = new bytes32[](NUMBER_OF_DEPOTS);
     for (uint i; i < depotsInPod.length; i++) {
       depotsInPod[i] = LibDepot.create(podEntity);
     }

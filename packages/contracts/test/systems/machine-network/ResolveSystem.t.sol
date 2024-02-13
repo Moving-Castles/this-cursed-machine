@@ -190,4 +190,63 @@ contract ResolveSystemTest is BaseTest {
 
     checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
   }
+
+  function testLastResolveValueIsUpdated() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Wait
+    vm.roll(block.number + 10);
+
+    // Attach depot 0 to inlet
+    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+
+    // Attach depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+
+    // Connect inlet to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (piss) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Check that LastResolved was updated
+    assertEq(LastResolved.get(podEntity), block.number);
+
+    // * * * * * * * * * * *
+
+    // Wait
+    vm.roll(block.number + 10);
+
+    // Detach depot 1 from outlet
+    world.detachDepot(MACHINE_TYPE.OUTLET);
+
+    // Check that LastResolved was updated
+    assertEq(LastResolved.get(podEntity), block.number);
+
+    // * * * * * * * * * * *
+
+    // Wait
+    vm.roll(block.number + 10);
+
+    // Attach depot 1 to outlet
+    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+
+    // Check that LastResolved was updated
+    assertEq(LastResolved.get(podEntity), block.number);
+
+    // * * * * * * * * * * *
+
+    // Wait
+    vm.roll(block.number + 10);
+
+    // Disconnect inlet from player
+    world.disconnect(inletEntities[0], PORT_INDEX.FIRST);
+
+    // Check that LastResolved was updated
+    assertEq(LastResolved.get(podEntity), block.number);
+
+    vm.stopPrank();
+  }
 }

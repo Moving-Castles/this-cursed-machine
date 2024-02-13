@@ -1,5 +1,5 @@
 import { fly } from "svelte/transition"
-import { stepsEasing } from "../../utils/misc"
+import { stepsEasing } from "../../utils"
 import { get } from "svelte/store"
 import { linear, expoIn } from "svelte/easing"
 import { graphPulse } from "../../ui/stores"

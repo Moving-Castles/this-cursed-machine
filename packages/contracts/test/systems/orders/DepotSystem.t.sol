@@ -4,6 +4,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
+import { NUMBER_OF_DEPOTS } from "../../../src/constants.sol";
 
 contract DepotSystemTest is BaseTest {
   bytes32 playerEntity;
@@ -35,7 +36,7 @@ contract DepotSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    assertEq(depotsInPod.length, 6);
+    assertEq(depotsInPod.length, NUMBER_OF_DEPOTS);
 
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
 

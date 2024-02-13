@@ -7,11 +7,12 @@
   } from "./modules/systems"
   import { network, initBlockListener } from "./modules/network"
   import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { initStateSimulator } from "./modules/simulator/networkResolver"
+  import { initStateSimulator } from "./modules/state/resolver"
   import { initStaticContent } from "./modules/content"
   import { initSound } from "./modules/sound"
-  import { clearTerminalOutput } from "./components/Terminal/functions/helpers"
-  import { UIState, UI, mouseX, mouseY } from "./modules/ui/stores"
+  import { clearTerminalOutput } from "./components/Pod/Terminal/functions/helpers"
+  import { UIState, mouseX, mouseY } from "./modules/ui/stores"
+  import { UI } from "./modules/ui/enums"
   import { messageToStumps } from "./modules/ui"
   import { playSound } from "./modules/sound"
 
@@ -67,7 +68,7 @@
     // Write block numbers to svelte store and alert on lost connection
     initBlockListener()
 
-    // Create systems to listen to changes to components in our namespace
+    // Create systems to listen to changes to game-specific tables
     for (const componentKey of mudLayer.tableKeys) {
       createComponentSystem(componentKey)
     }

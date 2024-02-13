@@ -1,8 +1,7 @@
 import { get, writable } from "svelte/store"
 import { network } from "../network"
-import { players } from "../state"
-import { getUniqueValues } from "../utils/misc"
-import { padAddress } from "../utils/misc"
+import { players } from "../state/base/stores"
+import { getUniqueValues, padAddress } from "../utils"
 
 // --- TYPES -------------------------------------------------------------------
 
