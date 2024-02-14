@@ -94,9 +94,9 @@ contract OrderSystem is System {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CurrentOrder.get(podEntity) == bytes32(0), "order in progress");
-    require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
+    require(!Tutorial.get(playerEntity), "player in tutorial");
     require(!Tutorial.get(_orderEntity), "order is tutorial");
+    require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
 
     // todo: check that the order is still valid
     // todo: check that the player has not already completed order
