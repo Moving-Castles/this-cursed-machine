@@ -1,25 +1,20 @@
 import { derived } from "svelte/store"
 import { EMPTY_CONNECTION, capAtZero, deepClone } from "../../utils"
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
-import type { SimulatedEntities, Connection } from "./types"
+import type { SimulatedEntities, SimulatedDepots, SimulatedMachines, Connection } from "./types"
 import { machines, depots, playerPod } from "../base/stores"
 import { patches } from "../resolver/patches/stores"
 import { blocksSinceLastResolution } from "../resolver/stores"
 
-export function processPatches(field: "inputs" | "outputs", simulated: SimulatedEntities, key: string, patch: any): SimulatedEntities {
+export function processPatches(field: "inputs" | "outputs", simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
     // Early return if conditions are not met, without modifying the original 'simulated' object.
-    if (!patch[field] || !simulated[key]) return simulated;
+    if (!patch[field] || !simulated[key]) return simulated as SimulatedMachines;
 
     // Create a deep copy of 'simulated' to avoid mutating the original object.
-    const simulatedCopy = deepClone(simulated);
+    const simulatedCopy = deepClone(simulated) as SimulatedMachines;
 
     // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.
     const updatedEntity = { ...simulatedCopy[key], [field]: [...patch[field]] };
-
-    // Iterate over each input/output in the patch and update the 'product' property.
-    patch[field].forEach((io: any) => {
-        updatedEntity.product = io.materialType;
-    });
 
     // Update the entity in the simulated copy with the new changes.
     simulatedCopy[key] = updatedEntity;
@@ -28,12 +23,12 @@ export function processPatches(field: "inputs" | "outputs", simulated: Simulated
     return simulatedCopy;
 }
 
-export function applyPatches(machines: Machines, patches: SimulatedEntities): SimulatedEntities {
+export function applyPatches(machines: Machines, patches: SimulatedEntities): SimulatedMachines {
     // Create deep copy to avoid accidentally mutating the original object.
     const patchesCopy = deepClone(patches);
     const machinesCopy = deepClone(machines);
 
-    let simulatedMachines: SimulatedEntities = Object.fromEntries([...Object.entries(machinesCopy)])
+    let simulatedMachines: SimulatedMachines = Object.fromEntries([...Object.entries(machinesCopy)])
 
     const filteredPatches = Object.entries(patchesCopy).filter(([_, patch]) => !patch.depot)
 
@@ -47,7 +42,7 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
     return simulatedMachines
 }
 
-export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedEntities {
+export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedDepots {
     // Create deep copy to avoid accidentally mutating the original object.
     const initialDepotsCopy = deepClone(depots);
     const patchesCopy = deepClone(patches);
@@ -57,7 +52,7 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
     // TODO: this, and many other things, needs to be reworked to support multiple inlets
     const inletDepot = Object.values(initialDepotsCopy).find(depot => depot.depotConnection === playerPodCopy.fixedEntities.inlets[0])
 
-    let simulatedDepots: SimulatedEntities = Object.fromEntries([...Object.entries(initialDepotsCopy)])
+    let simulatedDepots: SimulatedDepots = Object.fromEntries([...Object.entries(initialDepotsCopy)])
 
     const filteredPatches = Object.entries(patchesCopy).filter(([_, patch]) => patch.depot)
 

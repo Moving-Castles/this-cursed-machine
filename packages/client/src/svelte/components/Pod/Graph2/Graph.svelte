@@ -1,25 +1,37 @@
 <script lang="ts">
-  import { graphState } from "./graphState"
-  import { GRID } from "./constants"
-  import type { GraphState } from "./types"
+  import {
+    simulatedMachines,
+    simulatedConnections,
+  } from "../../../modules/state/simulated/stores"
+  import type { Connection } from "../../../modules/state/simulated/types"
+  import type { GraphMachines } from "./types"
+  import Grid from "./Grid/Grid.svelte"
+  import Machine from "./Machine/Machine.svelte"
+  import { createLayout } from "./layout"
 
-  let currentGraphState: GraphState
+  // $: console.log("$simulatedMachines", $simulatedMachines)
+  // $: console.log("$simulatedConnections", $simulatedConnections)
 
-  graphState.subscribe(newGraphState => {
-    currentGraphState = newGraphState
-  })
+  let graphMachines: GraphMachines = {}
+  let graphConnections: Connection[] = []
+
+  // Calculate the new layout based on new and old state
+  $: ({ graphMachines, graphConnections } = createLayout(
+    $simulatedMachines,
+    $simulatedConnections,
+    graphMachines,
+    graphConnections,
+  ))
 </script>
 
 <div class="graph">
   <div class="grid">
-    <div class="top"></div>
-    {#each Array(GRID.HEIGHT) as _, _}
-      <div class="row">
-        {#each Array(GRID.WIDTH) as _, _}
-          <div class="cell"></div>
-        {/each}
-      </div>
-    {/each}
+    <div class="top">
+      {#each Object.values(graphMachines) as machine}
+        <Machine {machine} />
+      {/each}
+    </div>
+    <Grid />
   </div>
 </div>
 
@@ -33,6 +45,9 @@
     align-items: center;
     position: relative;
 
+    --cellHeight: 55px;
+    --cellWidth: 55px;
+
     .grid {
       position: relative;
 
@@ -43,18 +58,6 @@
         width: 100%;
         height: 100%;
         background: rgba(255, 0, 0, 0.5);
-      }
-
-      .row {
-        width: 100%;
-        display: flex;
-
-        .cell {
-          width: 55px;
-          height: 55px;
-          background: white;
-          border: 0.5px solid grey;
-        }
       }
     }
   }

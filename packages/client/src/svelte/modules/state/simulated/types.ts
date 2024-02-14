@@ -1,12 +1,5 @@
 import { Product } from "../resolver/patches/types"
 
-export type Connection = {
-    id: string
-    sourceMachine: string
-    targetMachine: string
-    product: Product
-}
-
 type IntermediaryState = {
     depot?: boolean
     inputs?: Product[]
@@ -14,7 +7,24 @@ type IntermediaryState = {
 }
 
 export type SimulatedEntity = Entity & IntermediaryState
+export type SimulatedMachine = Machine & IntermediaryState
+export type SimulatedDepot = Depot & IntermediaryState
 
 export type SimulatedEntities = {
     [key: string]: SimulatedEntity
+}
+
+export type SimulatedMachines = {
+    [key: string]: SimulatedMachine
+}
+
+export type SimulatedDepots = {
+    [key: string]: SimulatedDepot
+}
+
+export type Connection = {
+    id: string
+    sourceMachine: string
+    targetMachine: string
+    product: Product
 }

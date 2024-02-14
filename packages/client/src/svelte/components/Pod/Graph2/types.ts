@@ -1,23 +1,12 @@
+import { SimulatedMachine } from "../../../modules/state/simulated/types"
 
-export enum MACHINE_STATE {
-    IDLE,
-    CONNECTED,
-    RUNNING
+export type Position = {
+    x: number
+    y: number
 }
 
-export type GraphMachine = Machine & {
-    id: string,
-    x: number,
-    y: number,
-    state: MACHINE_STATE
-}
+export type GraphMachine = SimulatedMachine & Position
 
-export type GraphConnection = {
-    from: string,
-    to: string
+export type GraphMachines = {
+    [key: string]: GraphMachine
 }
-
-export type GraphState = {
-    machines: GraphMachine[],
-    connections: any[]
-};
