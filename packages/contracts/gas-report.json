@@ -1,8 +1,62 @@
 [
   {
+    "file": "test/systems/machine-network/BuildSystem.t.sol",
+    "test": "testBuild",
+    "name": "Build splitter",
+    "gasUsed": 285310
+  },
+  {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect player to splitter",
-    "gasUsed": 113444
+    "gasUsed": 120370
+  },
+  {
+    "file": "test/systems/machine-network/DestroySystem.t.sol",
+    "test": "testDestroy",
+    "name": "Destroy splitter",
+    "gasUsed": 122143
+  },
+  {
+    "file": "test/systems/machine-network/DisconnectSystem.t.sol",
+    "test": "testDisconnect",
+    "name": "Disconnect player from splitter",
+    "gasUsed": 70299
+  },
+  {
+    "file": "test/systems/machine-network/ResolveSystem.t.sol",
+    "test": "testResolve",
+    "name": "Resolve",
+    "gasUsed": 133598
+  },
+  {
+    "file": "test/systems/orders/DepotSystem.t.sol",
+    "test": "testClearDepot",
+    "name": "Clear depot",
+    "gasUsed": 39818
+  },
+  {
+    "file": "test/systems/orders/DepotSystem.t.sol",
+    "test": "testDetachDepot",
+    "name": "Detach depot",
+    "gasUsed": 57448
+  },
+  {
+    "file": "test/systems/orders/DepotSystem.t.sol",
+    "test": "testattachDepot",
+    "name": "Attach depot",
+    "gasUsed": 114295
+  },
+  {
+    "file": "test/systems/progression/SpawnSystem.t.sol",
+    "test": "testSpawn",
+    "name": "Spawn",
+    "gasUsed": 214078
+  },
+  {
+    "file": "test/systems/progression/SpawnSystem.t.sol",
+    "test": "testSpawnAndStart",
+    "name": "Start",
+    "gasUsed": 1363430
   }
 ]

@@ -11,6 +11,7 @@ import { Amount, AmountTableId } from "./tables/Amount.sol";
 import { Name, NameTableId } from "./tables/Name.sol";
 import { CarriedBy, CarriedByTableId } from "./tables/CarriedBy.sol";
 import { BuildIndex, BuildIndexTableId } from "./tables/BuildIndex.sol";
+import { BuildTracker, BuildTrackerTableId } from "./tables/BuildTracker.sol";
 import { SpawnIndex, SpawnIndexTableId } from "./tables/SpawnIndex.sol";
 import { Tutorial, TutorialTableId } from "./tables/Tutorial.sol";
 import { TutorialLevel, TutorialLevelTableId } from "./tables/TutorialLevel.sol";

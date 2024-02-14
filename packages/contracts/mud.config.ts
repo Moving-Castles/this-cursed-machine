@@ -1,4 +1,4 @@
-import { mudConfig, resolveTableId } from "@latticexyz/world/register";
+import { mudConfig } from "@latticexyz/world/register";
 import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, MATERIAL_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
 
 export const enums = {
@@ -30,8 +30,9 @@ export default mudConfig({
         // ...
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in
-        BuildIndex: "uint32", // Index of the machines in the pod, used by machine type
-        SpawnIndex: "uint32",
+        BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
+        BuildTracker: "uint32[]", // How many machines of each type have been built in pod since its creation?
+        SpawnIndex: "uint32", // How many players have spawned?
         // ...
         Tutorial: "bool",
         TutorialLevel: "uint32",
@@ -80,11 +81,6 @@ export default mudConfig({
         }
     },
     modules: [
-        {
-            name: "KeysWithValueModule",
-            root: true,
-            args: [resolveTableId("CarriedBy")],
-        },
         {
             name: "UniqueEntityModule",
             root: true,

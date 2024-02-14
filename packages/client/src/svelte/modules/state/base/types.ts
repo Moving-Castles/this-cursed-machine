@@ -15,6 +15,7 @@ declare global {
     name?: string
     carriedBy?: string
     buildIndex?: number
+    buildTracker?: number[]
     spawnIndex?: number
     tutorial?: boolean
     tutorialLevel?: number
@@ -71,6 +72,7 @@ declare global {
     lastResolved: number
     machinesInPod: string[]
     depotsInPod: string[]
+    buildTracker: number[]
     currentOrder: string
     fixedEntities: FixedEntities
   }

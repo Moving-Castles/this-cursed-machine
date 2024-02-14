@@ -171,7 +171,7 @@
       OutputType.SPECIAL,
       "From: " +
         machineTypeToLabel(sourceMachineEntity.machineType) +
-        (sourceMachineEntity.buildIndex
+        (sourceMachineEntity.buildIndex !== undefined
           ? " #" + sourceMachineEntity.buildIndex
           : ""),
       true,
@@ -215,7 +215,7 @@
       OutputType.SPECIAL,
       "To: " +
         machineTypeToLabel(targetMachineEntity.machineType) +
-        (targetMachineEntity.buildIndex
+        (targetMachineEntity.buildIndex !== undefined
           ? " #" + targetMachineEntity.buildIndex
           : ""),
       true,

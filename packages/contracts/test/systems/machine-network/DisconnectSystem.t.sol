@@ -25,7 +25,9 @@ contract DiconnectSystemTest is BaseTest {
     assertEq(IncomingConnections.get(splitterEntity)[0], playerEntity);
 
     // Disconnect player from splitter
+    startGasReport("Disconnect player from splitter");
     world.disconnect(playerEntity, PORT_INDEX.FIRST);
+    endGasReport();
 
     // Check that the connection was destroyed
     assertEq(OutgoingConnections.get(playerEntity)[0], bytes32(0));

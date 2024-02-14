@@ -77,7 +77,9 @@ contract ResolveSystemTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Resolve
+    startGasReport("Resolve");
     world.resolve();
+    endGasReport();
 
     vm.stopPrank();
 

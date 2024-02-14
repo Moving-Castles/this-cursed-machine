@@ -1,6 +1,5 @@
 enum ENTITY_TYPE {
     NONE,
-    BUILD_INDEX,
     ORDER,
     POD,
     MACHINE,

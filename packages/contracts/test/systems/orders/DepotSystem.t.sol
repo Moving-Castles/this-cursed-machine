@@ -38,7 +38,9 @@ contract DepotSystemTest is BaseTest {
 
     assertEq(depotsInPod.length, NUMBER_OF_DEPOTS);
 
+    startGasReport("Attach depot");
     world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    endGasReport();
 
     // Inlet is connected to the first depot
     assertEq(DepotConnection.get(inletEntities[0]), depotsInPod[0]);
@@ -62,7 +64,9 @@ contract DepotSystemTest is BaseTest {
     // The first depot is connected to the inlet
     assertEq(DepotConnection.get(depotsInPod[0]), inletEntities[0]);
 
+    startGasReport("Detach depot");
     world.detachDepot(MACHINE_TYPE.INLET);
+    endGasReport();
 
     // Inlet depot is disconnected
     assertEq(DepotConnection.get(inletEntities[0]), bytes32(0));
@@ -102,7 +106,9 @@ contract DepotSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
+    startGasReport("Clear depot");
     world.clearDepot(depotsInPod[0]);
+    endGasReport();
 
     vm.stopPrank();
   }

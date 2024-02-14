@@ -106,7 +106,7 @@ function createSelectOptionsInspect(): SelectOption[] {
     selectOptions.push({
       label:
         machineTypeToLabel(machine.machineType) +
-        (machine.buildIndex ? " #" + machine.buildIndex : ""),
+        (machine.buildIndex !== undefined ? " #" + machine.buildIndex : ""),
       value: machineId,
     })
   })
@@ -124,7 +124,7 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   const machines = availableMachines(direction)
 
   selectOptions = machines.map(([address, machine]) => ({
-    label: machineTypeToLabel(machine.machineType) + (machine.buildIndex ? "#" + machine.buildIndex : ""),
+    label: machineTypeToLabel(machine.machineType) + (machine.buildIndex !== undefined ? "#" + machine.buildIndex : ""),
     value: address,
   }))
 
@@ -146,7 +146,7 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     const sourceMachine = machines[connection.sourceMachine]
     const targetMachine = machines[connection.targetMachine]
     const label = `${machineTypeToLabel(sourceMachine.machineType)
-      } ${sourceMachine?.buildIndex ?? ""
+      } ${sourceMachine?.buildIndex !== undefined ?? ""
       } to ${machineTypeToLabel(targetMachine.machineType)} ${targetMachine?.buildIndex ?? ""
       } ${connection?.product
         ? `(${materialTypeToLabel(connection.product.materialType)})`

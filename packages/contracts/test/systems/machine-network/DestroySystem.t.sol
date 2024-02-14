@@ -20,7 +20,9 @@ contract DestroySystemTest is BaseTest {
     // Check that the machine was created
     assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.MACHINE));
 
+    startGasReport("Destroy splitter");
     world.destroy(machineEntity);
+    endGasReport();
 
     // Check that the machine was destroyed
     assertEq(uint8(EntityType.get(machineEntity)), uint8(ENTITY_TYPE.NONE));

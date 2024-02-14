@@ -10,7 +10,9 @@ contract SpawnSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
+    startGasReport("Spawn");
     bytes32 playerEntity = world.spawn();
+    endGasReport();
     vm.stopPrank();
 
     // Check that the player was spawned correctly
@@ -27,7 +29,9 @@ contract SpawnSystemTest is BaseTest {
 
     vm.startPrank(alice);
     bytes32 playerEntity = world.spawn();
+    startGasReport("Start");
     bytes32 podEntity = world.start();
+    endGasReport();
     vm.stopPrank();
 
     assertEq(CarriedBy.get(playerEntity), podEntity);
