@@ -4,13 +4,12 @@ import { attachDepot as sendAttachDepot } from "../../../../modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "../functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "../../../../modules/action/actionSequencer/utils"
 import { playSound } from "../../../../modules/sound";
-import { MACHINE_TYPE, } from "../../../../modules/state/base/enums";
 
-async function execute(depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+async function execute(depotEntity: string, targetEntity: string) {
     try {
         writeToTerminal(OutputType.NORMAL, "Locating depot...")
         // ...
-        const action = sendAttachDepot(depotEntity, machineType)
+        const action = sendAttachDepot(depotEntity, targetEntity)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
@@ -28,7 +27,7 @@ async function execute(depotEntity: string, machineType: MACHINE_TYPE.INLET | MA
     }
 }
 
-export const attachDepot: Command<[depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET]> = {
+export const attachDepot: Command<[depotEntity: string, targetEntity: string]> = {
     id: COMMAND.ATTACH_DEPOT,
     public: true,
     name: "attachDepot",

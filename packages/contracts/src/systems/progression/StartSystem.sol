@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial, BuildIndex, BuildTracker } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial, BuildIndex, BuildTracker, DepotConnection } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_DEPOTS } from "../../constants.sol";
@@ -24,6 +24,7 @@ contract StartSystem is System {
       BuildIndex.set(inletEntities[i], i + 1);
       CarriedBy.set(inletEntities[i], podEntity);
       MachinesInPod.push(podEntity, inletEntities[i]);
+      DepotConnection.set(inletEntities[i], bytes32(0));
     }
 
     // Place player in pod
@@ -34,11 +35,13 @@ contract StartSystem is System {
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.push(podEntity, outletEntity);
+    DepotConnection.set(outletEntity, bytes32(0));
+    BuildIndex.set(outletEntity, 1);
 
     // Create depots
     bytes32[] memory depotsInPod = new bytes32[](NUMBER_OF_DEPOTS);
-    for (uint i; i < depotsInPod.length; i++) {
-      depotsInPod[i] = LibDepot.create(podEntity);
+    for (uint32 i; i < depotsInPod.length; i++) {
+      depotsInPod[i] = LibDepot.create(podEntity, i);
     }
     DepotsInPod.set(podEntity, depotsInPod);
 

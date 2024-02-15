@@ -2,60 +2,99 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection } from "../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
-import { Product } from "../constants.sol";
+import { Product } from "../structs.sol";
 
 library LibDepot {
-  function create(bytes32 podEntity) internal returns (bytes32) {
+  function create(bytes32 _podEntity, uint32 _index) internal returns (bytes32) {
     bytes32 depotEntity = getUniqueEntity();
     EntityType.set(depotEntity, ENTITY_TYPE.DEPOT);
-    CarriedBy.set(depotEntity, podEntity);
+    CarriedBy.set(depotEntity, _podEntity);
     MaterialType.set(depotEntity, MATERIAL_TYPE.NONE);
     Amount.set(depotEntity, 0);
+    BuildIndex.set(depotEntity, _index + 1);
     DepotConnection.set(depotEntity, bytes32(0));
     return depotEntity;
   }
 
   function write(
-    bytes32 _inletDepotEntity,
+    bytes32[2] memory _inletDepotEntities,
     bytes32 _outletDepotEntity,
     uint256 _blocksSinceLastResolution,
     Product memory _output
   ) internal {
-    uint32 cumulativeAmount = _output.amount * uint32(_blocksSinceLastResolution);
+    uint32 cumulativeOutputAmount = _output.amount * uint32(_blocksSinceLastResolution);
 
-    // !!! PROBLEM
-    // We now have two inlets and potentially two inlet depots that affect how much we can produce
-    uint32 inletAmount = Amount.get(_inletDepotEntity);
+    uint32[2] memory inletAmounts = [Amount.get(_inletDepotEntities[0]), Amount.get(_inletDepotEntities[1])];
 
-    uint32 divisor = _output.divisor == 0 ? 1 : _output.divisor;
+    // The divisor keeps track of how much the inlet materials has been diluted by the machines
+    uint32[2] memory consumedInletAmounts = [
+      _output.divisors[0] * cumulativeOutputAmount,
+      _output.divisors[1] * cumulativeOutputAmount
+    ];
 
-    // The divisor keeps track of how much the inlet material has been diluted by the machines
-    uint32 consumedInletAmount = divisor * cumulativeAmount;
+    // Did we exhaust the amount of material the inlets allows us to produce?
+    bool[2] memory exhaustedInletDepots = [
+      consumedInletAmounts[0] >= inletAmounts[0],
+      consumedInletAmounts[0] >= inletAmounts[1]
+    ];
 
-    // Did we exhaust the amount of material the inlet material allows us to produce?
-    bool exhaustedInletDepot = consumedInletAmount >= inletAmount;
+    // DEBUG
+    // for (uint i; i < 2; i++) {
+    //   console.log("inlet depot");
+    //   console.log(i);
+    //   console.logBytes32(_inletDepotEntities[i]);
+    //   console.log("divisor");
+    //   console.log(_output.divisors[i]);
+    //   console.log("inlet amount");
+    //   console.log(inletAmounts[i]);
+    //   console.log("consumed inlet amount");
+    //   console.log(consumedInletAmounts[i]);
+    //   console.log("exhausted inlet depot");
+    //   console.log(exhaustedInletDepots[i]);
+    //   console.log("************");
+    // }
 
-    // Cap output by the amount in inlet depot
-    cumulativeAmount = exhaustedInletDepot ? inletAmount / divisor : cumulativeAmount;
+    // Cap output by the amount in inlet depots
+    cumulativeOutputAmount = capOutput(cumulativeOutputAmount, inletAmounts, _output.divisors);
 
-    // Add if material is same
+    // Write to outlet depot
     if (MaterialType.get(_outletDepotEntity) == _output.materialType) {
-      Amount.set(_outletDepotEntity, Amount.get(_outletDepotEntity) + cumulativeAmount);
+      // Add if material is same
+      Amount.set(_outletDepotEntity, Amount.get(_outletDepotEntity) + cumulativeOutputAmount);
     } else {
+      // Otherwise, replace
       MaterialType.set(_outletDepotEntity, _output.materialType);
-      Amount.set(_outletDepotEntity, cumulativeAmount);
+      Amount.set(_outletDepotEntity, cumulativeOutputAmount);
     }
 
-    // Subtract from inlet depot
-    if (exhaustedInletDepot) {
-      MaterialType.set(_inletDepotEntity, MATERIAL_TYPE.NONE);
-      Amount.set(_inletDepotEntity, 0);
-    } else {
-      Amount.set(_inletDepotEntity, inletAmount - consumedInletAmount);
+    // Subtract from inlet depots
+    for (uint i; i < 2; i++) {
+      if (exhaustedInletDepots[i]) {
+        MaterialType.set(_inletDepotEntities[i], MATERIAL_TYPE.NONE);
+        Amount.set(_inletDepotEntities[i], 0);
+      } else {
+        Amount.set(_inletDepotEntities[i], inletAmounts[i] - consumedInletAmounts[i]);
+      }
+    }
+  }
+
+  function capOutput(
+    uint32 _cumulativeAmount,
+    uint32[2] memory _inletAmounts,
+    uint32[2] memory _divisors
+  ) internal pure returns (uint32) {
+    // OLD calc: cumulativeAmount = exhaustedInletDepot ? inletAmount / divisor : cumulativeAmount;
+    // Find which inlet is the limiting factor
+    // !!! does not seem right as if both are limiting we should cap by the lowest?
+    for (uint i; i < 2; i++) {
+      if (_divisors[i] == 0) continue;
+      if (_cumulativeAmount >= _inletAmounts[i]) {
+        return _inletAmounts[i] / _divisors[i];
+      }
     }
 
-    // @todo: check if depot is full
+    return _cumulativeAmount;
   }
 }

@@ -9,13 +9,13 @@
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect player to splitter",
-    "gasUsed": 120370
+    "gasUsed": 114370
   },
   {
     "file": "test/systems/machine-network/DestroySystem.t.sol",
     "test": "testDestroy",
     "name": "Destroy splitter",
-    "gasUsed": 122143
+    "gasUsed": 116143
   },
   {
     "file": "test/systems/machine-network/DisconnectSystem.t.sol",
@@ -33,19 +33,19 @@
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testClearDepot",
     "name": "Clear depot",
-    "gasUsed": 39818
+    "gasUsed": 39805
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testDetachDepot",
     "name": "Detach depot",
-    "gasUsed": 57448
+    "gasUsed": 52323
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testattachDepot",
     "name": "Attach depot",
-    "gasUsed": 114295
+    "gasUsed": 104506
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -75,6 +75,6 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1363430
+    "gasUsed": 1430498
   }
 ]

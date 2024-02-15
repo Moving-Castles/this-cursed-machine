@@ -5,7 +5,7 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { EntityType, LastResolved, BuildIndex, BuildTracker } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
-import { Product } from "../constants.sol";
+import { Product } from "../structs.sol";
 
 library LibPod {
   function create() internal returns (bytes32) {

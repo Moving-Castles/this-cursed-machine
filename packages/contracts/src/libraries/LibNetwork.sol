@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { console } from "forge-std/console.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, DepotConnection, FixedEntities, FixedEntitiesData } from "../codegen/index.sol";
+import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, DepotConnection, FixedEntities, FixedEntitiesData, BuildIndex } from "../codegen/index.sol";
 import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibPod } from "./LibPod.sol";
 import { LibMachine } from "./LibMachine.sol";
 import { LibDepot } from "./LibDepot.sol";
 import { LibUtils } from "./LibUtils.sol";
-import { Product, FLOW_RATE } from "../constants.sol";
+import { FLOW_RATE } from "../constants.sol";
+import { Product } from "../structs.sol";
 
 library LibNetwork {
   struct Counters {
@@ -58,9 +60,8 @@ library LibNetwork {
 
         // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          // Is it inlet one or two?
-          uint32 depotIndex = node == fixedEntities.inlets[0] ? 0 : 1;
           // Get material from depot
+          uint depotIndex = BuildIndex.get(node) - 1;
           MATERIAL_TYPE materialType = MaterialType.get(connectedDepots[depotIndex]);
 
           // Mark as resolved and continue if inlet is empty
@@ -70,11 +71,14 @@ library LibNetwork {
             continue;
           }
 
+          uint32[2] memory newDivisors;
+          newDivisors[depotIndex] = 1;
+
           inputs[counter.inputs] = Product({
             machineId: node,
             materialType: materialType,
             amount: FLOW_RATE,
-            divisor: 0
+            divisors: newDivisors
           });
           counter.inputs++;
         }
@@ -111,7 +115,7 @@ library LibNetwork {
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
           // Write to depot
           LibDepot.write(
-            connectedDepots[0],
+            [connectedDepots[0], connectedDepots[1]],
             connectedDepots[2],
             block.number - LastResolved.get(_podEntity), // Blocks since last resolved
             currentOutputs[0]

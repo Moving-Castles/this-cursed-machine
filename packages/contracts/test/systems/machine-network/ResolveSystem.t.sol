@@ -13,6 +13,7 @@ contract ResolveSystemTest is BaseTest {
   bytes32[] inletEntities;
   bytes32 outletEntity;
   bytes32[] depotsInPod;
+  FixedEntitiesData fixedEntities;
 
   function setUp() public override {
     super.setUp();
@@ -25,6 +26,8 @@ contract ResolveSystemTest is BaseTest {
 
     inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
+
+    fixedEntities = FixedEntities.get(podEntity);
 
     depotsInPod = DepotsInPod.get(podEntity);
 
@@ -64,13 +67,50 @@ contract ResolveSystemTest is BaseTest {
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to outlet
     world.connect(inletEntities[0], outletEntity, PORT_INDEX.FIRST);
+
+    // Wait
+    uint32 blocksToWait = 10;
+    vm.roll(block.number + blocksToWait);
+
+    // Resolve
+    startGasReport("Resolve");
+    world.resolve();
+    endGasReport();
+
+    vm.stopPrank();
+
+    // uint32 divisor = 1; // Material loss
+
+    // Input
+    assertEq(Amount.get(depotsInPod[0]), 1000);
+    // Output
+    assertEq(Amount.get(depotsInPod[1]), 1000);
+
+    // checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.BUG);
+  }
+
+  function testResolveInlet2() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    uint32 initialInletAmount = Amount.get(depotsInPod[0]);
+
+    // Connect depot 0 to inlet 1
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[1]);
+
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
+
+    // Connect inlet 1 to outlet
+    world.connect(inletEntities[1], outletEntity, PORT_INDEX.FIRST);
 
     // Wait
     uint32 blocksToWait = 10;
@@ -96,10 +136,10 @@ contract ResolveSystemTest is BaseTest {
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 0 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -129,10 +169,10 @@ contract ResolveSystemTest is BaseTest {
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -168,10 +208,10 @@ contract ResolveSystemTest is BaseTest {
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -202,10 +242,10 @@ contract ResolveSystemTest is BaseTest {
     vm.roll(block.number + 10);
 
     // Attach depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Attach depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -222,7 +262,7 @@ contract ResolveSystemTest is BaseTest {
     vm.roll(block.number + 10);
 
     // Detach depot 1 from outlet
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(depotsInPod[1]);
 
     // Check that LastResolved was updated
     assertEq(LastResolved.get(podEntity), block.number);
@@ -233,7 +273,7 @@ contract ResolveSystemTest is BaseTest {
     vm.roll(block.number + 10);
 
     // Attach depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Check that LastResolved was updated
     assertEq(LastResolved.get(podEntity), block.number);

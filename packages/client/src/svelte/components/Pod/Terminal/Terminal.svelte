@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { EMPTY_CONNECTION } from "../../../modules/utils"
+  import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import {
     COMMAND,
@@ -35,6 +37,10 @@
     machineTypeToLabel,
     availablePorts,
   } from "../../../modules/state/simulated"
+  import {
+    playerPod,
+    machines as machinesStore,
+  } from "../../../modules/state/base/stores"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -171,9 +177,8 @@
       OutputType.SPECIAL,
       "From: " +
         machineTypeToLabel(sourceMachineEntity.machineType) +
-        (sourceMachineEntity.buildIndex !== undefined
-          ? " #" + sourceMachineEntity.buildIndex
-          : ""),
+        " #" +
+        sourceMachineEntity.buildIndex,
       true,
       SYMBOLS[11],
     )
@@ -215,9 +220,8 @@
       OutputType.SPECIAL,
       "To: " +
         machineTypeToLabel(targetMachineEntity.machineType) +
-        (targetMachineEntity.buildIndex !== undefined
-          ? " #" + targetMachineEntity.buildIndex
-          : ""),
+        " #" +
+        targetMachineEntity.buildIndex,
       true,
       SYMBOLS[14],
     )
@@ -266,45 +270,56 @@
     // Get depots
     let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
 
-    await writeToTerminal(OutputType.NORMAL, "Store:")
+    await writeToTerminal(OutputType.NORMAL, "Depot:")
 
-    const depotKey = await renderSelect(
+    const depotEntity = await renderSelect(
       selectContainerElement,
       Select,
       sourceSelectOptions,
     )
 
     // Abort if nothing selected
-    if (!depotKey) {
+    if (!depotEntity) {
       handleInvalid("No depot selected")
       return false
     }
 
-    let networkPointSelectOptions: SelectOption[] = []
+    let targetSelectOptions: SelectOption[] = []
 
-    networkPointSelectOptions.push({
-      label: "Inlet",
-      value: MACHINE_TYPE.INLET,
-    })
+    const inlets = get(playerPod).fixedEntities.inlets
+    const outlet = get(playerPod).fixedEntities.outlet
+    const machines = get(machinesStore)
 
-    networkPointSelectOptions.push({
-      label: "Outlet",
-      value: MACHINE_TYPE.OUTLET,
-    })
+    // Add unattached inlets to the options
+    for (const inletEntity of inlets) {
+      if (machines[inletEntity].depotConnection !== EMPTY_CONNECTION) continue
+      targetSelectOptions.push({
+        label: `Inlet #${machines[inletEntity].buildIndex}`,
+        value: inletEntity,
+      })
+    }
 
-    const networkPointType = await renderSelect(
+    // Add outlet if unattached
+    if (machines[outlet].depotConnection === EMPTY_CONNECTION) {
+      targetSelectOptions.push({
+        label: "Outlet",
+        value: outlet,
+      })
+    }
+
+    const targetEntity = await renderSelect(
       selectContainerElement,
       Select,
-      networkPointSelectOptions,
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
-    if (!networkPointType) {
+    if (!targetEntity) {
       handleInvalid("Nothing selected")
       return false
     }
 
-    return [depotKey, networkPointType]
+    return [depotEntity, targetEntity]
   }
 
   const onSubmit = async () => {

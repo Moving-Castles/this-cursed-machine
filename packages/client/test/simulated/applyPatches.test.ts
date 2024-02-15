@@ -58,8 +58,7 @@ test("(1) applyPatches", () => {
                     machineId: "INLET_ONE",
                     materialType: 1
                 }
-            ],
-            product: 1
+            ]
         }
     }
 

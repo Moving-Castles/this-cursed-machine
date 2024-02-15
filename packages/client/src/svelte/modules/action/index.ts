@@ -64,15 +64,15 @@ export function name(name: string) {
   return addToSequencer(WorldFunctions.Name, [name])
 }
 
-export function attachDepot(depotEntity: string, machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
+export function attachDepot(depotEntity: string, targetEntity: string) {
   return addToSequencer(WorldFunctions.AttachDepot, [
     depotEntity,
-    machineType
+    targetEntity
   ])
 }
 
-export function detachDepot(machineType: MACHINE_TYPE.INLET | MACHINE_TYPE.OUTLET) {
-  return addToSequencer(WorldFunctions.DetachDepot, [machineType])
+export function detachDepot(depotEntity: string) {
+  return addToSequencer(WorldFunctions.DetachDepot, [depotEntity])
 }
 
 export function clearDepot(depotEntity: string) {

@@ -14,6 +14,7 @@ contract TutorialLevelsTest is BaseTest {
   bytes32 outletEntity;
   bytes32[] depotsInPod;
   bytes32[] tutorialLevels;
+  FixedEntitiesData fixedEntities;
 
   function setUp() public override {
     super.setUp();
@@ -28,6 +29,8 @@ contract TutorialLevelsTest is BaseTest {
     outletEntity = FixedEntities.get(podEntity).outlet;
 
     depotsInPod = DepotsInPod.get(podEntity);
+
+    fixedEntities = FixedEntities.get(podEntity);
 
     tutorialLevels = TutorialOrders.get();
 
@@ -129,10 +132,10 @@ contract TutorialLevelsTest is BaseTest {
     vm.startPrank(alice);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -146,7 +149,7 @@ contract TutorialLevelsTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Detach depot and resolve
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(fixedEntities.outlet);
 
     vm.stopPrank();
 
@@ -176,10 +179,10 @@ contract TutorialLevelsTest is BaseTest {
     vm.startPrank(alice);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -193,7 +196,7 @@ contract TutorialLevelsTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Detach depot and resolve
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(fixedEntities.outlet);
 
     vm.stopPrank();
 
@@ -223,10 +226,10 @@ contract TutorialLevelsTest is BaseTest {
     vm.startPrank(alice);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -246,7 +249,7 @@ contract TutorialLevelsTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Detach depot and resolve
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(fixedEntities.outlet);
 
     vm.stopPrank();
 
@@ -276,10 +279,10 @@ contract TutorialLevelsTest is BaseTest {
     vm.startPrank(alice);
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
 
     // Build boiler
     bytes32 boilerOne = world.build(MACHINE_TYPE.BOILER);
@@ -302,7 +305,7 @@ contract TutorialLevelsTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Detach depot and resolve
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(fixedEntities.outlet);
 
     vm.stopPrank();
 
@@ -337,10 +340,10 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], MACHINE_TYPE.INLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], MACHINE_TYPE.OUTLET);
+    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
 
     // Build Splitter
     bytes32 splitter = world.build(MACHINE_TYPE.SPLITTER);
@@ -387,7 +390,7 @@ contract TutorialLevelsTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Detach depot and resolve
-    world.detachDepot(MACHINE_TYPE.OUTLET);
+    world.detachDepot(fixedEntities.outlet);
 
     /*
      * + + + + + + + + + + + +

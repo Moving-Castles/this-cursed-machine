@@ -4,6 +4,7 @@
     playerPod,
     depots,
     gameConfig,
+    machines,
   } from "../../../modules/state/base/stores"
   import { blocksSinceLastResolution } from "../../../modules/state/resolver/stores"
   import type { SimulatedEntity } from "../../../modules/state/simulated/types"
@@ -38,7 +39,9 @@
     {MATERIAL_TYPE[$depots[key].materialType]}
   </div>
   <hr />
-  <div>conn.: {getConnectionName(typedDepot.depotConnection)}</div>
+  <div>
+    conn.: {`${getConnectionName(typedDepot.depotConnection)} #${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`}
+  </div>
   <hr />
   {#if $patches[key] && $patches[key].inputs}
     <div>

@@ -44,13 +44,13 @@ test("(1) resolutionSequence", () => {
 
     const expectedSimulatedDepotsAfter10Blocks = {
         DEPOT_ONE: {
-            entityType: 5,
+            entityType: 4,
             materialType: 1,
             amount: 10000,
             depotConnection: 'INLET_ONE'
         },
         DEPOT_TWO: {
-            entityType: 5,
+            entityType: 4,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 5000
@@ -65,13 +65,13 @@ test("(1) resolutionSequence", () => {
 
     const expectedSimulatedDepotsAfter2000Blocks = {
         DEPOT_ONE: {
-            entityType: 5,
+            entityType: 4,
             materialType: 0, // MATERIAL_TYPE.NONE because empty
             amount: 0,
             depotConnection: 'INLET_ONE'
         },
         DEPOT_TWO: {
-            entityType: 5,
+            entityType: 4,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 10000

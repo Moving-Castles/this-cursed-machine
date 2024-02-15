@@ -1,3 +1,4 @@
+import { EMPTY_CONNECTION } from "../../../../modules/utils"
 import { SelectOption, COMMAND, DIRECTION } from "../types"
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../../../../modules/state/base/enums"
 import {
@@ -57,7 +58,7 @@ export function createSelectOptions(
 function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
   let availableMachines: MACHINE_TYPE[] =
-    MACHINES_BY_LEVEL[get(player)?.level || 0]
+    MACHINES_BY_LEVEL[get(player)?.tutorialLevel || 0]
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
@@ -83,8 +84,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
       !FIXED_MACHINE_TYPES.includes(machine.machineType || MACHINE_TYPE.NONE)
     ) {
       selectOptions.push({
-        label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex
-          }`,
+        label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
         value: machineId,
       })
     }
@@ -94,7 +94,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
 }
 
 /**
- * Generates select options for inspecting machines
+ * Generates select options for inspecting machinesBuil
  * This function returns select options for all machines
  * @returns {SelectOption[]} An array of select options representing various machines to inspect, using their machine type as a label and their ID as the value.
  */
@@ -105,8 +105,7 @@ function createSelectOptionsInspect(): SelectOption[] {
   Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
     selectOptions.push({
       label:
-        machineTypeToLabel(machine.machineType) +
-        (machine.buildIndex !== undefined ? " #" + machine.buildIndex : ""),
+        machineTypeToLabel(machine.machineType) + " #" + machine.buildIndex,
       value: machineId,
     })
   })
@@ -124,7 +123,7 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   const machines = availableMachines(direction)
 
   selectOptions = machines.map(([address, machine]) => ({
-    label: machineTypeToLabel(machine.machineType) + (machine.buildIndex !== undefined ? "#" + machine.buildIndex : ""),
+    label: machineTypeToLabel(machine.machineType) + "#" + machine.buildIndex,
     value: address,
   }))
 
@@ -162,32 +161,53 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsClearDepot(): SelectOption[] {
+function createSelectOptionsAttachDepot(): SelectOption[] {
+  let selectOptions: SelectOption[] = [];
+
+  const depots = get(depotsStore);
+
+  // Only depots that are not attached can be attached
+  selectOptions = Object.entries(depots)
+    .filter(([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION)
+    .map(([address, depot]) => ({
+      label: `Depot #${depot.buildIndex}`,
+      value: address,
+    }));
+
+  return selectOptions;
+}
+
+function createSelectOptionsDetachDepot(): SelectOption[] {
+
   let selectOptions: SelectOption[] = []
 
   const depots = get(depotsStore)
 
+  // Only depots that are attached can be detached 
   selectOptions = Object.entries(depots)
-    .map(([address, _], index) => ({
-      label: `Depot #${index + 1}`,
+    .filter(([_, depot]) => depot.depotConnection !== EMPTY_CONNECTION)
+    .map(([address, depot]) => ({
+      label: `Depot #${depot.buildIndex}`,
       value: address,
     }))
 
   return selectOptions
 }
 
-function createSelectOptionsAttachDepot(): SelectOption[] {
-  let selectOptions: SelectOption[] = []
+function createSelectOptionsClearDepot(): SelectOption[] {
+  let selectOptions: SelectOption[] = [];
 
-  const depots = get(depotsStore)
+  const depots = get(depotsStore);
 
+  // Only depots that are not attached be cleared
   selectOptions = Object.entries(depots)
-    .map(([address, _], index) => ({
-      label: `Depot #${index + 1}`,
+    .filter(([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION)
+    .map(([address, depot]) => ({
+      label: `Depot #${depot.buildIndex}`,
       value: address,
-    }))
+    }));
 
-  return selectOptions
+  return selectOptions;
 }
 
 function createSelectOptionsFill(): SelectOption[] {
@@ -196,22 +216,11 @@ function createSelectOptionsFill(): SelectOption[] {
   const depots = get(depotsStore)
 
   selectOptions = Object.entries(depots)
-    .map(([address, _], index) => ({
-      label: `Depot #${index + 1}`,
+    .map(([address, depot]) => ({
+      label: `Depot #${depot.buildIndex}`,
       value: address,
     }))
 
-  return selectOptions
-}
-
-function createSelectOptionsDetachDepot(): SelectOption[] {
-  let selectOptions: SelectOption[] = [{
-    label: "Inlet",
-    value: MACHINE_TYPE.INLET,
-  }, {
-    label: "Outlet",
-    value: MACHINE_TYPE.OUTLET,
-  }]
   return selectOptions
 }
 

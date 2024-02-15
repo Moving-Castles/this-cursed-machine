@@ -106,6 +106,7 @@ declare global {
     carriedBy: string
     amount: number
     materialType: MATERIAL_TYPE
+    buildIndex: number
     depotConnection: string
   }
 
