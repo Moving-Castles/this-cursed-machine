@@ -57,16 +57,16 @@ library LibDepot {
     // }
 
     // Cap output by the amount in inlet depots
-    cumulativeOutputAmount = capOutput(cumulativeOutputAmount, inletAmounts, _output.divisors);
+    uint32 cappedOutputAmount = capOutput(cumulativeOutputAmount, inletAmounts, _output.divisors);
 
     // Write to outlet depot
     if (MaterialType.get(_outletDepotEntity) == _output.materialType) {
       // Add if material is same
-      Amount.set(_outletDepotEntity, Amount.get(_outletDepotEntity) + cumulativeOutputAmount);
+      Amount.set(_outletDepotEntity, Amount.get(_outletDepotEntity) + cappedOutputAmount);
     } else {
       // Otherwise, replace
       MaterialType.set(_outletDepotEntity, _output.materialType);
-      Amount.set(_outletDepotEntity, cumulativeOutputAmount);
+      Amount.set(_outletDepotEntity, cappedOutputAmount);
     }
 
     // Subtract from inlet depots
