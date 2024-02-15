@@ -24,6 +24,35 @@ library LibDepot {
     uint256 _blocksSinceLastResolution,
     Product memory _output
   ) internal {
+
+    //Agnes comments
+    /*
+    // find the lesser inlet amount
+    uint32 lowestInput = _inletAmounts[0]
+
+    if(_inletAmounts[0] > _inletAmounts[1]){
+      lowestInput = _inletAmounts[0]
+    }
+
+    // if this is > than the blocks since last resolution, then capped output amount is blocks since last rewolution
+    // if it is < than the blocks since last resolution, the capped output amount is equal to that
+
+    uint32 cappedBlocks = _blocksSinceLastResolution;
+
+    if(_blocksSinceLastResolution > lowestInput){
+      cappedOutput = lowestInput;
+    }
+
+    uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
+
+    // the amounts on the inputs are now that minus the number of blocks for which output material was being generated
+    for (uint i; i < 2; i++) {
+      if (_divisors[i] == 0) continue;
+      return _inletAmounts[i] = inletAmounts[i] - cappedBlocks;
+    }
+
+    */
+
     uint32 cumulativeOutputAmount = _output.amount * uint32(_blocksSinceLastResolution);
 
     uint32[2] memory inletAmounts = [Amount.get(_inletDepotEntities[0]), Amount.get(_inletDepotEntities[1])];
