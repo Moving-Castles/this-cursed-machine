@@ -64,7 +64,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    uint32 initialInletAmount = Amount.get(depotsInPod[0]);
+    // uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
@@ -117,9 +117,7 @@ contract ResolveSystemTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Resolve
-    startGasReport("Resolve");
     world.resolve();
-    endGasReport();
 
     vm.stopPrank();
 
