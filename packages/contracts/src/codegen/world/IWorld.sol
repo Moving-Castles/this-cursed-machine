@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 
-import { IWarpSystem } from "./IWarpSystem.sol";
+import { IDevSystem } from "./IDevSystem.sol";
 import { IBuildSystem } from "./IBuildSystem.sol";
 import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
@@ -26,7 +26,7 @@ import { IStartSystem } from "./IStartSystem.sol";
  */
 interface IWorld is
   IBaseWorld,
-  IWarpSystem,
+  IDevSystem,
   IBuildSystem,
   IConnectSystem,
   IDestroySystem,

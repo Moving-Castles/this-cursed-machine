@@ -3,8 +3,9 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, TutorialOrders, CarriedBy, DepotsInPod, Amount, MaterialType, Order, Tutorial, Name } from "../../codegen/index.sol";
 import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
+import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
-contract WarpSystem is System {
+contract DevSystem is System {
   /**
    * @dev Used in testing to fast forward the tutorial level. NOTE: disable for production.
    */
@@ -37,5 +38,10 @@ contract WarpSystem is System {
 
     // Give tokens for testing
     LibToken.send(_msgSender(), 1000);
+  }
+
+  function fillDepot(bytes32 _depotEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {
+    MaterialType.set(_depotEntity, _materialType);
+    Amount.set(_depotEntity, _amount);
   }
 }

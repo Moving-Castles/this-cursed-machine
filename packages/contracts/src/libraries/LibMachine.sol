@@ -50,14 +50,12 @@ library LibMachine {
     // Abort if input is not bug
     if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
 
-    uint32[2] memory newDivisors = getNewDivisors(_input);
-
     // Output Piss
     outputs[0] = Product({
       machineId: _input.machineId,
       materialType: MATERIAL_TYPE.PISS,
       amount: _input.amount / 2,
-      divisors: newDivisors
+      inletActive: _input.inletActive
     });
 
     // Output blood
@@ -65,7 +63,7 @@ library LibMachine {
       machineId: _input.machineId,
       materialType: MATERIAL_TYPE.BLOOD,
       amount: _input.amount / 2,
-      divisors: newDivisors
+      inletActive: _input.inletActive
     });
 
     return outputs;
@@ -83,21 +81,19 @@ library LibMachine {
   function splitter(Product memory _input) internal pure returns (Product[] memory _outputs) {
     Product[] memory outputs = new Product[](2);
 
-    uint32[2] memory newDivisors = getNewDivisors(_input);
-
     // Output 1
     outputs[0] = Product({
       machineId: _input.machineId,
       materialType: _input.materialType,
       amount: _input.amount / 2,
-      divisors: newDivisors
+      inletActive: _input.inletActive
     });
     // Output 2
     outputs[1] = Product({
       machineId: _input.machineId,
       materialType: _input.materialType,
       amount: _input.amount / 2,
-      divisors: newDivisors
+      inletActive: _input.inletActive
     });
     return outputs;
   }
@@ -116,6 +112,13 @@ library LibMachine {
       return outputs;
     }
 
+    console.log("_________");
+    console.log("_inputs[0].materialType");
+    console.log(uint32(_inputs[0].materialType));
+    console.log("_inputs[1].materialType");
+    console.log(uint32(_inputs[1].materialType));
+    console.log("_________");
+
     MATERIAL_TYPE resultMaterialType = Recipe.get(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
@@ -124,12 +127,25 @@ library LibMachine {
     // Return the lowest amount
     Product memory lowestAmountProduct = getLowestAmountProduct(_inputs[0], _inputs[1]);
 
+    bool[2] memory combinedInletActive = [
+      _inputs[0].inletActive[0] || _inputs[1].inletActive[0],
+      _inputs[1].inletActive[1] || _inputs[1].inletActive[1]
+    ];
+
+    console.log("combinedInletActive");
+    console.log(combinedInletActive[0]);
+    console.log(combinedInletActive[1]);
+
+    console.log("&&&&&&&&&&&&&&&");
+    console.log("resultMaterialType");
+    console.log(uint32(resultMaterialType));
+    console.log("&&&&&&&&&&&&&&&");
+
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
       materialType: resultMaterialType,
       amount: lowestAmountProduct.amount,
-      // divisor: lowestAmountProduct.divisor
-      divisors: [uint32(0), uint32(0)]
+      inletActive: combinedInletActive
     });
     return outputs;
   }
@@ -147,13 +163,11 @@ library LibMachine {
     MATERIAL_TYPE resultMaterialType = Recipe.get(_machineType, uint256(_input.materialType));
     Product[] memory outputs = new Product[](1);
 
-    uint32[2] memory newDivisors = getNewDivisors(_input);
-
     outputs[0] = Product({
       machineId: _input.machineId,
       materialType: resultMaterialType,
       amount: _input.amount,
-      divisors: newDivisors
+      inletActive: _input.inletActive
     });
     return outputs;
   }
@@ -163,31 +177,5 @@ library LibMachine {
     Product memory _B
   ) internal pure returns (Product memory _lowestAmountProduct) {
     return _A.amount < _B.amount ? _A : _B;
-  }
-
-  function getNewDivisors(Product memory _input) internal pure returns (uint32[2] memory _newDivisors) {
-    /**
-     * input.divisors[i] == 0
-     * __ Input does not come from this inlet, keep divisor at 0
-     *
-     * input.divisors[i] == 1
-     * ___ Input is coming directly from inlet depot, set divisor to 2
-     *
-     * input.divisors[i] > 1
-     * ___ Input has been processed by a machine, increase divisor by 2
-     *
-     **/
-    uint32[2] memory newDivisors;
-    for (uint32 i = 0; i < newDivisors.length; i++) {
-      if (_input.divisors[0] == 0) {
-        newDivisors[i] = 0;
-      } else if (_input.divisors[0] == 1) {
-        newDivisors[i] = 2;
-      } else {
-        newDivisors[i] = _input.divisors[0] + 2;
-      }
-    }
-
-    return newDivisors;
   }
 }

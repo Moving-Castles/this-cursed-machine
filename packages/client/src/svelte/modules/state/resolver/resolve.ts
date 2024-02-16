@@ -75,7 +75,7 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
           machineId: machineKey,
           materialType: materialType,
           amount: FLOW_RATE,
-          divisor: 0
+          inletActive: [true, true]
         })
       }
 

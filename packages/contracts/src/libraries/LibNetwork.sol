@@ -64,6 +64,12 @@ library LibNetwork {
           uint depotIndex = BuildIndex.get(node) - 1;
           MATERIAL_TYPE materialType = MaterialType.get(connectedDepots[depotIndex]);
 
+          console.log("$ $ $ $ $ $ $");
+          console.log("inlet");
+          console.log(depotIndex);
+          console.log(uint32(materialType));
+          console.log("$ $ $ $ $ $ $");
+
           // Mark as resolved and continue if inlet is empty
           if (materialType == MATERIAL_TYPE.NONE) {
             resolvedNodes[counter.resolved] = node;
@@ -71,14 +77,18 @@ library LibNetwork {
             continue;
           }
 
-          uint32[2] memory newDivisors;
-          newDivisors[depotIndex] = 1;
+          bool[2] memory newInletActive;
+          newInletActive[depotIndex] = true;
+
+          console.log("material from depot");
+          console.log(depotIndex);
+          console.log(uint32(materialType));
 
           inputs[counter.inputs] = Product({
             machineId: node,
             materialType: materialType,
             amount: FLOW_RATE,
-            divisors: newDivisors
+            inletActive: newInletActive
           });
           counter.inputs++;
         }
@@ -105,12 +115,21 @@ library LibNetwork {
         // Process the inputs of the machine to get the outputs
         Product[] memory currentOutputs = LibMachine.process(MachineType.get(node), currentInputs);
 
+        for (uint k; k < currentOutputs.length; k++) {
+          console.log("= = = = = =");
+          console.log("currentOutputs");
+          console.log(uint32(currentOutputs[k].materialType));
+          console.log(currentOutputs[k].amount);
+          console.log("= = = = = =");
+        }
+
         // Mark as resolved
         resolvedNodes[counter.resolved] = node;
         counter.resolved += 1;
 
         // Handle outlet
         if (node == fixedEntities.outlet) {
+          console.log("writing to outlet depot");
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
           // Write to depot

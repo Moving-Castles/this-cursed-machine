@@ -135,7 +135,7 @@ contract TutorialLevelsTest is BaseTest {
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -182,7 +182,7 @@ contract TutorialLevelsTest is BaseTest {
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -229,7 +229,7 @@ contract TutorialLevelsTest is BaseTest {
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -282,7 +282,7 @@ contract TutorialLevelsTest is BaseTest {
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Build boiler
     bytes32 boilerOne = world.build(MACHINE_TYPE.BOILER);
@@ -343,7 +343,7 @@ contract TutorialLevelsTest is BaseTest {
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
     // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[0], fixedEntities.outlet);
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
 
     // Build Splitter
     bytes32 splitter = world.build(MACHINE_TYPE.SPLITTER);

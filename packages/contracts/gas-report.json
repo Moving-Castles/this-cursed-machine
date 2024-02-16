@@ -3,31 +3,31 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 285310
+    "gasUsed": 290039
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect player to splitter",
-    "gasUsed": 114370
+    "gasUsed": 115660
   },
   {
     "file": "test/systems/machine-network/DestroySystem.t.sol",
     "test": "testDestroy",
     "name": "Destroy splitter",
-    "gasUsed": 116143
+    "gasUsed": 117441
   },
   {
     "file": "test/systems/machine-network/DisconnectSystem.t.sol",
     "test": "testDisconnect",
     "name": "Disconnect player from splitter",
-    "gasUsed": 70299
+    "gasUsed": 71588
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 133598
+    "gasUsed": 169999
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
@@ -39,31 +39,31 @@
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testDetachDepot",
     "name": "Detach depot",
-    "gasUsed": 52323
+    "gasUsed": 53352
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testattachDepot",
     "name": "Attach depot",
-    "gasUsed": 104506
+    "gasUsed": 105535
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptOrder",
     "name": "Accept order",
-    "gasUsed": 47723
+    "gasUsed": 47722
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testBuy",
     "name": "Buy bugs",
-    "gasUsed": 141510
+    "gasUsed": 141787
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrder",
     "name": "Create order",
-    "gasUsed": 143739
+    "gasUsed": 148481
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
@@ -75,6 +75,6 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1430498
+    "gasUsed": 1668446
   }
 ]
