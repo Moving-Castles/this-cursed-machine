@@ -112,13 +112,6 @@ library LibMachine {
       return outputs;
     }
 
-    console.log("_________");
-    console.log("_inputs[0].materialType");
-    console.log(uint32(_inputs[0].materialType));
-    console.log("_inputs[1].materialType");
-    console.log(uint32(_inputs[1].materialType));
-    console.log("_________");
-
     MATERIAL_TYPE resultMaterialType = Recipe.get(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
@@ -131,15 +124,6 @@ library LibMachine {
       _inputs[0].inletActive[0] || _inputs[1].inletActive[0],
       _inputs[1].inletActive[1] || _inputs[1].inletActive[1]
     ];
-
-    console.log("combinedInletActive");
-    console.log(combinedInletActive[0]);
-    console.log(combinedInletActive[1]);
-
-    console.log("&&&&&&&&&&&&&&&");
-    console.log("resultMaterialType");
-    console.log(uint32(resultMaterialType));
-    console.log("&&&&&&&&&&&&&&&");
 
     outputs[0] = Product({
       machineId: _inputs[0].machineId,

@@ -308,9 +308,6 @@ contract ResolveSystemTest is BaseTest {
     // Connect depot 1 to inlet 1
     world.attachDepot(depotsInPod[1], inletEntities[1]);
 
-    // Connect depot 2 to outlet
-    world.attachDepot(depotsInPod[2], outletEntity);
-
     // Build mixer
     bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
 
@@ -323,6 +320,9 @@ contract ResolveSystemTest is BaseTest {
     // Connect mixer to outlet
     world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
 
+    // Connect depot 2 to outlet
+    world.attachDepot(depotsInPod[2], outletEntity);
+
     // Wait
     uint32 blocksToWait = 9;
     vm.roll(block.number + blocksToWait);
@@ -332,7 +332,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Depot 0 should have 10000 MATERIAL_TYPE.AMMONIA
+    // Depot 0 should have 11000 MATERIAL_TYPE.AMMONIA
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
     assertEq(Amount.get(depotsInPod[0]), 11000);
 
@@ -342,6 +342,109 @@ contract ResolveSystemTest is BaseTest {
 
     // Depot 2 should have 9000 MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP
     assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
+    assertEq(Amount.get(depotsInPod[2]), 9000);
+  }
+
+  function testResolveSplitterMixer() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
+    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
+    // Fill depot 1 with 10000 PURE_FAT
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PURE_FAT);
+
+    // Connect depot 0 to inlet 0
+    world.attachDepot(depotsInPod[0], inletEntities[0]);
+
+    // Connect depot 1 to inlet 1
+    world.attachDepot(depotsInPod[1], inletEntities[1]);
+
+    // Build mixer
+    bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
+
+    // Build splitter
+    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+
+    // Connect inlet 0 (ammonia) to mixer
+    world.connect(inletEntities[0], mixerEntity, PORT_INDEX.FIRST);
+
+    // Connect inlet 1 (pure fat) to splitter
+    world.connect(inletEntities[1], splitterEntity, PORT_INDEX.FIRST);
+
+    // Connect splitter to mixer
+    world.connect(splitterEntity, mixerEntity, PORT_INDEX.FIRST);
+
+    // Connect mixer to outlet
+    world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Connect depot 2 to outlet
+    world.attachDepot(depotsInPod[2], outletEntity);
+
+    // Wait
+    uint32 blocksToWait = 9;
+    vm.roll(block.number + blocksToWait);
+
+    // Resolve
+    world.resolve();
+
+    vm.stopPrank();
+
+    // Depot 0 should have 11000 MATERIAL_TYPE.AMMONIA
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
+    assertEq(Amount.get(depotsInPod[0]), 11000);
+
+    // Depot 1 should have 1000 MATERIAL_TYPE.PURE_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    assertEq(Amount.get(depotsInPod[1]), 1000);
+
+    // Depot 2 should have 4500 MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
+    assertEq(Amount.get(depotsInPod[2]), 4500);
+  }
+
+  function testUnusedInlet() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
+    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
+    // Fill depot 1 with 10000 PURE_FAT
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PURE_FAT);
+
+    // Connect depot 0 to inlet 0
+    world.attachDepot(depotsInPod[0], inletEntities[0]);
+
+    // Connect depot 1 to inlet 1
+    world.attachDepot(depotsInPod[1], inletEntities[1]);
+
+    // Connect inlet 1 (pure fat) to outlet
+    world.connect(inletEntities[1], outletEntity, PORT_INDEX.FIRST);
+
+    // Connect depot 2 to outlet
+    world.attachDepot(depotsInPod[2], outletEntity);
+
+    // Wait
+    uint32 blocksToWait = 9;
+    vm.roll(block.number + blocksToWait);
+
+    // Resolve
+    world.resolve();
+
+    vm.stopPrank();
+
+    // Depot 0 should have 20000 MATERIAL_TYPE.AMMONIA
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
+    assertEq(Amount.get(depotsInPod[0]), 20000);
+
+    // Depot 1 should have 1000 MATERIAL_TYPE.PURE_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    assertEq(Amount.get(depotsInPod[1]), 1000);
+
+    // Depot 2 should have 9000 MATERIAL_TYPE.PURE_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.PURE_FAT));
     assertEq(Amount.get(depotsInPod[2]), 9000);
   }
 }
