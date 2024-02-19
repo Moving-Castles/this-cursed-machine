@@ -18,7 +18,7 @@ const patches = {
         inputs: [
             {
                 amount: 1000,
-                divisor: 0,
+                inletActive: [true, false],
                 machineId: "INLET_ONE",
                 materialType: 1,
             },
@@ -26,7 +26,7 @@ const patches = {
         outputs: [
             {
                 amount: 1000,
-                divisor: 0,
+                inletActive: [true, false],
                 machineId: "INLET_ONE",
                 materialType: 1,
             },
@@ -46,7 +46,7 @@ test("(1) applyPatches", () => {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1
                 }
@@ -54,7 +54,7 @@ test("(1) applyPatches", () => {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1
                 }

@@ -83,7 +83,7 @@ export function createOutletDepotPatches(
                 machineId: outletDepot,
                 materialType: outletOutput[0].materialType,
                 amount: outletOutput[0].amount,
-                divisor: outletOutput[0].divisor
+                inletActive: outletOutput[0].inletActive
             }]
         }
     }
@@ -119,7 +119,7 @@ export function createInletDepotPatches(
                 machineId: depotId,
                 materialType: inletInputs[i].materialType,
                 amount: inletInputs[i].amount,
-                divisor: inletInputs[i].divisor
+                inletActive: inletInputs[i].inletActive
             }]
         }
     }

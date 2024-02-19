@@ -72,6 +72,7 @@ library LibNetwork {
           }
 
           bool[2] memory newInletActive;
+          // Set active for inlet
           newInletActive[depotIndex] = true;
 
           inputs[counter.inputs] = Product({

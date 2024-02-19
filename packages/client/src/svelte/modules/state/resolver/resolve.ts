@@ -2,21 +2,19 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
 import { process } from "./machines"
-
 import { EMPTY_CONNECTION, deepClone } from "../../utils"
 import { organizePatches, consolidatePatches, createOutletDepotPatches, createInletDepotPatches } from "./patches"
 
 const FLOW_RATE = 1000
 
 /**
- * Resolves the state of a given pod entity.
- * This function simulates a process within a system of machines that interact with each other.
- * It processes the materials through the network of machines until all machines are resolved.
+ * Processes the materials through the network of machines until all machines are resolved.
  *
- * @returns Patches to be applied to the state to reflect the resolved state of the pod entity.
+ * Should work the same as contracts/src/libraries/LibNetwork.sol:resolve
+ * 
+ * @returns Patches to be applied to the state to reflect the resolved state of the pod
  */
 export function resolve(machines: Machines, inlets: Machines, outlets: Machines, depots: Depots, recipes: Recipe[]): SimulatedEntities {
-  // console.log('##### RESOLVE')
 
   // Counter for the number of iterations over the network
   let iterationCounter = 0
@@ -33,7 +31,6 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
 
   // Store the products for intermediary state
   // Only used for frontend display, not used in actual resolution
-  // @todo: use a single patch array
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
 
@@ -45,44 +42,38 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-    // console.log('*** ITERATION', iterationCounter)
 
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
-      // console.log('___ RESOLVING MACHINE', MACHINE_TYPE[machine.machineType], machine.buildIndex, machine)
 
       // Skip if node is already resolved
-      if (resolvedNodes.includes(machineKey)) {
-        // console.log('___ ALREADY RESOLVED')
-        return
-      }
+      if (resolvedNodes.includes(machineKey)) return
 
       // Handle inlets
       if (machine.machineType === MACHINE_TYPE.INLET) {
 
         // Is it inlet one or two?
-        let depotIndex = machineKey == Object.keys(inlets)[0] ? 0 : 1;
+        let inletIndex = machineKey == Object.keys(inlets)[0] ? 0 : 1;
 
-        let depot = inletDepots[depotIndex]
+        let depot = inletDepots[inletIndex]
 
         // Skip if inlet is not connected to depot
         if (!depot || depot == EMPTY_CONNECTION) return
 
-        // Get material from depot
-        let materialType = depots[depot].materialType
+        const newInletActive: boolean[] = [false, false]
+        // Set active for inlet
+        newInletActive[inletIndex] = true
 
         inputs.push({
           machineId: machineKey,
-          materialType: materialType,
+          materialType: depots[depot].materialType,
           amount: FLOW_RATE,
-          inletActive: [true, true]
+          inletActive: newInletActive
         })
       }
 
       // Gather all the inputs for the current machine.
-      const currentInputs = inputs.filter(
-        input => input.machineId === machineKey
-      )
+      const currentInputs = inputs.filter(input => input.machineId === machineKey)
 
       // Skip if node has no input
       if (currentInputs.length === 0) return
@@ -104,8 +95,6 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
       for (let k = 0; k < currentOutputs.length; k++) {
         patchOutputs.push(deepClone(currentOutputs[k]))
       }
-
-      // console.log('___ currentOutputs', currentOutputs)
 
       // Mark the machine as resolved.
       resolvedNodes.push(machineKey)
@@ -130,7 +119,6 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
         // Fill output
         if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
           const output = currentOutputs[k]
-          // console.log('___ output', output)
           if (output) {
             output.machineId = machine.outgoingConnections[k]
             inputs.push(output)
@@ -142,10 +130,7 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
     // Increment the counter.
     iterationCounter++
     // Break out of the loop if it seems like an infinite loop is occurring.
-    if (iterationCounter === Object.values(machines).length * 2) {
-      // console.log('!!!!! BREAKING OUT OF LOOP')
-      break
-    }
+    if (iterationCounter === Object.values(machines).length * 2) break
   }
 
   /*

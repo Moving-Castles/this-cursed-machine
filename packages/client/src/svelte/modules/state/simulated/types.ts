@@ -26,5 +26,6 @@ export type Connection = {
     id: string
     sourceMachine: string
     targetMachine: string
-    product: Product
+    portIndex: number
+    product: Product | null
 }

@@ -1,7 +1,7 @@
 import { derived } from "svelte/store"
-import { EMPTY_CONNECTION, capAtZero, deepClone } from "../../utils"
+import { EMPTY_CONNECTION, deepClone } from "../../utils"
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
-import type { SimulatedEntities, SimulatedDepots, SimulatedMachines, Connection } from "./types"
+import type { SimulatedEntities, SimulatedEntity, SimulatedDepots, SimulatedMachines, Connection } from "./types"
 import { machines, depots, playerPod } from "../base/stores"
 import { patches } from "../resolver/patches/stores"
 import { blocksSinceLastResolution } from "../resolver/stores"
@@ -42,61 +42,125 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
     return simulatedMachines
 }
 
+/*
+* Should work the same as contracts/src/libraries/LibDepot.sol:write
+*/
 export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedDepots {
+
+    const FLOW_RATE = 1000;
+
     // Create deep copy to avoid accidentally mutating the original object.
     const initialDepotsCopy = deepClone(depots);
     const patchesCopy = deepClone(patches);
     const playerPodCopy = deepClone(playerPod)
 
-    // Get depot that is connected to the inlet of the player pod
-    // TODO: this, and many other things, needs to be reworked to support multiple inlets
-    const inletDepot = Object.values(initialDepotsCopy).find(depot => depot.depotConnection === playerPodCopy.fixedEntities.inlets[0])
-
     let simulatedDepots: SimulatedDepots = Object.fromEntries([...Object.entries(initialDepotsCopy)])
 
-    const filteredPatches = Object.entries(patchesCopy).filter(([_, patch]) => patch.depot)
+    const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) => playerPodCopy.fixedEntities.inlets.includes(depot.depotConnection))
+    const depotPatches = Object.entries(patchesCopy).filter(([_, patch]) => patch.depot)
 
-    // Iterate over each patch in the patches store.
-    for (const [key, patch] of filteredPatches) {
+    /*
+     * Filter out the inlet depots that are not contributing to the output
+     */
+    const usedInletDepots = getUsedInletDepots(inletDepots, depotPatches);
+    const usedInletDepotsKeys = usedInletDepots.map(([key, _]) => key)
 
-        if (!patch.depot || !simulatedDepots[key]) continue
+    const lowestInputAmount = findLowestValue(usedInletDepots);
 
-        // Depot connected to inlet
-        if (Array.isArray(patch.outputs) && patch.outputs[0]) {
-            const patchOutput = patch.outputs[0]
-            // Subtract from depot, capping at zero
-            const cappedAmount = capAtZero(initialDepotsCopy[key].amount - (patchOutput.amount * blocksSinceLastResolution))
-            simulatedDepots[key].amount = cappedAmount
-            // If the amount is zero, set the material type to none
-            simulatedDepots[key].materialType = cappedAmount === 0 ? MATERIAL_TYPE.NONE : patchOutput.materialType
-        }
+    if (lowestInputAmount === 0) return simulatedDepots;
 
-        // Depot connected to outlet
+    /*
+     * With a flow rate of FLOW_RATE per block,
+     * how long does it take for the lowest input to be exhausted?
+     */
+    const exhaustionBlock = lowestInputAmount / FLOW_RATE;
+
+    /*
+     * if exhaustionBlock > _blocksSinceLastResolution => capped output amount is blocks since last resolution
+     * if exhaustionBlock < _blocksSinceLastResolution => capped output amount is equal to exhaustionBlock
+     */
+    const cappedBlocks = exhaustionBlock > blocksSinceLastResolution
+        ? blocksSinceLastResolution
+        : exhaustionBlock;
+
+    for (const [key, patch] of depotPatches) {
+
+        if (!simulatedDepots[key]) continue
+
+        /*
+         * Write to outlet depot
+         * Add if material is same, otherwise replace
+         */
         if (Array.isArray(patch.inputs) && patch.inputs[0]) {
             const patchInput = patch.inputs[0]
-            // If the current material is the same, add to it
+            const cumulativeOutputAmount = patchInput.amount * cappedBlocks;
             if (initialDepotsCopy[key].materialType === patchInput.materialType) {
-                const outputAmount = patchInput.amount * blocksSinceLastResolution
-                simulatedDepots[key].amount = (initialDepotsCopy[key].amount ?? 0) + capByInputDepotAmount(outputAmount, patchInput.divisor, inletDepot?.amount ?? 0)
+                simulatedDepots[key].amount = (initialDepotsCopy[key].amount ?? 0) + cumulativeOutputAmount
             } else {
-                // Otherwise, we replace it
                 simulatedDepots[key].materialType = patchInput.materialType
-                const outputAmount = patchInput.amount * blocksSinceLastResolution
-                simulatedDepots[key].amount = capByInputDepotAmount(outputAmount, patchInput.divisor, inletDepot?.amount ?? 0)
+                simulatedDepots[key].amount = cumulativeOutputAmount
             }
         }
+
+        /*
+         * Write to inlet depots
+         * Check that the inlet depot contributed to the output
+         * Empty depot if we exhausted it
+         */
+        if (Array.isArray(patch.outputs) && patch.outputs[0] && usedInletDepotsKeys.includes(key)) {
+            const consumedInletAmount = cappedBlocks * FLOW_RATE;
+            if (consumedInletAmount === initialDepotsCopy[key].amount) {
+                simulatedDepots[key].materialType = MATERIAL_TYPE.NONE
+                simulatedDepots[key].amount = 0
+            } else {
+                simulatedDepots[key].amount = initialDepotsCopy[key].amount - consumedInletAmount
+            }
+        }
+
     }
 
     // Return the updated simulated state.
     return simulatedDepots
 }
 
-function capByInputDepotAmount(amount: number, divisor: number, inputDepotAmount: number): number {
-    // The divisor is the loss caused by the transformations 
-    const outputAmountExceededInput = amount >= inputDepotAmount / (divisor == 0 ? 1 : divisor)
-    const cappedAmount = outputAmountExceededInput ? inputDepotAmount / divisor : amount
-    return cappedAmount
+function findLowestValue(usedInletDepots: [string, Depot][]): number {
+    let lowestEntry: [string, Depot] | null = null;
+
+    for (const [key, depot] of usedInletDepots) {
+        if (!lowestEntry || depot.amount < lowestEntry[1].amount) {
+            lowestEntry = [key, depot];
+        }
+    }
+
+    if (!lowestEntry) return 0;
+
+    return lowestEntry[1].amount ?? 0;
 }
+
+
+function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
+    let inletActive: boolean[] | null = null;
+    let usedInletDepots: [string, Depot][] = []
+
+    // Find the outlet patch – it is the only one with inputs
+    for (const [, patch] of depotPatches) {
+        if (Array.isArray(patch.inputs) && patch.inputs[0]) {
+            inletActive = patch.inputs[0].inletActive;
+            break;
+        }
+    }
+
+    if (inletActive == null) return usedInletDepots;
+
+    for (let i = 0; i < inletDepots.length; i++) {
+        if (inletActive[i]) {
+            usedInletDepots.push(inletDepots[i]);
+        }
+    }
+
+    return usedInletDepots;
+}
+
 
 export function calculateSimulatedConnections(simulatedMachines: SimulatedEntities): Connection[] {
     let connections: Connection[] = []
@@ -143,7 +207,7 @@ export const simulatedDepots = derived(
     ([$depots, $patches, $blocksSinceLastResolution, $playerPod]) => calculateSimulatedDepots($depots, $patches, $blocksSinceLastResolution, $playerPod)
 )
 
-// Cconnection objects based on the properties of the machines
+// Connection objects based on the properties of the machines
 export const simulatedConnections = derived(simulatedMachines, $simulatedMachines => calculateSimulatedConnections($simulatedMachines))
 
 export const readableMachines = derived(simulatedMachines, $simulatedMachines => getReadableMachines($simulatedMachines))

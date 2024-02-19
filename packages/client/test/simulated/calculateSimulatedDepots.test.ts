@@ -36,7 +36,7 @@ const patches = {
         outputs: [
             {
                 amount: FLOW_RATE,
-                divisor: 0,
+                inletActive: [true, false],
                 machineId: "DEPOT_ONE",
                 materialType: 1,
             },
@@ -47,7 +47,7 @@ const patches = {
         inputs: [
             {
                 amount: FLOW_RATE / 4,
-                divisor: 4,
+                inletActive: [true, false],
                 machineId: "DEPOT_TWO",
                 materialType: 2, // PISS
             },

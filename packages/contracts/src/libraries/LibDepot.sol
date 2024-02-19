@@ -30,23 +30,7 @@ library LibDepot {
     uint256 _blocksSinceLastResolution,
     Product memory _output
   ) internal {
-    // DEBUG
-    // console.log("_output");
-    // console.logBytes32(_output.machineId);
-    // console.log(_output.amount);
-    // console.log(uint32(_output.materialType));
-    // console.log(_output.inletActive[0]);
-    // console.log(_output.inletActive[1]);
-
     InletDepotAmount[] memory usedInletAmounts = getUsedInletAmounts(_output.inletActive, _inletDepotEntities);
-
-    // DEBUG
-    // for (uint i; i < usedInletAmounts.length; i++) {
-    //   console.log("usedInlet index");
-    //   console.log(usedInletAmounts[i].index);
-    //   console.log("usedInlet amount");
-    //   console.log(usedInletAmounts[i].amount);
-    // }
 
     InletDepotAmount memory lowestInput = findLowestValue(usedInletAmounts);
 
@@ -66,18 +50,6 @@ library LibDepot {
 
     uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
 
-    // DEBUG
-    // console.log("lowestInput.amount");
-    // console.log(lowestInput.amount);
-    // console.log("lowestInput.index");
-    // console.log(lowestInput.index);
-    // console.log("exhaustionBlock");
-    // console.log(exhaustionBlock);
-    // console.log("cappedBlocks");
-    // console.log(cappedBlocks);
-    // console.log("cumulativeOutputAmount");
-    // console.log(cumulativeOutputAmount);
-
     /*
      * Write to outlet depot
      * Add if material is same, otherwise replace
@@ -89,10 +61,7 @@ library LibDepot {
       Amount.set(_outletDepotEntity, cumulativeOutputAmount);
     }
 
-    // DEBUG
     uint32 consumedInletAmount = cappedBlocks * FLOW_RATE;
-    // console.log("consumedInletAmount");
-    // console.log(consumedInletAmount);
 
     /*
      * Write to inlet depots

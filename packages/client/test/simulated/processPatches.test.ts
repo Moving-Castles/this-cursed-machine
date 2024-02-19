@@ -9,7 +9,7 @@ const patch = {
     inputs: [
         {
             amount: 1000,
-            divisor: 0,
+            inletActive: [true, false],
             machineId: "INLET_ONE",
             materialType: 1,
         },
@@ -17,7 +17,7 @@ const patch = {
     outputs: [
         {
             amount: 1000,
-            divisor: 0,
+            inletActive: [true, false],
             machineId: "INLET_ONE",
             materialType: 1,
         },
@@ -30,7 +30,7 @@ test("(1) processInputPatches", () => {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1
                 }
@@ -47,7 +47,7 @@ test("(2) processOutputPatches", () => {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1
                 }

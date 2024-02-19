@@ -61,14 +61,14 @@ function player(inputs: Product[]): Product[] {
     machineId: input.machineId,
     materialType: MATERIAL_TYPE.PISS,
     amount: halfAmount,
-    divisor: input.divisor + 2
+    inletActive: input.inletActive
   }
 
   outputs[1] = {
     machineId: input.machineId,
     materialType: MATERIAL_TYPE.BLOOD,
     amount: halfAmount,
-    divisor: input.divisor + 2
+    inletActive: input.inletActive
   }
 
   return outputs
@@ -94,14 +94,14 @@ function splitter(inputs: Product[]): Product[] {
     machineId: input.machineId,
     materialType: input.materialType,
     amount: halfAmount,
-    divisor: input.divisor + 2
+    inletActive: input.inletActive
   }
 
   outputs[1] = {
     machineId: input.machineId,
     materialType: input.materialType,
     amount: halfAmount,
-    divisor: input.divisor + 2
+    inletActive: input.inletActive
   }
 
   return outputs
@@ -123,11 +123,16 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 
   const lowestAmountProduct = getLowestAmountProduct(inputs[0], inputs[1])
 
+  const combinedInletActive = [
+    inputs[0].inletActive[0] || inputs[1].inletActive[0],
+    inputs[0].inletActive[1] || inputs[1].inletActive[1]
+  ]
+
   outputs[0] = {
     machineId: inputs[0].machineId,
     materialType: outputMaterial,
     amount: lowestAmountProduct.amount,
-    divisor: lowestAmountProduct.divisor
+    inletActive: combinedInletActive
   }
 
   return outputs
@@ -154,7 +159,7 @@ function simpleMachine(recipes: Recipe[], machineType: MACHINE_TYPE, inputs: Pro
     machineId: input.machineId,
     materialType: outputMaterial,
     amount: input.amount,
-    divisor: input.divisor
+    inletActive: input.inletActive
   }
 
   return outputs

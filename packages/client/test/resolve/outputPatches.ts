@@ -6,7 +6,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -14,7 +14,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -24,7 +24,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -32,13 +32,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -50,7 +50,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -58,7 +58,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -68,7 +68,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -76,13 +76,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -95,7 +95,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
                 },
@@ -105,7 +105,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -113,7 +113,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -123,7 +123,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -131,13 +131,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -147,7 +147,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 2,
                 },
@@ -155,7 +155,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 2,
                 },
@@ -166,7 +166,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 2,
                 },
@@ -178,7 +178,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -186,7 +186,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -196,7 +196,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -204,13 +204,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -220,7 +220,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
@@ -228,7 +228,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
@@ -241,7 +241,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
                 },
@@ -251,7 +251,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -259,7 +259,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -269,7 +269,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "SPLITTER",
                     materialType: 1,
                 },
@@ -277,13 +277,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "SPLITTER",
                     materialType: 1,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "SPLITTER",
                     materialType: 1,
                 },
@@ -293,7 +293,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -301,13 +301,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -317,7 +317,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "DRYER_ONE",
                     materialType: 2,
                 },
@@ -325,7 +325,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "DRYER_ONE",
                     materialType: 7,
                 },
@@ -335,7 +335,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "BOILER",
                     materialType: 1,
                 },
@@ -343,7 +343,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "BOILER",
                     materialType: 10,
                 },
@@ -353,7 +353,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "DRYER_TWO",
                     materialType: 10,
                 },
@@ -361,7 +361,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "DRYER_TWO",
                     materialType: 9,
                 },
@@ -371,13 +371,13 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "MIXER",
                     materialType: 9,
                 },
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "MIXER",
                     materialType: 7,
                 }
@@ -385,7 +385,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "MIXER",
                     materialType: 8,
                 },
@@ -395,7 +395,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 8,
                 },
@@ -403,7 +403,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 8,
                 },
@@ -414,7 +414,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 250,
-                    divisor: 4,
+                    inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 8,
                 },
@@ -427,7 +427,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
                 },
@@ -437,7 +437,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -445,7 +445,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -455,7 +455,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -463,13 +463,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -479,7 +479,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
@@ -487,7 +487,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
@@ -498,7 +498,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 3,
                 },
@@ -510,7 +510,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -518,7 +518,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
                 },
@@ -528,7 +528,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 1000,
-                    divisor: 0,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
                 },
@@ -536,13 +536,13 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 2,
                 },
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 3,
                 },
@@ -552,7 +552,7 @@ export const outputPatches = {
             inputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
@@ -560,7 +560,7 @@ export const outputPatches = {
             outputs: [
                 {
                     amount: 500,
-                    divisor: 2,
+                    inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
                 },
