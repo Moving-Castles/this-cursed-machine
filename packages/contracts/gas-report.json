@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 169999
+    "gasUsed": 140251
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
