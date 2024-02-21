@@ -14,7 +14,7 @@ const playerPod = {
 }
 
 test("(1) resolutionSequence", () => {
-    const { depots, machines, inlets, outlet, recipes } = setUp()
+    const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -95,7 +95,7 @@ test("(1) resolutionSequence", () => {
 })
 
 test("(2) resolveSplitterMixer", () => {
-    const { depots, machines, inlets, outlet, recipes } = setUp()
+    const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Fill depot 1 with 20000 MATERIAL_TYPE.AMMONIA
     depots["DEPOT_ONE"].materialType = 7 // AMMONIA
@@ -206,7 +206,7 @@ test("(2) resolveSplitterMixer", () => {
 })
 
 test("(3) unusedInlet", () => {
-    const { depots, machines, inlets, outlet, recipes } = setUp()
+    const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Fill depot 1 with 20000 MATERIAL_TYPE.AMMONIA
     depots["DEPOT_ONE"].materialType = 7 // AMMONIA

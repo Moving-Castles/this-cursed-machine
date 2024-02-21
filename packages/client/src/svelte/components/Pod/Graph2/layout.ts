@@ -1,9 +1,9 @@
 import { MACHINE_TYPE } from "contracts/enums";
-import { get } from "svelte/store";
-import type { SimulatedMachines, SimulatedMachine, Connection } from "../../../modules/state/simulated/types";
+import type { SimulatedMachines, Connection } from "../../../modules/state/simulated/types";
 import { deepClone } from "../../../modules/utils";
-import { GraphMachine, GraphMachines } from "./types";
-import { playerPod } from "../../../modules/state/base/stores";
+import type { GraphConnection, GraphMachine, GraphMachines, Path } from "./types";
+import pathfinding from "pathfinding"
+import { GRID } from "./constants";
 
 const FIXED_POSITIONS = {
     inletOne: { x: 0, y: 1 },
@@ -76,17 +76,21 @@ function combineStates(simulatedMachines: SimulatedMachines, previousGraphMachin
 }
 
 export function createLayout(
+    fixedEntities: FixedEntities,
     simulatedMachines: SimulatedMachines,
     simulatedConnections: Connection[],
     previousGraphMachines: GraphMachines,
     previousConnections: Connection[]) {
 
-    const fixedEntities = get(playerPod).fixedEntities
     // Clone to avoid accidentally modifying the original state
     const simulatedMachinesCopy = deepClone(simulatedMachines);
     const simulatedConnectionsCopy = deepClone(simulatedConnections);
+    // Initialize pathfinding grid
+    const grid = new pathfinding.Grid(GRID.WIDTH, GRID.HEIGHT)
 
-    const graphConnections = Object.values(simulatedConnectionsCopy)
+    /*
+     * Place Machines
+     */
 
     // Transfer positions from previous state, and set null position for new machines
     const graphMachines: GraphMachines = combineStates(simulatedMachinesCopy, previousGraphMachines)
@@ -104,6 +108,38 @@ export function createLayout(
 
         graphMachines[machineId].x = x
         graphMachines[machineId].y = y
+
+        // Mark as occupied in grid
+        grid.setWalkableAt(x, y, false);
+    }
+
+    /*
+     * Calculate Connections
+     */
+
+    const graphConnections = simulatedConnectionsCopy as GraphConnection[]
+
+    // Set up grid
+    const finder = new pathfinding.AStarFinder();
+
+    // Iterate over graphConnections
+    for (let i = 0; i < graphConnections.length; i++) {
+        // Start position is one tile to the right of the source machine, as outputs are to the right
+        const startPosition = { x: graphMachines[graphConnections[i].sourceMachine].x + 1, y: graphMachines[graphConnections[i].sourceMachine].y }
+        // End position is one tile to the left of the target machine, as inputs are to the left
+        const endPosition = { x: graphMachines[graphConnections[i].targetMachine].x - 1, y: graphMachines[graphConnections[i].targetMachine].y }
+
+        // console.log(`${graphConnections[i].sourceMachine} -> ${graphConnections[i].targetMachine}`)
+        // console.log('startPosition', startPosition)
+        // console.log('endPosition', endPosition)
+
+        // Find Path
+        const path = finder.findPath(startPosition.x, startPosition.y, endPosition.x, endPosition.y, grid.clone())
+
+        // console.log('path', path)
+
+        // Set path in graphConnections
+        graphConnections[i].path = path
     }
 
     return { graphMachines, graphConnections }

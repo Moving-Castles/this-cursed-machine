@@ -56,7 +56,12 @@ export function setUp() {
     let outlet = {}
     outlet["OUTLET"] = machines["OUTLET"]
 
+    const fixedEntities = {
+        inlets: ["INLET_ONE", "INLET_TWO"],
+        outlet: "OUTLET"
+    }
+
     const recipes = RECIPES
 
-    return { depots, machines, inlets, outlet, recipes }
+    return { depots, machines, inlets, outlet, recipes, fixedEntities }
 }

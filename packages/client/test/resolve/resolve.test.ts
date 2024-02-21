@@ -12,7 +12,7 @@ test("(1) resolve: no connections", () => {
 })
 
 test("(2) resolve: depot 1 to inlet", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -23,7 +23,7 @@ test("(2) resolve: depot 1 to inlet", () => {
 })
 
 test("(3) resolve: depot 1 to inlet, inlet to player", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -41,7 +41,7 @@ test("(3) resolve: depot 1 to inlet, inlet to player", () => {
 })
 
 test("(4) resolve: depot 1 to inlet, inlet to player, depot2 to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -63,7 +63,7 @@ test("(4) resolve: depot 1 to inlet, inlet to player, depot2 to outlet", () => {
 })
 
 test("(5) resolve: depot 1 to inlet, inlet to player, player (piss) to outlet, depot2 to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -91,7 +91,7 @@ test("(5) resolve: depot 1 to inlet, inlet to player, player (piss) to outlet, d
 })
 
 test("(6) resolve: depot 1 to inlet, inlet to player, player (blood) to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -115,18 +115,18 @@ test("(6) resolve: depot 1 to inlet, inlet to player, player (blood) to outlet",
 })
 
 test("(7) resolve: create AESOP_ORGANIC_HAND_SOAP", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // - Build Splitter
-    machines["SPLITTER"] = createMachine(MACHINE_TYPE.SPLITTER)
+    machines["SPLITTER"] = createMachine(MACHINE_TYPE.SPLITTER, 1)
     // - Build boiler
-    machines["BOILER"] = createMachine(MACHINE_TYPE.BOILER)
+    machines["BOILER"] = createMachine(MACHINE_TYPE.BOILER, 1)
     // - Build dryer one
-    machines["DRYER_ONE"] = createMachine(MACHINE_TYPE.DRYER)
+    machines["DRYER_ONE"] = createMachine(MACHINE_TYPE.DRYER, 1)
     // - Build dryer two
-    machines["DRYER_TWO"] = createMachine(MACHINE_TYPE.DRYER)
+    machines["DRYER_TWO"] = createMachine(MACHINE_TYPE.DRYER, 2)
     // - Build mixer
-    machines["MIXER"] = createMachine(MACHINE_TYPE.MIXER)
+    machines["MIXER"] = createMachine(MACHINE_TYPE.MIXER, 1)
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
@@ -172,7 +172,7 @@ test("(7) resolve: create AESOP_ORGANIC_HAND_SOAP", () => {
 })
 
 test("(8) resolve: clear on disconnect", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"

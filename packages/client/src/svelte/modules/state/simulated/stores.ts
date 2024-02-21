@@ -66,7 +66,6 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
     const usedInletDepotsKeys = usedInletDepots.map(([key, _]) => key)
 
     const lowestInputAmount = findLowestValue(usedInletDepots);
-
     if (lowestInputAmount === 0) return simulatedDepots;
 
     /*
@@ -137,7 +136,6 @@ function findLowestValue(usedInletDepots: [string, Depot][]): number {
     return lowestEntry[1].amount ?? 0;
 }
 
-
 function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
     let inletActive: boolean[] | null = null;
     let usedInletDepots: [string, Depot][] = []
@@ -161,7 +159,6 @@ function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [strin
     return usedInletDepots;
 }
 
-
 export function calculateSimulatedConnections(simulatedMachines: SimulatedEntities): Connection[] {
     let connections: Connection[] = []
     const simulatedMachinesCopy = deepClone(simulatedMachines)
@@ -174,7 +171,7 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedEntiti
                 ? sourceMachine?.outputs[i]
                 : null
             connections.push({
-                id: `${sourceAddress}-${targetAddress}-${i}`,
+                id: `FROM-${sourceAddress}-TO-${targetAddress}-${i}`,
                 sourceMachine: sourceAddress,
                 targetMachine: targetAddress,
                 portIndex: i,

@@ -1,22 +1,22 @@
 <script lang="ts">
+  import { playerPod } from "../../../modules/state/base/stores"
   import {
     simulatedMachines,
     simulatedConnections,
   } from "../../../modules/state/simulated/stores"
-  import type { Connection } from "../../../modules/state/simulated/types"
-  import type { GraphMachines } from "./types"
-  import Grid from "./Grid/Grid.svelte"
-  import Machine from "./Machine/Machine.svelte"
+  import type { GraphMachines, GraphConnection } from "./types"
   import { createLayout } from "./layout"
 
-  // $: console.log("$simulatedMachines", $simulatedMachines)
-  // $: console.log("$simulatedConnections", $simulatedConnections)
+  import Grid from "./Grid/Grid.svelte"
+  import Machine from "./Machine/Machine.svelte"
+  import Connection from "./Connection/Connection.svelte"
 
   let graphMachines: GraphMachines = {}
-  let graphConnections: Connection[] = []
+  let graphConnections: GraphConnection[] = []
 
   // Calculate the new layout based on new and old state
   $: ({ graphMachines, graphConnections } = createLayout(
+    $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
     graphMachines,
@@ -29,6 +29,9 @@
     <div class="top">
       {#each Object.values(graphMachines) as machine}
         <Machine {machine} />
+      {/each}
+      {#each graphConnections as connection}
+        <Connection {connection} />
       {/each}
     </div>
     <Grid />
