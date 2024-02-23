@@ -3,25 +3,25 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 290039
+    "gasUsed": 291183
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect player to splitter",
-    "gasUsed": 115660
+    "gasUsed": 116234
   },
   {
     "file": "test/systems/machine-network/DestroySystem.t.sol",
     "test": "testDestroy",
     "name": "Destroy splitter",
-    "gasUsed": 117441
+    "gasUsed": 117731
   },
   {
     "file": "test/systems/machine-network/DisconnectSystem.t.sol",
     "test": "testDisconnect",
     "name": "Disconnect player from splitter",
-    "gasUsed": 71588
+    "gasUsed": 72162
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
@@ -69,12 +69,12 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 214078
+    "gasUsed": 214651
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1668446
+    "gasUsed": 1671866
   }
 ]

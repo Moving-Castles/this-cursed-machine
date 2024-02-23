@@ -16,7 +16,7 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-main-a02da555",
+    "@latticexyz/cli": "2.0.0-main-f8af70f5",
     "@typescript-eslint/eslint-plugin": "7.0.2",
     "@typescript-eslint/parser": "7.0.2",
     "eslint": "8.56.0",
