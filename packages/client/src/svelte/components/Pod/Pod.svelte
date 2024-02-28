@@ -14,6 +14,8 @@
   import InfoBar from "./Bars/InfoBar.svelte"
   import ModeBar from "./Bars/ModeBar.svelte"
 
+  import WalletButton from "../Wallet/WalletButton.svelte"
+
   import Tooltips from "./Tooltip/Tooltips.svelte"
 
   let terminalComponent: any
@@ -30,6 +32,8 @@
 {#if $showMap}
   <Map />
 {/if}
+
+<WalletButton />
 
 {#if $player?.carriedBy}
   <div class="bg">
