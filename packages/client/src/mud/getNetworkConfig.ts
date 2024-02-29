@@ -4,8 +4,7 @@
  *
  */
 
-import { getBurnerWallet } from "./getBurnerWallet";
-import { Wallet } from "ethers";
+import { getBurnerPrivateKey } from "@latticexyz/common";
 import { getChain, getWorldFromChainId } from "./utils";
 
 export async function getNetworkConfig() {
@@ -65,7 +64,7 @@ export async function getNetworkConfig() {
       jsonRpcUrl: params.get("rpc") ?? chain.rpcUrls.default.http[0],
       wsRpcUrl: params.get("wsRpc") ?? chain.rpcUrls.default.webSocket?.[0],
     },
-    privateKey: params.has("anon") ? Wallet.createRandom().privateKey : getBurnerWallet(),
+    privateKey: getBurnerPrivateKey(),
     useBurner: params.has("useBurner"),
     chainId,
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
