@@ -12,6 +12,7 @@ import {
   Hex,
   parseEther,
   ClientConfig,
+  getContract
 } from "viem"
 import { createFaucetService } from "@latticexyz/services/faucet"
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
@@ -19,15 +20,10 @@ import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
 import { getNetworkConfig } from "./getNetworkConfig"
 import { world } from "./world"
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
-import {
-  createBurnerAccount,
-  getContract,
-  transportObserver,
-  ContractWrite,
-} from "@latticexyz/common"
+import { createBurnerAccount, transportObserver, ContractWrite } from "@latticexyz/common"
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 
 import { tables as extraTables, syncFilters as extraSyncFilters } from "./extraTables";
-
 import { createSyncFilters } from "./createSyncFilters"
 
 import { Subject, share } from "rxjs"
@@ -47,6 +43,8 @@ export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export async function setupNetwork() {
   const networkConfig = await getNetworkConfig()
 
+  const filters = [...createSyncFilters(null), ...extraSyncFilters];
+
   /*
    * Create a viem public (read only) client
    * (https://viem.sh/docs/clients/public.html)
@@ -59,7 +57,32 @@ export async function setupNetwork() {
 
   const publicClient = createPublicClient(clientOptions)
 
-  const filters = [...createSyncFilters(null), ...extraSyncFilters];
+  /*
+ * Create an observable for contract writes that we can
+ * pass into MUD dev tools for transaction observability.
+ */
+  const write$ = new Subject<ContractWrite>()
+
+  /*
+  * Create a temporary wallet and a viem client for it
+  * (see https://viem.sh/docs/clients/wallet.html).
+  */
+  const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
+  const burnerWalletClient = createWalletClient({
+    ...clientOptions,
+    account: burnerAccount,
+  })
+    .extend(transactionQueue())
+    .extend(writeObserver({ onWrite: (write) => write$.next(write) }));
+
+  /*
+   * Create an object for communicating with the deployed World.
+   */
+  const worldContract = getContract({
+    address: networkConfig.worldAddress as Hex,
+    abi: IWorldAbi,
+    client: { public: publicClient, wallet: burnerWalletClient }
+  })
 
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
@@ -77,36 +100,10 @@ export async function setupNetwork() {
     config: mudConfig,
     address: networkConfig.worldAddress as Hex,
     publicClient,
-    indexerUrl: networkConfig.indexerUrl,
     startBlock: BigInt(networkConfig.initialBlockNumber),
+    indexerUrl: networkConfig.indexerUrl,
     filters,
     tables: extraTables
-  })
-
-  /*
-  * Create a temporary wallet and a viem client for it
-  * (see https://viem.sh/docs/clients/wallet.html).
-  */
-  const burnerAccount = createBurnerAccount(networkConfig.privateKey as Hex)
-  const burnerWalletClient = createWalletClient({
-    ...clientOptions,
-    account: burnerAccount,
-  })
-
-  /*
-   * Create an observable for contract writes that we can
-   * pass into MUD dev tools for transaction observability.
-   */
-  const write$ = new Subject<ContractWrite>()
-
-  /*
-   * Create an object for communicating with the deployed World.
-   */
-  const worldContract = getContract({
-    address: networkConfig.worldAddress as Hex,
-    abi: IWorldAbi,
-    client: { public: publicClient, wallet: burnerWalletClient },
-    onWrite: write => write$.next(write),
   })
 
   /*

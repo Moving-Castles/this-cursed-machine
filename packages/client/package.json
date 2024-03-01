@@ -29,14 +29,14 @@
     "wait-port": "^1.1.0"
   },
   "dependencies": {
-    "@latticexyz/common": "2.0.0-main-db314a74",
-    "@latticexyz/dev-tools": "2.0.0-main-db314a74",
-    "@latticexyz/recs": "2.0.0-main-db314a74",
-    "@latticexyz/schema-type": "2.0.0-main-db314a74",
-    "@latticexyz/services": "2.0.0-main-db314a74",
-    "@latticexyz/store-sync": "2.0.0-main-db314a74",
-    "@latticexyz/utils": "2.0.0-main-db314a74",
-    "@latticexyz/world": "2.0.0-main-db314a74",
+    "@latticexyz/common": "2.0.0-main-59267655",
+    "@latticexyz/dev-tools": "2.0.0-main-59267655",
+    "@latticexyz/recs": "2.0.0-main-59267655",
+    "@latticexyz/schema-type": "2.0.0-main-59267655",
+    "@latticexyz/services": "2.0.0-main-59267655",
+    "@latticexyz/store-sync": "2.0.0-main-59267655",
+    "@latticexyz/utils": "2.0.0-main-59267655",
+    "@latticexyz/world": "2.0.0-main-59267655",
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.15.1",
     "@sanity/image-url": "^1.0.2",
@@ -53,6 +53,6 @@
     "pathfinding": "^0.4.18",
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
-    "viem": "^2.7.16"
+    "viem": "2.7.12"
   }
 }
