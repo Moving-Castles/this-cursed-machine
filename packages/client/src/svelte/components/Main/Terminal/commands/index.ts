@@ -1,7 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types";
 
 import { blink } from "@components/Main/Terminal/commands/blink";
-import { clear } from "@components/Main/Terminal/commands/clear";
 import { help } from "@components/Main/Terminal/commands/help";
 import { build } from "@components/Main/Terminal/commands/build";
 import { connect } from "@components/Main/Terminal/commands/connect";
@@ -13,12 +12,12 @@ import { detachDepot } from "@components/Main/Terminal/commands/detachDepot";
 import { clearDepot } from "@components/Main/Terminal/commands/clearDepot";
 import { fill } from "@components/Main/Terminal/commands/fill";
 // Testing
-import { accept } from "@components/Main/Terminal/commands/accept";
 import { buy } from "@components/Main/Terminal/commands/buy";
 import { skip } from "@components/Main/Terminal/commands/skip";
 import { graduate } from "@components/Main/Terminal/commands/graduate";
 import { resolve } from "@components/Main/Terminal/commands/resolve";
 import { fail } from "@components/Main/Terminal/commands/fail";
+// import { accept } from "@components/Main/Terminal/commands/accept";
 
 
 export const commands: Command[] = [
@@ -26,18 +25,17 @@ export const commands: Command[] = [
     destroy,
     connect,
     disconnect,
-    blink,
-    clear,
-    help,
-    resolve,
-    skip,
-    start,
-    fail,
     attachDepot,
     detachDepot,
     clearDepot,
     fill,
-    // accept,
+    help,
+    blink,
+    // Testing
+    resolve,
+    skip,
+    start,
+    fail,
     buy,
     graduate
 ]
