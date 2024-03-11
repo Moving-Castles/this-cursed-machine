@@ -1,6 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, OutputType } from "@components/Main/Terminal/types";
-import { clearDepot as sendClearDepot } from "@modules/action";
+import { emptyDepot as sendEmptyDepot } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
@@ -9,11 +9,11 @@ async function execute(depotEntity: string) {
     try {
         writeToTerminal(OutputType.NORMAL, "Locating depot...")
         // ...
-        const action = sendClearDepot(depotEntity,)
+        const action = sendEmptyDepot(depotEntity,)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(OutputType.NORMAL, "Clearing depot...")
+        writeToTerminal(OutputType.NORMAL, "Emptying depot...")
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(OutputType.SUCCESS, "Done")
@@ -27,11 +27,11 @@ async function execute(depotEntity: string) {
     }
 }
 
-export const clearDepot: Command<[depotEntity: string]> = {
-    id: COMMAND.CLEAR_DEPOT,
+export const emptyDepot: Command<[depotEntity: string]> = {
+    id: COMMAND.EMPTY_DEPOT,
     public: true,
-    name: "clearDepot",
+    name: "emptyDepot",
     alias: "e",
-    description: "Clear depot",
+    description: "Empty depot",
     fn: execute,
 }

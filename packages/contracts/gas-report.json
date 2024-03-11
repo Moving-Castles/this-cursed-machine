@@ -31,21 +31,21 @@
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
-    "test": "testClearDepot",
-    "name": "Clear depot",
-    "gasUsed": 39805
+    "test": "testDetachDepot",
+    "name": "Detach depot",
+    "gasUsed": 53330
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
-    "test": "testDetachDepot",
-    "name": "Detach depot",
-    "gasUsed": 53352
+    "test": "testEmptyDepot",
+    "name": "Clear depot",
+    "gasUsed": 39803
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testattachDepot",
     "name": "Attach depot",
-    "gasUsed": 105535
+    "gasUsed": 105513
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",

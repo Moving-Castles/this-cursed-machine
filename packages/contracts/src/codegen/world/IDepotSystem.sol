@@ -13,5 +13,5 @@ interface IDepotSystem {
 
   function detachDepot(bytes32 _depotEntity) external;
 
-  function clearDepot(bytes32 _depotEntity) external;
+  function emptyDepot(bytes32 _depotEntity) external;
 }

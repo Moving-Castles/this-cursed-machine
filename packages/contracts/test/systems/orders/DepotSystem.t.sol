@@ -111,13 +111,13 @@ contract DepotSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testClearDepot() public {
+  function testEmptyDepot() public {
     setUp();
 
     vm.startPrank(alice);
 
     startGasReport("Clear depot");
-    world.clearDepot(depotsInPod[0]);
+    world.emptyDepot(depotsInPod[0]);
     endGasReport();
 
     vm.stopPrank();

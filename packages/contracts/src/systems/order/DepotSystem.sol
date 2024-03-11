@@ -44,7 +44,7 @@ contract DepotSystem is System {
     DepotConnection.set(_depotEntity, bytes32(0));
   }
 
-  function clearDepot(bytes32 _depotEntity) public {
+  function emptyDepot(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     require(CarriedBy.get(_depotEntity) == CarriedBy.get(playerEntity), "not in pod");

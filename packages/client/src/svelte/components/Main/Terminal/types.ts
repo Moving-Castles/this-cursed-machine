@@ -41,7 +41,7 @@ export enum COMMAND {
     FAIL,
     ATTACH_DEPOT,
     DETACH_DEPOT,
-    CLEAR_DEPOT,
+    EMPTY_DEPOT,
     FILL,
     ACCEPT,
     BUY,

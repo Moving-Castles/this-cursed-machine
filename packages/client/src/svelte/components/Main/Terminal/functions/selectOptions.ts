@@ -39,8 +39,8 @@ export function createSelectOptions(
       return createSelectOptionsAttachDepot()
     case COMMAND.DETACH_DEPOT:
       return createSelectOptionsDetachDepot()
-    case COMMAND.CLEAR_DEPOT:
-      return createSelectOptionsClearDepot()
+    case COMMAND.EMPTY_DEPOT:
+      return createSelectOptionsEmptyDepot()
     case COMMAND.FILL:
       return createSelectOptionsFill()
     case COMMAND.ACCEPT:
@@ -193,12 +193,12 @@ function createSelectOptionsDetachDepot(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsClearDepot(): SelectOption[] {
+function createSelectOptionsEmptyDepot(): SelectOption[] {
   let selectOptions: SelectOption[] = [];
 
   const depots = get(depotsStore);
 
-  // Only depots that are not attached be cleared
+  // Only depots that are not attached be emptied
   selectOptions = Object.entries(depots)
     .filter(([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION)
     .map(([address, depot]) => ({

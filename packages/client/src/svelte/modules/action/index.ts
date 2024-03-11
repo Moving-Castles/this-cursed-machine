@@ -11,7 +11,7 @@ export enum WorldFunctions {
   Name = "name",
   AttachDepot = "attachDepot",
   DetachDepot = "detachDepot",
-  ClearDepot = "clearDepot",
+  EmptyDepot = "emptyDepot",
   Fill = "fill",
   Accept = "accept",
   // Testing
@@ -75,8 +75,8 @@ export function detachDepot(depotEntity: string) {
   return addToSequencer(WorldFunctions.DetachDepot, [depotEntity])
 }
 
-export function clearDepot(depotEntity: string) {
-  return addToSequencer(WorldFunctions.ClearDepot, [depotEntity])
+export function emptyDepot(depotEntity: string) {
+  return addToSequencer(WorldFunctions.EmptyDepot, [depotEntity])
 }
 
 export function fill(depotEntity: string) {
