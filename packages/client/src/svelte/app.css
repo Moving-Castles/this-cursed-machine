@@ -29,7 +29,9 @@
   --tilesize: calc(var(--tileunit) * 1px);
 
   /* Fonts */
-  --font-family-special: "Fake Receipt", monospace;
+  /* 'DEC Terminal Modern',  */
+  /* 'SV Basic Manual', */
+  --font-family-special:  "Fake Receipt", monospace;
   --font-family-quote: "Baleze", monospace;
   --font-family: "Fake Receipt", monospace;
   --font-size: 18px;
@@ -236,7 +238,7 @@ p,
 svg {
   user-select: none;
 }
-
+/* 
 button {
   padding: 20px;
   font-size: var(--font-size-normal);
@@ -251,7 +253,7 @@ button {
     background: white;
     color: black;
   }
-}
+} */
 
 [role="button"] {
   text-decoration: underline;

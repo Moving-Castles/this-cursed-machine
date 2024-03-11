@@ -1,8 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
-  import { staticContent } from "../../modules/content"
-  import { animateContent, typeWriter } from "./typewriter"
-  import { ready, loadingMessage } from "../../modules/network"
+  import { staticContent } from "@modules/content"
+  import { animateContent, typeWriter } from "@components/Loading/typewriter"
+  import { ready, loadingMessage } from "@modules/network"
 
   const dispatch = createEventDispatcher()
 
@@ -30,7 +30,7 @@
       loadingMessageElement,
       $staticContent.loading.content.content,
       1,
-      50
+      50,
     )
     await new Promise(res => setTimeout(res, 300))
     // Intro sequence done

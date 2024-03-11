@@ -1,14 +1,18 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { COMMAND, TerminalType, OutputType } from "../Pod/Terminal/types"
-  import { SYMBOLS } from "../Pod/Terminal"
-  import { typeWriteToTerminal } from "../Pod/Terminal/functions/writeToTerminal"
-  import { narrative } from "./narrative"
-  import { player } from "../../modules/state/base/stores"
+  import {
+    COMMAND,
+    TerminalType,
+    OutputType,
+  } from "@components/Main/Terminal/types"
+  import { SYMBOLS } from "@components/Main/Terminal"
+  import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
+  import { narrative } from "@components/Spawn/narrative"
+  import { player } from "@modules/state/base/stores"
 
   const dispatch = createEventDispatcher()
 
-  import Terminal from "../Pod/Terminal/Terminal.svelte"
+  import Terminal from "@components/Main/Terminal/Terminal.svelte"
 
   let terminalComponent: any
   let narrativeIndex = 0

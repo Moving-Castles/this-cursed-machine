@@ -20,9 +20,24 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "@mud/*": [
+        "src/mud/*"
+      ],
+      "@svelte/*": [
+        "src/svelte/*"
+      ],
+      "@components/*": [
+        "src/svelte/components/*"
+      ],
+      "@modules/*": [
+        "src/svelte/modules/*"
+      ]
+    },
   },
   "include": [
     "src"
-  ]
+  ],
 }

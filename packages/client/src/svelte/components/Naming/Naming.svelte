@@ -1,19 +1,19 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { TerminalType, OutputType } from "../Pod/Terminal/types"
-  import { SYMBOLS } from "../Pod/Terminal"
+  import { TerminalType, OutputType } from "@components/Main/Terminal/types"
+  import { SYMBOLS } from "@components/Main/Terminal"
   import {
     typeWriteToTerminal,
     writeToTerminal,
-  } from "../Pod/Terminal/functions/writeToTerminal"
-  import { narrative } from "./narrative"
-  import { player } from "../../modules/state/base/stores"
+  } from "@components/Main/Terminal/functions/writeToTerminal"
+  import { narrative } from "@components/Naming/narrative"
+  import { player } from "@modules/state/base/stores"
 
   const dispatch = createEventDispatcher()
 
   let terminalComponent: any
 
-  import Terminal from "../Pod/Terminal/Terminal.svelte"
+  import Terminal from "@components/Main/Terminal/Terminal.svelte"
 
   function isValidName(name: string): boolean {
     // Regex to check for at least one numeral

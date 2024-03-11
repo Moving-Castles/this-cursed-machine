@@ -55,6 +55,9 @@ function player(inputs: Product[]): Product[] {
 
   const input = inputs[0]
 
+  // Abort if input is not bug
+  if (input.materialType != MATERIAL_TYPE.BUG) return outputs;
+
   const halfAmount = Number(input.amount) / 2
 
   outputs[0] = {

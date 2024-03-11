@@ -1,26 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { setup } from "../mud/setup"
+  import { setup } from "@mud/setup"
   import {
     createComponentSystem,
     createSyncProgressSystem,
-  } from "./modules/systems"
-  import { network, initBlockListener } from "./modules/network"
-  import { initActionSequencer } from "./modules/action/actionSequencer"
-  import { initStateSimulator } from "./modules/state/resolver"
-  import { initStaticContent } from "./modules/content"
-  import { initSound } from "./modules/sound"
-  import { clearTerminalOutput } from "./components/Pod/Terminal/functions/helpers"
-  import { UIState, mouseX, mouseY } from "./modules/ui/stores"
-  import { UI } from "./modules/ui/enums"
-  import { messageToStumps } from "./modules/ui"
-  import { playSound } from "./modules/sound"
+  } from "@modules/systems"
+  import { network, initBlockListener } from "@modules/network"
+  import { initActionSequencer } from "@modules/action/actionSequencer"
+  import { initStateSimulator } from "@modules/state/resolver"
+  import { initStaticContent } from "@modules/content"
+  import { initSound } from "@modules/sound"
+  import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
+  import { UIState, mouseX, mouseY } from "@modules/ui/stores"
+  import { UI } from "@modules/ui/enums"
+  import { messageToStumps } from "@modules/ui"
+  import { playSound } from "@modules/sound"
 
-  import Loading from "./components/Loading/Loading.svelte"
-  import Spawn from "./components/Spawn/Spawn.svelte"
-  import Pod from "./components/Pod/Pod.svelte"
-  import Naming from "./components/Naming/Naming.svelte"
-  import Toasts from "./modules/ui/toast/Toasts.svelte"
+  import { patches } from "./modules/state/resolver/patches/stores"
+
+  $: console.log("patches", $patches)
+
+  import Loading from "@components/Loading/Loading.svelte"
+  import Spawn from "@components/Spawn/Spawn.svelte"
+  import Main from "@components/Main/Main.svelte"
+  import Naming from "@components/Naming/Naming.svelte"
+  import Toasts from "@modules/ui/toast/Toasts.svelte"
 
   const onMouseMove = e => {
     $mouseX = e.clientX
@@ -110,7 +114,7 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    <Pod on:completed={completed} />
+    <Main on:completed={completed} />
   {/if}
 
   {#if $UIState === UI.COMPLETED}

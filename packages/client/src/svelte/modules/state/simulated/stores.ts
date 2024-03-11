@@ -159,24 +159,38 @@ function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [strin
     return usedInletDepots;
 }
 
-export function calculateSimulatedConnections(simulatedMachines: SimulatedEntities): Connection[] {
+export function calculateSimulatedConnections(simulatedMachines: SimulatedMachines): Connection[] {
     let connections: Connection[] = []
     const simulatedMachinesCopy = deepClone(simulatedMachines)
 
     Object.entries(simulatedMachinesCopy).forEach(([sourceAddress, machine]) => {
-        machine.outgoingConnections?.forEach((targetAddress, i) => {
+
+        machine.outgoingConnections.forEach((targetAddress, i) => {
+
             if (targetAddress === EMPTY_CONNECTION) return
+
             const sourceMachine = simulatedMachinesCopy[sourceAddress]
-            const product = sourceMachine?.outputs
-                ? sourceMachine?.outputs[i]
-                : null
-            connections.push({
+
+            console.log('sourceMachine', sourceMachine)
+
+            if (!sourceMachine) return
+
+            let connection: Connection = {
                 id: `FROM-${sourceAddress}-TO-${targetAddress}-${i}`,
                 sourceMachine: sourceAddress,
                 targetMachine: targetAddress,
                 portIndex: i,
-                product: product,
-            })
+            }
+
+            const product = sourceMachine.outputs
+                ? sourceMachine?.outputs[i]
+                : null
+
+            if (product) {
+                connection.product = product
+            }
+
+            connections.push(connection)
         })
     })
 

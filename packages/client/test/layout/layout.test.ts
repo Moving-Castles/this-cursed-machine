@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest'
 import { resolve } from "../../src/svelte/modules/state/resolver/resolve"
 import { calculateSimulatedConnections, applyPatches } from "../../src/svelte/modules/state/simulated/stores"
-import { createLayout } from "../../src/svelte/components/Pod/Graph2/layout"
+import { createLayout } from "../../src/svelte/components/Main/Tabs/Pod/Graph2/layout"
 import { setUp, createMachine } from "../resolve/setUp"
 import { MACHINE_TYPE } from 'contracts/enums'
 import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils'
 
-test.only("(1) createLayout", () => {
+test("(1) createLayout", () => {
     const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Connect DEPOT 1 to INLET 1
@@ -335,8 +335,6 @@ test("(2) createLayout 2", () => {
     expect(simulatedConnections).toStrictEqual(expectedSimulatedConnections)
 
     const layout = createLayout(fixedEntities, simulatedMachines, simulatedConnections, {}, [])
-
-    console.log(JSON.stringify(layout, null, 2));
 
     const expectedLayout = {
         graphMachines: {

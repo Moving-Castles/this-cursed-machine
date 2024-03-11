@@ -1,9 +1,9 @@
-import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "../Pod/Terminal/functions/writeToTerminal"
-import { OutputType } from "../Pod/Terminal/types"
-import { SYMBOLS } from "../Pod/Terminal"
-import { spawn, start } from "../../modules/action"
-import { waitForCompletion, waitForTransaction } from "../../modules/action/actionSequencer/utils"
-import { playSound } from "../../modules/sound"
+import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
+import { OutputType } from "@components/Main/Terminal/types"
+import { SYMBOLS } from "@components/Main/Terminal"
+import { spawn, start } from "@modules/action"
+import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
+import { playSound } from "@modules/sound"
 
 async function writeNarrative(text: string) {
     await typeWriteToTerminal(

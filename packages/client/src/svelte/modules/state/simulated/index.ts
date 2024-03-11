@@ -3,7 +3,7 @@ import { EMPTY_CONNECTION } from "../../utils"
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
 import { CONNECTION_STATE } from "./enums"
 import type { Connection } from "./types"
-import { DIRECTION } from "../../../components/Pod/Terminal/types"
+import { DIRECTION } from "../../../components/Main/Terminal/types"
 import { simulatedMachines, simulatedConnections } from "./stores"
 
 export const availableMachines = (direction: DIRECTION) => {

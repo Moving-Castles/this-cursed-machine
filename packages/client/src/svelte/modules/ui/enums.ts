@@ -5,3 +5,12 @@ export enum UI {
     COMPLETED,
     NAMED,
 }
+
+export enum TABS {
+    POD,
+    INBOX,
+    ORDERS,
+    SHOP,
+    LEADERBOARD,
+    CHAT
+}

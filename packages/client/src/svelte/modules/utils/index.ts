@@ -96,7 +96,7 @@ export function stringToHex(string: string) {
  * @returns {T} A deeply cloned copy of the input.
  * @template T
  */
-export function deepClone<T>(obj: T): T {
+export function deepClone2<T>(obj: T): T {
   // Handle primitives and null values directly.
   if (obj === null) return obj as any
   if (typeof obj !== "object") return obj
@@ -118,6 +118,17 @@ export function deepClone<T>(obj: T): T {
     }
   }
   return copy as T
+}
+
+/**
+ * Deeply clones a given object or array, creating a new instance without shared references.
+ *
+ * @param {T} obj - The object or array to be cloned.
+ * @returns {T} A deeply cloned copy of the input.
+ * @template T
+ */
+export function deepClone<T>(obj: T): T {
+  return structuredClone(obj) as T
 }
 
 /**

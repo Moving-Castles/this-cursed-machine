@@ -1,13 +1,13 @@
 import { writable } from "svelte/store"
 import { spring } from "svelte/motion"
-import { UI } from "./enums"
+import { UI, TABS } from "./enums"
 
 export const UIState = writable(UI.LOADING)
-export const showFlowChart = writable(false)
-export const showGraph = writable(false)
-export const showMap = writable(false)
+export const activeTab = writable(TABS.POD)
+
 export const localLevel = writable(0)
 export const lastCompletedBlock = writable(0)
+
 export const cursorCharacter = writable("")
 export const inspecting = writable(null)
 export const alignTooltip = writable("center") // "center" | "left" | "right" = "center"
