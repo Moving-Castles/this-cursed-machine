@@ -19,7 +19,10 @@
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
   import { MACHINE_TYPE, PORT_INDEX } from "@modules/state/base/enums"
-  import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
+  import {
+    writeToTerminal,
+    typeWriteToTerminal,
+  } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
   import Select from "@components/Main/Terminal/Select.svelte"
   import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
@@ -40,7 +43,7 @@
   let userInput = ""
   let selectContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
-  let inputActive = true
+  let inputActive = false
 
   export let terminalType: TerminalType = TerminalType.FULL
   export let placeholder = "HELP"
@@ -369,8 +372,29 @@
     playInputSound(e)
   }
 
-  onMount(() => {
+  const writeIntroMessage = async () => {
+    await typeWriteToTerminal(
+      OutputType.SPECIAL,
+      "Stump securely locked in pod",
+      SYMBOLS[7],
+      10,
+      800,
+    )
+    await typeWriteToTerminal(
+      OutputType.SPECIAL,
+      "Type help",
+      SYMBOLS[7],
+      10,
+      800,
+    )
+  }
+
+  onMount(async () => {
     cursorCharacter.set("█")
+    if (terminalType === TerminalType.FULL) {
+      await writeIntroMessage()
+      inputActive = true
+    }
     inputElement?.focus()
   })
 
