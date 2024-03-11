@@ -49,8 +49,8 @@ contract PostDeploy is Script {
     LibInitRecipes.init();
 
     // Create test orders
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, false, 1000, ONE_HOUR, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 100000, false, 1000, ONE_HOUR, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 10000, false, 1000, ONE_HOUR, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 10000, false, 1000, ONE_HOUR, 10);
 
     vm.stopBroadcast();
   }

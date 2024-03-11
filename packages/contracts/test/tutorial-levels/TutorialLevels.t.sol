@@ -76,7 +76,7 @@ contract TutorialLevelsTest is BaseTest {
     assertEq(Amount.get(depotsInPod[1]), currentOrderData.goalAmount);
   }
 
-  function fillAndCheckProgression(uint32 levelIndex, OrderData memory nextOrderData) internal {
+  function fillAndCheckProgression(uint32 levelIndex, OrderData memory nextOrderData, uint256 leftOver) internal {
     vm.startPrank(alice);
 
     // Fill the order and perform final checks
@@ -89,9 +89,9 @@ contract TutorialLevelsTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.NONE));
     assertEq(Amount.get(depotsInPod[1]), 0);
 
-    // Depot 0 should be filled with next order's material
+    // Depot 0 should be filled with next order's material + left over from previous order
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(nextOrderData.resourceMaterialType));
-    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount);
+    assertEq(Amount.get(depotsInPod[0]), nextOrderData.resourceAmount + leftOver);
 
     vm.stopPrank();
   }
@@ -160,7 +160,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData);
+    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelTwo() public {
@@ -207,7 +207,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData);
+    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelThree() public {
@@ -260,7 +260,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData);
+    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelFour() public {
@@ -316,7 +316,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData);
+    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelFive() public {

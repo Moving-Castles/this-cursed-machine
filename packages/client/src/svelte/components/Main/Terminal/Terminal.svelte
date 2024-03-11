@@ -19,10 +19,7 @@
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
   import { MACHINE_TYPE, PORT_INDEX } from "@modules/state/base/enums"
-  import {
-    writeToTerminal,
-    typeWriteToTerminal,
-  } from "@components/Main/Terminal/functions/writeToTerminal"
+  import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
   import Select from "@components/Main/Terminal/Select.svelte"
   import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
@@ -38,6 +35,7 @@
     playerPod,
     machines as machinesStore,
   } from "@modules/state/base/stores"
+  import { terminalMessages } from "./functions/terminalMessages"
 
   let inputElement: HTMLInputElement
   let userInput = ""
@@ -51,24 +49,6 @@
   export let noOutput = false
 
   const dispatch = createEventDispatcher()
-
-  // $: if (
-  //   terminalType == TerminalType.FULL &&
-  //   $player &&
-  //   $player.level !== $localLevel
-  // ) {
-  //   handleLevelChange($player.level)
-  // }
-
-  // const handleLevelChange = async (level: number) => {
-  //   localLevel.set(level)
-  //   inputActive = false
-  //   await new Promise(resolve => setTimeout(resolve, 500))
-  //   clearTerminalOutput()
-  //   await writeLevel(level)
-  //   resetInput()
-  //   inputActive = true
-  // }
 
   const focusInput = async () => {
     await tick()
@@ -372,27 +352,10 @@
     playInputSound(e)
   }
 
-  const writeIntroMessage = async () => {
-    await typeWriteToTerminal(
-      OutputType.SPECIAL,
-      "Stump securely locked in pod",
-      SYMBOLS[7],
-      10,
-      800,
-    )
-    await typeWriteToTerminal(
-      OutputType.SPECIAL,
-      "Type help",
-      SYMBOLS[7],
-      10,
-      800,
-    )
-  }
-
   onMount(async () => {
     cursorCharacter.set("█")
     if (terminalType === TerminalType.FULL) {
-      await writeIntroMessage()
+      await terminalMessages.startUp()
       inputActive = true
     }
     inputElement?.focus()

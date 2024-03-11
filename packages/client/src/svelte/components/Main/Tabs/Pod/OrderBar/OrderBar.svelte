@@ -13,7 +13,7 @@
       NO ORDER
     {:else}
       CURRENT ORDER:
-      {currentOrder?.order.goalAmount}
+      {currentOrder?.order.goalAmount / 100}
       {MATERIAL_TYPE[currentOrder?.order.goalMaterialType]}
     {/if}
   </div>

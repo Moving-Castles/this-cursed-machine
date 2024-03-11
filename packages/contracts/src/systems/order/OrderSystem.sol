@@ -65,8 +65,21 @@ contract OrderSystem is System {
 
         // Fill depot with tutorial order
         // todo: find first empty depot
-        MaterialType.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
-        Amount.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
+
+        // Is the material type of the depot the same as the tutorial order?
+        // If so, add to the amount
+        // Otherwise, replace
+        if (
+          MaterialType.get(DepotsInPod.get(podEntity)[0]) == Order.get(CurrentOrder.get(podEntity)).resourceMaterialType
+        ) {
+          Amount.set(
+            DepotsInPod.get(podEntity)[0],
+            Amount.get(DepotsInPod.get(podEntity)[0]) + Order.get(CurrentOrder.get(podEntity)).resourceAmount
+          );
+        } else {
+          MaterialType.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
+          Amount.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
+        }
       } else {
         // Tutorial done
         Tutorial.set(playerEntity, false);
