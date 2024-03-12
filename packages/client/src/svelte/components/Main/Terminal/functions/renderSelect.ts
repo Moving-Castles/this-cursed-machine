@@ -1,5 +1,5 @@
 
-import { MACHINE_TYPE } from "@modules/state/base/enums"
+import { MACHINE_TYPE, PORT_INDEX } from "@modules/state/base/enums"
 import { SelectOption } from "@components/Main/Terminal/types"
 
 /**
@@ -13,7 +13,7 @@ export async function renderSelect(
     selectContainerElement: HTMLDivElement,
     Select: any,
     selectOptions: SelectOption[]
-): Promise<string | MACHINE_TYPE | null> {
+): Promise<string | MACHINE_TYPE | PORT_INDEX | null> {
     return new Promise(resolve => {
         const component = new Select({
             target: selectContainerElement,

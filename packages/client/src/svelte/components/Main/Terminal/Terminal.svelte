@@ -124,9 +124,9 @@
   }
 
   const getConnectParameters = async (): Promise<any[] | false> => {
-    // %%%%%%%%%%%%%%%%%%%%%%%%
-    // %% Get source machine %%
-    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Start source machine %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
 
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
@@ -161,8 +161,64 @@
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
-    // %% Get target machine %%
+    // %% End source machine %%
     // %%%%%%%%%%%%%%%%%%%%%%%%
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Start port selection %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    // Default, for all machines that only have one port
+    let portIndex = PORT_INDEX.FIRST
+
+    // Handle splitter port selection
+    if (sourceMachineEntity.machineType === MACHINE_TYPE.SPLITTER) {
+      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+      // Use the first available
+      portIndex = ports[0].portIndex
+    } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
+      await writeToTerminal(OutputType.NORMAL, "Select source port:")
+      let sourcePortOptions: SelectOption[] = []
+
+      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+
+      const portLabel = p =>
+        `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
+
+      sourcePortOptions = ports.map(p => ({
+        label: portLabel(p),
+        value: p.portIndex,
+      }))
+
+      const sourcePort = (await renderSelect(
+        selectContainerElement,
+        Select,
+        sourcePortOptions,
+      )) as PORT_INDEX
+
+      // Abort if nothing selected
+      if (!sourcePort && sourcePort !== 0) {
+        handleInvalid("No port selected")
+        return false
+      }
+
+      await writeToTerminal(
+        OutputType.SPECIAL,
+        "Port: #" + (sourcePort + 1),
+        true,
+        SYMBOLS[14],
+      )
+
+      portIndex = sourcePort
+    }
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %% End port selection %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %% Start target machine %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%
 
     // Get machines with available incoming connection slots
     // Remove the source machine from the list
@@ -203,44 +259,11 @@
       SYMBOLS[14],
     )
 
-    /** Exceptions first */
+    // %%%%%%%%%%%%%%%%%%%%%%%%
+    // %% End target machine %%
+    // %%%%%%%%%%%%%%%%%%%%%%%%
 
-    // Handle splitter port selection
-    if (sourceMachineEntity.machineType === MACHINE_TYPE.SPLITTER) {
-      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-      // Use the first available one
-      return [sourceMachineKey, targetMachineKey, ports[0].portIndex]
-    } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
-      await writeToTerminal(OutputType.NORMAL, "Select source port:")
-      let sourcePortOptions: SelectOption[] = []
-
-      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
-      const portLabel = p =>
-        `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
-
-      sourcePortOptions = ports.map(p => ({
-        label: portLabel(p),
-        value: p.portIndex,
-      }))
-
-      const sourcePort = await renderSelect(
-        selectContainerElement,
-        Select,
-        sourcePortOptions,
-      )
-
-      // Abort if nothing selected
-      if (!sourcePort && sourcePort !== 0) {
-        handleInvalid("No port selected")
-        return false
-      }
-
-      return [sourceMachineKey, targetMachineKey, sourcePort]
-    } else {
-      // Use the first one
-      return [sourceMachineKey, targetMachineKey, PORT_INDEX.FIRST]
-    }
+    return [sourceMachineKey, targetMachineKey, portIndex]
   }
 
   const getAttachDepotParameters = async (): Promise<any[] | false> => {
