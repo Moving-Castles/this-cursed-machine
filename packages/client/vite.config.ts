@@ -25,7 +25,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    // exclude: ["lodash"],
     esbuildOptions: {
       target: "es2022",
     },

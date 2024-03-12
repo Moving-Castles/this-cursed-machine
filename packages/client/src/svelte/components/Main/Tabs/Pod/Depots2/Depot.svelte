@@ -1,8 +1,7 @@
 <script lang="ts">
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
-  import { playerPod } from "@modules/state/base/stores"
   import type { SimulatedEntity } from "@modules/state/simulated/types"
-  import { EMPTY_CONNECTION } from "@modules/utils"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
   export let depot: SimulatedEntity
   export let key: string
   export let index: number
@@ -11,12 +10,6 @@
   $: typedDepot = depot as Depot
 
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
-
-  const getConnectionName = (machineEntity: string) => {
-    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "Inlet"
-    if (machineEntity === $playerPod.fixedEntities.outlet) return "Outlet"
-    return "none"
-  }
 </script>
 
 <div class="depot-item" class:connected>

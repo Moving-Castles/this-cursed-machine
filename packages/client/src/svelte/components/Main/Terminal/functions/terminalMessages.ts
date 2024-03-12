@@ -1,4 +1,4 @@
-import { OutputType } from "../types";
+import { TERMINAL_OUTPUT_TYPE } from "../enums";
 import { typeWriteToTerminal } from "./writeToTerminal";
 import { SYMBOLS } from "../index";
 import { clearTerminalOutput } from "./helpers";
@@ -8,14 +8,14 @@ async function orderFullfilled() {
     clearTerminalOutput()
 
     await typeWriteToTerminal(
-        OutputType.SUCCESS,
+        TERMINAL_OUTPUT_TYPE.SUCCESS,
         "ORDER FULLFILLED",
         SYMBOLS[7],
         10,
         800,
     )
     await typeWriteToTerminal(
-        OutputType.SUCCESS,
+        TERMINAL_OUTPUT_TYPE.SUCCESS,
         "PERFORMANCE: ADEQUATE",
         SYMBOLS[7],
         10,
@@ -23,7 +23,7 @@ async function orderFullfilled() {
     )
 
     await typeWriteToTerminal(
-        OutputType.SUCCESS,
+        TERMINAL_OUTPUT_TYPE.SUCCESS,
         "BUG VAT HAS BEEN REPLENISHED",
         SYMBOLS[7],
         10,
@@ -33,14 +33,14 @@ async function orderFullfilled() {
 
 async function startUp() {
     await typeWriteToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Stump securely locked in pod",
         SYMBOLS[7],
         10,
         800,
     )
     await typeWriteToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Type help",
         SYMBOLS[7],
         10,

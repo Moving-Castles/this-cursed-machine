@@ -1,6 +1,8 @@
 import { tick } from "svelte"
-import { COMMAND, SelectOption } from "@components/Main/Terminal/types"
-import { COMMANDS_BY_LEVEL, terminalOutput } from "@components/Main/Terminal/"
+import { COMMAND } from "@components/Main/Terminal/enums"
+import { SelectOption } from "@components/Main/Terminal/types"
+import { COMMANDS_BY_LEVEL } from "@components/Main/Terminal/"
+import { terminalOutput } from "@components/Main/Terminal/stores"
 import { machineTypeToLabel } from "@modules/state/simulated"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
 

@@ -1,12 +1,6 @@
 <script lang="ts">
-  import { depots } from "@modules/state/base/stores"
   import { simulatedDepots } from "@modules/state/simulated/stores"
-  import { patches } from "@modules/state/resolver/patches/stores"
   import Depot from "./Depot.svelte"
-
-  // $: console.log("$depots", $depots)
-  // $: console.log("$simulatedDepots", $simulatedDepots)
-  // $: console.log("$patches", $patches)
 </script>
 
 <div class="depots-box">

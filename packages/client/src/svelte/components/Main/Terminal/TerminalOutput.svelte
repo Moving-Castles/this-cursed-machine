@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { OutputType, type Output } from "@components/Main/Terminal/types"
+  import type { Output } from "@components/Main/Terminal/types"
+  import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
   export let output: Output
 </script>
 
-<p class="output-content {OutputType[output.type]}">
+<p class="output-content {TERMINAL_OUTPUT_TYPE[output.type]}">
   <span class="symbol">{output.symbol}</span>
   <span class="content">{@html output.text}</span>
 </p>

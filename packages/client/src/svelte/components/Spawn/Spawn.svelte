@@ -2,9 +2,9 @@
   import { createEventDispatcher, onMount } from "svelte"
   import {
     COMMAND,
-    TerminalType,
-    OutputType,
-  } from "@components/Main/Terminal/types"
+    TERMINAL_OUTPUT_TYPE,
+    TERMINAL_TYPE,
+  } from "@components/Main/Terminal/enums"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
@@ -41,7 +41,7 @@
     // Skip intro if player is completed or spawned
     // if ($player && $player.level > Object.keys($levels).length) {
     //   await typeWriteToTerminal(
-    //     OutputType.SPECIAL,
+    //     TERMINAL_OUTPUT_TYPE.SPECIAL,
     //     `Welcome back ${$player.name ? $player.name : "stump"}...`,
     //     SYMBOLS[7],
     //     10,
@@ -51,7 +51,7 @@
     // } else
     if ($player?.carriedBy) {
       await typeWriteToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Welcome back...",
         SYMBOLS[7],
         10,
@@ -68,7 +68,7 @@
 <div class="spawn">
   <Terminal
     bind:this={terminalComponent}
-    terminalType={TerminalType.SPAWN}
+    terminalType={TERMINAL_TYPE.SPAWN}
     placeholder="BLINK"
     setBlink
     on:commandExecuted={e => handleCommand(e)}

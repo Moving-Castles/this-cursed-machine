@@ -1,10 +1,11 @@
 import { derived } from "svelte/store"
-import { EMPTY_CONNECTION, deepClone } from "../../utils"
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
+import { deepClone } from "@modules/utils/"
+import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
 import type { SimulatedEntities, SimulatedEntity, SimulatedDepots, SimulatedMachines, Connection } from "./types"
-import { machines, depots, playerPod } from "../base/stores"
-import { patches } from "../resolver/patches/stores"
-import { blocksSinceLastResolution } from "../resolver/stores"
+import { machines, depots, playerPod } from "@modules/state/base/stores"
+import { patches } from "@modules/state/resolver/patches/stores"
+import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
 
 export function processPatches(field: "inputs" | "outputs", simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
     // Early return if conditions are not met, without modifying the original 'simulated' object.

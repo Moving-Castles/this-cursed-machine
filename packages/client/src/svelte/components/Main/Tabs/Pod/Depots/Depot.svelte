@@ -5,7 +5,7 @@
   import type { SimulatedEntity } from "@modules/state/simulated/types"
   import { blockNumber } from "@modules/network"
   import { patches } from "@modules/state/resolver/patches/stores"
-  import { EMPTY_CONNECTION } from "@modules/utils"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
   export let depot: SimulatedEntity
   export let key: string
   export let index: number

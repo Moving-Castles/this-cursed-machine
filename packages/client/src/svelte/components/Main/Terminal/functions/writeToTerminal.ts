@@ -1,17 +1,20 @@
-import { terminalOutput, SYMBOLS } from "@components/Main/Terminal/"
-import { OutputType, type Output } from "@components/Main/Terminal/types"
+import { SYMBOLS } from "@components/Main/Terminal/"
+import { terminalOutput } from "@components/Main/Terminal/stores"
+import type { Output } from "@components/Main/Terminal/types"
+import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+
 import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
 import { playSound, randomPitch } from "@modules/sound"
 
 /**
  * Writes a given string to the terminal output. Optionally replaces the previous output.
- * @param {OutputType} type - The type of output to be written to the terminal.
+ * @param {TERMINAL_OUTPUT_TYPE} type - The type of output to be written to the terminal.
  * @param {string} str - The string to be written to the terminal.
  * @param {boolean} [replace=false] - Whether to replace the previous output. Defaults to false.
  * @returns {Promise<void>} - A promise indicating the completion of the write operation.
  */
 export async function writeToTerminal(
-  type: OutputType,
+  type: TERMINAL_OUTPUT_TYPE,
   str: string,
   replace: boolean = false,
   symbol: string = SYMBOLS[2],
@@ -45,7 +48,7 @@ export async function writeToTerminal(
  *
  * @async
  * @function
- * @param {OutputType} type - The type of output.
+ * @param {TERMINAL_OUTPUT_TYPE} type - The type of output.
  * @param {string} str - The string to be typed out.
  * @param {string} [symbol=SYMBOLS[2]] - The symbol used to represent typing progress.
  * @param {number} [delay=10] - The delay (in milliseconds) between typing each character.
@@ -53,7 +56,7 @@ export async function writeToTerminal(
  * @returns {Promise<void>} A promise that resolves when typing is complete.
  */
 export async function typeWriteToTerminal(
-  type: OutputType,
+  type: TERMINAL_OUTPUT_TYPE,
   str: string,
   symbol: string = SYMBOLS[2],
   delay: number = 10,
@@ -81,10 +84,10 @@ export async function loadingLine(index: number): Promise<void> {
   const CHARACTER = "·"
   playSound("tcm", "TRX_wait_b")
   if (index === 1) {
-    await writeToTerminal(OutputType.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
   } else {
     await writeToTerminal(
-      OutputType.NORMAL,
+      TERMINAL_OUTPUT_TYPE.NORMAL,
       CHARACTER.repeat(index),
       true,
       SYMBOLS[2],
@@ -103,8 +106,8 @@ export async function loadingSpinner(index: number): Promise<void> {
   const currentGlyph = GLYPHS[index % GLYPHS.length]
   playSound("tcm", "TRX_wait_b_07")
   if (index === 1) {
-    await writeToTerminal(OutputType.NORMAL, currentGlyph, false, SYMBOLS[2], 0)
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, currentGlyph, false, SYMBOLS[2], 0)
   } else {
-    await writeToTerminal(OutputType.NORMAL, currentGlyph, true, SYMBOLS[2], 0)
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, currentGlyph, true, SYMBOLS[2], 0)
   }
 }

@@ -1,6 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte"
-  import { TerminalType, OutputType } from "@components/Main/Terminal/types"
+  import {
+    TERMINAL_TYPE,
+    TERMINAL_OUTPUT_TYPE,
+  } from "@components/Main/Terminal/enums"
   import { SYMBOLS } from "@components/Main/Terminal"
   import {
     typeWriteToTerminal,
@@ -34,7 +37,7 @@
     }
 
     await writeToTerminal(
-      OutputType.ERROR,
+      TERMINAL_OUTPUT_TYPE.ERROR,
       "Name must include at least one numeral and one special character. Maximum 24 characters long.",
       false,
       SYMBOLS[5],
@@ -46,7 +49,7 @@
     // Skip intro if player is completed or spawned
     if ($player && $player.level > 8) {
       await typeWriteToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         `Loading dashboard...`,
         SYMBOLS[7],
         10,
@@ -63,7 +66,7 @@
 <div class="naming">
   <Terminal
     bind:this={terminalComponent}
-    terminalType={TerminalType.NAMING}
+    terminalType={TERMINAL_TYPE.NAMING}
     placeholder="ENTER NAME"
     setBlink
     on:commandExecuted={e => handleCommand(e)}

@@ -2,8 +2,8 @@
   import { fade } from "svelte/transition"
   import type { GraphMachine } from "../types"
   import { CELL } from "../constants"
-  import { EMPTY_CONNECTION } from "@modules/utils"
-  import { DIRECTION } from "@components/Main/Terminal/types"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
+  import { DIRECTION } from "@components/Main/Terminal/enums"
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`

@@ -1,7 +1,5 @@
 import { getAddress } from "viem"
 
-export const EMPTY_CONNECTION = "0x0000000000000000000000000000000000000000000000000000000000000000"
-
 export function toCamelCase(s: string): string {
   return s
     // Remove all underscores and hyphens and convert the following letter to uppercase

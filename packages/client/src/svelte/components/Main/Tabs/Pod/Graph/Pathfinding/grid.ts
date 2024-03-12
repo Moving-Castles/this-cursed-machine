@@ -1,4 +1,3 @@
-import { deepClone } from '@svelte/modules/utils'
 import type { GridNode, Grid } from './types'
 
 export function initializeGrid(width: number, height: number): Grid {
@@ -34,9 +33,6 @@ export function isWalkableAt(grid: Grid, x: number, y: number): boolean {
 }
 
 export function setWalkableAt(grid: Grid, x: number, y: number, walkable: boolean): Grid {
-    // const newGrid = deepClone(grid)
-    // newGrid.nodes[y][x].walkable = walkable
-    // return newGrid
     grid.nodes[y][x].walkable = walkable
     return grid
 }
@@ -47,9 +43,6 @@ export function getCostAt(grid: Grid, x: number, y: number): number | boolean {
 }
 
 export function setCostAt(grid: Grid, x: number, y: number, cost: number): Grid {
-    // const newGrid = deepClone(grid)
-    // newGrid.nodes[y][x].cost = cost
-    // return newGrid
     grid.nodes[y][x].cost = cost
     return grid
 }

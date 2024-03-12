@@ -1,5 +1,5 @@
 import { loadingLine, loadingSpinner, typeWriteToTerminal, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
-import { OutputType } from "@components/Main/Terminal/types"
+import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
 import { SYMBOLS } from "@components/Main/Terminal"
 import { spawn, start } from "@modules/action"
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
@@ -7,7 +7,7 @@ import { playSound } from "@modules/sound"
 
 async function writeNarrative(text: string) {
     await typeWriteToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         text,
         SYMBOLS[7],
         10,
@@ -17,7 +17,7 @@ async function writeNarrative(text: string) {
 
 async function writeNarrativeAction(text: string) {
     await typeWriteToTerminal(
-        OutputType.INFO,
+        TERMINAL_OUTPUT_TYPE.INFO,
         text,
         SYMBOLS[7],
         10,
@@ -27,7 +27,7 @@ async function writeNarrativeAction(text: string) {
 
 async function writeNarrativeInfo(text: string) {
     await writeToTerminal(
-        OutputType.NORMAL,
+        TERMINAL_OUTPUT_TYPE.NORMAL,
         text,
         false,
         SYMBOLS[10],
@@ -37,7 +37,7 @@ async function writeNarrativeInfo(text: string) {
 
 async function writeNarrativeSuccess(text: string) {
     await writeToTerminal(
-        OutputType.SUCCESS,
+        TERMINAL_OUTPUT_TYPE.SUCCESS,
         text,
         false,
         SYMBOLS[10],

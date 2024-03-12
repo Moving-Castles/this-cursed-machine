@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { EMPTY_CONNECTION } from "@modules/utils"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
+  import type { Command, SelectOption } from "@components/Main/Terminal/types"
   import {
-    COMMAND,
-    OutputType,
-    TerminalType,
+    TERMINAL_TYPE,
     DIRECTION,
-    type Command,
-    type SelectOption,
-  } from "@components/Main/Terminal/types"
+    TERMINAL_OUTPUT_TYPE,
+    COMMAND,
+  } from "@components/Main/Terminal/enums"
+
   import {
     SYMBOLS,
     NO_INPUT_COMMANDS,
     SINGLE_INPUT_COMMANDS,
-    terminalOutput,
   } from "@components/Main/Terminal/"
+  import { terminalOutput } from "@components/Main/Terminal/stores"
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
   import { MACHINE_TYPE, PORT_INDEX } from "@modules/state/base/enums"
@@ -43,7 +43,7 @@
   let interval: ReturnType<typeof setInterval>
   let inputActive = false
 
-  export let terminalType: TerminalType = TerminalType.FULL
+  export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
   export let setBlink = false
   export let noOutput = false
@@ -63,7 +63,12 @@
   }
 
   const handleInvalid = async (message: string) => {
-    await writeToTerminal(OutputType.ERROR, message, false, SYMBOLS[5])
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.ERROR,
+      message,
+      false,
+      SYMBOLS[5],
+    )
     resetInput()
   }
 
@@ -134,7 +139,7 @@
       DIRECTION.OUTGOING,
     )
 
-    await writeToTerminal(OutputType.NORMAL, "From:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "From:")
 
     const sourceMachineKey = await renderSelect(
       selectContainerElement,
@@ -151,7 +156,7 @@
     let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
 
     writeToTerminal(
-      OutputType.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.SPECIAL,
       "From: " +
         machineTypeToLabel(sourceMachineEntity.machineType) +
         " #" +
@@ -177,7 +182,7 @@
       // Use the first available
       portIndex = ports[0].portIndex
     } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
-      await writeToTerminal(OutputType.NORMAL, "Select source port:")
+      await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Select source port:")
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
@@ -203,7 +208,7 @@
       }
 
       await writeToTerminal(
-        OutputType.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Port: #" + (sourcePort + 1),
         true,
         SYMBOLS[14],
@@ -233,7 +238,7 @@
       return false
     }
 
-    await writeToTerminal(OutputType.NORMAL, "TO:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "TO:")
 
     let targetMachineKey = await renderSelect(
       selectContainerElement,
@@ -250,7 +255,7 @@
     let targetMachineEntity = $simulatedMachines[targetMachineKey]
 
     await writeToTerminal(
-      OutputType.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.SPECIAL,
       "To: " +
         machineTypeToLabel(targetMachineEntity.machineType) +
         " #" +
@@ -270,7 +275,7 @@
     // Get depots
     let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
 
-    await writeToTerminal(OutputType.NORMAL, "Depot:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Depot:")
 
     const depotEntity = await renderSelect(
       selectContainerElement,
@@ -327,10 +332,15 @@
     inputActive = false
 
     // Write input to terminal
-    await writeToTerminal(OutputType.COMMAND, userInput, false, SYMBOLS[0])
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.COMMAND,
+      userInput,
+      false,
+      SYMBOLS[0],
+    )
 
     // Return the input and abort if this is the naming terminal
-    if (terminalType === TerminalType.NAMING) {
+    if (terminalType === TERMINAL_TYPE.NAMING) {
       dispatch("commandExecuted", { userInput })
       return
     }
@@ -377,7 +387,7 @@
 
   onMount(async () => {
     cursorCharacter.set("█")
-    if (terminalType === TerminalType.FULL) {
+    if (terminalType === TERMINAL_TYPE.FULL) {
       await terminalMessages.startUp()
       inputActive = true
     }

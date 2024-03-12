@@ -2,7 +2,9 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
 import { process } from "./machines"
-import { EMPTY_CONNECTION, deepClone } from "../../utils"
+import { deepClone } from "@modules/utils"
+import { EMPTY_CONNECTION } from "@modules/utils/constants"
+
 import { organizePatches, consolidatePatches, createOutletDepotPatches, createInletDepotPatches } from "./patches"
 
 const FLOW_RATE = 1000

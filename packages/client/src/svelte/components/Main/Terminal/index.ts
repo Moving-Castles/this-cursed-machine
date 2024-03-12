@@ -1,10 +1,5 @@
-import { writable } from "svelte/store"
-import type { Output } from "@components/Main/Terminal/types"
-import { COMMAND } from "@components/Main/Terminal/types"
+import { COMMAND } from "@components/Main/Terminal/enums"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
-
-// STORES
-export const terminalOutput = writable([] as Output[])
 
 // CONSTANTS
 export const SYMBOLS = [

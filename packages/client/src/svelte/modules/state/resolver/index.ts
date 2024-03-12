@@ -13,7 +13,6 @@ import {
 } from "../base/stores"
 import { playSound } from "../../sound"
 import { resolve } from "./resolve"
-import { pulseGraph } from "../../ui/transitions"
 import { UIState } from "../../ui/stores"
 import { UI } from "../../ui/enums"
 
@@ -29,15 +28,12 @@ export async function initStateSimulator() {
     const localResolvedValue = get(localResolved)
     // const lastCompletedBlockValue = get(lastCompletedBlock)
 
-    // console.log('blocknumber', blockNumber)
-
     // Player is not spawned yet
     if (!playerEntityValue) return
 
     // Play heartbeat on new block if player is in pod
     if (playerEntityValue.carriedBy && get(UIState) === UI.READY) {
       playSound("tcm", "singleHeartbeat100")
-      pulseGraph()
     }
 
     // Network was resolved onchain

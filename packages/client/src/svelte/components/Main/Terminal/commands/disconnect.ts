@@ -1,6 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types"
 import { PORT_INDEX } from "@modules/state/base/enums"
-import { COMMAND } from "@components/Main/Terminal/types"
+import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
 import { disconnect as sendDisconnect } from "@modules/action"
 import {
   loadingLine,
@@ -8,27 +8,26 @@ import {
   writeToTerminal,
 } from "@components/Main/Terminal/functions/writeToTerminal"
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
-import { OutputType } from "@components/Main/Terminal/types"
 import { playSound } from "@modules/sound"
 
 async function execute(sourceMachine: string, portIndex: PORT_INDEX) {
   try {
-    writeToTerminal(OutputType.NORMAL, "Approval pending")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Approval pending")
     // ...
     const action = sendDisconnect(sourceMachine, portIndex)
     // ...
     await waitForTransaction(action, loadingSpinner)
     // ...
-    writeToTerminal(OutputType.NORMAL, "Disconnecting...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Disconnecting...")
     await waitForCompletion(action, loadingLine)
     playSound("tcm", "TRX_yes")
-    await writeToTerminal(OutputType.SUCCESS, "Done")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return
   } catch (error) {
     console.error(error)
     playSound("tcm", "TRX_no")
-    await writeToTerminal(OutputType.ERROR, "Command failed")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Command failed")
     return
   }
 }

@@ -3,7 +3,7 @@ import { resolve } from "../../src/svelte/modules/state/resolver/resolve"
 import { setUp, createMachine } from "./setUp"
 import { outputPatches } from './outputPatches'
 import { MACHINE_TYPE } from 'contracts/enums'
-import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils'
+import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
 
 test("(1) resolve: no connections", () => {
     const { depots, machines, inlets, outlet, recipes } = setUp()

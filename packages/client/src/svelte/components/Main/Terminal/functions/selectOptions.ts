@@ -1,12 +1,13 @@
 import { get } from "svelte/store"
-import { EMPTY_CONNECTION } from "@modules/utils"
-import { SelectOption, COMMAND, DIRECTION } from "@components/Main/Terminal/types"
-import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
+import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { SelectOption } from "@components/Main/Terminal/types"
+import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
+import { MACHINE_TYPE } from "@modules/state/base/enums"
 import {
   simulatedMachines,
   simulatedConnections,
 } from "@modules/state/simulated/stores"
-import { player, depots as depotsStore, orders as ordersStore } from "@modules/state/base/stores"
+import { player, depots as depotsStore } from "@modules/state/base/stores"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from "@components/Main/Terminal/"
 import { connectionMachineSort } from "@components/Main/Terminal/functions/helpers"
 import {

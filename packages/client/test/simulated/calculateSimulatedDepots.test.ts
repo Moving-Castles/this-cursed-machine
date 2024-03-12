@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { calculateSimulatedDepots } from "../../src/svelte/modules/state/simulated/stores"
 import { ENTITY_TYPE } from 'contracts/enums'
-import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils'
+import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
 
 const FLOW_RATE = 1000
 
