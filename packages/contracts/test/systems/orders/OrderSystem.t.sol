@@ -169,6 +169,26 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testRevertOrderAlreadyCompleted() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fast forward out of tutorial
+    world.graduate();
+
+    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+
+    world.accept(orderEntity);
+
+    world.ship(depotsInPod[0]);
+
+    vm.expectRevert("order already completed");
+    world.accept(orderEntity);
+
+    vm.stopPrank();
+  }
+
   function testBuy() public {
     setUp();
 

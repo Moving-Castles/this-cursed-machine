@@ -5,6 +5,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
+import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 
 contract OrderSystem is System {
   function create(
@@ -116,8 +117,7 @@ contract OrderSystem is System {
     OrderData memory currentOrder = Order.get(_orderEntity);
 
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-
-    // todo: check that the player has not already completed order
+    require(!ArrayLib.includes(CompletedPlayers.get(_orderEntity), playerEntity), "order already completed");
 
     CurrentOrder.set(podEntity, _orderEntity);
   }
