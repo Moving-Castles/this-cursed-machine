@@ -17,8 +17,6 @@ import { skip } from "@components/Main/Terminal/commands/skip";
 import { graduate } from "@components/Main/Terminal/commands/graduate";
 import { resolve } from "@components/Main/Terminal/commands/resolve";
 import { fail } from "@components/Main/Terminal/commands/fail";
-// import { accept } from "@components/Main/Terminal/commands/accept";
-
 
 export const commands: Command[] = [
     build,
