@@ -12,7 +12,7 @@ export enum WorldFunctions {
   AttachDepot = "attachDepot",
   DetachDepot = "detachDepot",
   EmptyDepot = "emptyDepot",
-  Fill = "fill",
+  Ship = "ship",
   Accept = "accept",
   // Testing
   Resolve = "resolve",
@@ -79,8 +79,8 @@ export function emptyDepot(depotEntity: string) {
   return addToSequencer(WorldFunctions.EmptyDepot, [depotEntity])
 }
 
-export function fill(depotEntity: string) {
-  return addToSequencer(WorldFunctions.Fill, [depotEntity])
+export function ship(depotEntity: string) {
+  return addToSequencer(WorldFunctions.Ship, [depotEntity])
 }
 
 export function accept(orderEntity: string) {

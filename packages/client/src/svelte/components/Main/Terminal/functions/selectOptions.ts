@@ -40,7 +40,7 @@ export function createSelectOptions(
       return createSelectOptionsDetachDepot()
     case COMMAND.EMPTY_DEPOT:
       return createSelectOptionsEmptyDepot()
-    case COMMAND.FILL:
+    case COMMAND.SHIP:
       return createSelectOptionsFill()
     default:
       return [] as SelectOption[]

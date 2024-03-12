@@ -23,6 +23,7 @@ contract OrderSystemTest is BaseTest {
   bytes32 outletEntity;
   bytes32[] depotsInPod;
   bytes32[] tutorialLevels;
+  FixedEntitiesData fixedEntities;
 
   function setUp() public override {
     super.setUp();
@@ -38,6 +39,8 @@ contract OrderSystemTest is BaseTest {
     outletEntity = FixedEntities.get(podEntity).outlet;
 
     depotsInPod = DepotsInPod.get(podEntity);
+
+    fixedEntities = FixedEntities.get(podEntity);
 
     tutorialLevels = TutorialOrders.get();
 
@@ -95,6 +98,37 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
 
     assertEq(CurrentOrder.get(podEntity), orderEntity);
+  }
+
+  function testShip() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
+
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
+
+    // Connect inlet to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (blood) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.SECOND);
+
+    uint blocksToWait = 100;
+
+    vm.roll(block.number + blocksToWait);
+
+    // Detach depot and resolve
+    world.detachDepot(fixedEntities.outlet);
+
+    startGasReport("Ship");
+    world.ship(depotsInPod[1]);
+    endGasReport();
+
+    vm.stopPrank();
   }
 
   function testBuy() public {

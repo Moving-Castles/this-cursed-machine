@@ -22,7 +22,6 @@ export enum TERMINAL_OUTPUT_TYPE {
 
 export enum COMMAND {
     BLINK,
-    CLEAR,
     HELP,
     BUILD,
     DESTROY,
@@ -40,8 +39,7 @@ export enum COMMAND {
     ATTACH_DEPOT,
     DETACH_DEPOT,
     EMPTY_DEPOT,
-    FILL,
-    ACCEPT,
+    SHIP,
     BUY,
     GRADUATE
 }

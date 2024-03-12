@@ -32,7 +32,7 @@ contract OrderSystem is System {
     return orderEntity;
   }
 
-  function fill(bytes32 _depotEntity) public {
+  function ship(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 

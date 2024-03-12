@@ -1,6 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { fill as sendFill } from "@modules/action";
+import { ship as sendShip } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
@@ -10,9 +10,9 @@ import { terminalMessages } from "../functions/terminalMessages";
 
 async function execute(depotEntity: string) {
     try {
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Filling order...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Shipping material...")
         // ...
-        const action = sendFill(depotEntity)
+        const action = sendShip(depotEntity)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
@@ -39,11 +39,11 @@ async function execute(depotEntity: string) {
     }
 }
 
-export const fill: Command<[depotEntity: string]> = {
-    id: COMMAND.FILL,
+export const ship: Command<[depotEntity: string]> = {
+    id: COMMAND.SHIP,
     public: true,
-    name: "fill",
-    alias: "f",
-    description: "Fill order",
+    name: "ship",
+    alias: "s",
+    description: "Ship order",
     fn: execute,
 }

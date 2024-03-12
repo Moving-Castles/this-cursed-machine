@@ -76,11 +76,11 @@ contract TutorialLevelsTest is BaseTest {
     assertEq(Amount.get(depotsInPod[1]), currentOrderData.goalAmount);
   }
 
-  function fillAndCheckProgression(uint32 levelIndex, OrderData memory nextOrderData, uint256 leftOver) internal {
+  function shipAndCheckProgression(uint32 levelIndex, OrderData memory nextOrderData, uint256 leftOver) internal {
     vm.startPrank(alice);
 
     // Fill the order and perform final checks
-    world.fill(depotsInPod[1]);
+    world.ship(depotsInPod[1]);
 
     // Order is set to next tutorial order
     assertEq(CurrentOrder.get(podEntity), tutorialLevels[levelIndex + 1]);
@@ -160,7 +160,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
+    shipAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelTwo() public {
@@ -207,7 +207,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
+    shipAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelThree() public {
@@ -260,7 +260,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
+    shipAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelFour() public {
@@ -316,7 +316,7 @@ contract TutorialLevelsTest is BaseTest {
      */
 
     checkProcessing(currentOrderData, blocksToWait);
-    fillAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
+    shipAndCheckProgression(levelIndex, nextOrderData, currentOrderData.resourceAmount - blocksToWait * FLOW_RATE);
   }
 
   function testLevelFive() public {
@@ -401,7 +401,7 @@ contract TutorialLevelsTest is BaseTest {
     checkProcessing(currentOrderData, blocksToWait);
 
     // Fill the order
-    world.fill(depotsInPod[1]);
+    world.ship(depotsInPod[1]);
 
     // Tutorial is done
     assertEq(Tutorial.get(playerEntity), false);

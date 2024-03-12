@@ -21,7 +21,7 @@ interface IOrderSystem {
     uint32 _maxPlayers
   ) external returns (bytes32);
 
-  function fill(bytes32 _depotEntity) external;
+  function ship(bytes32 _depotEntity) external;
 
   function accept(bytes32 _orderEntity) external;
 

@@ -10,7 +10,7 @@ import { start } from "@components/Main/Terminal/commands/start";
 import { attachDepot } from "@components/Main/Terminal/commands/attachDepot";
 import { detachDepot } from "@components/Main/Terminal/commands/detachDepot";
 import { emptyDepot } from "@components/Main/Terminal/commands/emptyDepot";
-import { fill } from "@components/Main/Terminal/commands/fill";
+import { ship } from "@components/Main/Terminal/commands/ship";
 // Testing
 import { buy } from "@components/Main/Terminal/commands/buy";
 import { skip } from "@components/Main/Terminal/commands/skip";
@@ -26,7 +26,7 @@ export const commands: Command[] = [
     attachDepot,
     detachDepot,
     emptyDepot,
-    fill,
+    ship,
     help,
     blink,
     // Testing
