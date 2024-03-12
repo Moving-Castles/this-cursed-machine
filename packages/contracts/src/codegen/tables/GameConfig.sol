@@ -321,13 +321,13 @@ library GameConfig {
   function decodeStatic(
     bytes memory _blob
   ) internal pure returns (address tokenAddress, uint32 globalSpawnIndex, uint32 scaleDown, uint32 flowRate) {
-    tokenAddress = (address(Bytes.slice20(_blob, 0)));
+    tokenAddress = (address(Bytes.getBytes20(_blob, 0)));
 
-    globalSpawnIndex = (uint32(Bytes.slice4(_blob, 20)));
+    globalSpawnIndex = (uint32(Bytes.getBytes4(_blob, 20)));
 
-    scaleDown = (uint32(Bytes.slice4(_blob, 24)));
+    scaleDown = (uint32(Bytes.getBytes4(_blob, 24)));
 
-    flowRate = (uint32(Bytes.slice4(_blob, 28)));
+    flowRate = (uint32(Bytes.getBytes4(_blob, 28)));
   }
 
   /**

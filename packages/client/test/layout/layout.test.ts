@@ -34,7 +34,10 @@ test("(1) createLayout", () => {
             id: 'FROM-INLET_ONE-TO-PLAYER-0',
             sourceMachine: 'INLET_ONE',
             targetMachine: 'PLAYER',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'INLET_ONE',
                 materialType: 1,
@@ -46,7 +49,10 @@ test("(1) createLayout", () => {
             id: 'FROM-PLAYER-TO-OUTLET-0',
             sourceMachine: 'PLAYER',
             targetMachine: 'OUTLET',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'PLAYER',
                 materialType: 2,
@@ -191,7 +197,10 @@ test("(1) createLayout", () => {
                 id: "FROM-INLET_ONE-TO-PLAYER-0",
                 sourceMachine: "INLET_ONE",
                 targetMachine: "PLAYER",
-                portIndex: 0,
+                portIndex: {
+                    source: 0,
+                    target: 0
+                },
                 product: {
                     machineId: "INLET_ONE",
                     materialType: 1,
@@ -228,7 +237,10 @@ test("(1) createLayout", () => {
                 id: "FROM-PLAYER-TO-OUTLET-0",
                 sourceMachine: "PLAYER",
                 targetMachine: "OUTLET",
-                portIndex: 0,
+                portIndex: {
+                    source: 0,
+                    target: 0
+                },
                 product: {
                     machineId: "PLAYER",
                     materialType: 2,
@@ -298,7 +310,10 @@ test("(2) createLayout 2", () => {
             id: 'FROM-INLET_ONE-TO-PLAYER-0',
             sourceMachine: 'INLET_ONE',
             targetMachine: 'PLAYER',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'INLET_ONE',
                 materialType: 1,
@@ -310,7 +325,10 @@ test("(2) createLayout 2", () => {
             id: 'FROM-PLAYER-TO-DRYER-1',
             sourceMachine: 'PLAYER',
             targetMachine: 'DRYER',
-            portIndex: 1,
+            portIndex: {
+                source: 1,
+                target: 0
+            },
             product: {
                 machineId: 'PLAYER',
                 materialType: 3, // Blood
@@ -322,7 +340,10 @@ test("(2) createLayout 2", () => {
             id: 'FROM-DRYER-TO-OUTLET-0',
             sourceMachine: 'DRYER',
             targetMachine: 'OUTLET',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'DRYER',
                 materialType: 4, // Blood meal
@@ -504,7 +525,10 @@ test("(2) createLayout 2", () => {
                 id: "FROM-INLET_ONE-TO-PLAYER-0",
                 sourceMachine: "INLET_ONE",
                 targetMachine: "PLAYER",
-                portIndex: 0,
+                portIndex: {
+                    source: 0,
+                    target: 0
+                },
                 product: {
                     machineId: "INLET_ONE",
                     materialType: 1,
@@ -541,7 +565,10 @@ test("(2) createLayout 2", () => {
                 id: "FROM-PLAYER-TO-DRYER-1",
                 sourceMachine: "PLAYER",
                 targetMachine: "DRYER",
-                portIndex: 1,
+                portIndex: {
+                    source: 1,
+                    target: 0
+                },
                 product: {
                     machineId: "PLAYER",
                     materialType: 3,
@@ -590,7 +617,10 @@ test("(2) createLayout 2", () => {
                 id: "FROM-DRYER-TO-OUTLET-0",
                 sourceMachine: "DRYER",
                 targetMachine: "OUTLET",
-                portIndex: 0,
+                portIndex: {
+                    source: 0,
+                    target: 0
+                },
                 product: {
                     machineId: "DRYER",
                     materialType: 4,

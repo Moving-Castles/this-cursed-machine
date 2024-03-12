@@ -364,7 +364,7 @@ library FixedEntities {
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
   function decodeStatic(bytes memory _blob) internal pure returns (bytes32 outlet) {
-    outlet = (Bytes.slice32(_blob, 0));
+    outlet = (Bytes.getBytes32(_blob, 0));
   }
 
   /**

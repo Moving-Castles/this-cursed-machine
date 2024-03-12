@@ -1,7 +1,6 @@
 import { MACHINE_TYPE } from "contracts/enums";
 import type { SimulatedMachines, Connection } from "@modules/state/simulated/types";
-import { deepClone } from "@modules/utils";
-import type { Coordinate, GraphConnection, GraphMachine, GraphMachines } from "./types";
+import type { Coordinate, GraphConnection, GraphMachine, GraphMachines, PathfindingPosition } from "./types";
 import { initializeGrid, setWalkableAt, findPath, setCostAt } from "./Pathfinding";
 import { GRID, PLAYER, ORFICE, MACHINE } from "./constants";
 import { PLACEMENT_GROUP } from "./enums";
@@ -184,9 +183,10 @@ export function createLayout(
     for (const machineId in graphMachines) {
         const machine = graphMachines[machineId]
 
-        let placementGroup = PLACEMENT_GROUP.TOP
+        let placementGroup = machine.placementGroup
 
         // Place machine if special
+        // !!! This returns the x and y values of machine if it is not a fixed machine
         let { x, y } = getFixedMachinePosition(machineId, machine, fixedEntities)
 
         if (notPlaced(x, y)) {
@@ -209,86 +209,11 @@ export function createLayout(
     for (let i = 0; i < graphConnections.length; i++) {
 
         const currentConnection = graphConnections[i]
-        // console.log('currentConnection', currentConnection)
         const startMachine = graphMachines[currentConnection.sourceMachine]
         const endMachine = graphMachines[currentConnection.targetMachine]
 
-        let startPosition = { x: startMachine.x, y: startMachine.y, offsetX: 0, offsetY: 0 }
-        let endPosition = { x: endMachine.x, y: endMachine.y, offsetX: 0, offsetY: 0 }
-
-        /*
-         * Start positions
-         */
-
-        if (startMachine.machineType === MACHINE_TYPE.INLET) {
-            startPosition = {
-                x: startMachine.x + ORFICE.WIDTH,
-                y: startMachine.y + Math.floor(ORFICE.HEIGHT / 2),
-                offsetX: 2,
-                offsetY: 0
-            }
-        } else if (startMachine.machineType === MACHINE_TYPE.PLAYER) {
-            startPosition = {
-                x: startMachine.x + PLAYER.WIDTH,
-                y: startMachine.y + Math.floor(PLAYER.HEIGHT / 2) + (currentConnection.portIndex == 0 ? -2 : 2),
-                offsetX: 2,
-                offsetY: 0
-            }
-        } else {
-            if (startMachine.placementGroup === PLACEMENT_GROUP.TOP) {
-                startPosition = {
-                    x: startMachine.x + 5,
-                    y: startMachine.y + MACHINE.HEIGHT - 1,
-                    offsetX: 0,
-                    offsetY: 2
-                }
-            } else if (startMachine.placementGroup === PLACEMENT_GROUP.BOTTOM) {
-                startPosition = {
-                    x: startMachine.x + 5,
-                    y: startMachine.y,
-                    offsetX: 0,
-                    offsetY: -3
-                }
-            }
-        }
-
-        /*
-         * End positions
-         */
-
-        if (endMachine.machineType === MACHINE_TYPE.OUTLET) {
-            // End position is one tile to the left of the target machine, as inputs are to the left
-            endPosition = {
-                x: endMachine.x,
-                y: endMachine.y + Math.floor(ORFICE.HEIGHT / 2),
-                offsetX: -3,
-                offsetY: 0
-            }
-        } else if (endMachine.machineType === MACHINE_TYPE.PLAYER) {
-            // End position is one tile to the left of the target machine, as inputs are to the left
-            endPosition = {
-                x: endMachine.x,
-                y: endMachine.y + Math.floor(PLAYER.HEIGHT / 2),
-                offsetX: -3,
-                offsetY: 0
-            }
-        } else {
-            if (endMachine.placementGroup === PLACEMENT_GROUP.TOP) {
-                endPosition = {
-                    x: endMachine.x + 1,
-                    y: endMachine.y + MACHINE.HEIGHT - 1,
-                    offsetX: 0,
-                    offsetY: 3
-                }
-            } else if (endMachine.placementGroup === PLACEMENT_GROUP.BOTTOM) {
-                endPosition = {
-                    x: endMachine.x + 1,
-                    y: endMachine.y,
-                    offsetX: 0,
-                    offsetY: -2
-                }
-            }
-        }
+        const startPosition = getStartPosition(startMachine, currentConnection)
+        const endPosition = getEndPosition(endMachine, currentConnection)
 
         // Find Path
         const path = findPath(
@@ -308,4 +233,100 @@ export function createLayout(
 
     console.timeEnd('createLayout');
     return { graphMachines, graphConnections }
+}
+
+function getStartPosition(startMachine: GraphMachine, currentConnection: GraphConnection): PathfindingPosition {
+
+    let startPosition: PathfindingPosition = { x: startMachine.x, y: startMachine.y, offsetX: 0, offsetY: 0 }
+
+    if (startMachine.machineType === MACHINE_TYPE.INLET) {
+        startPosition = {
+            x: startMachine.x + ORFICE.WIDTH,
+            y: startMachine.y + Math.floor(ORFICE.HEIGHT / 2),
+            offsetX: 2,
+            offsetY: 0
+        }
+    } else if (startMachine.machineType === MACHINE_TYPE.PLAYER) {
+        startPosition = {
+            x: startMachine.x + PLAYER.WIDTH,
+            y: startMachine.y + Math.floor(PLAYER.HEIGHT / 2) + (currentConnection.portIndex.source == 0 ? -2 : 2),
+            offsetX: 2,
+            offsetY: 0
+        }
+    } else {
+
+        // Default position
+        let portPositionX = startMachine.x + 5
+
+        // The splitter has two outputs, so we need to adjust the port position
+        if (startMachine.machineType === MACHINE_TYPE.SPLITTER) {
+            portPositionX = currentConnection.portIndex.source == 0 ? startMachine.x + 4 : startMachine.x + 6
+        }
+
+        if (startMachine.placementGroup === PLACEMENT_GROUP.TOP) {
+            startPosition = {
+                x: portPositionX,
+                y: startMachine.y + MACHINE.HEIGHT - 1,
+                offsetX: 0,
+                offsetY: 2
+            }
+        } else if (startMachine.placementGroup === PLACEMENT_GROUP.BOTTOM) {
+            startPosition = {
+                x: portPositionX,
+                y: startMachine.y,
+                offsetX: 0,
+                offsetY: -3
+            }
+        }
+    }
+
+    return startPosition
+}
+
+function getEndPosition(endMachine: GraphMachine, currentConnection: GraphConnection): PathfindingPosition {
+
+    let endPosition: PathfindingPosition = { x: endMachine.x, y: endMachine.y, offsetX: 0, offsetY: 0 }
+
+    if (endMachine.machineType === MACHINE_TYPE.OUTLET) {
+        endPosition = {
+            x: endMachine.x,
+            y: endMachine.y + Math.floor(ORFICE.HEIGHT / 2),
+            offsetX: -3,
+            offsetY: 0
+        }
+    } else if (endMachine.machineType === MACHINE_TYPE.PLAYER) {
+        endPosition = {
+            x: endMachine.x,
+            y: endMachine.y + Math.floor(PLAYER.HEIGHT / 2),
+            offsetX: -3,
+            offsetY: 0
+        }
+    } else {
+        // Default position
+        let portPositionX = endMachine.x + 1
+
+        // The mixer has two inputs, so we need to adjust the port position
+        if (endMachine.machineType === MACHINE_TYPE.MIXER) {
+            portPositionX = currentConnection.portIndex.target == 0 ? endMachine.x : endMachine.x + 2
+        }
+
+        if (endMachine.placementGroup === PLACEMENT_GROUP.TOP) {
+            endPosition = {
+                x: portPositionX,
+                y: endMachine.y + MACHINE.HEIGHT - 1,
+                offsetX: 0,
+                offsetY: 3
+            }
+        } else if (endMachine.placementGroup === PLACEMENT_GROUP.BOTTOM) {
+            endPosition = {
+                x: portPositionX,
+                y: endMachine.y,
+                offsetX: 0,
+                offsetY: -2
+            }
+        }
+    }
+
+    return endPosition
+
 }

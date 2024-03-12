@@ -170,8 +170,9 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
             if (targetAddress === EMPTY_CONNECTION) return
 
             const sourceMachine = simulatedMachinesCopy[sourceAddress]
+            const targetMachine = simulatedMachinesCopy[targetAddress]
 
-            console.log('sourceMachine', sourceMachine)
+            const targetPortIndex = targetMachine.incomingConnections.findIndex(connection => connection === sourceAddress)
 
             if (!sourceMachine) return
 
@@ -179,7 +180,10 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
                 id: `FROM-${sourceAddress}-TO-${targetAddress}-${i}`,
                 sourceMachine: sourceAddress,
                 targetMachine: targetAddress,
-                portIndex: i,
+                portIndex: {
+                    source: i,
+                    target: targetPortIndex
+                }
             }
 
             const product = sourceMachine.outputs

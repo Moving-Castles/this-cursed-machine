@@ -5,29 +5,39 @@ import { CONNECTION_STATE } from "./enums"
 import type { Connection } from "./types"
 import { DIRECTION } from "../../../components/Main/Terminal/types"
 import { simulatedMachines, simulatedConnections } from "./stores"
+import type { SimulatedMachines, SimulatedEntity } from "./types"
 
-export const availableMachines = (direction: DIRECTION) => {
-  const machines = Object.entries(get(simulatedMachines))
+export const availableMachines = (direction: DIRECTION, simulatedMachines: SimulatedMachines) => {
+  const machines = Object.entries(simulatedMachines)
 
-  return machines.filter(([_, machine]) => {
-    return (
-      machine[
-        direction === DIRECTION.OUTGOING
-          ? "outgoingConnections"
-          : "incomingConnections"
-      ].filter(connection => connection === EMPTY_CONNECTION).length > 0
-    )
-  })
+  let availableMachines = []
+
+  const connectionKey = direction === DIRECTION.OUTGOING
+    ? "outgoingConnections"
+    : "incomingConnections"
+
+  for (let i = 0; i < machines.length; i++) {
+
+    // The machines does not take connections of the given direction at all
+    if (!machines[i][1][connectionKey]) continue
+
+    // If the machine has an empty connection, it is available
+    if (machines[i][1][connectionKey].some(connection => connection === EMPTY_CONNECTION)) {
+      availableMachines.push(machines[i])
+    }
+  }
+
+  return availableMachines
 }
 
 export const availablePorts = (machine: Machine, direction: DIRECTION) => {
-  let ports =
+  let portAddresses =
     machine[
     direction === DIRECTION.OUTGOING
       ? "outgoingConnections"
       : "incomingConnections"
     ]
-  ports = ports.map((address, i) => ({
+  let ports = portAddresses.map((address, i) => ({
     portIndex: i,
     machine,
     address,

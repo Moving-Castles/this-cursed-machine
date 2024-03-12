@@ -8,11 +8,12 @@
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
 
-  $: console.log("connection", connection)
-
   $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
 
-  $: hasProduct = connection.hasOwnProperty("product") && connection.product.materialType !== MATERIAL_TYPE.NONE
+  $: hasProduct =
+    connection.hasOwnProperty("product") &&
+    connection.product &&
+    connection.product.materialType !== MATERIAL_TYPE.NONE
 
   /*
    * CONNECTION_STATE = {
@@ -29,8 +30,11 @@
 </script>
 
 <div class="connection" class:product={hasProduct}>
-  <svg {width} {height} >
-    <path {d} alt={hasProduct ? MATERIAL_TYPE[connection.product.materialType] : ""}/>
+  <svg {width} {height}>
+    <path
+      {d}
+      alt={hasProduct ? MATERIAL_TYPE[connection.product.materialType] : ""}
+    />
   </svg>
 </div>
 
@@ -50,7 +54,7 @@
         fill: none;
 
         &:hove {
-          stroke: #0000ff;  
+          stroke: #0000ff;
         }
       }
     }

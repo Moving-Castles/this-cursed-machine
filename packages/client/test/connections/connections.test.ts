@@ -32,7 +32,10 @@ test("(1) calculateSimulatedConnections", () => {
             id: 'FROM-INLET_ONE-TO-PLAYER-0',
             sourceMachine: 'INLET_ONE',
             targetMachine: 'PLAYER',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'INLET_ONE',
                 materialType: 1,
@@ -44,7 +47,10 @@ test("(1) calculateSimulatedConnections", () => {
             id: 'FROM-PLAYER-TO-OUTLET-0',
             sourceMachine: 'PLAYER',
             targetMachine: 'OUTLET',
-            portIndex: 0,
+            portIndex: {
+                source: 0,
+                target: 0
+            },
             product: {
                 machineId: 'PLAYER',
                 materialType: 2,

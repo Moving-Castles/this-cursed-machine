@@ -120,7 +120,7 @@
 
     const connection = $simulatedConnections.find(c => c.id === connectionId)
 
-    return [connection?.sourceMachine, connection?.portIndex]
+    return [connection?.sourceMachine, connection?.portIndex.source]
   }
 
   const getConnectParameters = async (): Promise<any[] | false> => {

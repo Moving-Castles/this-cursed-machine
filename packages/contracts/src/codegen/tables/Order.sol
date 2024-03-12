@@ -582,21 +582,21 @@ library Order {
       uint256 duration
     )
   {
-    creationBlock = (uint256(Bytes.slice32(_blob, 0)));
+    creationBlock = (uint256(Bytes.getBytes32(_blob, 0)));
 
-    resourceMaterialType = MATERIAL_TYPE(uint8(Bytes.slice1(_blob, 32)));
+    resourceMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 32)));
 
-    resourceAmount = (uint32(Bytes.slice4(_blob, 33)));
+    resourceAmount = (uint32(Bytes.getBytes4(_blob, 33)));
 
-    goalMaterialType = MATERIAL_TYPE(uint8(Bytes.slice1(_blob, 37)));
+    goalMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 37)));
 
-    goalAmount = (uint32(Bytes.slice4(_blob, 38)));
+    goalAmount = (uint32(Bytes.getBytes4(_blob, 38)));
 
-    rewardAmount = (uint32(Bytes.slice4(_blob, 42)));
+    rewardAmount = (uint32(Bytes.getBytes4(_blob, 42)));
 
-    maxPlayers = (uint32(Bytes.slice4(_blob, 46)));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 46)));
 
-    duration = (uint256(Bytes.slice32(_blob, 50)));
+    duration = (uint256(Bytes.getBytes32(_blob, 50)));
   }
 
   /**

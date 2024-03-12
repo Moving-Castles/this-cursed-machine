@@ -33,11 +33,6 @@
   }
 
   $: updateLayout($simulatedMachines, $simulatedConnections)
-
-  $: console.log("graphMachines", graphMachines)
-  $: console.log("graphConnections", graphConnections)
-
-  $: console.log("$playerPod.fixedEntities", $playerPod.fixedEntities)
 </script>
 
 <div class="graph">

@@ -23,3 +23,10 @@ export type Path = {
 }
 
 export type GraphConnection = Connection & Path
+
+export type PathfindingPosition = {
+    x: number
+    y: number
+    offsetX: number
+    offsetY: number
+}

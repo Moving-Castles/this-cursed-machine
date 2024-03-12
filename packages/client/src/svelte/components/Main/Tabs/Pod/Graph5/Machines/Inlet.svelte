@@ -6,8 +6,6 @@
   import { EMPTY_CONNECTION } from "@modules/utils"
   export let machine: GraphMachine
 
-  $: console.log("machine", machine)
-
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
   $: connected = machine.depotConnection !== EMPTY_CONNECTION

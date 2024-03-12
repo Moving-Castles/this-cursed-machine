@@ -33,8 +33,6 @@ export function createSelectOptions(
       return createSelectOptionsConnect(direction)
     case COMMAND.DISCONNECT:
       return createSelectOptionsDisconnect()
-    case COMMAND.INSPECT:
-      return createSelectOptionsInspect()
     case COMMAND.ATTACH_DEPOT:
       return createSelectOptionsAttachDepot()
     case COMMAND.DETACH_DEPOT:
@@ -43,8 +41,6 @@ export function createSelectOptions(
       return createSelectOptionsEmptyDepot()
     case COMMAND.FILL:
       return createSelectOptionsFill()
-    case COMMAND.ACCEPT:
-      return createSelectOptionsAccept()
     default:
       return [] as SelectOption[]
   }
@@ -94,33 +90,13 @@ function createSelectOptionsDestroy(): SelectOption[] {
 }
 
 /**
- * Generates select options for inspecting machinesBuil
- * This function returns select options for all machines
- * @returns {SelectOption[]} An array of select options representing various machines to inspect, using their machine type as a label and their ID as the value.
- */
-function createSelectOptionsInspect(): SelectOption[] {
-  let selectOptions: SelectOption[] = []
-
-  // All machines
-  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
-    selectOptions.push({
-      label:
-        machineTypeToLabel(machine.machineType) + " #" + machine.buildIndex,
-      value: machineId,
-    })
-  })
-
-  return selectOptions
-}
-
-/**
  * Creates an array of select options based on machines with available ports of a specified type.
  * @returns {SelectOption[]} An array of select options containing machine types as labels and machine IDs as values.
  */
 function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const machines = availableMachines(direction)
+  const machines = availableMachines(direction, get(simulatedMachines))
 
   selectOptions = machines.map(([address, machine]) => ({
     label: machineTypeToLabel(machine.machineType) + (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
@@ -217,21 +193,6 @@ function createSelectOptionsFill(): SelectOption[] {
   selectOptions = Object.entries(depots)
     .map(([address, depot]) => ({
       label: `Depot #${depot.buildIndex}`,
-      value: address,
-    }))
-
-  return selectOptions
-}
-
-function createSelectOptionsAccept(): SelectOption[] {
-  let selectOptions: SelectOption[] = []
-
-  const orders = get(ordersStore)
-
-  selectOptions = Object.entries(orders)
-    .filter(([_, order]) => !order.tutorial)
-    .map(([address, order], index) => ({
-      label: `#${index + 1}: ${order.order.goalAmount} ${MATERIAL_TYPE[order.order.goalMaterialType]}`,
       value: address,
     }))
 

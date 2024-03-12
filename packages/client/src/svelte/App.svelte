@@ -16,10 +16,6 @@
   import { messageToStumps } from "@modules/ui"
   import { playSound } from "@modules/sound"
 
-  import { patches } from "./modules/state/resolver/patches/stores"
-
-  $: console.log("patches", $patches)
-
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"
