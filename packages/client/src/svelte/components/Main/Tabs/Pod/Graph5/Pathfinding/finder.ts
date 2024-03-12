@@ -14,7 +14,7 @@ import { deepClone } from '@svelte/modules/utils'
  * Config constants
  */
 
-const TURN_PENALTY = 2
+const TURN_PENALTY = 10
 const HEURISTIC_WEIGHT = 1
 
 /**

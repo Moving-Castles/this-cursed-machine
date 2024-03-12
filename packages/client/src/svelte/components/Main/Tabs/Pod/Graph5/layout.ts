@@ -109,27 +109,34 @@ function createGrid() {
         }
     }
 
-    // Set higher cost for cells around the player
-    // for (let x = -1; x <= PLAYER.WIDTH; x++) {
-    //     for (let y = -1; y <= PLAYER.HEIGHT; y++) {
-    //         // Calculate the actual grid positions
-    //         let gridX = FIXED_POSITIONS.player.x + x;
-    //         let gridY = FIXED_POSITIONS.player.y + y;
-
-    //         // Check if the cell is outside the player's rectangle but within grid bounds
-    //         if (x >= -1 && x < PLAYER.WIDTH && y >= -1 && y < PLAYER.HEIGHT) {
-    //             // Skip the player's own cells
-    //             if (x >= 0 && x < PLAYER.WIDTH && y >= 0 && y < PLAYER.HEIGHT) {
-    //                 continue;
-    //             }
-    //             // Set cost for the surrounding cells
-    //             grid = setCostAt(grid, gridX, gridY, 200);
-    //         }
-    //     }
-    // }
-
     // Machines
-    // ...
+    for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
+        for (let x = 0; x < MACHINE.WIDTH; x++) {
+            for (let y = 0; y < MACHINE.HEIGHT; y++) {
+                grid = setWalkableAt(grid, DYNAMIC_POSITIONS[i].x + x, DYNAMIC_POSITIONS[i].y + y, false);
+            }
+        }
+    }
+
+    // Set higher cost for cells around the player
+    for (let x = -1; x <= PLAYER.WIDTH; x++) {
+        for (let y = -1; y <= PLAYER.HEIGHT; y++) {
+            // Calculate the actual grid positions
+            let gridX = FIXED_POSITIONS.player.x + x;
+            let gridY = FIXED_POSITIONS.player.y + y;
+
+            // Check if the cell is outside the player's rectangle but within grid bounds
+            if (x >= -1 && x < PLAYER.WIDTH && y >= -1 && y < PLAYER.HEIGHT) {
+                // Skip the player's own cells
+                if (x >= 0 && x < PLAYER.WIDTH && y >= 0 && y < PLAYER.HEIGHT) {
+                    continue;
+                }
+                // Set cost for the surrounding cells
+                grid = setCostAt(grid, gridX, gridY, 10);
+            }
+        }
+    }
+
 
     return grid
 }
@@ -250,7 +257,7 @@ function getStartPosition(startMachine: GraphMachine, currentConnection: GraphCo
         startPosition = {
             x: startMachine.x + PLAYER.WIDTH,
             y: startMachine.y + Math.floor(PLAYER.HEIGHT / 2) + (currentConnection.portIndex.source == 0 ? -2 : 2),
-            offsetX: 2,
+            offsetX: (currentConnection.portIndex.source == 0 ? 2 : 3),
             offsetY: 0
         }
     } else {

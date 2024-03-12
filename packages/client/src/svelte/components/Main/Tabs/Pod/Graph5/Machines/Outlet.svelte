@@ -1,18 +1,34 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { MACHINE_TYPE } from "@modules/state/base/enums"
   import type { GraphMachine } from "../types"
   import { CELL } from "../constants"
   import { EMPTY_CONNECTION } from "@modules/utils"
+  import { DIRECTION } from "@components/Main/Terminal/types"
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
+  $: label = `OUT ${machine.buildIndex ?? ""}`
   $: connected = machine.depotConnection !== EMPTY_CONNECTION
+
+  function makePorts() {
+    return [
+      {
+        direction: DIRECTION.INCOMING,
+        style: `top: ${CELL.WIDTH * 2}px; left: 0px;`,
+      },
+    ]
+  }
+
+  const ports = makePorts()
 </script>
 
 <div class="outlet" in:fade class:connected {style}>
-  {label}
+  <div class="inner-container">
+    <div class="label">{label}</div>
+    {#each ports as port}
+      <div class="port" style={port.style} />
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">
@@ -30,6 +46,22 @@
     &.connected {
       background: rgb(148, 255, 116);
       color: black;
+    }
+
+    .inner-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .port {
+        position: absolute;
+        width: var(--cellWidth);
+        height: var(--cellHeight);
+        background: white;
+      }
     }
   }
 </style>
