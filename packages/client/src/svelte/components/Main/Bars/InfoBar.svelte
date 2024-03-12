@@ -1,14 +1,14 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  import { reward, charge } from "@modules/action"
+  // import { reward, charge } from "@modules/action"
 
-  const sendReward = () => {
-    reward()
-  }
+  // const sendReward = () => {
+  //   reward()
+  // }
 
-  const sendCharge = () => {
-    charge()
-  }
+  // const sendCharge = () => {
+  //   charge()
+  // }
 </script>
 
 <div class="info-bar">
@@ -22,8 +22,8 @@
 
   <div class="tokens">
     TOKENS: {$player.tokenBalances ?? 0}
-    <button on:click={sendReward}>Reward</button>
-    <button on:click={sendCharge}>Charge</button>
+    <!-- <button on:click={sendReward}>Reward</button>
+    <button on:click={sendCharge}>Charge</button> -->
   </div>
 </div>
 

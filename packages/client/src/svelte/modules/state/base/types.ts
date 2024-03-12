@@ -47,13 +47,13 @@ declare global {
 
   type OrderData = {
     creationBlock: number
+    expirationBlock: number
     resourceMaterialType: MATERIAL_TYPE
     resourceAmount: number
     goalMaterialType: MATERIAL_TYPE
     goalAmount: number
     rewardAmount: number
     maxPlayers: number
-    duration: number
   }
 
   type GameConfig = {

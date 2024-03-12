@@ -17,10 +17,9 @@
       {MATERIAL_TYPE[currentOrder?.order.goalMaterialType]}
     {/if}
   </div>
-  {#if currentOrder && currentOrder.order.duration > 0}
+  {#if currentOrder && currentOrder.order.expirationBlock > 0}
     <div>
-      REMAINING TIME: {Number(currentOrder.order.creationBlock) +
-        Number(currentOrder?.order.duration) -
+      REMAINING BLOCKS: {Number(currentOrder.order.expirationBlock) -
         Number($blockNumber)}
     </div>
   {/if}

@@ -21,13 +21,13 @@ import { MATERIAL_TYPE } from "./../common.sol";
 
 struct OrderData {
   uint256 creationBlock;
+  uint256 expirationBlock;
   MATERIAL_TYPE resourceMaterialType;
   uint32 resourceAmount;
   MATERIAL_TYPE goalMaterialType;
   uint32 goalAmount;
   uint32 rewardAmount;
   uint32 maxPlayers;
-  uint256 duration;
 }
 
 library Order {
@@ -35,12 +35,12 @@ library Order {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f726465720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0052080020010401040404200000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0052080020200104010404040000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, uint8, uint32, uint8, uint32, uint32, uint32, uint256)
-  Schema constant _valueSchema = Schema.wrap(0x005208001f0003000303031f0000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, uint256, uint8, uint32, uint8, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x005208001f1f0003000303030000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -58,13 +58,13 @@ library Order {
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](8);
     fieldNames[0] = "creationBlock";
-    fieldNames[1] = "resourceMaterialType";
-    fieldNames[2] = "resourceAmount";
-    fieldNames[3] = "goalMaterialType";
-    fieldNames[4] = "goalAmount";
-    fieldNames[5] = "rewardAmount";
-    fieldNames[6] = "maxPlayers";
-    fieldNames[7] = "duration";
+    fieldNames[1] = "expirationBlock";
+    fieldNames[2] = "resourceMaterialType";
+    fieldNames[3] = "resourceAmount";
+    fieldNames[4] = "goalMaterialType";
+    fieldNames[5] = "goalAmount";
+    fieldNames[6] = "rewardAmount";
+    fieldNames[7] = "maxPlayers";
   }
 
   /**
@@ -124,13 +124,55 @@ library Order {
   }
 
   /**
+   * @notice Get expirationBlock.
+   */
+  function getExpirationBlock(bytes32 key) internal view returns (uint256 expirationBlock) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Get expirationBlock.
+   */
+  function _getExpirationBlock(bytes32 key) internal view returns (uint256 expirationBlock) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Set expirationBlock.
+   */
+  function setExpirationBlock(bytes32 key, uint256 expirationBlock) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((expirationBlock)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set expirationBlock.
+   */
+  function _setExpirationBlock(bytes32 key, uint256 expirationBlock) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((expirationBlock)), _fieldLayout);
+  }
+
+  /**
    * @notice Get resourceMaterialType.
    */
   function getResourceMaterialType(bytes32 key) internal view returns (MATERIAL_TYPE resourceMaterialType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -141,7 +183,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -152,7 +194,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(resourceMaterialType)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(resourceMaterialType)), _fieldLayout);
   }
 
   /**
@@ -162,7 +204,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(resourceMaterialType)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(resourceMaterialType)), _fieldLayout);
   }
 
   /**
@@ -172,7 +214,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -183,7 +225,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -194,7 +236,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((resourceAmount)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((resourceAmount)), _fieldLayout);
   }
 
   /**
@@ -204,7 +246,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((resourceAmount)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((resourceAmount)), _fieldLayout);
   }
 
   /**
@@ -214,7 +256,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -225,7 +267,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -236,7 +278,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(goalMaterialType)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked(uint8(goalMaterialType)), _fieldLayout);
   }
 
   /**
@@ -246,7 +288,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(goalMaterialType)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked(uint8(goalMaterialType)), _fieldLayout);
   }
 
   /**
@@ -256,7 +298,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -267,7 +309,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -278,7 +320,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((goalAmount)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((goalAmount)), _fieldLayout);
   }
 
   /**
@@ -288,7 +330,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((goalAmount)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((goalAmount)), _fieldLayout);
   }
 
   /**
@@ -298,7 +340,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -309,7 +351,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -320,7 +362,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((rewardAmount)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((rewardAmount)), _fieldLayout);
   }
 
   /**
@@ -330,7 +372,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((rewardAmount)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((rewardAmount)), _fieldLayout);
   }
 
   /**
@@ -340,7 +382,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -351,7 +393,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 6, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -362,7 +404,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((maxPlayers)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((maxPlayers)), _fieldLayout);
   }
 
   /**
@@ -372,49 +414,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 6, abi.encodePacked((maxPlayers)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get duration.
-   */
-  function getDuration(bytes32 key) internal view returns (uint256 duration) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Get duration.
-   */
-  function _getDuration(bytes32 key) internal view returns (uint256 duration) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 7, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Set duration.
-   */
-  function setDuration(bytes32 key, uint256 duration) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((duration)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set duration.
-   */
-  function _setDuration(bytes32 key, uint256 duration) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((duration)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 7, abi.encodePacked((maxPlayers)), _fieldLayout);
   }
 
   /**
@@ -453,23 +453,23 @@ library Order {
   function set(
     bytes32 key,
     uint256 creationBlock,
+    uint256 expirationBlock,
     MATERIAL_TYPE resourceMaterialType,
     uint32 resourceAmount,
     MATERIAL_TYPE goalMaterialType,
     uint32 goalAmount,
     uint32 rewardAmount,
-    uint32 maxPlayers,
-    uint256 duration
+    uint32 maxPlayers
   ) internal {
     bytes memory _staticData = encodeStatic(
       creationBlock,
+      expirationBlock,
       resourceMaterialType,
       resourceAmount,
       goalMaterialType,
       goalAmount,
       rewardAmount,
-      maxPlayers,
-      duration
+      maxPlayers
     );
 
     PackedCounter _encodedLengths;
@@ -487,23 +487,23 @@ library Order {
   function _set(
     bytes32 key,
     uint256 creationBlock,
+    uint256 expirationBlock,
     MATERIAL_TYPE resourceMaterialType,
     uint32 resourceAmount,
     MATERIAL_TYPE goalMaterialType,
     uint32 goalAmount,
     uint32 rewardAmount,
-    uint32 maxPlayers,
-    uint256 duration
+    uint32 maxPlayers
   ) internal {
     bytes memory _staticData = encodeStatic(
       creationBlock,
+      expirationBlock,
       resourceMaterialType,
       resourceAmount,
       goalMaterialType,
       goalAmount,
       rewardAmount,
-      maxPlayers,
-      duration
+      maxPlayers
     );
 
     PackedCounter _encodedLengths;
@@ -521,13 +521,13 @@ library Order {
   function set(bytes32 key, OrderData memory _table) internal {
     bytes memory _staticData = encodeStatic(
       _table.creationBlock,
+      _table.expirationBlock,
       _table.resourceMaterialType,
       _table.resourceAmount,
       _table.goalMaterialType,
       _table.goalAmount,
       _table.rewardAmount,
-      _table.maxPlayers,
-      _table.duration
+      _table.maxPlayers
     );
 
     PackedCounter _encodedLengths;
@@ -545,13 +545,13 @@ library Order {
   function _set(bytes32 key, OrderData memory _table) internal {
     bytes memory _staticData = encodeStatic(
       _table.creationBlock,
+      _table.expirationBlock,
       _table.resourceMaterialType,
       _table.resourceAmount,
       _table.goalMaterialType,
       _table.goalAmount,
       _table.rewardAmount,
-      _table.maxPlayers,
-      _table.duration
+      _table.maxPlayers
     );
 
     PackedCounter _encodedLengths;
@@ -573,30 +573,30 @@ library Order {
     pure
     returns (
       uint256 creationBlock,
+      uint256 expirationBlock,
       MATERIAL_TYPE resourceMaterialType,
       uint32 resourceAmount,
       MATERIAL_TYPE goalMaterialType,
       uint32 goalAmount,
       uint32 rewardAmount,
-      uint32 maxPlayers,
-      uint256 duration
+      uint32 maxPlayers
     )
   {
     creationBlock = (uint256(Bytes.getBytes32(_blob, 0)));
 
-    resourceMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 32)));
+    expirationBlock = (uint256(Bytes.getBytes32(_blob, 32)));
 
-    resourceAmount = (uint32(Bytes.getBytes4(_blob, 33)));
+    resourceMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 64)));
 
-    goalMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 37)));
+    resourceAmount = (uint32(Bytes.getBytes4(_blob, 65)));
 
-    goalAmount = (uint32(Bytes.getBytes4(_blob, 38)));
+    goalMaterialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 69)));
 
-    rewardAmount = (uint32(Bytes.getBytes4(_blob, 42)));
+    goalAmount = (uint32(Bytes.getBytes4(_blob, 70)));
 
-    maxPlayers = (uint32(Bytes.getBytes4(_blob, 46)));
+    rewardAmount = (uint32(Bytes.getBytes4(_blob, 74)));
 
-    duration = (uint256(Bytes.getBytes32(_blob, 50)));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 78)));
   }
 
   /**
@@ -612,13 +612,13 @@ library Order {
   ) internal pure returns (OrderData memory _table) {
     (
       _table.creationBlock,
+      _table.expirationBlock,
       _table.resourceMaterialType,
       _table.resourceAmount,
       _table.goalMaterialType,
       _table.goalAmount,
       _table.rewardAmount,
-      _table.maxPlayers,
-      _table.duration
+      _table.maxPlayers
     ) = decodeStatic(_staticData);
   }
 
@@ -648,24 +648,24 @@ library Order {
    */
   function encodeStatic(
     uint256 creationBlock,
+    uint256 expirationBlock,
     MATERIAL_TYPE resourceMaterialType,
     uint32 resourceAmount,
     MATERIAL_TYPE goalMaterialType,
     uint32 goalAmount,
     uint32 rewardAmount,
-    uint32 maxPlayers,
-    uint256 duration
+    uint32 maxPlayers
   ) internal pure returns (bytes memory) {
     return
       abi.encodePacked(
         creationBlock,
+        expirationBlock,
         resourceMaterialType,
         resourceAmount,
         goalMaterialType,
         goalAmount,
         rewardAmount,
-        maxPlayers,
-        duration
+        maxPlayers
       );
   }
 
@@ -677,23 +677,23 @@ library Order {
    */
   function encode(
     uint256 creationBlock,
+    uint256 expirationBlock,
     MATERIAL_TYPE resourceMaterialType,
     uint32 resourceAmount,
     MATERIAL_TYPE goalMaterialType,
     uint32 goalAmount,
     uint32 rewardAmount,
-    uint32 maxPlayers,
-    uint256 duration
+    uint32 maxPlayers
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(
       creationBlock,
+      expirationBlock,
       resourceMaterialType,
       resourceAmount,
       goalMaterialType,
       goalAmount,
       rewardAmount,
-      maxPlayers,
-      duration
+      maxPlayers
     );
 
     PackedCounter _encodedLengths;

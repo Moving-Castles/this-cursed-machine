@@ -14,7 +14,7 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
 import { LibOrder, LibInitRecipes, LibInit } from "../src/libraries/Libraries.sol";
-import { ONE_DAY, ONE_HOUR } from "../src/constants.sol";
+import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
 
 uint256 constant POOL_SUPPLY = 1_000_000 wei;
 
@@ -49,8 +49,9 @@ contract PostDeploy is Script {
     LibInitRecipes.init();
 
     // Create test orders
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, false, 1000, ONE_MINUTE, 10);
     LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 10000, false, 1000, ONE_HOUR, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 10000, false, 1000, ONE_HOUR, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 10000, false, 1000, ONE_DAY, 10);
 
     vm.stopBroadcast();
   }

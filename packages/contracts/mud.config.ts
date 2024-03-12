@@ -45,13 +45,13 @@ export default mudConfig({
         Order: {
             valueSchema: {
                 creationBlock: "uint256",
+                expirationBlock: "uint256",
                 resourceMaterialType: "MATERIAL_TYPE",
                 resourceAmount: "uint32",
                 goalMaterialType: "MATERIAL_TYPE",
                 goalAmount: "uint32",
                 rewardAmount: "uint32",
-                maxPlayers: "uint32",
-                duration: "uint256"
+                maxPlayers: "uint32"
             }
         },
         CompletedPlayers: "bytes32[]",

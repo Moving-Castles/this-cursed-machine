@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, Order, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
 
@@ -40,13 +40,17 @@ contract OrderSystem is System {
     require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
     require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
-    bytes32 currentOrder = CurrentOrder.get(podEntity);
-    require(currentOrder != bytes32(0), "no order");
+    bytes32 currentOrderId = CurrentOrder.get(podEntity);
+    require(currentOrderId != bytes32(0), "no order");
+
+    OrderData memory currentOrder = Order.get(currentOrderId);
+
+    require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
 
     // Check if order goals are met
     require(
-      MaterialType.get(_depotEntity) == Order.get(currentOrder).goalMaterialType &&
-        Amount.get(_depotEntity) >= Order.get(currentOrder).goalAmount,
+      MaterialType.get(_depotEntity) == currentOrder.goalMaterialType &&
+        Amount.get(_depotEntity) >= currentOrder.goalAmount,
       "order not met"
     );
 
@@ -69,16 +73,14 @@ contract OrderSystem is System {
         // Is the material type of the depot the same as the tutorial order?
         // If so, add to the amount
         // Otherwise, replace
-        if (
-          MaterialType.get(DepotsInPod.get(podEntity)[0]) == Order.get(CurrentOrder.get(podEntity)).resourceMaterialType
-        ) {
+        if (MaterialType.get(DepotsInPod.get(podEntity)[0]) == currentOrder.resourceMaterialType) {
           Amount.set(
             DepotsInPod.get(podEntity)[0],
-            Amount.get(DepotsInPod.get(podEntity)[0]) + Order.get(CurrentOrder.get(podEntity)).resourceAmount
+            Amount.get(DepotsInPod.get(podEntity)[0]) + currentOrder.resourceAmount
           );
         } else {
-          MaterialType.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
-          Amount.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
+          MaterialType.set(DepotsInPod.get(podEntity)[0], currentOrder.resourceMaterialType);
+          Amount.set(DepotsInPod.get(podEntity)[0], currentOrder.resourceAmount);
         }
       } else {
         // Tutorial done
@@ -94,13 +96,13 @@ contract OrderSystem is System {
     // Not in tutorial mode...
 
     // Add player to completedPlayers list
-    CompletedPlayers.push(currentOrder, playerEntity);
+    CompletedPlayers.push(currentOrderId, playerEntity);
 
     // Clear currentOrder
     CurrentOrder.set(podEntity, bytes32(0));
 
     // Reward player in tokens
-    LibToken.send(_msgSender(), Order.get(currentOrder).rewardAmount);
+    LibToken.send(_msgSender(), currentOrder.rewardAmount);
   }
 
   function accept(bytes32 _orderEntity) public {
@@ -111,7 +113,10 @@ contract OrderSystem is System {
     require(!Tutorial.get(_orderEntity), "order is tutorial");
     require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
 
-    // todo: check that the order is still valid
+    OrderData memory currentOrder = Order.get(_orderEntity);
+
+    require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
+
     // todo: check that the player has not already completed order
 
     CurrentOrder.set(podEntity, _orderEntity);

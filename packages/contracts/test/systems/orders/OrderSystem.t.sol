@@ -5,7 +5,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
-import { FLOW_RATE, ONE_HOUR } from "../../../src/constants.sol";
+import { FLOW_RATE, ONE_MINUTE, ONE_HOUR } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -70,7 +70,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Create order
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
 
     vm.expectRevert("player in tutorial");
     world.accept(orderEntity);
@@ -127,6 +127,44 @@ contract OrderSystemTest is BaseTest {
     startGasReport("Ship");
     world.ship(depotsInPod[1]);
     endGasReport();
+
+    vm.stopPrank();
+  }
+
+  function testRevertShipOrderExpired() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fast forward out of tutorial
+    world.graduate();
+
+    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+
+    world.accept(orderEntity);
+
+    vm.roll(block.number + ONE_MINUTE + 1);
+
+    vm.expectRevert("order expired");
+    world.ship(depotsInPod[1]);
+
+    vm.stopPrank();
+  }
+
+  function testRevertAcceptOrderExpired() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fast forward out of tutorial
+    world.graduate();
+
+    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+
+    vm.roll(block.number + ONE_MINUTE + 1);
+
+    vm.expectRevert("order expired");
+    world.accept(orderEntity);
 
     vm.stopPrank();
   }

@@ -22,13 +22,13 @@ library LibOrder {
       orderEntity,
       OrderData({
         creationBlock: block.number,
+        expirationBlock: _duration == 0 ? 0 : block.number + _duration,
         resourceMaterialType: _resourceMaterial,
         resourceAmount: _resourceAmount,
         goalMaterialType: _goalMaterial,
         goalAmount: _goalAmount,
         rewardAmount: _reward,
-        maxPlayers: _maxPlayers,
-        duration: _duration
+        maxPlayers: _maxPlayers
       })
     );
 
