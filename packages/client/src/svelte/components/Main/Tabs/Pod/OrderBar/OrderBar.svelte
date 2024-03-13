@@ -1,10 +1,11 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { orders, playerPod } from "@modules/state/base/stores"
+  import { activeOrders, playerPod } from "@modules/state/base/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
+  import { blocksToReadableTime } from "@modules/utils"
 
   let currentOrder: Order | null = null
-  $: currentOrder = $orders[$playerPod.currentOrder]
+  $: currentOrder = $activeOrders[$playerPod.currentOrder]
 </script>
 
 <div class="order-bar">
@@ -19,8 +20,9 @@
   </div>
   {#if currentOrder && currentOrder.order.expirationBlock > 0}
     <div>
-      REMAINING BLOCKS: {Number(currentOrder.order.expirationBlock) -
-        Number($blockNumber)}
+      {blocksToReadableTime(
+        Number(currentOrder.order.expirationBlock) - Number($blockNumber),
+      )}
     </div>
   {/if}
 </div>

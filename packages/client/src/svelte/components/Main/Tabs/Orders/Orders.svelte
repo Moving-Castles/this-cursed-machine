@@ -1,38 +1,28 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
-  import { orders, playerPod } from "@modules/state/base/stores"
-  import { MATERIAL_TYPE } from "contracts/enums"
-  import { accept } from "@modules/action"
+  import { playerPod } from "@modules/state/base/stores"
+  import { activeOrders } from "@modules/state/base/stores"
 
-  function sendAccept(orderId: string) {
-    accept(orderId)
-  }
+  import OrderItem from "./OrderItem.svelte"
+
+  // - Grey out orders that have been completed by player
+  // – show accepted order at top of list?
 </script>
 
-<div class="container" in:fade>
+<div class="container">
   <div>ORDERS</div>
-  {#each Object.entries($orders) as [key, order]}
-    {#if !order.tutorial}
-      <div class="order-item">
-        {#if key === $playerPod.currentOrder}
-          <span>(★)</span>
-        {/if}
-        {order.order.goalAmount / 100}
-        {MATERIAL_TYPE[order.order.goalMaterialType]}
-        <button on:click={() => sendAccept(key)}>Accept</button>
-      </div>
-    {/if}
-  {/each}
+  <div class="order-list">
+    {#each Object.entries($activeOrders) as [key, order]}
+      <OrderItem {key} {order} active={key === $playerPod.currentOrder} />
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">
   .container {
     padding: 20px;
 
-    .order-item {
-      width: 100%;
-      border-bottom: 1px solid white;
-      padding: 10px;
+    .order-list {
+      margin-top: 40px;
     }
   }
 </style>

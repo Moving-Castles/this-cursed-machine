@@ -3,9 +3,16 @@
  *
  */
 import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
-import { filterByEntitytype, filterByMachinetype, filterByCarriedBy, getRecipes } from "./utils"
+import {
+  filterByEntitytype,
+  filterByMachinetype,
+  filterByCarriedBy,
+  getRecipes,
+  getActiveOrders,
+  getExpiredOrders
+} from "./utils"
 import { writable, derived } from "svelte/store"
-import { network } from "../../network"
+import { blockNumber, network } from "../../network"
 
 export const GAME_CONFIG_ID = "0x"
 
@@ -49,7 +56,10 @@ export const depots = derived([entities, player],
   ([$entities, $player]) => filterByEntitytype(filterByCarriedBy($entities, $player?.carriedBy ?? ""), ENTITY_TYPE.DEPOT) as Depots)
 
 export const players = derived(entities, $entities => filterByMachinetype($entities, MACHINE_TYPE.PLAYER) as Players)
+
 export const orders = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ORDER) as Orders)
+export const activeOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getActiveOrders($orders, $blockNumber))
+export const expiredOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getExpiredOrders($orders, $blockNumber))
 
 // * * * * * * * * * * * * * * * * *
 // POD FIXTURES

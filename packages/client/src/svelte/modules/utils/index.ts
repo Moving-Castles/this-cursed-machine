@@ -1,4 +1,5 @@
 import { getAddress } from "viem"
+import { BLOCKTIME } from "./constants";
 
 export function toCamelCase(s: string): string {
   return s
@@ -187,4 +188,27 @@ export function stepsEasing(t: number, steps: number = 4, direction = "start") {
   }
 
   return progress
+}
+
+function blocksToSeconds(blocks: number) {
+  return blocks * BLOCKTIME
+}
+
+export function blocksToReadableTime(blocks: number): string {
+
+  const seconds = blocksToSeconds(blocks)
+
+  // Calculate hours, minutes and seconds
+  const hours: number = Math.floor(seconds / 3600);
+  const minutes: number = Math.floor((seconds % 3600) / 60);
+  const secs: number = seconds % 60;
+
+  // Pad minutes and seconds with leading zeros if needed
+  const paddedMinutes: string = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  const paddedSeconds: string = secs < 10 ? `0${secs}` : `${secs}`;
+
+  // Format the string
+  const result: string = `${hours}:${paddedMinutes}:${paddedSeconds}`;
+
+  return result;
 }

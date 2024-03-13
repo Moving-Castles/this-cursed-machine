@@ -42,3 +42,19 @@ export function getRecipes(entities: Entities): Recipe[] {
 
     return recipes
 }
+
+export function getActiveOrders(orders: Orders, blockNumber: number): Orders {
+    return Object.fromEntries(
+        Object.entries(orders).filter(
+            ([, order]) => order.order.expirationBlock > blockNumber
+        )
+    )
+}
+
+export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
+    return Object.fromEntries(
+        Object.entries(orders).filter(
+            ([, order]) => order.order.expirationBlock <= blockNumber
+        )
+    )
+}
