@@ -17,7 +17,7 @@
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
 
-  const tabList = {
+  $: tabList = {
     [TABS.POD]: {
       label: "Pod",
       component: Pod,
@@ -31,22 +31,22 @@
     [TABS.ORDERS]: {
       label: "Orders",
       component: Orders,
-      enabled: true,
+      enabled: $player.tutorial ? false : true,
     },
     [TABS.SHOP]: {
       label: "Shop",
       component: Shop,
-      enabled: true,
+      enabled: $player.tutorial ? false : true,
     },
     [TABS.CHAT]: {
       label: "Chat",
       component: Chat,
-      enabled: true,
+      enabled: $player.tutorial ? false : true,
     },
     [TABS.EXIT]: {
       label: "Exit",
       component: Exit,
-      enabled: true,
+      enabled: $player.tutorial ? false : true,
     },
   }
 
