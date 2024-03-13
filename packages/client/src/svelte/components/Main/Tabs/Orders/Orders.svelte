@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { playerPod } from "@modules/state/base/stores"
+  import { playerPod, player } from "@modules/state/base/stores"
   import { activeOrders } from "@modules/state/base/stores"
 
   import OrderItem from "./OrderItem.svelte"
@@ -12,7 +12,12 @@
   <div>ORDERS</div>
   <div class="order-list">
     {#each Object.entries($activeOrders) as [key, order]}
-      <OrderItem {key} {order} active={key === $playerPod.currentOrder} />
+      <OrderItem
+        {key}
+        {order}
+        active={$playerPod.currentOrder === key}
+        completed={$player.completed?.includes(key)}
+      />
     {/each}
   </div>
 </div>

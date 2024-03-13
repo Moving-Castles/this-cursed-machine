@@ -54,7 +54,7 @@ export default mudConfig({
                 maxPlayers: "uint32"
             }
         },
-        CompletedPlayers: "bytes32[]",
+        Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
         // ...
         LastResolved: "uint256",
         Input: "uint256",

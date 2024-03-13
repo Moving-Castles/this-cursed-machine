@@ -51,7 +51,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptOrder",
     "name": "Accept order",
-    "gasUsed": 51386
+    "gasUsed": 55841
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",

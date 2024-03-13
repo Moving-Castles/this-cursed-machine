@@ -21,7 +21,7 @@ declare global {
     tutorialLevel?: number
     tutorialOrders?: string[]
     order?: OrderData
-    completedPlayers?: string[]
+    completed?: string[]
     lastResolved?: number
     input?: number
     output?: MATERIAL_TYPE
@@ -88,7 +88,8 @@ declare global {
     outgoingConnections: string[]
     tutorialLevel?: number
     tokenBalances?: number
-    tutorial: boolean
+    tutorial: boolean,
+    completed: string[] // Orders completed by player
   }
 
   type Machine = {
@@ -114,7 +115,7 @@ declare global {
     entityType: ENTITY_TYPE.ORDER
     order: OrderData
     tutorial?: boolean
-    completedPlayers: string[]
+    completed: string[] // Players that have completed the order
   }
 
   type Recipe = {

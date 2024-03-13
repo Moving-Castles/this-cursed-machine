@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, CompletedPlayers, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, Completed, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
@@ -55,7 +55,7 @@ contract OrderSystem is System {
       "order not met"
     );
 
-    // Clear depot
+    // Empty depot
     MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
     Amount.set(_depotEntity, 0);
 
@@ -96,8 +96,10 @@ contract OrderSystem is System {
 
     // Not in tutorial mode...
 
-    // Add player to completedPlayers list
-    CompletedPlayers.push(currentOrderId, playerEntity);
+    // On order: add player to completed list
+    Completed.push(currentOrderId, playerEntity);
+    // On player: add order to completed list
+    Completed.push(playerEntity, currentOrderId);
 
     // Clear currentOrder
     CurrentOrder.set(podEntity, bytes32(0));
@@ -117,7 +119,7 @@ contract OrderSystem is System {
     OrderData memory currentOrder = Order.get(_orderEntity);
 
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-    require(!ArrayLib.includes(CompletedPlayers.get(_orderEntity), playerEntity), "order already completed");
+    require(!ArrayLib.includes(Completed.get(_orderEntity), playerEntity), "order already completed");
 
     CurrentOrder.set(podEntity, _orderEntity);
   }
@@ -125,7 +127,7 @@ contract OrderSystem is System {
   function cancel(bytes32 _orderEntity) public {
     // Todo: Restrict to admin
     Order.deleteRecord(_orderEntity);
-    CompletedPlayers.deleteRecord(_orderEntity);
+    Completed.deleteRecord(_orderEntity);
   }
 
   function buy() public {
@@ -135,16 +137,16 @@ contract OrderSystem is System {
     // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    // 100 Points = 1000 BUGS
+    // 1000 Points = 1000 BUGS
     LibToken.transferToken(_world(), _world(), 100);
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 
-    // Fill first empty depot with 1000 BUGS
+    // Fill first empty depot with 10000 BUGS
     for (uint32 i = 0; i < depotsInPod.length; i++) {
       if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
         MaterialType.set(depotsInPod[i], MATERIAL_TYPE.BUG);
-        Amount.set(depotsInPod[i], 1000);
+        Amount.set(depotsInPod[i], 10000);
         return;
       }
     }

@@ -16,9 +16,9 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-library CompletedPlayers {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "CompletedPlayers", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x74620000000000000000000000000000436f6d706c65746564506c6179657273);
+library Completed {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "Completed", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x74620000000000000000000000000000436f6d706c6574656400000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0000000100000000000000000000000000000000000000000000000000000000);
