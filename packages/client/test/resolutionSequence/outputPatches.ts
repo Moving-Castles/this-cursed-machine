@@ -83,6 +83,90 @@ export const outputPatches = {
             ],
         },
     },
+    "test1_2": {
+        DEPOT_ONE: {
+            depot: true,
+            outputs: [
+                {
+                    amount: 1000,
+                    inletActive: [false, true],
+                    machineId: "DEPOT_ONE",
+                    materialType: 1,
+                },
+            ],
+        },
+        INLET_TWO: {
+            inputs: [
+                {
+                    amount: 1000,
+                    inletActive: [false, true],
+                    machineId: "INLET_TWO",
+                    materialType: 1,
+                },
+            ],
+            outputs: [
+                {
+                    amount: 1000,
+                    inletActive: [false, true],
+                    machineId: "INLET_TWO",
+                    materialType: 1,
+                },
+            ],
+        },
+        PLAYER: {
+            inputs: [
+                {
+                    amount: 1000,
+                    inletActive: [false, true],
+                    machineId: "PLAYER",
+                    materialType: 1,
+                },
+            ],
+            outputs: [
+                {
+                    amount: 500,
+                    inletActive: [false, true],
+                    machineId: "PLAYER",
+                    materialType: 2,
+                },
+                {
+                    amount: 500,
+                    inletActive: [false, true],
+                    machineId: "PLAYER",
+                    materialType: 3,
+                },
+            ],
+        },
+        OUTLET: {
+            inputs: [
+                {
+                    amount: 500,
+                    inletActive: [false, true],
+                    machineId: "OUTLET",
+                    materialType: 2,
+                },
+            ],
+            outputs: [
+                {
+                    amount: 500,
+                    inletActive: [false, true],
+                    machineId: "OUTLET",
+                    materialType: 2,
+                },
+            ],
+        },
+        DEPOT_TWO: {
+            depot: true,
+            inputs: [
+                {
+                    amount: 500,
+                    inletActive: [false, true],
+                    machineId: "DEPOT_TWO",
+                    materialType: 2,
+                },
+            ],
+        },
+    },
     "test2": {
         DEPOT_ONE: {
             depot: true,

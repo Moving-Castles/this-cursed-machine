@@ -63,8 +63,9 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
     /*
      * Filter out the inlet depots that are not contributing to the output
      */
-    const usedInletDepots = getUsedInletDepots(inletDepots, depotPatches);
+    const usedInletDepots = getUsedInletDepots(inletDepots, playerPodCopy.fixedEntities.inlets, depotPatches);
     const usedInletDepotsKeys = usedInletDepots.map(([key, _]) => key)
+
 
     const lowestInputAmount = findLowestValue(usedInletDepots);
     if (lowestInputAmount === 0) return simulatedDepots;
@@ -137,13 +138,14 @@ function findLowestValue(usedInletDepots: [string, Depot][]): number {
     return lowestEntry[1].amount ?? 0;
 }
 
-function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
+function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
     let inletActive: boolean[] | null = null;
     let usedInletDepots: [string, Depot][] = []
 
     // Find the outlet patch – it is the only one with inputs
     for (const [, patch] of depotPatches) {
         if (Array.isArray(patch.inputs) && patch.inputs[0]) {
+            // Get the boolean array indicating which of the inlets contributed to the final output
             inletActive = patch.inputs[0].inletActive;
             break;
         }
@@ -151,8 +153,12 @@ function getUsedInletDepots(inletDepots: [string, Depot][], depotPatches: [strin
 
     if (inletActive == null) return usedInletDepots;
 
+    // Iterate over the inlet depots and check if the inlet it is connected is active
     for (let i = 0; i < inletDepots.length; i++) {
-        if (inletActive[i]) {
+
+        const inletIndex = inlets.indexOf(inletDepots[i][1].depotConnection);
+
+        if (inletActive[inletIndex]) {
             usedInletDepots.push(inletDepots[i]);
         }
     }
@@ -217,7 +223,7 @@ export const simulatedMachines = derived(
 )
 
 // Simulated state = on-chain state of the depots + patches produced by the local resolver
-// We re-calculate every based on the blocks passed since the last resolution
+// We re-calculate every block based on the blocks passed since the last resolution
 export const simulatedDepots = derived(
     [depots, patches, blocksSinceLastResolution, playerPod],
     ([$depots, $patches, $blocksSinceLastResolution, $playerPod]) => calculateSimulatedDepots($depots, $patches, $blocksSinceLastResolution, $playerPod)

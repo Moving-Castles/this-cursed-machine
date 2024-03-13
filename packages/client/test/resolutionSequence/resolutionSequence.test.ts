@@ -94,7 +94,100 @@ test("(1) resolutionSequence", () => {
 
 })
 
-test("(2) resolveSplitterMixer", () => {
+test("(2) resolutionSequence (inlet 2)", () => {
+    const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+
+    // /*
+    //  *
+    //  * START INLET 2
+    //  *
+    //  */
+
+    // Connect DEPOT 1 to INLET 2
+    depots["DEPOT_ONE"].depotConnection = "INLET_TWO"
+    machines["INLET_TWO"].depotConnection = "DEPOT_ONE"
+
+    // Connect INLET 2 to PLAYER
+    machines["INLET_TWO"].outgoingConnections.push("PLAYER")
+    machines["PLAYER"].incomingConnections.push("INLET_TWO")
+
+    // /*
+    //  *
+    //  * END INLET 2
+    //  *
+    //  */
+
+    // Connect PLAYER (PISS) to OUTLET
+    machines["PLAYER"].outgoingConnections.push("OUTLET")
+    machines["OUTLET"].incomingConnections.push("PLAYER")
+
+    // Connect DEPOT 2 to OUTLET
+    depots["DEPOT_TWO"].depotConnection = "OUTLET"
+    machines["OUTLET"].depotConnection = "DEPOT_TWO"
+
+    const receivedPatches = resolve(machines, inlets, outlet, depots, recipes)
+
+    expect(receivedPatches).toStrictEqual(outputPatches.test1_2)
+
+    // ...
+
+    const receivedSimulatedDepotsAfter10Blocks = calculateSimulatedDepots(depots, receivedPatches, 10, playerPod)
+
+    const expectedSimulatedDepotsAfter10Blocks = {
+        DEPOT_ONE: {
+            entityType: 4,
+            materialType: 1,
+            amount: 10000,
+            depotConnection: 'INLET_TWO',
+            buildIndex: 1
+        },
+        DEPOT_TWO: {
+            entityType: 4,
+            depotConnection: 'OUTLET',
+            materialType: 2,
+            amount: 5000,
+            buildIndex: 2
+        },
+        DEPOT_THREE: {
+            entityType: 4,
+            depotConnection: '',
+            buildIndex: 3
+        }
+    }
+
+    expect(receivedSimulatedDepotsAfter10Blocks).toStrictEqual(expectedSimulatedDepotsAfter10Blocks)
+
+    // ...
+
+    const receivedSimulatedDepotsAfter2000Blocks = calculateSimulatedDepots(depots, receivedPatches, 2000, playerPod)
+
+    const expectedSimulatedDepotsAfter2000Blocks = {
+        DEPOT_ONE: {
+            entityType: 4,
+            materialType: 0, // MATERIAL_TYPE.NONE because empty
+            amount: 0,
+            depotConnection: 'INLET_TWO',
+            buildIndex: 1
+        },
+        DEPOT_TWO: {
+            entityType: 4,
+            depotConnection: 'OUTLET',
+            materialType: 2,
+            amount: 10000,
+            buildIndex: 2
+        },
+        DEPOT_THREE: {
+            entityType: 4,
+            depotConnection: '',
+            buildIndex: 3
+        }
+    }
+
+    expect(receivedSimulatedDepotsAfter2000Blocks).toStrictEqual(expectedSimulatedDepotsAfter2000Blocks)
+
+})
+
+test("(3) resolveSplitterMixer", () => {
     const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Fill depot 1 with 20000 MATERIAL_TYPE.AMMONIA
@@ -205,7 +298,7 @@ test("(2) resolveSplitterMixer", () => {
 
 })
 
-test("(3) unusedInlet", () => {
+test("(4) unusedInlet", () => {
     const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Fill depot 1 with 20000 MATERIAL_TYPE.AMMONIA

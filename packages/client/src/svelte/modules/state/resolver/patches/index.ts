@@ -105,10 +105,9 @@ export function createInletDepotPatches(
     // Get the inputs from to the inlets
     const inletInputs = inputPatches.filter(patch => inlets.includes(patch.machineId));
 
-
     for (let i = 0; i < inletInputs.length; i++) {
 
-        const depotId = machines[inlets[i]]?.depotConnection;
+        const depotId = machines[inletInputs[i].machineId]?.depotConnection;
 
         if (!depotId) continue;
 
