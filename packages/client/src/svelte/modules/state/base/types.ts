@@ -22,6 +22,7 @@ declare global {
     tutorialOrders?: string[]
     order?: OrderData
     completed?: string[]
+    earnedPoints?: number
     lastResolved?: number
     input?: number
     output?: MATERIAL_TYPE
@@ -90,6 +91,7 @@ declare global {
     tokenBalances?: number
     tutorial: boolean,
     completed: string[] // Orders completed by player
+    earnedPoints: number
   }
 
   type Machine = {

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, Completed, FixedEntities, DepotsInPod } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, TutorialOrders, Completed, FixedEntities, DepotsInPod, EarnedPoints } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
@@ -106,6 +106,7 @@ contract OrderSystem is System {
 
     // Reward player in tokens
     LibToken.send(_msgSender(), currentOrder.rewardAmount);
+    EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.rewardAmount);
   }
 
   function accept(bytes32 _orderEntity) public {

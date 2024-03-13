@@ -18,6 +18,7 @@ import { TutorialLevel } from "./tables/TutorialLevel.sol";
 import { TutorialOrders } from "./tables/TutorialOrders.sol";
 import { Order, OrderData } from "./tables/Order.sol";
 import { Completed } from "./tables/Completed.sol";
+import { EarnedPoints } from "./tables/EarnedPoints.sol";
 import { LastResolved } from "./tables/LastResolved.sol";
 import { Input } from "./tables/Input.sol";
 import { Output } from "./tables/Output.sol";

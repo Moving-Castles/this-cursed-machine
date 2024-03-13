@@ -57,7 +57,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testBuy",
     "name": "Buy bugs",
-    "gasUsed": 141754
+    "gasUsed": 141760
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -69,7 +69,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 157505
+    "gasUsed": 157535
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

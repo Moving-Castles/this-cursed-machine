@@ -131,6 +131,28 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function testShip2() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fast forward out of tutorial
+    world.graduate();
+
+    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
+
+    world.accept(orderEntity);
+
+    world.ship(depotsInPod[0]);
+
+    assertEq(CurrentOrder.get(podEntity), bytes32(0));
+    assertEq(EarnedPoints.get(playerEntity), 1000);
+    assertEq(Completed.get(orderEntity)[0], playerEntity);
+    assertEq(Completed.get(playerEntity)[0], orderEntity);
+
+    vm.stopPrank();
+  }
+
   function testRevertShipOrderExpired() public {
     setUp();
 
@@ -197,7 +219,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
-    world.graduate();
+    world.reward();
 
     startGasReport("Buy bugs");
     world.buy();
