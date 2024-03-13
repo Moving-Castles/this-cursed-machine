@@ -11,6 +11,6 @@ export enum TABS {
     INBOX,
     ORDERS,
     SHOP,
-    LEADERBOARD,
-    CHAT
+    CHAT,
+    EXIT
 }

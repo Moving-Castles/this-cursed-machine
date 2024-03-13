@@ -5,7 +5,7 @@
 
   import Terminal from "@components/Main/Terminal/Terminal.svelte"
   import InfoBar from "@components/Main/Bars/InfoBar.svelte"
-  import ModeBar from "@components/Main/Bars/TabBar.svelte"
+  import TabBar from "@components/Main/Bars/TabBar.svelte"
 
   import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
@@ -14,7 +14,7 @@
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
-  import Leaderboard from "@components/Main/Tabs/Leaderboard/Leaderboard.svelte"
+  import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
 
   const tabList = {
@@ -38,14 +38,14 @@
       component: Shop,
       enabled: true,
     },
-    [TABS.LEADERBOARD]: {
-      label: "Top Workers",
-      component: Leaderboard,
-      enabled: true,
-    },
     [TABS.CHAT]: {
       label: "Chat",
       component: Chat,
+      enabled: true,
+    },
+    [TABS.EXIT]: {
+      label: "Exit",
+      component: Exit,
       enabled: true,
     },
   }
@@ -55,7 +55,7 @@
     | typeof Pod
     | typeof Inbox
     | typeof Orders
-    | typeof Leaderboard
+    | typeof Exit
     | typeof Shop
     | typeof Chat
 
@@ -103,7 +103,7 @@
             {/if}
           </div>
           <div class="tab-switch">
-            <ModeBar {tabList} />
+            <TabBar {tabList} />
           </div>
         </div>
       {/if}
