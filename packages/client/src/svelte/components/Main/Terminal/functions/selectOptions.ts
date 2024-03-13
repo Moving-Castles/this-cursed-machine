@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { SelectOption } from "@components/Main/Terminal/types"
 import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
-import { MACHINE_TYPE } from "@modules/state/base/enums"
+import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
 import {
   simulatedMachines,
   simulatedConnections,
@@ -41,7 +41,7 @@ export function createSelectOptions(
     case COMMAND.EMPTY_DEPOT:
       return createSelectOptionsEmptyDepot()
     case COMMAND.SHIP:
-      return createSelectOptionsFill()
+      return createSelectOptionsShip()
     default:
       return [] as SelectOption[]
   }
@@ -186,16 +186,24 @@ function createSelectOptionsEmptyDepot(): SelectOption[] {
   return selectOptions;
 }
 
-function createSelectOptionsFill(): SelectOption[] {
+function createSelectOptionsShip(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const depots = get(depotsStore)
+  // Only detached depots can be shipped
+  const availableDepots = Object.entries(get(depotsStore)).filter(([_, depot]) => depot.depotConnection === EMPTY_CONNECTION)
 
-  selectOptions = Object.entries(depots)
-    .map(([address, depot]) => ({
-      label: `Depot #${depot.buildIndex}`,
+  selectOptions = availableDepots.map(([address, depot]) => {
+
+    let materialDescription = "(empty)"
+    if (depot.materialType !== MATERIAL_TYPE.NONE) {
+      materialDescription = `(${depot.amount / 100} ${materialTypeToLabel(depot.materialType)})`
+    }
+
+    return {
+      label: `Depot #${depot.buildIndex} ${materialDescription}`,
       value: address,
-    }))
+    }
+  })
 
   return selectOptions
 }
