@@ -43,21 +43,21 @@ test("(1) resolutionSequence", () => {
 
     const expectedSimulatedDepotsAfter10Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 1,
             amount: 10000,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 5000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: '',
             buildIndex: 3
         }
@@ -71,21 +71,21 @@ test("(1) resolutionSequence", () => {
 
     const expectedSimulatedDepotsAfter2000Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 0, // MATERIAL_TYPE.NONE because empty
             amount: 0,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 10000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: '',
             buildIndex: 3
         }
@@ -136,21 +136,21 @@ test("(2) resolutionSequence (inlet 2)", () => {
 
     const expectedSimulatedDepotsAfter10Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 1,
             amount: 10000,
             depotConnection: 'INLET_TWO',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 5000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: '',
             buildIndex: 3
         }
@@ -164,21 +164,21 @@ test("(2) resolutionSequence (inlet 2)", () => {
 
     const expectedSimulatedDepotsAfter2000Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 0, // MATERIAL_TYPE.NONE because empty
             amount: 0,
             depotConnection: 'INLET_TWO',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 2,
             amount: 10000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: '',
             buildIndex: 3
         }
@@ -243,21 +243,21 @@ test("(3) resolveSplitterMixer", () => {
 
     const expectedSimulatedDepotsAfter9Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 7,
             amount: 11000,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'INLET_TWO',
             materialType: 9,
             amount: 1000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 8,
             amount: 4500,
@@ -273,21 +273,21 @@ test("(3) resolveSplitterMixer", () => {
 
     const expectedSimulatedDepotsAfter2000Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 7,
             amount: 10000,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'INLET_TWO',
             materialType: 0,
             amount: 0,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 8,
             amount: 5000,
@@ -336,21 +336,21 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
 
     const expectedSimulatedDepotsAfter9Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 7,
             amount: 20000,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'INLET_TWO',
             materialType: 9,
             amount: 1000,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 9,
             amount: 9000,
@@ -366,21 +366,21 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
 
     const expectedSimulatedDepotsAfter2000Blocks = {
         DEPOT_ONE: {
-            entityType: 4,
+            entityType: 5,
             materialType: 7,
             amount: 20000,
             depotConnection: 'INLET_ONE',
             buildIndex: 1
         },
         DEPOT_TWO: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'INLET_TWO',
             materialType: 0,
             amount: 0,
             buildIndex: 2
         },
         DEPOT_THREE: {
-            entityType: 4,
+            entityType: 5,
             depotConnection: 'OUTLET',
             materialType: 9,
             amount: 10000,
@@ -422,7 +422,7 @@ test("(5) resolveSplitterMixer", () => {
 
     const expectedOutput = {
         INLET_ONE: {
-            entity: 3,
+            entity: 4,
             machineType: 1,
             depotConnection: "DEPOT_ONE",
             incomingConnections: [],
@@ -461,7 +461,7 @@ test("(5) resolveSplitterMixer", () => {
             ]
         },
         INLET_TWO: {
-            entity: 3,
+            entity: 4,
             machineType: 1,
             depotConnection: "",
             incomingConnections: [],
@@ -471,7 +471,7 @@ test("(5) resolveSplitterMixer", () => {
             state: 0
         },
         OUTLET: {
-            entity: 3,
+            entity: 4,
             machineType: 2,
             depotConnection: "",
             incomingConnections: [],

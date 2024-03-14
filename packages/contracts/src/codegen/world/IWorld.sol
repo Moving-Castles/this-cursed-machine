@@ -12,6 +12,7 @@ import { IDestroySystem } from "./IDestroySystem.sol";
 import { IDisconnectSystem } from "./IDisconnectSystem.sol";
 import { IResolveSystem } from "./IResolveSystem.sol";
 import { IDepotSystem } from "./IDepotSystem.sol";
+import { IOfferSystem } from "./IOfferSystem.sol";
 import { IOrderSystem } from "./IOrderSystem.sol";
 import { INameSystem } from "./INameSystem.sol";
 import { IRewardSystem } from "./IRewardSystem.sol";
@@ -34,6 +35,7 @@ interface IWorld is
   IDisconnectSystem,
   IResolveSystem,
   IDepotSystem,
+  IOfferSystem,
   IOrderSystem,
   INameSystem,
   IRewardSystem,

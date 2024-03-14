@@ -4,7 +4,6 @@
 
   import OrderItem from "./OrderItem.svelte"
 
-  // - Grey out orders that have been completed by player
   // – show accepted order at top of list?
 </script>
 

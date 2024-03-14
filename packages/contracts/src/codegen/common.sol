@@ -5,6 +5,7 @@ pragma solidity >=0.8.24;
 enum ENTITY_TYPE {
   NONE,
   ORDER,
+  OFFER,
   POD,
   MACHINE,
   DEPOT

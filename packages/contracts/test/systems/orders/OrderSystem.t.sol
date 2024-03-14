@@ -56,7 +56,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     startGasReport("Create order");
-    world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
     endGasReport();
 
     vm.stopPrank();
@@ -70,7 +70,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Create order
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
 
     vm.expectRevert("player in tutorial");
     world.accept(orderEntity);
@@ -86,7 +86,15 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Create order
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(
+      MATERIAL_TYPE.NONE,
+      0,
+      MATERIAL_TYPE.BLOOD_MEAL,
+      100000,
+      1000,
+      ONE_HOUR,
+      10
+    );
 
     // Fast forward out of tutorial
     world.graduate();
@@ -139,7 +147,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
 
     world.accept(orderEntity);
 
@@ -161,7 +169,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     world.accept(orderEntity);
 
@@ -181,7 +189,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     vm.roll(block.number + ONE_MINUTE + 1);
 
@@ -199,7 +207,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    bytes32 orderEntity = world.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     world.accept(orderEntity);
 
@@ -207,23 +215,6 @@ contract OrderSystemTest is BaseTest {
 
     vm.expectRevert("order already completed");
     world.accept(orderEntity);
-
-    vm.stopPrank();
-  }
-
-  function testBuy() public {
-    setUp();
-
-    // !!! This should be limited to admin
-
-    vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.reward();
-
-    startGasReport("Buy bugs");
-    world.buy();
-    endGasReport();
 
     vm.stopPrank();
   }

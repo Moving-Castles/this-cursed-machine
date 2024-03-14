@@ -21,6 +21,7 @@ declare global {
     tutorialLevel?: number
     tutorialOrders?: string[]
     order?: OrderData
+    offer?: OfferData
     completed?: string[]
     earnedPoints?: number
     lastResolved?: number
@@ -55,6 +56,13 @@ declare global {
     goalAmount: number
     rewardAmount: number
     maxPlayers: number
+  }
+
+  type OfferData = {
+    creationBlock: number
+    materialType: MATERIAL_TYPE
+    amount: number
+    cost: number
   }
 
   type GameConfig = {
@@ -120,6 +128,11 @@ declare global {
     completed: string[] // Players that have completed the order
   }
 
+  type Offer = {
+    entityType: ENTITY_TYPE.OFFER
+    offer: OfferData
+  }
+
   type Recipe = {
     machineType: number
     input: number
@@ -152,5 +165,9 @@ declare global {
 
   type Orders = {
     [index: string]: Order
+  }
+
+  type Offers = {
+    [index: string]: Offer
   }
 }

@@ -14,12 +14,12 @@ export enum WorldFunctions {
   EmptyDepot = "emptyDepot",
   Ship = "ship",
   Accept = "accept",
+  Buy = "buy",
   // Testing
   Resolve = "resolve",
   Reward = "reward",
   Charge = "charge",
   Graduate = "graduate",
-  Buy = "buy"
 }
 
 // --- API --------------------------------------------------------------
@@ -87,8 +87,8 @@ export function accept(orderEntity: string) {
   return addToSequencer(WorldFunctions.Accept, [orderEntity])
 }
 
-export function buy() {
-  return addToSequencer(WorldFunctions.Buy, [])
+export function buy(offerEntity: string) {
+  return addToSequencer(WorldFunctions.Buy, [offerEntity])
 }
 
 // ...

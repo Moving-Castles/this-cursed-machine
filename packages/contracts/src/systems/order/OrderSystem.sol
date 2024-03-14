@@ -8,7 +8,7 @@ import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 
 contract OrderSystem is System {
-  function create(
+  function createOrder(
     MATERIAL_TYPE _resourceMaterialType,
     uint32 _resourceAmount,
     MATERIAL_TYPE _goalMaterialType,
@@ -129,27 +129,5 @@ contract OrderSystem is System {
     // Todo: Restrict to admin
     Order.deleteRecord(_orderEntity);
     Completed.deleteRecord(_orderEntity);
-  }
-
-  function buy() public {
-    require(LibToken.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
-
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    // Get player's pod entity
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    // 1000 Points = 1000 BUGS
-    LibToken.transferToken(_world(), _world(), 100);
-
-    bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
-
-    // Fill first empty depot with 10000 BUGS
-    for (uint32 i = 0; i < depotsInPod.length; i++) {
-      if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
-        MaterialType.set(depotsInPod[i], MATERIAL_TYPE.BUG);
-        Amount.set(depotsInPod[i], 10000);
-        return;
-      }
-    }
   }
 }

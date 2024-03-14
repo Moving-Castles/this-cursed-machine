@@ -48,28 +48,34 @@
     "gasUsed": 105513
   },
   {
-    "file": "test/systems/orders/OrderSystem.t.sol",
-    "test": "testAcceptOrder",
-    "name": "Accept order",
-    "gasUsed": 55841
+    "file": "test/systems/orders/OfferSystem.t.sol",
+    "test": "testBuyBug",
+    "name": "Buy",
+    "gasUsed": 92500
+  },
+  {
+    "file": "test/systems/orders/OfferSystem.t.sol",
+    "test": "testCreateOffer",
+    "name": "Create offer",
+    "gasUsed": 124331
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
-    "test": "testBuy",
-    "name": "Buy bugs",
-    "gasUsed": 141760
+    "test": "testAcceptOrder",
+    "name": "Accept order",
+    "gasUsed": 55819
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrder",
     "name": "Create order",
-    "gasUsed": 148582
+    "gasUsed": 148573
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 157535
+    "gasUsed": 157557
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

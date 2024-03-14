@@ -54,6 +54,14 @@ export default mudConfig({
                 maxPlayers: "uint32"
             }
         },
+        Offer: {
+            valueSchema: {
+                creationBlock: "uint256",
+                materialType: "MATERIAL_TYPE",
+                amount: "uint32",
+                cost: "uint32",
+            }
+        },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
         EarnedPoints: "uint32",
         // ...

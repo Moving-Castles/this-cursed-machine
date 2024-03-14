@@ -1,6 +1,7 @@
 enum ENTITY_TYPE {
     NONE,
     ORDER,
+    OFFER,
     POD,
     MACHINE,
     DEPOT

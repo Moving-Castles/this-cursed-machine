@@ -61,6 +61,8 @@ export const orders = derived(entities, $entities => filterByEntitytype($entitie
 export const activeOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getActiveOrders($orders, $blockNumber))
 export const expiredOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getExpiredOrders($orders, $blockNumber))
 
+export const offers = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.OFFER) as Offers)
+
 // * * * * * * * * * * * * * * * * *
 // POD FIXTURES
 // * * * * * * * * * * * * * * * * *
