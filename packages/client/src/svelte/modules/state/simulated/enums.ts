@@ -1,5 +1,5 @@
-export enum CONNECTION_STATE {
-    NONE,
-    CONNECTED,
-    FLOWING,
+export enum GRAPH_ENTITY_STATE {
+    IDLE,
+    ACTIVE,
+    PRODUCTIVE,
 }

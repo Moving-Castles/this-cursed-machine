@@ -3,6 +3,7 @@
   import type { GraphMachine } from "../types"
   import { CELL, PLAYER } from "../constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
+  import { GRAPH_ENTITY_STATE } from "@svelte/modules/state/simulated/enums"
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
@@ -27,7 +28,12 @@
   const ports = makePorts()
 </script>
 
-<div class="player" in:fade {style}>
+<div
+  class="player"
+  class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  in:fade
+  {style}
+>
   <div class="inner-container">
     <div class="label">YOU</div>
     {#each ports as port}
@@ -48,6 +54,10 @@
     background-image: url("/images/eye.png");
     background-size: cover;
     border: 1px solid black;
+
+    &.active {
+      border: 1px solid #00ff00;
+    }
 
     .inner-container {
       width: 100%;

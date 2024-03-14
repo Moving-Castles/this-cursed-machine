@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { processPatches } from "../../src/svelte/modules/state/simulated/stores"
+import { processInputPatches, processOutputPatches } from "../../src/svelte/modules/state/simulated/stores"
 
 const simulated = {
     INLET_ONE: {}
@@ -38,7 +38,7 @@ test("(1) processInputPatches", () => {
         }
     }
 
-    expect(processPatches("inputs", simulated, key, patch)).toStrictEqual(expectedOutput)
+    expect(processInputPatches(simulated, key, patch)).toStrictEqual(expectedOutput)
 })
 
 test("(2) processOutputPatches", () => {
@@ -51,9 +51,16 @@ test("(2) processOutputPatches", () => {
                     machineId: "INLET_ONE",
                     materialType: 1
                 }
-            ]
+            ],
+            product: {
+                amount: 1000,
+                inletActive: [true, false],
+                machineId: "INLET_ONE",
+                materialType: 1
+            },
+            state: 1
         }
     }
 
-    expect(processPatches("outputs", simulated, key, patch)).toStrictEqual(expectedOutput)
+    expect(processOutputPatches(simulated, key, patch)).toStrictEqual(expectedOutput)
 })

@@ -41,7 +41,8 @@ test("(1) calculateSimulatedConnections", () => {
                 materialType: 1,
                 amount: 1000,
                 inletActive: [true, false]
-            }
+            },
+            state: 1
         },
         {
             id: 'FROM-PLAYER-TO-OUTLET-0',
@@ -56,7 +57,8 @@ test("(1) calculateSimulatedConnections", () => {
                 materialType: 2,
                 amount: 500,
                 inletActive: [true, false]
-            }
+            },
+            state: 1
         }
     ]
 

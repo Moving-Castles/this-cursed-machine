@@ -1,21 +1,47 @@
 import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
-import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
-import type { SimulatedEntities, SimulatedEntity, SimulatedDepots, SimulatedMachines, Connection } from "./types"
+import { MATERIAL_TYPE } from "@modules/state/base/enums"
+import type { SimulatedEntities, SimulatedEntity, SimulatedDepots, SimulatedMachines, Connection, SimulatedMachine } from "./types"
 import { machines, depots, playerPod } from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
+import { GRAPH_ENTITY_STATE } from "./enums"
 
-export function processPatches(field: "inputs" | "outputs", simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
+export function processInputPatches(simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
     // Early return if conditions are not met, without modifying the original 'simulated' object.
-    if (!patch[field] || !simulated[key]) return simulated as SimulatedMachines;
+    if (!patch.inputs || !simulated[key]) return simulated as SimulatedMachines;
 
     // Create a deep copy of 'simulated' to avoid mutating the original object.
     const simulatedCopy = deepClone(simulated) as SimulatedMachines;
 
     // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.
-    const updatedEntity = { ...simulatedCopy[key], [field]: [...patch[field]] };
+    const updatedEntity: SimulatedMachine = { ...simulatedCopy[key], inputs: [...patch.inputs] };
+
+    // Update the entity in the simulated copy with the new changes.
+    simulatedCopy[key] = updatedEntity;
+
+    // Return the updated copy of 'simulated'.
+    return simulatedCopy;
+}
+
+export function processOutputPatches(simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
+    // Early return if conditions are not met, without modifying the original 'simulated' object.
+    if (!patch.outputs || !simulated[key]) return simulated as SimulatedMachines;
+
+    // Create a deep copy of 'simulated' to avoid mutating the original object.
+    const simulatedCopy = deepClone(simulated) as SimulatedMachines;
+
+    // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.
+    const updatedEntity: SimulatedMachine = { ...simulatedCopy[key], outputs: [...patch.outputs] };
+
+    // Assign product if there is one
+    updatedEntity.product = updatedEntity.outputs && updatedEntity.outputs[0] ? updatedEntity.outputs[0] : null
+
+    // If there is anoutput the machine is active
+    if (updatedEntity.product) {
+        updatedEntity.state = GRAPH_ENTITY_STATE.ACTIVE
+    }
 
     // Update the entity in the simulated copy with the new changes.
     simulatedCopy[key] = updatedEntity;
@@ -35,8 +61,8 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
 
     // Iterate over each patch in the patches store.
     for (const [key, patch] of filteredPatches) {
-        simulatedMachines = processPatches("inputs", simulatedMachines, key, patch);
-        simulatedMachines = processPatches("outputs", simulatedMachines, key, patch);
+        simulatedMachines = processInputPatches(simulatedMachines, key, patch);
+        simulatedMachines = processOutputPatches(simulatedMachines, key, patch);
     }
 
     // Return the updated simulated state.
@@ -44,8 +70,8 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
 }
 
 /*
-* Should work the same as contracts/src/libraries/LibDepot.sol:write
-*/
+ * Should work the same as contracts/src/libraries/LibDepot.sol:write
+ */
 export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedDepots {
 
     const FLOW_RATE = 1000;
@@ -138,6 +164,10 @@ function findLowestValue(usedInletDepots: [string, Depot][]): number {
     return lowestEntry[1].amount ?? 0;
 }
 
+/*
+ * Checks the output patch of the outlet to see which inlets contributed to the output.
+ * Then finds the depots connected to those inlets
+ */
 function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
     let inletActive: boolean[] | null = null;
     let usedInletDepots: [string, Depot][] = []
@@ -190,15 +220,16 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
                 portIndex: {
                     source: i,
                     target: targetPortIndex
-                }
+                },
+                product: null,
+                state: GRAPH_ENTITY_STATE.IDLE
             }
 
-            const product = sourceMachine.outputs
-                ? sourceMachine?.outputs[i]
-                : null
+            // Assign product if there is one
+            connection.product = sourceMachine.outputs && sourceMachine.outputs[i] ? sourceMachine.outputs[i] : null
 
-            if (product) {
-                connection.product = product
+            if (connection.product) {
+                connection.state = GRAPH_ENTITY_STATE.ACTIVE
             }
 
             connections.push(connection)
@@ -206,14 +237,6 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
     })
 
     return connections
-}
-
-export function getReadableMachines(simulatedMachines: SimulatedEntities) {
-    return Object.entries(simulatedMachines).map(([id, machine]) => ({
-        id,
-        machine,
-        read: MACHINE_TYPE[machine.machineType ?? MACHINE_TYPE.NONE],
-    }))
 }
 
 // Simulated state = on-chain state of the machines + patches produced by the local resolver
@@ -229,7 +252,4 @@ export const simulatedDepots = derived(
     ([$depots, $patches, $blocksSinceLastResolution, $playerPod]) => calculateSimulatedDepots($depots, $patches, $blocksSinceLastResolution, $playerPod)
 )
 
-// Connection objects based on the properties of the machines
 export const simulatedConnections = derived(simulatedMachines, $simulatedMachines => calculateSimulatedConnections($simulatedMachines))
-
-export const readableMachines = derived(simulatedMachines, $simulatedMachines => getReadableMachines($simulatedMachines))

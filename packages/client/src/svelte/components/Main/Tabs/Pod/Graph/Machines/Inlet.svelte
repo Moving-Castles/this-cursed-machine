@@ -4,6 +4,7 @@
   import { CELL, ORFICE } from "../constants"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
+  import { GRAPH_ENTITY_STATE } from "@svelte/modules/state/simulated/enums"
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
@@ -22,7 +23,13 @@
   const ports = makePorts()
 </script>
 
-<div class="inlet" in:fade class:connected {style}>
+<div
+  class="inlet"
+  class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  in:fade
+  class:connected
+  {style}
+>
   <div class="inner-container">
     <div class="label">{label}</div>
     {#each ports as port}
@@ -46,6 +53,10 @@
     &.connected {
       background: rgb(148, 255, 116);
       color: black;
+    }
+
+    &.active {
+      border: 1px solid #00ff00;
     }
 
     .inner-container {

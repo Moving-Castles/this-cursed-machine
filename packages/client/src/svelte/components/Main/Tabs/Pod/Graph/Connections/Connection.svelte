@@ -1,40 +1,22 @@
 <script lang="ts">
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import type { GraphConnection } from "../types"
   import { GRID, CELL } from "../constants"
   import { generateSvgPath } from "./svg"
+  import { GRAPH_ENTITY_STATE } from "@svelte/modules/state/simulated/enums"
   export let connection: GraphConnection
 
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
 
   $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
-
-  $: hasProduct =
-    connection.hasOwnProperty("product") &&
-    connection.product &&
-    connection.product.materialType !== MATERIAL_TYPE.NONE
-
-  /*
-   * CONNECTION_STATE = {
-   * INPRODUCTIVE (not in the chain from )
-   * PRODUCTIVE
-   * PRODUCING
-   * }
-   */
-
-  /*
-   * material = MATERIAL_TYPE | MATERIAL_TYPE.NONE if unknown
-   * state = CONNECTION_STATE
-   */
 </script>
 
-<div class="connection" class:product={hasProduct}>
+<div
+  class="connection"
+  class:active={connection.state === GRAPH_ENTITY_STATE.ACTIVE}
+>
   <svg {width} {height}>
-    <path
-      {d}
-      alt={hasProduct ? MATERIAL_TYPE[connection.product.materialType] : ""}
-    />
+    <path {d} />
   </svg>
 </div>
 
@@ -59,7 +41,7 @@
       }
     }
 
-    &.product {
+    &.active {
       svg {
         path {
           stroke: #00ff00;

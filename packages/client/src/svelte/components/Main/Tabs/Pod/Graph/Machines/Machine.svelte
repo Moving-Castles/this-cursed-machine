@@ -6,6 +6,7 @@
   export let machine: GraphMachine
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
+  import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
@@ -63,7 +64,12 @@
   const ports = makePorts(machine)
 </script>
 
-<div class="machine {MACHINE_TYPE[machine.machineType]}" in:fade {style}>
+<div
+  class="machine {MACHINE_TYPE[machine.machineType]}"
+  class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  in:fade
+  {style}
+>
   <div class="inner-container">
     <div class="label">{label}</div>
     {#each ports as port}
@@ -82,6 +88,10 @@
     align-items: center;
     background: darkgrey;
     position: absolute;
+
+    &.active {
+      border: 1px solid #00ff00;
+    }
 
     .inner-container {
       width: 100%;
