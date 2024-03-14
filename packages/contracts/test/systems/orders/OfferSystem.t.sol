@@ -50,9 +50,7 @@ contract OfferSystemTest is BaseTest {
   function testCreateOffer() public {
     setUp();
 
-    // !!! This should be limited to admin
-
-    vm.startPrank(alice);
+    prankAdmin();
 
     // Create order
     startGasReport("Create offer");
@@ -68,14 +66,26 @@ contract OfferSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testBuyBug() public {
+  function testRevertCreateOfferNotAllowed() public {
     setUp();
-
-    // !!! This should be limited to admin
 
     vm.startPrank(alice);
 
+    // Create order
+    vm.expectRevert("not allowed");
+    world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
+
+    vm.stopPrank();
+  }
+
+  function testBuyBug() public {
+    setUp();
+
+    prankAdmin();
     bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BUG, 10000, 100);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     world.reward();
 
@@ -93,11 +103,11 @@ contract OfferSystemTest is BaseTest {
   function testBuyBlood() public {
     setUp();
 
-    // !!! This should be limited to admin
+    prankAdmin();
+    bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
+    vm.stopPrank();
 
     vm.startPrank(alice);
-
-    bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
 
     world.reward();
 

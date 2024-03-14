@@ -6,10 +6,16 @@ import { MATERIAL_TYPE } from "../../codegen/common.sol";
 import { FLOW_RATE } from "../../constants.sol";
 
 library LibInit {
-  function init(address tokenAddress) internal {
+  function init(address _adminAddress, address _tokenAddress) internal {
     // Set game config
     GameConfig.set(
-      GameConfigData({ tokenAddress: tokenAddress, globalSpawnIndex: 0, scaleDown: 100, flowRate: FLOW_RATE })
+      GameConfigData({
+        adminAddress: _adminAddress,
+        tokenAddress: _tokenAddress,
+        globalSpawnIndex: 0,
+        scaleDown: 100,
+        flowRate: FLOW_RATE
+      })
     );
 
     // Create tutorial orders

@@ -66,6 +66,7 @@ declare global {
   }
 
   type GameConfig = {
+    adminAddress: string,
     tokenAddress: string,
     globalSpawnIndex: number,
     scaleDown: number,

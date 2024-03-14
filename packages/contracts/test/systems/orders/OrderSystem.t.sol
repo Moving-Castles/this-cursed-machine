@@ -47,13 +47,10 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testCreateOrder() public {
+  function testCreateOrderAsAdmin() public {
     setUp();
 
-    // !!! This should be limited to admin
-
-    vm.startPrank(alice);
-
+    prankAdmin();
     // Create order
     startGasReport("Create order");
     world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
@@ -62,15 +59,27 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertPlayerInTutorial() public {
+  function testRevertCreateOrderNotAllowed() public {
     setUp();
-
-    // !!! This should be limited to admin
 
     vm.startPrank(alice);
 
     // Create order
+    vm.expectRevert("not allowed");
+    world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+
+    vm.stopPrank();
+  }
+
+  function testRevertPlayerInTutorial() public {
+    setUp();
+
+    prankAdmin();
+    // Create order
     bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     vm.expectRevert("player in tutorial");
     world.accept(orderEntity);
@@ -81,11 +90,8 @@ contract OrderSystemTest is BaseTest {
   function testAcceptOrder() public {
     setUp();
 
-    // !!! This should be limited to admin
-
-    vm.startPrank(alice);
-
     // Create order
+    prankAdmin();
     bytes32 orderEntity = world.createOrder(
       MATERIAL_TYPE.NONE,
       0,
@@ -95,6 +101,9 @@ contract OrderSystemTest is BaseTest {
       ONE_HOUR,
       10
     );
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Fast forward out of tutorial
     world.graduate();
@@ -142,12 +151,14 @@ contract OrderSystemTest is BaseTest {
   function testShip2() public {
     setUp();
 
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
+    vm.stopPrank();
+
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
     world.graduate();
-
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
 
     world.accept(orderEntity);
 
@@ -164,12 +175,14 @@ contract OrderSystemTest is BaseTest {
   function testRevertShipOrderExpired() public {
     setUp();
 
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    vm.stopPrank();
+
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
     world.graduate();
-
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     world.accept(orderEntity);
 
@@ -184,12 +197,14 @@ contract OrderSystemTest is BaseTest {
   function testRevertAcceptOrderExpired() public {
     setUp();
 
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    vm.stopPrank();
+
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
     world.graduate();
-
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     vm.roll(block.number + ONE_MINUTE + 1);
 
@@ -202,12 +217,14 @@ contract OrderSystemTest is BaseTest {
   function testRevertOrderAlreadyCompleted() public {
     setUp();
 
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    vm.stopPrank();
+
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
     world.graduate();
-
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
 
     world.accept(orderEntity);
 

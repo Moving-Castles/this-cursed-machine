@@ -26,6 +26,8 @@ contract PostDeploy is Script {
     // console.log("Deployed world: ", worldAddress);
     IWorld world = IWorld(worldAddress);
 
+    address adminAddress = address(uint160(vm.envUint("ADMIN_ADDRESS")));
+
     // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
@@ -43,7 +45,7 @@ contract PostDeploy is Script {
     token.mint(worldAddress, POOL_SUPPLY);
 
     // Initialize gameConfig and tutorial levels
-    LibInit.init(address(token));
+    LibInit.init(adminAddress, address(token));
 
     // Initialize recipes
     LibInitRecipes.init();

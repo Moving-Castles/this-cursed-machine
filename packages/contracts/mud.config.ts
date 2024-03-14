@@ -15,6 +15,7 @@ export default mudConfig({
         GameConfig: {
             keySchema: {},
             valueSchema: {
+                adminAddress: "address",
                 tokenAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
                 scaleDown: "uint32", // Used to scale down the amounts in the UI

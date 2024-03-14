@@ -2,16 +2,16 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod } from "../../codegen/index.sol";
+import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOffer, LibToken } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 
 contract OfferSystem is System {
   function createOffer(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) public returns (bytes32) {
-    // Todo: Restrict to admin
+    //  Restrict to admin
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
-    // ...
     bytes32 orderEntity = LibOffer.create(_materialType, _amount, _cost);
 
     return orderEntity;

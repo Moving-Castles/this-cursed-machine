@@ -3,7 +3,7 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 291183
+    "gasUsed": 291184
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
@@ -51,13 +51,13 @@
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testBuyBug",
     "name": "Buy",
-    "gasUsed": 92500
+    "gasUsed": 93099
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testCreateOffer",
     "name": "Create offer",
-    "gasUsed": 124331
+    "gasUsed": 125567
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -67,9 +67,9 @@
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
-    "test": "testCreateOrder",
+    "test": "testCreateOrderAsAdmin",
     "name": "Create order",
-    "gasUsed": 148573
+    "gasUsed": 149805
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -81,7 +81,7 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 214651
+    "gasUsed": 215083
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
