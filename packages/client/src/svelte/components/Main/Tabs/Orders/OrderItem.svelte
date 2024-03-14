@@ -10,33 +10,33 @@
   export let active: boolean
   export let completed: boolean
 
-  $: remainingTime = blocksToReadableTime(
-    Number(order.order.expirationBlock) - Number($blockNumber),
-  )
-
   function sendAccept() {
     accept(key)
   }
 </script>
 
 <div class="order-item" class:active class:completed transition:fade>
-  <div class="section goal">
-    {order.order.goalAmount / 100}
-    {MATERIAL_TYPE[order.order.goalMaterialType]}
-  </div>
-
-  <div class="section reward">
-    {order.order.rewardAmount}P
-  </div>
-
-  <div class="section time">
-    {remainingTime}
-  </div>
-
-  {#if !active && !completed}
-    <div class="section accept">
-      <button on:click={() => sendAccept()}>Accept</button>
+  {#if order?.order}
+    <div class="section goal">
+      {order.order.goalAmount / 100}
+      {MATERIAL_TYPE[order.order.goalMaterialType]}
     </div>
+
+    <div class="section reward">
+      {order.order.rewardAmount}P
+    </div>
+
+    <div class="section time">
+      {blocksToReadableTime(
+        Number(order.order.expirationBlock) - Number($blockNumber),
+      )}
+    </div>
+
+    {#if !active && !completed}
+      <div class="section accept">
+        <button on:click={() => sendAccept()}>Accept</button>
+      </div>
+    {/if}
   {/if}
 </div>
 

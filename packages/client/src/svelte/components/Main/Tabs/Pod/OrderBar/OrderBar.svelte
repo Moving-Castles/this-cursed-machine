@@ -1,11 +1,18 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { activeOrders, playerPod } from "@modules/state/base/stores"
+  import {
+    player,
+    activeOrders,
+    orders,
+    playerPod,
+  } from "@modules/state/base/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
 
   let currentOrder: Order | null = null
-  $: currentOrder = $activeOrders[$playerPod.currentOrder]
+  $: currentOrder = $player.tutorial
+    ? $orders[$playerPod.currentOrder]
+    : $activeOrders[$playerPod.currentOrder]
 </script>
 
 <div class="order-bar">
