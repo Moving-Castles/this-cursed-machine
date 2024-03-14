@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { processInputPatches, processOutputPatches } from "../../src/svelte/modules/state/simulated/stores"
+import { processOutputPatches, processInputPatches } from "../../src/svelte/modules/state/simulated/stores"
 
 const simulated = {
     INLET_ONE: {}
@@ -52,12 +52,12 @@ test("(2) processOutputPatches", () => {
                     materialType: 1
                 }
             ],
-            product: {
-                amount: 1000,
-                inletActive: [true, false],
-                machineId: "INLET_ONE",
-                materialType: 1
-            },
+            products: [
+                {
+                    amount: 1000,
+                    materialType: 1,
+                }
+            ],
             state: 1
         }
     }

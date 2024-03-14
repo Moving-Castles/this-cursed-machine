@@ -6,7 +6,7 @@ const EMPTY_PRODUCT: Product = {
   machineId: "",
   materialType: MATERIAL_TYPE.NONE,
   amount: 0,
-  inletActive: false
+  inletActive: [false, false]
 }
 
 /**

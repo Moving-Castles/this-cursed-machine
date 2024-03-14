@@ -2,11 +2,11 @@
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { playerPod, depots, machines } from "@modules/state/base/stores"
   import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
-  import type { SimulatedEntity } from "@modules/state/simulated/types"
+  import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { blockNumber } from "@modules/network"
   import { patches } from "@modules/state/resolver/patches/stores"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  export let depot: SimulatedEntity
+  export let depot: SimulatedDepot
   export let key: string
   export let index: number
 

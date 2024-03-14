@@ -394,4 +394,48 @@ export const outputPatches = {
             ],
         },
     },
+    "test5": {
+        INLET_ONE: {
+            inputs: [
+                {
+                    amount: 1000,
+                    inletActive: [true, false],
+                    machineId: "INLET_ONE",
+                    materialType: 1,
+                },
+            ],
+            outputs: [
+                {
+                    amount: 1000,
+                    inletActive: [true, false],
+                    machineId: "INLET_ONE",
+                    materialType: 1,
+                },
+            ],
+        },
+        PLAYER: {
+            inputs: [
+                {
+                    amount: 1000,
+                    inletActive: [true, false],
+                    machineId: "PLAYER",
+                    materialType: 1,
+                },
+            ],
+            outputs: [
+                {
+                    amount: 500,
+                    inletActive: [true, false],
+                    machineId: "PLAYER",
+                    materialType: 2,
+                },
+                {
+                    amount: 500,
+                    inletActive: [true, false],
+                    machineId: "PLAYER",
+                    materialType: 3,
+                },
+            ],
+        },
+    },
 }

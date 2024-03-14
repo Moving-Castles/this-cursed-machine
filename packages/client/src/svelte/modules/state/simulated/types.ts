@@ -1,17 +1,34 @@
+import { MATERIAL_TYPE } from "contracts/enums"
 import { Product } from "../resolver/patches/types"
 import { GRAPH_ENTITY_STATE } from "./enums"
 
-type IntermediaryState = {
+type Patches = {
     depot?: boolean
     inputs?: Product[]
-    outputs?: Product[],
-    product: Product | null
-    state: GRAPH_ENTITY_STATE
+    outputs?: Product[]
 }
 
-export type SimulatedEntity = Entity & IntermediaryState
-export type SimulatedMachine = Machine & IntermediaryState
-export type SimulatedDepot = Depot & IntermediaryState
+type GraphEntityState = {
+    state: GRAPH_ENTITY_STATE
+    products: {
+        materialType: MATERIAL_TYPE
+        amount: number
+    }[]
+}
+
+export type Connection = {
+    id: string
+    sourceMachine: string
+    targetMachine: string
+    portIndex: {
+        source: number
+        target: number
+    }
+} & GraphEntityState
+
+export type SimulatedEntity = Entity & Patches
+export type SimulatedDepot = Depot & Patches
+export type SimulatedMachine = Machine & Patches & GraphEntityState
 
 export type SimulatedEntities = {
     [key: string]: SimulatedEntity
@@ -25,14 +42,3 @@ export type SimulatedDepots = {
     [key: string]: SimulatedDepot
 }
 
-export type Connection = {
-    id: string
-    sourceMachine: string
-    targetMachine: string
-    portIndex: {
-        source: number
-        target: number
-    }
-    product: Product | null
-    state: GRAPH_ENTITY_STATE
-}

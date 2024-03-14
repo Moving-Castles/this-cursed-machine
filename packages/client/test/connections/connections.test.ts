@@ -36,12 +36,12 @@ test("(1) calculateSimulatedConnections", () => {
                 source: 0,
                 target: 0
             },
-            product: {
-                machineId: 'INLET_ONE',
-                materialType: 1,
-                amount: 1000,
-                inletActive: [true, false]
-            },
+            products: [
+                {
+                    amount: 1000,
+                    materialType: 1,
+                }
+            ],
             state: 1
         },
         {
@@ -52,12 +52,12 @@ test("(1) calculateSimulatedConnections", () => {
                 source: 0,
                 target: 0
             },
-            product: {
-                machineId: 'PLAYER',
-                materialType: 2,
-                amount: 500,
-                inletActive: [true, false]
-            },
+            products: [
+                {
+                    amount: 500,
+                    materialType: 2,
+                }
+            ],
             state: 1
         }
     ]

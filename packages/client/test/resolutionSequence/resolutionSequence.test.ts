@@ -1,9 +1,10 @@
 import { expect, test } from 'vitest'
 import { resolve } from "../../src/svelte/modules/state/resolver/resolve"
-import { calculateSimulatedDepots } from "../../src/svelte/modules/state/simulated/stores"
+import { calculateSimulatedDepots, applyPatches } from "../../src/svelte/modules/state/simulated/stores"
 import { setUp, createMachine } from "../resolve/setUp"
 import { outputPatches } from './outputPatches'
 import { ENTITY_TYPE, MACHINE_TYPE } from 'contracts/enums'
+import { s } from 'vitest/dist/reporters-MmQN-57K'
 
 const playerPod = {
     entityType: ENTITY_TYPE.POD,
@@ -298,7 +299,7 @@ test("(3) resolveSplitterMixer", () => {
 
 })
 
-test("(4) unusedInlet", () => {
+test("(4) unusedPlayerAndUnusedMachine", () => {
     const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     // Fill depot 1 with 20000 MATERIAL_TYPE.AMMONIA
@@ -389,4 +390,183 @@ test("(4) unusedInlet", () => {
 
     expect(receivedSimulatedDepotsAfter2000Blocks).toStrictEqual(expectedSimulatedDepotsAfter2000Blocks)
 
+})
+
+test("(5) resolveSplitterMixer", () => {
+    const { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+
+    // Build dryer
+    machines["DRYER"] = createMachine(MACHINE_TYPE.MIXER, 1)
+
+    // Build wetter
+    machines["WETTER"] = createMachine(MACHINE_TYPE.MIXER, 1)
+
+    // Build splitter
+    machines["SPLITTER"] = createMachine(MACHINE_TYPE.SPLITTER, 1)
+
+    // Connect DEPOT 1 to INLET 1
+    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
+    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+
+    // Connect Inlet 1 to player
+    machines["INLET_ONE"].outgoingConnections.push("PLAYER")
+    machines["PLAYER"].incomingConnections.push("INLET_ONE")
+
+    // Connect dryer to wetter
+    machines["DRYER"].outgoingConnections.push("WETTER")
+    machines["WETTER"].incomingConnections.push("DRYER")
+
+    const receivedPatches = resolve(machines, inlets, outlet, depots, recipes)
+
+    expect(receivedPatches).toStrictEqual(outputPatches.test5)
+
+    const expectedOutput = {
+        INLET_ONE: {
+            entity: 3,
+            machineType: 1,
+            depotConnection: "DEPOT_ONE",
+            incomingConnections: [],
+            outgoingConnections: [
+                "PLAYER"
+            ],
+            buildIndex: 1,
+            products: [
+                {
+                    materialType: 1,
+                    amount: 1000
+                }
+            ],
+            state: 1,
+            inputs: [
+                {
+                    machineId: "INLET_ONE",
+                    materialType: 1,
+                    amount: 1000,
+                    inletActive: [
+                        true,
+                        false
+                    ]
+                }
+            ],
+            outputs: [
+                {
+                    machineId: "INLET_ONE",
+                    materialType: 1,
+                    amount: 1000,
+                    inletActive: [
+                        true,
+                        false
+                    ]
+                }
+            ]
+        },
+        INLET_TWO: {
+            entity: 3,
+            machineType: 1,
+            depotConnection: "",
+            incomingConnections: [],
+            outgoingConnections: [],
+            buildIndex: 2,
+            products: [],
+            state: 0
+        },
+        OUTLET: {
+            entity: 3,
+            machineType: 2,
+            depotConnection: "",
+            incomingConnections: [],
+            outgoingConnections: [],
+            buildIndex: 1,
+            products: [],
+            state: 0
+        },
+        PLAYER: {
+            entity: 3,
+            machineType: 3,
+            depotConnection: "",
+            incomingConnections: [
+                "INLET_ONE"
+            ],
+            outgoingConnections: [],
+            buildIndex: 1,
+            products: [
+                {
+                    materialType: 2,
+                    amount: 500
+                },
+                {
+                    materialType: 3,
+                    amount: 500
+                }
+            ],
+            state: 1,
+            inputs: [
+                {
+                    machineId: "PLAYER",
+                    materialType: 1,
+                    amount: 1000,
+                    inletActive: [
+                        true,
+                        false
+                    ]
+                }
+            ],
+            outputs: [
+                {
+                    machineId: "PLAYER",
+                    materialType: 2,
+                    amount: 500,
+                    inletActive: [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    machineId: "PLAYER",
+                    materialType: 3,
+                    amount: 500,
+                    inletActive: [
+                        true,
+                        false
+                    ]
+                }
+            ]
+        },
+        DRYER: {
+            entity: 3,
+            machineType: 5,
+            depotConnection: "",
+            incomingConnections: [],
+            outgoingConnections: [
+                "WETTER"
+            ],
+            buildIndex: 1,
+            products: [],
+            state: 0
+        },
+        WETTER: {
+            entity: 3,
+            machineType: 5,
+            depotConnection: "",
+            incomingConnections: [
+                "DRYER"
+            ],
+            outgoingConnections: [],
+            buildIndex: 1,
+            products: [],
+            state: 0
+        },
+        SPLITTER: {
+            entity: 3,
+            machineType: 4,
+            depotConnection: "",
+            incomingConnections: [],
+            outgoingConnections: [],
+            buildIndex: 1,
+            products: [],
+            state: 0
+        }
+    }
+
+    expect(applyPatches(machines, receivedPatches)).toStrictEqual(expectedOutput)
 })

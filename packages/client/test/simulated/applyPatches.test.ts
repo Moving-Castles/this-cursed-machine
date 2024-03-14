@@ -59,12 +59,12 @@ test("(1) applyPatches", () => {
                     materialType: 1
                 }
             ],
-            product: {
-                amount: 1000,
-                inletActive: [true, false],
-                machineId: "INLET_ONE",
-                materialType: 1
-            },
+            products: [
+                {
+                    amount: 1000,
+                    materialType: 1,
+                }
+            ],
             state: 1
         }
     }

@@ -174,9 +174,6 @@ export function createLayout(
     previousGraphMachines: GraphMachines) {
     console.time('createLayout');
 
-    // Clone to avoid accidentally modifying the original state
-    // const simulatedMachinesCopy = deepClone(simulatedMachines);
-    // const simulatedConnectionsCopy = deepClone(simulatedConnections);
     // Initialize pathfinding grid
     const grid = createGrid()
 

@@ -2,16 +2,13 @@ import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MATERIAL_TYPE } from "@modules/state/base/enums"
-import type { SimulatedEntities, SimulatedEntity, SimulatedDepots, SimulatedMachines, Connection, SimulatedMachine } from "./types"
+import type { SimulatedEntities, SimulatedDepots, SimulatedDepot, SimulatedMachines, Connection, SimulatedMachine } from "./types"
 import { machines, depots, playerPod } from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
 import { GRAPH_ENTITY_STATE } from "./enums"
 
 export function processInputPatches(simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
-    // Early return if conditions are not met, without modifying the original 'simulated' object.
-    if (!patch.inputs || !simulated[key]) return simulated as SimulatedMachines;
-
     // Create a deep copy of 'simulated' to avoid mutating the original object.
     const simulatedCopy = deepClone(simulated) as SimulatedMachines;
 
@@ -26,20 +23,23 @@ export function processInputPatches(simulated: SimulatedEntities, key: string, p
 }
 
 export function processOutputPatches(simulated: SimulatedEntities, key: string, patch: any): SimulatedMachines {
-    // Early return if conditions are not met, without modifying the original 'simulated' object.
-    if (!patch.outputs || !simulated[key]) return simulated as SimulatedMachines;
-
     // Create a deep copy of 'simulated' to avoid mutating the original object.
     const simulatedCopy = deepClone(simulated) as SimulatedMachines;
 
     // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.
-    const updatedEntity: SimulatedMachine = { ...simulatedCopy[key], outputs: [...patch.outputs] };
+    let updatedEntity: SimulatedMachine = { ...simulatedCopy[key], outputs: [...patch.outputs] };
 
-    // Assign product if there is one
-    updatedEntity.product = updatedEntity.outputs && updatedEntity.outputs[0] ? updatedEntity.outputs[0] : null
+    updatedEntity.products = []
 
-    // If there is anoutput the machine is active
-    if (updatedEntity.product) {
+    for (const output of patch.outputs) {
+        if (output.materialType === MATERIAL_TYPE.NONE) continue
+        updatedEntity.products.push({
+            materialType: output.materialType,
+            amount: output.amount
+        })
+    }
+
+    if (updatedEntity.products.length > 0) {
         updatedEntity.state = GRAPH_ENTITY_STATE.ACTIVE
     }
 
@@ -52,12 +52,12 @@ export function processOutputPatches(simulated: SimulatedEntities, key: string, 
 
 export function applyPatches(machines: Machines, patches: SimulatedEntities): SimulatedMachines {
     // Create deep copy to avoid accidentally mutating the original object.
-    const patchesCopy = deepClone(patches);
-    const machinesCopy = deepClone(machines);
+    // const patchesCopy = deepClone(patches);
+    // const machinesCopy = deepClone(machines);
 
-    let simulatedMachines: SimulatedMachines = Object.fromEntries([...Object.entries(machinesCopy)])
+    let simulatedMachines: SimulatedMachines = Object.fromEntries([...Object.entries(machines).map(([key, machine]) => [key, { ...machine, products: [], state: GRAPH_ENTITY_STATE.IDLE }])])
 
-    const filteredPatches = Object.entries(patchesCopy).filter(([_, patch]) => !patch.depot)
+    const filteredPatches = Object.entries(patches).filter(([_, patch]) => !patch.depot)
 
     // Iterate over each patch in the patches store.
     for (const [key, patch] of filteredPatches) {
@@ -78,20 +78,17 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
 
     // Create deep copy to avoid accidentally mutating the original object.
     const initialDepotsCopy = deepClone(depots);
-    const patchesCopy = deepClone(patches);
-    const playerPodCopy = deepClone(playerPod)
 
     let simulatedDepots: SimulatedDepots = Object.fromEntries([...Object.entries(initialDepotsCopy)])
 
-    const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) => playerPodCopy.fixedEntities.inlets.includes(depot.depotConnection))
-    const depotPatches = Object.entries(patchesCopy).filter(([_, patch]) => patch.depot)
+    const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) => playerPod.fixedEntities.inlets.includes(depot.depotConnection))
+    const depotPatches = Object.entries(patches).filter(([_, patch]) => patch.depot)
 
     /*
      * Filter out the inlet depots that are not contributing to the output
      */
-    const usedInletDepots = getUsedInletDepots(inletDepots, playerPodCopy.fixedEntities.inlets, depotPatches);
+    const usedInletDepots = getUsedInletDepots(inletDepots, playerPod.fixedEntities.inlets, depotPatches);
     const usedInletDepotsKeys = usedInletDepots.map(([key, _]) => key)
-
 
     const lowestInputAmount = findLowestValue(usedInletDepots);
     if (lowestInputAmount === 0) return simulatedDepots;
@@ -168,7 +165,7 @@ function findLowestValue(usedInletDepots: [string, Depot][]): number {
  * Checks the output patch of the outlet to see which inlets contributed to the output.
  * Then finds the depots connected to those inlets
  */
-function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], depotPatches: [string, SimulatedEntity][]): [string, Depot][] {
+function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], depotPatches: [string, SimulatedDepot][]): [string, Depot][] {
     let inletActive: boolean[] | null = null;
     let usedInletDepots: [string, Depot][] = []
 
@@ -198,16 +195,16 @@ function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], de
 
 export function calculateSimulatedConnections(simulatedMachines: SimulatedMachines): Connection[] {
     let connections: Connection[] = []
-    const simulatedMachinesCopy = deepClone(simulatedMachines)
+    // const simulatedMachinesCopy = deepClone(simulatedMachines)
 
-    Object.entries(simulatedMachinesCopy).forEach(([sourceAddress, machine]) => {
+    Object.entries(simulatedMachines).forEach(([sourceAddress, machine]) => {
 
         machine.outgoingConnections.forEach((targetAddress, i) => {
 
             if (targetAddress === EMPTY_CONNECTION) return
 
-            const sourceMachine = simulatedMachinesCopy[sourceAddress]
-            const targetMachine = simulatedMachinesCopy[targetAddress]
+            const sourceMachine = simulatedMachines[sourceAddress]
+            const targetMachine = simulatedMachines[targetAddress]
 
             const targetPortIndex = targetMachine.incomingConnections.findIndex(connection => connection === sourceAddress)
 
@@ -221,14 +218,17 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
                     source: i,
                     target: targetPortIndex
                 },
-                product: null,
+                products: [],
                 state: GRAPH_ENTITY_STATE.IDLE
             }
 
-            // Assign product if there is one
-            connection.product = sourceMachine.outputs && sourceMachine.outputs[i] ? sourceMachine.outputs[i] : null
-
-            if (connection.product) {
+            // If the source machine has an output:
+            // Assign material and amount, and set state to active
+            if (sourceMachine.outputs && sourceMachine.outputs[i] && sourceMachine.outputs[i].materialType !== MATERIAL_TYPE.NONE) {
+                connection.products = [{
+                    materialType: sourceMachine.outputs[i].materialType,
+                    amount: sourceMachine.outputs[i].amount
+                }]
                 connection.state = GRAPH_ENTITY_STATE.ACTIVE
             }
 
