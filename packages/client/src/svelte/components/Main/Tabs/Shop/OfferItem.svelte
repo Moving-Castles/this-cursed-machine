@@ -3,18 +3,27 @@
   import { fade } from "svelte/transition"
   import { MATERIAL_TYPE } from "contracts/enums"
   import { buy } from "@modules/action"
+  import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { playSound } from "@modules/sound"
 
   export let key: string
   export let offer: Offer
 
+  let working = false
+
   $: unafforable = (offer.offer?.cost ?? 0) > ($player.tokenBalances ?? 0)
 
-  function sendBuy() {
-    buy(key)
+  async function sendBuy() {
+    working = true
+    playSound("tcm", "listPrint")
+    const action = buy(key)
+    await waitForCompletion(action)
+    playSound("tcm", "TRX_yes")
+    working = false
   }
 </script>
 
-<div class="offer-item" transition:fade>
+<div class="offer-item" class:working transition:fade>
   {#if offer?.offer}
     <div class="section material">
       {offer.offer.amount / 100}
@@ -46,6 +55,11 @@
     }
 
     display: flex;
+
+    &.working {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
     .section {
       user-select: none;

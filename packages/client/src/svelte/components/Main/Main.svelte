@@ -6,6 +6,7 @@
   import Terminal from "@components/Main/Terminal/Terminal.svelte"
   import InfoBar from "@components/Main/Bars/InfoBar.svelte"
   import TabBar from "@components/Main/Bars/TabBar.svelte"
+  import OrderBar from "@components/Main/Bars/OrderBar.svelte"
 
   import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
@@ -96,6 +97,9 @@
       </div>
       {#if $player}
         <div class="right-col">
+          <div class="status-bar">
+            <OrderBar />
+          </div>
           <div class="tab-container">
             <!-- Render the CurrentComponent if it's not null -->
             {#if currentTabComponent}
@@ -164,8 +168,14 @@
       overflow: hidden;
       position: relative;
 
+      .status-bar {
+        height: 40px;
+        border-bottom: 5px double var(--color-border);
+        font-size: 14px;
+      }
+
       .tab-container {
-        height: calc(100vh - 100px);
+        height: calc(100vh - 140px);
         position: relative;
         animation: hue-rotate-animation 5s infinite linear;
       }

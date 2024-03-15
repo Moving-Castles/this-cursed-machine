@@ -3,14 +3,10 @@
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
 
   import DepotsBox from "@components/Main/Tabs/Pod/Depots2/DepotsBox.svelte"
-  import OrderBar from "@components/Main/Tabs/Pod/OrderBar/OrderBar.svelte"
   import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 
 <div class="pod" in:fade>
-  <div class="status-bar">
-    <OrderBar />
-  </div>
   <div class="stats">
     <DepotsBox />
   </div>
@@ -22,12 +18,6 @@
 <Tooltips />
 
 <style lang="scss">
-  .status-bar {
-    height: 40px;
-    border-bottom: 5px double var(--color-border);
-    font-size: 14px;
-  }
-
   .stats {
     height: 100px;
     border-bottom: 5px double var(--color-border);

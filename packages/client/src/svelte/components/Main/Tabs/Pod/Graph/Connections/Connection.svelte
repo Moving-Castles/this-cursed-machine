@@ -2,7 +2,7 @@
   import type { GraphConnection } from "../types"
   import { GRID, CELL } from "../constants"
   import { generateSvgPath } from "./svg"
-  import { GRAPH_ENTITY_STATE } from "@svelte/modules/state/simulated/enums"
+  import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   export let connection: GraphConnection
 
   const width = GRID.WIDTH * CELL.WIDTH

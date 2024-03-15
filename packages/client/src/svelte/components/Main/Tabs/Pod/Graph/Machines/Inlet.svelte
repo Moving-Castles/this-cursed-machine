@@ -4,7 +4,7 @@
   import { CELL, ORFICE } from "../constants"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
-  import { GRAPH_ENTITY_STATE } from "@svelte/modules/state/simulated/enums"
+  import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`

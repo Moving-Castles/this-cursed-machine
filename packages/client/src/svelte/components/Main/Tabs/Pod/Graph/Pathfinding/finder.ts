@@ -8,7 +8,7 @@
 import Heap from 'heap'
 import type { GridNode, Grid } from './types'
 import { getNodeAt, getNeighbors } from './grid'
-import { deepClone } from '@svelte/modules/utils'
+import { deepClone } from '@modules/utils'
 
 /* 
  * Config constants

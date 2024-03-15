@@ -4,18 +4,33 @@
   import { MATERIAL_TYPE } from "contracts/enums"
   import { accept } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
+  import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { playSound } from "@modules/sound"
 
   export let key: string
   export let order: Order
   export let active: boolean
   export let completed: boolean
 
-  function sendAccept() {
-    accept(key)
+  let working = false
+
+  async function sendAccept() {
+    working = true
+    playSound("tcm", "listPrint")
+    const action = accept(key)
+    await waitForCompletion(action)
+    playSound("tcm", "TRX_yes")
+    working = false
   }
 </script>
 
-<div class="order-item" class:active class:completed transition:fade>
+<div
+  class="order-item"
+  class:working
+  class:active
+  class:completed
+  transition:fade
+>
   {#if order?.order}
     <div class="section goal">
       {order.order.goalAmount / 100}
@@ -47,6 +62,11 @@
     padding: 10px;
     padding-top: 30px;
     padding-bottom: 30px;
+
+    &.working {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
     &:first-child {
       border-top: 4px double white;

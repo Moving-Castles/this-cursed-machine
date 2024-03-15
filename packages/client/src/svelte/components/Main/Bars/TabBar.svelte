@@ -4,10 +4,31 @@
   import { playSound } from "@modules/sound"
   import type { TabDefinitions } from "../types"
   export let tabList: TabDefinitions
+
+  function toggleTabByKeyboard(e: KeyboardEvent) {
+    const keyPressed = e.key
+    const numericKey = parseInt(keyPressed, 10) // Convert the key pressed to a number
+
+    // Check if the key is a number and within the valid range of tabList
+    if (
+      !isNaN(numericKey) &&
+      numericKey >= 0 &&
+      numericKey < Object.keys(tabList).length
+    ) {
+      const tabKeys = Object.keys(tabList).map(key => parseInt(key, 10))
+      const tabKey = tabKeys[numericKey] // Get the actual key of the tab from tabList
+
+      if (tabList[tabKey].enabled) {
+        // Check if the tab is enabled
+        playSound("tcm", "selectionEnter")
+        activeTab.set(tabKey) // Set the active tab using the key from tabList
+      }
+    }
+  }
 </script>
 
 <div class="tab-bar">
-  {#each Object.entries(tabList) as [key, value]}
+  {#each Object.entries(tabList) as [key, value], index}
     <div class="button-container">
       <button
         class:enabled={value.enabled}
@@ -22,6 +43,8 @@
     </div>
   {/each}
 </div>
+
+<!-- <svelte:window on:keydown={e => toggleTabByKeyboard(e)} /> -->
 
 <style lang="scss">
   .tab-bar {

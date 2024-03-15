@@ -1,14 +1,9 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  import { reward } from "@modules/action"
-
-  const sendReward = () => {
-    reward()
-  }
 </script>
 
 <div class="info-bar">
-  <div>
+  <div class="name">
     {#if $player.name}
       {$player.name}
     {:else}
@@ -16,9 +11,8 @@
     {/if}
   </div>
 
-  <div class="tokens">
-    TOKENS: {$player.tokenBalances ?? 0}
-    <button on:click={sendReward}>Reward</button>
+  <div class="completed">
+    <div>COMPLETED: {$player.completed?.length ?? 0}</div>
   </div>
 </div>
 
