@@ -14,6 +14,7 @@ export enum WorldFunctions {
   EmptyDepot = "emptyDepot",
   Ship = "ship",
   Accept = "accept",
+  Unaccept = "unaccept",
   Buy = "buy",
   // Testing
   Resolve = "resolve",
@@ -85,6 +86,9 @@ export function ship(depotEntity: string) {
 
 export function accept(orderEntity: string) {
   return addToSequencer(WorldFunctions.Accept, [orderEntity])
+}
+export function unaccept() {
+  return addToSequencer(WorldFunctions.Unaccept, [])
 }
 
 export function buy(offerEntity: string) {

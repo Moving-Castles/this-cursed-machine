@@ -34,6 +34,36 @@ contract OrderSystem is System {
     return orderEntity;
   }
 
+  function cancel(bytes32 _orderEntity) public {
+    //  Restrict to admin
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+
+    Order.deleteRecord(_orderEntity);
+    Completed.deleteRecord(_orderEntity);
+  }
+
+  function accept(bytes32 _orderEntity) public {
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    bytes32 podEntity = CarriedBy.get(playerEntity);
+
+    require(!Tutorial.get(playerEntity), "player in tutorial");
+    require(!Tutorial.get(_orderEntity), "order is tutorial");
+    require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
+
+    OrderData memory currentOrder = Order.get(_orderEntity);
+
+    require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
+    require(!ArrayLib.includes(Completed.get(_orderEntity), playerEntity), "order already completed");
+
+    CurrentOrder.set(podEntity, _orderEntity);
+  }
+
+  function unaccept() public {
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+    require(!Tutorial.get(playerEntity), "player in tutorial");
+    CurrentOrder.set(CarriedBy.get(playerEntity), bytes32(0));
+  }
+
   function ship(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
@@ -108,27 +138,5 @@ contract OrderSystem is System {
     // Reward player in tokens
     LibToken.send(_msgSender(), currentOrder.rewardAmount);
     EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.rewardAmount);
-  }
-
-  function accept(bytes32 _orderEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    require(!Tutorial.get(playerEntity), "player in tutorial");
-    require(!Tutorial.get(_orderEntity), "order is tutorial");
-    require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
-
-    OrderData memory currentOrder = Order.get(_orderEntity);
-
-    require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-    require(!ArrayLib.includes(Completed.get(_orderEntity), playerEntity), "order already completed");
-
-    CurrentOrder.set(podEntity, _orderEntity);
-  }
-
-  function cancel(bytes32 _orderEntity) public {
-    // Todo: Restrict to admin
-    Order.deleteRecord(_orderEntity);
-    Completed.deleteRecord(_orderEntity);
   }
 }

@@ -87,7 +87,7 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testAcceptOrder() public {
+  function testAcceptAndUnacceptOrder() public {
     setUp();
 
     // Create order
@@ -112,9 +112,15 @@ contract OrderSystemTest is BaseTest {
     world.accept(orderEntity);
     endGasReport();
 
-    vm.stopPrank();
-
     assertEq(CurrentOrder.get(podEntity), orderEntity);
+
+    startGasReport("Unaccept order");
+    world.unaccept();
+    endGasReport();
+
+    assertEq(CurrentOrder.get(podEntity), bytes32(0));
+
+    vm.stopPrank();
   }
 
   function testShip() public {

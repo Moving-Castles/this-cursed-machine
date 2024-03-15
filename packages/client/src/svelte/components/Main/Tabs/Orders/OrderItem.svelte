@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition"
   import { blockNumber } from "@modules/network"
   import { MATERIAL_TYPE } from "contracts/enums"
-  import { accept } from "@modules/action"
+  import { accept, unaccept } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { playSound } from "@modules/sound"
@@ -18,6 +18,15 @@
     working = true
     playSound("tcm", "listPrint")
     const action = accept(key)
+    await waitForCompletion(action)
+    playSound("tcm", "TRX_yes")
+    working = false
+  }
+
+  async function sendUnaccept() {
+    working = true
+    playSound("tcm", "listPrint")
+    const action = unaccept()
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
     working = false
@@ -47,10 +56,16 @@
       )}
     </div>
 
-    {#if !active && !completed}
-      <div class="section accept">
-        <button on:click={() => sendAccept()}>Accept</button>
-      </div>
+    {#if !completed}
+      {#if active}
+        <div class="section accept">
+          <button on:click={() => sendUnaccept()}>Cancel</button>
+        </div>
+      {:else}
+        <div class="section accept">
+          <button on:click={() => sendAccept()}>Accept</button>
+        </div>
+      {/if}
     {/if}
   {/if}
 </div>
