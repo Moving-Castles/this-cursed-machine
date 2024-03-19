@@ -5,7 +5,7 @@ import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
-import { organizePatches, consolidatePatches, createOutletDepotPatches, createInletDepotPatches } from "./patches"
+import { organizePatches, consolidatePatches, createOutletDepotPatches, createInletDepotPatches, backtraceOutletConnection } from "./patches"
 
 const FLOW_RATE = 1000
 
@@ -68,6 +68,7 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
 
         inputs.push({
           machineId: machineKey,
+          sourceMachineId: null,
           materialType: depots[depot].materialType,
           amount: FLOW_RATE,
           inletActive: newInletActive
@@ -122,6 +123,7 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
         if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
           const output = currentOutputs[k]
           if (output) {
+            output.sourceMachineId = machineKey
             output.machineId = machine.outgoingConnections[k]
             inputs.push(output)
           }
@@ -139,11 +141,12 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
   * We take the patches produced by the resolution and organize them into a structure that can be applied to the state.
   * Special treatment is given to the depots.
   */
-  return consolidatePatches([
-    organizePatches(patchInputs, "machineId", "inputs"),
-    organizePatches(patchOutputs, "machineId", "outputs"),
-    createOutletDepotPatches(circuitClosed, patchOutputs, Object.keys(outlets)[0], outletDepots[0]),
-    createInletDepotPatches(circuitClosed, patchInputs, Object.keys(inlets), machines)
-  ])
+  return backtraceOutletConnection(
+    consolidatePatches([
+      organizePatches(patchInputs, "machineId", "inputs"),
+      organizePatches(patchOutputs, "machineId", "outputs"),
+      createOutletDepotPatches(circuitClosed, patchOutputs, Object.keys(outlets)[0], outletDepots[0]),
+      createInletDepotPatches(circuitClosed, patchInputs, Object.keys(inlets), machines)
+    ]),
+    Object.keys(outlets)[0])
 }
-

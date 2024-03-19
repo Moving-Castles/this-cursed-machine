@@ -6,8 +6,12 @@ type Patches = {
     depot?: boolean
     inputs?: Product[]
     outputs?: Product[]
+    productive?: boolean
 }
 
+/*
+ * State: If the machine/connecting is carrying/producing a product (ACTIVE) or not (IDLE) 
+ */
 type GraphEntityState = {
     state: GRAPH_ENTITY_STATE
     products: {
@@ -23,7 +27,8 @@ export type Connection = {
     portIndex: {
         source: number
         target: number
-    }
+    },
+    productive: boolean
 } & GraphEntityState
 
 export type SimulatedEntity = Entity & Patches

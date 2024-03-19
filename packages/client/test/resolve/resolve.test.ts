@@ -63,7 +63,7 @@ test("(4) resolve: depot 1 to inlet, inlet to player, depot2 to outlet", () => {
 })
 
 test("(5) resolve: depot 1 to inlet, inlet to player, player (piss) to outlet, depot2 to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+    let { depots, machines, inlets, outlet, recipes } = setUp()
 
     // Connect DEPOT 1 to INLET 1
     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"

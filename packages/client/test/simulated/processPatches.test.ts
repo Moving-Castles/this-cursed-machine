@@ -22,6 +22,7 @@ const patch = {
             materialType: 1,
         },
     ],
+    productive: false
 }
 
 test("(1) processInputPatches", () => {
@@ -58,7 +59,8 @@ test("(2) processOutputPatches", () => {
                     materialType: 1,
                 }
             ],
-            state: 1
+            state: 1,
+            productive: false
         }
     }
 

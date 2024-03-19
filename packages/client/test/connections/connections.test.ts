@@ -42,7 +42,8 @@ test("(1) calculateSimulatedConnections", () => {
                     materialType: 1,
                 }
             ],
-            state: 1
+            state: 1,
+            productive: true
         },
         {
             id: 'FROM-PLAYER-TO-OUTLET-0',
@@ -58,7 +59,8 @@ test("(1) calculateSimulatedConnections", () => {
                     materialType: 2,
                 }
             ],
-            state: 1
+            state: 1,
+            productive: true
         }
     ]
 

@@ -8,8 +8,6 @@
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
 
-  console.log("connection", connection)
-
   $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
@@ -17,6 +15,7 @@
 <div
   class="connection"
   class:active={connection.state === GRAPH_ENTITY_STATE.ACTIVE}
+  class:productive={connection.productive}
 >
   <svg {width} {height}>
     <path {d} />
@@ -58,6 +57,19 @@
 
         polygon {
           fill: var(--color-active);
+          opacity: 0.7;
+        }
+      }
+    }
+
+    &.productive {
+      svg {
+        path {
+          stroke: red;
+        }
+
+        polygon {
+          fill: red;
           opacity: 0.7;
         }
       }

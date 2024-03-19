@@ -1,12 +1,13 @@
 import type { Product } from './types';
 import type { SimulatedEntities } from '../../simulated/types';
+import { deepClone } from '@svelte/modules/utils';
 
 export function organizePatches(
     dataArray: any[],
     key: string,
     field: string
 ): SimulatedEntities {
-    // Create a new object to avoid modifying the original `patches`
+    // Create a new object to avoid modifying the original patches
     const newPatches = {} as SimulatedEntities;
 
     for (let i = 0; i < dataArray.length; i++) {
@@ -81,9 +82,10 @@ export function createOutletDepotPatches(
             depot: true,
             inputs: [{
                 machineId: outletDepot,
+                sourceMachineId: outletOutput[0].machineId,
                 materialType: outletOutput[0].materialType,
                 amount: outletOutput[0].amount,
-                inletActive: outletOutput[0].inletActive
+                inletActive: outletOutput[0].inletActive,
             }]
         }
     }
@@ -116,6 +118,7 @@ export function createInletDepotPatches(
             depot: true,
             outputs: [{
                 machineId: depotId,
+                sourceMachineId: null,
                 materialType: inletInputs[i].materialType,
                 amount: inletInputs[i].amount,
                 inletActive: inletInputs[i].inletActive
@@ -124,4 +127,32 @@ export function createInletDepotPatches(
     }
 
     return newPatches;
+}
+
+export function backtraceOutletConnection(simulatedEntities: SimulatedEntities, outlet: string): SimulatedEntities {
+    // Deep clone to avoid mutating the input object
+    const simulatedEntitiesCopy = deepClone(simulatedEntities);
+
+    // Recursive function to mark entities as productive by tracing back their source
+    const markProductive = (machineId: string): void => {
+        const machine = simulatedEntitiesCopy[machineId];
+        if (!machine || machine.productive) return;
+
+        machine.productive = true;
+
+        machine.inputs?.forEach(input => {
+            if (input.sourceMachineId) {
+                markProductive(input.sourceMachineId); // Recursively mark the source entity as productive
+            }
+        });
+    };
+
+    // Starting entity for backtracing
+    const outletEntity: Entity | undefined = simulatedEntitiesCopy[outlet];
+    if (!outletEntity || !outletEntity.inputs || !outletEntity.inputs[0]) return simulatedEntitiesCopy;
+
+    // Initiate the recursive backtracing from the outlet entity
+    markProductive(outlet);
+
+    return simulatedEntitiesCopy;
 }

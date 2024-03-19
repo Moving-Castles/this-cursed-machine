@@ -4,7 +4,6 @@ import { calculateSimulatedDepots, applyPatches } from "../../src/svelte/modules
 import { setUp, createMachine } from "../resolve/setUp"
 import { outputPatches } from './outputPatches'
 import { ENTITY_TYPE, MACHINE_TYPE } from 'contracts/enums'
-import { s } from 'vitest/dist/reporters-MmQN-57K'
 
 const playerPod = {
     entityType: ENTITY_TYPE.POD,
@@ -430,6 +429,7 @@ test("(5) resolveSplitterMixer", () => {
                 "PLAYER"
             ],
             buildIndex: 1,
+            productive: false,
             products: [
                 {
                     materialType: 1,
@@ -445,7 +445,8 @@ test("(5) resolveSplitterMixer", () => {
                     inletActive: [
                         true,
                         false
-                    ]
+                    ],
+                    sourceMachineId: null
                 }
             ],
             outputs: [
@@ -456,7 +457,8 @@ test("(5) resolveSplitterMixer", () => {
                     inletActive: [
                         true,
                         false
-                    ]
+                    ],
+                    sourceMachineId: null
                 }
             ]
         },
@@ -481,7 +483,7 @@ test("(5) resolveSplitterMixer", () => {
             state: 0
         },
         PLAYER: {
-            entity: 3,
+            entity: 4,
             machineType: 3,
             depotConnection: "",
             incomingConnections: [
@@ -489,6 +491,7 @@ test("(5) resolveSplitterMixer", () => {
             ],
             outgoingConnections: [],
             buildIndex: 1,
+            productive: false,
             products: [
                 {
                     materialType: 2,
@@ -508,7 +511,8 @@ test("(5) resolveSplitterMixer", () => {
                     inletActive: [
                         true,
                         false
-                    ]
+                    ],
+                    sourceMachineId: "INLET_ONE"
                 }
             ],
             outputs: [
@@ -533,7 +537,7 @@ test("(5) resolveSplitterMixer", () => {
             ]
         },
         DRYER: {
-            entity: 3,
+            entity: 4,
             machineType: 5,
             depotConnection: "",
             incomingConnections: [],
@@ -545,7 +549,7 @@ test("(5) resolveSplitterMixer", () => {
             state: 0
         },
         WETTER: {
-            entity: 3,
+            entity: 4,
             machineType: 5,
             depotConnection: "",
             incomingConnections: [
@@ -557,7 +561,7 @@ test("(5) resolveSplitterMixer", () => {
             state: 0
         },
         SPLITTER: {
-            entity: 3,
+            entity: 4,
             machineType: 4,
             depotConnection: "",
             incomingConnections: [],

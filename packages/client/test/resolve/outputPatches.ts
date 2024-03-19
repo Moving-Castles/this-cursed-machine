@@ -9,6 +9,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -17,6 +18,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
         },
@@ -27,6 +29,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -53,6 +56,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -61,6 +65,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
         },
@@ -71,6 +76,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -98,6 +104,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
         },
@@ -108,6 +115,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -116,8 +124,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
+            productive: true
         },
         PLAYER: {
             inputs: [
@@ -126,6 +136,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -142,6 +153,7 @@ export const outputPatches = {
                     materialType: 3,
                 },
             ],
+            productive: true
         },
         OUTLET: {
             inputs: [
@@ -150,6 +162,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 2,
+                    sourceMachineId: "PLAYER"
                 },
             ],
             outputs: [
@@ -158,8 +171,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 2,
+                    sourceMachineId: "PLAYER"
                 },
             ],
+            productive: true
         },
         DEPOT_TWO: {
             depot: true,
@@ -169,6 +184,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 2,
+                    sourceMachineId: "OUTLET"
                 },
             ],
         },
@@ -181,6 +197,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -189,8 +206,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
+            productive: true
         },
         PLAYER: {
             inputs: [
@@ -199,6 +218,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -215,6 +235,7 @@ export const outputPatches = {
                     materialType: 3,
                 },
             ],
+            productive: true
         },
         OUTLET: {
             inputs: [
@@ -223,6 +244,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
             outputs: [
@@ -231,8 +253,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
+            productive: true
         },
     },
     "test7": {
@@ -244,6 +268,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
         },
@@ -254,6 +279,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null,
                 },
             ],
             outputs: [
@@ -262,8 +288,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null,
                 },
             ],
+            productive: true
         },
         SPLITTER: {
             inputs: [
@@ -272,6 +300,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "SPLITTER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE",
                 },
             ],
             outputs: [
@@ -288,6 +317,7 @@ export const outputPatches = {
                     materialType: 1,
                 },
             ],
+            productive: true
         },
         PLAYER: {
             inputs: [
@@ -296,6 +326,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "SPLITTER"
                 },
             ],
             outputs: [
@@ -312,6 +343,7 @@ export const outputPatches = {
                     materialType: 3,
                 },
             ],
+            productive: true
         },
         DRYER_ONE: {
             inputs: [
@@ -320,6 +352,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DRYER_ONE",
                     materialType: 2,
+                    sourceMachineId: "PLAYER"
                 },
             ],
             outputs: [
@@ -330,6 +363,7 @@ export const outputPatches = {
                     materialType: 7,
                 },
             ],
+            productive: true
         },
         BOILER: {
             inputs: [
@@ -338,6 +372,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "BOILER",
                     materialType: 1,
+                    sourceMachineId: "SPLITTER"
                 },
             ],
             outputs: [
@@ -348,6 +383,7 @@ export const outputPatches = {
                     materialType: 10,
                 },
             ],
+            productive: true
         },
         DRYER_TWO: {
             inputs: [
@@ -356,6 +392,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DRYER_TWO",
                     materialType: 10,
+                    sourceMachineId: "BOILER"
                 },
             ],
             outputs: [
@@ -366,6 +403,7 @@ export const outputPatches = {
                     materialType: 9,
                 },
             ],
+            productive: true
         },
         MIXER: {
             inputs: [
@@ -374,12 +412,14 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "MIXER",
                     materialType: 9,
+                    sourceMachineId: "DRYER_TWO"
                 },
                 {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "MIXER",
                     materialType: 7,
+                    sourceMachineId: "DRYER_ONE"
                 }
             ],
             outputs: [
@@ -390,6 +430,7 @@ export const outputPatches = {
                     materialType: 8,
                 },
             ],
+            productive: true
         },
         OUTLET: {
             inputs: [
@@ -398,6 +439,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 8,
+                    sourceMachineId: "MIXER"
                 },
             ],
             outputs: [
@@ -406,8 +448,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 8,
+                    sourceMachineId: "MIXER"
                 },
             ],
+            productive: true
         },
         DEPOT_TWO: {
             depot: true,
@@ -417,6 +461,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 8,
+                    sourceMachineId: "OUTLET"
                 },
             ],
         },
@@ -430,6 +475,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
         },
@@ -440,6 +486,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -448,8 +495,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
+            productive: true
         },
         PLAYER: {
             inputs: [
@@ -458,6 +507,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -474,6 +524,7 @@ export const outputPatches = {
                     materialType: 3,
                 },
             ],
+            productive: true
         },
         OUTLET: {
             inputs: [
@@ -482,6 +533,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
             outputs: [
@@ -490,8 +542,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
+            productive: true
         },
         DEPOT_TWO: {
             depot: true,
@@ -501,6 +555,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "DEPOT_TWO",
                     materialType: 3,
+                    sourceMachineId: "OUTLET"
                 },
             ],
         },
@@ -513,6 +568,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
             outputs: [
@@ -521,8 +577,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
                     materialType: 1,
+                    sourceMachineId: null
                 },
             ],
+            productive: true
         },
         PLAYER: {
             inputs: [
@@ -531,6 +589,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "PLAYER",
                     materialType: 1,
+                    sourceMachineId: "INLET_ONE"
                 },
             ],
             outputs: [
@@ -547,6 +606,7 @@ export const outputPatches = {
                     materialType: 3,
                 },
             ],
+            productive: true
         },
         OUTLET: {
             inputs: [
@@ -555,6 +615,7 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
             outputs: [
@@ -563,8 +624,10 @@ export const outputPatches = {
                     inletActive: [true, false],
                     machineId: "OUTLET",
                     materialType: 3,
+                    sourceMachineId: "PLAYER"
                 },
             ],
+            productive: true
         },
     },
 }

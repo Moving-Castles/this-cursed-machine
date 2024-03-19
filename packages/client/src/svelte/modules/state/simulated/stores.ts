@@ -26,8 +26,10 @@ export function processOutputPatches(simulated: SimulatedEntities, key: string, 
     // Create a deep copy of 'simulated' to avoid mutating the original object.
     const simulatedCopy = deepClone(simulated) as SimulatedMachines;
 
+    if (!patch.outputs) return simulatedCopy
+
     // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.
-    let updatedEntity: SimulatedMachine = { ...simulatedCopy[key], outputs: [...patch.outputs] };
+    let updatedEntity: SimulatedMachine = { ...simulatedCopy[key], outputs: [...patch.outputs], productive: patch.productive ?? false };
 
     updatedEntity.products = []
 
@@ -219,7 +221,8 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
                     target: targetPortIndex
                 },
                 products: [],
-                state: GRAPH_ENTITY_STATE.IDLE
+                state: GRAPH_ENTITY_STATE.IDLE,
+                productive: sourceMachine.productive ?? false
             }
 
             // If the source machine has an output:

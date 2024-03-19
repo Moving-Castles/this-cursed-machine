@@ -31,6 +31,7 @@ const patches = {
                 materialType: 1,
             },
         ],
+        productive: false
     }
 }
 
@@ -65,7 +66,8 @@ test("(1) applyPatches", () => {
                     materialType: 1,
                 }
             ],
-            state: 1
+            state: 1,
+            productive: false
         }
     }
 
