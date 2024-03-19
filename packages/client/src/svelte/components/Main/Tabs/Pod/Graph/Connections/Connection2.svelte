@@ -45,7 +45,7 @@
 
     svg {
       path {
-        stroke: #00ff00;
+        stroke: var(--color-active);
         stroke-width: 10;
         opacity: 0.5;
         fill: none;

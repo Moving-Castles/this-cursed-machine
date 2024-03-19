@@ -36,3 +36,46 @@ export function generateSvgPath(connection: GraphConnection, cellHeight: number,
 
     return pathData
 }
+
+export function generateSvgArrow(connection: GraphConnection, cellHeight: number, cellWidth: number): string {
+    if (connection.path.length === 0) return "";
+
+    // Calculate the midpoint index and its coordinates, then scale them
+    const midpointIndex = Math.floor((connection.path.length - 1) / 2);
+    const [midGridX, midGridY] = connection.path[midpointIndex];
+    const [nextGridX, nextGridY] = connection.path[midpointIndex + 1];
+
+    // Scale midpoint and next point coordinates to fit the grid
+    const midX = (midGridX + 0.5) * cellWidth;
+    const midY = (midGridY + 0.5) * cellHeight;
+    const nextX = (nextGridX + 0.5) * cellWidth;
+    const nextY = (nextGridY + 0.5) * cellHeight;
+
+    // Calculate direction from scaled midpoint to next point
+    const dx = nextX - midX;
+    const dy = nextY - midY;
+
+    // Calculate the angle for the arrowhead
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    // Define the size of the arrowhead, potentially scaling it
+    const arrowSize = Math.min(cellWidth, cellHeight) * 1.3; // Example scaling factor, adjust as needed
+
+    // Calculate the points for the arrowhead polygon, starting from the origin to make rotation easier
+    const arrowPoints = [
+        [0, 0], // The tip of the arrow at the origin, will be translated to midpoint
+        [-arrowSize, -arrowSize / 2],
+        [-arrowSize, arrowSize / 2]
+    ].map(([x, y]) => {
+        // Rotate the points by the calculated angle
+        const rotatedX = x * Math.cos(angle * Math.PI / 180) - y * Math.sin(angle * Math.PI / 180);
+        const rotatedY = x * Math.sin(angle * Math.PI / 180) + y * Math.cos(angle * Math.PI / 180);
+        // Translate the rotated points to the scaled midpoint
+        return [rotatedX + midX, rotatedY + midY];
+    });
+
+    // Convert arrowPoints to a string format suitable for the 'points' attribute of an SVG polygon
+    const arrowData = arrowPoints.map(point => point.join(',')).join(' ');
+
+    return arrowData;
+}

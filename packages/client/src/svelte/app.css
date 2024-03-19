@@ -2,21 +2,24 @@
 
 :root {
   /* Colors */
-  --black: #000000;
+  --black: #201e1e;
   --white: #ffffff;
-  --background: rgb(var(--black));
+  --dark-brown: #0b0b0b;
+  --alt-foreground: #d7d7c3;
+
+  --background: var(--dark-brown);
   --background-offset: rgb(40, 40, 40);
-  --foreground: rgb(var(--white));
-  --terminal-background: black;
-  --terminal-color: var(--white);
+  --foreground: var(--alt-foreground);
   --color-info: #50908e;
-  --color-alert: #effb04;
-  --color-success: #3bb13b;
+  --color-alert: #eb55bb;
+  --color-success: #439543;
   --color-failure: #ff4000;
   --color-help: #534bce;
-  --color-special: #d013d0;
+  --color-special: #bcbe8f;
+
+  --color-active: #ffa807;
   
-  --color-border: #7a7a7a;
+  --color-border: #444444;
 
   /* Sizing */
   --default-padding: 1ch;
@@ -83,8 +86,8 @@
 
 body,
 html {
-  background: var(--black);
-  color: var(--white);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-family);
   font-size: var(--font-size-normal);
   margin: 0;

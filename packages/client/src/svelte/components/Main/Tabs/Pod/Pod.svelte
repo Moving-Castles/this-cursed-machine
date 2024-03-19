@@ -44,16 +44,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 255, 0, 1);
+    background-color: rgb(255, 0, 0);
     // background-image: url(/images/noise2.png);
     background-image: url(/images/scanlines.png);
     background-size: 400px 400px;
     // filter: blur(1px);
     // backdrop-filter: blur(1px);
     // backdrop-filter: saturate(5);
-    // mix-blend-mode: difference;
-    mix-blend-mode: lighten;
-    opacity: 0.3;
+    mix-blend-mode: difference;
+    // mix-blend-mode: lighten;
+    opacity: 0.1;
     z-index: 10;
     backdrop-filter: saturate(100%);
   }

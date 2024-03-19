@@ -73,7 +73,7 @@
 <style lang="scss">
   .order-item {
     width: 100%;
-    border-bottom: 4px double white;
+    border-bottom: 4px double var(--foreground);
     padding: 10px;
     padding-top: 30px;
     padding-bottom: 30px;
@@ -84,7 +84,7 @@
     }
 
     &:first-child {
-      border-top: 4px double white;
+      border-top: 4px double var(--foreground);
     }
 
     display: flex;
@@ -121,8 +121,8 @@
           font-family: var(--font-family);
 
           &:hover {
-            background: white;
-            color: black;
+            background: var(--foreground);
+            color: var(--background);
             cursor: pointer;
           }
         }

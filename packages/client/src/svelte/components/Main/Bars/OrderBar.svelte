@@ -56,7 +56,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-inline: 20px;
+    padding-inline: 15px;
+    user-select: none;
 
     .order-information {
       display: flex;
@@ -66,8 +67,8 @@
       }
 
       .time {
-        background: white;
-        color: black;
+        background: var(--foreground);
+        color: var(--background);
       }
     }
   }

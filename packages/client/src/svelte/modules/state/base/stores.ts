@@ -12,7 +12,7 @@ import {
   getExpiredOrders
 } from "./utils"
 import { writable, derived } from "svelte/store"
-import { blockNumber, network } from "../../network"
+import { blockNumber, network } from "@modules/network"
 
 export const GAME_CONFIG_ID = "0x"
 

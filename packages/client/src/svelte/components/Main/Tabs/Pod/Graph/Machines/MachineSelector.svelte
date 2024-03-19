@@ -9,8 +9,6 @@
 
   export let machine: GraphMachine
 
-  $: console.log("machine", machine)
-
   const componentList = {
     [MACHINE_TYPE.INLET]: Inlet,
     [MACHINE_TYPE.OUTLET]: Outlet,

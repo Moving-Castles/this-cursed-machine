@@ -129,7 +129,7 @@
       .status-bar {
         height: 40px;
         border-bottom: 5px double var(--color-border);
-        color: white;
+        color: var(--foreground);
         font-size: 14px;
       }
 
@@ -153,7 +153,7 @@
         // backdrop-filter: blur(1px);
         // backdrop-filter: invert(1);
         // backdrop-filter: saturate(100%);
-        // mix-blend-mode: difference;
+        mix-blend-mode: difference;
         mix-blend-mode: hard-light;
         opacity: 0.2;
         z-index: 10;

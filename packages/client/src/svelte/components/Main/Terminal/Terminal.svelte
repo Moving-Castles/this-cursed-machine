@@ -434,8 +434,6 @@
   .terminal {
     font-family: var(--font-family);
     overflow: hidden;
-    color: var(--terminal-color);
-    background: var(--terminal-background);
     width: 100%;
     position: relative;
     white-space: pre-line;
@@ -450,7 +448,6 @@
     }
 
     form {
-      color: var(--terminal-color);
       font-family: var(--font-family);
       border: none;
       outline: none;
@@ -465,7 +462,7 @@
       }
 
       .terminal-input-wrapper {
-        color: white;
+        color: var(--foreground);
         width: 100%;
 
         .terminal-input {

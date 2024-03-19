@@ -33,14 +33,14 @@
     background: rgb(74, 74, 74);
 
     &.connected {
-      background: rgb(148, 255, 116);
-      color: black;
+      background: var(--color-active);
+      color: var(--background);
     }
 
     button {
       font-size: 10px;
       padding: 5px;
-      border: 1px solid white;
+      border: 1px solid var(--foreground);
       margin: 1px;
     }
   }

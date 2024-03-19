@@ -52,11 +52,13 @@
     align-items: center;
     position: absolute;
     background-image: url("/images/eye.png");
+    // background-image: url("/images/eye2.gif");
     background-size: cover;
-    border: 1px solid black;
+    border: 1px solid var(--background);
+    color: var(--background);
 
     &.active {
-      border: 1px solid #00ff00;
+      border: 1px solid var(--color-active);
     }
 
     .inner-container {
@@ -71,7 +73,7 @@
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
-        background: black;
+        background: var(--background);
       }
     }
   }

@@ -1,14 +1,17 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
   import { GRID, CELL } from "../constants"
-  import { generateSvgPath } from "./svg"
+  import { generateSvgPath, generateSvgArrow } from "./svg"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   export let connection: GraphConnection
 
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
 
+  console.log("connection", connection)
+
   $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
+  $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
 
 <div
@@ -17,6 +20,7 @@
 >
   <svg {width} {height}>
     <path {d} />
+    <polygon {points} />
   </svg>
 </div>
 
@@ -32,19 +36,29 @@
       path {
         stroke: #cdcdcd;
         stroke-width: 5;
-        opacity: 0.5;
+        opacity: 0.7;
         fill: none;
 
-        &:hove {
+        &:hover {
           stroke: #0000ff;
         }
+      }
+
+      polygon {
+        fill: #cdcdcd;
+        opacity: 0.7;
       }
     }
 
     &.active {
       svg {
         path {
-          stroke: #00ff00;
+          stroke: var(--color-active);
+        }
+
+        polygon {
+          fill: var(--color-active);
+          opacity: 0.7;
         }
       }
     }

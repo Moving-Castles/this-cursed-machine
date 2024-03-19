@@ -76,7 +76,7 @@
     button {
       font-size: 10px;
       padding: 5px;
-      border: 1px solid white;
+      border: 1px solid var(--foreground);
       margin: 1px;
     }
   }

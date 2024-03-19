@@ -12,7 +12,11 @@
   </div>
 
   <div class="completed">
-    <div>COMPLETED: {$player.completed?.length ?? 0}</div>
+    {#if $player.tutorial}
+      <div>TUTORIAL LEVEL: {($player.tutorialLevel ?? 0) + 1}</div>
+    {:else}
+      <div>COMPLETED: {$player.completed?.length ?? 0}</div>
+    {/if}
   </div>
 </div>
 
@@ -23,7 +27,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-inline: 20px;
+    padding-inline: 15px;
+    user-select: none;
 
     .tokens {
       display: flex;

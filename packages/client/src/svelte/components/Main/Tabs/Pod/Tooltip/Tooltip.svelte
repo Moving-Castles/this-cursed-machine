@@ -46,8 +46,8 @@
     bottom: 0;
     left: 0;
     z-index: 9999;
-    background-color: black !important;
-    border: 1px solid white;
+    background-color: var(--background) !important;
+    border: 1px solid var(--foreground);
     pointer-events: none;
     cursor: none;
   }

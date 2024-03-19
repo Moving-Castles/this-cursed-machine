@@ -28,7 +28,7 @@
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    color: white;
+    color: var(--foreground);
     padding: 20px;
     cursor: pointer;
     text-align: center;

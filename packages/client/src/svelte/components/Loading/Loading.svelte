@@ -69,7 +69,7 @@
     height: 2em;
     width: 80px;
     background: var(--color-alert);
-    color: var(--black);
+    color: var(--background);
     z-index: 10000;
     line-height: 2em;
     text-align: center;
@@ -82,9 +82,9 @@
     left: 0;
     width: 100%;
     height: 100%;
-    color: var(--white);
+    color: var(--foreground);
     font-family: var(--font-family);
-    background: var(--black);
+    background: var(--background);
     font-size: var(--font-size-normal);
     color: inherit;
     user-select: none;

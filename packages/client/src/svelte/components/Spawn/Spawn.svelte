@@ -79,7 +79,7 @@
   .spawn {
     position: fixed;
     inset: 0;
-    background-color: black;
+    background-color: var(--background);
     background-size: cover;
     background-position: center;
     z-index: 1;

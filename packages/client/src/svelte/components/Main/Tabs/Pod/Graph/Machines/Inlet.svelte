@@ -47,16 +47,16 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    background: black;
-    color: white;
+    background: var(--background);
+    color: var(--foreground);
 
     &.connected {
-      background: rgb(148, 255, 116);
-      color: black;
+      background: var(--color-active);
+      color: var(--background);
     }
 
     &.active {
-      border: 1px solid #00ff00;
+      border: 1px solid var(--color-active);
     }
 
     .inner-container {
@@ -71,7 +71,7 @@
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
-        background: white;
+        background: var(--foreground);
       }
     }
   }

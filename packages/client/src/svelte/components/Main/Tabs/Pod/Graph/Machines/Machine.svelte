@@ -73,7 +73,7 @@
   <div class="inner-container">
     <div class="label">{label}</div>
     {#each ports as port}
-      <div class="port" style={port.style} />
+      <div class="port {DIRECTION[port.direction]}" style={port.style} />
     {/each}
   </div>
 </div>
@@ -88,9 +88,10 @@
     align-items: center;
     background: darkgrey;
     position: absolute;
+    color: var(--background);
 
     &.active {
-      border: 1px solid #00ff00;
+      border: 1px solid var(--color-active);
     }
 
     .inner-container {
@@ -105,7 +106,7 @@
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
-        background: black;
+        background: grey;
       }
     }
   }
