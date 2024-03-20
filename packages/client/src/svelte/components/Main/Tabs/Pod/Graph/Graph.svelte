@@ -1,5 +1,7 @@
 <script lang="ts">
   import { playerPod } from "@modules/state/base/stores"
+  import { GRID, CELL } from "./constants"
+
   import {
     simulatedMachines,
     simulatedConnections,
@@ -12,6 +14,9 @@
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
 
+  const width = GRID.WIDTH * CELL.WIDTH
+  const height = GRID.HEIGHT * CELL.HEIGHT
+
   let graphMachines: GraphMachines = {}
   let graphConnections: GraphConnection[] = []
 
@@ -20,7 +25,7 @@
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    graphMachines,
+    graphMachines
   ))
 </script>
 
@@ -30,9 +35,12 @@
       {#each Object.values(graphMachines) as machine}
         <MachineSelector {machine} />
       {/each}
-      {#each graphConnections as connection}
-        <Connection {connection} />
-      {/each}
+
+      <svg {width} {height}>
+        {#each graphConnections as connection}
+          <Connection {connection} />
+        {/each}
+      </svg>
     </div>
     <Grid />
   </div>
