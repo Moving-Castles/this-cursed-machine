@@ -42,6 +42,7 @@
   let selectContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
   let inputActive = false
+  let hasFocus = false
 
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
@@ -67,7 +68,7 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5],
+      SYMBOLS[5]
     )
     resetInput()
   }
@@ -80,7 +81,7 @@
   }
 
   const getSingleInputCommandParameters = async (
-    command: Command,
+    command: Command
   ): Promise<any[] | false> => {
     const selectOptions = createSelectOptions(command.id)
 
@@ -93,7 +94,7 @@
     const value = await renderSelect(
       selectContainerElement,
       Select,
-      selectOptions,
+      selectOptions
     )
 
     // Abort if nothing selected
@@ -111,7 +112,7 @@
     const connectionId = await renderSelect(
       selectContainerElement,
       Select,
-      disconnectOptions,
+      disconnectOptions
     )
 
     // Abort if nothing selected
@@ -136,7 +137,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING,
+      DIRECTION.OUTGOING
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "From:")
@@ -144,7 +145,7 @@
     const sourceMachineKey = await renderSelect(
       selectContainerElement,
       Select,
-      sourceSelectOptions,
+      sourceSelectOptions
     )
 
     // Abort if nothing selected
@@ -162,7 +163,7 @@
         " #" +
         sourceMachineEntity.buildIndex,
       true,
-      SYMBOLS[11],
+      SYMBOLS[11]
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -198,7 +199,7 @@
       const sourcePort = (await renderSelect(
         selectContainerElement,
         Select,
-        sourcePortOptions,
+        sourcePortOptions
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -211,7 +212,7 @@
         TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14],
+        SYMBOLS[14]
       )
 
       portIndex = sourcePort
@@ -229,7 +230,7 @@
     // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING,
+      DIRECTION.INCOMING
     ).filter(option => option.value !== sourceMachineKey)
 
     // Abort if no available targets
@@ -243,7 +244,7 @@
     let targetMachineKey = await renderSelect(
       selectContainerElement,
       Select,
-      targetSelectOptions,
+      targetSelectOptions
     )
 
     // Abort if nothing selected
@@ -261,7 +262,7 @@
         " #" +
         targetMachineEntity.buildIndex,
       true,
-      SYMBOLS[14],
+      SYMBOLS[14]
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -280,7 +281,7 @@
     const depotEntity = await renderSelect(
       selectContainerElement,
       Select,
-      sourceSelectOptions,
+      sourceSelectOptions
     )
 
     // Abort if nothing selected
@@ -315,7 +316,7 @@
     const targetEntity = await renderSelect(
       selectContainerElement,
       Select,
-      targetSelectOptions,
+      targetSelectOptions
     )
 
     // Abort if nothing selected
@@ -336,7 +337,7 @@
       TERMINAL_OUTPUT_TYPE.COMMAND,
       userInput,
       false,
-      SYMBOLS[0],
+      SYMBOLS[0]
     )
 
     // Return the input and abort if this is the naming terminal
@@ -421,11 +422,20 @@
       <input
         class="terminal-input"
         type="text"
+        on:focus={() => (hasFocus = true)}
+        on:blur={() => (hasFocus = false)}
         {placeholder}
         on:keydown={onInput}
         bind:this={inputElement}
         bind:value={userInput}
       />
+      <div
+        class="blinker blink"
+        class:empty={userInput === ""}
+        style:transform="translate({userInput.length}ch, -2px)"
+      >
+        █
+      </div>
     </form>
   {/if}
 </div>
@@ -473,6 +483,7 @@
       }
 
       input {
+        caret-color: transparent;
         font-family: inherit;
         font-size: inherit;
         color: inherit;
@@ -483,13 +494,26 @@
         border: none;
         padding: 0;
         position: relative; /* To position the pseudo-element */
-        // caret-color: transparent;
+
+        &::placeholder {
+          opacity: 1;
+          color: #666;
+        }
 
         &:focus {
           border: none;
           outline: none;
         }
-        // }
+      }
+
+      .blinker {
+        opacity: 1;
+        position: absolute;
+        left: 3ch;
+
+        &.empty {
+          color: #666;
+        }
       }
     }
   }
