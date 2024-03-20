@@ -430,7 +430,8 @@
         bind:value={userInput}
       />
       <div
-        class="blinker blink"
+        class="blinker"
+        class:blink={userInput.length === 0}
         class:empty={userInput === ""}
         style:transform="translate({userInput.length}ch, -2px)"
       >
