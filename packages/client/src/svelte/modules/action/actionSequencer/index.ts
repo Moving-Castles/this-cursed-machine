@@ -7,6 +7,7 @@
 import { writable, get } from "svelte/store"
 import { network, blockNumber } from "../../network"
 import { toastMessage } from "../../ui/toast"
+import { parseError } from "@components/Main/Terminal/functions/errors"
 import { v4 as uuid } from "uuid"
 import { clearActionTimer, startActionTimer } from "./timeoutHandler"
 
@@ -151,7 +152,7 @@ function handleError(error: any, action: Action) {
   // Update action status
   action.error = error
   // Trigger toast
-  toastMessage(error, { type: "error" })
+  toastMessage(parseError(error), { type: "error" })
   // Add action to failed list
   failedActions.update(failedActions => [action, ...failedActions])
   // Clear active list
