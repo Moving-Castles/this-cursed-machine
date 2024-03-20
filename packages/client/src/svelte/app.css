@@ -11,14 +11,14 @@
   --background-offset: rgb(40, 40, 40);
   --foreground: var(--alt-foreground);
   --color-info: #50908e;
-  --color-alert: #eb55bb;
+  --color-alert: #9beb55;
   --color-success: #439543;
   --color-failure: #ff4000;
   --color-help: #534bce;
   --color-special: #bcbe8f;
 
   --color-active: #ffa807;
-  
+
   --color-border: #444444;
 
   /* Sizing */
@@ -27,7 +27,7 @@
   /* Fonts */
   /* 'DEC Terminal Modern',  */
   /* 'SV Basic Manual', */
-  --font-family-special:  "Fake Receipt", monospace;
+  --font-family-special: "Fake Receipt", monospace;
   --font-family-quote: "Baleze", monospace;
   --font-family: "Fake Receipt", monospace;
   --font-size: 18px;
@@ -63,6 +63,14 @@
   animation: strobe 80ms steps(1, end) infinite;
 }
 
+.flash-fast-thrice {
+  animation: strobe 120ms steps(1, end) 3;
+}
+
+.flash-slow-thrice {
+  animation: strobe 240ms steps(1, end) 3;
+}
+
 .flash-a-little,
 .flash-a-bit {
   animation: strobe 200ms steps(1, end) 3;
@@ -93,6 +101,8 @@ html {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: none;
+  background-image: url(/images/g2.png);
+  /* background-size: 100px; */
 }
 
 h1,

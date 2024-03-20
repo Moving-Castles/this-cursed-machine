@@ -8,11 +8,15 @@
   } from "@modules/state/base/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
-  import { reward } from "@modules/action"
   import NumberGoingUp from "@svelte/components/Atoms/NumberGoingUp.svelte"
+  import { reward, charge } from "@modules/action"
 
   const sendReward = () => {
     reward()
+  }
+
+  const sendCharge = () => {
+    charge()
   }
 
   let currentOrder: Order | null = null
@@ -45,8 +49,14 @@
 
   <!-- TOKEN BALANCE -->
   <div class="token-balance">
-    POINTS: <NumberGoingUp value={$player.tokenBalances ?? 0} />
-    <!-- <button on:click={sendReward}>Reward</button> -->
+    POINTS: <NumberGoingUp
+      value={$player.tokenBalances ?? 0}
+      goal={30000}
+      warn={26900}
+    />
+
+    <button on:click={sendReward}>Reward</button>
+    <button on:click={sendCharge}>Charge</button>
   </div>
 </div>
 

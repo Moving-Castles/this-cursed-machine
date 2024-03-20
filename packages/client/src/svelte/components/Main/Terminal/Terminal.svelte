@@ -440,6 +440,7 @@
     line-height: 1.2em;
     max-width: 69ch;
     text-transform: uppercase;
+    background: var(--background);
 
     &:not(.noOutput) {
       height: 100vh;

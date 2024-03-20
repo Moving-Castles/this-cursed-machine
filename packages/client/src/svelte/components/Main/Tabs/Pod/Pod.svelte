@@ -44,14 +44,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(255, 0, 0);
-    // background-image: url(/images/noise2.png);
+    // background-color: rgb(255, 0, 149);
     background-image: url(/images/scanlines.png);
+    // background-image: url(/images/g2.png);
+    // background-image: url(/images/vhs.webp);
+
     background-size: 400px 400px;
     // filter: blur(1px);
     // backdrop-filter: blur(1px);
     // backdrop-filter: saturate(5);
-    mix-blend-mode: difference;
+    mix-blend-mode: hard-light;
+    // mix-blend-mode: difference;
     // mix-blend-mode: lighten;
     opacity: 0.1;
     z-index: 10;
