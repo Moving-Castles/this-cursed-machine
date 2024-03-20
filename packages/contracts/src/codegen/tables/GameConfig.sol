@@ -22,6 +22,7 @@ struct GameConfigData {
   uint32 globalSpawnIndex;
   uint32 scaleDown;
   uint32 flowRate;
+  uint32 depotCapacity;
 }
 
 library GameConfig {
@@ -29,12 +30,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462000000000000000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0034050014140404040000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0038060014140404040400000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, address, uint32, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x0034050061610303030000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, address, uint32, uint32, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x0038060061610303030300000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -49,12 +50,13 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](5);
+    fieldNames = new string[](6);
     fieldNames[0] = "adminAddress";
     fieldNames[1] = "tokenAddress";
     fieldNames[2] = "globalSpawnIndex";
     fieldNames[3] = "scaleDown";
     fieldNames[4] = "flowRate";
+    fieldNames[5] = "depotCapacity";
   }
 
   /**
@@ -262,6 +264,44 @@ library GameConfig {
   }
 
   /**
+   * @notice Get depotCapacity.
+   */
+  function getDepotCapacity() internal view returns (uint32 depotCapacity) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Get depotCapacity.
+   */
+  function _getDepotCapacity() internal view returns (uint32 depotCapacity) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
+    return (uint32(bytes4(_blob)));
+  }
+
+  /**
+   * @notice Set depotCapacity.
+   */
+  function setDepotCapacity(uint32 depotCapacity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((depotCapacity)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set depotCapacity.
+   */
+  function _setDepotCapacity(uint32 depotCapacity) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((depotCapacity)), _fieldLayout);
+  }
+
+  /**
    * @notice Get the full data.
    */
   function get() internal view returns (GameConfigData memory _table) {
@@ -297,9 +337,17 @@ library GameConfig {
     address tokenAddress,
     uint32 globalSpawnIndex,
     uint32 scaleDown,
-    uint32 flowRate
+    uint32 flowRate,
+    uint32 depotCapacity
   ) internal {
-    bytes memory _staticData = encodeStatic(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate);
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      tokenAddress,
+      globalSpawnIndex,
+      scaleDown,
+      flowRate,
+      depotCapacity
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -317,9 +365,17 @@ library GameConfig {
     address tokenAddress,
     uint32 globalSpawnIndex,
     uint32 scaleDown,
-    uint32 flowRate
+    uint32 flowRate,
+    uint32 depotCapacity
   ) internal {
-    bytes memory _staticData = encodeStatic(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate);
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      tokenAddress,
+      globalSpawnIndex,
+      scaleDown,
+      flowRate,
+      depotCapacity
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -338,7 +394,8 @@ library GameConfig {
       _table.tokenAddress,
       _table.globalSpawnIndex,
       _table.scaleDown,
-      _table.flowRate
+      _table.flowRate,
+      _table.depotCapacity
     );
 
     PackedCounter _encodedLengths;
@@ -358,7 +415,8 @@ library GameConfig {
       _table.tokenAddress,
       _table.globalSpawnIndex,
       _table.scaleDown,
-      _table.flowRate
+      _table.flowRate,
+      _table.depotCapacity
     );
 
     PackedCounter _encodedLengths;
@@ -377,7 +435,14 @@ library GameConfig {
   )
     internal
     pure
-    returns (address adminAddress, address tokenAddress, uint32 globalSpawnIndex, uint32 scaleDown, uint32 flowRate)
+    returns (
+      address adminAddress,
+      address tokenAddress,
+      uint32 globalSpawnIndex,
+      uint32 scaleDown,
+      uint32 flowRate,
+      uint32 depotCapacity
+    )
   {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
 
@@ -388,6 +453,8 @@ library GameConfig {
     scaleDown = (uint32(Bytes.getBytes4(_blob, 44)));
 
     flowRate = (uint32(Bytes.getBytes4(_blob, 48)));
+
+    depotCapacity = (uint32(Bytes.getBytes4(_blob, 52)));
   }
 
   /**
@@ -406,7 +473,8 @@ library GameConfig {
       _table.tokenAddress,
       _table.globalSpawnIndex,
       _table.scaleDown,
-      _table.flowRate
+      _table.flowRate,
+      _table.depotCapacity
     ) = decodeStatic(_staticData);
   }
 
@@ -437,9 +505,10 @@ library GameConfig {
     address tokenAddress,
     uint32 globalSpawnIndex,
     uint32 scaleDown,
-    uint32 flowRate
+    uint32 flowRate,
+    uint32 depotCapacity
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate);
+    return abi.encodePacked(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate, depotCapacity);
   }
 
   /**
@@ -453,9 +522,17 @@ library GameConfig {
     address tokenAddress,
     uint32 globalSpawnIndex,
     uint32 scaleDown,
-    uint32 flowRate
+    uint32 flowRate,
+    uint32 depotCapacity
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate);
+    bytes memory _staticData = encodeStatic(
+      adminAddress,
+      tokenAddress,
+      globalSpawnIndex,
+      scaleDown,
+      flowRate,
+      depotCapacity
+    );
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;

@@ -70,7 +70,8 @@ declare global {
     tokenAddress: string,
     globalSpawnIndex: number,
     scaleDown: number,
-    flowRate: number
+    flowRate: number,
+    depotCapacity: number,
   }
 
   // * * * * * * * * * * * * * * * * *

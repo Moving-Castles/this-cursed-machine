@@ -20,6 +20,7 @@ export default mudConfig({
                 globalSpawnIndex: "uint32", // Global index for all players
                 scaleDown: "uint32", // Used to scale down the amounts in the UI
                 flowRate: "uint32", // Amount flowing from the inlet
+                depotCapacity: "uint32", // Amount of material that can be stored in a depot
             },
             dataStruct: true,
         },

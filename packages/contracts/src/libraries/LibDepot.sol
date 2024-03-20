@@ -5,7 +5,7 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
 import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection, BuildIndex } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../structs.sol";
-import { FLOW_RATE } from "../constants.sol";
+import { FLOW_RATE, DEPOT_CAPACITY } from "../constants.sol";
 
 library LibDepot {
   struct InletDepotAmount {
@@ -30,30 +30,49 @@ library LibDepot {
     uint256 _blocksSinceLastResolution,
     Product memory _output
   ) internal {
-    InletDepotAmount[] memory usedInletAmounts = getUsedInletAmounts(_output.inletActive, _inletDepotEntities);
+    /*
+     * This function updates the inlet and outlet depots
+     *
+     * Generally the output is what is produced by the outlet machine * blocks past
+     *
+     * But, we need to take into account the following limiting factors:
+     * - The amount of material in the inlet depots
+     * - The capacity of the outlet depot
+     *
+     * We need to find the lowest of the two limiting factors and cap the number of blocks by that
+     */
 
+    InletDepotAmount[] memory usedInletAmounts = getUsedInletAmounts(_output.inletActive, _inletDepotEntities);
     InletDepotAmount memory lowestInput = findLowestValue(usedInletAmounts);
 
     /*
      * With a flow rate of FLOW_RATE per block,
      * how long does it take for the lowest input to be exhausted?
      */
-    uint32 exhaustionBlock = lowestInput.amount / FLOW_RATE;
+    uint32 inletExhaustionBlock = lowestInput.amount / FLOW_RATE;
 
     /*
-     * if lowestInput > _blocksSinceLastResolution => capped output amount is blocks since last resolution
-     * if lowestInput < _blocksSinceLastResolution => capped output amount is equal to exhaustionBlock
+     * When is the outlet depot full?
+     * available capacity of the depot / flow rate of the outlet product
      */
-    uint32 cappedBlocks = exhaustionBlock > uint32(_blocksSinceLastResolution)
-      ? uint32(_blocksSinceLastResolution)
-      : exhaustionBlock;
+    uint32 outletFullBlock = (DEPOT_CAPACITY - Amount.get(_outletDepotEntity)) / _output.amount;
 
-    uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
+    /*
+     * Stop block is the lowest of the two limiting factors
+     */
+    uint32 stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
+
+    uint32 cappedBlocks = stopBlock > uint32(_blocksSinceLastResolution)
+      ? uint32(_blocksSinceLastResolution)
+      : stopBlock;
 
     /*
      * Write to outlet depot
      * Add if material is same, otherwise replace
      */
+
+    uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
+
     if (MaterialType.get(_outletDepotEntity) == _output.materialType) {
       Amount.set(_outletDepotEntity, Amount.get(_outletDepotEntity) + cumulativeOutputAmount);
     } else {
@@ -61,19 +80,21 @@ library LibDepot {
       Amount.set(_outletDepotEntity, cumulativeOutputAmount);
     }
 
-    uint32 consumedInletAmount = cappedBlocks * FLOW_RATE;
-
     /*
      * Write to inlet depots
      * Empty depot if we exhausted it
      */
-    for (uint i; i < usedInletAmounts.length; i++) {
-      if (consumedInletAmount == usedInletAmounts[i].amount) {
+
+    uint32 consumedInletAmount = cappedBlocks * FLOW_RATE;
+
+    for (uint i = 0; i < usedInletAmounts.length; i++) {
+      uint32 newAmount = usedInletAmounts[i].amount > consumedInletAmount
+        ? usedInletAmounts[i].amount - consumedInletAmount
+        : 0;
+      if (newAmount == 0) {
         MaterialType.set(_inletDepotEntities[usedInletAmounts[i].index], MATERIAL_TYPE.NONE);
-        Amount.set(_inletDepotEntities[usedInletAmounts[i].index], 0);
-      } else {
-        Amount.set(_inletDepotEntities[usedInletAmounts[i].index], usedInletAmounts[i].amount - consumedInletAmount);
       }
+      Amount.set(_inletDepotEntities[usedInletAmounts[i].index], newAmount);
     }
   }
 

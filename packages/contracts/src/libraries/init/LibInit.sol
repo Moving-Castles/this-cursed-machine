@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { GameConfig, GameConfigData, TutorialOrders } from "../../codegen/index.sol";
 import { LibOrder } from "../LibOrder.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
-import { FLOW_RATE } from "../../constants.sol";
+import { FLOW_RATE, DEPOT_CAPACITY } from "../../constants.sol";
 
 library LibInit {
   function init(address _adminAddress, address _tokenAddress) internal {
@@ -14,7 +14,8 @@ library LibInit {
         tokenAddress: _tokenAddress,
         globalSpawnIndex: 0,
         scaleDown: 100,
-        flowRate: FLOW_RATE
+        flowRate: FLOW_RATE,
+        depotCapacity: DEPOT_CAPACITY
       })
     );
 

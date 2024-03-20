@@ -15,7 +15,7 @@
 <div class="depot-item" class:connected>
   <div><strong>#: {index + 1}</strong></div>
   <div>
-    {typedDepot.amount / 100}
+    {Math.round(typedDepot.amount / 100)}
     {MATERIAL_TYPE[typedDepot.materialType]}
   </div>
 </div>

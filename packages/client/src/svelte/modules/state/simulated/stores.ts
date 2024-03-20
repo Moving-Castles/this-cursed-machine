@@ -72,19 +72,39 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
 }
 
 /*
- * Should work the same as contracts/src/libraries/LibDepot.sol:write
+ * 
  */
 export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedDepots {
-
+    /*
+     * This function updates the inlet and outlet depots
+     *
+     * Should work the same as contracts/src/libraries/LibDepot.sol:write
+     *
+     * Generally the output is what is produced by the outlet machine * blocks past
+     *
+     * But, we need to take into account the following limiting factors:
+     * - The amount of material in the inlet depots
+     * - The capacity of the outlet depot
+     *
+     * We need to find the lowest of the two limiting factors and cap the number of blocks by that
+     */
     const FLOW_RATE = 1000;
+    const DEPOT_CAPACITY = 10000;
 
     // Create deep copy to avoid accidentally mutating the original object.
     const initialDepotsCopy = deepClone(depots);
 
     let simulatedDepots: SimulatedDepots = Object.fromEntries([...Object.entries(initialDepotsCopy)])
 
+    const outletDepot = Object.entries(initialDepotsCopy).filter(([_, depot]) => depot.depotConnection === playerPod.fixedEntities.outlet)
     const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) => playerPod.fixedEntities.inlets.includes(depot.depotConnection))
     const depotPatches = Object.entries(patches).filter(([_, patch]) => patch.depot)
+
+    if (outletDepot.length === 0 || inletDepots.length === 0 || depotPatches.length === 0) return simulatedDepots
+
+    const outletDepotPatch = depotPatches.find(([key, _]) => key == outletDepot[0][0])
+
+    if (!outletDepotPatch) return simulatedDepots
 
     /*
      * Filter out the inlet depots that are not contributing to the output
@@ -99,15 +119,22 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
      * With a flow rate of FLOW_RATE per block,
      * how long does it take for the lowest input to be exhausted?
      */
-    const exhaustionBlock = lowestInputAmount / FLOW_RATE;
+    const inletExhaustionBlock = lowestInputAmount / FLOW_RATE;
 
     /*
-     * if exhaustionBlock > _blocksSinceLastResolution => capped output amount is blocks since last resolution
-     * if exhaustionBlock < _blocksSinceLastResolution => capped output amount is equal to exhaustionBlock
+    * When is the outlet depot full?
+    * available capacity of the depot / flow rate of the outlet product
+    */
+    const outletFullBlock = (DEPOT_CAPACITY - outletDepot[0][1].amount) / outletDepotPatch[1].inputs[0].amount;
+
+    /*
+     * Stop block is the lowest of the two limiting factors
      */
-    const cappedBlocks = exhaustionBlock > blocksSinceLastResolution
+    const stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
+
+    const cappedBlocks = stopBlock > blocksSinceLastResolution
         ? blocksSinceLastResolution
-        : exhaustionBlock;
+        : stopBlock;
 
     for (const [key, patch] of depotPatches) {
 
@@ -142,7 +169,6 @@ export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntit
                 simulatedDepots[key].amount = initialDepotsCopy[key].amount - consumedInletAmount
             }
         }
-
     }
 
     // Return the updated simulated state.

@@ -201,6 +201,38 @@ contract ResolveSystemTest is BaseTest {
     checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
   }
 
+  function testCapByDepotCapacity() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    uint32 initialInletAmount = Amount.get(depotsInPod[0]);
+
+    // Connect depot 0 to inlet
+    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
+
+    // Connect depot 1 to outlet
+    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
+
+    // Connect inlet to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (piss) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Wait
+    uint32 blocksToWait = 500;
+    vm.roll(block.number + blocksToWait);
+
+    // Resolve
+    world.resolve();
+
+    vm.stopPrank();
+
+    uint32 divisor = 2; // Material loss
+    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
+  }
+
   function testCapAtInletMaterialAmount() public {
     setUp();
 

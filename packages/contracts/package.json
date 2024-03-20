@@ -13,7 +13,7 @@
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
     "test": "mud test",
     "test-verbose": "mud test --forgeOptions=' -vvv'",
-    "test-single": "mud test --forgeOptions='--match-test testResolveSplitterMixer'",
+    "test-single": "mud test --forgeOptions='--match-test testCapAtInletMaterialAmount'",
     "test-levels": "mud test --forgeOptions='--match-contract TutorialLevelsTest'",
     "----- TESTNET -----": "---------------------------",
     "deploy:testnet": "pnpm run build && mud deploy --profile=lattice-testnet",
@@ -22,21 +22,21 @@
     "deploy:redstone-holesky": "DEBUG=mud:* mud deploy --profile=redstone-holesky"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-main-f6b14736",
-    "@latticexyz/config": "2.0.0-main-f6b14736",
-    "@latticexyz/gas-report": "2.0.0-main-f6b14736",
-    "@latticexyz/schema-type": "2.0.0-main-f6b14736",
-    "@latticexyz/store": "2.0.0-main-f6b14736",
-    "@latticexyz/world": "2.0.0-main-f6b14736",
-    "@latticexyz/world-modules": "2.0.0-main-f6b14736",
+    "@latticexyz/cli": "2.0.0-main-20ffc95f",
+    "@latticexyz/config": "2.0.0-main-20ffc95f",
+    "@latticexyz/gas-report": "2.0.0-main-20ffc95f",
+    "@latticexyz/schema-type": "2.0.0-main-20ffc95f",
+    "@latticexyz/store": "2.0.0-main-20ffc95f",
+    "@latticexyz/world": "2.0.0-main-20ffc95f",
+    "@latticexyz/world-modules": "2.0.0-main-20ffc95f",
     "@types/node": "^20.11.6",
     "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
     "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
     "prettier": "^3.2.5",
     "prettier-plugin-solidity": "^1.3.1",
     "solhint": "^4.1.1",
-    "solhint-config-mud": "2.0.0-main-f6b14736",
-    "solhint-plugin-mud": "2.0.0-main-f6b14736"
+    "solhint-config-mud": "2.0.0-main-20ffc95f",
+    "solhint-plugin-mud": "2.0.0-main-20ffc95f"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2"
