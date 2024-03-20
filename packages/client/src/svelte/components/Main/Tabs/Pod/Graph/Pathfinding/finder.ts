@@ -14,7 +14,7 @@ import { deepClone } from '@modules/utils'
  * Config constants
  */
 
-const TURN_PENALTY = 0
+const TURN_PENALTY = 10
 const HEURISTIC_WEIGHT = 1
 
 /**

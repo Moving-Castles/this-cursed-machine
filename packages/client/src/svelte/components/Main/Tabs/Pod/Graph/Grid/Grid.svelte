@@ -35,11 +35,11 @@
       }
 
       &[data-cost="4"] {
-        background: orangered;
+        background: rgba(255, 255, 0, 0.5);
       }
 
       &[data-cost="10"] {
-        background: red;
+        background: rgba(255, 0, 0, 0.5);
       }
     }
   }

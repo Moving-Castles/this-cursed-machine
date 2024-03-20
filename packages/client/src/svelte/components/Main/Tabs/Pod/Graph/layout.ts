@@ -206,7 +206,7 @@ export function createLayout(
     console.time('createLayout');
 
     // Initialize pathfinding grid
-    const grid = createGrid()
+    let grid = createGrid()
 
     /*
      * Place Machines
@@ -261,6 +261,8 @@ export function createLayout(
 
         path.unshift([startPosition.x, startPosition.y])
         path.push([endPosition.x, endPosition.y])
+
+        path.forEach(point => grid = setCostAt(grid, point[0], point[1], 10))
 
         // Set path in graphConnections
         graphConnections[i].path = path;
