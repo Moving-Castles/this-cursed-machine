@@ -1,5 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
+import { parseError } from "@components/Main/Terminal/functions/errors"
 import { ship as sendShip } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
@@ -34,7 +35,7 @@ async function execute(depotEntity: string) {
     } catch (error) {
         console.error(error)
         playSound("tcm", "TRX_no")
-        await writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Command failed")
+        await writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, parseError(error))
         return
     }
 }

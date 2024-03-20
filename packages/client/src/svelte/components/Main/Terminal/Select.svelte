@@ -76,6 +76,7 @@
     selectContainerElement.focus()
     await tick()
     scrollToEnd()
+    console.log("on mount")
   })
 </script>
 
@@ -86,8 +87,7 @@
     {#each selectOptions as option, index (option.value)}
       <div
         class:active={selectedIndex === index}
-        class="option {option.label}"
-        in:fade={{ duration: 100, delay: 50 * index }}
+        class="option {option.label} option-{index}"
       >
         {option.label}
       </div>
@@ -104,6 +104,7 @@
       white-space: nowrap; /* Ensure no line breaks inside the element */
       overflow: hidden; /* Hide the overflow text */
       text-overflow: ellipsis; /* Add ellipses at the end of the text */
+      opacity: 0;
 
       &.active {
         color: #000;
@@ -128,6 +129,23 @@
             content: "x ";
           }
         }
+      }
+    }
+
+    @keyframes showOpacity {
+      0%,
+      99% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @for $i from 0 through 50 {
+      .option-#{$i} {
+        animation: showOpacity #{$i * 40}ms linear;
+        opacity: 1;
       }
     }
   }

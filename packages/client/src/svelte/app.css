@@ -63,6 +63,10 @@
   animation: strobe 80ms steps(1, end) infinite;
 }
 
+.blink {
+  animation: strobe 1200ms steps(1, end) infinite reverse;
+}
+
 .flash-fast-thrice {
   animation: strobe 120ms steps(1, end) 3;
 }
