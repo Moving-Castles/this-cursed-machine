@@ -4,7 +4,10 @@ export type ToastType = "warning" | "error"
 
 // An array of muted messages, that won't be toasted
 export const mute = [
-  "order not met"
+  "order not met",
+  "order already completed",
+  "order expired",
+  "not completed"
 ]
 
 export interface Toast {
