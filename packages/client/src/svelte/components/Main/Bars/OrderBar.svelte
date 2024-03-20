@@ -9,6 +9,7 @@
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
   import { reward } from "@modules/action"
+  import NumberGoingUp from "@svelte/components/Atoms/NumberGoingUp.svelte"
 
   const sendReward = () => {
     reward()
@@ -36,7 +37,7 @@
     {#if currentOrder && currentOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number(currentOrder.order.expirationBlock) - Number($blockNumber),
+          Number(currentOrder.order.expirationBlock) - Number($blockNumber)
         )}
       </div>
     {/if}
@@ -44,7 +45,7 @@
 
   <!-- TOKEN BALANCE -->
   <div class="token-balance">
-    POINTS: {$player.tokenBalances ?? 0}
+    POINTS: <NumberGoingUp value={$player.tokenBalances ?? 0} />
     <!-- <button on:click={sendReward}>Reward</button> -->
   </div>
 </div>
