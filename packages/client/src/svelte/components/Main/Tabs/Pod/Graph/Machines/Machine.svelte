@@ -89,6 +89,9 @@
     background: darkgrey;
     position: absolute;
     color: var(--background);
+    background-image: url("/images/conc.jpg");
+    background-size: cover;
+    border: 1px solid var(--background);
 
     &.active {
       border: 1px solid var(--color-active);
@@ -106,7 +109,8 @@
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
-        background: grey;
+        background: darkgrey;
+        opacity: 0.5;
       }
     }
   }

@@ -144,7 +144,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(255, 0, 0, 1);
+        background-color: rgb(255, 0, 0);
         // background-image: url(/images/noise2.png);
         background-size: 100px 100px;
         background-image: url(/images/scanlines.png);

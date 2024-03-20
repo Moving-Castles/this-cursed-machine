@@ -11,7 +11,7 @@
   --background-offset: rgb(40, 40, 40);
   --foreground: var(--alt-foreground);
   --color-info: #50908e;
-  --color-alert: #eb55bb;
+  --color-alert: #9beb55;
   --color-success: #439543;
   --color-failure: #ff4000;
   --color-help: #534bce;
@@ -93,6 +93,8 @@ html {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: none;
+  background-image: url(/images/g2.png);
+  /* background-size: 100px; */
 }
 
 h1,

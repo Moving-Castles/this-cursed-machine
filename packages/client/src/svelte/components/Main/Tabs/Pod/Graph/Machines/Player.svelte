@@ -51,11 +51,11 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    background-image: url("/images/eye.png");
+    background-image: url("/images/eye2.png");
     // background-image: url("/images/eye2.gif");
     background-size: cover;
     border: 1px solid var(--background);
-    color: var(--background);
+    color: var(--foreground);
 
     &.active {
       border: 1px solid var(--color-active);
