@@ -10,7 +10,7 @@
 
   import { createLayout } from "./layout"
 
-  import Grid from "./Grid/Grid.svelte"
+  import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
 
@@ -19,9 +19,10 @@
 
   let graphMachines: GraphMachines = {}
   let graphConnections: GraphConnection[] = []
+  let grid: Grid
 
   // Calculate the new layout based on new and old state
-  $: ({ graphMachines, graphConnections } = createLayout(
+  $: ({ graphMachines, graphConnections, grid } = createLayout(
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
@@ -33,7 +34,7 @@
   <div class="grid">
     <div class="top">
       {#each Object.values(graphMachines) as machine}
-        <MachineSelector {machine} />
+        <!-- <MachineSelector {machine} /> -->
       {/each}
 
       <svg {width} {height}>
@@ -42,7 +43,7 @@
         {/each}
       </svg>
     </div>
-    <Grid />
+    <GridComponent {grid} />
   </div>
 </div>
 

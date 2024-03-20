@@ -37,13 +37,24 @@ export function setWalkableAt(grid: Grid, x: number, y: number, walkable: boolea
     return grid
 }
 
+export function getWalkableAt(grid: Grid, x: number, y: number): boolean {
+  if (!isInside(grid, x, y)) return false;
+  return grid.nodes[y][x].walkable
+}
+
 export function getCostAt(grid: Grid, x: number, y: number): number | boolean {
     if (!isInside(grid, x, y)) return false;
     return grid.nodes[y][x].cost;
 }
 
 export function setCostAt(grid: Grid, x: number, y: number, cost: number): Grid {
-    grid.nodes[y][x].cost = cost
+    if (!isInside(grid, x, y)) {
+      console.warn("Trying to set cost for out of bounds grid")
+      return grid
+    }
+
+    // Maximize cost
+    grid.nodes[y][x].cost = Math.max(cost, grid.nodes[y][x].cost)
     return grid
 }
 

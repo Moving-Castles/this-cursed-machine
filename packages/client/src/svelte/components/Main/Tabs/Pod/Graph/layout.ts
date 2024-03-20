@@ -113,7 +113,38 @@ function createGrid() {
     for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
         for (let x = 0; x < MACHINE.WIDTH; x++) {
             for (let y = 0; y < MACHINE.HEIGHT; y++) {
-                grid = setWalkableAt(grid, DYNAMIC_POSITIONS[i].x + x, DYNAMIC_POSITIONS[i].y + y, false);
+              const gridX = DYNAMIC_POSITIONS[i].x + x
+              const gridY = DYNAMIC_POSITIONS[i].y + y
+
+              grid = setWalkableAt(grid, gridX, gridY, false);
+            }
+        }
+    }
+
+    for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
+        for (let x = 0; x < MACHINE.WIDTH; x++) {
+            for (let y = 0; y < MACHINE.HEIGHT; y++) {
+              const gridX = DYNAMIC_POSITIONS[i].x + x
+              const gridY = DYNAMIC_POSITIONS[i].y + y
+
+              grid = setCostAt(grid, gridX, gridY, 10);
+              
+              if (x === 0) {
+                grid = setCostAt(grid, gridX - 1, gridY, 10);
+                grid = setCostAt(grid, gridX - 2, gridY, 4);
+              }
+              if (x === MACHINE.WIDTH - 1) {
+                grid = setCostAt(grid, gridX + 1, gridY, 10);
+                grid = setCostAt(grid, gridX + 2, gridY, 4);
+              }
+              if (y === 0) {
+                grid = setCostAt(grid, gridX, gridY - 1, 10);
+                grid = setCostAt(grid, gridX, gridY - 2, 4);
+              }
+              if (y === MACHINE.HEIGHT - 1) {
+                grid = setCostAt(grid, gridX, gridY + 1, 10);
+                grid = setCostAt(grid, gridX, gridY + 2, 4);
+              }
             }
         }
     }
@@ -122,15 +153,15 @@ function createGrid() {
     for (let x = -1; x <= PLAYER.WIDTH; x++) {
         for (let y = -1; y <= PLAYER.HEIGHT; y++) {
             // Calculate the actual grid positions
-            let gridX = FIXED_POSITIONS.player.x + x;
-            let gridY = FIXED_POSITIONS.player.y + y;
+            const gridX = FIXED_POSITIONS.player.x + x;
+            const gridY = FIXED_POSITIONS.player.y + y;
 
             // Check if the cell is outside the player's rectangle but within grid bounds
             if (x >= -1 && x < PLAYER.WIDTH && y >= -1 && y < PLAYER.HEIGHT) {
                 // Skip the player's own cells
-                if (x >= 0 && x < PLAYER.WIDTH && y >= 0 && y < PLAYER.HEIGHT) {
-                    continue;
-                }
+                // if (x >= 0 && x < PLAYER.WIDTH && y >= 0 && y < PLAYER.HEIGHT) {
+                //     continue;
+                // }
                 // Set cost for the surrounding cells
                 grid = setCostAt(grid, gridX, gridY, 10);
             }
@@ -236,7 +267,7 @@ export function createLayout(
     }
 
     console.timeEnd('createLayout');
-    return { graphMachines, graphConnections }
+    return { graphMachines, graphConnections, grid }
 }
 
 function getStartPosition(startMachine: GraphMachine, currentConnection: GraphConnection): PathfindingPosition {

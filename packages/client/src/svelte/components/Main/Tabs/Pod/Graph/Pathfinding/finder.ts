@@ -14,7 +14,7 @@ import { deepClone } from '@modules/utils'
  * Config constants
  */
 
-const TURN_PENALTY = 10
+const TURN_PENALTY = 0
 const HEURISTIC_WEIGHT = 1
 
 /**
@@ -46,7 +46,7 @@ export function findPath(
 
     const newGrid = deepClone(grid)
 
-    var openList = new Heap(function (nodeA: GridNode, nodeB: GridNode) {
+    let openList = new Heap(function (nodeA: GridNode, nodeB: GridNode) {
         return nodeA.f - nodeB.f;
     });
 
@@ -69,7 +69,7 @@ export function findPath(
     openList.push(startNode);
     startNode.opened = true;
 
-    // console.log('openList', openList.toArray());
+    console.log('openList', openList.toArray());
 
     // While the open list is not empty
     // while (!openList.isEmpty() && testCounter < 1000) {
@@ -101,8 +101,6 @@ export function findPath(
 
             // Get the next g score
             ng = neighbor.cost;
-
-            // console.log('ng', ng);
 
             // Avoid staircasing, add penalties if the direction will change
             lastDirection = node.parent == undefined ? undefined : { x: node.x - node.parent.x, y: node.y - node.parent.y };

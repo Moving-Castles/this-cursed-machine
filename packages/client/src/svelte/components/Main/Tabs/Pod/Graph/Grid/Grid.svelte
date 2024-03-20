@@ -1,11 +1,20 @@
 <script lang="ts">
   import { GRID } from "../constants"
+  import {
+    getCostAt,
+    getWalkableAt,
+  } from "@components/Main/Tabs/Pod/Graph/Pathfinding/grid"
+  export let grid: Grid
 </script>
 
-{#each Array(GRID.HEIGHT) as _}
+{#each Array(GRID.HEIGHT) as _, j}
   <div class="row">
-    {#each Array(GRID.WIDTH) as _}
-      <div class="cell"></div>
+    {#each Array(GRID.WIDTH) as __, i}
+      <div
+        data-cost={getCostAt(grid, i, j)}
+        data-walkable={getWalkableAt(grid, i, j)}
+        class="cell"
+      ></div>
     {/each}
   </div>
 {/each}
@@ -20,6 +29,18 @@
       height: var(--cellHeight);
       background: rgba(255, 255, 255, 0.4);
       border: 0.5px solid rgba(0, 0, 0, 0.1);
+
+      &[data-cost="1"] {
+        background: black;
+      }
+
+      &[data-cost="4"] {
+        background: orangered;
+      }
+
+      &[data-cost="10"] {
+        background: red;
+      }
     }
   }
 </style>

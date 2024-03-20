@@ -76,7 +76,6 @@
     selectContainerElement.focus()
     await tick()
     scrollToEnd()
-    console.log("on mount")
   })
 </script>
 
