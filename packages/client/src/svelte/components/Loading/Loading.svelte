@@ -73,7 +73,7 @@
     z-index: 10000;
     line-height: 2em;
     text-align: center;
-    font-size: 12px;
+    font-size: var(--font-size-small);
   }
 
   .loading {
@@ -98,6 +98,7 @@
       padding-bottom: 20%;
       text-wrap: wrap;
       word-break: break-all;
+      line-height: 1.2em;
     }
   }
 </style>

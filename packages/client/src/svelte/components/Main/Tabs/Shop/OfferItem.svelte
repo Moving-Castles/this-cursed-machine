@@ -49,6 +49,8 @@
     padding: 10px;
     padding-top: 30px;
     padding-bottom: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
 
     &:first-child {
       border-top: 4px double var(--foreground);

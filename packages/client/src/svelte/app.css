@@ -17,9 +17,12 @@
   --color-help: #534bce;
   --color-special: #bcbe8f;
 
-  --color-active: #ffa807;
+  --color-active: #90ca48;
 
   --color-border: #444444;
+  /* --color-border: #eeff00; */
+  --default-border-style: 2px dashed var(--color-border);
+
 
   /* Sizing */
   --default-padding: 1ch;
@@ -30,11 +33,11 @@
   /* "SixtyFour",  */
   --font-family-special: "Fake Receipt", monospace;
   --font-family-quote: "Baleze", monospace;
-  --font-family: "Fake Receipt", monospace;
+  --font-family: "SixtyFour", "Fake Receipt", monospace;
   /* --font-size: 14px; */
-  --font-size-normal: 20px;
-  /* --font-size-normal: 14px; */
-
+  /* --font-size-normal: 20px; */
+  --font-size-small: 8px;
+  --font-size-normal: 14px;
   --font-size-large: 18px;
 }
 
@@ -48,6 +51,9 @@
   /* user-select: none; */
   margin: 0;
   padding: 0;
+  font-variation-settings: "BLED" 0, "SCAN" 0;
+  text-transform: uppercase;
+  letter-spacing: 0px;
 }
 
 *::-webkit-scrollbar {
@@ -108,7 +114,8 @@ html {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: none;
-  background-image: url(/images/g2.png);
+  background-image: url(/images/graf.png);
+  background-size: cover;
   /* background-size: 100px; */
 }
 

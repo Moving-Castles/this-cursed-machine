@@ -79,43 +79,57 @@
 </script>
 
 {#if $player?.carriedBy}
-  <div class="bg">
-    <div class="split-screen">
-      <div class="left-col">
+  <div class="dust" />
+
+  <div class="split-screen">
+    <div class="left-col">
+      <div class="status-bar">
+        <InfoBar />
+      </div>
+      <div class="terminal">
+        <Terminal
+          bind:this={terminalComponent}
+          on:commandExecuted={() => handleCommand()}
+          setBlink
+          placeholder="HELP"
+        />
+        <!-- <div class="terminal-overlay" /> -->
+      </div>
+    </div>
+    {#if $player}
+      <div class="right-col">
         <div class="status-bar">
-          <InfoBar />
+          <OrderBar />
         </div>
-        <div class="terminal">
-          <Terminal
-            bind:this={terminalComponent}
-            on:commandExecuted={() => handleCommand()}
-            setBlink
-            placeholder="HELP"
-          />
-          <div class="terminal-overlay" />
+        <div class="tab-container">
+          <!-- Render the CurrentComponent if it's not null -->
+          {#if currentTabComponent}
+            <svelte:component this={currentTabComponent} />
+          {/if}
+        </div>
+        <div class="tab-switch">
+          <TabBar {tabList} />
         </div>
       </div>
-      {#if $player}
-        <div class="right-col">
-          <div class="status-bar">
-            <OrderBar />
-          </div>
-          <div class="tab-container">
-            <!-- Render the CurrentComponent if it's not null -->
-            {#if currentTabComponent}
-              <svelte:component this={currentTabComponent} />
-            {/if}
-          </div>
-          <div class="tab-switch">
-            <TabBar {tabList} />
-          </div>
-        </div>
-      {/if}
-    </div>
+    {/if}
   </div>
 {/if}
 
 <style lang="scss">
+  .dust {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000000;
+    pointer-events: none;
+    background-image: url(/images/dust.png);
+    opacity: 0.6;
+    background-size: cover;
+    // mix-blend-mode: difference;
+  }
+
   .split-screen {
     display: flex;
     height: 100vh;
@@ -130,7 +144,7 @@
         height: 40px;
         border-bottom: 5px double var(--color-border);
         color: var(--foreground);
-        font-size: 14px;
+        font-size: var(--font-size-normal);
       }
 
       .terminal {
@@ -144,18 +158,18 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgb(255, 0, 0);
-        // background-image: url(/images/noise2.png);
+        background-color: rgb(255, 58, 189);
+        background-image: url(/images/noise2.png);
         background-size: 100px 100px;
-        background-image: url(/images/scanlines.png);
+        // background-image: url(/images/scanlines.png);
         background-size: 400px 400px;
         // filter: blur(1px);
         // backdrop-filter: blur(1px);
         // backdrop-filter: invert(1);
         // backdrop-filter: saturate(100%);
-        mix-blend-mode: difference;
+        // mix-blend-mode: difference;
         mix-blend-mode: hard-light;
-        opacity: 0.2;
+        opacity: 0.6;
         z-index: 10;
       }
     }
@@ -171,7 +185,7 @@
       .status-bar {
         height: 40px;
         border-bottom: 5px double var(--color-border);
-        font-size: 14px;
+        font-size: var(--font-size-normal);
       }
 
       .tab-container {
@@ -183,7 +197,7 @@
       .tab-switch {
         height: 100px;
         border-top: 5px double var(--color-border);
-        font-size: 14px;
+        font-size: var(--font-size-normal);
 
         button {
           all: revert;

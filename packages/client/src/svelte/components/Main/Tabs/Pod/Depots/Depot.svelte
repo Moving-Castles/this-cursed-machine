@@ -64,7 +64,7 @@
     margin-bottom: 10px;
     overflow: hidden;
     padding: 10px;
-    font-size: 11px;
+    font-size: var(--font-size-small);
     height: 160px;
     width: 260px;
     background: rgb(74, 74, 74);
@@ -74,7 +74,7 @@
     }
 
     button {
-      font-size: 10px;
+      font-size: var(--font-size-small);
       padding: 5px;
       border: 1px solid var(--foreground);
       margin: 1px;

@@ -18,7 +18,8 @@
     .cell {
       width: var(--cellWidth);
       height: var(--cellHeight);
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(120, 120, 120, 0.9);
+
       border: 0.5px solid rgba(0, 0, 0, 0.1);
     }
   }

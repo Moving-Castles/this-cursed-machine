@@ -46,12 +46,12 @@
   .player {
     width: calc(var(--cellWidth) * 13);
     height: calc(var(--cellWidth) * 13);
-    font-size: 8px;
+    font-size: var(--font-size-small);
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    background-image: url("/images/eye2.png");
+    background-image: url("/images/eye3.gif");
     // background-image: url("/images/eye2.gif");
     background-size: cover;
     border: 1px solid var(--background);

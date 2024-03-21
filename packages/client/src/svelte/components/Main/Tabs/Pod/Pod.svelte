@@ -12,7 +12,6 @@
   </div>
   <div class="graph">
     <Graph />
-    <!-- <div class="graph-overlay" /> -->
   </div>
 </div>
 <Tooltips />
@@ -36,28 +35,5 @@
     100% {
       filter: hue-rotate(360deg);
     }
-  }
-
-  .graph-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    // background-color: rgb(255, 0, 149);
-    background-image: url(/images/scanlines.png);
-    // background-image: url(/images/g2.png);
-    // background-image: url(/images/vhs.webp);
-
-    background-size: 400px 400px;
-    // filter: blur(1px);
-    // backdrop-filter: blur(1px);
-    // backdrop-filter: saturate(5);
-    mix-blend-mode: hard-light;
-    // mix-blend-mode: difference;
-    // mix-blend-mode: lighten;
-    opacity: 0.1;
-    z-index: 10;
-    backdrop-filter: saturate(100%);
   }
 </style>

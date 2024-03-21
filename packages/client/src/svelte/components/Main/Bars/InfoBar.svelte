@@ -35,7 +35,7 @@
       align-items: center;
 
       button {
-        font-size: 8px;
+        font-size: var(--font-size-small);
         padding: 5px;
         border: none;
         margin-left: 5px;

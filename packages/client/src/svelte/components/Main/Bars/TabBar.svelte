@@ -54,6 +54,8 @@
     // justify-content: space-between;
     align-items: center;
     padding-inline: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
 
     .button-container {
       width: 20%;
@@ -65,6 +67,7 @@
         border: 1px solid rgb(76, 54, 58);
         border-right: none;
         font-family: var(--font-family);
+        font-size: var(--font-size-normal);
         // font-family: "SixtyFour", "Permanent Marker";
         // // font-size: 22px;
         opacity: 0.3;

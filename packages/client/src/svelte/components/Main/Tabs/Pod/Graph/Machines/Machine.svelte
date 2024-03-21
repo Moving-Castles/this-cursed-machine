@@ -82,7 +82,7 @@
   .machine {
     width: calc(var(--cellWidth) * 7);
     height: calc(var(--cellWidth) * 7);
-    font-size: 8px;
+    font-size: var(--font-size-small);
     display: flex;
     justify-content: center;
     align-items: center;

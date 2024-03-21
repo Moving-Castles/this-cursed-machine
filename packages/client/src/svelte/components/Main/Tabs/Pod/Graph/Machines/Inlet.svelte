@@ -8,7 +8,7 @@
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  $: label = `IN ${machine.buildIndex ?? ""}`
+  $: label = `I${machine.buildIndex ?? ""}`
   $: connected = machine.depotConnection !== EMPTY_CONNECTION
 
   function makePorts() {
@@ -42,7 +42,7 @@
   .inlet {
     width: calc(var(--cellWidth) * 5);
     height: calc(var(--cellWidth) * 5);
-    font-size: 8px;
+    font-size: var(--font-size-small);
     display: flex;
     justify-content: center;
     align-items: center;

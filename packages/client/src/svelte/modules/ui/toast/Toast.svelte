@@ -34,7 +34,7 @@
     text-align: center;
     background: red;
     margin-top: 10px;
-    font-size: 10px;
+    font-size: var(--font-size-small);
     overflow: hidden;
     word-break: break-all;
   }
