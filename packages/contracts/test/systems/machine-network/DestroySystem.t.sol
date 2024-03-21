@@ -44,20 +44,20 @@ contract DestroySystemTest is BaseTest {
     // Build a splitter
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
 
-    // Build a cooler
-    bytes32 coolerEntity = world.build(MACHINE_TYPE.COOLER);
+    // Build a boiler
+    bytes32 boilerEntity = world.build(MACHINE_TYPE.BOILER);
 
     // Connect dryer to splitter
     world.connect(dryerEntity, splitterEntity, PORT_INDEX.FIRST);
 
     // Connect splitter to cooler
-    world.connect(splitterEntity, coolerEntity, PORT_INDEX.FIRST);
+    world.connect(splitterEntity, boilerEntity, PORT_INDEX.FIRST);
 
     // Destroy splitter
     world.destroy(splitterEntity);
 
     // Check that incoming connection is removed from cooler
-    assertEq(IncomingConnections.get(coolerEntity)[0], bytes32(0));
+    assertEq(IncomingConnections.get(boilerEntity)[0], bytes32(0));
 
     // Check that outgoing connection is removed from dryer
     assertEq(IncomingConnections.get(dryerEntity)[0], bytes32(0));

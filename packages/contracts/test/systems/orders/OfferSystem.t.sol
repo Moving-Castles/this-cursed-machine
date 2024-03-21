@@ -97,7 +97,7 @@ contract OfferSystemTest is BaseTest {
 
     assertEq(LibToken.getTokenBalance(alice), 900);
     assertEq(uint8(MaterialType.get(depotsInPod[0])), uint8(MATERIAL_TYPE.BUG));
-    assertEq(Amount.get(depotsInPod[0]), 30000);
+    assertEq(Amount.get(depotsInPod[0]), 20000);
   }
 
   function testBuyBlood() public {

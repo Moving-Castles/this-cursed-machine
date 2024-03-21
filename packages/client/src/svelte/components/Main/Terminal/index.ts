@@ -169,9 +169,11 @@ export const FULL_MACHINES = [
   MACHINE_TYPE.SPLITTER,
   MACHINE_TYPE.MIXER,
   MACHINE_TYPE.DRYER,
-  MACHINE_TYPE.WETTER,
   MACHINE_TYPE.BOILER,
-  MACHINE_TYPE.COOLER,
+  MACHINE_TYPE.CENTRIFUGE,
+  MACHINE_TYPE.GRINDER,
+  MACHINE_TYPE.RAT_CAGE,
+  MACHINE_TYPE.MEALWORM_VAT
 ]
 
 export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
@@ -181,27 +183,6 @@ export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
   3: FULL_MACHINES,
   4: FULL_MACHINES,
 }
-
-// export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
-//   0: [],
-//   1: [],
-//   2: [],
-//   3: [
-//     MACHINE_TYPE.MIXER,
-//     MACHINE_TYPE.COOLER,
-//   ],
-//   4: [
-//     MACHINE_TYPE.MIXER,
-//     MACHINE_TYPE.COOLER,
-//     MACHINE_TYPE.SPLITTER,
-//     MACHINE_TYPE.BOILER,
-//   ],
-//   5: FULL_MACHINES,
-//   6: FULL_MACHINES,
-//   7: FULL_MACHINES,
-//   8: [],
-//   9: []
-// }
 
 export const FIXED_MACHINE_TYPES = [MACHINE_TYPE.PLAYER, MACHINE_TYPE.INLET, MACHINE_TYPE.OUTLET]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g

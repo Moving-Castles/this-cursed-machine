@@ -398,7 +398,7 @@ test("(5) resolveSplitterMixer", () => {
     machines["DRYER"] = createMachine(MACHINE_TYPE.MIXER, 1)
 
     // Build wetter
-    machines["WETTER"] = createMachine(MACHINE_TYPE.MIXER, 1)
+    machines["MIXER"] = createMachine(MACHINE_TYPE.MIXER, 1)
 
     // Build splitter
     machines["SPLITTER"] = createMachine(MACHINE_TYPE.SPLITTER, 1)
@@ -412,8 +412,8 @@ test("(5) resolveSplitterMixer", () => {
     machines["PLAYER"].incomingConnections.push("INLET_ONE")
 
     // Connect dryer to wetter
-    machines["DRYER"].outgoingConnections.push("WETTER")
-    machines["WETTER"].incomingConnections.push("DRYER")
+    machines["DRYER"].outgoingConnections.push("MIXER")
+    machines["MIXER"].incomingConnections.push("DRYER")
 
     const receivedPatches = resolve(machines, inlets, outlet, depots, recipes)
 
@@ -542,13 +542,13 @@ test("(5) resolveSplitterMixer", () => {
             depotConnection: "",
             incomingConnections: [],
             outgoingConnections: [
-                "WETTER"
+                "MIXER"
             ],
             buildIndex: 1,
             products: [],
             state: 0
         },
-        WETTER: {
+        MIXER: {
             entity: 4,
             machineType: 5,
             depotConnection: "",

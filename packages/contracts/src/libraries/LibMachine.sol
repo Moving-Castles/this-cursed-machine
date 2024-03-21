@@ -29,8 +29,8 @@ library LibMachine {
     else if (_machineType == MACHINE_TYPE.MIXER) {
       return mixer(_inputs);
     }
-    // Dryer, Wetter, Boiler, Cooler
-    else if (_machineType >= MACHINE_TYPE.DRYER && _machineType <= MACHINE_TYPE.COOLER) {
+    // DRYER, BOILER, CENTRIFUGE, GRINDER, RAT_CAGE, MEALWORM_VAT
+    else if (_machineType >= MACHINE_TYPE.DRYER) {
       return simpleMachine(_machineType, _inputs[0]);
     }
     // Default

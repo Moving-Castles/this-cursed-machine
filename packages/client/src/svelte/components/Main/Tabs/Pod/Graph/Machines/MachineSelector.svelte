@@ -10,16 +10,18 @@
   export let machine: GraphMachine
 
   const componentList = {
+    [MACHINE_TYPE.NONE]: Machine,
     [MACHINE_TYPE.INLET]: Inlet,
     [MACHINE_TYPE.OUTLET]: Outlet,
     [MACHINE_TYPE.PLAYER]: Player,
     [MACHINE_TYPE.SPLITTER]: Machine,
     [MACHINE_TYPE.MIXER]: Machine,
     [MACHINE_TYPE.DRYER]: Machine,
-    [MACHINE_TYPE.WETTER]: Machine,
     [MACHINE_TYPE.BOILER]: Machine,
-    [MACHINE_TYPE.COOLER]: Machine,
-    [MACHINE_TYPE.NONE]: Machine,
+    [MACHINE_TYPE.CENTRIFUGE]: Machine,
+    [MACHINE_TYPE.GRINDER]: Machine,
+    [MACHINE_TYPE.RAT_CAGE]: Machine,
+    [MACHINE_TYPE.MEALWORM_VAT]: Machine,
   }
 
   const component = componentList[machine.machineType]

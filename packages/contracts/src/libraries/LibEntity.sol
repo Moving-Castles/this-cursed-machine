@@ -16,17 +16,19 @@ library LibEntity {
     MachineType.set(entity, _machineType);
 
     // Set ports on machine
-    // - - - - - - - - - - - -
-    // NONE:      0 IN, 0 OUT
-    // INLET:     0 IN, 1 OUT
-    // OUTLET:    1 IN, 0 OUT
-    // PLAYER:    1 IN, 2 OUT (created at spawn)
-    // SPLITTER:  1 IN, 2 OUT
-    // MIXER:     2 IN, 1 OUT
-    // WETTER:    1 IN, 1 OUT
-    // DRYER:     1 IN, 1 OUT
-    // BOILER:    1 IN, 1 OUT
-    // COOLER:    1 IN, 1 OUT
+    // - - - - - - - - - - - - -
+    // NONE:          0 IN, 0 OUT
+    // INLET:         0 IN, 1 OUT
+    // OUTLET:        1 IN, 0 OUT
+    // PLAYER:        1 IN, 2 OUT (created at spawn)
+    // SPLITTER:      1 IN, 2 OUT
+    // MIXER:         2 IN, 1 OUT
+    // DRYER:         1 IN, 1 OUT
+    // BOILER:        1 IN, 1 OUT
+    // CENTRIFUGE:    1 IN, 1 OUT
+    // GRINDER:       1 IN, 1 OUT
+    // RAT_CAGE:      1 IN, 1 OUT
+    // MEALWORM_VAT:  1 IN, 1 OUT
 
     if (_machineType == MACHINE_TYPE.INLET) {
       IncomingConnections.set(entity, new bytes32[](0));
@@ -66,20 +68,6 @@ library LibEntity {
    * @return bool True if the machine type is among the predefined buildable types, false otherwise.
    */
   function isBuildableMachineType(MACHINE_TYPE _machineType) internal pure returns (bool) {
-    MACHINE_TYPE[6] memory buildableMachineTypes = [
-      MACHINE_TYPE.SPLITTER,
-      MACHINE_TYPE.MIXER,
-      MACHINE_TYPE.DRYER,
-      MACHINE_TYPE.WETTER,
-      MACHINE_TYPE.BOILER,
-      MACHINE_TYPE.COOLER
-    ];
-
-    for (uint i = 0; i < buildableMachineTypes.length; i++) {
-      if (_machineType == buildableMachineTypes[i]) {
-        return true;
-      }
-    }
-    return false;
+    return _machineType >= MACHINE_TYPE.SPLITTER ? true : false;
   }
 }

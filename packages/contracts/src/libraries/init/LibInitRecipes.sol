@@ -6,12 +6,6 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 
 library LibInitRecipes {
   function init() internal {
-    // Cooler recipes
-    // ...
-
-    // Wetter recipes
-    // ...
-
     // Dryer recipes
     Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.BLOOD), MATERIAL_TYPE.BLOOD_MEAL);
     Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.PISS), MATERIAL_TYPE.AMMONIA);

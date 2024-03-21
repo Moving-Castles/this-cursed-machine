@@ -7,6 +7,8 @@
 
   let hover = false
 
+  console.log("connection", connection)
+
   const carrying = connection?.products.length > 0
 
   const onMouseEnter = () => {

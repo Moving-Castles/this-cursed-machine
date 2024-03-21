@@ -16,7 +16,7 @@ const EMPTY_PRODUCT: Product = {
  * - If `machineType` is PLAYER, the `player` function is used.
  * - If `machineType` is SPLITTER, the `splitter` function is used.
  * - If `machineType` is MIXER, the `mixer` function is used.
- * - For machine types between DRYER and COOLER (inclusive), the `simpleMachine` function is used.
+ * - If `machineType` is DRYER, BOILER, CENTRIFUGE, GRINDER, RAT_CAGE, or MEALWORM_VAT, the `simpleMachine` function is used.
  * - For MACHINE_TYPE.NONE, MACHINE_TYPE.INLET, and MACHINE_TYPE.OUTLET, the products are deeply cloned and returned as is.
  *
  * @param {MACHINE_TYPE} machineType - The type of machine used for processing.
@@ -32,8 +32,7 @@ export function process(machineType: MACHINE_TYPE, inputs: Product[], recipes: R
   } else if (machineType === MACHINE_TYPE.MIXER) {
     return mixer(recipes, inputs)
   } else if (
-    machineType >= MACHINE_TYPE.DRYER &&
-    machineType <= MACHINE_TYPE.COOLER
+    machineType >= MACHINE_TYPE.DRYER
   ) {
     return simpleMachine(recipes, machineType, inputs)
   }

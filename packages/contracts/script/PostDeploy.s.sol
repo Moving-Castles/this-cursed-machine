@@ -53,8 +53,8 @@ contract PostDeploy is Script {
 
     // Create test orders
     LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, false, 1000, ONE_MINUTE, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 10000, false, 1000, ONE_HOUR, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 10000, false, 1000, ONE_DAY, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 4000, false, 1000, ONE_HOUR, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 4000, false, 1000, ONE_DAY, 10);
 
     // Create offer
     LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100);

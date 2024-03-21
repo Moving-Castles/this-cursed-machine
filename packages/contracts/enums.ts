@@ -15,9 +15,11 @@ enum MACHINE_TYPE {
     SPLITTER,
     MIXER,
     DRYER,
-    WETTER,
     BOILER,
-    COOLER
+    CENTRIFUGE,
+    GRINDER,
+    RAT_CAGE,
+    MEALWORM_VAT
 }
 
 enum MATERIAL_TYPE {
