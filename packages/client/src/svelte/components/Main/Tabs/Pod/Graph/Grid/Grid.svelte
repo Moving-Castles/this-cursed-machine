@@ -30,17 +30,17 @@
       background: rgba(255, 255, 255, 0.4);
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
-      &[data-cost="1"] {
-        background: black;
-      }
+      // &[data-cost="1"] {
+      //   background: black;
+      // }
 
-      &[data-cost="4"] {
-        background: rgba(255, 255, 0, 0.5);
-      }
+      // &[data-cost="4"] {
+      //   background: rgba(255, 255, 0, 0.5);
+      // }
 
-      &[data-cost="10"] {
-        background: rgba(255, 0, 0, 0.5);
-      }
+      // &[data-cost="10"] {
+      //   background: rgba(255, 0, 0, 0.5);
+      // }
     }
   }
 </style>

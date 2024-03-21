@@ -34,7 +34,7 @@
   <div class="grid">
     <div class="top">
       {#each Object.values(graphMachines) as machine}
-        <!-- <MachineSelector {machine} /> -->
+        <MachineSelector {machine} />
       {/each}
 
       <svg {width} {height}>
