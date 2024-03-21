@@ -2,7 +2,14 @@ import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MATERIAL_TYPE } from "@modules/state/base/enums"
-import type { SimulatedEntities, SimulatedDepots, SimulatedDepot, SimulatedMachines, Connection, SimulatedMachine } from "./types"
+import type {
+    SimulatedEntities,
+    SimulatedDepots,
+    SimulatedDepot,
+    SimulatedMachines,
+    Connection,
+    SimulatedMachine
+} from "./types"
 import { machines, depots, playerPod } from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
@@ -53,9 +60,8 @@ export function processOutputPatches(simulated: SimulatedEntities, key: string, 
 }
 
 export function applyPatches(machines: Machines, patches: SimulatedEntities): SimulatedMachines {
-    // Create deep copy to avoid accidentally mutating the original object.
-    // const patchesCopy = deepClone(patches);
-    // const machinesCopy = deepClone(machines);
+    // Exit early if there are no patches.
+    if (Object.keys(patches).length === 0) return machines as SimulatedMachines
 
     let simulatedMachines: SimulatedMachines = Object.fromEntries([...Object.entries(machines).map(([key, machine]) => [key, { ...machine, products: [], state: GRAPH_ENTITY_STATE.IDLE }])])
 
@@ -71,9 +77,6 @@ export function applyPatches(machines: Machines, patches: SimulatedEntities): Si
     return simulatedMachines
 }
 
-/*
- * 
- */
 export function calculateSimulatedDepots(depots: Depots, patches: SimulatedEntities, blocksSinceLastResolution: number, playerPod: Pod): SimulatedDepots {
     /*
      * This function updates the inlet and outlet depots
@@ -223,7 +226,6 @@ function getUsedInletDepots(inletDepots: [string, Depot][], inlets: string[], de
 
 export function calculateSimulatedConnections(simulatedMachines: SimulatedMachines): Connection[] {
     let connections: Connection[] = []
-    // const simulatedMachinesCopy = deepClone(simulatedMachines)
 
     Object.entries(simulatedMachines).forEach(([sourceAddress, machine]) => {
 

@@ -41,7 +41,7 @@
     {#if currentOrder && currentOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number(currentOrder.order.expirationBlock) - Number($blockNumber)
+          Number(currentOrder.order.expirationBlock) - Number($blockNumber),
         )}
       </div>
     {/if}
