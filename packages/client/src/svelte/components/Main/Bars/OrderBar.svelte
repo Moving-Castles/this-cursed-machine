@@ -8,7 +8,7 @@
   } from "@modules/state/base/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
-  import NumberGoingUp from "@svelte/components/Atoms/NumberGoingUp.svelte"
+  import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
   import { reward, charge } from "@modules/action"
 
   const sendReward = () => {
@@ -54,9 +54,8 @@
       goal={30000}
       warn={26900}
     />
-
-    <button on:click={sendReward}>Reward</button>
-    <button on:click={sendCharge}>Charge</button>
+    <!-- <button on:click={sendReward}>Reward</button>
+    <button on:click={sendCharge}>Charge</button> -->
   </div>
 </div>
 

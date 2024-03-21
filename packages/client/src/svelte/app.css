@@ -27,11 +27,14 @@
   /* Fonts */
   /* 'DEC Terminal Modern',  */
   /* 'SV Basic Manual', */
+  /* "SixtyFour",  */
   --font-family-special: "Fake Receipt", monospace;
   --font-family-quote: "Baleze", monospace;
   --font-family: "Fake Receipt", monospace;
-  --font-size: 18px;
+  /* --font-size: 14px; */
   --font-size-normal: 20px;
+  /* --font-size-normal: 14px; */
+
   --font-size-large: 18px;
 }
 
