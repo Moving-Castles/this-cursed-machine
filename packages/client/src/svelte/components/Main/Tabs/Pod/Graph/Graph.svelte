@@ -1,5 +1,7 @@
 <script lang="ts">
   import { playerPod } from "@modules/state/base/stores"
+  import { GRID, CELL } from "./constants"
+
   import {
     simulatedMachines,
     simulatedConnections,
@@ -8,19 +10,23 @@
 
   import { createLayout } from "./layout"
 
-  import Grid from "./Grid/Grid.svelte"
+  import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
 
+  const width = GRID.WIDTH * CELL.WIDTH
+  const height = GRID.HEIGHT * CELL.HEIGHT
+
   let graphMachines: GraphMachines = {}
   let graphConnections: GraphConnection[] = []
+  let grid: Grid
 
   // Calculate the new layout based on new and old state
-  $: ({ graphMachines, graphConnections } = createLayout(
+  $: ({ graphMachines, graphConnections, grid } = createLayout(
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    graphMachines,
+    graphMachines
   ))
 </script>
 
@@ -31,11 +37,14 @@
       {#each Object.values(graphMachines) as machine}
         <MachineSelector {machine} />
       {/each}
-      {#each graphConnections as connection}
-        <Connection {connection} />
-      {/each}
+
+      <svg {width} {height}>
+        {#each graphConnections as connection}
+          <Connection {connection} />
+        {/each}
+      </svg>
     </div>
-    <Grid />
+    <GridComponent {grid} />
   </div>
 </div>
 

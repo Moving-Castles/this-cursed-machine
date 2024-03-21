@@ -1,78 +1,74 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import { GRID, CELL } from "../constants"
   import { generateSvgPath, generateSvgArrow } from "./svg"
-  import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
+  import { inspecting } from "@modules/ui/stores"
+  import { CELL } from "../constants"
   export let connection: GraphConnection
 
-  const width = GRID.WIDTH * CELL.WIDTH
-  const height = GRID.HEIGHT * CELL.HEIGHT
+  let hover = false
+
+  const onMouseEnter = () => {
+    inspecting.set(connection)
+    hover = true
+  }
+
+  const onMouseLeave = () => {
+    inspecting.set(null)
+    hover = false
+  }
 
   $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
 
-<div
-  class="connection"
-  class:active={connection.state === GRAPH_ENTITY_STATE.ACTIVE}
-  class:productive={connection.productive}
->
-  <svg {width} {height}>
-    <path {d} />
-    <polygon {points} />
-  </svg>
-</div>
+<g class:hover on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
+  <path {d} class="pseudo" />
+  <path
+    {d}
+    class="visible"
+    class:hover
+    class:productive={connection.productive}
+  />
+  <polygon {points} class:hover class:productive={connection.productive} />
+</g>
 
 <style lang="scss">
-  .connection {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  g {
+    opacity: 0.6;
 
-    svg {
-      path {
-        stroke: #cdcdcd;
-        stroke-width: 5;
-        opacity: 0.7;
-        fill: none;
-
-        &:hover {
-          stroke: #0000ff;
-        }
-      }
-
-      polygon {
-        fill: #cdcdcd;
-        opacity: 0.7;
-      }
+    &.hover {
+      opacity: 1;
     }
+  }
+  .pseudo {
+    stroke: transparent;
+    stroke-width: 15;
+    fill: none;
+  }
 
-    &.active {
-      svg {
-        path {
-          stroke: var(--color-active);
-        }
+  .visible {
+    stroke: #cdcdcd;
+    stroke-width: 5;
+    fill: none;
 
-        polygon {
-          fill: var(--color-active);
-          opacity: 0.7;
-        }
-      }
+    &.hover {
+      stroke: blue;
     }
 
     &.productive {
-      svg {
-        path {
-          stroke: red;
-        }
+      stroke: red;
+    }
+  }
 
-        polygon {
-          fill: red;
-          opacity: 0.7;
-        }
-      }
+  polygon {
+    fill: #cdcdcd;
+
+    &.hover {
+      fill: blue;
+    }
+
+    &.productive {
+      fill: red;
     }
   }
 </style>
