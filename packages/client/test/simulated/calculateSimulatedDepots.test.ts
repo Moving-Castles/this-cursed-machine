@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 import { calculateSimulatedDepots } from "../../src/svelte/modules/state/simulated/stores"
 import { ENTITY_TYPE } from 'contracts/enums'
 import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
+import { deepClone } from '../../src/svelte/modules/utils'
 
 const FLOW_RATE = 1000
 
@@ -9,7 +10,7 @@ const playerPod = {
     entityType: ENTITY_TYPE.POD,
     fixedEntities: {
         inlets: ["INLET_ONE", EMPTY_CONNECTION],
-        outlets: ["OUTLET"]
+        outlet: "OUTLET"
     }
 }
 
@@ -154,4 +155,36 @@ test("(4) calculateSimulatedDepots, 100 block, cap input by 0, cap output by inp
     }
 
     expect(calculateSimulatedDepots(depots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+})
+
+test("(5) calculateSimulatedDepots, cap at outlet depot full", () => {
+    const BLOCKS_SINCE_LAST_RESOLUTION = 100;
+
+    const modifiedDepots = deepClone(depots);
+
+    modifiedDepots.DEPOT_TWO.amount = 8000;
+
+    // Stop block is: 
+    // available capacity in outlet depot / output patch amount
+    // 2000 / 250 = 8
+
+    const expectedOutput = {
+        DEPOT_ONE: {
+            entityType: ENTITY_TYPE.DEPOT,
+            carriedBy: "POD_ID",
+            depotConnection: "INLET_ONE",
+            materialType: 1,
+            amount: 12000 // 20000 - (1000 * 8)
+        },
+
+        DEPOT_TWO: {
+            entityType: ENTITY_TYPE.DEPOT,
+            carriedBy: "POD_ID",
+            depotConnection: "OUTLET",
+            materialType: 2, // PISS
+            amount: 10000 // 8000 + (250 * 8) => Depot max capacity
+        }
+    }
+
+    expect(calculateSimulatedDepots(modifiedDepots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })
