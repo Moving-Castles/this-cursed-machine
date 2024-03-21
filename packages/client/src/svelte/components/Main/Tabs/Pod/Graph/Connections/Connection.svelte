@@ -7,7 +7,10 @@
 
   let hover = false
 
+  const carrying = connection?.products.length > 0
+
   const onMouseEnter = () => {
+    if (!carrying) return
     inspecting.set(connection)
     hover = true
   }
@@ -21,12 +24,19 @@
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
 
-<g class:hover on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<g
+  class:hover
+  class:carrying
+  on:mouseenter={onMouseEnter}
+  on:mouseleave={onMouseLeave}
+>
   <path {d} class="pseudo" />
   <path
     {d}
     class="visible"
     class:hover
+    class:carrying
     class:productive={connection.productive}
   />
   <polygon {points} class:hover class:productive={connection.productive} />
@@ -39,7 +49,12 @@
     &.hover {
       opacity: 1;
     }
+
+    &.carrying {
+      cursor: none;
+    }
   }
+
   .pseudo {
     stroke: transparent;
     stroke-width: 15;
@@ -51,8 +66,12 @@
     stroke-width: 5;
     fill: none;
 
+    &.carrying {
+      stroke: var(--color-active);
+    }
+
     &.hover {
-      stroke: blue;
+      stroke: rgb(149, 149, 149);
     }
 
     &.productive {
@@ -64,7 +83,7 @@
     fill: #cdcdcd;
 
     &.hover {
-      fill: blue;
+      fill: rgb(149, 149, 149);
     }
 
     &.productive {

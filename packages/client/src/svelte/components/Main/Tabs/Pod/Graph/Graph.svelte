@@ -26,7 +26,7 @@
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    graphMachines
+    graphMachines,
   ))
 </script>
 
@@ -57,6 +57,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    cursor: crosshair;
 
     --cellHeight: 10px;
     --cellWidth: 10px;

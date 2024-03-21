@@ -41,7 +41,7 @@
 
 <style>
   .box {
-    width: 32ch;
+    max-width: 32ch;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -50,9 +50,11 @@
     border: 1px solid var(--foreground);
     pointer-events: none;
     cursor: none;
+    font-size: var(--font-size-small);
+    line-height: 1.2em;
   }
 
   .inner {
-    padding: 20px;
+    padding: 10px;
   }
 </style>
