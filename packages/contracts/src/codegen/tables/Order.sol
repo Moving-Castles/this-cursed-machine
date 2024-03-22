@@ -13,7 +13,7 @@ import { SliceLib } from "@latticexyz/store/src/Slice.sol";
 import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
 import { Schema } from "@latticexyz/store/src/Schema.sol";
-import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
+import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
@@ -424,7 +424,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
+    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
       _keyTuple,
       _fieldLayout
@@ -439,7 +439,7 @@ library Order {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
+    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
       _keyTuple,
       _fieldLayout
@@ -472,7 +472,7 @@ library Order {
       maxPlayers
     );
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -506,7 +506,7 @@ library Order {
       maxPlayers
     );
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -530,7 +530,7 @@ library Order {
       _table.maxPlayers
     );
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -554,7 +554,7 @@ library Order {
       _table.maxPlayers
     );
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -607,7 +607,7 @@ library Order {
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter,
+    EncodedLengths,
     bytes memory
   ) internal pure returns (OrderData memory _table) {
     (
@@ -684,7 +684,7 @@ library Order {
     uint32 goalAmount,
     uint32 rewardAmount,
     uint32 maxPlayers
-  ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       creationBlock,
       expirationBlock,
@@ -696,7 +696,7 @@ library Order {
       maxPlayers
     );
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     return (_staticData, _encodedLengths, _dynamicData);

@@ -3,13 +3,13 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 291184
+    "gasUsed": 290897
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect player to splitter",
-    "gasUsed": 116234
+    "gasUsed": 116235
   },
   {
     "file": "test/systems/machine-network/DestroySystem.t.sol",
@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 140251
+    "gasUsed": 141796
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
@@ -63,7 +63,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Accept order",
-    "gasUsed": 55819
+    "gasUsed": 55818
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -93,6 +93,6 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1672024
+    "gasUsed": 1672228
   }
 ]

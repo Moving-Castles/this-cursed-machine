@@ -13,7 +13,7 @@ import { SliceLib } from "@latticexyz/store/src/Slice.sol";
 import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
 import { Schema } from "@latticexyz/store/src/Schema.sol";
-import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
+import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
@@ -37,7 +37,7 @@ library Output {
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "key";
+    keyNames[0] = "id";
   }
 
   /**
@@ -66,9 +66,9 @@ library Output {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function getValue(bytes32 id) internal view returns (MATERIAL_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
@@ -77,9 +77,9 @@ library Output {
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function _getValue(bytes32 id) internal view returns (MATERIAL_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
@@ -88,9 +88,9 @@ library Output {
   /**
    * @notice Get value.
    */
-  function get(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function get(bytes32 id) internal view returns (MATERIAL_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
@@ -99,9 +99,9 @@ library Output {
   /**
    * @notice Get value.
    */
-  function _get(bytes32 key) internal view returns (MATERIAL_TYPE value) {
+  function _get(bytes32 id) internal view returns (MATERIAL_TYPE value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
@@ -110,9 +110,9 @@ library Output {
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 key, MATERIAL_TYPE value) internal {
+  function setValue(bytes32 id, MATERIAL_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
   }
@@ -120,9 +120,9 @@ library Output {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 key, MATERIAL_TYPE value) internal {
+  function _setValue(bytes32 id, MATERIAL_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
   }
@@ -130,9 +130,9 @@ library Output {
   /**
    * @notice Set value.
    */
-  function set(bytes32 key, MATERIAL_TYPE value) internal {
+  function set(bytes32 id, MATERIAL_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
   }
@@ -140,9 +140,9 @@ library Output {
   /**
    * @notice Set value.
    */
-  function _set(bytes32 key, MATERIAL_TYPE value) internal {
+  function _set(bytes32 id, MATERIAL_TYPE value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
   }
@@ -150,9 +150,9 @@ library Output {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 key) internal {
+  function deleteRecord(bytes32 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -160,9 +160,9 @@ library Output {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 key) internal {
+  function _deleteRecord(bytes32 id) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -181,10 +181,10 @@ library Output {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(MATERIAL_TYPE value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  function encode(MATERIAL_TYPE value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     return (_staticData, _encodedLengths, _dynamicData);
@@ -193,9 +193,9 @@ library Output {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = id;
 
     return _keyTuple;
   }

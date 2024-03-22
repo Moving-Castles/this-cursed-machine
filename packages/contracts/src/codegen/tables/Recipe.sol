@@ -13,7 +13,7 @@ import { SliceLib } from "@latticexyz/store/src/Slice.sol";
 import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
 import { Schema } from "@latticexyz/store/src/Schema.sol";
-import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
+import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
@@ -47,7 +47,7 @@ library Recipe {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](1);
-    fieldNames[0] = "value";
+    fieldNames[0] = "output";
   }
 
   /**
@@ -65,9 +65,9 @@ library Recipe {
   }
 
   /**
-   * @notice Get value.
+   * @notice Get output.
    */
-  function getValue(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE value) {
+  function getOutput(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE output) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
@@ -77,9 +77,9 @@ library Recipe {
   }
 
   /**
-   * @notice Get value.
+   * @notice Get output.
    */
-  function _getValue(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE value) {
+  function _getOutput(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE output) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
@@ -89,9 +89,9 @@ library Recipe {
   }
 
   /**
-   * @notice Get value.
+   * @notice Get output.
    */
-  function get(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE value) {
+  function get(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE output) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
@@ -101,9 +101,9 @@ library Recipe {
   }
 
   /**
-   * @notice Get value.
+   * @notice Get output.
    */
-  function _get(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE value) {
+  function _get(MACHINE_TYPE machineType, uint256 input) internal view returns (MATERIAL_TYPE output) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
@@ -113,47 +113,47 @@ library Recipe {
   }
 
   /**
-   * @notice Set value.
+   * @notice Set output.
    */
-  function setValue(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE value) internal {
+  function setOutput(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE output) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(output)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set output.
    */
-  function _setValue(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE value) internal {
+  function _setOutput(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE output) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(output)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set output.
    */
-  function set(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE value) internal {
+  function set(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE output) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(output)), _fieldLayout);
   }
 
   /**
-   * @notice Set value.
+   * @notice Set output.
    */
-  function _set(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE value) internal {
+  function _set(MACHINE_TYPE machineType, uint256 input, MATERIAL_TYPE output) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(output)), _fieldLayout);
   }
 
   /**
@@ -182,8 +182,8 @@ library Recipe {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(MATERIAL_TYPE value) internal pure returns (bytes memory) {
-    return abi.encodePacked(value);
+  function encodeStatic(MATERIAL_TYPE output) internal pure returns (bytes memory) {
+    return abi.encodePacked(output);
   }
 
   /**
@@ -192,10 +192,10 @@ library Recipe {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(MATERIAL_TYPE value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(value);
+  function encode(MATERIAL_TYPE output) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+    bytes memory _staticData = encodeStatic(output);
 
-    PackedCounter _encodedLengths;
+    EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
 
     return (_staticData, _encodedLengths, _dynamicData);

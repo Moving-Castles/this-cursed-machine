@@ -13,7 +13,7 @@ import { SliceLib } from "@latticexyz/store/src/Slice.sol";
 import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
 import { Schema } from "@latticexyz/store/src/Schema.sol";
-import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
+import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 struct FixedEntitiesData {
@@ -277,7 +277,7 @@ library FixedEntities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
+    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
       _keyTuple,
       _fieldLayout
@@ -292,7 +292,7 @@ library FixedEntities {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    (bytes memory _staticData, PackedCounter _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
+    (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
       _keyTuple,
       _fieldLayout
@@ -306,7 +306,7 @@ library FixedEntities {
   function set(bytes32 key, bytes32 outlet, bytes32[] memory inlets) internal {
     bytes memory _staticData = encodeStatic(outlet);
 
-    PackedCounter _encodedLengths = encodeLengths(inlets);
+    EncodedLengths _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -321,7 +321,7 @@ library FixedEntities {
   function _set(bytes32 key, bytes32 outlet, bytes32[] memory inlets) internal {
     bytes memory _staticData = encodeStatic(outlet);
 
-    PackedCounter _encodedLengths = encodeLengths(inlets);
+    EncodedLengths _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -336,7 +336,7 @@ library FixedEntities {
   function set(bytes32 key, FixedEntitiesData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.outlet);
 
-    PackedCounter _encodedLengths = encodeLengths(_table.inlets);
+    EncodedLengths _encodedLengths = encodeLengths(_table.inlets);
     bytes memory _dynamicData = encodeDynamic(_table.inlets);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -351,7 +351,7 @@ library FixedEntities {
   function _set(bytes32 key, FixedEntitiesData memory _table) internal {
     bytes memory _staticData = encodeStatic(_table.outlet);
 
-    PackedCounter _encodedLengths = encodeLengths(_table.inlets);
+    EncodedLengths _encodedLengths = encodeLengths(_table.inlets);
     bytes memory _dynamicData = encodeDynamic(_table.inlets);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
@@ -371,7 +371,7 @@ library FixedEntities {
    * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
    */
   function decodeDynamic(
-    PackedCounter _encodedLengths,
+    EncodedLengths _encodedLengths,
     bytes memory _blob
   ) internal pure returns (bytes32[] memory inlets) {
     uint256 _start;
@@ -390,7 +390,7 @@ library FixedEntities {
    */
   function decode(
     bytes memory _staticData,
-    PackedCounter _encodedLengths,
+    EncodedLengths _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (FixedEntitiesData memory _table) {
     (_table.outlet) = decodeStatic(_staticData);
@@ -430,10 +430,10 @@ library FixedEntities {
    * @notice Tightly pack dynamic data lengths using this table's schema.
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
-  function encodeLengths(bytes32[] memory inlets) internal pure returns (PackedCounter _encodedLengths) {
+  function encodeLengths(bytes32[] memory inlets) internal pure returns (EncodedLengths _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = PackedCounterLib.pack(inlets.length * 32);
+      _encodedLengths = EncodedLengthsLib.pack(inlets.length * 32);
     }
   }
 
@@ -454,10 +454,10 @@ library FixedEntities {
   function encode(
     bytes32 outlet,
     bytes32[] memory inlets
-  ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(outlet);
 
-    PackedCounter _encodedLengths = encodeLengths(inlets);
+    EncodedLengths _encodedLengths = encodeLengths(inlets);
     bytes memory _dynamicData = encodeDynamic(inlets);
 
     return (_staticData, _encodedLengths, _dynamicData);

@@ -1,4 +1,4 @@
-import { mudConfig } from "@latticexyz/world/register";
+import { defineWorld } from "@latticexyz/world";
 import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, MATERIAL_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
 
 export const enums = {
@@ -8,13 +8,12 @@ export const enums = {
     PORT_INDEX: PORT_INDEX_ARRAY
 }
 
-export default mudConfig({
-    deploysDirectory: "./deploys",
+export default defineWorld({
     enums,
     tables: {
         GameConfig: {
-            keySchema: {},
-            valueSchema: {
+            key: [],
+            schema: {
                 adminAddress: "address",
                 tokenAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
@@ -22,7 +21,9 @@ export default mudConfig({
                 flowRate: "uint32", // Amount flowing from the inlet
                 depotCapacity: "uint32", // Amount of material that can be stored in a depot
             },
-            dataStruct: true,
+            codegen: {
+                dataStruct: true
+            }
         },
         // ...
         EntityType: "ENTITY_TYPE",
@@ -39,13 +40,15 @@ export default mudConfig({
         Tutorial: "bool",
         TutorialLevel: "uint32",
         TutorialOrders: {
-            keySchema: {},
-            valueSchema: {
+            key: [],
+            schema: {
                 value: "bytes32[]"
             }
         },
         Order: {
-            valueSchema: {
+            key: ["key"],
+            schema: {
+                key: "bytes32",
                 creationBlock: "uint256",
                 expirationBlock: "uint256",
                 resourceMaterialType: "MATERIAL_TYPE",
@@ -57,7 +60,9 @@ export default mudConfig({
             }
         },
         Offer: {
-            valueSchema: {
+            key: ["key"],
+            schema: {
+                key: "bytes32",
                 creationBlock: "uint256",
                 materialType: "MATERIAL_TYPE",
                 amount: "uint32",
@@ -77,18 +82,21 @@ export default mudConfig({
         MachinesInPod: "bytes32[]",
         DepotsInPod: "bytes32[]",
         FixedEntities: {
-            valueSchema: {
+            key: ["key"],
+            schema: {
+                key: "bytes32",
                 outlet: "bytes32",
                 inlets: "bytes32[]"
             }
         },
         CurrentOrder: "bytes32",
         Recipe: {
-            keySchema: {
+            key: ["machineType", "input"],
+            schema: {
                 machineType: "MACHINE_TYPE",
                 input: "uint256",
-            },
-            valueSchema: "MATERIAL_TYPE"
+                output: "MATERIAL_TYPE"
+            }
         }
     },
     modules: [
