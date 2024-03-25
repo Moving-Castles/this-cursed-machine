@@ -69,7 +69,7 @@ export function findPath(
     openList.push(startNode);
     startNode.opened = true;
 
-    console.log('openList', openList.toArray());
+    // console.log('openList', openList.toArray());
 
     // While the open list is not empty
     // while (!openList.isEmpty() && testCounter < 1000) {

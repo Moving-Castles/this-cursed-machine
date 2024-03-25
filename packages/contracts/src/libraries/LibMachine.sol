@@ -17,56 +17,21 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product[] memory _inputs
   ) internal view returns (Product[] memory _output) {
-    // Player
-    if (_machineType == MACHINE_TYPE.PLAYER) {
-      return player(_inputs[0]);
-    }
     // Splitter
-    else if (_machineType == MACHINE_TYPE.SPLITTER) {
+    if (_machineType == MACHINE_TYPE.SPLITTER) {
       return splitter(_inputs[0]);
     }
     // Mixer
     else if (_machineType == MACHINE_TYPE.MIXER) {
       return mixer(_inputs);
     }
-    // DRYER, BOILER, CENTRIFUGE, GRINDER, RAT_CAGE, MEALWORM_VAT
-    else if (_machineType >= MACHINE_TYPE.DRYER) {
-      return simpleMachine(_machineType, _inputs[0]);
+    // PLAYER, DRYER, BOILER, CENTRIFUGE, GRINDER, RAT_CAGE, MEALWORM_VAT
+    else if (_machineType == MACHINE_TYPE.PLAYER || _machineType >= MACHINE_TYPE.DRYER) {
+      return defaultMachine(_machineType, _inputs[0]);
     }
     // Default
     // for MACHINE_TYPE.NONE, MACHINE_TYPE.INLET and MACHINE_TYPE.OUTLET
     return _inputs;
-  }
-
-  /**
-   * @dev Processes input products
-   *
-   * @param _input Product to be processed.
-   * @return _outputs An array of products output by the player machine.
-   */
-  function player(Product memory _input) internal pure returns (Product[] memory _outputs) {
-    Product[] memory outputs = new Product[](2);
-
-    // Abort if input is not bug
-    if (_input.materialType != MATERIAL_TYPE.BUG) return outputs;
-
-    // Output Piss
-    outputs[0] = Product({
-      machineId: _input.machineId,
-      materialType: MATERIAL_TYPE.PISS,
-      amount: _input.amount / 2,
-      inletActive: _input.inletActive
-    });
-
-    // Output blood
-    outputs[1] = Product({
-      machineId: _input.machineId,
-      materialType: MATERIAL_TYPE.BLOOD,
-      amount: _input.amount / 2,
-      inletActive: _input.inletActive
-    });
-
-    return outputs;
   }
 
   /**
@@ -112,7 +77,7 @@ library LibMachine {
       return outputs;
     }
 
-    MATERIAL_TYPE resultMaterialType = Recipe.get(
+    uint8[2] memory resultMaterials = Recipe.get(
       MACHINE_TYPE.MIXER,
       LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
     );
@@ -127,7 +92,7 @@ library LibMachine {
 
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
-      materialType: resultMaterialType,
+      materialType: uintToMaterialTypeEnum(resultMaterials[0]),
       amount: lowestAmountProduct.amount,
       inletActive: combinedInletActive
     });
@@ -140,20 +105,47 @@ library LibMachine {
    * @param _input A Product structure detailing the input product's attributes.
    * @return _outputs An array of products representing the output after processing through the machine.
    */
-  function simpleMachine(
+  function defaultMachine(
     MACHINE_TYPE _machineType,
     Product memory _input
   ) internal view returns (Product[] memory _outputs) {
-    MATERIAL_TYPE resultMaterialType = Recipe.get(_machineType, uint256(_input.materialType));
-    Product[] memory outputs = new Product[](1);
+    uint8[2] memory resultMaterials = Recipe.get(_machineType, uint256(_input.materialType));
 
-    outputs[0] = Product({
-      machineId: _input.machineId,
-      materialType: resultMaterialType,
-      amount: _input.amount,
-      inletActive: _input.inletActive
-    });
-    return outputs;
+    if (resultMaterials[1] == uint8(MATERIAL_TYPE.NONE)) {
+      // One output
+
+      Product[] memory outputs = new Product[](1);
+
+      outputs[0] = Product({
+        machineId: _input.machineId,
+        materialType: uintToMaterialTypeEnum(resultMaterials[0]),
+        amount: _input.amount,
+        inletActive: _input.inletActive
+      });
+
+      return outputs;
+    } else {
+      // Two outputs
+
+      Product[] memory outputs = new Product[](2);
+
+      outputs[0] = Product({
+        machineId: _input.machineId,
+        materialType: uintToMaterialTypeEnum(resultMaterials[0]),
+        amount: _input.amount / 2,
+        inletActive: _input.inletActive
+      });
+
+      // Output 2
+      outputs[1] = Product({
+        machineId: _input.machineId,
+        materialType: uintToMaterialTypeEnum(resultMaterials[1]),
+        amount: _input.amount / 2,
+        inletActive: _input.inletActive
+      });
+
+      return outputs;
+    }
   }
 
   function getLowestAmountProduct(
@@ -161,5 +153,10 @@ library LibMachine {
     Product memory _B
   ) internal pure returns (Product memory _lowestAmountProduct) {
     return _A.amount < _B.amount ? _A : _B;
+  }
+
+  function uintToMaterialTypeEnum(uint8 _num) public pure returns (MATERIAL_TYPE) {
+    require(_num <= uint(MATERIAL_TYPE.END), "Integer out of enum range");
+    return MATERIAL_TYPE(_num);
   }
 }

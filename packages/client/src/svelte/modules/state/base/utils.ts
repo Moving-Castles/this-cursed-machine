@@ -36,7 +36,7 @@ export function getRecipes(entities: Entities): Recipe[] {
         return {
             machineType: parseInt(machineType, 16),
             input: parseInt(input, 16),
-            output: recipe[1].recipe ?? 0,
+            outputs: recipe[1].recipe.outputs ?? [0, 0],
         } as Recipe
     })
 

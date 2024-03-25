@@ -138,7 +138,7 @@ declare global {
   type Recipe = {
     machineType: number
     input: number
-    output: number
+    outputs: number[]
   }
 
   // * * * * * * * * * * * * * * * * *

@@ -113,10 +113,10 @@ function createGrid() {
     for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
         for (let x = 0; x < MACHINE.WIDTH; x++) {
             for (let y = 0; y < MACHINE.HEIGHT; y++) {
-              const gridX = DYNAMIC_POSITIONS[i].x + x
-              const gridY = DYNAMIC_POSITIONS[i].y + y
+                const gridX = DYNAMIC_POSITIONS[i].x + x
+                const gridY = DYNAMIC_POSITIONS[i].y + y
 
-              grid = setWalkableAt(grid, gridX, gridY, false);
+                grid = setWalkableAt(grid, gridX, gridY, false);
             }
         }
     }
@@ -124,27 +124,27 @@ function createGrid() {
     for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
         for (let x = 0; x < MACHINE.WIDTH; x++) {
             for (let y = 0; y < MACHINE.HEIGHT; y++) {
-              const gridX = DYNAMIC_POSITIONS[i].x + x
-              const gridY = DYNAMIC_POSITIONS[i].y + y
+                const gridX = DYNAMIC_POSITIONS[i].x + x
+                const gridY = DYNAMIC_POSITIONS[i].y + y
 
-              grid = setCostAt(grid, gridX, gridY, 10);
-              
-              if (x === 0) {
-                grid = setCostAt(grid, gridX - 1, gridY, 10);
-                grid = setCostAt(grid, gridX - 2, gridY, 4);
-              }
-              if (x === MACHINE.WIDTH - 1) {
-                grid = setCostAt(grid, gridX + 1, gridY, 10);
-                grid = setCostAt(grid, gridX + 2, gridY, 4);
-              }
-              if (y === 0) {
-                grid = setCostAt(grid, gridX, gridY - 1, 10);
-                grid = setCostAt(grid, gridX, gridY - 2, 4);
-              }
-              if (y === MACHINE.HEIGHT - 1) {
-                grid = setCostAt(grid, gridX, gridY + 1, 10);
-                grid = setCostAt(grid, gridX, gridY + 2, 4);
-              }
+                grid = setCostAt(grid, gridX, gridY, 10);
+
+                if (x === 0) {
+                    grid = setCostAt(grid, gridX - 1, gridY, 10);
+                    grid = setCostAt(grid, gridX - 2, gridY, 4);
+                }
+                if (x === MACHINE.WIDTH - 1) {
+                    grid = setCostAt(grid, gridX + 1, gridY, 10);
+                    grid = setCostAt(grid, gridX + 2, gridY, 4);
+                }
+                if (y === 0) {
+                    grid = setCostAt(grid, gridX, gridY - 1, 10);
+                    grid = setCostAt(grid, gridX, gridY - 2, 4);
+                }
+                if (y === MACHINE.HEIGHT - 1) {
+                    grid = setCostAt(grid, gridX, gridY + 1, 10);
+                    grid = setCostAt(grid, gridX, gridY + 2, 4);
+                }
             }
         }
     }

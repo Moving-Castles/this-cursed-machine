@@ -3,7 +3,7 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 290897
+    "gasUsed": 290992
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 141796
+    "gasUsed": 141746
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",

@@ -331,8 +331,8 @@ contract ResolveSystemTest is BaseTest {
 
     // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
     world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
-    // Fill depot 1 with 10000 PURE_FAT
-    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PURE_FAT);
+    // Fill depot 1 with 10000 CONGEALED_FAT
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
 
     // Connect depot 0 to inlet 0
     world.attachDepot(depotsInPod[0], inletEntities[0]);
@@ -368,12 +368,12 @@ contract ResolveSystemTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
     assertEq(Amount.get(depotsInPod[0]), 11000);
 
-    // Depot 1 should have 1000 MATERIAL_TYPE.PURE_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    // Depot 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
     assertEq(Amount.get(depotsInPod[1]), 1000);
 
-    // Depot 2 should have 9000 MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP
-    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
+    // Depot 2 should have 9000 MATERIAL_TYPE.AESOP_SOAP
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_SOAP));
     assertEq(Amount.get(depotsInPod[2]), 9000);
   }
 
@@ -384,8 +384,8 @@ contract ResolveSystemTest is BaseTest {
 
     // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
     world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
-    // Fill depot 1 with 10000 PURE_FAT
-    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PURE_FAT);
+    // Fill depot 1 with 10000 CONGEALED_FAT
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
 
     // Connect depot 0 to inlet 0
     world.attachDepot(depotsInPod[0], inletEntities[0]);
@@ -427,12 +427,12 @@ contract ResolveSystemTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
     assertEq(Amount.get(depotsInPod[0]), 11000);
 
-    // Depot 1 should have 1000 MATERIAL_TYPE.PURE_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    // Depot 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
     assertEq(Amount.get(depotsInPod[1]), 1000);
 
-    // Depot 2 should have 4500 MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP
-    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP));
+    // Depot 2 should have 4500 MATERIAL_TYPE.AESOP_SOAP
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_SOAP));
     assertEq(Amount.get(depotsInPod[2]), 4500);
   }
 
@@ -443,8 +443,8 @@ contract ResolveSystemTest is BaseTest {
 
     // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
     world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
-    // Fill depot 1 with 10000 PURE_FAT
-    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PURE_FAT);
+    // Fill depot 1 with 10000 CONGEALED_FAT
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
 
     // Connect depot 0 to inlet 0
     world.attachDepot(depotsInPod[0], inletEntities[0]);
@@ -471,12 +471,12 @@ contract ResolveSystemTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
     assertEq(Amount.get(depotsInPod[0]), 20000);
 
-    // Depot 1 should have 1000 MATERIAL_TYPE.PURE_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PURE_FAT));
+    // Depot 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
     assertEq(Amount.get(depotsInPod[1]), 1000);
 
-    // Depot 2 should have 9000 MATERIAL_TYPE.PURE_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.PURE_FAT));
+    // Depot 2 should have 9000 MATERIAL_TYPE.CONGEALED_FAT
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
     assertEq(Amount.get(depotsInPod[2]), 9000);
   }
 }

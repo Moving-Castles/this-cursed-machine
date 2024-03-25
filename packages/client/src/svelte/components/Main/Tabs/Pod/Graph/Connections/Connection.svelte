@@ -7,9 +7,9 @@
 
   let hover = false
 
-  console.log("connection", connection)
+  // $: console.log('connection', connection)
 
-  const carrying = connection?.products.length > 0
+  $: carrying = connection?.products.length > 0
 
   const onMouseEnter = () => {
     if (!carrying) return
@@ -70,6 +70,10 @@
 
     &.carrying {
       stroke: var(--color-active);
+
+      &.hover {
+        stroke: #00ff00;
+      }
     }
 
     &.hover {

@@ -25,26 +25,31 @@ library LibEntity {
     // MIXER:         2 IN, 1 OUT
     // DRYER:         1 IN, 1 OUT
     // BOILER:        1 IN, 1 OUT
-    // CENTRIFUGE:    1 IN, 1 OUT
-    // GRINDER:       1 IN, 1 OUT
-    // RAT_CAGE:      1 IN, 1 OUT
-    // MEALWORM_VAT:  1 IN, 1 OUT
+    // CENTRIFUGE:    1 IN, 2 OUT
+    // GRINDER:       1 IN, 2 OUT
+    // RAT_CAGE:      1 IN, 2 OUT
+    // MEALWORM_VAT:  1 IN, 2 OUT
 
     if (_machineType == MACHINE_TYPE.INLET) {
+      // 0 IN, 1 OUT
       IncomingConnections.set(entity, new bytes32[](0));
       OutgoingConnections.set(entity, new bytes32[](1));
     } else if (_machineType == MACHINE_TYPE.OUTLET) {
+      // 1 IN, 0 OUT
       IncomingConnections.set(entity, new bytes32[](1));
       OutgoingConnections.set(entity, new bytes32[](0));
-    } else if (_machineType == MACHINE_TYPE.SPLITTER) {
-      IncomingConnections.set(entity, new bytes32[](1));
-      OutgoingConnections.set(entity, new bytes32[](2));
     } else if (_machineType == MACHINE_TYPE.MIXER) {
+      // 2 IN, 1 OUT
       IncomingConnections.set(entity, new bytes32[](2));
       OutgoingConnections.set(entity, new bytes32[](1));
-    } else {
+    } else if (_machineType == MACHINE_TYPE.DRYER || _machineType == MACHINE_TYPE.BOILER) {
+      // 1 IN, 1 OUT
       IncomingConnections.set(entity, new bytes32[](1));
       OutgoingConnections.set(entity, new bytes32[](1));
+    } else {
+      // 1 IN, 2 OUT
+      IncomingConnections.set(entity, new bytes32[](1));
+      OutgoingConnections.set(entity, new bytes32[](2));
     }
 
     return entity;

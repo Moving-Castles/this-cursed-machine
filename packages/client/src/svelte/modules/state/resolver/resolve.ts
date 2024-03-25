@@ -78,6 +78,8 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
       // Gather all the inputs for the current machine.
       const currentInputs = inputs.filter(input => input.machineId === machineKey)
 
+      // console.log('currentInputs', currentInputs)
+
       // Skip if node has no input
       if (currentInputs.length === 0) return
 
@@ -93,6 +95,8 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
 
       // Process the inputs of the machine to get the outputs
       const currentOutputs = process(machine.machineType, currentInputs, recipes)
+
+      // console.log('currentOutputs', currentOutputs)
 
       // Save to patchOutputs
       for (let k = 0; k < currentOutputs.length; k++) {

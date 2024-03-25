@@ -1,7 +1,7 @@
 import { defineWorld } from "@latticexyz/world";
 import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, MATERIAL_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
 
-export const enums = {
+const enums = {
     ENTITY_TYPE: ENTITY_TYPE_ARRAY,
     MACHINE_TYPE: MACHINE_TYPE_ARRAY,
     MATERIAL_TYPE: MATERIAL_TYPE_ARRAY,
@@ -95,7 +95,7 @@ export default defineWorld({
             schema: {
                 machineType: "MACHINE_TYPE",
                 input: "uint256",
-                output: "MATERIAL_TYPE"
+                outputs: "uint8[2]"
             }
         }
     },

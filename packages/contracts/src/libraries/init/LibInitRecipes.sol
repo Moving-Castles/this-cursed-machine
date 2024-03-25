@@ -6,23 +6,186 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 
 library LibInitRecipes {
   function init() internal {
-    // Dryer recipes
-    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.BLOOD), MATERIAL_TYPE.BLOOD_MEAL);
-    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.PISS), MATERIAL_TYPE.AMMONIA);
-    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE), MATERIAL_TYPE.PURE_FAT);
+    /*//////////////////////////////////////////////////////////////
+                                 PLAYER
+    //////////////////////////////////////////////////////////////*/
 
-    // Boiler recipes
-    Recipe.set(MACHINE_TYPE.BOILER, uint256(MATERIAL_TYPE.PISS), MATERIAL_TYPE.NESTLE_PURE_LIFE_BOTTLED_WATER);
-    Recipe.set(MACHINE_TYPE.BOILER, uint256(MATERIAL_TYPE.BLOOD), MATERIAL_TYPE.COAGULATED_BLOOD_CUBES);
-    Recipe.set(MACHINE_TYPE.BOILER, uint256(MATERIAL_TYPE.BUG), MATERIAL_TYPE.CSX_INDUSTRIAL_GREASE);
+    Recipe.set(
+      MACHINE_TYPE.PLAYER,
+      uint256(MATERIAL_TYPE.BUG),
+      [uint8(MATERIAL_TYPE.PISS), uint8(MATERIAL_TYPE.BLOOD)]
+    );
 
-    // Mixer recipes
+    Recipe.set(
+      MACHINE_TYPE.PLAYER,
+      uint256(MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE),
+      [uint8(MATERIAL_TYPE.PISS), uint8(MATERIAL_TYPE.BLOOD_CLOT)]
+    );
 
-    // AMMONIA + PURE_FAT => AESOP_ORGANIC_HAND_SOAP
+    /*//////////////////////////////////////////////////////////////
+                                 DRYER
+    //////////////////////////////////////////////////////////////*/
+
+    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.BUG), [uint8(MATERIAL_TYPE.DUST), uint8(MATERIAL_TYPE.NONE)]);
+
+    Recipe.set(MACHINE_TYPE.DRYER, uint256(MATERIAL_TYPE.PISS), [uint8(MATERIAL_TYPE.UREA), uint8(MATERIAL_TYPE.NONE)]);
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.UREA),
+      [uint8(MATERIAL_TYPE.FERTILIZER), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.EVIAN),
+      [uint8(MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.BLOOD),
+      [uint8(MATERIAL_TYPE.BLOOD_CLOT), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.BLOOD_CLOT),
+      [uint8(MATERIAL_TYPE.BLOOD_MEAL), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.DUST),
+      [uint8(MATERIAL_TYPE.ORGANIC_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT),
+      [uint8(MATERIAL_TYPE.CONGEALED_FAT), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.DRYER,
+      uint256(MATERIAL_TYPE.CONGEALED_FAT),
+      [uint8(MATERIAL_TYPE.RENDERED_FAT), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    /*//////////////////////////////////////////////////////////////
+                                 BOILER
+    //////////////////////////////////////////////////////////////*/
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.BUG),
+    //   [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.BUG),
+    //   [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.CONGEALED_FAT),
+    //   [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.UREA),
+    //   [uint8(MATERIAL_TYPE.AMMONIA), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE),
+    //   [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.MEDICAL_WASTE),
+    //   [uint8(MATERIAL_TYPE.INSULIN), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.INSULIN),
+    //   [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.PISS),
+    //   [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.EVIAN),
+    //   [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.BLOOD_CLOT),
+    //   [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.BLOOD_MEAL),
+    //   [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.BLOOD),
+    //   [uint8(MATERIAL_TYPE.ORGANIC_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.ORGANIC_WASTE),
+    //   [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.HEMATURIC_FLUID),
+    //   [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    // Recipe.set(
+    //   MACHINE_TYPE.BOILER,
+    //   uint256(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT),
+    //   [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
+    // );
+
+    /*//////////////////////////////////////////////////////////////
+                                 MIXER
+    //////////////////////////////////////////////////////////////*/
+
     Recipe.set(
       MACHINE_TYPE.MIXER,
-      LibUtils.getUniqueIdentifier(uint8(MATERIAL_TYPE.AMMONIA), uint8(MATERIAL_TYPE.PURE_FAT)),
-      MATERIAL_TYPE.AESOP_ORGANIC_HAND_SOAP
+      LibUtils.getUniqueIdentifier(uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.PISS)),
+      [uint8(MATERIAL_TYPE.HEMATURIC_FLUID), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.MIXER,
+      LibUtils.getUniqueIdentifier(uint8(MATERIAL_TYPE.CONGEALED_FAT), uint8(MATERIAL_TYPE.AMMONIA)),
+      [uint8(MATERIAL_TYPE.AESOP_SOAP), uint8(MATERIAL_TYPE.NONE)]
+    );
+
+    Recipe.set(
+      MACHINE_TYPE.MIXER,
+      LibUtils.getUniqueIdentifier(uint8(MATERIAL_TYPE.CONGEALED_FAT), uint8(MATERIAL_TYPE.BLOOD_CLOT)),
+      [uint8(MATERIAL_TYPE.BLOOD_SAUSAGE), uint8(MATERIAL_TYPE.NONE)]
     );
   }
 }
