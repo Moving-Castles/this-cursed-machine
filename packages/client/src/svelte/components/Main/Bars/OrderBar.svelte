@@ -2,7 +2,7 @@
   import { blockNumber } from "@modules/network"
   import {
     player,
-    activeOrders,
+    availableOrders,
     orders,
     playerPod,
   } from "@modules/state/base/stores"
@@ -22,7 +22,7 @@
   let currentOrder: Order | null = null
   $: currentOrder = $player.tutorial
     ? $orders[$playerPod.currentOrder]
-    : $activeOrders[$playerPod.currentOrder]
+    : $availableOrders[$playerPod.currentOrder]
 </script>
 
 <div class="order-bar">

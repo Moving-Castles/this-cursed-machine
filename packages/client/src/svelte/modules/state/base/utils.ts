@@ -43,10 +43,21 @@ export function getRecipes(entities: Entities): Recipe[] {
     return recipes
 }
 
-export function getActiveOrders(orders: Orders, blockNumber: number): Orders {
+export function getAvailableOrders(orders: Orders, blockNumber: number, playerInTutorial: boolean, tutorialLevel: number): Orders {
+
+    // If not in tutorial, return all orders that are not expired
+    if (!playerInTutorial) {
+        return Object.fromEntries(
+            Object.entries(orders).filter(
+                ([, order]) => order.order ? order.order.expirationBlock > blockNumber : false
+            )
+        )
+    }
+
+    // If in tutorial, return only the orders that are in the tutorial level
     return Object.fromEntries(
         Object.entries(orders).filter(
-            ([, order]) => order.order ? order.order.expirationBlock > blockNumber : false
+            ([, order]) => order.order ? order.tutorialLevel == tutorialLevel : false
         )
     )
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { playerPod, player } from "@modules/state/base/stores"
-  import { activeOrders } from "@modules/state/base/stores"
+  import { availableOrders, orders } from "@modules/state/base/stores"
 
   import OrderItem from "./OrderItem.svelte"
 
@@ -10,7 +10,7 @@
 <div class="container">
   <div>ORDERS</div>
   <div class="order-list">
-    {#each Object.entries($activeOrders) as [key, order]}
+    {#each Object.entries($availableOrders) as [key, order]}
       <OrderItem
         {key}
         {order}

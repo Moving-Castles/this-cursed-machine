@@ -1,12 +1,6 @@
 #######
 LEVEL 1
 #######
-Resource: 200000 BUG
-Goal: 20000 BLOOD
-
-- Connect inlet to player
-- Connect player (blood) to outlet
-- Wait
 
 * * * * * * * * * * * * * * * * * * *
 * * * * * * * * * * * * * * * * * * *
@@ -16,12 +10,6 @@ Goal: 20000 BLOOD
 #######
 LEVEL 2
 #######
-Resource: 200000 BUG
-Goal: 50000 PISS
-
-- Connect inlet to player
-- Connect player (piss) to outlet
-- Wait
 
 * * * * * * * * * * * * * * * * * * *
 * * * * * * * * * * * * * * * * * * *
@@ -31,58 +19,6 @@ Goal: 50000 PISS
 #######
 LEVEL 3
 #######
-Resource: 200000 BUG
-Goal: 50000 NESTLE_PURE_LIFE_BOTTLED_WATER
-
-- Connect inlet to player
-- Build boiler
-- Connect player (piss) to boiler
-- Connect boiler to outlet
-- Wait
-
-* * * * * * * * * * * * * * * * * * *
-* * * * * * * * * * * * * * * * * * *
-* * * * * * * * * * * * * * * * * * *
-
-
-#######
-LEVEL 4
-#######
-Resource: 200000 BUG
-Goal: 100000 PURE_FAT
-
-- Build boiler
-- Build dryer
-- Connect inlet to boiler
-- Connect boiler to dryer
-- Connect dryer to outlet
-- Wait
-
-* * * * * * * * * * * * * * * * * * *
-* * * * * * * * * * * * * * * * * * *
-* * * * * * * * * * * * * * * * * * *
-
-
-#######
-LEVEL 5
-#######
-Resource: 200000 BUG
-Goal: 50000 AESOP_ORGANIC_HAND_SOAP
-
-- Build Splitter
-- Build boiler
-- Build dryer one
-- Build dryer two
-- Build mixer
-- Connect inlet to Splitter
-- Connect splitter to player
-- Connect player (piss) to dryer one
-- Connect dryer one to mixer
-- Connect splitter to boiler
-- Connect boiler to dryer two
-- Connect dryer two to mixer
-- Connect mixer to outlet
-- Wait
 
 * * * * * * * * * * * * * * * * * * *
 * * * * * * * * * * * * * * * * * * *

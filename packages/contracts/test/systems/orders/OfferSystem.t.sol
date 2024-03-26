@@ -42,8 +42,6 @@ contract OfferSystemTest is BaseTest {
 
     fixedEntities = FixedEntities.get(podEntity);
 
-    tutorialLevels = TutorialOrders.get();
-
     vm.stopPrank();
   }
 

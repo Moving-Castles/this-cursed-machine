@@ -57,13 +57,13 @@
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testCreateOffer",
     "name": "Create offer",
-    "gasUsed": 125567
+    "gasUsed": 125566
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Accept order",
-    "gasUsed": 55818
+    "gasUsed": 52468
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -75,13 +75,13 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order",
-    "gasUsed": 149805
+    "gasUsed": 149809
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 157513
+    "gasUsed": 319897
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
@@ -93,6 +93,6 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1672228
+    "gasUsed": 1611927
   }
 ]

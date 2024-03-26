@@ -39,12 +39,6 @@ export default defineWorld({
         // ...
         Tutorial: "bool",
         TutorialLevel: "uint32",
-        TutorialOrders: {
-            key: [],
-            schema: {
-                value: "bytes32[]"
-            }
-        },
         Order: {
             key: ["key"],
             schema: {

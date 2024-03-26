@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Order, TutorialOrders, CurrentOrder, Tutorial, BuildIndex, BuildTracker, DepotConnection } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, DepotConnection } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_DEPOTS } from "../../constants.sol";
@@ -52,14 +52,12 @@ contract StartSystem is System {
     BuildTracker.set(podEntity, new uint32[](uint(type(MACHINE_TYPE).max) + 1));
 
     // Go to first tutorial level
-    bytes32 nextTutorialLevel = TutorialOrders.get()[0];
     TutorialLevel.set(playerEntity, 0);
     Tutorial.set(playerEntity, true);
-    CurrentOrder.set(podEntity, nextTutorialLevel);
 
     // Fill first depot, based on the config of the first tutorial level
-    MaterialType.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceMaterialType);
-    Amount.set(depotsInPod[0], Order.get(nextTutorialLevel).resourceAmount);
+    MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
+    Amount.set(depotsInPod[0], 10000);
 
     return podEntity;
   }

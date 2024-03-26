@@ -51,9 +51,11 @@
     </div>
 
     <div class="section time">
-      {blocksToReadableTime(
-        Number(order.order.expirationBlock) - Number($blockNumber),
-      )}
+      {#if Number(order.order.expirationBlock) > 0}
+        {blocksToReadableTime(
+          Number(order.order.expirationBlock) - Number($blockNumber),
+        )}
+      {/if}
     </div>
 
     {#if !completed}

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, Order, OrderData, Tutorial } from "../codegen/index.sol";
+import { EntityType, Order, OrderData, Tutorial, TutorialLevel } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 
 library LibOrder {
@@ -11,6 +11,7 @@ library LibOrder {
     MATERIAL_TYPE _goalMaterial,
     uint32 _goalAmount,
     bool _isTutorial,
+    uint32 _tutorialLevel,
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
@@ -32,7 +33,10 @@ library LibOrder {
       })
     );
 
-    if (_isTutorial) Tutorial.set(orderEntity, true);
+    if (_isTutorial) {
+      Tutorial.set(orderEntity, true);
+      TutorialLevel.set(orderEntity, _tutorialLevel);
+    }
 
     return orderEntity;
   }

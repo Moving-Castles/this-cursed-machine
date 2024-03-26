@@ -19,7 +19,6 @@ declare global {
     spawnIndex?: number
     tutorial?: boolean
     tutorialLevel?: number
-    tutorialOrders?: string[]
     order?: OrderData
     offer?: OfferData
     completed?: string[]
@@ -127,6 +126,7 @@ declare global {
     entityType: ENTITY_TYPE.ORDER
     order: OrderData
     tutorial?: boolean
+    tutorialLevel?: number
     completed: string[] // Players that have completed the order
   }
 

@@ -8,7 +8,7 @@ import {
   filterByMachinetype,
   filterByCarriedBy,
   getRecipes,
-  getActiveOrders,
+  getAvailableOrders,
   getExpiredOrders
 } from "./utils"
 import { writable, derived } from "svelte/store"
@@ -58,7 +58,7 @@ export const depots = derived([entities, player],
 export const players = derived(entities, $entities => filterByMachinetype($entities, MACHINE_TYPE.PLAYER) as Players)
 
 export const orders = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.ORDER) as Orders)
-export const activeOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getActiveOrders($orders, $blockNumber))
+export const availableOrders = derived([orders, blockNumber, player], ([$orders, $blockNumber, $player]) => getAvailableOrders($orders, $blockNumber, $player.tutorial, $player.tutorialLevel ?? 0))
 export const expiredOrders = derived([orders, blockNumber], ([$orders, $blockNumber]) => getExpiredOrders($orders, $blockNumber))
 
 export const offers = derived(entities, $entities => filterByEntitytype($entities, ENTITY_TYPE.OFFER) as Offers)

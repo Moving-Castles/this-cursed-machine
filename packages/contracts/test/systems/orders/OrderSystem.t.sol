@@ -42,8 +42,6 @@ contract OrderSystemTest is BaseTest {
 
     fixedEntities = FixedEntities.get(podEntity);
 
-    tutorialLevels = TutorialOrders.get();
-
     vm.stopPrank();
   }
 
@@ -81,7 +79,7 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    vm.expectRevert("player in tutorial");
+    vm.expectRevert("not tutorial order");
     world.accept(orderEntity);
 
     vm.stopPrank();
@@ -126,7 +124,15 @@ contract OrderSystemTest is BaseTest {
   function testShip() public {
     setUp();
 
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD, 2000, 1000, ONE_HOUR, 10);
+    vm.stopPrank();
+
     vm.startPrank(alice);
+
+    world.graduate();
+
+    world.accept(orderEntity);
 
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
@@ -150,25 +156,6 @@ contract OrderSystemTest is BaseTest {
     startGasReport("Ship");
     world.ship(depotsInPod[1]);
     endGasReport();
-
-    vm.stopPrank();
-  }
-
-  function testShip2() public {
-    setUp();
-
-    prankAdmin();
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 1000, ONE_HOUR, 10);
-    vm.stopPrank();
-
-    vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.graduate();
-
-    world.accept(orderEntity);
-
-    world.ship(depotsInPod[0]);
 
     assertEq(CurrentOrder.get(podEntity), bytes32(0));
     assertEq(EarnedPoints.get(playerEntity), 1000);

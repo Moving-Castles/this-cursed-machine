@@ -24,7 +24,7 @@ contract CreateOrder is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
 
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.PISS, 50000, false, 6969, ONE_HOUR, 10);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.PISS, 50000, false, 0, 6969, ONE_HOUR, 10);
 
     vm.stopBroadcast();
   }

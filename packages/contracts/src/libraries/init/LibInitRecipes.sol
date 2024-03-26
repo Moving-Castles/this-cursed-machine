@@ -76,95 +76,95 @@ library LibInitRecipes {
                                  BOILER
     //////////////////////////////////////////////////////////////*/
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.BUG),
-    //   [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.BUG),
+      [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.BUG),
-    //   [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.BUG),
+      [uint8(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.CONGEALED_FAT),
-    //   [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.CONGEALED_FAT),
+      [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.UREA),
-    //   [uint8(MATERIAL_TYPE.AMMONIA), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.UREA),
+      [uint8(MATERIAL_TYPE.AMMONIA), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE),
-    //   [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE),
+      [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.MEDICAL_WASTE),
-    //   [uint8(MATERIAL_TYPE.INSULIN), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.MEDICAL_WASTE),
+      [uint8(MATERIAL_TYPE.INSULIN), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.INSULIN),
-    //   [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.INSULIN),
+      [uint8(MATERIAL_TYPE.MEDICAL_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.PISS),
-    //   [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.PISS),
+      [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.EVIAN),
-    //   [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.EVIAN),
+      [uint8(MATERIAL_TYPE.EVIAN), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.BLOOD_CLOT),
-    //   [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.BLOOD_CLOT),
+      [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.BLOOD_MEAL),
-    //   [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.BLOOD_MEAL),
+      [uint8(MATERIAL_TYPE.BLOOD), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.BLOOD),
-    //   [uint8(MATERIAL_TYPE.ORGANIC_WASTE), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.BLOOD),
+      [uint8(MATERIAL_TYPE.ORGANIC_WASTE), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.ORGANIC_WASTE),
-    //   [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.ORGANIC_WASTE),
+      [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.HEMATURIC_FLUID),
-    //   [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.HEMATURIC_FLUID),
+      [uint8(MATERIAL_TYPE.CONTAMINATED_WATER), uint8(MATERIAL_TYPE.NONE)]
+    );
 
-    // Recipe.set(
-    //   MACHINE_TYPE.BOILER,
-    //   uint256(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT),
-    //   [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
-    // );
+    Recipe.set(
+      MACHINE_TYPE.BOILER,
+      uint256(MATERIAL_TYPE.INDUSTRIAL_LUBRICANT),
+      [uint8(MATERIAL_TYPE.ANTIFREEZE), uint8(MATERIAL_TYPE.NONE)]
+    );
 
     /*//////////////////////////////////////////////////////////////
                                  MIXER

@@ -15,7 +15,6 @@ import { BuildTracker } from "./tables/BuildTracker.sol";
 import { SpawnIndex } from "./tables/SpawnIndex.sol";
 import { Tutorial } from "./tables/Tutorial.sol";
 import { TutorialLevel } from "./tables/TutorialLevel.sol";
-import { TutorialOrders } from "./tables/TutorialOrders.sol";
 import { Order, OrderData } from "./tables/Order.sol";
 import { Offer, OfferData } from "./tables/Offer.sol";
 import { Completed } from "./tables/Completed.sol";

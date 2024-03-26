@@ -32,22 +32,23 @@
     [TABS.ORDERS]: {
       label: "Orders",
       component: Orders,
-      enabled: $player.tutorial ? false : true,
+      // enabled: $player.tutorial ? false : true,
+      enabled: true,
     },
     [TABS.SHOP]: {
       label: "Shop",
       component: Shop,
-      enabled: $player.tutorial ? false : true,
+      enabled: true,
     },
     [TABS.CHAT]: {
       label: "Chat",
       component: Chat,
-      enabled: $player.tutorial ? false : true,
+      enabled: true,
     },
     [TABS.EXIT]: {
       label: "Exit",
       component: Exit,
-      enabled: $player.tutorial ? false : true,
+      enabled: true,
     },
   }
 

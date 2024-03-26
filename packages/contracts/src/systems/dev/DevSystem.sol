@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CurrentOrder, TutorialOrders, CarriedBy, DepotsInPod, Amount, MaterialType, Order, Tutorial, Name } from "../../codegen/index.sol";
+import { TutorialLevel, CurrentOrder, CarriedBy, DepotsInPod, Amount, MaterialType, Order, Tutorial, Name } from "../../codegen/index.sol";
 import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
@@ -14,8 +14,6 @@ contract DevSystem is System {
     bytes32 podEntity = CarriedBy.get(playerEntity);
     // Set level
     TutorialLevel.set(playerEntity, _level);
-    // Set current order
-    CurrentOrder.set(podEntity, TutorialOrders.get()[_level]);
     // Fill depot with tutorial order
     MaterialType.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceMaterialType);
     Amount.set(DepotsInPod.get(podEntity)[0], Order.get(CurrentOrder.get(podEntity)).resourceAmount);
