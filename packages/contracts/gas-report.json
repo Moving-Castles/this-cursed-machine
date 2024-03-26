@@ -15,13 +15,19 @@
     "file": "test/systems/machine-network/DestroySystem.t.sol",
     "test": "testDestroy",
     "name": "Destroy splitter",
-    "gasUsed": 117731
+    "gasUsed": 126674
   },
   {
     "file": "test/systems/machine-network/DisconnectSystem.t.sol",
     "test": "testDisconnect",
     "name": "Disconnect player from splitter",
     "gasUsed": 72162
+  },
+  {
+    "file": "test/systems/machine-network/ResetSystem.t.sol",
+    "test": "testReset",
+    "name": "Reset pod",
+    "gasUsed": 252368
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",

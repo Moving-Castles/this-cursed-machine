@@ -1,19 +1,21 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { resolve as sendResolve } from "@modules/action";
+import { reset as sendReset } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
 
 async function execute() {
     try {
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Starting resolver...")
-        const action = sendResolve()
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Destroying everything...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "THIS CANNOT BE UNDONE...")
+        // ...
+        const action = sendReset()
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Resolving network...")
-        await waitForCompletion(action, loadingLine);
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Destruction in progress...")
+        await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
         // ...
@@ -26,11 +28,11 @@ async function execute() {
     }
 }
 
-export const resolve: Command<[]> = {
-    id: COMMAND.RESOLVE,
-    public: false,
-    name: "resolve",
-    alias: "+",
-    description: "Resolve the network",
+export const reset: Command<[]> = {
+    id: COMMAND.RESET,
+    public: true,
+    name: "reset",
+    alias: "r",
+    description: "Reset pod",
     fn: execute,
 }

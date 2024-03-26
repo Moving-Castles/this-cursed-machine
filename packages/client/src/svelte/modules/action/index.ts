@@ -16,6 +16,7 @@ export enum WorldFunctions {
   Accept = "accept",
   Unaccept = "unaccept",
   Buy = "buy",
+  Reset = "reset",
   // Testing
   Resolve = "resolve",
   Reward = "reward",
@@ -59,6 +60,10 @@ export function destroy(machineEntity: string) {
 
 export function resolve() {
   return addToSequencer(WorldFunctions.Resolve, [])
+}
+
+export function reset() {
+  return addToSequencer(WorldFunctions.Reset, [])
 }
 
 export function name(name: string) {

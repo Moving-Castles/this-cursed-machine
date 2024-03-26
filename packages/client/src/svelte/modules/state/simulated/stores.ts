@@ -236,6 +236,8 @@ export function calculateSimulatedConnections(simulatedMachines: SimulatedMachin
             const sourceMachine = simulatedMachines[sourceAddress]
             const targetMachine = simulatedMachines[targetAddress]
 
+            if (!sourceMachine || !targetMachine) return connections
+
             const targetPortIndex = targetMachine.incomingConnections.findIndex(connection => connection === sourceAddress)
 
             if (!sourceMachine) return

@@ -6,6 +6,7 @@ import { build } from "@components/Main/Terminal/commands/build";
 import { connect } from "@components/Main/Terminal/commands/connect";
 import { disconnect } from "@components/Main/Terminal/commands/disconnect";
 import { destroy } from "@components/Main/Terminal/commands/destroy";
+import { reset } from "@components/Main/Terminal/commands/reset";
 import { start } from "@components/Main/Terminal/commands/start";
 import { attachDepot } from "@components/Main/Terminal/commands/attachDepot";
 import { detachDepot } from "@components/Main/Terminal/commands/detachDepot";
@@ -26,6 +27,7 @@ export const commands: Command[] = [
     attachDepot,
     detachDepot,
     emptyDepot,
+    reset,
     ship,
     help,
     blink,

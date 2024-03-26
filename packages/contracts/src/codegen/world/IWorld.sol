@@ -10,6 +10,7 @@ import { IBuildSystem } from "./IBuildSystem.sol";
 import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
 import { IDisconnectSystem } from "./IDisconnectSystem.sol";
+import { IResetSystem } from "./IResetSystem.sol";
 import { IResolveSystem } from "./IResolveSystem.sol";
 import { IDepotSystem } from "./IDepotSystem.sol";
 import { IOfferSystem } from "./IOfferSystem.sol";
@@ -33,6 +34,7 @@ interface IWorld is
   IConnectSystem,
   IDestroySystem,
   IDisconnectSystem,
+  IResetSystem,
   IResolveSystem,
   IDepotSystem,
   IOfferSystem,

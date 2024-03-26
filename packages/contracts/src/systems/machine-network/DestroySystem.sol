@@ -39,10 +39,7 @@ contract DestroySystem is System {
     }
 
     // Destroy machine entity
-    LibEntity.destroy(_machineEntity);
-
-    // Remove it from the list of machines
-    MachinesInPod.set(podEntity, LibUtils.removeFromArray(MachinesInPod.get(podEntity), _machineEntity));
+    LibEntity.destroy(podEntity, _machineEntity);
   }
 
   function _removeOutgoingConnection(bytes32 _sourceMachine, bytes32 _connectedMachine) internal {
