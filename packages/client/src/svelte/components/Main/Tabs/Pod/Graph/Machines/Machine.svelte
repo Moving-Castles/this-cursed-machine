@@ -1,12 +1,25 @@
 <script lang="ts">
+  import type { GraphMachine } from "../types"
+
   import { fade } from "svelte/transition"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
-  import type { GraphMachine } from "../types"
   import { CELL, MACHINE } from "../constants"
-  export let machine: GraphMachine
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
+  import { inspecting } from "@modules/ui/stores"
+
+  export let machine: GraphMachine
+
+  const onMouseEnter = () => {
+    inspecting.set({ type: "machine", machine })
+    // hover = true
+  }
+
+  const onMouseLeave = () => {
+    inspecting.set(null)
+    // hover = false
+  }
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
@@ -67,6 +80,8 @@
 <div
   class="machine {MACHINE_TYPE[machine.machineType]}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  on:mouseenter={onMouseEnter}
+  on:mouseleave={onMouseLeave}
   in:fade
   {style}
 >
@@ -92,6 +107,7 @@
     background-image: url("/images/conc.jpg");
     background-size: cover;
     border: 1px solid var(--background);
+    cursor: none;
 
     &.active {
       border: 1px solid var(--color-active);
