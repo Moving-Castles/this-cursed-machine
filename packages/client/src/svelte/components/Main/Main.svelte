@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { fade } from "svelte/transition"
   import { player } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
 
@@ -10,6 +11,7 @@
 
   import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
@@ -98,6 +100,9 @@
           <OrderBar />
         </div>
         <div class="tab-container">
+          {#if $tutorialProgress == 0}
+            <div class="dim" out:fade={{duration: 100}} />
+          {/if}
           <!-- Render the CurrentComponent if it's not null -->
           {#if currentTabComponent}
             <svelte:component this={currentTabComponent} />
@@ -124,6 +129,13 @@
     opacity: 0.6;
     background-size: cover;
     // mix-blend-mode: difference;
+  }
+
+  .dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9;
   }
 
   .split-screen {

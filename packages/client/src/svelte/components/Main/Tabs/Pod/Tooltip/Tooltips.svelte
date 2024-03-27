@@ -16,12 +16,14 @@
       {/each}
     {:else if $inspecting.type === "machine"}
       {MACHINE_TYPE[$inspecting.machine.machineType]}<br />
-      {#each $inspecting.machine.products as product}
-        <div class="">
-          Producing: {MATERIAL_TYPE[product.materialType]}<br />
-          Flow rate: {product.amount / 100}
-        </div>
-      {/each}
+      {#if $inspecting.machine?.products}
+        {#each $inspecting.machine?.products as product}
+          <div class="">
+            Producing: {MATERIAL_TYPE[product.materialType]}<br />
+            Flow rate: {product.amount / 100}
+          </div>
+        {/each}
+      {/if}
     {/if}
   </Tooltip>
 {/if}
