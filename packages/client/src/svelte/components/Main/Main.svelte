@@ -45,11 +45,6 @@
       component: Chat,
       enabled: true,
     },
-    [TABS.EXIT]: {
-      label: "Exit",
-      component: Exit,
-      enabled: true,
-    },
   }
 
   type ComponentType =
