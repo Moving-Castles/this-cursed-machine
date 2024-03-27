@@ -11,6 +11,7 @@
   import { initStaticContent } from "@modules/content"
   import { initSound } from "@modules/sound"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { messageToStumps } from "@modules/ui"
@@ -20,7 +21,9 @@
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"
   import Naming from "@components/Naming/Naming.svelte"
+  import Tutorial from "@components/Tutorial/Tutorial.svelte"
   import Toasts from "@modules/ui/toast/Toasts.svelte"
+  import Assistant from "@modules/ui/assistant/Assistant.svelte"
 
   const onMouseMove = e => {
     $mouseX = e.clientX
@@ -35,6 +38,8 @@
 
   const spawned = () => {
     clearTerminalOutput()
+    // Reset tutorial level
+    tutorialProgress.set(0)
     UIState.set(UI.READY)
   }
 
@@ -111,6 +116,7 @@
 
   {#if $UIState === UI.READY}
     <Main on:completed={completed} />
+    <Tutorial />
   {/if}
 
   {#if $UIState === UI.COMPLETED}
@@ -119,3 +125,4 @@
 </main>
 
 <Toasts />
+<Assistant />

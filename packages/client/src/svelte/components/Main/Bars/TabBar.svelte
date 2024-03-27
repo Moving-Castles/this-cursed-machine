@@ -33,6 +33,7 @@
       <button
         class:enabled={value.enabled}
         class:active={key === $activeTab}
+        class:pulse={index == 1}
         on:click={() => {
           playSound("tcm", "selectionEnter")
           activeTab.set(key)
@@ -82,6 +83,10 @@
           background: grey;
         }
 
+        &.pulse {
+          animation: pulse 0.8s infinite alternate ease-out;
+        }
+
         &.enabled {
           opacity: 1;
           pointer-events: all;
@@ -92,6 +97,17 @@
           }
         }
       }
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      background: grey;
+      // opacity: 1;
+    }
+    100% {
+      background: darkgrey;
+      // opacity: 0.7;
     }
   }
 </style>
