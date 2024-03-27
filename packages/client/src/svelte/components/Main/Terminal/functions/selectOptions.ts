@@ -6,6 +6,7 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
 import {
   simulatedMachines,
   simulatedConnections,
+  simulatedDepots,
 } from "@modules/state/simulated/stores"
 import { player, depots as depotsStore } from "@modules/state/base/stores"
 import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from "@components/Main/Terminal/"
@@ -190,7 +191,7 @@ function createSelectOptionsShip(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   // Only detached depots can be shipped
-  const availableDepots = Object.entries(get(depotsStore)).filter(([_, depot]) => depot.depotConnection === EMPTY_CONNECTION)
+  const availableDepots = Object.entries(get(simulatedDepots))
 
   selectOptions = availableDepots.map(([address, depot]) => {
 

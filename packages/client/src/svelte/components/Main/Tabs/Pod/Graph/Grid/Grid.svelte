@@ -32,8 +32,7 @@
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
       &[data-walkable="false"] {
-        background: rgba(0, 0, 0, 0.5);
-        border: 0.5px solid rgba(120, 120, 120, 0.09);
+        background: rgba(120, 120, 120, 0.72);
       }
     }
   }
