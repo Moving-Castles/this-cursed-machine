@@ -31,6 +31,10 @@
 
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
+      &[data-walkable="false"] {
+        background: black;
+      }
+
       // &[data-cost="1"] {
       //   background: black;
       // }
