@@ -32,7 +32,7 @@
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
       &[data-walkable="false"] {
-        background: black;
+        background: rgba(120, 120, 120, 0.72);
       }
 
       // &[data-cost="1"] {
