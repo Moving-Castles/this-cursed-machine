@@ -81,7 +81,7 @@ export async function typeWriteToTerminal(
  * @returns {Promise<void>} A promise that resolves when the loading line has been written to the terminal.
  */
 export async function loadingLine(index: number): Promise<void> {
-  const CHARACTER = "·"
+  const CHARACTER = "░▒"
   playSound("tcm", "TRX_wait_b")
   if (index === 1) {
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
