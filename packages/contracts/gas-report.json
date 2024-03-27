@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResetSystem.t.sol",
     "test": "testReset",
     "name": "Reset pod",
-    "gasUsed": 252368
+    "gasUsed": 252397
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",

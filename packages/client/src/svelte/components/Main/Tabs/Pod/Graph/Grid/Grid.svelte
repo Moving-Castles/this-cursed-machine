@@ -35,7 +35,7 @@
         // border: 1px solid red;
       }
       &[data-walkable="false"] {
-        background: rgba(120, 120, 120, 0.72);
+        background: rgba(120, 120, 120, 0.7);
       }
     }
   }

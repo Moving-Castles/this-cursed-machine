@@ -2,9 +2,9 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, FixedEntities, DepotsInPod, EarnedPoints } from "../../codegen/index.sol";
+import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, FixedEntities, FixedEntitiesData, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibToken } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOrder, LibToken, LibNetwork, LibReset } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 import { TUTORIAL_LEVELS } from "../../constants.sol";
 
@@ -52,7 +52,35 @@ contract OrderSystem is System {
 
     if (Tutorial.get(playerEntity)) {
       require(Tutorial.get(_orderEntity), "not tutorial order");
-      require(TutorialLevel.get(playerEntity) == TutorialLevel.get(_orderEntity), "wrong tutorial level");
+      uint32 playerTutorialLevel = TutorialLevel.get(playerEntity);
+      require(playerTutorialLevel == TutorialLevel.get(_orderEntity), "wrong tutorial level");
+
+      /*
+       * For didactic purposes, we wire up the pods for the tutorial levels
+       */
+      if (playerTutorialLevel == 0 || playerTutorialLevel == 1) {
+        FixedEntitiesData memory fixedEntities = FixedEntities.get(podEntity);
+        bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
+        // Attach depot 1 to inlet 1
+        DepotConnection.set(fixedEntities.inlets[0], depotsInPod[0]);
+        DepotConnection.set(depotsInPod[0], fixedEntities.inlets[0]);
+        // Attach depot 2 to outlet
+        DepotConnection.set(fixedEntities.outlet, depotsInPod[1]);
+        DepotConnection.set(depotsInPod[1], fixedEntities.outlet);
+        // Connect Inlet 1 to Player
+        OutgoingConnections.update(fixedEntities.inlets[0], 0, playerEntity);
+        IncomingConnections.update(playerEntity, 0, fixedEntities.inlets[0]);
+        // Disconnect Player
+        OutgoingConnections.update(playerEntity, 0, bytes32(0));
+        OutgoingConnections.update(playerEntity, 1, bytes32(0));
+        // Disconnect outlet
+        IncomingConnections.update(fixedEntities.outlet, 0, bytes32(0));
+        // Resolve
+        // LibNetwork.resolve(podEntity);
+      } else if (playerTutorialLevel == 2) {
+        // Reset pod
+        LibReset.reset(podEntity);
+      }
     }
 
     OrderData memory currentOrder = Order.get(_orderEntity);
