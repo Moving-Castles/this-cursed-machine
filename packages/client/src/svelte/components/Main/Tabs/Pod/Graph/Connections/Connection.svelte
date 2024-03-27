@@ -7,13 +7,11 @@
 
   let hover = false
 
-  // $: console.log('connection', connection)
-
   $: carrying = connection?.products.length > 0
 
   const onMouseEnter = () => {
     if (!carrying) return
-    inspecting.set(connection)
+    inspecting.set({ type: "connection", connection })
     hover = true
   }
 

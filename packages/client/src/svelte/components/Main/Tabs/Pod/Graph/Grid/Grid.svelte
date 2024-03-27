@@ -34,18 +34,6 @@
       &[data-walkable="false"] {
         background: rgba(120, 120, 120, 0.7);
       }
-
-      // &[data-cost="1"] {
-      //   background: black;
-      // }
-
-      // &[data-cost="4"] {
-      //   background: rgba(255, 255, 0, 0.5);
-      // }
-
-      // &[data-cost="10"] {
-      //   background: rgba(255, 0, 0, 0.5);
-      // }
     }
   }
 </style>
