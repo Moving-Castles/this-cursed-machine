@@ -2,8 +2,25 @@
   // import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import type { TabDefinitions } from "../types"
   export let tabList: TabDefinitions
+
+  const HIDDEN_CONDITIONS = {
+    0: 0,
+    1: 1,
+    2: 0,
+    3: 7,
+    4: 21,
+  }
+
+  const PULSE_CONDITIONS = {
+    0: [3],
+    1: [],
+    2: [1],
+    3: [],
+    4: [],
+  }
 
   function toggleTabByKeyboard(e: KeyboardEvent) {
     const keyPressed = e.key
@@ -28,15 +45,17 @@
 </script>
 
 <div class="tab-bar">
-  {#each Object.entries(tabList) as [key, value], index}
+  {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
     <div class="button-container">
       <button
         class:enabled={value.enabled}
         class:active={key === $activeTab}
-        class:pulse={index == 1}
+        class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
+        class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         on:click={() => {
           playSound("tcm", "selectionEnter")
           activeTab.set(key)
+          advanceTutorial(key, $tutorialProgress, "tab")
         }}
       >
         {value.label}
@@ -81,6 +100,10 @@
 
         &.active {
           background: grey;
+        }
+
+        &.hidden {
+          opacity: 0 !important;
         }
 
         &.pulse {

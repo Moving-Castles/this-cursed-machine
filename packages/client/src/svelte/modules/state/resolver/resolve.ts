@@ -5,7 +5,13 @@ import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
-import { organizePatches, consolidatePatches, createOutletDepotPatches, createInletDepotPatches, backtraceOutletConnection } from "./patches"
+import {
+  organizePatches,
+  consolidatePatches,
+  createOutletDepotPatches,
+  createInletDepotPatches,
+  backtraceOutletConnection,
+} from "./patches"
 
 const FLOW_RATE = 1000
 
@@ -13,11 +19,16 @@ const FLOW_RATE = 1000
  * Processes the materials through the network of machines until all machines are resolved.
  *
  * Should work the same as contracts/src/libraries/LibNetwork.sol:resolve
- * 
+ *
  * @returns Patches to be applied to the state to reflect the resolved state of the pod
  */
-export function resolve(machines: Machines, inlets: Machines, outlets: Machines, depots: Depots, recipes: Recipe[]): SimulatedEntities {
-
+export function resolve(
+  machines: Machines,
+  inlets: Machines,
+  outlets: Machines,
+  depots: Depots,
+  recipes: Recipe[]
+): SimulatedEntities {
   // Counter for the number of iterations over the network
   let iterationCounter = 0
 
@@ -36,26 +47,27 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
 
-  const inletDepots = Object.values(inlets).map(inlet => inlet?.depotConnection ?? null)
-  const outletDepots = Object.values(outlets).map(outlet => outlet?.depotConnection ?? null)
+  const inletDepots = Object.values(inlets).map(
+    inlet => inlet?.depotConnection ?? null
+  )
+  const outletDepots = Object.values(outlets).map(
+    outlet => outlet?.depotConnection ?? null
+  )
 
   // Abort early if neither inlets are connected to depot or if outlet is not connected to depot
   // if (inletDepots.every(depot => depot === null) || outletDepots.every(depot => depot === null)) return {} as SimulatedEntities
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
-
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
-
       // Skip if node is already resolved
       if (resolvedNodes.includes(machineKey)) return
 
       // Handle inlets
       if (machine.machineType === MACHINE_TYPE.INLET) {
-
         // Is it inlet one or two?
-        let inletIndex = machineKey == Object.keys(inlets)[0] ? 0 : 1;
+        let inletIndex = machineKey == Object.keys(inlets)[0] ? 0 : 1
 
         let depot = inletDepots[inletIndex]
 
@@ -71,12 +83,14 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
           sourceMachineId: null,
           materialType: depots[depot].materialType,
           amount: FLOW_RATE,
-          inletActive: newInletActive
+          inletActive: newInletActive,
         })
       }
 
       // Gather all the inputs for the current machine.
-      const currentInputs = inputs.filter(input => input.machineId === machineKey)
+      const currentInputs = inputs.filter(
+        input => input.machineId === machineKey
+      )
 
       // console.log('currentInputs', currentInputs)
 
@@ -85,7 +99,10 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
 
       // If this is a mixer and it has less than two inputs:
       // skip without marking as resolved to avoid missing the second input
-      if (machine.machineType === MACHINE_TYPE.MIXER && currentInputs.length < 2)
+      if (
+        machine.machineType === MACHINE_TYPE.MIXER &&
+        currentInputs.length < 2
+      )
         return
 
       // Save to patchInputs
@@ -94,7 +111,11 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
       }
 
       // Process the inputs of the machine to get the outputs
-      const currentOutputs = process(machine.machineType, currentInputs, recipes)
+      const currentOutputs = process(
+        machine.machineType,
+        currentInputs,
+        recipes
+      )
 
       // console.log('currentOutputs', currentOutputs)
 
@@ -109,26 +130,28 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
       // Handle outlet
       if (machine.machineType === MACHINE_TYPE.OUTLET) {
         // Continue if no output
-        if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) return;
+        if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) return
 
         // We have reached the outlet, and it is connect to a depot, so circuit is closed
-        if (machine.depotConnection && machine.depotConnection !== EMPTY_CONNECTION) {
-          circuitClosed = true;
+        if (
+          machine.depotConnection &&
+          machine.depotConnection !== EMPTY_CONNECTION
+        ) {
+          circuitClosed = true
         }
       }
 
       // Distribute the machine's outputs to the connected machines.
-      for (let k = 0; k < machine.outgoingConnections.length; k++) {
-
+      for (let k = 0; k < machine?.outgoingConnections.length; k++) {
         // No connection
-        if (machine.outgoingConnections[k] === "0") continue
+        if (machine?.outgoingConnections[k] === "0") continue
 
         // Fill output
         if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
           const output = currentOutputs[k]
           if (output) {
             output.sourceMachineId = machineKey
-            output.machineId = machine.outgoingConnections[k]
+            output.machineId = machine?.outgoingConnections?.[k]
             inputs.push(output)
           }
         }
@@ -142,15 +165,26 @@ export function resolve(machines: Machines, inlets: Machines, outlets: Machines,
   }
 
   /*
-  * We take the patches produced by the resolution and organize them into a structure that can be applied to the state.
-  * Special treatment is given to the depots.
-  */
+   * We take the patches produced by the resolution and organize them into a structure that can be applied to the state.
+   * Special treatment is given to the depots.
+   */
   return backtraceOutletConnection(
     consolidatePatches([
       organizePatches(patchInputs, "machineId", "inputs"),
       organizePatches(patchOutputs, "machineId", "outputs"),
-      createOutletDepotPatches(circuitClosed, patchOutputs, Object.keys(outlets)[0], outletDepots[0]),
-      createInletDepotPatches(circuitClosed, patchInputs, Object.keys(inlets), machines)
+      createOutletDepotPatches(
+        circuitClosed,
+        patchOutputs,
+        Object.keys(outlets)[0],
+        outletDepots[0]
+      ),
+      createInletDepotPatches(
+        circuitClosed,
+        patchInputs,
+        Object.keys(inlets),
+        machines
+      ),
     ]),
-    Object.keys(outlets)[0])
+    Object.keys(outlets)[0]
+  )
 }

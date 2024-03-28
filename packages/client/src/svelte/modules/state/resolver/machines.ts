@@ -6,10 +6,14 @@ const EMPTY_PRODUCT: Product = {
   machineId: "",
   materialType: MATERIAL_TYPE.NONE,
   amount: 0,
-  inletActive: [false, false]
+  inletActive: [false, false],
 }
 
-export function process(machineType: MACHINE_TYPE, inputs: Product[], recipes: Recipe[]): Product[] {
+export function process(
+  machineType: MACHINE_TYPE,
+  inputs: Product[],
+  recipes: Recipe[]
+): Product[] {
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MACHINE_TYPE.PLAYER) {
     return defaultMachine(recipes, machineType, inputs)
@@ -44,14 +48,14 @@ function splitter(inputs: Product[]): Product[] {
     machineId: input.machineId,
     materialType: input.materialType,
     amount: halfAmount,
-    inletActive: input.inletActive
+    inletActive: input.inletActive,
   }
 
   outputs[1] = {
     machineId: input.machineId,
     materialType: input.materialType,
     amount: halfAmount,
-    inletActive: input.inletActive
+    inletActive: input.inletActive,
   }
 
   return outputs
@@ -69,20 +73,27 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 
   if (inputs.length !== 2) return outputs
 
-  const outputMaterials = getRecipe(recipes, MACHINE_TYPE.MIXER, getUniqueIdentifier(Number(inputs[0].materialType), Number(inputs[1].materialType)))
+  const outputMaterials = getRecipe(
+    recipes,
+    MACHINE_TYPE.MIXER,
+    getUniqueIdentifier(
+      Number(inputs[0].materialType),
+      Number(inputs[1].materialType)
+    )
+  )
 
   const lowestAmountProduct = getLowestAmountProduct(inputs[0], inputs[1])
 
   const combinedInletActive = [
     inputs[0].inletActive[0] || inputs[1].inletActive[0],
-    inputs[0].inletActive[1] || inputs[1].inletActive[1]
+    inputs[0].inletActive[1] || inputs[1].inletActive[1],
   ]
 
   outputs[0] = {
     machineId: inputs[0].machineId,
     materialType: outputMaterials[0],
     amount: lowestAmountProduct.amount,
-    inletActive: combinedInletActive
+    inletActive: combinedInletActive,
   }
 
   return outputs
@@ -96,16 +107,22 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
  * @param {Product[]} inputs - An array of input products to be processed. The function primarily checks the first product in the array.
  * @returns {Product[]} An array containing the processed product. If the input does not meet the requirements or no matching recipe is found, it returns an array with an empty product.
  */
-function defaultMachine(recipes: Recipe[], machineType: MACHINE_TYPE, inputs: Product[]): Product[] {
+function defaultMachine(
+  recipes: Recipe[],
+  machineType: MACHINE_TYPE,
+  inputs: Product[]
+): Product[] {
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
 
   const input = inputs[0]
 
   if (!input) return outputs
 
-  const outputMaterials = getRecipe(recipes, machineType, Number(inputs[0].materialType))
-
-  console.log('outputMaterials', outputMaterials)
+  const outputMaterials = getRecipe(
+    recipes,
+    machineType,
+    Number(inputs[0].materialType)
+  )
 
   if (outputMaterials[1] === MATERIAL_TYPE.NONE) {
     // One output
@@ -113,7 +130,7 @@ function defaultMachine(recipes: Recipe[], machineType: MACHINE_TYPE, inputs: Pr
       machineId: input.machineId,
       materialType: outputMaterials[0],
       amount: input.amount,
-      inletActive: input.inletActive
+      inletActive: input.inletActive,
     }
 
     return outputs
@@ -124,14 +141,14 @@ function defaultMachine(recipes: Recipe[], machineType: MACHINE_TYPE, inputs: Pr
       machineId: input.machineId,
       materialType: outputMaterials[0],
       amount: input.amount / 2,
-      inletActive: input.inletActive
+      inletActive: input.inletActive,
     }
 
     outputs[1] = {
       machineId: input.machineId,
       materialType: outputMaterials[1],
       amount: input.amount / 2,
-      inletActive: input.inletActive
+      inletActive: input.inletActive,
     }
 
     return outputs
@@ -142,8 +159,14 @@ function getLowestAmountProduct(A: Product, B: Product): Product {
   return A.amount < B.amount ? A : B
 }
 
-function getRecipe(recipes: Recipe[], machineType: MACHINE_TYPE, input: number): MATERIAL_TYPE[] {
-  return recipes.find(recipe => recipe.machineType === machineType &&
-    recipe.input === input
-  )?.outputs || [MATERIAL_TYPE.NONE, MATERIAL_TYPE.NONE]
+function getRecipe(
+  recipes: Recipe[],
+  machineType: MACHINE_TYPE,
+  input: number
+): MATERIAL_TYPE[] {
+  return (
+    recipes.find(
+      recipe => recipe.machineType === machineType && recipe.input === input
+    )?.outputs || [MATERIAL_TYPE.NONE, MATERIAL_TYPE.NONE]
+  )
 }

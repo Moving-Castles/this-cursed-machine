@@ -1,11 +1,19 @@
 <script lang="ts">
-  import { playerPod, machines } from "@modules/state/base/stores"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import type { SimulatedDepot } from "@modules/state/simulated/types"
+  import {
+    playerPod,
+    machines,
+    shippableDepots,
+  } from "@modules/state/base/stores"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   export let depot: SimulatedDepot
   export let key: string
   export let index: number
+
+  $: canShip = $shippableDepots[key]
+  $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Narrow the type
   $: typedDepot = depot as Depot
@@ -20,7 +28,7 @@
   }
 </script>
 
-<div class="depot-item">
+<div class="depot-item" class:shippable={canShip}>
   <div class="id">
     <div>{index + 1}</div>
   </div>
@@ -57,6 +65,10 @@
     height: 60px;
     background: rgb(74, 74, 74);
     display: flex;
+
+    &.shippable {
+      background: var(--color-active);
+    }
 
     .id {
       width: 50px;
