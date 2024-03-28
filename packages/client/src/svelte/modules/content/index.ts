@@ -20,6 +20,7 @@ export type StaticContent = {
   commands: any[]
   map: any
   tutorial: any
+  messages: any[]
 }
 
 // --- STORES -----------------------------------------------------------
@@ -37,6 +38,7 @@ export async function initStaticContent() {
   const commands = await loadData("*[_type == 'command']", {})
   const map = await loadData("*[_type == 'map'][0]", {})
   const tutorial = await loadData("*[_type == 'tutorial'][0]", {})
+  const messages = await loadData("*[_type == 'message']", {})
   staticContent.set({
     loading,
     spawning,
@@ -46,5 +48,6 @@ export async function initStaticContent() {
     commands,
     map,
     tutorial,
+    messages,
   })
 }

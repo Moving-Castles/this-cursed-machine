@@ -1,11 +1,6 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import {
-    player,
-    availableOrders,
-    orders,
-    playerPod,
-  } from "@modules/state/base/stores"
+  import { player, playerOrder } from "@modules/state/base/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
   import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
@@ -18,11 +13,6 @@
   const sendCharge = () => {
     charge()
   }
-
-  let currentOrder: Order | null = null
-  $: currentOrder = $player.tutorial
-    ? $orders[$playerPod.currentOrder]
-    : $availableOrders[$playerPod.currentOrder]
 </script>
 
 <div class="order-bar">
@@ -30,18 +20,18 @@
   <div class="order-information">
     <div class="goal">
       ORDER:
-      {#if !currentOrder}
+      {#if !$playerOrder}
         NONE
       {:else}
-        {currentOrder?.order.goalAmount / 100}
-        {MATERIAL_TYPE[currentOrder?.order.goalMaterialType]}
+        {$playerOrder?.order.goalAmount / 100}
+        {MATERIAL_TYPE[$playerOrder?.order.goalMaterialType]}
       {/if}
     </div>
 
-    {#if currentOrder && currentOrder.order.expirationBlock > 0}
+    {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number(currentOrder.order.expirationBlock) - Number($blockNumber),
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
         )}
       </div>
     {/if}

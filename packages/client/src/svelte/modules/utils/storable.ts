@@ -5,22 +5,22 @@ export function storableNumber(data) {
   const { subscribe, set, update } = store
   const isBrowser = () => typeof window !== "undefined"
 
+  const init = () =>
+    isBrowser() &&
+    localStorage.getItem("storable") &&
+    set(localStorage.getItem("storable"))
+
   // Update value when switching tabs
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
-      // console.log("Browser tab is hidden")
+      // Browser tab is hidden
     } else {
-      // console.log("Browser tab is visible")
-
-      isBrowser() &&
-        localStorage.getItem("storable") &&
-        set(localStorage.getItem("storable"))
+      // Browser tab is visible
+      init()
     }
   })
 
-  isBrowser() &&
-    localStorage.getItem("storable") &&
-    set(localStorage.getItem("storable"))
+  init()
 
   return {
     subscribe,

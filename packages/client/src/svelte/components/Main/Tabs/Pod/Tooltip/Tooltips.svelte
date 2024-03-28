@@ -2,8 +2,6 @@
   import { inspecting } from "@modules/ui/stores"
   import Tooltip from "@components/Main/Tabs/Pod/Tooltip/Tooltip.svelte"
   import { MATERIAL_TYPE, MACHINE_TYPE } from "@modules/state/base/enums"
-
-  $: console.log($inspecting)
 </script>
 
 {#if $inspecting}

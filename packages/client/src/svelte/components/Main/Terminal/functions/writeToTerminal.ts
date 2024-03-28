@@ -1,7 +1,9 @@
+import type { Output } from "@components/Main/Terminal/types"
+import { get } from "svelte/store"
 import { SYMBOLS } from "@components/Main/Terminal/"
 import { terminalOutput } from "@components/Main/Terminal/stores"
-import type { Output } from "@components/Main/Terminal/types"
 import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
 
 import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
 import { playSound, randomPitch } from "@modules/sound"
@@ -33,6 +35,8 @@ export async function writeToTerminal(
     } else {
       output.push(newOutput)
     }
+
+    advanceTutorial(newOutput.text, get(tutorialProgress), "command")
     return output
   })
 
@@ -84,7 +88,13 @@ export async function loadingLine(index: number): Promise<void> {
   const CHARACTER = "░▒"
   playSound("tcm", "TRX_wait_b")
   if (index === 1) {
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, CHARACTER, false, SYMBOLS[2], 0)
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      CHARACTER,
+      false,
+      SYMBOLS[2],
+      0
+    )
   } else {
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.NORMAL,
@@ -106,8 +116,20 @@ export async function loadingSpinner(index: number): Promise<void> {
   const currentGlyph = GLYPHS[index % GLYPHS.length]
   playSound("tcm", "TRX_wait_b_07")
   if (index === 1) {
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, currentGlyph, false, SYMBOLS[2], 0)
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      currentGlyph,
+      false,
+      SYMBOLS[2],
+      0
+    )
   } else {
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, currentGlyph, true, SYMBOLS[2], 0)
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      currentGlyph,
+      true,
+      SYMBOLS[2],
+      0
+    )
   }
 }

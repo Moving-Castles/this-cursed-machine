@@ -12,6 +12,7 @@
   import { initSound } from "@modules/sound"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { tutorialProgress } from "@modules/ui/assistant"
+  import { player } from "@modules/state/base/stores"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { messageToStumps } from "@modules/ui"
@@ -38,8 +39,9 @@
 
   const spawned = () => {
     clearTerminalOutput()
-    // Reset tutorial level
-    tutorialProgress.set(0)
+    // Reset tutorial level if
+    if ($player.tutorialLevel == 0) tutorialProgress.set(0)
+
     UIState.set(UI.READY)
   }
 
