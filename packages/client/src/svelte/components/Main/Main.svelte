@@ -72,6 +72,9 @@
   }
 
   onMount(() => {
+    // TODO: check if player has escaped the pod
+    // If so:
+    // dispatch("escaped")
     playSound("tcm", "podBg", true, false)
   })
 </script>
@@ -101,7 +104,7 @@
         </div>
         <div class="tab-container">
           {#if $tutorialProgress == 0}
-            <div class="dim" out:fade={{duration: 100}} />
+            <div class="dim" out:fade={{ duration: 100 }} />
           {/if}
           <!-- Render the CurrentComponent if it's not null -->
           {#if currentTabComponent}

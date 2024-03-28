@@ -105,7 +105,7 @@
           }
 
           &.unafforable {
-            background: red;
+            opacity: 0.3;
             pointer-events: none;
           }
         }

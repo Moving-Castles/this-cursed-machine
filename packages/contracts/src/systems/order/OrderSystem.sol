@@ -133,10 +133,6 @@ contract OrderSystem is System {
       if (nextTutorialLevel < TUTORIAL_LEVELS) {
         // Level up player
         TutorialLevel.set(playerEntity, nextTutorialLevel);
-      } else {
-        // Tutorial done
-        Tutorial.set(playerEntity, false);
-        TutorialLevel.deleteRecord(playerEntity);
       }
 
       // Reward player in tokens

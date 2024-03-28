@@ -1,9 +1,8 @@
 export enum UI {
     LOADING,
     SPAWNING,
-    READY,
-    COMPLETED,
-    NAMED,
+    READY, // Main player UI
+    ESCAPED // Player has minted an exit NFT and left the pod
 }
 
 export enum TABS {
@@ -11,6 +10,5 @@ export enum TABS {
     INBOX,
     ORDERS,
     SHOP,
-    CHAT,
-    EXIT
+    CHAT
 }
