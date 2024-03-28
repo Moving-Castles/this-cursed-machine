@@ -23,40 +23,35 @@
   }
 </script>
 
-<div class="offer-item" class:working transition:fade>
+<div class="shop-item" class:working in:fade>
   {#if offer?.offer}
     <div class="section material">
-      {offer.offer.amount / 100}
-      {MATERIAL_TYPE[offer.offer.materialType]}
+      <div>{MATERIAL_TYPE[offer.offer.materialType]}</div>
+      <div>{offer.offer.amount / 100}</div>
     </div>
 
-    <div class="section cost">
-      {offer.offer.cost}P
+    <div class="section icon">
+      <img src="/images/bug.gif" />
     </div>
 
     <div class="section buy">
       <button class:unafforable on:click={() => sendBuy()}>
-        {unafforable ? "Too expensive" : "Buy"}
+        {offer.offer.cost}P
       </button>
     </div>
   {/if}
 </div>
 
 <style lang="scss">
-  .offer-item {
-    width: 100%;
-    border-bottom: 4px double var(--foreground);
+  .shop-item {
+    width: 300px;
+    height: 300px;
+    border: 1px solid var(--foreground);
     padding: 10px;
-    padding-top: 30px;
     padding-bottom: 30px;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
-
-    &:first-child {
-      border-top: 4px double var(--foreground);
-    }
-
-    display: flex;
+    margin-right: 20px;
 
     &.working {
       opacity: 0.5;
@@ -65,21 +60,40 @@
 
     .section {
       user-select: none;
+      width: 100%;
 
       &.material {
-        width: 40%;
+        border-bottom: 1px solid var(--foreground);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 30px;
       }
 
-      &.cost {
-        width: 40%;
+      &.icon {
+        height: 200px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 140px;
+          aspect-ratio: 1;
+          object-fit: cover;
+        }
       }
 
       &.buy {
-        width: 20%;
+        height: 60px;
+        border-top: 1px solid var(--foreground);
+        padding-top: 10px;
 
         button {
           width: 100%;
-          height: 100%;
+          height: 36px;
           background: grey;
           border: 0;
           font-family: var(--font-family);

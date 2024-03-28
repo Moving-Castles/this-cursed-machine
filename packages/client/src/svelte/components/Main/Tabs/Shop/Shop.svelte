@@ -1,14 +1,16 @@
 <script lang="ts">
   import { offers } from "@modules/state/base/stores"
-  import OfferItem from "./OfferItem.svelte"
+  import ShopItem from "./ShopItem.svelte"
+  import Certificate from "./Certificate.svelte"
 </script>
 
 <div class="container">
-  <div>OFFERS</div>
+  <div>SHOP</div>
   <div class="offer-list">
     {#each Object.entries($offers) as [key, offer]}
-      <OfferItem {key} {offer} />
+      <ShopItem {key} {offer} />
     {/each}
+    <Certificate />
   </div>
 </div>
 
@@ -18,6 +20,7 @@
 
     .offer-list {
       margin-top: 40px;
+      display: flex;
     }
   }
 </style>

@@ -58,7 +58,6 @@ contract PostDeploy is Script {
 
     // Create offer
     LibOffer.create(MATERIAL_TYPE.BUG, 10000, 1000);
-    LibOffer.create(MATERIAL_TYPE.BLOOD, 10000, 200);
 
     vm.stopBroadcast();
   }

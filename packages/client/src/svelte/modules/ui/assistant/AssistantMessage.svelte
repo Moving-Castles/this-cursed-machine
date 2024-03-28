@@ -18,7 +18,8 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="msg absolute" on:click={close}>
+<!-- on:click={close} -->
+<div class="msg absolute">
   <p>
     {msg.message}
   </p>
@@ -29,15 +30,13 @@
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    color: var(--foreground);
+    color: var(--background);
     padding: 20px;
-    cursor: pointer;
     text-align: center;
-    background: black;
+    background: var(--foreground);
     margin-top: 10px;
-    font-size: var(--font-size-small);
+    font-size: var(--font-size);
     overflow: hidden;
-    word-break: break-all;
     border: 1px solid white;
     white-space: pre-wrap;
     text-align: left;

@@ -8,8 +8,8 @@
   const onEnd = (e: CustomEvent<{ end: AssistantMessage }>) => {
     assistantMessages.set(
       $assistantMessages.filter(
-        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp
-      )
+        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp,
+      ),
     )
   }
 </script>
@@ -26,11 +26,11 @@
   .toast-pane {
     position: absolute;
     z-index: 99;
-    bottom: 10px;
-    right: 10px;
+    bottom: 80px;
+    right: 20px;
     display: flex;
     flex-direction: column-reverse;
-    width: 400px;
+    width: 300px;
     text-align: center;
   }
 </style>
