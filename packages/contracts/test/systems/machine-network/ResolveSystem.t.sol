@@ -479,4 +479,69 @@ contract ResolveSystemTest is BaseTest {
     assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
     assertEq(Amount.get(depotsInPod[2]), 9000);
   }
+
+  function testOneMixerTwoInlets() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    // Fill depot 0 with 20000 MATERIAL_TYPE.BUG
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+    // Fill depot 1 with 10000 MATERIAL_TYPE.PISS
+    world.fillDepot(depotsInPod[1], 20000, MATERIAL_TYPE.PISS);
+
+    // Connect depot 0 to inlet 0
+    world.attachDepot(depotsInPod[0], inletEntities[0]);
+
+    // Connect depot 1 to inlet 1
+    world.attachDepot(depotsInPod[1], inletEntities[1]);
+
+    // Build mixer
+    bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
+
+    // Connect inlet 0 (bugs) to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (blood) to mixer
+    world.connect(playerEntity, mixerEntity, PORT_INDEX.SECOND);
+
+    // Connect inlet 1 (piss) to mixer
+    world.connect(inletEntities[1], mixerEntity, PORT_INDEX.FIRST);
+
+    // Connect mixer to outlet
+    world.connect(mixerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Connect depot 2 to outlet
+    world.attachDepot(depotsInPod[2], outletEntity);
+
+    // Wait
+    uint32 blocksToWait = 100;
+    vm.roll(block.number + blocksToWait);
+
+    // inletExhaustionBlock = 10000 / 1000 = 10
+    // outletFullBlock = 10000 / 500 = 20
+    // cappedBlocks = 10;
+
+    // Resolve
+    world.resolve();
+
+    vm.stopPrank();
+
+    /*
+     *
+     *
+     */
+
+    // Depot 2 (outlet depot) should have 5000 MATERIAL_TYPE.HEMATURIC_FLUID
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
+    assertEq(Amount.get(depotsInPod[2]), 5000);
+
+    // Depot 0 should have 0 MATERIAL_TYPE.NONE (exhausted)
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    assertEq(Amount.get(depotsInPod[0]), 0);
+
+    // Depot 1 should have 10000 MATERIAL_TYPE.PISS
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
+    assertEq(Amount.get(depotsInPod[1]), 10000);
+  }
 }

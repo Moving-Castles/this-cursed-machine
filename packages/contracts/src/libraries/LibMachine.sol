@@ -87,7 +87,7 @@ library LibMachine {
 
     bool[2] memory combinedInletActive = [
       _inputs[0].inletActive[0] || _inputs[1].inletActive[0],
-      _inputs[1].inletActive[1] || _inputs[1].inletActive[1]
+      _inputs[0].inletActive[1] || _inputs[1].inletActive[1]
     ];
 
     outputs[0] = Product({
