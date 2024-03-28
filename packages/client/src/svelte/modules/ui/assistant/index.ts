@@ -51,10 +51,15 @@ export function clearMessage() {
 export function advanceTutorial(
   input: number | string | Action,
   level: number,
-  type: "tab" | "contract" | "command" | "order"
+  type: "tab" | "contract" | "command" | "order" | "read"
 ) {
   const PLAYER_ADDRESS = get(playerAddress)
   const OUTLET_ADDRESS = get(playerPod)?.fixedEntities?.outlet
+  const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
+  const INLET_ADDRESSES = get(playerPod)?.fixedEntities?.inlets
+  const DEPOT_ADDRESSES = get(playerPod)?.depotsInPod
+
+  // const DEPOT_ADDRESS = get(playerPod)?.fixedEntities
 
   const ADVANCE_CONDITIONS = [
     { type: "command", value: ["blink", "."] },
@@ -74,7 +79,7 @@ export function advanceTutorial(
     { type: "tab", value: [0] },
     {
       type: "contract",
-      value: { systemId: "build", args: [MACHINE_TYPE.DRYER] },
+      value: { systemId: "build", params: [MACHINE_TYPE.DRYER] },
     },
     { type: "order" },
     { type: "contract", value: { systemId: "ship" } },
@@ -82,6 +87,23 @@ export function advanceTutorial(
     { type: "contract", value: { systemId: "accept" } },
     { type: "contract", value: { systemId: "buy" } },
     { type: "tab", value: [1] },
+    { type: "read" }, // new one
+    { type: "tab", value: [0] },
+    {
+      type: "contract",
+      value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
+    },
+    {
+      type: "contract",
+      value: {
+        systemId: "attachDepot",
+        params: [DEPOT_ADDRESSES, INLET_ADDRESSES],
+      },
+    },
+    { type: "order" },
+    { type: "tab", value: [3] },
+    { type: "contract", value: { systemId: "name" } },
+    { type: "tab", value: [4] },
   ]
 
   // Indeces correspond to steps
@@ -114,8 +136,12 @@ export function advanceTutorial(
       // Check if all the params correspond to all the input params
       if (step.value.params) {
         step.value.params.forEach(prm => {
-          console.log(input.params, prm)
-          if (!input.params.includes(prm)) return
+          if (Array.isArray(prm)) {
+            if (prm.filter(value => input.params.includes(value))?.length === 0)
+              return
+          } else {
+            if (!input.params.includes(prm)) return
+          }
         })
       }
 
@@ -128,6 +154,10 @@ export function advanceTutorial(
       if (Object.values(get(shippableDepots)).some(e => e === true)) {
         return tutorialProgress.set(level + 1)
       }
+    }
+
+    if (step.type === "read" && type === "read") {
+      return tutorialProgress.set(level + 1)
     }
   }
 }

@@ -293,6 +293,7 @@ export function calculateSimulatedConnections(
   let connections: Connection[] = []
 
   Object.entries(simulatedMachines).forEach(([sourceAddress, machine]) => {
+    if (!machine?.outgoingConnections) return
     machine?.outgoingConnections.forEach((targetAddress, i) => {
       if (targetAddress === EMPTY_CONNECTION) return
 

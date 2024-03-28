@@ -3,16 +3,19 @@
   import { player } from "@modules/state/base/stores"
   import { fade } from "svelte/transition"
   import { urlFor } from "@modules/content/sanity"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
 
   let viewing = -1
 
   $: messages = $staticContent.messages.filter(
-    // msg => $player.tutorial && msg.tutorial
-    msg => msg
+    msg => $player.tutorial && msg.tutorial
+    // msg => msg
   )
 
   const open = i => {
     viewing = viewing === i ? -1 : i
+    console.log("opening")
+    advanceTutorial(null, $tutorialProgress, "read")
   }
 </script>
 
@@ -25,11 +28,13 @@
 
       {#if viewing === i && messages?.[i]?.attachment}
         <div class="attachment">
-          <img
-            on:click={() => (i = -1)}
-            src={urlFor(messages?.[i]?.attachment)}
-            alt={message.title}
-          />
+          {#if import.meta.env.PROD}
+            <img
+              on:click={() => (i = -1)}
+              src={urlFor(messages?.[i]?.attachment)}
+              alt={message.title}
+            />
+          {/if}
         </div>
       {/if}
     </div>
