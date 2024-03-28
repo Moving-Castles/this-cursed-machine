@@ -6,13 +6,15 @@ import { MATERIAL_TYPE } from "../../codegen/common.sol";
 import { FLOW_RATE, DEPOT_CAPACITY } from "../../constants.sol";
 
 library LibInit {
-  function init(address _adminAddress, address _tokenAddress) internal {
+  function init(address _adminAddress, address _tokenAddress, address _escapedStumpTokenAddress) internal {
     // Set game config
     GameConfig.set(
       GameConfigData({
         adminAddress: _adminAddress,
         tokenAddress: _tokenAddress,
+        escapedStumpTokenAddress: _escapedStumpTokenAddress,
         globalSpawnIndex: 0,
+        globalEscapeIndex: 0,
         scaleDown: 100,
         flowRate: FLOW_RATE,
         depotCapacity: DEPOT_CAPACITY
