@@ -13,6 +13,7 @@ import { CarriedBy } from "./tables/CarriedBy.sol";
 import { BuildIndex } from "./tables/BuildIndex.sol";
 import { BuildTracker } from "./tables/BuildTracker.sol";
 import { SpawnIndex } from "./tables/SpawnIndex.sol";
+import { EscapeIndex } from "./tables/EscapeIndex.sol";
 import { Tutorial } from "./tables/Tutorial.sol";
 import { TutorialLevel } from "./tables/TutorialLevel.sol";
 import { Order, OrderData } from "./tables/Order.sol";

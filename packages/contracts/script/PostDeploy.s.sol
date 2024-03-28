@@ -6,6 +6,9 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/registerERC20.sol";
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
+import { IERC721Mintable } from "@latticexyz/world-modules/src/modules/erc721-puppet/IERC721Mintable.sol";
+import { registerERC721 } from "@latticexyz/world-modules/src/modules/erc721-puppet/registerERC721.sol";
+import { ERC721MetadataData } from "@latticexyz/world-modules/src/modules/erc721-puppet/tables/ERC721Metadata.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
@@ -14,7 +17,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
 import { LibOrder, LibInitRecipes, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
-import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
+import { ONE_MINUTE, ONE_DAY, ONE_HOUR, ESCAPED_STUMP_TOKEN_NAMESPACE } from "../src/constants.sol";
 
 uint256 constant POOL_SUPPLY = 1_000_000 wei;
 
@@ -38,9 +41,16 @@ contract PostDeploy is Script {
 
     token.mint(worldAddress, POOL_SUPPLY);
 
+    // Register ERC721 escaped stump token
+    IERC721Mintable escapedStumpToken = registerERC721(
+      world,
+      ESCAPED_STUMP_TOKEN_NAMESPACE,
+      ERC721MetadataData({ name: "TCM", symbol: "TCM", baseURI: "" })
+    );
+
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
-    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(token));
+    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(token), address(escapedStumpToken));
 
     // Initialize recipes
     LibInitRecipes.init();
