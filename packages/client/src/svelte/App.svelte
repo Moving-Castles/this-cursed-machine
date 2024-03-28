@@ -20,7 +20,6 @@
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"
-  import Naming from "@components/Naming/Naming.svelte"
   import Tutorial from "@components/Tutorial/Tutorial.svelte"
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
@@ -43,14 +42,8 @@
     UIState.set(UI.READY)
   }
 
-  const completed = () => {
-    clearTerminalOutput()
-    UIState.set(UI.COMPLETED)
-  }
-
-  const named = () => {
-    clearTerminalOutput()
-    UIState.set(UI.NAMED)
+  const escaped = () => {
+    UIState.set(UI.ESCAPED)
   }
 
   onMount(async () => {
@@ -81,8 +74,6 @@
     // Listen to changes to the SyncProgresscomponent
     createSyncProgressSystem()
 
-    // createTokenBalancesSystem()
-
     // Simulate state changes
     initStateSimulator()
 
@@ -111,16 +102,12 @@
   {/if}
 
   {#if $UIState === UI.SPAWNING}
-    <Spawn on:done={spawned} on:completed={completed} />
+    <Spawn on:done={spawned} on:escaped={escaped} />
   {/if}
 
   {#if $UIState === UI.READY}
-    <Main on:completed={completed} />
+    <Main on:escaped={escaped} />
     <Tutorial />
-  {/if}
-
-  {#if $UIState === UI.COMPLETED}
-    <Naming on:named={named} />
   {/if}
 </main>
 

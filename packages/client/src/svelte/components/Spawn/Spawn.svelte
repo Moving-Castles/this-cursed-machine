@@ -38,17 +38,9 @@
   }
 
   onMount(async () => {
-    // Skip intro if player is completed or spawned
-    // if ($player && $player.level > Object.keys($levels).length) {
-    //   await typeWriteToTerminal(
-    //     TERMINAL_OUTPUT_TYPE.SPECIAL,
-    //     `Welcome back ${$player.name ? $player.name : "stump"}...`,
-    //     SYMBOLS[7],
-    //     10,
-    //     1000,
-    //   )
-    //   dispatch("completed")
-    // } else
+    // TODO: check if player has escaped the pod
+    // If so:
+    // dispatch("escaped")
     if ($player?.carriedBy) {
       await typeWriteToTerminal(
         TERMINAL_OUTPUT_TYPE.SPECIAL,

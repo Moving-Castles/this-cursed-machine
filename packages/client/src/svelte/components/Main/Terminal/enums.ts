@@ -1,7 +1,6 @@
 export enum TERMINAL_TYPE {
     FULL,
-    SPAWN,
-    NAMING
+    SPAWN
 }
 
 export enum DIRECTION {
