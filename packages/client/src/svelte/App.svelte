@@ -10,6 +10,7 @@
   import { initStateSimulator } from "@modules/state/resolver"
   import { initStaticContent } from "@modules/content"
   import { initSound } from "@modules/sound"
+  import { initSignalNetwork } from "./modules/signal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
@@ -79,6 +80,9 @@
     initSound()
 
     introSound = playSound("tcm", "introBg", true, true)
+
+    // Signal network
+    initSignalNetwork()
   })
 
   // Fade out intro sound when ready

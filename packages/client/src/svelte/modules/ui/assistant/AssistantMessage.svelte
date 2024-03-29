@@ -18,9 +18,8 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- on:click={close} -->
 <div class="msg absolute">
-  <p>S.C.U.M:</p>
+  <img src="/images/bugsy.gif" alt="bugsy" />
   <p>
     {msg.message}
   </p>
@@ -38,9 +37,25 @@
     margin-top: 10px;
     font-size: var(--font-size);
     overflow: hidden;
-    border: 1px solid white;
+    // border: 1px solid white;
     white-space: pre-wrap;
     text-align: left;
+    font-family: var(--font-family-handwriting);
+    font-size: 28px;
+    line-height: 1em;
+    font-weight: bold;
+    border-radius: 5px;
+    background: rgba(255, 255, 95, 0.9);
+    text-align: center;
+    // box-shadow: rgba(255, 255, 95, 0.9) 0px 0px 10px 0px;
+
+    img {
+      width: 100px;
+      margin: 0 auto;
+      margin: 10px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   .error {

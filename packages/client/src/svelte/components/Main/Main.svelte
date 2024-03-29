@@ -42,7 +42,7 @@
       enabled: true,
     },
     [TABS.CHAT]: {
-      label: "Chat",
+      label: "STUMPBOX",
       component: Chat,
       enabled: true,
     },

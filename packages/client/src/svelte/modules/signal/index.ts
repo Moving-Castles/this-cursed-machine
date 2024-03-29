@@ -1,25 +1,12 @@
-import { get, writable } from "svelte/store"
+import { get } from "svelte/store"
 import { network } from "../network"
 import { players } from "../state/base/stores"
 import { getUniqueValues, padAddress } from "../utils"
+import type { ChatMessage, Client, MessageObject } from "./types"
+import { SIGNAL_SERVER_URL, MESSAGE } from "./constants"
+import { chatMessages, verifiedClients } from "./stores"
 
-// --- TYPES -------------------------------------------------------------------
-
-type Client = {
-    id: string
-    address: string
-}
-
-// --- CONSTANTS --------------------------------------------------------------
-
-const SIGNAL_SERVER_URL = "wss://mc.rttskr.com"
-const MESSAGE = "mc"
-
-// --- STORES -----------------------------------------------------------------
-
-export let verifiedClients = writable([] as string[])
-
-let socket: any
+let socket: WebSocket
 
 export function initSignalNetwork() {
     socket = new WebSocket(SIGNAL_SERVER_URL)
@@ -30,7 +17,7 @@ export function initSignalNetwork() {
     // Listen for messages
     socket.addEventListener("message", (event: { data: string }) => {
         // console.log("Message from server ", event.data)
-        let msgObj = JSON.parse(event.data)
+        let msgObj: MessageObject = JSON.parse(event.data)
 
         // VERIFIED CLIENTS
         if (msgObj.topic === "verifiedClients") {
@@ -38,24 +25,38 @@ export function initSignalNetwork() {
             // TODO: do this on server ??
             // Verified clients changed: dedupe and filter to players in current world
             verifiedClients.update((verifiedClients) => {
-
                 verifiedClients = getUniqueValues(
                     msgObj.verifiedClients
                         .filter((client: Client) => get(players)[padAddress(client.address)])
-                        .map((client: Client) => padAddress(client.address)))
+                        .map((client: Client) => client.address))
 
                 return verifiedClients;
+            })
+        }
+
+        // Chat
+        if (msgObj.topic === "chat") {
+            chatMessages.update(messages => {
+                messages.push(msgObj.data)
+                return messages
             })
         }
     })
 }
 
 async function sendVerification() {
-    // @todo: update
-    const signature = await get(network).network.signer.value_.signMessage(MESSAGE)
+    const signature = await get(network).walletClient.signMessage({ message: MESSAGE });
     const message = JSON.stringify({
         topic: "verify",
         data: { signature: signature },
+    })
+    socket.send(message)
+}
+
+export async function sendChatMessage(chatMessage: ChatMessage) {
+    const message = JSON.stringify({
+        topic: "chat",
+        data: chatMessage,
     })
     socket.send(message)
 }

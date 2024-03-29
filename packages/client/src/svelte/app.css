@@ -27,12 +27,9 @@
   --default-padding: 1ch;
 
   /* Fonts */
-  /* 'DEC Terminal Modern',  */
-  /* 'SV Basic Manual', */
-  /* "SixtyFour",  */
   --font-family-special: "Fake Receipt", monospace;
-  --font-family-quote: "Baleze", monospace;
   --font-family: "SixtyFour", "Fake Receipt", monospace;
+  --font-family-handwriting: "Waiting for the Sunrise", cursive;
   /* --font-size: 14px; */
   /* --font-size-normal: 20px; */
   --font-size-small: 9px;
