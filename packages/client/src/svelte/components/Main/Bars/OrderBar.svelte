@@ -1,6 +1,7 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { player, playerOrder } from "@modules/state/base/stores"
+  import { player } from "@modules/state/base/stores"
+  import { playerOrder } from "@modules/state/simulated/stores"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
   import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"

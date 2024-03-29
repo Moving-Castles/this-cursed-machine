@@ -11,7 +11,7 @@
     1: 17,
     2: 0,
     3: 8,
-    4: 21,
+    4: 25,
   }
 
   const PULSE_CONDITIONS = {

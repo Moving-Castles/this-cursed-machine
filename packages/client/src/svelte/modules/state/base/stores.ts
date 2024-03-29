@@ -40,10 +40,13 @@ export const recipes = derived(entities, $entities => getRecipes($entities))
 // PLAYER STORES
 // * * * * * * * * * * * * * * * * *
 
+// Address in padded format
 export const playerAddress = derived(
   network,
   $network => $network.walletClient?.account.address || ("0x0" as string)
 )
+
+// Non-padded address
 export const playerId = derived(
   network,
   $network => $network.playerEntity || ("0x0" as string)
@@ -129,38 +132,5 @@ export const inlets = derived(
       inlets[inlet] = $machines[inlet]
     })
     return inlets
-  }
-)
-
-// * * * * * * * * * * * * * * * * *
-// MORE STORES
-// * * * * * * * * * * * * * * * * *
-
-export const playerOrder = derived(
-  [player, orders, playerPod, availableOrders],
-  ([$player, $orders, $playerPod, $availableOrders]) => {
-    if (!$player || !$orders || !$playerPod || !$availableOrders) return null
-
-    return $player.tutorial
-      ? $orders[$playerPod.currentOrder]
-      : $availableOrders[$playerPod.currentOrder]
-  }
-)
-
-export const shippableDepots = derived(
-  [depots, playerOrder],
-  ([$depots, $playerOrder]) => {
-    return Object.fromEntries(
-      Object.entries($depots).map(([_, depot]) => {
-        if (
-          depot.materialType === $playerOrder?.order.goalMaterialType &&
-          depot.amount >= $playerOrder?.order.goalAmount
-        ) {
-          return [_, true]
-        }
-
-        return [_, false]
-      })
-    )
   }
 )

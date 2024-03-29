@@ -27,7 +27,8 @@
 
 {#if import.meta.env.DEV}
   <div class="test">
-    <button on:click={() => $tutorialProgress++}> Add </button>
+    <button on:click={() => $tutorialProgress--}> Prev </button>
+    <button on:click={() => $tutorialProgress++}> Next </button>
     <button
       on:click={() => {
         $tutorialProgress = 0
@@ -38,7 +39,8 @@
     </button>
 
     {$player.tutorialLevel}
-    {Number($tutorialProgress)}
+    {typeof $tutorialProgress}
+    {$tutorialProgress}
   </div>
 {/if}
 

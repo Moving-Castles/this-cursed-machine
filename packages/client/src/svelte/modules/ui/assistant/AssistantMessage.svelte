@@ -20,6 +20,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- on:click={close} -->
 <div class="msg absolute">
+  <p>S.C.U.M:</p>
   <p>
     {msg.message}
   </p>

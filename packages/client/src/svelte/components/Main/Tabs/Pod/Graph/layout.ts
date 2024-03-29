@@ -235,7 +235,7 @@ export function createLayout(
   simulatedConnections: Connection[],
   previousGraphMachines: GraphMachines
 ) {
-  console.time("createLayout")
+  // console.time("createLayout")
 
   // Initialize pathfinding grid
   let grid = createGrid()
@@ -302,7 +302,7 @@ export function createLayout(
     graphConnections[i].path = path
   }
 
-  console.timeEnd("createLayout")
+  // console.timeEnd("createLayout")
   return { graphMachines, graphConnections, grid }
 }
 
