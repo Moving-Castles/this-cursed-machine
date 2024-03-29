@@ -34,22 +34,21 @@ async function orderFullfilled() {
 
 async function startUp() {
   const lvl = get(tutorialProgress)
-  console.log(lvl)
   if (lvl === 0) {
-    await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
-      "Starting employment competence assessment",
-      SYMBOLS[7],
-      10,
-      800
-    )
-    await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
-      "Type blink",
-      SYMBOLS[7],
-      10,
-      800
-    )
+    // await typeWriteToTerminal(
+    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
+    //   "Starting employment competence assessment",
+    //   SYMBOLS[7],
+    //   10,
+    //   800
+    // )
+    // await typeWriteToTerminal(
+    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
+    //   "Type blink",
+    //   SYMBOLS[7],
+    //   10,
+    //   800
+    // )
   } else {
     await typeWriteToTerminal(
       TERMINAL_OUTPUT_TYPE.SPECIAL,

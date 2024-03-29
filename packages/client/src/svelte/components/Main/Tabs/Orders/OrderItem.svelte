@@ -5,6 +5,7 @@
   import { accept, unaccept } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
 
   export let key: string
@@ -13,6 +14,8 @@
   export let completed: boolean
 
   let working = false
+
+  const PULSE_CONDITIONS = [2, 8, 16]
 
   async function sendAccept() {
     working = true
@@ -53,7 +56,7 @@
     <div class="section time">
       {#if Number(order.order.expirationBlock) > 0}
         {blocksToReadableTime(
-          Number(order.order.expirationBlock) - Number($blockNumber),
+          Number(order.order.expirationBlock) - Number($blockNumber)
         )}
       {/if}
     </div>
@@ -65,7 +68,10 @@
         </div>
       {:else}
         <div class="section accept">
-          <button on:click={() => sendAccept()}>Accept</button>
+          <button
+            class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
+            on:click={() => sendAccept()}>Accept</button
+          >
         </div>
       {/if}
     {/if}

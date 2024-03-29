@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
 
@@ -7,12 +7,18 @@
 
   export let msg: AssistantMessage
 
+  let timeout: ReturnType<typeof setTimeout>
+
   const close = () => dispatch("end", msg)
 
   onMount(() => {
     if (msg.disappear) {
-      setTimeout(close, 3000)
+      timeout = setTimeout(close, 10000)
     }
+  })
+
+  onDestroy(() => {
+    clearTimeout(timeout)
   })
 </script>
 
@@ -30,8 +36,8 @@
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    color: var(--background);
-    padding: 20px;
+    color: var(--black);
+    padding: 10px 20px;
     text-align: center;
     background: var(--foreground);
     margin-top: 10px;
@@ -45,16 +51,21 @@
     line-height: 1em;
     font-weight: bold;
     border-radius: 5px;
-    background: rgba(255, 255, 95, 0.9);
+    color: var(--color-info);
     text-align: center;
     // box-shadow: rgba(255, 255, 95, 0.9) 0px 0px 10px 0px;
 
     img {
+      position: absolute;
+      top: 0;
+      right: 20px;
       width: 100px;
       margin: 0 auto;
-      margin: 10px;
+      margin: 0px;
       margin-left: auto;
       margin-right: auto;
+      filter: invert(0.6);
+      transform: translate(0, -100%);
     }
   }
 

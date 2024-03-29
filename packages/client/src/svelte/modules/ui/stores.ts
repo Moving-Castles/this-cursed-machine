@@ -1,11 +1,12 @@
 import { writable } from "svelte/store"
+import { storableNumber } from "@modules/utils/storable"
 import type { Writable } from "svelte/store"
 import { spring } from "svelte/motion"
 import { UI, TABS } from "./enums"
 import { GraphConnection } from "@svelte/components/Main/Tabs/Pod/Graph/types"
 
 export const UIState = writable(UI.LOADING)
-export const activeTab = writable(TABS.POD)
+export const activeTab = storableNumber(TABS.POD, "tab")
 
 export const localLevel = writable(0)
 export const lastCompletedBlock = writable(0)

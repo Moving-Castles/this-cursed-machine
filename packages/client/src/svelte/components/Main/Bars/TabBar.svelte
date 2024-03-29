@@ -15,11 +15,11 @@
   }
 
   const PULSE_CONDITIONS = {
-    0: [],
-    1: [],
-    2: [],
-    3: [],
-    4: [],
+    0: [20],
+    1: [1, 7, 15],
+    2: [17, 25],
+    3: [18],
+    4: [27],
   }
 
   function toggleTabByKeyboard(e: KeyboardEvent) {
@@ -103,10 +103,6 @@
           background: grey;
         }
 
-        &.pulse {
-          animation: pulse 0.8s infinite alternate ease-out;
-        }
-
         &.hidden {
           opacity: 0.2 !important;
           pointer-events: none;
@@ -126,17 +122,6 @@
           }
         }
       }
-    }
-  }
-
-  @keyframes pulse {
-    0% {
-      background: grey;
-      // opacity: 1;
-    }
-    100% {
-      background: white;
-      // opacity: 0.7;
     }
   }
 </style>

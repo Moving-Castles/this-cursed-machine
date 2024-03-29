@@ -9,7 +9,10 @@ import {
   simulatedDepots,
 } from "@modules/state/simulated/stores"
 import { player, depots as depotsStore } from "@modules/state/base/stores"
-import { FIXED_MACHINE_TYPES, MACHINES_BY_LEVEL } from "@components/Main/Terminal/"
+import {
+  FIXED_MACHINE_TYPES,
+  MACHINES_BY_LEVEL,
+} from "@components/Main/Terminal/"
 import { connectionMachineSort } from "@components/Main/Terminal/functions/helpers"
 import {
   machineTypeToLabel,
@@ -56,7 +59,7 @@ export function createSelectOptions(
 function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
   let availableMachines: MACHINE_TYPE[] =
-    MACHINES_BY_LEVEL[get(player)?.tutorialLevel || 0]
+    MACHINES_BY_LEVEL[get(player)?.tutorial ? get(player)?.tutorialLevel : 2]
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
@@ -101,7 +104,9 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   const machines = availableMachines(direction, get(simulatedMachines))
 
   selectOptions = machines.map(([address, machine]) => ({
-    label: machineTypeToLabel(machine.machineType) + (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
+    label:
+      machineTypeToLabel(machine.machineType) +
+      (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
     value: address,
   }))
 
@@ -123,9 +128,15 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     const sourceMachine = machines[connection.sourceMachine]
     const targetMachine = machines[connection.targetMachine]
 
-    const sourceMachineBuildIndex = sourceMachine.hasOwnProperty("buildIndex") ? "#" + sourceMachine.buildIndex : ""
-    const targetMachineBuildIndex = targetMachine.hasOwnProperty("buildIndex") ? "#" + targetMachine.buildIndex : ""
-    const connectionProduct = connection?.product ? `(${materialTypeToLabel(connection.product.materialType)})` : ""
+    const sourceMachineBuildIndex = sourceMachine.hasOwnProperty("buildIndex")
+      ? "#" + sourceMachine.buildIndex
+      : ""
+    const targetMachineBuildIndex = targetMachine.hasOwnProperty("buildIndex")
+      ? "#" + targetMachine.buildIndex
+      : ""
+    const connectionProduct = connection?.product
+      ? `(${materialTypeToLabel(connection.product.materialType)})`
+      : ""
 
     const label = `${machineTypeToLabel(sourceMachine.machineType)}${sourceMachineBuildIndex} to ${machineTypeToLabel(targetMachine.machineType)}${targetMachineBuildIndex} ${connectionProduct}`
 
@@ -139,28 +150,29 @@ function createSelectOptionsDisconnect(): SelectOption[] {
 }
 
 function createSelectOptionsAttachDepot(): SelectOption[] {
-  let selectOptions: SelectOption[] = [];
-
-  const depots = get(depotsStore);
-
-  // Only depots that are not attached can be attached
-  selectOptions = Object.entries(depots)
-    .filter(([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION)
-    .map(([address, depot]) => ({
-      label: `Depot #${depot.buildIndex}`,
-      value: address,
-    }));
-
-  return selectOptions;
-}
-
-function createSelectOptionsDetachDepot(): SelectOption[] {
-
   let selectOptions: SelectOption[] = []
 
   const depots = get(depotsStore)
 
-  // Only depots that are attached can be detached 
+  // Only depots that are not attached can be attached
+  selectOptions = Object.entries(depots)
+    .filter(
+      ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
+    )
+    .map(([address, depot]) => ({
+      label: `Depot #${depot.buildIndex}`,
+      value: address,
+    }))
+
+  return selectOptions
+}
+
+function createSelectOptionsDetachDepot(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const depots = get(depotsStore)
+
+  // Only depots that are attached can be detached
   selectOptions = Object.entries(depots)
     .filter(([_, depot]) => depot.depotConnection !== EMPTY_CONNECTION)
     .map(([address, depot]) => ({
@@ -172,19 +184,21 @@ function createSelectOptionsDetachDepot(): SelectOption[] {
 }
 
 function createSelectOptionsEmptyDepot(): SelectOption[] {
-  let selectOptions: SelectOption[] = [];
+  let selectOptions: SelectOption[] = []
 
-  const depots = get(depotsStore);
+  const depots = get(depotsStore)
 
   // Only depots that are not attached be emptied
   selectOptions = Object.entries(depots)
-    .filter(([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION)
+    .filter(
+      ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
+    )
     .map(([address, depot]) => ({
       label: `Depot #${depot.buildIndex}`,
       value: address,
-    }));
+    }))
 
-  return selectOptions;
+  return selectOptions
 }
 
 function createSelectOptionsShip(): SelectOption[] {
@@ -194,7 +208,6 @@ function createSelectOptionsShip(): SelectOption[] {
   const availableDepots = Object.entries(get(simulatedDepots))
 
   selectOptions = availableDepots.map(([address, depot]) => {
-
     let materialDescription = "(empty)"
     if (depot.materialType !== MATERIAL_TYPE.NONE) {
       materialDescription = `(${depot.amount / 100} ${materialTypeToLabel(depot.materialType)})`
