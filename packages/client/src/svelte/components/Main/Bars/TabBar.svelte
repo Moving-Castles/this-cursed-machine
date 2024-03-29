@@ -129,7 +129,7 @@
       // opacity: 1;
     }
     100% {
-      background: darkgrey;
+      background: white;
       // opacity: 0.7;
     }
   }
