@@ -37,6 +37,11 @@
   } from "@modules/state/base/stores"
   import { terminalMessages } from "./functions/terminalMessages"
 
+  export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
+  export let placeholder = "HELP"
+  export let setBlink = false
+  export let noOutput = false
+
   let inputElement: HTMLInputElement
   let userInput = ""
   let selectContainerElement: HTMLDivElement
@@ -44,15 +49,10 @@
   let inputActive = false
   let hasFocus = false
 
-  export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
-  export let placeholder = "HELP"
-  export let setBlink = false
-  export let noOutput = false
-
   const dispatch = createEventDispatcher()
 
   const focusInput = async e => {
-    if (e.target.tagName.toUpperCase() !== "INPUT") {
+    if (e && e.target.tagName.toUpperCase() !== "INPUT") {
       await tick()
       inputElement?.focus()
     }
@@ -341,6 +341,8 @@
       false,
       SYMBOLS[0]
     )
+
+    console.log(userInput)
 
     // Evaluate input
     const command = evaluate(userInput)

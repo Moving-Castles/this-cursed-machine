@@ -4,10 +4,13 @@
   import { MATERIAL_TYPE } from "contracts/enums"
   import { buy } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
 
   export let key: string
   export let offer: Offer
+
+  const PULSE_CONDITIONS = [10, 17]
 
   let working = false
 
@@ -35,7 +38,11 @@
     </div>
 
     <div class="section buy">
-      <button class:unafforable on:click={() => sendBuy()}>
+      <button
+        class:unafforable
+        class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
+        on:click={() => sendBuy()}
+      >
         {offer.offer.cost}P
       </button>
     </div>

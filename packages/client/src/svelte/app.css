@@ -186,3 +186,29 @@ pre {
   opacity: 0;
   pointer-events: none;
 }
+
+.pulse {
+  animation: pulse 0.8s infinite alternate ease-out;
+}
+
+.pulse-opacity {
+  animation: pulse-opacity 0.8s infinite alternate ease-out;
+}
+
+@keyframes pulse {
+  0% {
+    background: grey;
+  }
+  100% {
+    background: white;
+  }
+}
+
+@keyframes pulse-opacity {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}

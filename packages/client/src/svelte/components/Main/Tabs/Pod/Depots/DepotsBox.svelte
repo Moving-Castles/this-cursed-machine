@@ -1,9 +1,10 @@
 <script lang="ts">
   import { simulatedDepots } from "@modules/state/simulated/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import Depot from "./Depot.svelte"
 </script>
 
-<div class="depots-box">
+<div class="depots-box" class:pulse-opacity={$tutorialProgress === 21}>
   {#if $simulatedDepots}
     {#each Object.entries($simulatedDepots) as [key, depot], index}
       <Depot {key} {depot} {index} />

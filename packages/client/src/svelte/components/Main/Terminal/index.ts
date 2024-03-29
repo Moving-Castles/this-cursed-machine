@@ -17,7 +17,7 @@ export const SYMBOLS = [
   "«",
   "¥",
   "?",
-  "»"
+  "»",
 ]
 
 export const FULL_COMMANDS = [
@@ -39,7 +39,7 @@ export const FULL_COMMANDS = [
   COMMAND.EMPTY_DEPOT,
   COMMAND.SHIP,
   COMMAND.BUY,
-  COMMAND.GRADUATE
+  COMMAND.GRADUATE,
 ]
 
 export const NO_INPUT_COMMANDS = [
@@ -53,7 +53,7 @@ export const NO_INPUT_COMMANDS = [
   COMMAND.SKIP,
   COMMAND.BUY,
   COMMAND.GRADUATE,
-  COMMAND.RESET
+  COMMAND.RESET,
 ]
 
 export const SINGLE_INPUT_COMMANDS = [
@@ -67,94 +67,28 @@ export const SINGLE_INPUT_COMMANDS = [
 export const MULTI_INPUT_COMMANDS = [
   COMMAND.CONNECT,
   COMMAND.DISCONNECT,
-  COMMAND.ATTACH_DEPOT
+  COMMAND.ATTACH_DEPOT,
 ]
 
-// export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
-//   0: [
-//     COMMAND.HELP,
-//     COMMAND.BLINK,
-//     COMMAND.SKIP,
-//     // ... Hidden
-//     COMMAND.START,
-//     COMMAND.RESOLVE,
-//     COMMAND.TRANSFER,
-//     COMMAND.COMPLETE,
-//     COMMAND.FAIL
-//   ],
-//   1: [
-//     COMMAND.CONNECT,
-//     COMMAND.DISCONNECT,
-//     COMMAND.HELP,
-//     COMMAND.ORDER,
-//     COMMAND.BLINK,
-//     COMMAND.MAP,
-//     // ... Hidden
-//     COMMAND.START,
-//     COMMAND.RESOLVE,
-//     COMMAND.TRANSFER,
-//     COMMAND.COMPLETE,
-//     COMMAND.FAIL
-//   ],
-//   2: [
-//     COMMAND.CLEAR,
-//     COMMAND.CONNECT,
-//     COMMAND.DISCONNECT,
-//     COMMAND.HELP,
-//     COMMAND.ORDER,
-//     COMMAND.BLINK,
-//     COMMAND.MAP,
-//     // ... Hidden
-//     COMMAND.START,
-//     COMMAND.RESOLVE,
-//     COMMAND.TRANSFER,
-//     COMMAND.COMPLETE,
-//     COMMAND.FAIL
-//   ],
-//   3: [
-//     COMMAND.CLEAR,
-//     COMMAND.CONNECT,
-//     COMMAND.DISCONNECT,
-//     COMMAND.BUILD,
-//     COMMAND.DESTROY,
-//     COMMAND.MAP,
-//     COMMAND.HELP,
-//     COMMAND.ORDER,
-//     COMMAND.BLINK,
-//     // ... Hidden
-//     COMMAND.START,
-//     COMMAND.RESOLVE,
-//     COMMAND.TRANSFER,
-//     COMMAND.COMPLETE,
-//     COMMAND.FAIL
-//   ],
-//   4: [
-//     COMMAND.CLEAR,
-//     COMMAND.CONNECT,
-//     COMMAND.DISCONNECT,
-//     COMMAND.BUILD,
-//     COMMAND.DESTROY,
-//     COMMAND.MAP,
-//     COMMAND.HELP,
-//     COMMAND.ORDER,
-//     COMMAND.BLINK,
-//     // ... Hidden
-//     COMMAND.START,
-//     COMMAND.RESOLVE,
-//     COMMAND.TRANSFER,
-//     COMMAND.COMPLETE,
-//     COMMAND.FAIL
-//   ],
-//   5: FULL_COMMANDS,
-//   6: FULL_COMMANDS,
-//   7: FULL_COMMANDS,
-//   8: [],
-//   9: []
-// }
-
 export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
-  0: FULL_COMMANDS,
-  1: FULL_COMMANDS,
+  0: [
+    COMMAND.HELP,
+    COMMAND.BLINK,
+    COMMAND.DISCONNECT,
+    COMMAND.CONNECT,
+    COMMAND.RESET,
+    COMMAND.SHIP,
+  ],
+  1: [
+    COMMAND.HELP,
+    COMMAND.BLINK,
+    COMMAND.DISCONNECT,
+    COMMAND.CONNECT,
+    COMMAND.RESET,
+    COMMAND.SHIP,
+    COMMAND.BUILD,
+    COMMAND.DESTROY,
+  ],
   2: FULL_COMMANDS,
   3: FULL_COMMANDS,
   4: FULL_COMMANDS,
@@ -168,7 +102,7 @@ export const FULL_MACHINES = [
   MACHINE_TYPE.CENTRIFUGE,
   MACHINE_TYPE.GRINDER,
   MACHINE_TYPE.RAT_CAGE,
-  MACHINE_TYPE.MEALWORM_VAT
+  MACHINE_TYPE.MEALWORM_VAT,
 ]
 
 export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
@@ -179,7 +113,11 @@ export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
   4: FULL_MACHINES,
 }
 
-export const FIXED_MACHINE_TYPES = [MACHINE_TYPE.PLAYER, MACHINE_TYPE.INLET, MACHINE_TYPE.OUTLET]
+export const FIXED_MACHINE_TYPES = [
+  MACHINE_TYPE.PLAYER,
+  MACHINE_TYPE.INLET,
+  MACHINE_TYPE.OUTLET,
+]
 export const BETWEEN_SQUARE_BRACKETS = /(?<=\[).+?(?=\])/g
 export const BETWEEN_BRACKETS = /(?<=\().+?(?=\))/g
 export const BETWEEN_CARETS = /(?<=\>).+?(?=\<)/g

@@ -2,8 +2,6 @@
   import { verifiedClients } from "@modules/signal/stores"
   import type { ChatMessage } from "@modules/signal/types"
   export let message: ChatMessage
-
-  $: console.log("$verifiedClients", $verifiedClients)
 </script>
 
 <div class="message">

@@ -4,7 +4,11 @@
   import Depot from "./Depot.svelte"
 </script>
 
-<div class="depots-box" class:hidden={$tutorialProgress < 4}>
+<div
+  class="depots-box"
+  class:hidden={$tutorialProgress < 4}
+  class:pulse-opacity={$tutorialProgress === 21}
+>
   {#if $simulatedDepots}
     {#each Object.entries($simulatedDepots) as [key, depot], index}
       <Depot {key} {depot} {index} />

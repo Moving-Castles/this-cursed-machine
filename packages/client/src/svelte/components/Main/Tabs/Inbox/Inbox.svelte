@@ -14,7 +14,6 @@
 
   const open = i => {
     viewing = viewing === i ? -1 : i
-    console.log("opening")
     advanceTutorial(null, $tutorialProgress, "read")
   }
 </script>
@@ -22,7 +21,7 @@
 <div class="inbox" in:fade>
   {#each messages as message, i}
     <div on:click={() => open(i)} class="message">
-      <button class="opener">
+      <button class="opener" class:pulse={$tutorialProgress === 19}>
         {message.title}
       </button>
 

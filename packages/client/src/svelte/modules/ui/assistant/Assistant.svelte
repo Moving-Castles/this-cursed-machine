@@ -8,15 +8,19 @@
   const onEnd = (e: CustomEvent<{ end: AssistantMessage }>) => {
     assistantMessages.set(
       $assistantMessages.filter(
-        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp,
-      ),
+        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp
+      )
     )
   }
 </script>
 
 <div class="toast-pane">
   {#each $assistantMessages as msg (msg.timestamp + $assistantMessages.length)}
-    <div animate:flip in:fly={{ y: 20, delay: 150 }}>
+    <div
+      animate:flip
+      in:fly={{ y: 20, delay: 150 }}
+      out:fly={{ y: -20, duration: 100 }}
+    >
       <AssistantMessageComponent {msg} on:end={onEnd} />
     </div>
   {/each}
@@ -30,7 +34,7 @@
     right: 20px;
     display: flex;
     flex-direction: column-reverse;
-    width: 300px;
+    width: 400px;
     text-align: center;
   }
 </style>

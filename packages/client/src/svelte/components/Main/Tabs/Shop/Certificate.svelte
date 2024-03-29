@@ -4,6 +4,7 @@
   //   import { playSound } from "@modules/sound"
   import { name } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   let working = false
   let modalActive = false
@@ -72,7 +73,9 @@
   </div>
 
   <div class="section buy">
-    <button on:click={toggleModal}>FREE</button>
+    <button class:pulse={$tutorialProgress === 26} on:click={toggleModal}
+      >FREE</button
+    >
   </div>
 </div>
 

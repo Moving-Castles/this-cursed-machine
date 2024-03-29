@@ -11,5 +11,12 @@ import { levelCommandFilter } from "@components/Main/Terminal/functions/helpers"
  */
 export function evaluate(input: string): Command | undefined {
   const cleanInput = input.toLowerCase().trim()
-  return commands.find(command => levelCommandFilter(get(player)?.level || 0, command.id) && (command.name === cleanInput || command.alias === cleanInput))
+  return commands.find(
+    command =>
+      levelCommandFilter(
+        get(player)?.tutorial ? get(player)?.tutorialLevel : 2,
+        command.id
+      ) &&
+      (command.name === cleanInput || command.alias === cleanInput)
+  )
 }

@@ -394,14 +394,6 @@ export const shippableDepots = derived(
     if (!$blockNumber) return {}
     return Object.fromEntries(
       Object.entries($simulatedDepots).map(([_, depot]) => {
-        console.warn("depot.materialType, $playerOrder?.order.goalMaterialType")
-        console.log(
-          MATERIAL_TYPE[depot.materialType],
-          MATERIAL_TYPE[$playerOrder?.order.goalMaterialType]
-        )
-
-        console.warn("depot.amount >= $playerOrder?.order.goalAmount")
-        console.log(depot.amount, $playerOrder?.order.goalAmount)
         if (
           depot.materialType === $playerOrder?.order.goalMaterialType &&
           depot.amount >= $playerOrder?.order.goalAmount

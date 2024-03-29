@@ -6,15 +6,15 @@ function formatNumber(num: string | number) {
   return Number(num)
 }
 
-export function storableNumber(data): Writable<number> {
+export function storableNumber(data, key): Writable<number> {
   const store = writable(data)
   const { subscribe, set } = store
   const isBrowser = () => typeof window !== "undefined"
 
   const init = () =>
     isBrowser() &&
-    localStorage.getItem("storable") &&
-    set(formatNumber(localStorage.getItem("storable")))
+    localStorage.getItem(key) &&
+    set(formatNumber(localStorage.getItem(key)))
 
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
@@ -33,13 +33,13 @@ export function storableNumber(data): Writable<number> {
       return subscribe(value => subscriber(formatNumber(value)))
     },
     set: n => {
-      isBrowser() && localStorage.setItem("storable", String(n))
+      isBrowser() && localStorage.setItem(key, String(n))
       set(formatNumber(n))
     },
     update: cb => {
       const updatedStore = cb(get(store))
 
-      isBrowser() && localStorage.setItem("storable", String(updatedStore))
+      isBrowser() && localStorage.setItem(key, String(updatedStore))
 
       set(formatNumber(updatedStore))
     },

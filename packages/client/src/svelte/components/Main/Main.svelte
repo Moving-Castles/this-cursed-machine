@@ -11,7 +11,11 @@
 
   import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
-  import { tutorialProgress } from "@modules/ui/assistant"
+  import {
+    sendMessage,
+    clearMessage,
+    tutorialProgress,
+  } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
@@ -68,6 +72,20 @@
 
   const handleCommand = async () => {
     terminalComponent.resetInput()
+  }
+
+  $: {
+    if ($tutorialProgress == 29) {
+      clearMessage()
+      sendMessage(
+        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
+        { disappear: true }
+      )
+
+      console.log(
+        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere"
+      )
+    }
   }
 
   onMount(() => {
