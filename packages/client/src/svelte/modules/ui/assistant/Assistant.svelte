@@ -2,7 +2,7 @@
   import type { AssistantMessage } from "."
   import { assistantMessages } from "."
   import AssistantMessageComponent from "./AssistantMessage.svelte"
-  import { fade } from "svelte/transition"
+  import { fly } from "svelte/transition"
   import { flip } from "svelte/animate"
 
   const onEnd = (e: CustomEvent<{ end: AssistantMessage }>) => {
@@ -16,7 +16,7 @@
 
 <div class="toast-pane">
   {#each $assistantMessages as msg (msg.timestamp + $assistantMessages.length)}
-    <div animate:flip in:fade out:fade>
+    <div animate:flip in:fly={{ y: 20, delay: 150 }}>
       <AssistantMessageComponent {msg} on:end={onEnd} />
     </div>
   {/each}
