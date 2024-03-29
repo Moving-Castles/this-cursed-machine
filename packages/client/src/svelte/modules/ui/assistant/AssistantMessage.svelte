@@ -31,7 +31,8 @@
     display: flex;
     flex-flow: column nowrap;
     color: var(--background);
-    padding: 20px;
+    padding: 10px;
+    padding-top: 0;
     text-align: center;
     background: var(--foreground);
     margin-top: 10px;
@@ -41,7 +42,7 @@
     white-space: pre-wrap;
     text-align: left;
     font-family: var(--font-family-handwriting);
-    font-size: 28px;
+    font-size: 22px;
     line-height: 1em;
     font-weight: bold;
     border-radius: 5px;
@@ -50,7 +51,7 @@
     // box-shadow: rgba(255, 255, 95, 0.9) 0px 0px 10px 0px;
 
     img {
-      width: 100px;
+      width: 80px;
       margin: 0 auto;
       margin: 10px;
       margin-left: auto;
