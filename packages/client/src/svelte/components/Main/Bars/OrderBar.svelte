@@ -2,6 +2,7 @@
   import { blockNumber } from "@modules/network"
   import { player } from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
   import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
@@ -16,7 +17,7 @@
   }
 </script>
 
-<div class="order-bar">
+<div class="order-bar" class:hidden={$tutorialProgress < 4}>
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">

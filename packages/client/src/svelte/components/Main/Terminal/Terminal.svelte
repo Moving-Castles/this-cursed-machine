@@ -51,9 +51,11 @@
 
   const dispatch = createEventDispatcher()
 
-  const focusInput = async () => {
-    await tick()
-    inputElement?.focus()
+  const focusInput = async e => {
+    if (e.target.tagName.toUpperCase() !== "INPUT") {
+      await tick()
+      inputElement?.focus()
+    }
   }
 
   export const resetInput = async () => {
@@ -68,7 +70,7 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5],
+      SYMBOLS[5]
     )
     resetInput()
   }
@@ -81,7 +83,7 @@
   }
 
   const getSingleInputCommandParameters = async (
-    command: Command,
+    command: Command
   ): Promise<any[] | false> => {
     const selectOptions = createSelectOptions(command.id)
 
@@ -94,7 +96,7 @@
     const value = await renderSelect(
       selectContainerElement,
       Select,
-      selectOptions,
+      selectOptions
     )
 
     // Abort if nothing selected
@@ -112,7 +114,7 @@
     const connectionId = await renderSelect(
       selectContainerElement,
       Select,
-      disconnectOptions,
+      disconnectOptions
     )
 
     // Abort if nothing selected
@@ -137,7 +139,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING,
+      DIRECTION.OUTGOING
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "From:")
@@ -145,7 +147,7 @@
     const sourceMachineKey = await renderSelect(
       selectContainerElement,
       Select,
-      sourceSelectOptions,
+      sourceSelectOptions
     )
 
     // Abort if nothing selected
@@ -163,7 +165,7 @@
         " #" +
         sourceMachineEntity.buildIndex,
       true,
-      SYMBOLS[11],
+      SYMBOLS[11]
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,7 +201,7 @@
       const sourcePort = (await renderSelect(
         selectContainerElement,
         Select,
-        sourcePortOptions,
+        sourcePortOptions
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -212,7 +214,7 @@
         TERMINAL_OUTPUT_TYPE.SPECIAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14],
+        SYMBOLS[14]
       )
 
       portIndex = sourcePort
@@ -230,7 +232,7 @@
     // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING,
+      DIRECTION.INCOMING
     ).filter(option => option.value !== sourceMachineKey)
 
     // Abort if no available targets
@@ -244,7 +246,7 @@
     let targetMachineKey = await renderSelect(
       selectContainerElement,
       Select,
-      targetSelectOptions,
+      targetSelectOptions
     )
 
     // Abort if nothing selected
@@ -262,7 +264,7 @@
         " #" +
         targetMachineEntity.buildIndex,
       true,
-      SYMBOLS[14],
+      SYMBOLS[14]
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -281,7 +283,7 @@
     const depotEntity = await renderSelect(
       selectContainerElement,
       Select,
-      sourceSelectOptions,
+      sourceSelectOptions
     )
 
     // Abort if nothing selected
@@ -316,7 +318,7 @@
     const targetEntity = await renderSelect(
       selectContainerElement,
       Select,
-      targetSelectOptions,
+      targetSelectOptions
     )
 
     // Abort if nothing selected
@@ -337,7 +339,7 @@
       TERMINAL_OUTPUT_TYPE.COMMAND,
       userInput,
       false,
-      SYMBOLS[0],
+      SYMBOLS[0]
     )
 
     // Evaluate input

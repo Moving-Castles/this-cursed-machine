@@ -1,5 +1,6 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
 </script>
 
 <div class="info-bar">
@@ -13,7 +14,9 @@
 
   <div class="completed">
     {#if $player.tutorial}
-      <div>TUTORIAL LEVEL: {($player.tutorialLevel ?? 0) + 1}</div>
+      <div class:hidden={$tutorialProgress < 4}>
+        TUTORIAL LEVEL: {($player.tutorialLevel ?? 0) + 1}
+      </div>
     {:else}
       <div>COMPLETED: {$player.completed?.length ?? 0}</div>
     {/if}

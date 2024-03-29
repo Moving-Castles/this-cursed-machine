@@ -62,7 +62,7 @@ export function advanceTutorial(
 
   const ADVANCE_CONDITIONS = [
     { type: "command", value: ["blink", "."] }, // 0
-    { type: "tab", value: [2] }, // 1
+    { type: "tab", value: [1] }, // 1
     { type: "contract", value: { systemId: "accept" } }, // 2
     { type: "tab", value: [0] }, // 3
     {
@@ -71,9 +71,9 @@ export function advanceTutorial(
     }, // 4
     { type: "order" }, // 5
     { type: "contract", value: { systemId: "ship" } }, // 6
-    { type: "tab", value: [2] }, // 7
+    { type: "tab", value: [1] }, // 7
     { type: "contract", value: { systemId: "accept" } }, // 8
-    { type: "tab", value: [3] }, // 9
+    { type: "tab", value: [2] }, // 9
     { type: "contract", value: { systemId: "buy" } }, // 10
     { type: "tab", value: [0] }, // 11
     {
@@ -82,10 +82,10 @@ export function advanceTutorial(
     }, // 12
     { type: "order" }, // 13
     { type: "contract", value: { systemId: "ship" } }, // 14
-    { type: "tab", value: [2] }, // 15
+    { type: "tab", value: [1] }, // 15
     { type: "contract", value: { systemId: "accept" } }, // 16
     { type: "contract", value: { systemId: "buy" } }, // 17
-    { type: "tab", value: [1] }, // 18
+    { type: "tab", value: [3] }, // 18
     { type: "read" }, // 19
     { type: "tab", value: [0] }, // 20
     {
@@ -100,7 +100,7 @@ export function advanceTutorial(
       },
     }, // 22
     { type: "order" }, // 23
-    { type: "tab", value: [3] }, // 24
+    { type: "tab", value: [2] }, // 24
     { type: "contract", value: { systemId: "name" } }, // 25
     { type: "tab", value: [4] }, // 26
     // { type: "contract", value: [4] }, // @todo: add callback to send chat

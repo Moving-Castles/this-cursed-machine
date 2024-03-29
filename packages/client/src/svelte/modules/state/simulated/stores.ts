@@ -2,6 +2,7 @@ import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MATERIAL_TYPE } from "@modules/state/base/enums"
+import { blockNumber } from "@modules/network"
 import type {
   SimulatedEntities,
   SimulatedDepots,
@@ -386,18 +387,27 @@ export const playerOrder = derived(
   }
 )
 
+// Can a depot ship?
 export const shippableDepots = derived(
-  [depots, playerOrder],
-  ([$depots, $playerOrder]) => {
+  [blockNumber, simulatedDepots, playerOrder],
+  ([$blockNumber, $simulatedDepots, $playerOrder]) => {
+    if (!$blockNumber) return {}
     return Object.fromEntries(
-      Object.entries($depots).map(([_, depot]) => {
+      Object.entries($simulatedDepots).map(([_, depot]) => {
+        console.warn("depot.materialType, $playerOrder?.order.goalMaterialType")
+        console.log(
+          MATERIAL_TYPE[depot.materialType],
+          MATERIAL_TYPE[$playerOrder?.order.goalMaterialType]
+        )
+
+        console.warn("depot.amount >= $playerOrder?.order.goalAmount")
+        console.log(depot.amount, $playerOrder?.order.goalAmount)
         if (
           depot.materialType === $playerOrder?.order.goalMaterialType &&
           depot.amount >= $playerOrder?.order.goalAmount
         ) {
           return [_, true]
         }
-
         return [_, false]
       })
     )

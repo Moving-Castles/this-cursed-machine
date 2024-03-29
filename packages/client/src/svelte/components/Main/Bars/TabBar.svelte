@@ -8,16 +8,16 @@
 
   const HIDDEN_CONDITIONS = {
     0: 0,
-    1: 17,
-    2: 0,
-    3: 8,
+    1: 0,
+    2: 8,
+    3: 17,
     4: 25,
   }
 
   const PULSE_CONDITIONS = {
-    0: [3],
+    0: [],
     1: [],
-    2: [1],
+    2: [],
     3: [],
     4: [],
   }
@@ -48,6 +48,7 @@
   {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
     <div class="button-container">
       <button
+        disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         class:enabled={value.enabled}
         class:active={key === $activeTab}
         class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
@@ -102,12 +103,13 @@
           background: grey;
         }
 
-        &.hidden {
-          opacity: 0 !important;
-        }
-
         &.pulse {
           animation: pulse 0.8s infinite alternate ease-out;
+        }
+
+        &.hidden {
+          opacity: 0.2 !important;
+          pointer-events: none;
         }
 
         &.enabled {
@@ -116,6 +118,10 @@
 
           &:hover {
             background: grey;
+            cursor: crosshair;
+          }
+          &:disabled:hover {
+            background: darkgrey;
             cursor: crosshair;
           }
         }

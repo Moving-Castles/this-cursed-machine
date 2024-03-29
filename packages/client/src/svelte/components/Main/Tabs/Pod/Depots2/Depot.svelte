@@ -9,6 +9,8 @@
   export let key: string
   export let index: number
 
+  // $: console.log($shippableDepots)
+
   $: canShip = $shippableDepots[key]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 

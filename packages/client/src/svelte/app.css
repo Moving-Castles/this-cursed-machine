@@ -23,7 +23,6 @@
   /* --color-border: #eeff00; */
   --default-border-style: 2px dashed var(--color-border);
 
-
   /* Sizing */
   --default-padding: 1ch;
 
@@ -51,7 +50,9 @@
   /* user-select: none; */
   margin: 0;
   padding: 0;
-  font-variation-settings: "BLED" 0, "SCAN" 0;
+  font-variation-settings:
+    "BLED" 0,
+    "SCAN" 0;
   text-transform: uppercase;
   letter-spacing: 0px;
 }
@@ -182,4 +183,9 @@ pre {
   mix-blend-mode: exclusion;
   z-index: 100000;
   opacity: 0.8;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
