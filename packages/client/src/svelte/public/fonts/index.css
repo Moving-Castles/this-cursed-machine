@@ -1,35 +1,8 @@
-@font-face {
+/* @font-face {
     font-family: 'Fake Receipt';
     src: url('FakeReceipt/FakeReceipt-Regular.woff2') format('woff2'),
         url('FakeReceipt/FakeReceipt-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-}
-
-@font-face {
-    font-family: 'Baleze';
-    src: url('Baleze/BalezeV01Trial-One.woff2') format('woff2'),
-        url('Baleze/BalezeV01Trial-One.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SV Basic Manual';
-    src: url('SVBasicManual/SVBasicManual.woff2') format('woff2'),
-        url('SVBasicManual/SVBasicManual.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'DEC Terminal Modern';
-    src: url('DECTerminalModern/DECTerminalModern.woff2') format('woff2'),
-        url('DECTerminalModern/DECTerminalModern.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
+} */
 
