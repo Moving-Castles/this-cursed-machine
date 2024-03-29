@@ -27,7 +27,7 @@ contract OfferSystem is System {
     // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    LibToken.transferToken(_world(), _world(), offerData.cost);
+    LibToken.transferToken(_world(), offerData.cost);
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 

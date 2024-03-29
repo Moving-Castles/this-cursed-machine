@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { TutorialLevel, EntityType, MachineType, OutgoingConnections, IncomingConnections, GameConfig } from "../codegen/index.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import { WorldContextConsumerLib } from "@latticexyz/world/src/WorldContext.sol";
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+import { IERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20.sol";
 import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
 import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
@@ -34,12 +35,13 @@ library LibToken {
   /**
    * @dev Transfer tokens from the caller to another address
    */
-  function transferToken(address worldAddress, address to, uint256 value) internal {
+  function transferToken(address to, uint256 value) internal {
     address token = GameConfig.getTokenAddress();
     ResourceId systemId = Puppet(token).systemId();
 
     bytes memory callData = abi.encodeCall(IERC20.transfer, (to, value));
 
+    address worldAddress = WorldContextConsumerLib._world();
     (bool success, ) = worldAddress.delegatecall(abi.encodeCall(IBaseWorld(worldAddress).call, (systemId, callData)));
 
     require(success, "token transfer failed");
