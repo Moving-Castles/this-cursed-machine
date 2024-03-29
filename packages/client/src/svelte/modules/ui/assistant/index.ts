@@ -1,11 +1,9 @@
 import type { Action } from "@modules/action/actionSequencer"
 import { MACHINE_TYPE } from "contracts/enums"
 import { writable, derived, get } from "svelte/store"
-import {
-  playerAddress,
-  playerPod,
-  shippableDepots,
-} from "@modules/state/base/stores"
+import { playerId, playerPod } from "@modules/state/base/stores"
+import { shippableDepots } from "@modules/state/simulated/stores"
+
 import { storableNumber } from "@modules/utils/storable"
 import { staticContent } from "@modules/content"
 
@@ -53,7 +51,8 @@ export function advanceTutorial(
   level: number,
   type: "tab" | "contract" | "command" | "order" | "read"
 ) {
-  const PLAYER_ADDRESS = get(playerAddress)
+  // const PLAYER_ADDRESS = get(playerAddress)
+  const PLAYER_ADDRESS = get(playerId)
   const OUTLET_ADDRESS = get(playerPod)?.fixedEntities?.outlet
   const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
   const INLET_ADDRESSES = get(playerPod)?.fixedEntities?.inlets
@@ -62,48 +61,49 @@ export function advanceTutorial(
   // const DEPOT_ADDRESS = get(playerPod)?.fixedEntities
 
   const ADVANCE_CONDITIONS = [
-    { type: "command", value: ["blink", "."] },
-    { type: "tab", value: [2] },
-    { type: "contract", value: { systemId: "accept" } },
-    { type: "tab", value: [0] },
+    { type: "command", value: ["blink", "."] }, // 0
+    { type: "tab", value: [2] }, // 1
+    { type: "contract", value: { systemId: "accept" } }, // 2
+    { type: "tab", value: [0] }, // 3
     {
       type: "contract",
       value: { systemId: "connect", params: [PLAYER_ADDRESS, OUTLET_ADDRESS] },
-    },
-    { type: "order" },
-    { type: "contract", value: { systemId: "ship" } },
-    { type: "tab", value: [2] },
-    { type: "contract", value: { systemId: "accept" } },
-    { type: "tab", value: [3] },
-    { type: "contract", value: { systemId: "buy" } },
-    { type: "tab", value: [0] },
+    }, // 4
+    { type: "order" }, // 5
+    { type: "contract", value: { systemId: "ship" } }, // 6
+    { type: "tab", value: [2] }, // 7
+    { type: "contract", value: { systemId: "accept" } }, // 8
+    { type: "tab", value: [3] }, // 9
+    { type: "contract", value: { systemId: "buy" } }, // 10
+    { type: "tab", value: [0] }, // 11
     {
       type: "contract",
       value: { systemId: "build", params: [MACHINE_TYPE.DRYER] },
-    },
-    { type: "order" },
-    { type: "contract", value: { systemId: "ship" } },
-    { type: "tab", value: [2] },
-    { type: "contract", value: { systemId: "accept" } },
-    { type: "contract", value: { systemId: "buy" } },
-    { type: "tab", value: [1] },
-    { type: "read" }, // new one
-    { type: "tab", value: [0] },
+    }, // 12
+    { type: "order" }, // 13
+    { type: "contract", value: { systemId: "ship" } }, // 14
+    { type: "tab", value: [2] }, // 15
+    { type: "contract", value: { systemId: "accept" } }, // 16
+    { type: "contract", value: { systemId: "buy" } }, // 17
+    { type: "tab", value: [1] }, // 18
+    { type: "read" }, // 19
+    { type: "tab", value: [0] }, // 20
     {
       type: "contract",
       value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
-    },
+    }, // 21
     {
       type: "contract",
       value: {
         systemId: "attachDepot",
-        params: [DEPOT_ADDRESSES, INLET_ADDRESSES],
+        params: [DEPOT_ADDRESSES, OUTLET_ADDRESS],
       },
-    },
-    { type: "order" },
-    { type: "tab", value: [3] },
-    { type: "contract", value: { systemId: "name" } },
-    { type: "tab", value: [4] },
+    }, // 22
+    { type: "order" }, // 23
+    { type: "tab", value: [3] }, // 24
+    { type: "contract", value: { systemId: "name" } }, // 25
+    { type: "tab", value: [4] }, // 26
+    // { type: "contract", value: [4] }, // @todo: add callback to send chat
   ]
 
   // Indeces correspond to steps
@@ -112,6 +112,7 @@ export function advanceTutorial(
   const step = ADVANCE_CONDITIONS[level]
 
   if (step) {
+    console.log(step)
     // Check if condition is met or not
     if (
       step.type === "command" &&
@@ -135,14 +136,26 @@ export function advanceTutorial(
 
       // Check if all the params correspond to all the input params
       if (step.value.params) {
+        let satisfies = true
+
         step.value.params.forEach(prm => {
+          const all = step.value.params.flat()
+
           if (Array.isArray(prm)) {
-            if (prm.filter(value => input.params.includes(value))?.length === 0)
-              return
+            console.log("comparing arrays", prm, input.params)
+
+            input.params.forEach(address => {
+              if (!all.includes(address)) {
+                satisfies = false
+              }
+            })
           } else {
-            if (!input.params.includes(prm)) return
+            console.log("comparing strings", prm, input.params)
+            if (!input.params.includes(prm)) satisfies = false
           }
         })
+
+        if (!satisfies) return
       }
 
       return tutorialProgress.set(level + 1)

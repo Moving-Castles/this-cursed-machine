@@ -1,10 +1,7 @@
 <script lang="ts">
   import type { SimulatedDepot } from "@modules/state/simulated/types"
-  import {
-    playerPod,
-    machines,
-    shippableDepots,
-  } from "@modules/state/base/stores"
+  import { playerPod, machines } from "@modules/state/base/stores"
+  import { shippableDepots } from "@modules/state/simulated/stores"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"

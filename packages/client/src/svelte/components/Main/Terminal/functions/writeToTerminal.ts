@@ -4,6 +4,8 @@ import { SYMBOLS } from "@components/Main/Terminal/"
 import { terminalOutput } from "@components/Main/Terminal/stores"
 import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
 import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+import { UIState } from "@modules/ui/stores"
+import { UI } from "@modules/ui/enums"
 
 import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
 import { playSound, randomPitch } from "@modules/sound"
@@ -36,7 +38,10 @@ export async function writeToTerminal(
       output.push(newOutput)
     }
 
-    advanceTutorial(newOutput.text, get(tutorialProgress), "command")
+    if (get(UIState) === UI.READY) {
+      advanceTutorial(newOutput.text, get(tutorialProgress), "command")
+    }
+
     return output
   })
 

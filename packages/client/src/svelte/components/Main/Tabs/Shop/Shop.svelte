@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { offers } from "@modules/state/base/stores"
+  import { player, offers } from "@modules/state/base/stores"
+  import { tutorialProgress } from "@svelte/modules/ui/assistant"
   import ShopItem from "./ShopItem.svelte"
   import Certificate from "./Certificate.svelte"
 </script>
@@ -10,7 +11,9 @@
     {#each Object.entries($offers) as [key, offer]}
       <ShopItem {key} {offer} />
     {/each}
-    <Certificate />
+    {#if $player?.tutorialLevel === 3}
+      <Certificate />
+    {/if}
   </div>
 </div>
 

@@ -66,7 +66,6 @@ export const waitForCompletion = (
     let index = 0
 
     const checkCompletion = () => {
-      console.log("checking completion")
       index++
       if (loadingFunction) loadingFunction(index)
       if (action.completed) {

@@ -103,7 +103,7 @@
           <OrderBar />
         </div>
         <div class="tab-container">
-          {#if $tutorialProgress == 0}
+          {#if $tutorialProgress === 0}
             <div class="dim" out:fade={{ duration: 100 }} />
           {/if}
           <!-- Render the CurrentComponent if it's not null -->

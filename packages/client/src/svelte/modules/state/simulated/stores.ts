@@ -10,7 +10,14 @@ import type {
   Connection,
   SimulatedMachine,
 } from "./types"
-import { machines, depots, playerPod } from "@modules/state/base/stores"
+import {
+  machines,
+  depots,
+  playerPod,
+  player,
+  orders,
+  availableOrders,
+} from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
 import { GRAPH_ENTITY_STATE } from "./enums"
@@ -366,4 +373,33 @@ export const simulatedDepots = derived(
 export const simulatedConnections = derived(
   simulatedMachines,
   $simulatedMachines => calculateSimulatedConnections($simulatedMachines)
+)
+
+export const playerOrder = derived(
+  [player, orders, playerPod, availableOrders],
+  ([$player, $orders, $playerPod, $availableOrders]) => {
+    if (!$player || !$orders || !$playerPod || !$availableOrders) return null
+
+    return $player.tutorial
+      ? $orders[$playerPod.currentOrder]
+      : $availableOrders[$playerPod.currentOrder]
+  }
+)
+
+export const shippableDepots = derived(
+  [depots, playerOrder],
+  ([$depots, $playerOrder]) => {
+    return Object.fromEntries(
+      Object.entries($depots).map(([_, depot]) => {
+        if (
+          depot.materialType === $playerOrder?.order.goalMaterialType &&
+          depot.amount >= $playerOrder?.order.goalAmount
+        ) {
+          return [_, true]
+        }
+
+        return [_, false]
+      })
+    )
+  }
 )

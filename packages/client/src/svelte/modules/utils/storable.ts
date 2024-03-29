@@ -1,16 +1,21 @@
-import { writable } from "svelte/store"
+import type { Writable } from "svelte/store"
+import { writable, get } from "svelte/store"
 
-export function storableNumber(data) {
+function formatNumber(num: string | number) {
+  // Example formatting: rounds the number to 2 decimal places
+  return Number(num)
+}
+
+export function storableNumber(data): Writable<number> {
   const store = writable(data)
-  const { subscribe, set, update } = store
+  const { subscribe, set } = store
   const isBrowser = () => typeof window !== "undefined"
 
   const init = () =>
     isBrowser() &&
     localStorage.getItem("storable") &&
-    set(localStorage.getItem("storable"))
+    set(formatNumber(localStorage.getItem("storable")))
 
-  // Update value when switching tabs
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
       // Browser tab is hidden
@@ -23,17 +28,20 @@ export function storableNumber(data) {
   init()
 
   return {
-    subscribe,
+    subscribe: subscriber => {
+      // Use the formatter function before passing the value to the subscriber
+      return subscribe(value => subscriber(formatNumber(value)))
+    },
     set: n => {
       isBrowser() && localStorage.setItem("storable", String(n))
-      set(n)
+      set(formatNumber(n))
     },
     update: cb => {
       const updatedStore = cb(get(store))
 
       isBrowser() && localStorage.setItem("storable", String(updatedStore))
 
-      set(updatedStore)
+      set(formatNumber(updatedStore))
     },
   }
 }
