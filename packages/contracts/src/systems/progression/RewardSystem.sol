@@ -13,6 +13,6 @@ contract RewardSystem is System {
   // Just used for testing
   function charge() public {
     require(LibToken.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
-    LibToken.transferToken(_world(), _world(), 100);
+    LibToken.transferToken(_world(), 100);
   }
 }
