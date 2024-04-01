@@ -6,18 +6,18 @@
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
   import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
-  import { reward, charge } from "@modules/action"
+  // import { reward, charge } from "@modules/action"
 
-  const sendReward = () => {
-    reward()
-  }
+  // const sendReward = () => {
+  //   reward()
+  // }
 
-  const sendCharge = () => {
-    charge()
-  }
+  // const sendCharge = () => {
+  //   charge()
+  // }
 </script>
 
-<div class="order-bar" class:hidden={$tutorialProgress < 4}>
+<div class="order-bar" class:hidden={$tutorialProgress < 1}>
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">
@@ -33,7 +33,7 @@
     {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber),
         )}
       </div>
     {/if}

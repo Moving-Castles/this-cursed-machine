@@ -7,13 +7,11 @@ import { connect } from "@components/Main/Terminal/commands/connect";
 import { disconnect } from "@components/Main/Terminal/commands/disconnect";
 import { destroy } from "@components/Main/Terminal/commands/destroy";
 import { reset } from "@components/Main/Terminal/commands/reset";
-import { start } from "@components/Main/Terminal/commands/start";
 import { attachDepot } from "@components/Main/Terminal/commands/attachDepot";
 import { detachDepot } from "@components/Main/Terminal/commands/detachDepot";
 import { emptyDepot } from "@components/Main/Terminal/commands/emptyDepot";
 import { ship } from "@components/Main/Terminal/commands/ship";
 // Testing
-import { buy } from "@components/Main/Terminal/commands/buy";
 import { skip } from "@components/Main/Terminal/commands/skip";
 import { graduate } from "@components/Main/Terminal/commands/graduate";
 import { resolve } from "@components/Main/Terminal/commands/resolve";
@@ -34,8 +32,6 @@ export const commands: Command[] = [
     // Testing
     resolve,
     skip,
-    start,
     fail,
-    buy,
     graduate
 ]

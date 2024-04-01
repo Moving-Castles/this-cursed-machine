@@ -59,7 +59,7 @@ export function createSelectOptions(
 function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
   let availableMachines: MACHINE_TYPE[] =
-    MACHINES_BY_LEVEL[get(player)?.tutorial ? get(player)?.tutorialLevel : 2]
+    MACHINES_BY_LEVEL[get(player)?.tutorialLevel ?? 3]
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
@@ -134,8 +134,8 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     const targetMachineBuildIndex = targetMachine.hasOwnProperty("buildIndex")
       ? "#" + targetMachine.buildIndex
       : ""
-    const connectionProduct = connection?.product
-      ? `(${materialTypeToLabel(connection.product.materialType)})`
+    const connectionProduct = connection?.products?.length > 0
+      ? `(${materialTypeToLabel(connection.products[0].materialType)})`
       : ""
 
     const label = `${machineTypeToLabel(sourceMachine.machineType)}${sourceMachineBuildIndex} to ${machineTypeToLabel(targetMachine.machineType)}${targetMachineBuildIndex} ${connectionProduct}`

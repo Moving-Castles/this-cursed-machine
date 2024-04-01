@@ -32,7 +32,7 @@ export async function flashEffect(): Promise<void> {
     // Create a new div element
     const flashDiv = document.createElement("div")
 
-    // Assign the 'flash-effect' class to it
+    // Assign the 'flash' class to it
     flashDiv.className = "flash"
 
     // Append it to the body

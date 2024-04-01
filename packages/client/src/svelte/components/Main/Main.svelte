@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { fade } from "svelte/transition"
+  // import { fade } from "svelte/transition"
+  import { flicker } from "@modules/ui/transitions"
   import { player } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
 
@@ -23,6 +24,7 @@
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
+  import { FINAL_TUTORIAL_LEVEL } from "@svelte/modules/ui/constants"
 
   const tabList = {
     [TABS.POD]: {
@@ -75,15 +77,14 @@
   }
 
   $: {
-    if ($tutorialProgress == 29) {
+    if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
       clearMessage()
       sendMessage(
         "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-        { disappear: true }
+        { disappear: true },
       )
-
       console.log(
-        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere"
+        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
       )
     }
   }
@@ -109,7 +110,7 @@
           bind:this={terminalComponent}
           on:commandExecuted={() => handleCommand()}
           setBlink
-          placeholder="HELP"
+          placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
         />
         <!-- <div class="terminal-overlay" /> -->
       </div>
@@ -121,7 +122,7 @@
         </div>
         <div class="tab-container">
           {#if $tutorialProgress === 0}
-            <div class="dim" out:fade={{ duration: 100 }} />
+            <div class="dim" out:flicker={{ duration: 500 }} />
           {/if}
           <!-- Render the CurrentComponent if it's not null -->
           {#if currentTabComponent}
@@ -161,6 +162,8 @@
   .split-screen {
     display: flex;
     height: 100vh;
+    background-image: url(/images/graf.png);
+    background-size: cover;
 
     .left-col {
       height: 100%;
@@ -178,27 +181,6 @@
       .terminal {
         height: calc(100vh - 40px);
         position: relative;
-      }
-
-      .terminal-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(255, 58, 189);
-        background-image: url(/images/noise2.png);
-        background-size: 100px 100px;
-        // background-image: url(/images/scanlines.png);
-        background-size: 400px 400px;
-        // filter: blur(1px);
-        // backdrop-filter: blur(1px);
-        // backdrop-filter: invert(1);
-        // backdrop-filter: saturate(100%);
-        // mix-blend-mode: difference;
-        mix-blend-mode: hard-light;
-        opacity: 0.6;
-        z-index: 10;
       }
     }
 
@@ -226,10 +208,6 @@
         height: 100px;
         border-top: 5px double var(--color-border);
         font-size: var(--font-size-normal);
-
-        button {
-          all: revert;
-        }
       }
     }
   }

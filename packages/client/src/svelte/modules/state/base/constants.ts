@@ -1,0 +1,1 @@
+export const GAME_CONFIG_ID = "0x"

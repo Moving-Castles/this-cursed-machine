@@ -25,15 +25,5 @@
   .graph {
     height: calc(100vh - 240px);
     position: relative;
-    // animation: hue-rotate-animation 5s infinite linear;
-  }
-
-  @keyframes hue-rotate-animation {
-    0% {
-      filter: hue-rotate(0deg);
-    }
-    100% {
-      filter: hue-rotate(360deg);
-    }
   }
 </style>

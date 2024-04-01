@@ -34,7 +34,7 @@
     </div>
 
     <div class="section icon">
-      <img src="/images/bug.gif" />
+      <img src="/images/bug.gif" alt="material icon" />
     </div>
 
     <div class="section buy">

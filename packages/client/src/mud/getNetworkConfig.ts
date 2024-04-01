@@ -13,24 +13,24 @@ export async function getNetworkConfig() {
   const chainId = Number(params.get("chainId") || params.get("chainid") || import.meta.env.VITE_CHAIN_ID || 31337);
   const chain = getChain(chainId);
 
-  chain.rpcUrls = {
-    default: {
-      http: [
-        "https://miner.testnet-chain.linfra.xyz"
-      ],
-      webSocket: [
-        "wss://miner.testnet-chain.linfra.xyz"
-      ]
-    },
-    public: {
-      http: [
-        "https://miner.testnet-chain.linfra.xyz"
-      ],
-      webSocket: [
-        "wss://miner.testnet-chain.linfra.xyz"
-      ]
-    }
-  }
+  // chain.rpcUrls = {
+  //   default: {
+  //     http: [
+  //       "https://miner.testnet-chain.linfra.xyz"
+  //     ],
+  //     webSocket: [
+  //       "wss://miner.testnet-chain.linfra.xyz"
+  //     ]
+  //   },
+  //   public: {
+  //     http: [
+  //       "https://miner.testnet-chain.linfra.xyz"
+  //     ],
+  //     webSocket: [
+  //       "wss://miner.testnet-chain.linfra.xyz"
+  //     ]
+  //   }
+  // }
 
   /*
    * Get the address of the World. If you want to use a

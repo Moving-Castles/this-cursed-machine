@@ -6,7 +6,7 @@ function formatNumber(num: string | number) {
   return Number(num)
 }
 
-export function storableNumber(data, key): Writable<number> {
+export function storableNumber(data: any, key: string): Writable<number> {
   const store = writable(data)
   const { subscribe, set } = store
   const isBrowser = () => typeof window !== "undefined"

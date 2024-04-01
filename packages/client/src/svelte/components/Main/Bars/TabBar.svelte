@@ -116,9 +116,10 @@
             background: grey;
             cursor: crosshair;
           }
+
           &:disabled:hover {
             background: darkgrey;
-            cursor: crosshair;
+            cursor: not-allowed;
           }
         }
       }

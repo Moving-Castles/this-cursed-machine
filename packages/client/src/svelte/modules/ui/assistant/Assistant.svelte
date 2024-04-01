@@ -5,22 +5,18 @@
   import { fly } from "svelte/transition"
   import { flip } from "svelte/animate"
 
-  const onEnd = (e: CustomEvent<{ end: AssistantMessage }>) => {
+  const onEnd = (e: CustomEvent<AssistantMessage>) => {
     assistantMessages.set(
       $assistantMessages.filter(
-        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp
-      )
+        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp,
+      ),
     )
   }
 </script>
 
 <div class="toast-pane">
   {#each $assistantMessages as msg (msg.timestamp + $assistantMessages.length)}
-    <div
-      animate:flip
-      in:fly={{ y: 20, delay: 150 }}
-      out:fly={{ y: -20, duration: 100 }}
-    >
+    <div animate:flip in:fly={{ y: 20, delay: 150 }}>
       <AssistantMessageComponent {msg} on:end={onEnd} />
     </div>
   {/each}

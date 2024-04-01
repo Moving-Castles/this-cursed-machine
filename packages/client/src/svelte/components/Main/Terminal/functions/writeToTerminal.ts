@@ -119,7 +119,7 @@ export async function loadingLine(index: number): Promise<void> {
 export async function loadingSpinner(index: number): Promise<void> {
   const GLYPHS = ["/", "–", "\\", "|"]
   const currentGlyph = GLYPHS[index % GLYPHS.length]
-  playSound("tcm", "TRX_wait_b_07")
+  playSound("tcm", "TRX_wait_ALT")
   if (index === 1) {
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.NORMAL,

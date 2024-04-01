@@ -5,7 +5,7 @@
   import { fade } from "svelte/transition"
   import { flip } from "svelte/animate"
 
-  const onEnd = (e: CustomEvent<{ end: Toast }>) => {
+  const onEnd = (e: CustomEvent<Toast>) => {
     toasts.set($toasts.filter((t: Toast) => t.timestamp !== e.detail.timestamp))
   }
 

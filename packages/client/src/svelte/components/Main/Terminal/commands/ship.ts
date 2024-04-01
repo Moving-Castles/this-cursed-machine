@@ -33,6 +33,7 @@ async function execute(depotEntity: string) {
       writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Detachment in progress...")
       await waitForCompletion(detachAction, loadingLine)
       await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Depot detached")
+      playSound("tcm", "selectionEsc2")
     }
 
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Shipping material...")

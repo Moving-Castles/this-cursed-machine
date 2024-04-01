@@ -9,6 +9,7 @@
     tutorialProgress,
     currentMessage,
   } from "@modules/ui/assistant"
+  import { playSound } from "@svelte/modules/sound"
 
   $: {
     if ($tutorialProgress && $currentMessage?.explanation) {
@@ -16,6 +17,11 @@
     } else if ($tutorialProgress && !$currentMessage?.explanation) {
       clearMessage()
     }
+  }
+
+  // Not sure if this is the right place to do this...
+  $: if ($tutorialProgress === 1) {
+    playSound("tcm", "mapPop")
   }
 
   onMount(() => {
@@ -27,8 +33,8 @@
 
 {#if import.meta.env.DEV}
   <div class="test">
-    <button on:click={() => $tutorialProgress--}> Prev </button>
-    <button on:click={() => $tutorialProgress++}> Next </button>
+    <button on:click={() => $tutorialProgress--}>Prev</button>
+    <button on:click={() => $tutorialProgress++}>Next</button>
     <button
       on:click={() => {
         $tutorialProgress = 0
@@ -50,6 +56,6 @@
     bottom: 0;
     left: 0;
     z-index: 999;
-    background: red;
+    background: grey;
   }
 </style>

@@ -12,12 +12,12 @@ import { player } from "@modules/state/base/stores"
 import { get } from "svelte/store"
 import { playSound } from "@modules/sound"
 
-async function execute(terminalType: TERMINAL_TYPE) {
+async function execute(_: TERMINAL_TYPE) {
   // Get subset if not full terminal
   const commandList = commands.filter(
     command =>
       levelCommandFilter(
-        get(player)?.tutorial ? get(player)?.tutorialLevel : 2,
+        get(player)?.tutorialLevel ?? 2,
         command.id
       ) && command.public
   )

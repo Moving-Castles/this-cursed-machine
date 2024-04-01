@@ -48,7 +48,7 @@
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("done")
     } else {
@@ -74,7 +74,7 @@
   .spawn {
     position: fixed;
     inset: 0;
-    background-color: var(--background);
+    background-color: black;
     background-size: cover;
     background-position: center;
     z-index: 1;

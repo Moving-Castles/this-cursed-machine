@@ -33,6 +33,10 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/TRX_wait-sfx_b_07.mp3",
     volume: 1,
   },
+  TRX_wait_ALT: {
+    src: "./sounds/tcm/TRX_wait-sfx_b_03.mp3",
+    volume: 1,
+  },
   TRX_yes: {
     src: "./sounds/tcm/TRX_yes-sfx_03.mp3",
     volume: 1,
@@ -109,4 +113,8 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/player_lvlend-sfx_02.mp3",
     volume: 1,
   },
+  selectionEsc2: {
+    src: "./sounds/tcm/selection_esc-hit_01c.mp3",
+    volume: 1,
+  }
 }

@@ -46,7 +46,7 @@ export function findPath(
   const newGrid = deepClone(grid)
 
   let openList = new Heap(function (nodeA: GridNode, nodeB: GridNode) {
-    return nodeA.f - nodeB.f
+    return (nodeA.f ?? 0) - (nodeB.f ?? 0)
   })
 
   const startNode: GridNode = getNodeAt(newGrid, startX, startY)
@@ -113,7 +113,7 @@ export function findPath(
       ng += TURN_PENALTY * Number(turned)
 
       // Check if the neighbor has not been inspected yet, or can be reached with smaller cost from the current node
-      if (!neighbor.opened || ng < neighbor.g) {
+      if (!neighbor.opened || ng < (neighbor.g ?? 0)) {
         neighbor.g = ng
         neighbor.h =
           neighbor.h || HEURISTIC_WEIGHT * heuristic(x - endX, y - endY)

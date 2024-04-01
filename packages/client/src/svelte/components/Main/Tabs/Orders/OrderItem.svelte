@@ -56,7 +56,7 @@
     <div class="section time">
       {#if Number(order.order.expirationBlock) > 0}
         {blocksToReadableTime(
-          Number(order.order.expirationBlock) - Number($blockNumber)
+          Number(order.order.expirationBlock) - Number($blockNumber),
         )}
       {/if}
     </div>
@@ -100,7 +100,8 @@
     display: flex;
 
     &.active {
-      background: red;
+      background: var(--foreground);
+      color: var(--background);
     }
 
     &.completed {
@@ -109,11 +110,11 @@
 
     .section {
       &.goal {
-        width: 40%;
+        width: 50%;
       }
 
       &.reward {
-        width: 20%;
+        width: 10%;
       }
 
       &.time {

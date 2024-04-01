@@ -54,6 +54,11 @@
   letter-spacing: 0px;
 }
 
+pre {
+  font-family: var(--font-family);
+}
+
+
 *::-webkit-scrollbar {
   display: none;
 }
@@ -62,9 +67,9 @@
   cursor: none;
 }
 
-.flash {
+/* .flash {
   animation: strobe 200ms steps(1, end) infinite;
-}
+} */
 
 .flash-fast {
   animation: strobe 80ms steps(1, end) infinite;
@@ -112,8 +117,6 @@ html {
   margin: 0;
   padding: 0;
   overscroll-behavior-y: none;
-  background-image: url(/images/graf.png);
-  background-size: cover;
   /* background-size: 100px; */
 }
 
@@ -176,10 +179,10 @@ pre {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: red;
-  mix-blend-mode: exclusion;
+  background-color: white;
+  /* mix-blend-mode: exclusion; */
   z-index: 100000;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .hidden {

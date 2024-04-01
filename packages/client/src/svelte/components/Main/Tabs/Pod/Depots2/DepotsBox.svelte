@@ -6,7 +6,7 @@
 
 <div
   class="depots-box"
-  class:hidden={$tutorialProgress < 4}
+  class:hidden={$tutorialProgress < 1}
   class:pulse-opacity={$tutorialProgress === 21}
 >
   {#if $simulatedDepots}

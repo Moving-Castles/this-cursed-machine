@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
   import { onMount, createEventDispatcher, tick } from "svelte"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
   import type { SelectOption } from "@components/Main/Terminal/types"

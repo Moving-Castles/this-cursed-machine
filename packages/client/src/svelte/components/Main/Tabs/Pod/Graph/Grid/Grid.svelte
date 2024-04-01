@@ -1,5 +1,6 @@
 <script lang="ts">
   import { GRID } from "../constants"
+  import type { Grid } from "@components/Main/Tabs/Pod/Graph/Pathfinding/types"
   import {
     getCostAt,
     getWalkableAt,
@@ -31,9 +32,6 @@
 
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
-      &[data-cost="10"] {
-        // border: 1px solid red;
-      }
       &[data-walkable="false"] {
         background: rgba(120, 120, 120, 0.7);
       }

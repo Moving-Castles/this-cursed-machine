@@ -23,6 +23,7 @@
   onMount(() => {
     document.body.classList.add("cursor-none")
   })
+
   onDestroy(() => {
     document.body.classList.remove("cursor-none")
   })

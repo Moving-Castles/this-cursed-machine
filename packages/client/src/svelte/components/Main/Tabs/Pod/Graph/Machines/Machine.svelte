@@ -12,7 +12,7 @@
   export let machine: GraphMachine
 
   const onMouseEnter = () => {
-    inspecting.set({ type: "machine", machine })
+    inspecting.set(machine)
     // hover = true
   }
 
@@ -77,6 +77,7 @@
   const ports = makePorts(machine)
 </script>
 
+<!-- svelte-ignore a11y-interactive-supports-focus -->
 <div
   class="machine {MACHINE_TYPE[machine.machineType]}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
@@ -84,6 +85,7 @@
   on:mouseleave={onMouseLeave}
   in:fade
   {style}
+  role="button"
 >
   <div class="inner-container">
     <div class="label">{label}</div>

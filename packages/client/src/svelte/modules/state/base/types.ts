@@ -34,7 +34,9 @@ declare global {
     fixedEntities?: FixedEntities
     currentOrder?: string
     tokenBalances?: number
-    recipe?: number
+    recipe?: {
+      outputs: number[]
+    }
   }
 
   // * * * * * * * * * * * * * * * * *

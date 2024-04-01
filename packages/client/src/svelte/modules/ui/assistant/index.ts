@@ -41,7 +41,7 @@ export function clearMessage() {
 }
 
 export function advanceTutorial(
-  input: number | string | Action,
+  input: number | string | Action | null,
   level: number,
   type: "tab" | "contract" | "command" | "order" | "read" | "custom"
 ) {

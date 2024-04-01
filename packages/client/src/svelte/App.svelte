@@ -24,7 +24,7 @@
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
 
-  const onMouseMove = e => {
+  const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX
     $mouseY = e.clientY
   }

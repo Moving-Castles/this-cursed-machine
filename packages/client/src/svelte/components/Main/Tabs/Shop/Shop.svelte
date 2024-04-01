@@ -1,6 +1,5 @@
 <script lang="ts">
   import { player, offers } from "@modules/state/base/stores"
-  import { tutorialProgress } from "@svelte/modules/ui/assistant"
   import ShopItem from "./ShopItem.svelte"
   import Certificate from "./Certificate.svelte"
 </script>

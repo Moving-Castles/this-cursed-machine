@@ -25,18 +25,20 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="msg absolute">
-  <img src="/images/bugsy.gif" alt="bugsy" />
-  <p>
+  <div class="image">
+    <img src="/images/bugsy.gif" alt="bugsy" />
+  </div>
+  <div class="text">
     {msg.message}
-  </p>
+  </div>
 </div>
 
 <style lang="scss">
   .msg {
     width: 100%;
     display: flex;
-    flex-flow: column nowrap;
-    color: var(--background);
+    // flex-flow: column nowrap;
+    align-items: center;
     padding: 10px;
     padding-top: 0;
     text-align: center;
@@ -52,95 +54,20 @@
     line-height: 1em;
     font-weight: bold;
     border-radius: 5px;
-    color: var(--color-info);
+    color: black;
+    background: rgba(243, 255, 25, 0.85);
     text-align: center;
     // box-shadow: rgba(255, 255, 95, 0.9) 0px 0px 10px 0px;
 
     img {
-      width: 80px;
-      margin: 0 auto;
-      margin: 0px;
+      width: 90px;
+      margin: 10px auto;
       margin-left: auto;
       margin-right: auto;
-      filter: invert(0.6);
-      transform: translate(0, -100%);
-    }
-  }
-
-  .error {
-    background-color: red;
-  }
-
-  @keyframes side-to-side {
-    0% {
-      transform: translate(0, 0);
-    }
-    10% {
-      transform: translate(40px, 0);
-    }
-    20% {
-      transform: translate(-40px, 0);
-    }
-    30% {
-      transform: translate(30px, 0);
-    }
-    40% {
-      transform: translate(-30px, 0);
-    }
-    60% {
-      transform: translate(20px, 0);
-    }
-    70% {
-      transform: translate(-20px, 0);
-    }
-    80% {
-      transform: translate(10px, 0);
-    }
-    90% {
-      transform: translate(-10px, 0);
-    }
-    100% {
-      transform: translate(0, 0);
-    }
-  }
-
-  @keyframes fly-up {
-    from {
-      bottom: 0;
-      opacity: 1;
     }
 
-    to {
-      bottom: 400px;
-      opacity: 0;
-    }
-  }
-
-  @keyframes wobble {
-    0%,
-    100% {
-      transform: translateY(0) rotate(0);
-      transform-origin: 50% 50%;
-    }
-
-    15% {
-      transform: translateY(-30px) rotate(6deg);
-    }
-
-    30% {
-      transform: translateY(15px) rotate(-6deg);
-    }
-
-    45% {
-      transform: translateY(-15px) rotate(3.6deg);
-    }
-
-    60% {
-      transform: translateY(9px) rotate(-2.4deg);
-    }
-
-    75% {
-      transform: translateY(-6px) rotate(1.2deg);
+    .image {
+      padding: 20px;
     }
   }
 </style>

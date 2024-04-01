@@ -13,6 +13,7 @@
   import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
+  import type { Grid } from "./Pathfinding/types"
 
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
@@ -30,9 +31,8 @@
   ))
 </script>
 
-<div class="graph">
+<div class="graph-container">
   <div class="grid">
-    <!-- <div class="graph-overlay" /> -->
     <div class="top">
       {#each Object.values(graphMachines) as machine}
         <MachineSelector {machine} />
@@ -49,8 +49,7 @@
 </div>
 
 <style lang="scss">
-  .graph {
-    // background: orangered;
+  .graph-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -58,6 +57,7 @@
     align-items: center;
     position: relative;
     cursor: crosshair;
+    transform: scale(0.85);
 
     --cellHeight: 10px;
     --cellWidth: 10px;
@@ -65,38 +65,12 @@
     .grid {
       position: relative;
 
-      .graph-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        // background-color: rgb(128, 255, 0);
-        // background-image: url(/images/noise2.png);
-        // background-image: url(/images/g2.png);
-        background-image: url(/images/scanlines.gif);
-
-        // background-size: 400px 400px;
-        background-size: cover;
-        // filter: blur(1px);
-        // backdrop-filter: blur(1px);
-        // backdrop-filter: saturate(5);
-        // mix-blend-mode: multiply;
-        mix-blend-mode: difference;
-        // mix-blend-mode: lighten;
-        // mix-blend-mode: hard-light;
-        opacity: 0.2;
-        z-index: 10;
-        // backdrop-filter: saturate(100%);
-      }
-
       .top {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        // background: rgb(255, 181, 181);
       }
     }
   }

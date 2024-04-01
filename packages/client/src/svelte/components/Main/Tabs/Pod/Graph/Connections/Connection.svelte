@@ -11,7 +11,7 @@
 
   const onMouseEnter = () => {
     if (!carrying) return
-    inspecting.set({ type: "connection", connection })
+    inspecting.set(connection)
     hover = true
   }
 

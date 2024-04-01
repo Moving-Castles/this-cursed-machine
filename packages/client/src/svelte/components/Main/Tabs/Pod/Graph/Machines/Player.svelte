@@ -11,7 +11,7 @@
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
 
   const onMouseEnter = () => {
-    inspecting.set({ type: "machine", machine })
+    inspecting.set(machine)
   }
 
   const onMouseLeave = () => {
@@ -38,6 +38,7 @@
   const ports = makePorts()
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="player"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}

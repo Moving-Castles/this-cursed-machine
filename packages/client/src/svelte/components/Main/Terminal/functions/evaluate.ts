@@ -14,7 +14,7 @@ export function evaluate(input: string): Command | undefined {
   return commands.find(
     command =>
       levelCommandFilter(
-        get(player)?.tutorial ? get(player)?.tutorialLevel : 2,
+        get(player)?.tutorialLevel ?? 2,
         command.id
       ) &&
       (command.name === cleanInput || command.alias === cleanInput)

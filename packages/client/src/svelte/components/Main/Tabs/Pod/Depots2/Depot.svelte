@@ -66,7 +66,7 @@
     display: flex;
 
     &.shippable {
-      background: var(--color-active);
+      border: 1px solid var(--color-active);
     }
 
     .id {
