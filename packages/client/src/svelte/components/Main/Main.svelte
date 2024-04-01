@@ -162,8 +162,9 @@
   .split-screen {
     display: flex;
     height: 100vh;
-    background-image: url(/images/graf.png);
-    background-size: cover;
+    background-image: url(/images/tcm2.png);
+    background-size: 200px;
+    background-repeat: repeat;
 
     .left-col {
       height: 100%;
@@ -172,7 +173,7 @@
       border-right: 5px double var(--color-border);
 
       .status-bar {
-        height: 40px;
+        height: 60px;
         border-bottom: 5px double var(--color-border);
         color: var(--foreground);
         font-size: var(--font-size-normal);
@@ -187,13 +188,11 @@
     .right-col {
       height: 100%;
       width: calc(100vw - 500px);
-      display: flex;
-      flex-direction: column;
       overflow: hidden;
       position: relative;
 
       .status-bar {
-        height: 40px;
+        height: 60px;
         border-bottom: 5px double var(--color-border);
         font-size: var(--font-size-normal);
       }
@@ -205,7 +204,7 @@
       }
 
       .tab-switch {
-        height: 100px;
+        height: 80px;
         border-top: 5px double var(--color-border);
         font-size: var(--font-size-normal);
       }

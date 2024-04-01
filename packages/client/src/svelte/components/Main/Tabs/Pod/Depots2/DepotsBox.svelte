@@ -7,7 +7,7 @@
 <div
   class="depots-box"
   class:hidden={$tutorialProgress < 1}
-  class:pulse-opacity={$tutorialProgress === 21}
+  class:highlight={$tutorialProgress === 21}
 >
   {#if $simulatedDepots}
     {#each Object.entries($simulatedDepots) as [key, depot], index}
@@ -28,5 +28,18 @@
     justify-content: space-between;
     padding-left: 15px;
     padding-right: 15px;
+
+    &.highlight {
+      animation: 1s ease-in-out infinite alternate highlight;
+    }
+  }
+
+  @keyframes highlight {
+    from {
+      background: orangered;
+    }
+    to {
+      background: transparent;
+    }
   }
 </style>

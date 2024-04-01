@@ -26,7 +26,7 @@
   .toast-pane {
     position: absolute;
     z-index: 99;
-    bottom: 80px;
+    bottom: 65px;
     right: 20px;
     display: flex;
     flex-direction: column-reverse;

@@ -57,7 +57,7 @@
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testBuyBug",
     "name": "Buy",
-    "gasUsed": 93099
+    "gasUsed": 93078
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",

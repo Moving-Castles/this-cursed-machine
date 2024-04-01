@@ -58,10 +58,9 @@
   .depot-item {
     border: 1px solid #fff;
     width: calc(33% - 5px);
-    margin-bottom: 10px;
     overflow: hidden;
     font-size: var(--font-size-small);
-    height: 60px;
+    height: 70px;
     background: rgb(74, 74, 74);
     display: flex;
 

@@ -449,10 +449,8 @@
     line-height: 1.1em;
     max-width: 69ch;
     text-transform: uppercase;
-    background-color: rgba(0, 0, 0, 0.5);
-    // background-image: url(/images/broken.png);
-    // background-size: cover;
-    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
     // text-shadow: 1px 1px 5px rgba(255, 255, 255, 0.2);
 
     &:not(.noOutput) {

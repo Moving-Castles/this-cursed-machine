@@ -15,6 +15,7 @@ import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { UIState } from "../../ui/stores"
 import { UI } from "../../ui/enums"
+import { tutorialProgress } from "@svelte/modules/ui/assistant"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.
@@ -32,7 +33,7 @@ export async function initStateSimulator() {
     if (!playerEntityValue) return
 
     // Play heartbeat on new block if player is in pod
-    if (playerEntityValue.carriedBy && get(UIState) === UI.READY) {
+    if (playerEntityValue.carriedBy && get(UIState) === UI.READY && get(tutorialProgress) > 0) {
       playSound("tcm", "singleHeartbeat100")
     }
 

@@ -75,8 +75,6 @@
     // justify-content: space-between;
     align-items: center;
     padding-inline: 20px;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
 
     .button-container {
       width: 20%;

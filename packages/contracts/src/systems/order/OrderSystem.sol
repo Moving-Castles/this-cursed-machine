@@ -93,7 +93,6 @@ contract OrderSystem is System {
 
   function unaccept() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(!Tutorial.get(playerEntity), "player in tutorial");
     CurrentOrder.set(CarriedBy.get(playerEntity), bytes32(0));
   }
 
