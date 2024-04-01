@@ -8,7 +8,6 @@
 </script>
 
 <div class="container">
-  <div>ORDERS</div>
   <div class="order-list">
     {#each Object.entries($availableOrders) as [key, order]}
       <OrderItem
@@ -26,7 +25,7 @@
     padding: 20px;
 
     .order-list {
-      margin-top: 40px;
+      // margin-top: 20px;
     }
   }
 </style>

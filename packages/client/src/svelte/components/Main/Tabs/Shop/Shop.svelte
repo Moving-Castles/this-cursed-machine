@@ -5,7 +5,6 @@
 </script>
 
 <div class="container">
-  <div>SHOP</div>
   <div class="offer-list">
     {#each Object.entries($offers) as [key, offer]}
       <ShopItem {key} {offer} />
@@ -21,7 +20,7 @@
     padding: 20px;
 
     .offer-list {
-      margin-top: 40px;
+      // margin-top: 20px;
       display: flex;
     }
   }

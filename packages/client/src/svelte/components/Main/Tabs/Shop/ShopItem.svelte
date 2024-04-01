@@ -7,6 +7,8 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
 
+  import Spinner from "@components/Main/Atoms/Spinner.svelte"
+
   export let key: string
   export let offer: Offer
 
@@ -29,8 +31,20 @@
 <div class="shop-item" class:working in:fade>
   {#if offer?.offer}
     <div class="section material">
-      <div>{MATERIAL_TYPE[offer.offer.materialType]}</div>
-      <div>{offer.offer.amount / 100}</div>
+      <div>
+        {#if working}
+          <Spinner />
+        {:else}
+          {MATERIAL_TYPE[offer.offer.materialType]}
+        {/if}
+      </div>
+      <div>
+        {#if working}
+          <Spinner />
+        {:else}
+          {offer.offer.amount / 100}
+        {/if}
+      </div>
     </div>
 
     <div class="section icon">

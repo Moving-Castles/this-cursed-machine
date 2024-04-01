@@ -8,6 +8,8 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
 
+  import Spinner from "@components/Main/Atoms/Spinner.svelte"
+
   export let key: string
   export let order: Order
   export let active: boolean
@@ -45,35 +47,47 @@
 >
   {#if order?.order}
     <div class="section goal">
-      {order.order.goalAmount / 100}
-      {MATERIAL_TYPE[order.order.goalMaterialType]}
+      {#if working}
+        <Spinner />
+      {:else}
+        {order.order.goalAmount / 100}
+        {MATERIAL_TYPE[order.order.goalMaterialType]}
+      {/if}
     </div>
 
     <div class="section reward">
-      {order.order.rewardAmount}P
+      {#if working}
+        <Spinner />
+      {:else}
+        {order.order.rewardAmount}P
+      {/if}
     </div>
 
     <div class="section time">
       {#if Number(order.order.expirationBlock) > 0}
-        {blocksToReadableTime(
-          Number(order.order.expirationBlock) - Number($blockNumber),
-        )}
+        {#if working}
+          <Spinner />
+        {:else}
+          {blocksToReadableTime(
+            Number(order.order.expirationBlock) - Number($blockNumber),
+          )}
+        {/if}
       {/if}
     </div>
 
     {#if !completed}
-      {#if active}
-        <div class="section accept">
+      <div class="section accept">
+        {#if active}
           <button on:click={() => sendUnaccept()}>Cancel</button>
-        </div>
-      {:else}
-        <div class="section accept">
+        {:else}
           <button
             class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
-            on:click={() => sendAccept()}>Accept</button
+            on:click={() => sendAccept()}
           >
-        </div>
-      {/if}
+            Accept
+          </button>
+        {/if}
+      </div>
     {/if}
   {/if}
 </div>
@@ -81,12 +95,14 @@
 <style lang="scss">
   .order-item {
     width: 100%;
-    border-bottom: 4px double var(--foreground);
+    border-bottom: 1px solid var(--foreground);
     padding: 10px;
     padding-top: 30px;
     padding-bottom: 30px;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     &.working {
       opacity: 0.5;
@@ -94,7 +110,7 @@
     }
 
     &:first-child {
-      border-top: 4px double var(--foreground);
+      border-top: 1px solid var(--foreground);
     }
 
     display: flex;
@@ -129,12 +145,30 @@
           height: 100%;
           background: grey;
           border: 0;
+          height: 30px;
           font-family: var(--font-family);
 
           &:hover {
             background: var(--foreground);
             color: var(--background);
             cursor: pointer;
+          }
+        }
+      }
+    }
+
+    &.active {
+      background: var(--foreground);
+      color: var(--background);
+
+      .section {
+        &.accept {
+          button {
+            background: grey;
+            &:hover {
+              background: var(--background);
+              color: var(--foreground);
+            }
           }
         }
       }

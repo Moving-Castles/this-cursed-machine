@@ -5,16 +5,6 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
-  import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
-  // import { reward, charge } from "@modules/action"
-
-  // const sendReward = () => {
-  //   reward()
-  // }
-
-  // const sendCharge = () => {
-  //   charge()
-  // }
 </script>
 
 <div class="order-bar" class:hidden={$tutorialProgress < 1}>
@@ -39,15 +29,8 @@
     {/if}
   </div>
 
-  <!-- TOKEN BALANCE -->
-  <div class="token-balance">
-    POINTS: <NumberGoingUp
-      value={$player.tokenBalances ?? 0}
-      goal={30000}
-      warn={26900}
-    />
-    <!-- <button on:click={sendReward}>Reward</button>
-    <button on:click={sendCharge}>Charge</button> -->
+  <div class="completed-orders">
+    COMPLETED: {$player.completed?.length ?? 0}
   </div>
 </div>
 
@@ -72,6 +55,11 @@
         background: var(--foreground);
         color: var(--background);
       }
+    }
+
+    .completed-orders {
+      // height: 100%;
+      // border-left: 4px double var(--color-border);
     }
   }
 </style>

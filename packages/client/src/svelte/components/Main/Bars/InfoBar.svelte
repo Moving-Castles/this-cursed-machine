@@ -1,6 +1,7 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
+  import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
 <div class="info-bar">
@@ -13,13 +14,16 @@
   </div>
 
   <div class="completed">
-    {#if $player.tutorial}
-      <div class:hidden={$tutorialProgress < 4}>
-        TUTORIAL LEVEL: {($player.tutorialLevel ?? 0) + 1}
+    <div>
+      <!-- TOKEN BALANCE -->
+      <div class="token-balance">
+        <NumberGoingUp
+          value={$player.tokenBalances ?? 0}
+          goal={30000}
+          warn={26900}
+        />P
       </div>
-    {:else}
-      <div>COMPLETED: {$player.completed?.length ?? 0}</div>
-    {/if}
+    </div>
   </div>
 </div>
 
