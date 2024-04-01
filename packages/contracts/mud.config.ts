@@ -99,5 +99,15 @@ export default defineWorld({
             root: true,
             args: [],
         },
+        {
+            name: "StandardDelegationsModule",
+            root: true,
+            args: [],
+        },
+        {
+            name: "PuppetModule",
+            root: false,
+            args: []
+        }
     ],
 });
