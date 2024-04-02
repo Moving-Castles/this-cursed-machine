@@ -32,15 +32,11 @@
     padding: 20px;
     cursor: pointer;
     text-align: center;
-    background: red;
+    background: var(--color-failure);
     margin-top: 10px;
     font-size: var(--font-size-small);
     overflow: hidden;
     word-break: break-all;
-  }
-
-  .error {
-    background-color: red;
   }
 
   @keyframes side-to-side {

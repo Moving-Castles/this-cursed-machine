@@ -11,7 +11,7 @@
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">
-      ORDER:
+      <span class="inverted">ORDER:</span>
       {#if !$playerOrder}
         NONE
       {:else}
@@ -30,11 +30,18 @@
   </div>
 
   <div class="completed-orders">
-    COMPLETED: {$player.completed?.length ?? 0}
+    <span class="inverted">COMPLETED:</span>
+    {$player.completed?.length ?? 0}
   </div>
 </div>
 
 <style lang="scss">
+  .inverted {
+    padding: 2px;
+    background: var(--foreground);
+    color: var(--background);
+  }
+
   .order-bar {
     width: 100%;
     height: 100%;
@@ -52,14 +59,15 @@
       }
 
       .time {
-        background: var(--foreground);
+        padding: 2px;
+        background: var(--color-success);
         color: var(--background);
       }
     }
 
     .completed-orders {
       // height: 100%;
-      // border-left: 4px double var(--color-border);
+      // border-left: 4px double var(--color-grey-dark);
     }
   }
 </style>

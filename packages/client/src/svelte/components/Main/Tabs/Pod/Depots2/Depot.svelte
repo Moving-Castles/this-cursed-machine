@@ -5,19 +5,17 @@
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-
   export let depot: SimulatedDepot
-  export let address: string
+  export let key: string
   export let index: number
 
-  $: canShip = $shippableDepots[address]
+  $: canShip = $shippableDepots[key]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Narrow the type
   $: typedDepot = depot as Depot
 
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
-
   $: empty = typedDepot.amount === 0
 
   const getConnectionName = (machineEntity: string) => {
@@ -27,7 +25,7 @@
   }
 </script>
 
-<div id="depot-{address}" class="depot-item" class:shippable={canShip}>
+<div class="depot-item" class:shippable={canShip}>
   <div class="id">
     <div>{index + 1}</div>
   </div>
@@ -56,17 +54,60 @@
 
 <style lang="scss">
   .depot-item {
-    border: 1px solid #fff;
+    display: flex;
+    border: 1px solid var(--foreground);
     width: calc(33% - 5px);
     overflow: hidden;
-    padding: 10px;
-    font-size: 6px;
-    height: 80px;
-    width: 260px;
+    font-size: var(--font-size-small);
+    height: 70px;
     background: var(--color-grey-dark);
 
-    &.connected {
-      background: var(--color-alert);
+    &.shippable {
+      border: 1px solid var(--color-success);
+    }
+
+    .id {
+      width: 50px;
+      border-right: 1px solid var(--foreground);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: var(--font-size-normal);
+      background: var(--foreground);
+      color: var(--background);
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .inner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .material-type {
+        background: var(--foreground);
+        color: var(--background);
+        padding: 2px;
+        margin-right: 1ch;
+      }
+    }
+
+    .connection {
+      width: 50px;
+      border-left: 1px solid var(--foreground);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.connected {
+        background: var(--color-success);
+        color: var(--background);
+      }
     }
 
     button {

@@ -40,7 +40,7 @@
     // Otherwise wait for chain to load
     await typeWriter(loadingMessageElement, "Syncing network", 10)
     await new Promise(res => window.setTimeout(res, 300))
-    loadingInterval = setInterval(() => {
+    loadingInterval = window.setInterval(() => {
       if (!loadingMessageElement) return
       loadingMessageElement.innerHTML += "  *"
       // Scroll to bottom
@@ -53,7 +53,9 @@
   }
 </script>
 
-<div class="loading-percentage">{$loadingMessage}</div>
+<div class="loading-percentage" class:done={Number($loadingMessage) === 100}>
+  {$loadingMessage}
+</div>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -126,6 +128,10 @@
     line-height: 2em;
     text-align: center;
     font-size: var(--font-size-small);
+
+    &.done {
+      background: var(--color-success);
+    }
   }
 
   .loading {

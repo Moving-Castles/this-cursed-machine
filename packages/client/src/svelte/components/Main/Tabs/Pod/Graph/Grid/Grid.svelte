@@ -28,12 +28,12 @@
     .cell {
       width: var(--cellWidth);
       height: var(--cellHeight);
-      background: rgba(120, 120, 120, 0.9);
+      background: var(--color-grey-mid);
 
       border: 0.5px solid rgba(0, 0, 0, 0.1);
 
       &[data-walkable="false"] {
-        background: rgba(120, 120, 120, 0.7);
+        background: var(--color-grey-dark);
       }
     }
   }
