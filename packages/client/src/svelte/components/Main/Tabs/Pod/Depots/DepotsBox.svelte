@@ -4,23 +4,42 @@
   import Depot from "./Depot.svelte"
 </script>
 
-<div class="depots-box" class:pulse-opacity={$tutorialProgress === 21}>
+<div
+  class="depots-box"
+  class:hidden={$tutorialProgress < 1}
+  class:highlight={$tutorialProgress === 21}
+>
   {#if $simulatedDepots}
-    {#each Object.entries($simulatedDepots) as [key, depot], index}
-      <Depot {key} {depot} {index} />
+    {#each Object.entries($simulatedDepots) as [address, depot], index}
+      <Depot {address} {depot} {index} />
     {/each}
   {/if}
 </div>
 
 <style lang="scss">
   .depots-box {
-    padding: 20px;
+    // padding: 20px;
     width: 100%;
     height: 100%;
     z-index: 10;
-    max-height: calc(100vh - 40px);
     overflow-y: scroll;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    &.highlight {
+      animation: 1s ease-in-out infinite alternate highlight;
+    }
+  }
+
+  @keyframes highlight {
+    from {
+      background: orangered;
+    }
+    to {
+      background: transparent;
+    }
   }
 </style>

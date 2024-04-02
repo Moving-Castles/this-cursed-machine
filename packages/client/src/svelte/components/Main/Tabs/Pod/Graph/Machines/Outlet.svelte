@@ -5,6 +5,8 @@
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
+
+  export let address: string
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
@@ -24,6 +26,7 @@
 </script>
 
 <div
+  id="machine-{address}"
   class="outlet"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   in:fade

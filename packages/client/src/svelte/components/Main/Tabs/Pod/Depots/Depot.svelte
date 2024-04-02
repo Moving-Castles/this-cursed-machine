@@ -1,68 +1,63 @@
 <script lang="ts">
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
-  import { playerPod, depots, machines } from "@modules/state/base/stores"
-  import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
   import type { SimulatedDepot } from "@modules/state/simulated/types"
-  import { blockNumber } from "@modules/network"
-  import { patches } from "@modules/state/resolver/patches/stores"
+  import { playerPod, machines } from "@modules/state/base/stores"
+  import { shippableDepots } from "@modules/state/simulated/stores"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
+
   export let depot: SimulatedDepot
-  export let key: string
+  export let address: string
   export let index: number
+
+  $: canShip = $shippableDepots[address]
+  $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Narrow the type
   $: typedDepot = depot as Depot
 
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
 
+  $: empty = typedDepot.amount === 0
+
   const getConnectionName = (machineEntity: string) => {
-    if ($playerPod?.fixedEntities?.inlets.includes(machineEntity))
-      return "Inlet"
-    if (machineEntity === $playerPod?.fixedEntities?.outlet) return "Outlet"
+    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
+    if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
     return "none"
   }
 </script>
 
-<div class="depot-item" class:connected>
-  <div><strong>#: {index + 1}</strong></div>
-  <div>lastRes.: {$playerPod.lastResolved}</div>
-  <div>curr. block.: {$blockNumber}</div>
-  <div>blocks since res.: {$blocksSinceLastResolution}</div>
-  <hr />
-  <div>
-    sim.depot: {typedDepot.amount}
-    {MATERIAL_TYPE[typedDepot.materialType]}
+<div id="depot-{address}" class="depot-item" class:shippable={canShip}>
+  <div class="id">
+    <div>{index + 1}</div>
   </div>
-  <div>
-    chain depot: {$depots[key].amount}
-    {MATERIAL_TYPE[$depots[key].materialType]}
+
+  <div class="content">
+    {#if empty}
+      <div>EMPTY</div>
+    {:else}
+      <div class="inner-container">
+        <div class="material-type">
+          {MATERIAL_TYPE[typedDepot.materialType]}
+        </div>
+        <div class="material-amount">
+          {Math.round(typedDepot.amount / 100)}/100
+        </div>
+      </div>
+    {/if}
   </div>
-  <hr />
-  <div>
-    conn.: {`${getConnectionName(typedDepot.depotConnection)} #${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`}
+
+  <div class="connection" class:connected>
+    {#if connected}
+      {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`}
+    {/if}
   </div>
-  <hr />
-  {#if $patches[key] && $patches[key].inputs}
-    <div>
-      IN-patch: {MATERIAL_TYPE[$patches[key].inputs[0]?.materialType]}
-      {$patches[key].inputs[0]?.amount}
-    </div>
-  {/if}
-  {#if $patches[key] && $patches[key].outputs}
-    <div>
-      OUT-patch: {MATERIAL_TYPE[$patches[key].outputs[0]?.materialType]}
-      {$patches[key].outputs[0]?.amount}
-    </div>
-  {/if}
 </div>
 
 <style lang="scss">
   .depot-item {
     border: 1px solid #fff;
-    margin-right: 20px;
-    width: 30%;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
+    width: calc(33% - 5px);
     overflow: hidden;
     padding: 10px;
     font-size: 6px;

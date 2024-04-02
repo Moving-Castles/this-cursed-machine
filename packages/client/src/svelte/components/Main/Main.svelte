@@ -9,6 +9,7 @@
   import InfoBar from "@components/Main/Bars/InfoBar.svelte"
   import TabBar from "@components/Main/Bars/TabBar.svelte"
   import OrderBar from "@components/Main/Bars/OrderBar.svelte"
+  import Attachments from "@components/Main/Tabs/Pod/Depots/Attachments.svelte"
 
   import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
@@ -103,6 +104,8 @@
 
 {#if $player?.carriedBy}
   <div class="dust" />
+
+  <Attachments />
 
   <div class="split-screen">
     <div class="left-col">

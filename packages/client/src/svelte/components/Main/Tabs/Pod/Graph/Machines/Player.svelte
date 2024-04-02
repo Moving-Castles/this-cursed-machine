@@ -6,6 +6,7 @@
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   import { inspecting } from "@modules/ui/stores"
 
+  export let address: string
   export let machine: GraphMachine
 
   $: producing = machine?.products && machine?.products.length > 0
@@ -43,6 +44,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
+  id="machine-{address}"
   class="player"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   on:mouseenter={onMouseEnter}

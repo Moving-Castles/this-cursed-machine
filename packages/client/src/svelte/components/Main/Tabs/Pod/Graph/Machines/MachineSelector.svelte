@@ -7,6 +7,7 @@
   import Player from "./Player.svelte"
   import Machine from "./Machine.svelte"
 
+  export let address: string
   export let machine: GraphMachine
 
   const componentList = {
@@ -27,4 +28,4 @@
   const component = componentList[machine.machineType]
 </script>
 
-<svelte:component this={component} {machine} />
+<svelte:component this={component} {address} {machine} />

@@ -411,3 +411,32 @@ export const shippableDepots = derived(
     )
   }
 )
+
+export const depotAttachments = derived(
+  [simulatedDepots, playerPod],
+  ([$simulatedDepots, $playerPod]) => {
+    const results: {
+      depot: string
+      machine: string
+      name: "I" | "O" | "none"
+    }[] = []
+
+    const getConnectionName = (machineEntity: string) => {
+      if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
+      if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
+      return "none"
+    }
+
+    Object.entries($simulatedDepots).forEach(([address, depot]) => {
+      if (depot.depotConnection !== EMPTY_CONNECTION) {
+        results.push({
+          depot: address,
+          machine: depot.depotConnection,
+          name: getConnectionName(depot.depotConnection),
+        })
+      }
+    })
+
+    return results
+  }
+)
