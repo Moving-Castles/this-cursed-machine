@@ -1,3 +1,4 @@
+import type { Writable } from "svelte/store"
 import type { Action } from "@modules/action/actionSequencer"
 import { MACHINE_TYPE } from "contracts/enums"
 import { writable, derived, get } from "svelte/store"
@@ -7,7 +8,14 @@ import { shippableDepots } from "@modules/state/simulated/stores"
 import { storableNumber } from "@modules/utils/storable"
 import { staticContent } from "@modules/content"
 
-export const tutorialProgress = storableNumber(0, "storable")
+export type Step = {
+  type: "tab" | "contract" | "command" | "order" | "read" | "custom"
+  value: number[] | Record<string, string | string[]>
+}
+
+export const tutorialProgress = storableNumber(0, "tutorialProgress")
+
+export const advanceConditions: Writable<Step[]> = writable([])
 
 export const currentMessage = derived(
   [tutorialProgress, staticContent],
@@ -40,12 +48,7 @@ export function clearMessage() {
   assistantMessages.set([])
 }
 
-export function advanceTutorial(
-  input: number | string | Action | null,
-  level: number,
-  type: "tab" | "contract" | "command" | "order" | "read" | "custom"
-) {
-  // const PLAYER_ADDRESS = get(playerAddress)
+function initTutorial() {
   const PLAYER_ADDRESS = get(playerId)
   const OUTLET_ADDRESS = get(playerPod)?.fixedEntities?.outlet
   const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
@@ -73,6 +76,7 @@ export function advanceTutorial(
       value: { systemId: "build", params: [MACHINE_TYPE.DRYER] },
     }, // 12
     { type: "order" }, // 13
+    // Ship another order
     { type: "contract", value: { systemId: "ship" } }, // 14
     { type: "tab", value: [1] }, // 15
     { type: "contract", value: { systemId: "accept" } }, // 16
@@ -92,6 +96,7 @@ export function advanceTutorial(
       },
     }, // 22
     { type: "order" }, // 23
+    // Ship your final order
     { type: "contract", value: { systemId: "ship" } }, // 23
     { type: "tab", value: [2] }, // 24
     { type: "contract", value: { systemId: "name" } }, // 25
@@ -99,10 +104,28 @@ export function advanceTutorial(
     { type: "custom", value: "message" }, // 26
   ]
 
-  // Indeces correspond to steps
-  level = Number(level)
+  advanceConditions.set(ADVANCE_CONDITIONS)
+}
 
-  const step = ADVANCE_CONDITIONS[level]
+const markComplete = lvl => {
+  let value = get(tutorialCompleted)
+
+  if (value.includes(lvl)) return
+
+  value = [...value, lvl]
+  tutorialCompleted.set(value)
+}
+
+export function advanceTutorial(
+  input: number | string | Action | null,
+  level: number,
+  type: "tab" | "contract" | "command" | "order" | "read" | "custom"
+) {
+  initTutorial()
+
+  const $advanceConditions = get(advanceConditions)
+
+  const step = $advanceConditions[level]
 
   if (step) {
     // Check if condition is met or not
@@ -112,12 +135,14 @@ export function advanceTutorial(
       typeof input === "string"
     ) {
       if (step.value.includes(input.toLowerCase())) {
+        markComplete(level)
         return tutorialProgress.set(level + 1)
       }
     }
 
     if (step.type === "tab" && type === "tab") {
       if (step.value.includes(Number(input))) {
+        markComplete(level)
         return tutorialProgress.set(level + 1)
       }
     }
@@ -147,23 +172,27 @@ export function advanceTutorial(
         if (!satisfies) return
       }
 
+      markComplete(level)
+      return tutorialProgress.set(level + 1)
+    }
+
+    // Read message ?
+    if (step.type === "read" && type === "read") {
+      markComplete(level)
+      return tutorialProgress.set(level + 1)
+    }
+
+    if (step.type === "custom" && type === "custom" && step.value === input) {
+      markComplete(level)
       return tutorialProgress.set(level + 1)
     }
 
     // Ready to ship ?
     if (step.type === "order" && type === "order") {
       if (Object.values(get(shippableDepots)).some(e => e === true)) {
+        markComplete(level)
         return tutorialProgress.set(level + 1)
       }
-    }
-
-    // Read message ?
-    if (step.type === "read" && type === "read") {
-      return tutorialProgress.set(level + 1)
-    }
-
-    if (step.type === "custom" && type === "custom" && step.value === input) {
-      return tutorialProgress.set(level + 1)
     }
   }
 }

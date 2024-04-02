@@ -8,7 +8,13 @@
   let viewing = -1
 
   $: messages = $staticContent.messages.filter(
-    msg => $player.tutorial && msg.tutorial
+    msg => {
+      if ($player.tutorial) {
+        return $player.tutorial && msg.tutorial
+      } else {
+        return msg
+      }
+    }
     // msg => msg
   )
 
@@ -27,13 +33,11 @@
 
       {#if viewing === i && messages?.[i]?.attachment}
         <div class="attachment">
-          <!-- {#if import.meta.env.PROD} -->
           <img
             on:click={() => (i = -1)}
             src={urlFor(messages?.[i]?.attachment)}
             alt={message.title}
           />
-          <!-- {/if} -->
         </div>
       {/if}
     </div>

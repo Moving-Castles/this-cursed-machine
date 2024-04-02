@@ -16,8 +16,9 @@
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
 
   const getConnectionName = (machineEntity: string) => {
-    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "Inlet"
-    if (machineEntity === $playerPod.fixedEntities.outlet) return "Outlet"
+    if ($playerPod?.fixedEntities?.inlets.includes(machineEntity))
+      return "Inlet"
+    if (machineEntity === $playerPod?.fixedEntities?.outlet) return "Outlet"
     return "none"
   }
 </script>

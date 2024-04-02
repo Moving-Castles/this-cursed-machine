@@ -134,9 +134,10 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     const targetMachineBuildIndex = targetMachine.hasOwnProperty("buildIndex")
       ? "#" + targetMachine.buildIndex
       : ""
-    const connectionProduct = connection?.products?.length > 0
-      ? `(${materialTypeToLabel(connection.products[0].materialType)})`
-      : ""
+    const connectionProduct =
+      connection?.products?.length > 0
+        ? `(${materialTypeToLabel(connection.products[0].materialType)})`
+        : ""
 
     const label = `${machineTypeToLabel(sourceMachine.machineType)}${sourceMachineBuildIndex} to ${machineTypeToLabel(targetMachine.machineType)}${targetMachineBuildIndex} ${connectionProduct}`
 

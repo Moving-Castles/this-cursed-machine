@@ -53,6 +53,8 @@
 
     <div class="section buy">
       <button
+        disabled={$player.tutorial &&
+          !PULSE_CONDITIONS.includes($tutorialProgress)}
         class:unafforable
         class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
         on:click={() => sendBuy()}
@@ -118,6 +120,15 @@
           background: grey;
           border: 0;
           font-family: var(--font-family);
+
+          &:disabled {
+            &:hover {
+              background: grey;
+              color: darkgrey;
+              // color: var(--background);
+              // cursor: pointer;
+            }
+          }
 
           &:hover {
             background: var(--foreground);

@@ -52,6 +52,7 @@ export const NO_INPUT_COMMANDS = [
   COMMAND.BUY,
   COMMAND.GRADUATE,
   COMMAND.RESET,
+  COMMAND.START,
 ]
 
 export const SINGLE_INPUT_COMMANDS = [
@@ -87,7 +88,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
     COMMAND.DESTROY,
     COMMAND.GRADUATE,
   ],
-  2: FULL_COMMANDS
+  2: FULL_COMMANDS,
 }
 
 export const FULL_MACHINES = [
@@ -105,7 +106,7 @@ export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
   0: [],
   1: [MACHINE_TYPE.DRYER],
   2: [MACHINE_TYPE.DRYER],
-  3: FULL_MACHINES
+  3: FULL_MACHINES,
 }
 
 export const FIXED_MACHINE_TYPES = [

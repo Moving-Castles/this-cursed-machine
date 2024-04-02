@@ -50,7 +50,7 @@ export function addToSequencer(systemId: string, params: any[] = []) {
     systemId: systemId,
     params: params || [],
     completed: false,
-    error: undefined
+    error: undefined,
   }
 
   queuedActions.update(queuedActions => {

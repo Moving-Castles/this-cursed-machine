@@ -2,12 +2,28 @@
   import { onMount, onDestroy } from "svelte"
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
+  import { playSound } from "@modules/sound"
+  import { tutorialProgress } from "@modules/ui/assistant"
+  import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { start } from "@modules/action"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
   export let msg: AssistantMessage
 
+  let working = false
+
   let timeout: ReturnType<typeof setTimeout>
+
+  async function sendStart() {
+    working = true
+    playSound("tcm", "listPrint")
+    const action = start()
+    await waitForCompletion(action)
+    playSound("tcm", "TRX_yes")
+    working = false
+    tutorialProgress.set(0)
+  }
 
   const close = () => dispatch("end", msg)
 
@@ -31,6 +47,7 @@
   <div class="text">
     {msg.message}
   </div>
+  <button on:click={sendStart}> Start </button>
 </div>
 
 <style lang="scss">

@@ -11,46 +11,42 @@
     1: 0,
     2: 8,
     3: 17,
-    4: 25,
+    4: 26,
   }
 
   const PULSE_CONDITIONS = {
-    0: [20],
+    0: [20, 3],
     1: [1, 7, 15],
-    2: [17, 25],
+    2: [9, 17, 25],
     3: [18],
     4: [27],
   }
 
-  function toggleTabByKeyboard(e: KeyboardEvent) {
-    const keyPressed = e.key
-    const numericKey = parseInt(keyPressed, 10) // Convert the key pressed to a number
+  $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
+    num => $tutorialProgress >= num
+  ).length
 
-    // Check if the key is a number and within the valid range of tabList
-    if (
-      !isNaN(numericKey) &&
-      numericKey >= 0 &&
-      numericKey < Object.keys(tabList).length
-    ) {
-      const tabKeys = Object.keys(tabList).map(key => parseInt(key, 10))
-      const tabKey = tabKeys[numericKey] // Get the actual key of the tab from tabList
-
-      if (tabList[tabKey].enabled) {
-        // Check if the tab is enabled
-        playSound("tcm", "selectionEnter")
-        activeTab.set(tabKey) // Set the active tab using the key from tabList
-      }
+  const onKeyDown = e => {
+    e.stopPropagation()
+    if (e.key.toLowerCase() === "tab") {
+      activeTab.set(($activeTab + 1) % availableTabsLength)
+      playSound("tcm", "selectionEnter")
+      console.log(tabList)
+      advanceTutorial($activeTab, $tutorialProgress, "tab")
     }
   }
 </script>
+
+<svelte:window on:keydown={onKeyDown} />
 
 <div class="tab-bar">
   {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
     <div class="button-container">
       <button
+        tabIndex={key}
         disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         class:enabled={value.enabled}
-        class:active={key === $activeTab}
+        class:active={key == $activeTab}
         class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
         class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         on:click={() => {
@@ -98,7 +94,7 @@
         }
 
         &.active {
-          background: grey;
+          background: grey !important;
         }
 
         &.hidden {
