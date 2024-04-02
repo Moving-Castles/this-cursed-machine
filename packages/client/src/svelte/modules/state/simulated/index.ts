@@ -3,22 +3,29 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
 import { DIRECTION } from "@components/Main/Terminal/enums"
 import type { SimulatedMachines } from "./types"
 
-export const availableMachines = (direction: DIRECTION, simulatedMachines: SimulatedMachines) => {
+export const availableMachines = (
+  direction: DIRECTION,
+  simulatedMachines: SimulatedMachines
+) => {
   const machines = Object.entries(simulatedMachines)
 
   let availableMachines = []
 
-  const connectionKey = direction === DIRECTION.OUTGOING
-    ? "outgoingConnections"
-    : "incomingConnections"
+  const connectionKey =
+    direction === DIRECTION.OUTGOING
+      ? "outgoingConnections"
+      : "incomingConnections"
 
   for (let i = 0; i < machines.length; i++) {
-
     // The machines does not take connections of the given direction at all
     if (!machines[i][1][connectionKey]) continue
 
     // If the machine has an empty connection, it is available
-    if (machines[i][1][connectionKey].some(connection => connection === EMPTY_CONNECTION)) {
+    if (
+      machines[i][1][connectionKey].some(
+        connection => connection === EMPTY_CONNECTION
+      )
+    ) {
       availableMachines.push(machines[i])
     }
   }
@@ -29,9 +36,9 @@ export const availableMachines = (direction: DIRECTION, simulatedMachines: Simul
 export const availablePorts = (machine: Machine, direction: DIRECTION) => {
   let portAddresses =
     machine[
-    direction === DIRECTION.OUTGOING
-      ? "outgoingConnections"
-      : "incomingConnections"
+      direction === DIRECTION.OUTGOING
+        ? "outgoingConnections"
+        : "incomingConnections"
     ]
   let ports = portAddresses.map((address, i) => ({
     portIndex: i,
@@ -60,4 +67,3 @@ export function machineTypeToLabel(machineType: MACHINE_TYPE | undefined) {
 export const materialTypeToLabel = (materialType: MATERIAL_TYPE) => {
   return MATERIAL_TYPE[materialType]?.split("_")?.join(" ")
 }
-

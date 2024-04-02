@@ -41,6 +41,7 @@
     "@sanity/client": "^6.15.6",
     "@sanity/image-url": "^1.0.2",
     "contracts": "workspace:*",
+    "d3-shape": "^3.2.0",
     "heap": "^0.2.7",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",

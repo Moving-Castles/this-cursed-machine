@@ -27,15 +27,15 @@
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    graphMachines,
+    graphMachines
   ))
 </script>
 
 <div class="graph-container">
   <div class="grid">
     <div class="top">
-      {#each Object.values(graphMachines) as machine}
-        <MachineSelector {machine} />
+      {#each Object.entries(graphMachines) as [address, machine]}
+        <MachineSelector {address} {machine} />
       {/each}
 
       <svg {width} {height}>
