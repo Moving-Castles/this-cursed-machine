@@ -10,6 +10,7 @@ import type {
   SimulatedMachines,
   Connection,
   SimulatedMachine,
+  Attachment,
 } from "./types"
 import {
   machines,
@@ -415,11 +416,7 @@ export const shippableDepots = derived(
 export const depotAttachments = derived(
   [simulatedDepots, playerPod],
   ([$simulatedDepots, $playerPod]) => {
-    const results: {
-      depot: string
-      machine: string
-      name: "I" | "O" | "none"
-    }[] = []
+    const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
       if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
