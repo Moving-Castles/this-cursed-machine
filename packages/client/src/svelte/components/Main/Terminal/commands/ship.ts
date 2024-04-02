@@ -6,6 +6,7 @@ import {
   detachDepot as sendDetachDepot,
   ship as sendShip,
 } from "@modules/action"
+import { shippableDepots } from "@modules/state/simulated/stores"
 import {
   loadingLine,
   loadingSpinner,
@@ -15,15 +16,28 @@ import {
   waitForCompletion,
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
+import { player } from "@modules/state/base/stores"
+import { tutorialProgress } from "@modules/ui/assistant"
 import { playSound } from "@modules/sound"
 import { terminalMessages } from "../functions/terminalMessages"
-import { simulatedDepots } from "@modules/state/simulated/stores"
+import {
+  simulatedDepots,
+  shippableDepots,
+} from "@modules/state/simulated/stores"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
 async function execute(depotEntity: string) {
   try {
+    const $player = get(player)
     const depots = get(simulatedDepots)
-    if (!depots[depotEntity]) return
+    const $shippableDepots = get(shippableDepots)
+
+    const canShip = $shippableDepots[depotEntity]
+
+    if (!canShip)
+      writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Not ready to ship")
+
+    if (!depots[depotEntity] || !canShip) return
 
     // If the depot is connected, detach it before shipping
     if (depots[depotEntity].depotConnection !== EMPTY_CONNECTION) {
@@ -49,6 +63,13 @@ async function execute(depotEntity: string) {
     playSound("tcm", "playerLvlend")
 
     await terminalMessages.orderFullfilled()
+
+    // If the player is in the tutorial and ships, do an extra check to make sure if their tutorial level should be skipped ahead
+    if ($player.tutorial) {
+      const $tutorialProgress = get(tutorialProgress)
+
+      // Compare with goals
+    }
 
     return
   } catch (error) {

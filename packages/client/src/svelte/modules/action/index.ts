@@ -42,7 +42,7 @@ export function connect(
   return addToSequencer(WorldFunctions.Connect, [
     sourceMachine,
     targetMachine,
-    portIndex
+    portIndex,
   ])
 }
 
@@ -71,10 +71,7 @@ export function name(name: string) {
 }
 
 export function attachDepot(depotEntity: string, targetEntity: string) {
-  return addToSequencer(WorldFunctions.AttachDepot, [
-    depotEntity,
-    targetEntity
-  ])
+  return addToSequencer(WorldFunctions.AttachDepot, [depotEntity, targetEntity])
 }
 
 export function detachDepot(depotEntity: string) {

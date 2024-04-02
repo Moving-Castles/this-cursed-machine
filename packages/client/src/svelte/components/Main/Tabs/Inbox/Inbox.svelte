@@ -8,7 +8,13 @@
   let viewing = -1
 
   $: messages = $staticContent.messages.filter(
-    msg => $player.tutorial && msg.tutorial,
+    msg => {
+      if ($player.tutorial) {
+        return $player.tutorial && msg.tutorial
+      } else {
+        return msg
+      }
+    },
     // msg => msg
   )
 
@@ -37,7 +43,6 @@
             src={urlFor(messages?.[i]?.attachment).url()}
             alt={message.title}
           />
-          <!-- {/if} -->
         </div>
       {/if}
     </div>

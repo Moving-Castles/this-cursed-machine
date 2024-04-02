@@ -52,7 +52,7 @@ export function processOutputPatches(
   // Create a deep copy of 'simulated' to avoid mutating the original object.
   const simulatedCopy = deepClone(simulated) as SimulatedMachines
 
-  console.log('patch.outputs', patch.outputs)
+  console.log("patch.outputs", patch.outputs)
 
   if (!patch.outputs) return simulatedCopy
 
@@ -141,11 +141,13 @@ export function calculateSimulatedDepots(
     ...Object.entries(initialDepotsCopy),
   ])
 
+  if (!playerPod?.fixedEntities) return simulatedDepots
+
   const outletDepot = Object.entries(initialDepotsCopy).filter(
-    ([_, depot]) => depot.depotConnection === playerPod.fixedEntities.outlet
+    ([_, depot]) => depot.depotConnection === playerPod?.fixedEntities.outlet
   )
   const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) =>
-    playerPod.fixedEntities.inlets.includes(depot.depotConnection)
+    playerPod?.fixedEntities.inlets.includes(depot.depotConnection)
   )
   const depotPatches = Object.entries(patches).filter(
     ([_, patch]) => patch.depot
@@ -312,7 +314,9 @@ export function calculateSimulatedConnections(
 
       if (!sourceMachine || !targetMachine) return connections
 
-      const targetPortIndex = targetMachine.incomingConnections.findIndex(
+      if (!targetMachine?.incomingConnections) return connections
+
+      const targetPortIndex = targetMachine?.incomingConnections?.findIndex(
         connection => connection === sourceAddress
       )
 

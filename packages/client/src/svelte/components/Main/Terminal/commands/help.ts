@@ -16,16 +16,15 @@ async function execute(_: TERMINAL_TYPE) {
   // Get subset if not full terminal
   const commandList = commands.filter(
     command =>
-      levelCommandFilter(
-        get(player)?.tutorialLevel ?? 2,
-        command.id
-      ) && command.public
+      levelCommandFilter(get(player)?.tutorialLevel ?? 2, command.id) &&
+      command.public
   )
 
   // List all available commands
   for (let i = 0; i < commandList.length; i++) {
     let command = commandList[i]
     let outputString = `(${command.alias}) ${command.name}`
+    console.log(command, commandList)
     playSound("tcm", "listPrint")
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.INFO,

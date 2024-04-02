@@ -12,16 +12,11 @@
   import { playSound } from "@svelte/modules/sound"
 
   $: {
-    if ($tutorialProgress && $currentMessage?.explanation) {
+    if (typeof $tutorialProgress === "number" && $currentMessage?.explanation) {
       sendMessage($currentMessage.explanation)
     } else if ($tutorialProgress && !$currentMessage?.explanation) {
       clearMessage()
     }
-  }
-
-  // Not sure if this is the right place to do this...
-  $: if ($tutorialProgress === 1) {
-    playSound("tcm", "mapPop")
   }
 
   onMount(() => {

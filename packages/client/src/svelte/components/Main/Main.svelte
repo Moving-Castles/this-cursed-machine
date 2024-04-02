@@ -77,14 +77,18 @@
   }
 
   $: {
+    if ($tutorialProgress === 1) playSound("tcm", "mapPop")
+  }
+
+  $: {
     if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
       clearMessage()
       sendMessage(
         "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-        { disappear: true },
+        { disappear: true }
       )
       console.log(
-        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
+        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere"
       )
     }
   }
