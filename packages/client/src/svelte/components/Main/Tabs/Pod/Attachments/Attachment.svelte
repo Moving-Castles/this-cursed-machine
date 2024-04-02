@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Attachment } from "@modules/state/simulated/types"
   import { onMount } from "svelte"
   import { line, curveCatmullRom } from "d3-shape"
 
@@ -29,36 +30,38 @@
     const from = depotElement?.getBoundingClientRect()
     const to = machineElement?.getBoundingClientRect()
 
-    fromCoord = { x: from.right - 28, y: from.bottom }
-    toCoord = {
-      x: attachment.name === "I" ? to.left : to.right,
-      y: to.top + to.height / 2,
+    if (from && to) {
+      fromCoord = { x: from.right - 28, y: from.bottom }
+      toCoord = {
+        x: attachment.name === "I" ? to.left : to.right,
+        y: to.top + to.height / 2,
+      }
+
+      const [minX, maxX, minY, maxY] = [
+        Math.min(fromCoord.x, toCoord.x),
+        Math.max(fromCoord.x, toCoord.x),
+        Math.min(fromCoord.y, toCoord.y),
+        Math.max(fromCoord.y, toCoord.y),
+      ]
+
+      throughCoord = {
+        x: Math.random() * (maxX - minX) + minX,
+        y: Math.random() * (maxY - minY) + minY,
+      }
+
+      const points = [
+        fromCoord,
+        { x: fromCoord.x, y: fromCoord.y + OFFSET },
+        throughCoord,
+        {
+          x: attachment.name === "I" ? toCoord.x - OFFSET : toCoord.x + OFFSET,
+          y: toCoord.y,
+        },
+        toCoord,
+      ]
+
+      path = lineGenerator(points)
     }
-
-    const [minX, maxX, minY, maxY] = [
-      Math.min(fromCoord.x, toCoord.x),
-      Math.max(fromCoord.x, toCoord.x),
-      Math.min(fromCoord.y, toCoord.y),
-      Math.max(fromCoord.y, toCoord.y),
-    ]
-
-    throughCoord = {
-      x: Math.random() * (maxX - minX) + minX,
-      y: Math.random() * (maxY - minY) + minY,
-    }
-
-    const points = [
-      fromCoord,
-      { x: fromCoord.x, y: fromCoord.y + OFFSET },
-      throughCoord,
-      {
-        x: attachment.name === "I" ? toCoord.x - OFFSET : toCoord.x + OFFSET,
-        y: toCoord.y,
-      },
-      toCoord,
-    ]
-
-    path = lineGenerator(points)
   }
 
   onMount(draw)

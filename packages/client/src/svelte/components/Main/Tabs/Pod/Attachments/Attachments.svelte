@@ -3,8 +3,6 @@
   import Attachment from "./Attachment.svelte"
 
   let [innerWidth, innerHeight] = [0, 0]
-
-  console.log($depotAttachments)
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
