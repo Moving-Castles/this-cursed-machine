@@ -5,17 +5,19 @@
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
+
   export let depot: SimulatedDepot
-  export let key: string
+  export let address: string
   export let index: number
 
-  $: canShip = $shippableDepots[key]
+  $: canShip = $shippableDepots[address]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Narrow the type
   $: typedDepot = depot as Depot
 
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
+
   $: empty = typedDepot.amount === 0
 
   const getConnectionName = (machineEntity: string) => {
@@ -25,7 +27,7 @@
   }
 </script>
 
-<div class="depot-item" class:shippable={canShip}>
+<div id="depot-{address}" class="depot-item" class:shippable={canShip}>
   <div class="id">
     <div>{index + 1}</div>
   </div>
@@ -54,13 +56,13 @@
 
 <style lang="scss">
   .depot-item {
-    display: flex;
-    border: 1px solid var(--foreground);
+    border: 1px solid #fff;
     width: calc(33% - 5px);
     overflow: hidden;
     font-size: var(--font-size-small);
     height: 70px;
-    background: var(--color-grey-dark);
+    background: rgb(74, 74, 74);
+    display: flex;
 
     &.shippable {
       border: 1px solid var(--color-success);
@@ -91,7 +93,7 @@
 
       .material-type {
         background: var(--foreground);
-        color: var(--background);
+        color: rgb(74, 74, 74);
         padding: 2px;
         margin-right: 1ch;
       }

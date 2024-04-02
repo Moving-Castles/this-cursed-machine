@@ -10,8 +10,8 @@
   class:highlight={$tutorialProgress === 21}
 >
   {#if $simulatedDepots}
-    {#each Object.entries($simulatedDepots) as [key, depot], index}
-      <Depot {key} {depot} {index} />
+    {#each Object.entries($simulatedDepots) as [address, depot], index}
+      <Depot {address} {depot} {index} />
     {/each}
   {/if}
 </div>
@@ -36,7 +36,7 @@
 
   @keyframes highlight {
     from {
-      background: var(--color-success);
+      background: orangered;
     }
     to {
       background: transparent;
