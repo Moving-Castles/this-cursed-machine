@@ -51,12 +51,12 @@
     color: var(--foreground);
 
     &.connected {
-      background: var(--color-active);
+      background: var(--color-success);
       color: var(--background);
     }
 
     &.active {
-      border: 1px solid var(--color-active);
+      border: 1px solid var(--color-success);
     }
 
     .inner-container {

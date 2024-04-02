@@ -21,14 +21,14 @@ async function startUp() {
   const lvl = get(tutorialProgress)
   if (lvl === 0) {
     // await typeWriteToTerminal(
-    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
+    //   TERMINAL_OUTPUT_TYPE.NORMAL,
     //   "Starting employment competence assessment",
     //   SYMBOLS[7],
     //   10,
     //   800
     // )
     // await typeWriteToTerminal(
-    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
+    //   TERMINAL_OUTPUT_TYPE.NORMAL,
     //   "Type blink",
     //   SYMBOLS[7],
     //   10,
@@ -36,14 +36,14 @@ async function startUp() {
     // )
   } else {
     await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.NORMAL,
       "Stump securely locked in pod",
       SYMBOLS[7],
       10,
       800
     )
     await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       "Type help",
       SYMBOLS[7],
       10,

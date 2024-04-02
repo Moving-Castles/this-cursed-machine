@@ -9,14 +9,12 @@ export enum DIRECTION {
 }
 
 export enum TERMINAL_OUTPUT_TYPE {
-    ERROR,
     COMMAND,
     NORMAL,
+    INFO,
+    ALERT,
     SUCCESS,
-    HELP,
-    SPECIAL,
-    SPECIALINV,
-    INFO
+    ERROR
 }
 
 export enum COMMAND {

@@ -29,7 +29,6 @@
     simulatedConnections,
   } from "@modules/state/simulated/stores"
   import { renderSelect } from "@components/Main/Terminal/functions/renderSelect"
-  import { cursorCharacter } from "@modules/ui/stores"
   import { machineTypeToLabel, availablePorts } from "@modules/state/simulated"
   import {
     playerPod,
@@ -142,7 +141,7 @@
       DIRECTION.OUTGOING,
     )
 
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "From:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
 
     const sourceMachineKey = await renderSelect(
       selectContainerElement,
@@ -159,7 +158,7 @@
     let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
 
     writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.INFO,
       "From: " +
         machineTypeToLabel(sourceMachineEntity.machineType) +
         " #" +
@@ -185,7 +184,7 @@
       // Use the first available
       portIndex = ports[0].portIndex
     } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
-      await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Select source port:")
+      await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Select source port:")
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
@@ -211,7 +210,7 @@
       }
 
       await writeToTerminal(
-        TERMINAL_OUTPUT_TYPE.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.NORMAL,
         "Port: #" + (sourcePort + 1),
         true,
         SYMBOLS[14],
@@ -241,7 +240,7 @@
       return false
     }
 
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "TO:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "TO:")
 
     let targetMachineKey = await renderSelect(
       selectContainerElement,
@@ -258,7 +257,7 @@
     let targetMachineEntity = $simulatedMachines[targetMachineKey]
 
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.INFO,
       "To: " +
         machineTypeToLabel(targetMachineEntity.machineType) +
         " #" +
@@ -278,7 +277,7 @@
     // Get depots
     let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
 
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Depot:")
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Depot:")
 
     const depotEntity = await renderSelect(
       selectContainerElement,
@@ -337,7 +336,7 @@
     // Write input to terminal
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.COMMAND,
-      userInput,
+      userInput.length == 0 ? "&nbsp;" : userInput,
       false,
       SYMBOLS[0],
     )
@@ -383,7 +382,6 @@
   }
 
   onMount(async () => {
-    cursorCharacter.set("█")
     if (terminalType === TERMINAL_TYPE.FULL) {
       await terminalMessages.startUp()
       inputActive = true
@@ -429,7 +427,7 @@
         class="blinker"
         class:blink={userInput.length === 0}
         class:empty={userInput === ""}
-        style:transform="translate({userInput.length}ch, -2px) scaleX(1.5) "
+        style:transform="translate({userInput.length}ch, -3px) scaleX(1.5) "
       >
         █
       </div>
@@ -444,12 +442,10 @@
     width: 100%;
     position: relative;
     white-space: pre-line;
-    line-height: 1.1em;
+    line-height: 1.15em;
     max-width: 69ch;
     text-transform: uppercase;
-    background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
-    // text-shadow: 1px 1px 5px rgba(255, 255, 255, 0.2);
 
     &:not(.noOutput) {
       height: 100vh;
@@ -486,7 +482,7 @@
 
         &::placeholder {
           opacity: 1;
-          color: #666;
+          color: var(--color-grey-mid);
         }
 
         &:focus {
@@ -501,10 +497,11 @@
         left: 3ch;
         display: inline-block;
         transform-origin: top left;
+        // mix-blend-mode: difference;
 
-        &.empty {
-          color: #666;
-        }
+        // &.empty {
+        //   color: var(--color-grey-mid);
+        // }
       }
     }
   }

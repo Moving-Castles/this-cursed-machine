@@ -19,7 +19,7 @@
 <style lang="scss">
   .stats {
     height: 100px;
-    border-bottom: 5px double var(--color-border);
+    border-bottom: var(--default-border-style);
   }
 
   .graph {

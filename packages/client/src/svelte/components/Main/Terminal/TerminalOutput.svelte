@@ -20,6 +20,7 @@
     .content {
       padding-left: 2ch;
       display: inline-block;
+      // margin-bottom: 1px;
     }
 
     .symbol {
@@ -29,32 +30,31 @@
       left: 0;
     }
 
+    &.COMMAND {
+      color: var(--background);
+      .content {
+        background: var(--foreground);
+      }
+    }
+
     &.ERROR {
       color: var(--color-failure);
     }
 
     &.NORMAL {
-      color: var(--color-alert);
+      color: var(--foreground);
     }
 
     &.SUCCESS {
       color: var(--color-success);
     }
-    &.HELP {
-      color: var(--color-help);
-    }
-
-    &.SPECIAL {
-      color: var(--color-special);
-    }
-
-    &.SPECIALINV {
-      color: #000;
-      background: var(--color-special);
-    }
 
     &.INFO {
       color: var(--color-info);
+    }
+
+    &.ALERT {
+      color: var(--color-alert);
     }
   }
 </style>

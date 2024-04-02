@@ -96,7 +96,7 @@
 <style lang="scss">
   .inline-select {
     .option {
-      color: #fff;
+      color: var(--foreground);
       margin-left: 2ch;
       height: 1.1em;
       white-space: nowrap; /* Ensure no line breaks inside the element */
@@ -105,8 +105,8 @@
       opacity: 0;
 
       &.active {
-        color: #000;
-        background: #fff;
+        color: var(--background);
+        background: var(--color-info);
         margin-left: 0;
 
         &::before {
@@ -120,7 +120,7 @@
         }
 
         &.active {
-          color: #000;
+          color: var(--background);
           background: var(--color-failure);
 
           &::before {
@@ -142,7 +142,7 @@
 
     @for $i from 0 through 50 {
       .option-#{$i} {
-        animation: showOpacity #{$i * 40}ms linear;
+        animation: showOpacity #{$i * 60}ms linear;
         opacity: 1;
       }
     }

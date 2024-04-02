@@ -102,7 +102,7 @@
 
   <div class="split-screen">
     <div class="left-col">
-      <div class="status-bar">
+      <div class="info-bar">
         <InfoBar />
       </div>
       <div class="terminal">
@@ -112,12 +112,11 @@
           setBlink
           placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
         />
-        <!-- <div class="terminal-overlay" /> -->
       </div>
     </div>
     {#if $player}
       <div class="right-col">
-        <div class="status-bar">
+        <div class="order-bar">
           <OrderBar />
         </div>
         <div class="tab-container">
@@ -129,7 +128,7 @@
             <svelte:component this={currentTabComponent} />
           {/if}
         </div>
-        <div class="tab-switch">
+        <div class="tab-bar">
           <TabBar {tabList} />
         </div>
       </div>
@@ -162,19 +161,19 @@
   .split-screen {
     display: flex;
     height: 100vh;
-    background-image: url(/images/tcm2.png);
-    background-size: 200px;
-    background-repeat: repeat;
+    // background-image: url(/images/tcm2.png);
+    // background-size: 200px;
+    // background-repeat: repeat;
 
     .left-col {
       height: 100%;
       width: 500px;
       overflow: hidden;
-      border-right: 5px double var(--color-border);
+      border-right: var(--default-border-style);
 
-      .status-bar {
-        height: 60px;
-        border-bottom: 5px double var(--color-border);
+      .info-bar {
+        height: var(--top-bar-height);
+        border-bottom: var(--default-border-style);
         color: var(--foreground);
         font-size: var(--font-size-normal);
       }
@@ -191,21 +190,21 @@
       overflow: hidden;
       position: relative;
 
-      .status-bar {
-        height: 60px;
-        border-bottom: 5px double var(--color-border);
+      .order-bar {
+        height: var(--top-bar-height);
+        border-bottom: var(--default-border-style);
         font-size: var(--font-size-normal);
       }
 
       .tab-container {
-        height: calc(100vh - 140px);
+        height: calc(100vh - 130px);
         position: relative;
         animation: hue-rotate-animation 5s infinite linear;
       }
 
-      .tab-switch {
-        height: 80px;
-        border-top: 5px double var(--color-border);
+      .tab-bar {
+        height: var(--tab-bar-height);
+        border-top: var(--default-border-style);
         font-size: var(--font-size-normal);
       }
     }

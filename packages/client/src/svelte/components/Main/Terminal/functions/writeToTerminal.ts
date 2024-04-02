@@ -94,7 +94,7 @@ export async function loadingLine(index: number): Promise<void> {
   playSound("tcm", "TRX_wait_b")
   if (index === 1) {
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.NORMAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       CHARACTER,
       false,
       SYMBOLS[2],
@@ -102,7 +102,7 @@ export async function loadingLine(index: number): Promise<void> {
     )
   } else {
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.NORMAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       CHARACTER.repeat(index),
       true,
       SYMBOLS[2],
@@ -122,7 +122,7 @@ export async function loadingSpinner(index: number): Promise<void> {
   playSound("tcm", "TRX_wait_ALT")
   if (index === 1) {
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.NORMAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       currentGlyph,
       false,
       SYMBOLS[2],
@@ -130,7 +130,7 @@ export async function loadingSpinner(index: number): Promise<void> {
     )
   } else {
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.NORMAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       currentGlyph,
       true,
       SYMBOLS[2],

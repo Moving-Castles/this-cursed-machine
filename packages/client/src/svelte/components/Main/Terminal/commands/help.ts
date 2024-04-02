@@ -28,7 +28,7 @@ async function execute(_: TERMINAL_TYPE) {
     let outputString = `(${command.alias}) ${command.name}`
     playSound("tcm", "listPrint")
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.HELP,
+      TERMINAL_OUTPUT_TYPE.INFO,
       outputString,
       false,
       SYMBOLS[13],

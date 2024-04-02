@@ -67,10 +67,10 @@
     font-size: 6px;
     height: 80px;
     width: 260px;
-    background: rgb(74, 74, 74);
+    background: var(--color-grey-dark);
 
     &.connected {
-      background: orangered;
+      background: var(--color-alert);
     }
 
     button {

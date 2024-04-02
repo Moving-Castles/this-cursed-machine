@@ -44,7 +44,7 @@
     // dispatch("escaped")
     if ($player?.carriedBy) {
       await typeWriteToTerminal(
-        TERMINAL_OUTPUT_TYPE.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.NORMAL,
         "Welcome back...",
         SYMBOLS[7],
         10,
@@ -74,7 +74,7 @@
   .spawn {
     position: fixed;
     inset: 0;
-    background-color: black;
+    background-color: var(--background);
     background-size: cover;
     background-position: center;
     z-index: 1;

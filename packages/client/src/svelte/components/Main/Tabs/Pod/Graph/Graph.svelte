@@ -37,7 +37,6 @@
       {#each Object.values(graphMachines) as machine}
         <MachineSelector {machine} />
       {/each}
-
       <svg {width} {height}>
         {#each graphConnections as connection}
           <Connection {connection} />
@@ -57,7 +56,7 @@
     align-items: center;
     position: relative;
     cursor: crosshair;
-    transform: scale(0.85);
+    // transform: scale(1.1);
 
     --cellHeight: 10px;
     --cellWidth: 10px;

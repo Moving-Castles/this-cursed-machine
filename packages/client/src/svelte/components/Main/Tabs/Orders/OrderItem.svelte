@@ -76,12 +76,13 @@
     </div>
 
     {#if !completed}
-      <div class="section accept">
+      <div class="section interaction">
         {#if active}
-          <button on:click={() => sendUnaccept()}>Cancel</button>
+          <button class="cancel" on:click={() => sendUnaccept()}>Cancel</button>
         {:else}
           <button
             class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
+            class="accept"
             on:click={() => sendAccept()}
           >
             Accept
@@ -137,20 +138,27 @@
         width: 20%;
       }
 
-      &.accept {
+      &.interaction {
         width: 20%;
 
         button {
           width: 100%;
           height: 100%;
-          background: grey;
+          background: var(--color-grey-mid);
           border: 0;
           height: 30px;
           font-family: var(--font-family);
 
+          &.accept {
+            background: var(--color-success);
+          }
+
+          &.cancel {
+            background: var(--color-failure);
+          }
+
           &:hover {
-            background: var(--foreground);
-            color: var(--background);
+            opacity: 0.8;
             cursor: pointer;
           }
         }
@@ -164,7 +172,7 @@
       .section {
         &.accept {
           button {
-            background: grey;
+            background: var(--color-grey-mid);
             &:hover {
               background: var(--background);
               color: var(--foreground);

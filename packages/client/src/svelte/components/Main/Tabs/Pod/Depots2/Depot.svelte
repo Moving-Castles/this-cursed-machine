@@ -56,16 +56,16 @@
 
 <style lang="scss">
   .depot-item {
-    border: 1px solid #fff;
+    display: flex;
+    border: 1px solid var(--foreground);
     width: calc(33% - 5px);
     overflow: hidden;
     font-size: var(--font-size-small);
     height: 70px;
-    background: rgb(74, 74, 74);
-    display: flex;
+    background: var(--color-grey-dark);
 
     &.shippable {
-      border: 1px solid var(--color-active);
+      border: 1px solid var(--color-success);
     }
 
     .id {
@@ -93,7 +93,7 @@
 
       .material-type {
         background: var(--foreground);
-        color: rgb(74, 74, 74);
+        color: var(--background);
         padding: 2px;
         margin-right: 1ch;
       }
@@ -107,7 +107,7 @@
       align-items: center;
 
       &.connected {
-        background: var(--color-active);
+        background: var(--color-success);
         color: var(--background);
       }
     }

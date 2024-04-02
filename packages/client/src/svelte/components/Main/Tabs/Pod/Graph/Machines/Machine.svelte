@@ -104,16 +104,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: darkgrey;
+    background: var(--color-grey-dark);
     position: absolute;
     color: var(--background);
-    background-image: url("/images/conc.jpg");
+    background-image: url("/images/machine2.png");
     background-size: cover;
     border: 1px solid var(--background);
     cursor: none;
 
     &.active {
-      border: 1px solid var(--color-active);
+      border: 1px solid var(--color-success);
     }
 
     .inner-container {
@@ -128,7 +128,7 @@
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
-        background: darkgrey;
+        background: var(--color-grey-dark);
         opacity: 0.7;
       }
     }

@@ -148,7 +148,7 @@
         button {
           width: 100%;
           height: 36px;
-          background: grey;
+          background: var(--color-grey-mid);
           border: 0;
           font-family: var(--font-family);
 
