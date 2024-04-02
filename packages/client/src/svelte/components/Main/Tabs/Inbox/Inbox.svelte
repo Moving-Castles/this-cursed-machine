@@ -14,11 +14,11 @@
       } else {
         return msg
       }
-    }
+    },
     // msg => msg
   )
 
-  const open = i => {
+  const open = (i: number) => {
     viewing = viewing === i ? -1 : i
     advanceTutorial(null, $tutorialProgress, "read")
   }
@@ -26,6 +26,8 @@
 
 <div class="inbox" in:fade>
   {#each messages as message, i}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div on:click={() => open(i)} class="message">
       <button class="opener" class:pulse={$tutorialProgress === 19}>
         {message.title}
@@ -33,9 +35,12 @@
 
       {#if viewing === i && messages?.[i]?.attachment}
         <div class="attachment">
+          <!-- {#if import.meta.env.PROD} -->
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
           <img
             on:click={() => (i = -1)}
-            src={urlFor(messages?.[i]?.attachment)}
+            src={urlFor(messages?.[i]?.attachment).url()}
             alt={message.title}
           />
         </div>
@@ -54,14 +59,14 @@
     height: 10rem;
     vertical-align: middle;
     font-family: var(--font-family);
-    background: var(--alt-foreground);
-    color: var(--black);
+    background: var(--foreground);
+    color: var(--background);
     border: none;
   }
 
   .opener:hover {
-    background: var(--black);
-    color: var(--alt-foreground);
+    background: var(--background);
+    color: var(--foreground);
   }
 
   .attachment {

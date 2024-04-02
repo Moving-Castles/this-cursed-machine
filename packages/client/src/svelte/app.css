@@ -2,39 +2,37 @@
 
 :root {
   /* Colors */
-  --black: #201e1e;
-  --white: #ffffff;
-  --dark-brown: #0b0b0b;
-  --alt-foreground: #d7d7c3;
+  --black: #0b0b0b;
+  --white: #d7d7c3;
+  /* --white: #dcdccb; */
 
-  --background: var(--dark-brown);
-  --background-offset: rgb(40, 40, 40);
-  --foreground: var(--alt-foreground);
-  --color-info: #50908e;
-  --color-alert: #9beb55;
-  --color-success: #439543;
-  --color-failure: #ff4000;
-  --color-help: #534bce;
-  --color-special: #bcbe8f;
 
-  --color-active: #90ca48;
+  --background: var(--black);
+  --foreground: var(--white);
 
-  --color-border: #444444;
-  /* --color-border: #eeff00; */
-  --default-border-style: 2px dashed var(--color-border);
+  --color-grey-dark: #333;
+  --color-grey-mid: #666;
+  --color-grey-light: #999;
+
+  --color-failure: #ff2600;
+  --color-alert: #00e5ff;
+  --color-info: #bb3af2;
+  --color-success: #a4fa3b;
+
 
   /* Sizing */
   --default-padding: 1ch;
+  --top-bar-height: 40px;
+  --tab-bar-height: 90px;
 
   /* Fonts */
-  --font-family-special: "Fake Receipt", monospace;
   --font-family: "SixtyFour", "Fake Receipt", monospace;
-  --font-family-handwriting: "Waiting for the Sunrise", cursive;
-  /* --font-size: 14px; */
-  /* --font-size-normal: 20px; */
   --font-size-small: 9px;
   --font-size-normal: 14px;
   --font-size-large: 18px;
+
+  /* Misc */
+  --default-border-style: 5px double var(--color-grey-dark);
 }
 
 * {
@@ -76,7 +74,7 @@ pre {
 }
 
 .blink {
-  animation: strobe 1200ms steps(1, end) infinite reverse;
+  animation: strobe 1200ms steps(1, end) infinite;
 }
 
 .flash-fast-thrice {
@@ -90,10 +88,6 @@ pre {
 .flash-a-little,
 .flash-a-bit {
   animation: strobe 200ms steps(1, end) 3;
-}
-
-.muted {
-  color: #ccc;
 }
 
 @keyframes strobe {
@@ -179,10 +173,9 @@ pre {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: white;
-  /* mix-blend-mode: exclusion; */
+  background-color: var(--foreground);
   z-index: 100000;
-  opacity: 1;
+  opacity: 0.8;
 }
 
 .hidden {
@@ -200,10 +193,10 @@ pre {
 
 @keyframes pulse {
   0% {
-    background: grey;
+    background: var(--color-grey-mid);
   }
   100% {
-    background: white;
+    background: var(--color-success);
   }
 }
 

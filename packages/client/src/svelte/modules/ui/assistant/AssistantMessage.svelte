@@ -42,49 +42,73 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="msg absolute">
   <div class="image">
-    <img src="/images/bugsy.gif" alt="bugsy" />
+    <img src="/images/bot2.png" alt="bot" />
   </div>
   <div class="text">
     {msg.message}
   </div>
-  <button on:click={sendStart}> Start </button>
+  <div class="restart">
+    <button on:click={sendStart}>Start over</button>
+  </div>
 </div>
 
 <style lang="scss">
   .msg {
     width: 100%;
     display: flex;
-    // flex-flow: column nowrap;
     align-items: center;
-    padding: 10px;
     padding-top: 0;
     text-align: center;
-    background: var(--foreground);
+    background: var(--background);
     margin-top: 10px;
-    font-size: var(--font-size);
     overflow: hidden;
-    // border: 1px solid white;
     white-space: pre-wrap;
     text-align: left;
-    font-family: var(--font-family-handwriting);
     font-size: 22px;
+    font-size: var(--font-size);
     line-height: 1em;
-    font-weight: bold;
-    border-radius: 5px;
-    color: black;
-    background: rgba(243, 255, 25, 0.85);
+    color: var(--foreground);
     text-align: center;
-    // box-shadow: rgba(255, 255, 95, 0.9) 0px 0px 10px 0px;
-
-    img {
-      width: 90px;
-      margin: 10px auto;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    border: 5px double var(--color-success);
+    color: var(--color-success);
+    position: relative;
 
     .image {
+      line-height: 0;
       padding: 20px;
+      img {
+        width: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+      }
+    }
+
+    .restart {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      button {
+        background: var(--color-grey-dark);
+        color: var(--foreground);
+        padding: 7px;
+        border: none;
+        cursor: pointer;
+        font-size: var(--font-size-small);
+        font-family: var(--font-family);
+
+        &:hover {
+          background: var(--foreground);
+          color: var(--background);
+        }
+      }
+    }
+
+    .text {
+      padding: 10px;
+      padding-left: 0;
+      width: 100%;
     }
   }
 </style>

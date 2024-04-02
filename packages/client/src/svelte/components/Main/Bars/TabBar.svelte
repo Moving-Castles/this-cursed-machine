@@ -23,7 +23,7 @@
   }
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress >= num
+    num => $tutorialProgress >= num,
   ).length
 
   const onKeyDown = e => {
@@ -46,7 +46,7 @@
         tabIndex={key}
         disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         class:enabled={value.enabled}
-        class:active={key == $activeTab}
+        class:active={Number(key) === $activeTab}
         class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
         class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         on:click={() => {
@@ -68,7 +68,6 @@
     width: 100%;
     height: 100%;
     display: flex;
-    // justify-content: space-between;
     align-items: center;
     padding-inline: 20px;
 
@@ -78,23 +77,16 @@
       button {
         width: 100%;
         padding: 10px;
-        background: darkgrey;
-        border: 1px solid rgb(76, 54, 58);
-        border-right: none;
+        background: var(--color-grey-mid);
         font-family: var(--font-family);
         font-size: var(--font-size-normal);
-        // font-family: "SixtyFour", "Permanent Marker";
-        // // font-size: 22px;
+        border: none;
         opacity: 0.3;
         pointer-events: none;
         user-select: none;
 
         &:last-child {
-          border-right: 1px solid rgb(76, 54, 58);
-        }
-
-        &.active {
-          background: grey !important;
+          border-right: 1px solid var(--color-grey-dark);
         }
 
         &.hidden {
@@ -107,12 +99,16 @@
           pointer-events: all;
 
           &:hover {
-            background: grey;
+            background: var(--color-grey-light);
             cursor: crosshair;
           }
 
+          &.active {
+            background: var(--foreground);
+          }
+
           &:disabled:hover {
-            background: darkgrey;
+            background: var(--color-grey-mid);
             cursor: not-allowed;
           }
         }

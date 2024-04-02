@@ -1,16 +1,17 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  import { tutorialProgress } from "@modules/ui/assistant"
   import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
 <div class="info-bar">
   <div class="name">
-    {#if $player.name}
-      {$player.name}
-    {:else}
-      Stump #{$player.spawnIndex}
-    {/if}
+    <span class="name-inner">
+      {#if $player.name}
+        {$player.name}
+      {:else}
+        Stump #{$player.spawnIndex}
+      {/if}
+    </span>
   </div>
 
   <div class="completed">
@@ -36,6 +37,14 @@
     align-items: center;
     padding-inline: 15px;
     user-select: none;
+
+    .name {
+      .name-inner {
+        padding: 2px;
+        background: var(--foreground);
+        color: var(--background);
+      }
+    }
 
     .tokens {
       display: flex;

@@ -39,7 +39,7 @@
 
   .message-timestamp {
     font-size: 0.8em;
-    color: #666;
+    color: var(--color-grey-dark);
   }
 
   .message-content {

@@ -62,36 +62,36 @@
   }
 
   .visible {
-    stroke: #cdcdcd;
+    stroke: var(--color-grey-light);
     stroke-width: 5;
     fill: none;
 
     &.carrying {
-      stroke: var(--color-active);
+      stroke: var(--color-success);
 
       &.hover {
-        stroke: #00ff00;
+        opacity: 0.8;
       }
     }
 
     &.hover {
-      stroke: rgb(149, 149, 149);
+      stroke: var(--color-grey-light);
     }
 
     &.productive {
-      stroke: red;
+      stroke: var(--color-alert);
     }
   }
 
   polygon {
-    fill: #cdcdcd;
+    fill: var(--color-grey-light);
 
     &.hover {
-      fill: rgb(149, 149, 149);
+      fill: var(--color-grey-light);
     }
 
     &.productive {
-      fill: red;
+      fill: var(--color-alert);
     }
   }
 </style>

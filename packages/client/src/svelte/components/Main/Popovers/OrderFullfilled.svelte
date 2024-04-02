@@ -27,7 +27,7 @@
 
     .text {
       font-size: 200px;
-      background: var(--color-active);
+      background: var(--color-success);
     }
   }
 </style>

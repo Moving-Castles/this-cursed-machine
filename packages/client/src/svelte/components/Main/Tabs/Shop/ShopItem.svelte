@@ -72,7 +72,6 @@
     border: 1px solid var(--foreground);
     padding: 10px;
     padding-bottom: 30px;
-    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     margin-right: 20px;
 
@@ -117,7 +116,7 @@
         button {
           width: 100%;
           height: 36px;
-          background: grey;
+          background: var(--color-success);
           border: 0;
           font-family: var(--font-family);
 
@@ -137,7 +136,7 @@
           }
 
           &.unafforable {
-            opacity: 0.3;
+            background: var(--color-failure);
             pointer-events: none;
           }
         }

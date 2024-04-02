@@ -30,7 +30,7 @@ async function execute(depotEntity: string) {
 export const detachDepot: Command<[depotEntity: string]> = {
     id: COMMAND.DETACH_DEPOT,
     public: true,
-    name: "detachDepot",
+    name: "detach",
     alias: "u",
     description: "Detach depot",
     fn: execute,

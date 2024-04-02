@@ -30,7 +30,7 @@ async function execute(depotEntity: string, targetEntity: string) {
 export const attachDepot: Command<[depotEntity: string, targetEntity: string]> = {
     id: COMMAND.ATTACH_DEPOT,
     public: true,
-    name: "attachDepot",
+    name: "attach",
     alias: "a",
     description: "Attach depot",
     fn: execute,

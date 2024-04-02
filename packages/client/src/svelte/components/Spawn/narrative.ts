@@ -7,7 +7,7 @@ import { playSound } from "@modules/sound"
 
 async function writeNarrative(text: string) {
     await typeWriteToTerminal(
-        TERMINAL_OUTPUT_TYPE.SPECIAL,
+        TERMINAL_OUTPUT_TYPE.NORMAL,
         text,
         SYMBOLS[7],
         10,
@@ -17,7 +17,7 @@ async function writeNarrative(text: string) {
 
 async function writeNarrativeAction(text: string) {
     await typeWriteToTerminal(
-        TERMINAL_OUTPUT_TYPE.INFO,
+        TERMINAL_OUTPUT_TYPE.ALERT,
         text,
         SYMBOLS[7],
         10,

@@ -26,7 +26,7 @@
   })
 </script>
 
-{#if import.meta.env.DEV}
+<!-- {#if import.meta.env.DEV}
   <div class="test">
     <button on:click={() => $tutorialProgress--}>Prev</button>
     <button on:click={() => $tutorialProgress++}>Next</button>
@@ -43,7 +43,7 @@
     {typeof $tutorialProgress}
     {$tutorialProgress}
   </div>
-{/if}
+{/if} -->
 
 <style>
   .test {
@@ -51,6 +51,6 @@
     bottom: 0;
     left: 0;
     z-index: 999;
-    background: grey;
+    background: var(--color-grey-mid);
   }
 </style>

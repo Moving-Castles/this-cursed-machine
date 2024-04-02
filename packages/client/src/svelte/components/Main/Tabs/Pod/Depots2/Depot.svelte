@@ -65,7 +65,7 @@
     display: flex;
 
     &.shippable {
-      border: 1px solid var(--color-active);
+      border: 1px solid var(--color-success);
     }
 
     .id {
@@ -107,7 +107,7 @@
       align-items: center;
 
       &.connected {
-        background: var(--color-active);
+        background: var(--color-success);
         color: var(--background);
       }
     }

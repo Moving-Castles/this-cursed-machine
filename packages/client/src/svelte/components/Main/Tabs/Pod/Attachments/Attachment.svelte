@@ -30,7 +30,9 @@
     const from = depotElement?.getBoundingClientRect()
     const to = machineElement?.getBoundingClientRect()
 
+    console.log(from, to)
     if (from && to) {
+      console.log(from, to)
       fromCoord = { x: from.right - 28, y: from.bottom }
       toCoord = {
         x: attachment.name === "I" ? to.left : to.right,
@@ -69,4 +71,4 @@
 
 <svelte:window on:resize={draw} />
 
-<path d={path} stroke="var(--color-active)" fill="none" stroke-width="10" />
+<path d={path} stroke="var(--color-success)" fill="none" stroke-width="10" />

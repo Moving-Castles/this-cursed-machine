@@ -20,30 +20,37 @@ async function orderFullfilled() {
 async function startUp() {
   const lvl = get(tutorialProgress)
   if (lvl === 0) {
-    // await typeWriteToTerminal(
-    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
-    //   "Starting employment competence assessment",
-    //   SYMBOLS[7],
-    //   10,
-    //   800
-    // )
-    // await typeWriteToTerminal(
-    //   TERMINAL_OUTPUT_TYPE.SPECIAL,
-    //   "Type blink",
-    //   SYMBOLS[7],
-    //   10,
-    //   800
-    // )
+    await typeWriteToTerminal(
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      "Employment competence assessment required",
+      SYMBOLS[7],
+      10,
+      800
+    )
+    await typeWriteToTerminal(
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      "TCM AI Assistant will guide you through the process",
+      SYMBOLS[7],
+      10,
+      800
+    )
+    await typeWriteToTerminal(
+      TERMINAL_OUTPUT_TYPE.ALERT,
+      "Type blink to start",
+      SYMBOLS[7],
+      10,
+      800
+    )
   } else {
     await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.NORMAL,
       "Stump securely locked in pod",
       SYMBOLS[7],
       10,
       800
     )
     await typeWriteToTerminal(
-      TERMINAL_OUTPUT_TYPE.SPECIAL,
+      TERMINAL_OUTPUT_TYPE.ALERT,
       "Type help",
       SYMBOLS[7],
       10,
