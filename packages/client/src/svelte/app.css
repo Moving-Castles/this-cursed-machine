@@ -196,7 +196,7 @@ pre {
     background: var(--color-grey-mid);
   }
   100% {
-    background: var(--foreground);
+    background: var(--color-success);
   }
 }
 

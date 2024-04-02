@@ -41,13 +41,15 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="msg absolute">
-  <!-- <div class="image">
-    <img src="/images/bugsy.gif" alt="bugsy" />
-  </div> -->
+  <div class="image">
+    <img src="/images/bot2.png" alt="bot" />
+  </div>
   <div class="text">
     {msg.message}
   </div>
-  <button on:click={sendStart}> Start </button>
+  <div class="restart">
+    <button on:click={sendStart}>Start over</button>
+  </div>
 </div>
 
 <style lang="scss">
@@ -55,10 +57,9 @@
     width: 100%;
     display: flex;
     align-items: center;
-    padding: 10px;
     padding-top: 0;
     text-align: center;
-    background: var(--foreground);
+    background: var(--background);
     margin-top: 10px;
     overflow: hidden;
     white-space: pre-wrap;
@@ -66,21 +67,48 @@
     font-size: 22px;
     font-size: var(--font-size);
     line-height: 1em;
-    color: var(--background);
+    color: var(--foreground);
     text-align: center;
-
-    border: 5px solid var(--color-alert);
-    padding: 20px;
-
-    img {
-      width: 90px;
-      margin: 10px auto;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    border: 5px double var(--color-success);
+    color: var(--color-success);
+    position: relative;
 
     .image {
+      line-height: 0;
       padding: 20px;
+      img {
+        width: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+      }
+    }
+
+    .restart {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      button {
+        background: var(--color-grey-dark);
+        color: var(--foreground);
+        padding: 7px;
+        border: none;
+        cursor: pointer;
+        font-size: var(--font-size-small);
+        font-family: var(--font-family);
+
+        &:hover {
+          background: var(--foreground);
+          color: var(--background);
+        }
+      }
+    }
+
+    .text {
+      padding: 10px;
+      padding-left: 0;
+      width: 100%;
     }
   }
 </style>

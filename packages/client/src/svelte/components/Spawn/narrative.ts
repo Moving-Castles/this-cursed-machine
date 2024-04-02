@@ -17,7 +17,7 @@ async function writeNarrative(text: string) {
 
 async function writeNarrativeAction(text: string) {
     await typeWriteToTerminal(
-        TERMINAL_OUTPUT_TYPE.INFO,
+        TERMINAL_OUTPUT_TYPE.ALERT,
         text,
         SYMBOLS[7],
         10,

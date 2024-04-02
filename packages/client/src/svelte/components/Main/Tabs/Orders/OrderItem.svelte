@@ -166,7 +166,7 @@
     }
 
     &.active {
-      background: var(--foreground);
+      background: var(--color-success);
       color: var(--background);
 
       .section {
