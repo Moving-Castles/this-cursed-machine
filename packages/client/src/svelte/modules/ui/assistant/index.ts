@@ -14,6 +14,7 @@ export type Step = {
 }
 
 export const tutorialProgress = storableNumber(0, "tutorialProgress")
+export const tutorialCompleted = writable([])
 
 export const advanceConditions: Writable<Step[]> = writable([])
 
