@@ -52,6 +52,8 @@ export function processOutputPatches(
   // Create a deep copy of 'simulated' to avoid mutating the original object.
   const simulatedCopy = deepClone(simulated) as SimulatedMachines
 
+  console.log('patch.outputs', patch.outputs)
+
   if (!patch.outputs) return simulatedCopy
 
   // Assign the inputs/outputs from the patch to a new copy of the entity in the simulated state.

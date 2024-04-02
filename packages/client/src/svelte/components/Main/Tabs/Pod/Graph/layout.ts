@@ -1,7 +1,7 @@
 import { MACHINE_TYPE } from "contracts/enums"
 import type {
   SimulatedMachines,
-  Connection,
+  Connection
 } from "@modules/state/simulated/types"
 import type {
   Coordinate,
@@ -235,7 +235,7 @@ export function createLayout(
   simulatedConnections: Connection[],
   previousGraphMachines: GraphMachines
 ) {
-  // console.time("createLayout")
+  console.time("createLayout")
 
   // Initialize pathfinding grid
   let grid = createGrid()
@@ -261,7 +261,7 @@ export function createLayout(
 
     if (notPlaced(x, y)) {
       // Place dynamic, new machine
-      ;({ x, y, placementGroup } = getFreePosition(graphMachines))
+      ; ({ x, y, placementGroup } = getFreePosition(graphMachines))
     }
 
     graphMachines[machineId].x = x

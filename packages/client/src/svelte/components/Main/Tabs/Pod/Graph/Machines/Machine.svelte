@@ -11,14 +11,15 @@
 
   export let machine: GraphMachine
 
+  $: producing = machine?.products && machine?.products.length > 0
+
   const onMouseEnter = () => {
+    if (!producing) return
     inspecting.set(machine)
-    // hover = true
   }
 
   const onMouseLeave = () => {
     inspecting.set(null)
-    // hover = false
   }
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`

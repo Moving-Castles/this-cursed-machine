@@ -64,8 +64,8 @@
     margin-bottom: 10px;
     overflow: hidden;
     padding: 10px;
-    font-size: var(--font-size-small);
-    height: 160px;
+    font-size: 6px;
+    height: 80px;
     width: 260px;
     background: rgb(74, 74, 74);
 

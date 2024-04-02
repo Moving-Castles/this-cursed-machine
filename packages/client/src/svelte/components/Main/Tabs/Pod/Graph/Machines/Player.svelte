@@ -8,15 +8,18 @@
 
   export let machine: GraphMachine
 
-  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
+  $: producing = machine?.products && machine?.products.length > 0
 
   const onMouseEnter = () => {
+    if (!producing) return
     inspecting.set(machine)
   }
 
   const onMouseLeave = () => {
     inspecting.set(null)
   }
+
+  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
 
   function makePorts() {
     return [

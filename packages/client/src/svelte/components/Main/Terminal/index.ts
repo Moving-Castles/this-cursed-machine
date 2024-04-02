@@ -104,7 +104,7 @@ export const FULL_MACHINES = [
 export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
   0: [],
   1: [MACHINE_TYPE.DRYER],
-  2: [MACHINE_TYPE.DRYER, MACHINE_TYPE.BOILER],
+  2: [MACHINE_TYPE.DRYER],
   3: FULL_MACHINES
 }
 

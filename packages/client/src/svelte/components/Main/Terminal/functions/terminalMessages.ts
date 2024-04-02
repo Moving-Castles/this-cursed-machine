@@ -15,21 +15,6 @@ async function orderFullfilled() {
     10,
     800
   )
-  await typeWriteToTerminal(
-    TERMINAL_OUTPUT_TYPE.SUCCESS,
-    "PERFORMANCE: ADEQUATE",
-    SYMBOLS[7],
-    10,
-    800
-  )
-
-  await typeWriteToTerminal(
-    TERMINAL_OUTPUT_TYPE.SUCCESS,
-    "BUG VAT HAS BEEN REPLENISHED",
-    SYMBOLS[7],
-    10,
-    800
-  )
 }
 
 async function startUp() {

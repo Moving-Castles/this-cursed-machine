@@ -342,8 +342,6 @@
       SYMBOLS[0],
     )
 
-    console.log(userInput)
-
     // Evaluate input
     const command = evaluate(userInput)
 

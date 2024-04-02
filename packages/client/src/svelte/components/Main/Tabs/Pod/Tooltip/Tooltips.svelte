@@ -6,7 +6,7 @@
 
 {#if $inspecting}
   <Tooltip>
-    {#if $inspecting !== null}
+    {#if $inspecting && $inspecting.products && $inspecting.products.length > 0}
       {#each $inspecting.products as product}
         Material: {MATERIAL_TYPE[product.materialType]}<br />
         Amount: {product.amount / 100}

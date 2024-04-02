@@ -23,23 +23,21 @@ library LibInit {
                                  LEVEL 0
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.PISS, 2000, true, 0, 1000, 0, 0);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD, 2000, true, 0, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.PISS, 5000, true, 0, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD, 5000, true, 0, 1000, 0, 0);
 
     /*//////////////////////////////////////////////////////////////
                                  LEVEL 1
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.UREA, 2000, true, 1, 1000, 0, 0);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_CLOT, 2000, true, 1, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.UREA, 5000, true, 1, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_CLOT, 5000, true, 1, 1000, 0, 0);
 
     /*//////////////////////////////////////////////////////////////
                                  LEVEL 2
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 2000, true, 2, 1000, 0, 0);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.LOW_GRADE_AMPHETAMINE, 2000, true, 2, 1000, 0, 0);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 2000, true, 2, 1000, 0, 0);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.DUST, 2000, true, 2, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.FERTILIZER, 5000, true, 2, 1000, 0, 0);
+    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 5000, true, 2, 1000, 0, 0);
   }
 }
