@@ -8,7 +8,7 @@ contract ResetSystem is System {
   function reset() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
-    LibReset.reset(podEntity);
     LibNetwork.resolve(podEntity);
+    LibReset.reset(podEntity);
   }
 }

@@ -23,6 +23,7 @@ import {
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
 import { GRAPH_ENTITY_STATE } from "./enums"
+import { FLOW_RATE, DEPOT_CAPACITY } from "@modules/state/simulated/constants"
 
 export function processInputPatches(
   simulated: SimulatedEntities,
@@ -52,8 +53,6 @@ export function processOutputPatches(
 ): SimulatedMachines {
   // Create a deep copy of 'simulated' to avoid mutating the original object.
   const simulatedCopy = deepClone(simulated) as SimulatedMachines
-
-  console.log("patch.outputs", patch.outputs)
 
   if (!patch.outputs) return simulatedCopy
 
@@ -132,8 +131,6 @@ export function calculateSimulatedDepots(
    *
    * We need to find the lowest of the two limiting factors and cap the number of blocks by that
    */
-  const FLOW_RATE = 1000
-  const DEPOT_CAPACITY = 10000
 
   // Create deep copy to avoid accidentally mutating the original object.
   const initialDepotsCopy = deepClone(depots)
@@ -382,6 +379,56 @@ export const simulatedConnections = derived(
   simulatedMachines,
   $simulatedMachines => calculateSimulatedConnections($simulatedMachines)
 )
+
+export const networkIsRunning = derived([simulatedDepots, playerPod, simulatedMachines], ([$simulatedDepots, $playerPod, $simulatedMachines]) => {
+
+  const outletKey = $playerPod?.fixedEntities.outlet
+  const outletEntity = $simulatedMachines[outletKey]
+  if (!outletKey || !outletEntity) return false
+
+  /*
+   * If the outlet has no output, the network is not running
+   */
+  if (!outletEntity.outputs) return false
+  const outletOutput = outletEntity.outputs[0]
+  if (!outletOutput) return false
+
+  /*
+   * If the outlet is not connected to a depot, the network is not running
+   */
+  const outletDepot = Object.values($simulatedDepots).find(depot => depot.depotConnection === outletKey)
+  if (!outletDepot) return false
+
+  /*
+   * If the output depot is full, the network is not running
+   */
+  if (outletDepot.amount == DEPOT_CAPACITY) return false
+
+  /*
+   * Get used inlet depots
+   * If any of the used inlet depots are empty, the network is not running
+   */
+  const inletKeys = $playerPod.fixedEntities.inlets
+  let usedInletKeys: string[] = []
+  for (let i = 0; i < outletOutput.inletActive.length; i++) {
+    if (outletOutput.inletActive[i]) {
+      usedInletKeys.push(inletKeys[i])
+    }
+  }
+  const usedInletDepots = Object.values($simulatedDepots).filter(depot => usedInletKeys.includes(depot.depotConnection))
+
+  /*
+   * If any of the used inlet depots are empty, the network is not running
+   */
+  for (let i = 0; i < usedInletDepots.length; i++) {
+    if (usedInletDepots[i].amount == 0) return false
+  }
+
+  /*
+   * All conditions met, the network is running
+   */
+  return true
+})
 
 export const playerOrder = derived(
   [player, orders, playerPod, availableOrders],

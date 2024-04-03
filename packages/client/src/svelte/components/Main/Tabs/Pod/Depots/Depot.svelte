@@ -5,6 +5,8 @@
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
+  import { DEPOT_CAPACITY } from "@modules/state/simulated/constants"
+  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
   export let depot: SimulatedDepot
   export let address: string
@@ -41,7 +43,7 @@
           {MATERIAL_TYPE[typedDepot.materialType]}
         </div>
         <div class="material-amount">
-          {Math.round(typedDepot.amount / 100)}/100
+          {Math.round(typedDepot.amount / UI_SCALE_FACTOR)}/{DEPOT_CAPACITY / UI_SCALE_FACTOR}
         </div>
       </div>
     {/if}

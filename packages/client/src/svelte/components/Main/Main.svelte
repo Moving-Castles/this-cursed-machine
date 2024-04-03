@@ -88,9 +88,6 @@
         "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
         { disappear: true },
       )
-      console.log(
-        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-      )
     }
   }
 

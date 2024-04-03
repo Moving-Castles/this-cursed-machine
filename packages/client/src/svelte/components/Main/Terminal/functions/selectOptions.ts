@@ -19,6 +19,7 @@ import {
   materialTypeToLabel,
   availableMachines,
 } from "@modules/state/simulated"
+import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -211,7 +212,7 @@ function createSelectOptionsShip(): SelectOption[] {
   selectOptions = availableDepots.map(([address, depot]) => {
     let materialDescription = "(empty)"
     if (depot.materialType !== MATERIAL_TYPE.NONE) {
-      materialDescription = `(${depot.amount / 100} ${materialTypeToLabel(depot.materialType)})`
+      materialDescription = `(${depot.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(depot.materialType)})`
     }
 
     return {

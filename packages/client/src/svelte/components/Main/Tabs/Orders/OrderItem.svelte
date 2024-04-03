@@ -7,6 +7,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
+  import { UI_SCALE_FACTOR} from "@modules/ui/constants"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -50,7 +51,7 @@
       {#if working}
         <Spinner />
       {:else}
-        {order.order.goalAmount / 100}
+        {order.order.goalAmount / UI_SCALE_FACTOR}
         {MATERIAL_TYPE[order.order.goalMaterialType]}
       {/if}
     </div>

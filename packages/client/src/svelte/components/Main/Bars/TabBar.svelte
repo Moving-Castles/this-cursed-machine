@@ -31,7 +31,6 @@
     if (e.key.toLowerCase() === "tab") {
       activeTab.set(($activeTab + 1) % availableTabsLength)
       playSound("tcm", "selectionEnter")
-      console.log(tabList)
       advanceTutorial($activeTab, $tutorialProgress, "tab")
     }
   }

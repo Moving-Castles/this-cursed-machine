@@ -30,9 +30,9 @@
     const from = depotElement?.getBoundingClientRect()
     const to = machineElement?.getBoundingClientRect()
 
-    console.log(from, to)
+    // console.log(from, to)
     if (from && to) {
-      console.log(from, to)
+      // console.log(from, to)
       fromCoord = { x: from.right - 28, y: from.bottom }
       toCoord = {
         x: attachment.name === "I" ? to.left : to.right,

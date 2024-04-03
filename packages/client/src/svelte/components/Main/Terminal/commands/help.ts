@@ -24,7 +24,6 @@ async function execute(_: TERMINAL_TYPE) {
   for (let i = 0; i < commandList.length; i++) {
     let command = commandList[i]
     let outputString = `(${command.alias}) ${command.name}`
-    console.log(command, commandList)
     playSound("tcm", "listPrint")
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.INFO,

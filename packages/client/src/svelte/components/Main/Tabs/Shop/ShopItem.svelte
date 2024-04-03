@@ -6,6 +6,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
+  import { UI_SCALE_FACTOR} from "@modules/ui/constants"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -46,7 +47,7 @@
         {#if working}
           <Spinner />
         {:else}
-          {offer.offer.amount / 100}
+          {offer.offer.amount / UI_SCALE_FACTOR}
         {/if}
       </div>
     </div>

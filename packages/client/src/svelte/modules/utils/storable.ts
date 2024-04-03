@@ -21,7 +21,7 @@ const makeStorable = (data: any, key: string, type: "number" | "array") => {
         set(formatNumber(localStorage.getItem(key)))
       }
       if (type === "array") {
-        console.log(localStorage.getItem(key))
+        // console.log(localStorage.getItem(key))
         set(localStorage.getItem(key))
       }
     }
