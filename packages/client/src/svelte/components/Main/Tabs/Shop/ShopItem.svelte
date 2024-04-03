@@ -19,6 +19,10 @@
   $: unafforable = (offer.offer?.cost ?? 0) > ($player.tokenBalances ?? 0)
 
   async function sendBuy() {
+    if (unafforable) {
+      playSound("tcm", "TRX_no")
+      return
+    }
     working = true
     playSound("tcm", "listPrint")
     const action = buy(key)
@@ -124,8 +128,6 @@
             &:hover {
               background: grey;
               color: darkgrey;
-              // color: var(--background);
-              // cursor: pointer;
             }
           }
 
@@ -137,7 +139,6 @@
 
           &.unafforable {
             background: var(--color-failure);
-            pointer-events: none;
           }
         }
       }

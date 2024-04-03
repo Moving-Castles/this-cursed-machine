@@ -4,8 +4,8 @@ import { graduate as sendGraduate } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
-import { tutorialProgress } from "@svelte/modules/ui/assistant";
-import { FINAL_TUTORIAL_LEVEL } from "@svelte/modules/ui/constants"
+import { tutorialProgress } from "@modules/ui/assistant";
+import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
 async function execute() {
     try {

@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition"
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
 
-  import DepotsBox from "@svelte/components/Main/Tabs/Pod/Depots2/DepotsBox.svelte"
+  import DepotsBox from "@components/Main/Tabs/Pod/Depots/DepotsBox.svelte"
   import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 

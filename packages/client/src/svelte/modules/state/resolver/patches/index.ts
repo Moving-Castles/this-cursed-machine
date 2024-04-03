@@ -1,6 +1,6 @@
 import type { Product } from './types';
 import type { SimulatedEntities } from '../../simulated/types';
-import { deepClone } from '@svelte/modules/utils';
+import { deepClone } from '@modules/utils';
 
 export function organizePatches(
     dataArray: any[],

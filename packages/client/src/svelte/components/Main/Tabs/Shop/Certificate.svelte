@@ -6,49 +6,27 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
 
+  import Spinner from "../../Atoms/Spinner.svelte"
+
   let working = false
   let modalActive = false
-  let userName = "MEATBALL"
+  let userName = ""
 
-  // function isValidName(name: string): boolean {
-  //   // Regex to check for at least one numeral
-  //   const hasNumeral = /\d/.test(name)
-  //   // Regex to check for any character that is not a letter
-  //   const hasSpecialChar = /[^A-Za-z]/.test(name)
-  //   // Check for maximum length of 24
-  //   const isLengthValid = name.length <= 24
+  function isValidName(name: string): boolean {
+    // Check for minimume length of 4
+    const hasMinLength = name.length >= 4
+    // Check for maximum length of 24
+    const isLengthValid = name.length <= 24
 
-  //   return hasNumeral && hasSpecialChar && isLengthValid
-  // }
-
-  // const handleCommand = async (e: any) => {
-  //   if (e.detail?.userInput && isValidName(e.detail.userInput)) {
-  //     await narrative[1](e.detail.userInput)
-  //     dispatch("named")
-  //     return
-  //   }
-
-  // await writeNarrative("congratulations on completing the on-boarding.")
-  //       await writeNarrative('You are a now a full time (168 hour week) employee of TCM.')
-  //       await writeNarrative('You are allowed to assign yourself a human readable ID (name).')
-  //       await writeNarrativeAction("Enter your name (Must include at least one numeral and one special character).")
-  //   },
-  //   async (str: string) => {
-  //       await writeNarrativeInfo("Permanently erasing old identity...")
-  //       await writeNarrativeError("WARNING: THIS CAN NOT BE UNDONE")
-  //       await writeNarrativeInfo("Assigning new name...")
-  //       const action = name(str)
-  //       await waitForTransaction(action, loadingSpinner);
-  //       await waitForCompletion(action, loadingLine);
-  //       playSound("tcm", "TRX_yes")
-  //       await writeNarrativeSuccess("Name assigned")
-  //   },
+    return hasMinLength && isLengthValid
+  }
 
   function toggleModal() {
     modalActive = !modalActive
   }
 
   async function sendName() {
+    if (!isValidName(userName)) return
     try {
       working = true
       const action = name(userName)
@@ -81,17 +59,25 @@
 
 {#if modalActive}
   <div class="certificate-modal" class:working in:fly>
-    <div>
-      Congratualtions: Your IQ (72) is sufficent for operating the POD
-      machinery. No serious brain damage detected.
+    <div class="inner-container">
+      <div class="close">
+        <button on:click={toggleModal}>X</button>
+      </div>
+
+      <div class="text">
+        Congratualtions: Your IQ (72) is sufficent for operating the POD
+        machinery. No serious brain damage detected.
+      </div>
+
+      <div class="form">
+        {#if working}
+          <div class="spinner"><Spinner /></div>
+        {:else}
+          <input type="text" bind:value={userName} placeholder="Enter name" />
+          <button on:click={sendName}>Sign</button>
+        {/if}
+      </div>
     </div>
-    <input
-      type="text"
-      bind:value={userName}
-      placeholder="Enter human readable ID (name)"
-    />
-    <button on:click={sendName}>Sign</button>
-    <button on:click={toggleModal}>X</button>
   </div>
 {/if}
 
@@ -157,11 +143,6 @@
             color: var(--background);
             cursor: pointer;
           }
-
-          &.unafforable {
-            background: red;
-            pointer-events: none;
-          }
         }
       }
     }
@@ -169,15 +150,82 @@
 
   .certificate-modal {
     position: absolute;
-    background: red;
+    background: var(--background);
+    color: var(--foreground);
+    border: 5px double var(--foreground);
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    padding: 100px;
+    // height: 60%;
+    width: 60%;
 
     &.working {
-      opacity: 0.5;
       pointer-events: none;
+    }
+
+    .inner-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      padding: 40px;
+
+      .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        button {
+          background: var(--color-grey-dark);
+          color: var(--foreground);
+          padding: 7px;
+          border: none;
+          cursor: pointer;
+          font-size: var(--font-size-small);
+          font-family: var(--font-family);
+
+          &:hover {
+            background: var(--foreground);
+            color: var(--background);
+          }
+        }
+      }
+
+      .text {
+        margin-bottom: 60px;
+      }
+
+      .form {
+        display: flex;
+
+        input {
+          width: 100%;
+          margin-right: 20px;
+          height: 36px;
+          padding-inline: 10px;
+          margin-bottom: 20px;
+          font-family: var(--font-family);
+          background: transparent;
+          border: none;
+          border-bottom: 3px dotted var(--foreground);
+          padding: 0;
+          color: var(--foreground);
+          outline: none;
+        }
+
+        button {
+          padding-inline: 20px;
+          height: 36px;
+          background: var(--color-success);
+          border: 0;
+          font-family: var(--font-family);
+
+          &:hover {
+            background: var(--foreground);
+            color: var(--background);
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
 </style>

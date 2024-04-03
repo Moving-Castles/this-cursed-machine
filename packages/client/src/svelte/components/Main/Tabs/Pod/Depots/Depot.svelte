@@ -56,7 +56,7 @@
 
 <style lang="scss">
   .depot-item {
-    border: 1px solid #fff;
+    border: 1px solid var(--foreground);
     width: calc(33% - 5px);
     overflow: hidden;
     font-size: var(--font-size-small);

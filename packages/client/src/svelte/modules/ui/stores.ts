@@ -3,7 +3,7 @@ import { storableNumber } from "@modules/utils/storable"
 import type { Writable } from "svelte/store"
 import { spring } from "svelte/motion"
 import { UI, TABS } from "./enums"
-import { GraphConnection, GraphMachine } from "@svelte/components/Main/Tabs/Pod/Graph/types"
+import { GraphConnection, GraphMachine } from "@components/Main/Tabs/Pod/Graph/types"
 
 export const UIState = writable(UI.LOADING)
 export const activeTab = storableNumber(TABS.POD, "tab")

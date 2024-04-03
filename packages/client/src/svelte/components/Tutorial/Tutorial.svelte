@@ -9,7 +9,7 @@
     tutorialProgress,
     currentMessage,
   } from "@modules/ui/assistant"
-  import { playSound } from "@svelte/modules/sound"
+  import { playSound } from "@modules/sound"
 
   $: {
     if (typeof $tutorialProgress === "number" && $currentMessage?.explanation) {

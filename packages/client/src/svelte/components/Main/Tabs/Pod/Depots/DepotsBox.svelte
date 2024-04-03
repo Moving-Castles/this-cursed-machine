@@ -36,7 +36,7 @@
 
   @keyframes highlight {
     from {
-      background: orangered;
+      background: var(--color-success);
     }
     to {
       background: transparent;

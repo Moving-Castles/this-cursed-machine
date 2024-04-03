@@ -1,6 +1,6 @@
 <script lang="ts">
   import { player } from "@modules/state/base/stores"
-  import NumberGoingUp from "@svelte/components/Main/Atoms/NumberGoingUp.svelte"
+  import NumberGoingUp from "@components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
 <div class="info-bar">

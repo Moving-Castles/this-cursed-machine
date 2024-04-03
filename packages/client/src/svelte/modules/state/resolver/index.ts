@@ -15,7 +15,7 @@ import { playSound } from "../../sound"
 import { resolve } from "./resolve"
 import { UIState } from "../../ui/stores"
 import { UI } from "../../ui/enums"
-import { tutorialProgress } from "@svelte/modules/ui/assistant"
+import { tutorialProgress } from "@modules/ui/assistant"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.

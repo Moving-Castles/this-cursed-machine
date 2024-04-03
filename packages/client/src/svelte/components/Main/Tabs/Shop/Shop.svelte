@@ -20,7 +20,6 @@
     padding: 20px;
 
     .offer-list {
-      // margin-top: 20px;
       display: flex;
     }
   }

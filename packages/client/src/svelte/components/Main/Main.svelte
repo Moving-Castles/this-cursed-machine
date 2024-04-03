@@ -25,7 +25,7 @@
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
-  import { FINAL_TUTORIAL_LEVEL } from "@svelte/modules/ui/constants"
+  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
   const tabList = {
     [TABS.POD]: {
