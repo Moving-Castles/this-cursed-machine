@@ -33,6 +33,8 @@ contract DevSystem is System {
     CurrentOrder.set(podEntity, bytes32(0));
 
     Name.set(playerEntity, "MEATBAG66");
+
+    LibToken.send(_msgSender(), 10000);
   }
 
   function fillDepot(bytes32 _depotEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {

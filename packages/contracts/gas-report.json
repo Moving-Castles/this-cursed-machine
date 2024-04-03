@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResetSystem.t.sol",
     "test": "testReset",
     "name": "Reset pod",
-    "gasUsed": 252397
+    "gasUsed": 391817
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
@@ -57,13 +57,13 @@
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testBuyBug",
     "name": "Buy",
-    "gasUsed": 93078
+    "gasUsed": 116209
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testCreateOffer",
     "name": "Create offer",
-    "gasUsed": 125566
+    "gasUsed": 125572
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -87,7 +87,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 319897
+    "gasUsed": 259697
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

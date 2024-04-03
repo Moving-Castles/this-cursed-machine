@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOffer, LibToken } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOffer, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 
 contract OfferSystem is System {
@@ -23,8 +23,6 @@ contract OfferSystem is System {
     require(LibToken.getTokenBalance(_msgSender()) >= offerData.cost, "insufficient balance");
 
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-
-    // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
     LibToken.transferToken(_world(), offerData.cost);
@@ -40,11 +38,13 @@ contract OfferSystem is System {
       if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
         MaterialType.set(depotsInPod[i], offerData.materialType);
         Amount.set(depotsInPod[i], offerData.amount);
-        return;
+        break;
       } else if (MaterialType.get(depotsInPod[i]) == offerData.materialType) {
         Amount.set(depotsInPod[i], Amount.get(depotsInPod[i]) + offerData.amount);
-        return;
+        break;
       }
     }
+
+    LibNetwork.resolve(podEntity);
   }
 }

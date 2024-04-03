@@ -41,9 +41,9 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="msg absolute">
-  <div class="image">
-    <img src="/images/bot2.png" alt="bot" />
-  </div>
+  <!-- <div class="image">
+    <img src="/images/eye3.gif" alt="bot" />
+  </div> -->
   <div class="text">
     {msg.message}
   </div>
@@ -80,7 +80,7 @@
         width: 100px;
         margin-left: auto;
         margin-right: auto;
-        border-radius: 50%;
+        // border-radius: 50%;
       }
     }
 
@@ -106,8 +106,8 @@
     }
 
     .text {
-      padding: 10px;
-      padding-left: 0;
+      padding: 40px;
+      // padding-left: 0;
       width: 100%;
     }
   }
