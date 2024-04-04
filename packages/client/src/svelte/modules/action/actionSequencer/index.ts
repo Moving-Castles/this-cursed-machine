@@ -4,6 +4,7 @@
  *
  */
 
+import type { Writable } from "svelte/store"
 import { writable, get } from "svelte/store"
 import { network, blockNumber } from "../../network"
 import { toastMessage } from "../../ui/toast"
@@ -160,3 +161,5 @@ function handleError(error: any, action: Action) {
   // Clear action timeout
   clearActionTimer()
 }
+
+export const waitingTransaction: Writable<Action | null> = writable(null)

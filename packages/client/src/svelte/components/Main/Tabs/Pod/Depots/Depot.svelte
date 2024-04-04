@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { SimulatedDepot } from "@modules/state/simulated/types"
+  import { fade } from "svelte/transition"
   import { playerPod, machines } from "@modules/state/base/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
+  import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
@@ -14,6 +16,8 @@
 
   $: canShip = $shippableDepots[address]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
+
+  $: shipping = $waitingTransaction?.systemId === "ship" && canShip
 
   // Narrow the type
   $: typedDepot = depot as Depot
@@ -30,6 +34,13 @@
 </script>
 
 <div id="depot-{address}" class="depot-item" class:shippable={canShip}>
+  {#if shipping}
+    <div
+      in:fade={{ duration: 400 }}
+      out:fade={{ duration: 100 }}
+      class="overlay flash-fast"
+    />
+  {/if}
   <div class="id">
     <div>{index + 1}</div>
   </div>
@@ -43,7 +54,8 @@
           {MATERIAL_TYPE[typedDepot.materialType]}
         </div>
         <div class="material-amount">
-          {Math.round(typedDepot.amount / UI_SCALE_FACTOR)}/{DEPOT_CAPACITY / UI_SCALE_FACTOR}
+          {Math.round(typedDepot.amount / UI_SCALE_FACTOR)}/{DEPOT_CAPACITY /
+            UI_SCALE_FACTOR}
         </div>
       </div>
     {/if}
@@ -65,6 +77,13 @@
     height: 70px;
     background: rgb(74, 74, 74);
     display: flex;
+    position: relative;
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: white;
+    }
 
     &.shippable {
       border: 1px solid var(--color-success);

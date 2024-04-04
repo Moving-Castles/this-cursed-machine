@@ -9,6 +9,7 @@
   class:hidden={$tutorialProgress < 1}
   class:highlight={$tutorialProgress === 21}
 >
+  <!-- <div class="">shipping</div> -->
   {#if $simulatedDepots}
     {#each Object.entries($simulatedDepots) as [address, depot], index}
       <Depot {address} {depot} {index} />

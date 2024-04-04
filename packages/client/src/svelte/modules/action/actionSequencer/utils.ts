@@ -1,5 +1,6 @@
 import { Action } from "."
 import { get } from "svelte/store"
+import { waitingTransaction } from "@modules/action/actionSequencer"
 import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
 
 export enum TransactionState {
@@ -27,19 +28,24 @@ export const waitForTransaction = (
     let attempts = 0
     let index = 0
 
+    waitingTransaction.set(action)
+
     const checkTransaction = () => {
       index++
       if (loadingFunction) loadingFunction(index)
       if (action.tx) {
         // check if tx is set (i.e., it has a truthy value)
+        waitingTransaction.set(null)
         resolve(action)
       } else if (action.error) {
+        waitingTransaction.set(null)
         reject(new Error(action.error))
       } else if (attempts < maxRetries) {
         attempts++
         // wait for some time before checking again
         setTimeout(checkTransaction, 100)
       } else {
+        waitingTransaction.set(null)
         reject(new Error("Max retries reached without transaction."))
       }
     }
