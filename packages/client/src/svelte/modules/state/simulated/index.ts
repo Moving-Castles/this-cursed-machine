@@ -64,6 +64,31 @@ export function machineTypeToLabel(machineType: MACHINE_TYPE | undefined) {
   }
 }
 
+export function machineTypeToActionVerbs(
+  machineType: MACHINE_TYPE | undefined
+) {
+  if (!machineType) return ""
+  const name = MACHINE_TYPE[machineType]
+  const map = {
+    NONE: [""],
+    INLET: [""],
+    OUTLET: [""],
+    PLAYER: ["PISSING", "BLEEDING"],
+    SPLITTER: ["SPLITTING"],
+    MIXER: ["MIXING"],
+    DRYER: ["DRYING", "PARCHING"],
+    BOILER: ["BOILING", "BROILING"],
+    CENTRIFUGE: ["SPINNING", "TURNING", "WHIRLING"],
+    GRINDER: ["GRINDING", "SCREECHING"],
+    RAT_CAGE: [""],
+    MEALWORM_VAT: [""],
+  }
+
+  if (map[name]) return map[name]
+
+  return ""
+}
+
 export const materialTypeToLabel = (materialType: MATERIAL_TYPE) => {
   return MATERIAL_TYPE[materialType]?.split("_")?.join(" ")
 }

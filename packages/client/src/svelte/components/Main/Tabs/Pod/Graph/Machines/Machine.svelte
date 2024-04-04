@@ -1,13 +1,15 @@
 <script lang="ts">
   import type { GraphMachine } from "../types"
-
   import { fade } from "svelte/transition"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
+  import { machineTypeToActionVerbs } from "@modules/state/simulated"
   import { CELL, MACHINE } from "../constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   import { inspecting } from "@modules/ui/stores"
+
+  import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
 
   export let address: string
   export let machine: GraphMachine
@@ -91,7 +93,15 @@
   role="button"
 >
   <div class="inner-container">
-    <div class="label">{label}</div>
+    <div class="label">
+      <TweenedText
+        duration={300}
+        delay={1000}
+        words={producing
+          ? [label, "@", ...machineTypeToActionVerbs(machine.machineType)]
+          : [label]}
+      />
+    </div>
     {#each ports as port}
       <div class="port {DIRECTION[port.direction]}" style={port.style} />
     {/each}
@@ -112,10 +122,10 @@
     background-image: url("/images/machine2.png");
     background-size: cover;
     border: 1px solid var(--background);
-    cursor: none;
 
     &.active {
       border: 1px solid var(--color-success);
+      cursor: none;
     }
 
     .inner-container {
@@ -125,6 +135,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .label {
+        white-space: nowrap;
+        letter-spacing: -1px;
+      }
 
       .port {
         position: absolute;

@@ -37,7 +37,7 @@
       {#each Object.entries(graphMachines) as [address, machine]}
         <MachineSelector {address} {machine} />
       {/each}
-      <svg {width} {height}>
+      <svg id="graph" {width} {height}>
         {#each graphConnections as connection}
           <Connection {connection} />
         {/each}

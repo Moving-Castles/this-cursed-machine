@@ -23,13 +23,17 @@
   }
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress >= num,
+    num => $tutorialProgress >= num
   ).length
 
   const onKeyDown = e => {
     e.stopPropagation()
     if (e.key.toLowerCase() === "tab") {
-      activeTab.set(($activeTab + 1) % availableTabsLength)
+      if (e.shiftKey) {
+        activeTab.set(($activeTab - 1) % availableTabsLength)
+      } else {
+        activeTab.set(($activeTab + 1) % availableTabsLength)
+      }
       playSound("tcm", "selectionEnter")
       advanceTutorial($activeTab, $tutorialProgress, "tab")
     }

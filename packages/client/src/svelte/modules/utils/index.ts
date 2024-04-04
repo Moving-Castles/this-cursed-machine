@@ -1,12 +1,16 @@
 import { getAddress } from "viem"
-import { BLOCKTIME } from "./constants";
+import { BLOCKTIME } from "./constants"
 
 export function toCamelCase(s: string): string {
-  return s
-    // Remove all underscores and hyphens and convert the following letter to uppercase
-    .replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
-    // Ensure the first character is in lowercase
-    .replace(/^./, (str) => str.toLowerCase());
+  return (
+    s
+      // Remove all underscores and hyphens and convert the following letter to uppercase
+      .replace(/([-_][a-z])/gi, $1 =>
+        $1.toUpperCase().replace("-", "").replace("_", "")
+      )
+      // Ensure the first character is in lowercase
+      .replace(/^./, str => str.toLowerCase())
+  )
 }
 
 export function shortenAddress(s: string) {
@@ -165,9 +169,17 @@ export function getUniqueIdentifier(a: number, b: number): number {
 }
 
 export const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a
-export const clamp = (a: number, min = 0, max = 1) => Math.min(max, Math.max(min, a))
-export const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x))
-export const range = (x1: number, y1: number, x2: number, y2: number, a: number) => lerp(x2, y2, invlerp(x1, y1, a))
+export const clamp = (a: number, min = 0, max = 1) =>
+  Math.min(max, Math.max(min, a))
+export const invlerp = (x: number, y: number, a: number) =>
+  clamp((a - x) / (y - x))
+export const range = (
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  a: number
+) => lerp(x2, y2, invlerp(x1, y1, a))
 
 export function stepsEasing(t: number, steps: number = 4, direction = "start") {
   // Normalize the input time.
@@ -194,20 +206,23 @@ function blocksToSeconds(blocks: number) {
 }
 
 export function blocksToReadableTime(blocks: number): string {
-
   const seconds = blocksToSeconds(blocks)
 
   // Calculate hours, minutes and seconds
-  const hours: number = Math.floor(seconds / 3600);
-  const minutes: number = Math.floor((seconds % 3600) / 60);
-  const secs: number = seconds % 60;
+  const hours: number = Math.floor(seconds / 3600)
+  const minutes: number = Math.floor((seconds % 3600) / 60)
+  const secs: number = seconds % 60
 
   // Pad minutes and seconds with leading zeros if needed
-  const paddedMinutes: string = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  const paddedSeconds: string = secs < 10 ? `0${secs}` : `${secs}`;
+  const paddedMinutes: string = minutes < 10 ? `0${minutes}` : `${minutes}`
+  const paddedSeconds: string = secs < 10 ? `0${secs}` : `${secs}`
 
   // Format the string
-  const result: string = `${hours}:${paddedMinutes}:${paddedSeconds}`;
+  const result: string = `${hours}:${paddedMinutes}:${paddedSeconds}`
 
-  return result;
+  return result
+}
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

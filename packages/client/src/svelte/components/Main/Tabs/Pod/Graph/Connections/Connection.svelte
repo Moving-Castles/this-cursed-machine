@@ -1,8 +1,13 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import { generateSvgPath, generateSvgArrow } from "./svg"
+  import { rubberGenerator, generatePoints, generateSvgArrow } from "./svg"
+  import { fade } from "svelte/transition"
   import { inspecting } from "@modules/ui/stores"
+  import { draw } from "svelte/transition"
   import { CELL } from "../constants"
+  import { sleep } from "@modules/utils"
+  import Label from "../Labels/Label.svelte"
+
   export let connection: GraphConnection
 
   let hover = false
@@ -20,7 +25,7 @@
     hover = false
   }
 
-  $: d = generateSvgPath(connection, CELL.WIDTH, CELL.HEIGHT)
+  $: d = rubberGenerator(generatePoints(connection, CELL.WIDTH, CELL.HEIGHT))
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
 
@@ -31,20 +36,21 @@
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
-  <path {d} class="pseudo" />
+  <path transition:draw {d} class="pseudo" />
   <path
     {d}
+    transition:draw
     class="visible"
     class:hover
     class:carrying
     class:productive={connection.productive}
   />
-  <polygon {points} class:hover class:productive={connection.productive} />
+  <Label {connection} {carrying} {hover} productive={connection.productive} />
 </g>
 
 <style lang="scss">
   g {
-    opacity: 0.6;
+    // opacity: 0.6;
 
     &.hover {
       opacity: 1;
