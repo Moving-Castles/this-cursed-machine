@@ -206,7 +206,11 @@
 
 <svelte:window on:resize={redraw} />
 
-<g bind:this={element}>
+<g
+  data-from={attachment.depot}
+  data-to={attachment.machine}
+  bind:this={element}
+>
   <path
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}
