@@ -39,6 +39,14 @@ export default defineWorld({
         BuildTracker: "uint32[]", // How many machines of each type have been built in pod since its creation?
         SpawnIndex: "uint32", // How many players have spawned?
         EscapeIndex: "uint32", // How many players have escaped?
+        EscapeIndexRanked: {
+            key: ["completedOrdersRank", "pointsRank"],
+            schema: {
+                completedOrdersRank: "uint32",
+                pointsRank: "uint32",
+                value: "uint32"
+            }
+        },
         // ...
         Tutorial: "bool",
         TutorialLevel: "uint32",

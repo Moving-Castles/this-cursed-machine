@@ -12,5 +12,6 @@ import { LibOrder } from "./LibOrder.sol";
 import { LibReset } from "./LibReset.sol";
 import { LibOffer } from "./LibOffer.sol";
 import { LibToken } from "./LibToken.sol";
+import { LibEscapedStumpTokenURI } from "./LibEscapedStumpTokenURI.sol";
 import { LibInit } from "./init/LibInit.sol";
 import { LibInitRecipes } from "./init/LibInitRecipes.sol";

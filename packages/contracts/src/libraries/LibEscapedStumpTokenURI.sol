@@ -2,40 +2,63 @@
 pragma solidity >=0.8.24;
 import { Base64 } from "@openzeppelin/contracts/utils/Base64.sol";
 
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+
+import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+
+import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
 import { TokenURI } from "@latticexyz/world-modules/src/modules/erc721-puppet/tables/TokenURI.sol";
 import { _tokenUriTableId } from "@latticexyz/world-modules/src/modules/erc721-puppet/utils.sol";
-import { Name } from "../codegen/index.sol";
-import { ESCAPED_STUMP_TOKEN_NAMESPACE } from "../constants.sol";
+
+import { GameConfig, Name, Completed } from "../codegen/index.sol";
 
 library LibEscapedStumpTokenURI {
-  string constant SVG_START =
-    '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">'
-    "<style>.base { font-family: serif; font-size: 32px; }</style>"
-    '<rect width="100%" height="100%" fill="#1e1e1e" stroke="#3c3c3c" stroke-width="1" />';
-  string constant SVG_END = "</svg>";
+  using WorldResourceIdInstance for ResourceId;
 
-  function createURI(uint256 tokenId, bytes32 playerEntity) internal {
-    TokenURI.set(_tokenUriTableId(ESCAPED_STUMP_TOKEN_NAMESPACE), tokenId, _uri(playerEntity));
+  function initTokenURI(uint256 _tokenId, bytes32 _playerEntity, uint256 _points, uint256 _completedOrders) internal {
+    address token = GameConfig.getEscapedStumpTokenAddress();
+    ResourceId systemId = Puppet(token).systemId();
+    ResourceId tableId = _tokenUriTableId(systemId.getNamespace());
+
+    string memory uri = _uri(_playerEntity, _points, _completedOrders);
+    TokenURI.set(tableId, _tokenId, uri);
   }
 
-  // TODO this uri is a placeholder
-  function _uri(bytes32 playerEntity) private view returns (string memory) {
-    string memory name = Name.get(playerEntity);
-
-    string memory svg = string.concat(
-      SVG_START,
-      '<text x="50%" class="base" text-anchor="middle" fill="#ffffff" y="40">',
-      name,
-      "</text>",
-      SVG_END
-    );
+  function _uri(bytes32 _playerEntity, uint256 _points, uint256 _completedOrders) private view returns (string memory) {
+    string memory playerName = Name.get(_playerEntity);
+    // TODO rank name
+    string memory rankName = "placeholder";
 
     // prettier-ignore
     // (manual formatting to make json contents more readable)
     string memory json = Base64.encode(abi.encodePacked(
-      '{"name": "', name, '",',
+      // TODO should this be the player name or sth else?
+      '{"name": "', playerName, '",',
+      // TODO custom descriptions?
       '"description": "Escaped stump",',
-      '"image": "data:image/svg+xml;base64,', Base64.encode(bytes(svg)), '"}'
+      '"attributes": ['
+        '{'
+          '"trait_type": "Player Name",'
+          '"value": "', playerName, '"'
+        '},'
+        '{'
+          '"trait_type": "Rank Name",'
+          '"value": "', rankName, '"'
+        '},'
+        '{'
+          '"trait_type": "Points",'
+          '"value": ', _points,
+        '},'
+        '{'
+          '"trait_type": "Completed Orders",'
+          '"value": ', _completedOrders,
+        '},'
+        '{'
+          '"trait_type": "Escape Block Number",'
+          '"value": ', block.number,
+        '}'
+      '],'
+      '"image": "https://PLACEHOLDER_IMAGE_URL/', '', '"}'
     ));
 
     return string.concat("data:application/json;base64,", json);
