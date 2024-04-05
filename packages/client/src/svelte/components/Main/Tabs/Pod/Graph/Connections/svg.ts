@@ -1,9 +1,80 @@
 import type { GraphConnection } from "../types"
-import { line, curveCatmullRom } from "d3-shape"
-export const rubberGenerator = line()
+import {
+  line,
+  curveBasis,
+  curveCatmullRom,
+  curveBumpX,
+  curveBumpY,
+  curveCardinal,
+  curveMonotoneX,
+  curveMonotoneY,
+  curveStep,
+  curveStepAfter,
+  curveStepBefore,
+} from "d3-shape"
+
+export const catMullRom = line()
   .x(d => d.x)
   .y(d => d.y)
   .curve(curveCatmullRom.alpha(0.6))
+
+export const basis = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveBasis)
+
+export const bumpX = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveBumpX)
+
+export const bumpY = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveBumpY)
+
+export const cardinal = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveCardinal.tension(0.6))
+
+export const monotoneX = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveMonotoneX)
+
+export const monotoneY = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveMonotoneY)
+
+export const step = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveStep)
+
+export const stepBefore = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveStepBefore)
+
+export const stepAfter = line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(curveStepAfter)
+
+export const generators = {
+  catMullRom,
+  basis,
+  bumpX,
+  bumpY,
+  cardinal,
+  monotoneX,
+  monotoneY,
+  step,
+  stepBefore,
+  stepAfter,
+}
 
 export function generatePoints(
   connection: GraphConnection,

@@ -176,24 +176,48 @@ function createGrid() {
   }
 
   for (let i = 0; i < DYNAMIC_POSITIONS.length; i++) {
-    for (let x = -2; x < MACHINE.WIDTH + 2; x++) {
-      for (let y = -2; y < MACHINE.HEIGHT + 2; y++) {
+    for (let x = -4; x < MACHINE.WIDTH + 4; x++) {
+      for (let y = -4; y < MACHINE.HEIGHT + 4; y++) {
         const gridX = DYNAMIC_POSITIONS[i].x + x
         const gridY = DYNAMIC_POSITIONS[i].y + y
 
-        grid = setCostAt(grid, gridX, gridY, 10)
+        // Determine outer ring
+        const outerRing =
+          x === -4 ||
+          x === -3 ||
+          x === MACHINE.WIDTH + 2 ||
+          x === MACHINE.WIDTH + 3 ||
+          y === -4 ||
+          y === -3 ||
+          y === MACHINE.HEIGHT + 2 ||
+          y === MACHINE.HEIGHT + 3
+        grid = setCostAt(grid, gridX, gridY, outerRing ? 5 : 10)
       }
     }
   }
 
   // Set higher cost for cells around the player
-  for (let x = -2; x <= PLAYER.WIDTH + 1; x++) {
-    for (let y = -2; y <= PLAYER.HEIGHT + 1; y++) {
+  for (let x = -4; x <= PLAYER.WIDTH + 3; x++) {
+    for (let y = -4; y <= PLAYER.HEIGHT + 3; y++) {
       // Calculate the actual grid positions
       const gridX = FIXED_POSITIONS.player.x + x
       const gridY = FIXED_POSITIONS.player.y + y
 
-      grid = setCostAt(grid, gridX, gridY, 10)
+      // Determine outer ring
+      const outerRing =
+        x === -4 ||
+        x === -3 ||
+        x === PLAYER.WIDTH + 2 ||
+        x === PLAYER.WIDTH + 3 ||
+        y === -4 ||
+        y === -3 ||
+        y === -2 ||
+        y === -1 ||
+        y === PLAYER.HEIGHT ||
+        y === PLAYER.HEIGHT + 1 ||
+        y === PLAYER.HEIGHT + 2 ||
+        y === PLAYER.HEIGHT + 3
+      grid = setCostAt(grid, gridX, gridY, outerRing ? 5 : 10)
     }
   }
 
@@ -229,17 +253,16 @@ function combineStates(
   return graphMachines
 }
 
+// Initialize pathfinding grid
+export const initialGrid = createGrid()
+
 export function createLayout(
   fixedEntities: FixedEntities,
   simulatedMachines: SimulatedMachines,
   simulatedConnections: Connection[],
   previousGraphMachines: GraphMachines
 ) {
-  console.time("createLayout")
-
-  // Initialize pathfinding grid
   let grid = createGrid()
-
   /*
    * Place Machines
    */
@@ -296,11 +319,15 @@ export function createLayout(
     path.unshift([startPosition.x, startPosition.y])
     path.push([endPosition.x, endPosition.y])
 
-    path.forEach(point => (grid = setCostAt(grid, point[0], point[1], 10)))
-
     // Set path in graphConnections
     graphConnections[i].path = path
   }
+
+  graphConnections.forEach(connection => {
+    connection.path.forEach(
+      point => (grid = setCostAt(grid, point[0], point[1], 10))
+    )
+  })
 
   // console.timeEnd("createLayout")
   return { graphMachines, graphConnections, grid }

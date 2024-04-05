@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import { rubberGenerator, generatePoints, generateSvgArrow } from "./svg"
+  import { generators, generatePoints, generateSvgArrow } from "./svg"
   import { fade } from "svelte/transition"
   import { inspecting } from "@modules/ui/stores"
   import { draw } from "svelte/transition"
@@ -10,7 +10,10 @@
 
   export let connection: GraphConnection
 
+  const options = Object.keys(generators)
+
   let hover = false
+  let activeCurve = "basis"
 
   $: carrying = connection?.products.length > 0
 
@@ -25,9 +28,25 @@
     hover = false
   }
 
-  $: d = rubberGenerator(generatePoints(connection, CELL.WIDTH, CELL.HEIGHT))
+  const testCurve = e => {
+    if (import.meta.env.DEV && e.key === ">" && e.shiftKey) {
+      const index = options.indexOf(activeCurve)
+
+      activeCurve = options[(index + 1) % options.length]
+
+      d = generators[activeCurve](
+        generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
+      )
+    }
+  }
+
+  $: d = generators[activeCurve](
+    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
+  )
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
+
+<svelte:window on:keydown={testCurve} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <g
