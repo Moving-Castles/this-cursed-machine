@@ -57,7 +57,7 @@
     />
     <ellipse fill="none" stroke="none" />
   {/if}
-  {#each $depotAttachments as attachment}
+  {#each Object.entries($depotAttachments) as [address, attachment] (address)}
     <Attachment {attachment} />
   {/each}
 </svg>

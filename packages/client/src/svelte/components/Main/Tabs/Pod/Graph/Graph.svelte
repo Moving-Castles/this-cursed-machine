@@ -18,32 +18,34 @@
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
 
-  let graphMachines: GraphMachines = {}
-  let graphConnections: GraphConnection[] = []
-  let grid: Grid
+  let layout = {
+    graphMachines: {},
+    graphConnections: [],
+    grid: {},
+  }
 
   // Calculate the new layout based on new and old state
-  $: ({ graphMachines, graphConnections, grid } = createLayout(
+  $: layout = createLayout(
     $playerPod.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    graphMachines
-  ))
+    layout.graphMachines
+  )
 </script>
 
 <div class="graph-container">
   <div class="grid">
     <div class="top">
-      {#each Object.entries(graphMachines) as [address, machine]}
-        <MachineSelector {address} {machine} />
+      {#each Object.entries(layout.graphMachines) as [address, machine], i (address)}
+        <MachineSelector {i} {address} {machine} />
       {/each}
       <svg id="graph" {width} {height}>
-        {#each graphConnections as connection}
+        {#each layout.graphConnections as connection (connection.id)}
           <Connection {connection} />
         {/each}
       </svg>
     </div>
-    <GridComponent {grid} />
+    <GridComponent grid={layout.grid} />
   </div>
 </div>
 
