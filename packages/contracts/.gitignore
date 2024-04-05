@@ -10,6 +10,7 @@ abi/
 types/
 broadcast/
 .DS_Store
+script/progression
 
 # Ignore all deploy artifacts
 deploys/**/*.json

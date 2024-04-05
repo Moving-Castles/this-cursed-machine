@@ -17,6 +17,9 @@
   import { messageToStumps } from "@modules/ui"
   import { playSound } from "@modules/sound"
 
+  import { recipes } from "./modules/state/base/stores"
+  $: console.log("$recipes", $recipes)
+
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"

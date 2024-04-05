@@ -1,10 +1,8 @@
 <script lang="ts">
   import { playerPod, player } from "@modules/state/base/stores"
-  import { availableOrders, orders } from "@modules/state/base/stores"
+  import { availableOrders } from "@modules/state/base/stores"
 
   import OrderItem from "./OrderItem.svelte"
-
-  // – show accepted order at top of list?
 </script>
 
 <div class="container">
@@ -23,9 +21,5 @@
 <style lang="scss">
   .container {
     padding: 20px;
-
-    .order-list {
-      // margin-top: 20px;
-    }
   }
 </style>

@@ -204,6 +204,7 @@
         height: calc(100vh - 130px);
         position: relative;
         animation: hue-rotate-animation 5s infinite linear;
+        overflow-y: auto;
       }
 
       .tab-bar {
