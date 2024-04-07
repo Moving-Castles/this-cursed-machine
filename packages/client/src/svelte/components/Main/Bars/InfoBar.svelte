@@ -22,7 +22,7 @@
           value={$player.tokenBalances ?? 0}
           goal={30000}
           warn={26900}
-        />P
+        /> $BUGS
       </div>
     </div>
   </div>

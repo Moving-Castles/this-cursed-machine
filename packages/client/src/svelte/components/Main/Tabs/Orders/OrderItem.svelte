@@ -7,7 +7,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
-  import { UI_SCALE_FACTOR} from "@modules/ui/constants"
+  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -60,7 +60,7 @@
       {#if working}
         <Spinner />
       {:else}
-        {order.order.rewardAmount}P
+        {order.order.rewardAmount} $BUGS
       {/if}
     </div>
 
@@ -128,11 +128,11 @@
 
     .section {
       &.goal {
-        width: 50%;
+        width: 40%;
       }
 
       &.reward {
-        width: 10%;
+        width: 20%;
       }
 
       &.time {

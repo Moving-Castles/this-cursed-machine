@@ -6,7 +6,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
-  import { UI_SCALE_FACTOR} from "@modules/ui/constants"
+  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -64,7 +64,7 @@
         class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
         on:click={() => sendBuy()}
       >
-        {offer.offer.cost}P
+        {offer.offer.cost} $BUGS
       </button>
     </div>
   {/if}
