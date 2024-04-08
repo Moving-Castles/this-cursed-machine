@@ -20,8 +20,6 @@ import { Offer, OfferData } from "./tables/Offer.sol";
 import { Completed } from "./tables/Completed.sol";
 import { EarnedPoints } from "./tables/EarnedPoints.sol";
 import { LastResolved } from "./tables/LastResolved.sol";
-import { Input } from "./tables/Input.sol";
-import { Output } from "./tables/Output.sol";
 import { IncomingConnections } from "./tables/IncomingConnections.sol";
 import { OutgoingConnections } from "./tables/OutgoingConnections.sol";
 import { DepotConnection } from "./tables/DepotConnection.sol";

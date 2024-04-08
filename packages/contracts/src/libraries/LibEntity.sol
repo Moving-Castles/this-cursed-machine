@@ -8,7 +8,7 @@ import { LibUtils } from "./LibUtils.sol";
 library LibEntity {
   /**
    * @notice Creates a new machine entity of the specified type.
-   * @param _machineType The type of machine to create, specified by the MACHINE_TYPE enum.
+   * @param _machineType The type of machine to create
    * @return entity The identifier for the newly created machine entity.
    */
   function create(MACHINE_TYPE _machineType) internal returns (bytes32) {
@@ -74,8 +74,8 @@ library LibEntity {
   }
 
   /**
-   * @notice Checks if the specified machine type is considered buildable.
-   * @param _machineType The type of machine to verify, dictated by the MACHINE_TYPE enum.
+   * @notice Checks if the specified machine type is buildable
+   * @param _machineType The type of machine to verify
    * @return bool True if the machine type is among the predefined buildable types, false otherwise.
    */
   function isBuildableMachineType(MACHINE_TYPE _machineType) internal pure returns (bool) {

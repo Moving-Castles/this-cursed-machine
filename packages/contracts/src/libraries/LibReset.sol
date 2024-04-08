@@ -7,6 +7,11 @@ import { LibUtils } from "./LibUtils.sol";
 import { LibEntity } from "./LibEntity.sol";
 
 library LibReset {
+  /**
+   * @notice Reset pod network
+   * @dev Remove all machines excvept fixed ones. Remove all connections and depot attachements
+   * @param _podEntity Pod entity
+   */
   function reset(bytes32 _podEntity) internal {
     bytes32[] memory machineInPod = MachinesInPod.get(_podEntity);
 
@@ -14,7 +19,7 @@ library LibReset {
       bytes32 machineEntity = machineInPod[i];
       MACHINE_TYPE machineType = MachineType.get(machineEntity);
 
-      // Destroy all connections and non-fixed mayhines
+      // Destroy all connections and non-fixed machines
       if (machineType == MACHINE_TYPE.PLAYER) {
         IncomingConnections.set(machineEntity, new bytes32[](1));
         OutgoingConnections.set(machineEntity, new bytes32[](2));

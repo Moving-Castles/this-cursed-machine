@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection, FixedEntities } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, MachineType, Amount, DepotConnection } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DepotSystem is System {
+  /**
+   * @notice Attach depot to inlet or outlet
+   * @dev Resolves network
+   * @param _depotEntity Id of depot entity
+   * @param _targetEntity Id of inlet or outlet entity
+   */
   function attachDepot(bytes32 _depotEntity, bytes32 _targetEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
@@ -29,6 +35,11 @@ contract DepotSystem is System {
     DepotConnection.set(_depotEntity, _targetEntity);
   }
 
+  /**
+   * @notice Detach depot from inlet or outlet
+   * @dev Resolves network
+   * @param _depotEntity Id of depot entity
+   */
   function detachDepot(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
@@ -44,6 +55,10 @@ contract DepotSystem is System {
     DepotConnection.set(_depotEntity, bytes32(0));
   }
 
+  /**
+   * @notice Empty depot
+   * @param _depotEntity Id of depot entity
+   */
   function emptyDepot(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 

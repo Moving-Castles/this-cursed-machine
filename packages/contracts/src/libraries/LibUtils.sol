@@ -120,6 +120,9 @@ library LibUtils {
     return newArray;
   }
 
+  /**
+   * @dev Checks equality of two strings
+   */
   function stringEq(string memory a, string memory b) internal pure returns (bool) {
     if (bytes(a).length != bytes(b).length) {
       return false;
@@ -128,6 +131,9 @@ library LibUtils {
     }
   }
 
+  /**
+   * @dev Subtract without underflow
+   */
   function safeSubtract(uint32 a, uint32 b) internal pure returns (uint32) {
     if (b > a) {
       // If b is greater than a, return 0 to prevent underflow

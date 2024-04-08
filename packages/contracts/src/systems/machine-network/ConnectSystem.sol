@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
+import { EntityType, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract ConnectSystem is System {
   /**
-   * @notice Establishes a connection from the source machine to the target machine on a specified port if not occupied.
-   * @param _sourceMachine The identifier for the source machine.
-   * @param _targetMachine The identifier for the target machine.
+   * @notice Connect source machine to target machine on a specified port
+   * @dev Resolves network
+   * @param _sourceMachine The id for the source machine.
+   * @param _targetMachine The id for the target machine.
    * @param _portIndex The port index on the source machine which determines the position (FIRST or SECOND) to write in the outgoing connections array.
    */
   function connect(bytes32 _sourceMachine, bytes32 _targetMachine, PORT_INDEX _portIndex) public {

@@ -8,13 +8,17 @@ import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries
 import { NUMBER_OF_DEPOTS } from "../../constants.sol";
 
 contract StartSystem is System {
-  function start() public returns (bytes32) {
+  /**
+   * @notice Set up a pod for the player
+   * @return podEntity Id of pod entity
+   */
+  function start() public returns (bytes32 podEntity) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // todo: check that player is spawned
 
     // Create pod
-    bytes32 podEntity = LibPod.create();
+    podEntity = LibPod.create();
 
     // Create inlet entities
     bytes32[] memory inletEntities = new bytes32[](2);
@@ -49,6 +53,7 @@ contract StartSystem is System {
     FixedEntities.set(podEntity, FixedEntitiesData({ outlet: outletEntity, inlets: inletEntities }));
 
     // Set build tracker to an array with the length of the number of machine types
+    // This is used to have a build index per machine type and pod to identify a particular machine in the UI
     BuildTracker.set(podEntity, new uint32[](uint(type(MACHINE_TYPE).max) + 1));
 
     // Go to first tutorial level

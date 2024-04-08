@@ -11,5 +11,5 @@ import { MACHINE_TYPE } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IBuildSystem {
-  function build(MACHINE_TYPE _machineType) external returns (bytes32);
+  function build(MACHINE_TYPE _machineType) external returns (bytes32 machineEntity);
 }

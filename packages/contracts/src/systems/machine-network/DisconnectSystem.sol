@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, GameConfig, GameConfigData, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
+import { EntityType, IncomingConnections, OutgoingConnections, CarriedBy } from "../../codegen/index.sol";
 import { ENTITY_TYPE, PORT_INDEX } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DisconnectSystem is System {
   /**
-   * @notice Disconnects a connection from the source machine on a specified port.
-   * @param _sourceMachine The identifier for the source machine.
+   * @notice Disconnects machine on a specified port.
+   * @param _sourceMachine The id for the source machine.
    * @param _portIndex The port index on the source machine which determines which connection to disconnect.
    */
   function disconnect(bytes32 _sourceMachine, PORT_INDEX _portIndex) public {

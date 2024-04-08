@@ -171,6 +171,14 @@ library Recipe {
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 1;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint8(bytes1(new bytes(0))));
+    }
+
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
       return (uint8(bytes1(_blob)));
@@ -185,6 +193,14 @@ library Recipe {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 1;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint8(bytes1(new bytes(0))));
+    }
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
@@ -201,6 +217,14 @@ library Recipe {
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
 
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 1;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint8(bytes1(new bytes(0))));
+    }
+
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
       return (uint8(bytes1(_blob)));
@@ -215,6 +239,14 @@ library Recipe {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
     _keyTuple[1] = bytes32(uint256(input));
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 1;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint8(bytes1(new bytes(0))));
+    }
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);

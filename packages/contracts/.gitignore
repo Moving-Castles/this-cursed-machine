@@ -11,6 +11,7 @@ types/
 broadcast/
 .DS_Store
 script/progression
+docs/
 
 # Ignore all deploy artifacts
 deploys/**/*.json
