@@ -5,8 +5,15 @@ import { EntityType, Offer, OfferData } from "../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
 
 library LibOffer {
-  function create(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) internal returns (bytes32) {
-    bytes32 offerEntity = getUniqueEntity();
+  /**
+   * @notice Create a new offer
+   * @param _materialType Material type of the offer
+   * @param _amount Amount of material in the offer
+   * @param _cost Cost of the offer
+   * @return offerEntity The id of the offer entity.
+   */
+  function create(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) internal returns (bytes32 offerEntity) {
+    offerEntity = getUniqueEntity();
     EntityType.set(offerEntity, ENTITY_TYPE.OFFER);
 
     Offer.set(

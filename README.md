@@ -1,6 +1,8 @@
 # THIS CURSED MACHINE
 
-## Get started
+THIS CURSED MACHINE is a sci-fi body horror fulfilment center simulator. Reverse engineer complex recipes and use your own body as a large scale production circuit. Build strange machines and connect them in intricate supply chains to fullfil orders more quickly than the other workers.
+
+## Run locally
 
 1. [Install foundry](https://getfoundry.sh/)
 2. Install dependencies: `pnpm i`

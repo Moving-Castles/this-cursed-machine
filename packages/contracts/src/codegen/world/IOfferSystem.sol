@@ -11,7 +11,11 @@ import { MATERIAL_TYPE } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IOfferSystem {
-  function createOffer(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) external returns (bytes32);
+  function createOffer(
+    MATERIAL_TYPE _materialType,
+    uint32 _amount,
+    uint32 _cost
+  ) external returns (bytes32 orderEntity);
 
   function buy(bytes32 _offerEntity) external;
 }

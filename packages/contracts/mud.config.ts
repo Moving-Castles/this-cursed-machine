@@ -25,18 +25,15 @@ export default defineWorld({
                 dataStruct: true
             }
         },
-        // ...
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
         MaterialType: "MATERIAL_TYPE",
         Amount: "uint32",
-        // ...
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
         BuildTracker: "uint32[]", // How many machines of each type have been built in pod since its creation?
         SpawnIndex: "uint32", // How many players have spawned?
-        // ...
         Tutorial: "bool",
         TutorialLevel: "uint32",
         Order: {
@@ -64,12 +61,8 @@ export default defineWorld({
             }
         },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
-        EarnedPoints: "uint32",
-        // ...
-        LastResolved: "uint256",
-        Input: "uint256",
-        Output: "MATERIAL_TYPE",
-        // ...
+        EarnedPoints: "uint32", // Lifetime points earned by player
+        LastResolved: "uint256", // Used to keep track block past since last resolution of pod
         IncomingConnections: "bytes32[]",
         OutgoingConnections: "bytes32[]",
         DepotConnection: "bytes32",

@@ -13,8 +13,13 @@ library LibDepot {
     uint32 amount;
   }
 
-  function create(bytes32 _podEntity, uint32 _index) internal returns (bytes32) {
-    bytes32 depotEntity = getUniqueEntity();
+  /**
+   * @notice Create a new depot
+   * @param _podEntity The id of the pod entity
+   * @return depotEntity The id of the depot entity
+   */
+  function create(bytes32 _podEntity, uint32 _index) internal returns (bytes32 depotEntity) {
+    depotEntity = getUniqueEntity();
     EntityType.set(depotEntity, ENTITY_TYPE.DEPOT);
     CarriedBy.set(depotEntity, _podEntity);
     MaterialType.set(depotEntity, MATERIAL_TYPE.NONE);
@@ -24,6 +29,13 @@ library LibDepot {
     return depotEntity;
   }
 
+  /**
+   * @notice Update depots based on the result of a network resolution
+   * @param _inletDepotEntities The ids of the inlet depot entities
+   * @param _outletDepotEntity The id of the outlet depot entity
+   * @param _blocksSinceLastResolution The number of blocks since the last resolution
+   * @param _output The output product of the outlet
+   */
   function write(
     bytes32[2] memory _inletDepotEntities,
     bytes32 _outletDepotEntity,
@@ -42,7 +54,7 @@ library LibDepot {
      * We need to find the lowest of the two limiting factors and cap the number of blocks by that
      */
 
-    InletDepotAmount[] memory usedInletAmounts = getUsedInletAmounts(_output.inletActive, _inletDepotEntities);
+    InletDepotAmount[] memory usedInletAmounts = getUsedInletDepots(_output.inletActive, _inletDepotEntities);
     InletDepotAmount memory lowestInput = findLowestValue(usedInletAmounts);
 
     /*
@@ -98,10 +110,15 @@ library LibDepot {
     }
   }
 
+  /**
+   * @notice Find the struct with the lowest amount in an array of structs
+   * @param inletDepotAmounts The array of structs to search
+   * @return The struct with the lowest amount
+   */
   function findLowestValue(
     InletDepotAmount[] memory inletDepotAmounts
   ) internal pure returns (InletDepotAmount memory) {
-    // Check if the array is empty, return a default struct
+    // Revert if the array is empty
     require(inletDepotAmounts.length > 0, "Array is empty");
 
     InletDepotAmount memory lowest = inletDepotAmounts[0]; // Initialize with the first struct in the array
@@ -116,7 +133,14 @@ library LibDepot {
     return lowest;
   }
 
-  function getUsedInletAmounts(
+  /**
+   * @notice Get depots that are connected to inlets that contribute to the final output
+   * @dev Based on the flags (_inletActive) set on the outlet product struct
+   * @param _inletActive The array of bools indicating if the inlets are active
+   * @param _inletDepotEntities The array of inlet depot entities
+   * @return An array of structs of used depots
+   */
+  function getUsedInletDepots(
     bool[2] memory _inletActive,
     bytes32[2] memory _inletDepotEntities
   ) internal view returns (InletDepotAmount[] memory) {

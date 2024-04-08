@@ -9,6 +9,18 @@ import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.s
 import { TUTORIAL_LEVELS } from "../../constants.sol";
 
 contract OrderSystem is System {
+  /**
+   * @notice Create an order
+   * @dev Restricted to admin
+   * @param _resourceMaterialType Material type of the order
+   * @param _resourceAmount Amount of material
+   * @param _goalMaterialType Material type of the goal
+   * @param _goalAmount Amount of the goal
+   * @param _reward Reward for completing the order
+   * @param _duration Duration of the order
+   * @param _maxPlayers Maximum number of players that can accept the order
+   * @return orderEntity Id of the offer entity
+   */
   function createOrder(
     MATERIAL_TYPE _resourceMaterialType,
     uint32 _resourceAmount,
@@ -17,11 +29,11 @@ contract OrderSystem is System {
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
-  ) public returns (bytes32) {
+  ) public returns (bytes32 orderEntity) {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
-    bytes32 orderEntity = LibOrder.create(
+    orderEntity = LibOrder.create(
       _resourceMaterialType,
       _resourceAmount,
       _goalMaterialType,
@@ -36,6 +48,11 @@ contract OrderSystem is System {
     return orderEntity;
   }
 
+  /**
+   * @notice Cancel an order
+   * @dev Restricted to admin
+   * @param _orderEntity Id of the order entity
+   */
   function cancel(bytes32 _orderEntity) public {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
@@ -44,6 +61,11 @@ contract OrderSystem is System {
     Completed.deleteRecord(_orderEntity);
   }
 
+  /**
+   * @notice Accept an order
+   * @dev This simply indicates that a user is commiting to an order, we also do some pre wiring of the pods for tutorial levels
+   * @param _orderEntity Id of the order entity
+   */
   function accept(bytes32 _orderEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
@@ -91,11 +113,19 @@ contract OrderSystem is System {
     CurrentOrder.set(podEntity, _orderEntity);
   }
 
+  /**
+   * @notice Unaccept the current order
+   */
   function unaccept() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     CurrentOrder.set(CarriedBy.get(playerEntity), bytes32(0));
   }
 
+  /**
+   * @notice Ship an order
+   * @dev Compares the depot to the current order goals and completes if goals are met
+   * @param _depotEntity Id of the depot entity
+   */
   function ship(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
@@ -125,7 +155,10 @@ contract OrderSystem is System {
     MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
     Amount.set(_depotEntity, 0);
 
-    // Handle tutorial levels
+    /*
+     * In tutorial
+     */
+
     if (Tutorial.get(playerEntity)) {
       uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
 
@@ -141,7 +174,9 @@ contract OrderSystem is System {
       return;
     }
 
-    // Not in tutorial mode...
+    /*
+     * Not in tutorial
+     */
 
     // On order: add player to completed list
     Completed.push(currentOrderId, playerEntity);

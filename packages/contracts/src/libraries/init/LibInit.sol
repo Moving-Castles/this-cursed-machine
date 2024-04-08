@@ -6,6 +6,11 @@ import { MATERIAL_TYPE } from "../../codegen/common.sol";
 import { FLOW_RATE, DEPOT_CAPACITY } from "../../constants.sol";
 
 library LibInit {
+  /**
+   * @notice Set game config and create tutorial orders
+   * @param _adminAddress The address of the admin
+   * @param _tokenAddress The address of the token
+   */
   function init(address _adminAddress, address _tokenAddress) internal {
     // Set game config
     GameConfig.set(

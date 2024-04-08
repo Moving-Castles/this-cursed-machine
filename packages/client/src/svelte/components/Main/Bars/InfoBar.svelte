@@ -45,18 +45,5 @@
         color: var(--background);
       }
     }
-
-    .tokens {
-      display: flex;
-      align-items: center;
-
-      button {
-        font-size: var(--font-size-small);
-        padding: 5px;
-        border: none;
-        margin-left: 5px;
-        margin-top: 0;
-      }
-    }
   }
 </style>

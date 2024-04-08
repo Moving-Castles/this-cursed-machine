@@ -11,9 +11,11 @@ import { MATERIAL_TYPE } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IDevSystem {
-  function warp(uint32 _level) external;
-
   function graduate() external;
 
   function fillDepot(bytes32 _depotEntity, uint32 _amount, MATERIAL_TYPE _materialType) external;
+
+  function reward() external;
+
+  function charge() external;
 }

@@ -13,11 +13,16 @@ import { Product } from "../structs.sol";
 
 library LibNetwork {
   struct Counters {
-    uint32 iterations; // Number of iterations
+    uint32 iterations; // Number of iterations of the outer loop
     uint32 resolved; // Number of resolved nodes
     uint32 inputs; // Number of stored inputs
   }
 
+  /**
+   * @notice Resolve the network in a pod
+   * @dev The outcome of this function is to update the depots in the pod
+   * @param _podEntity The id of the pod entity
+   */
   function resolve(bytes32 _podEntity) internal {
     // All counters grouped as a struct
     Counters memory counter;

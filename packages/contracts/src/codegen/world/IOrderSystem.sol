@@ -19,7 +19,7 @@ interface IOrderSystem {
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
-  ) external returns (bytes32);
+  ) external returns (bytes32 orderEntity);
 
   function cancel(bytes32 _orderEntity) external;
 
