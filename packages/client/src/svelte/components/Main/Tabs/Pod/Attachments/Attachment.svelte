@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Attachment } from "@modules/state/simulated/types"
   import { onMount, tick } from "svelte"
-  import { rubberGenerator } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
+  import { generators } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
   import { MACHINE_TYPE } from "contracts/enums"
   import * as easing from "svelte/easing"
   import {
@@ -11,6 +11,9 @@
   import { draw as drawTransition } from "svelte/transition"
 
   export let attachment: Attachment
+
+  const options = Object.keys(generators)
+  let activeCurve = "catMullRom"
 
   let element: SVGElement
   const OFFSET = 40
@@ -191,11 +194,23 @@
     return []
   }
 
-  const redraw = () => {
-    d = rubberGenerator(makePoints())
+  const testCurve = e => {
+    if (import.meta.env.DEV && e.key === "<" && e.shiftKey) {
+      const index = options.indexOf(activeCurve)
+
+      activeCurve = options[(index + 1) % options.length]
+
+      d = generators[activeCurve](
+        generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
+      )
+    }
   }
 
-  $: d = rubberGenerator(makePoints())
+  const redraw = () => {
+    d = generators[activeCurve](makePoints())
+  }
+
+  $: d = generators[activeCurve](makePoints())
 
   onMount(async () => {
     // Wait for parent to draw the safezone
@@ -204,9 +219,13 @@
   })
 </script>
 
-<svelte:window on:resize={redraw} />
+<svelte:window on:resize={redraw} on:keydown={testCurve} />
 
-<g bind:this={element}>
+<g
+  data-from={attachment.depot}
+  data-to={attachment.machine}
+  bind:this={element}
+>
   <path
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}

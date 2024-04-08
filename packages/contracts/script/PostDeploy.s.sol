@@ -55,13 +55,8 @@ contract PostDeploy is Script {
     // Initialize recipes
     LibInitRecipes.init();
 
-    // Create test orders
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, false, 0, 1000, ONE_MINUTE, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 4000, false, 0, 1000, ONE_HOUR, 10);
-    LibOrder.create(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.AMMONIA, 4000, false, 0, 1000, ONE_DAY, 10);
-
     // Create offer
-    LibOffer.create(MATERIAL_TYPE.BUG, 10000, 1000);
+    LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as with 100 Bug scale-down in UI)
 
     vm.stopBroadcast();
   }

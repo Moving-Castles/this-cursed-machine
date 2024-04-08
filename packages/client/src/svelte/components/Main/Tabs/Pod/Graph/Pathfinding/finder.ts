@@ -15,7 +15,7 @@ import { deepClone } from "@modules/utils"
  */
 
 const TURN_PENALTY = 10
-const HEURISTIC_WEIGHT = 1
+const HEURISTIC_WEIGHT = 2
 
 /**
  * Backtrace according to the parent records and return the path.

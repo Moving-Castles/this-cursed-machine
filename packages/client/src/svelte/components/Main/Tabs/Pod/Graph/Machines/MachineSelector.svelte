@@ -7,6 +7,7 @@
   import Player from "./Player.svelte"
   import Machine from "./Machine.svelte"
 
+  export let i = 0
   export let address: string
   export let machine: GraphMachine
 

@@ -23,7 +23,7 @@
   }
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress >= num
+    num => $tutorialProgress > num
   ).length
 
   const onKeyDown = e => {

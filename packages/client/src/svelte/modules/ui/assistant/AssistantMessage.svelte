@@ -12,11 +12,17 @@
   export let msg: AssistantMessage
 
   let working = false
+  let confirming = false
 
   let timeout: ReturnType<typeof setTimeout>
 
+  const startConfirm = () => {
+    confirming = true
+  }
+
   async function sendStart() {
     working = true
+    confirming = false
     playSound("tcm", "listPrint")
     const action = start()
     await waitForCompletion(action)
@@ -48,7 +54,12 @@
     {msg.message}
   </div>
   <div class="restart">
-    <button on:click={sendStart}>Start over</button>
+    {#if !confirming}
+      <button on:click={startConfirm}>Start over</button>
+    {:else}
+      <button on:click={sendStart}>I want to restart</button>
+      <button on:click={() => (confirming = false)}>x</button>
+    {/if}
   </div>
 </div>
 
@@ -84,10 +95,17 @@
       }
     }
 
+    &:hover {
+      .restart {
+        display: block;
+      }
+    }
+
     .restart {
       position: absolute;
       top: 0;
       right: 0;
+      display: none;
 
       button {
         background: var(--color-grey-dark);

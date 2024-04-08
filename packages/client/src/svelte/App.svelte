@@ -17,12 +17,16 @@
   import { messageToStumps } from "@modules/ui"
   import { playSound } from "@modules/sound"
 
+  import { recipes } from "./modules/state/base/stores"
+  $: console.log("$recipes", $recipes)
+
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"
   import Tutorial from "@components/Tutorial/Tutorial.svelte"
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
+  import MobileWarning from "@components/Main/MobileWarning.svelte"
 
   const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX
@@ -112,6 +116,8 @@
     <Tutorial />
   {/if}
 </main>
+
+<MobileWarning />
 
 <Toasts />
 <Assistant />

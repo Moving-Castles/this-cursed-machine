@@ -380,55 +380,63 @@ export const simulatedConnections = derived(
   $simulatedMachines => calculateSimulatedConnections($simulatedMachines)
 )
 
-export const networkIsRunning = derived([simulatedDepots, playerPod, simulatedMachines], ([$simulatedDepots, $playerPod, $simulatedMachines]) => {
+export const networkIsRunning = derived(
+  [simulatedDepots, playerPod, simulatedMachines],
+  ([$simulatedDepots, $playerPod, $simulatedMachines]) => {
+    if (!$playerPod?.fixedEntities) return false
 
-  const outletKey = $playerPod?.fixedEntities.outlet
-  const outletEntity = $simulatedMachines[outletKey]
-  if (!outletKey || !outletEntity) return false
+    const outletKey = $playerPod?.fixedEntities?.outlet
+    const outletEntity = $simulatedMachines[outletKey]
+    if (!outletKey || !outletEntity) return false
 
-  /*
-   * If the outlet has no output, the network is not running
-   */
-  if (!outletEntity.outputs) return false
-  const outletOutput = outletEntity.outputs[0]
-  if (!outletOutput) return false
+    /*
+     * If the outlet has no output, the network is not running
+     */
+    if (!outletEntity.outputs) return false
+    const outletOutput = outletEntity.outputs[0]
+    if (!outletOutput) return false
 
-  /*
-   * If the outlet is not connected to a depot, the network is not running
-   */
-  const outletDepot = Object.values($simulatedDepots).find(depot => depot.depotConnection === outletKey)
-  if (!outletDepot) return false
+    /*
+     * If the outlet is not connected to a depot, the network is not running
+     */
+    const outletDepot = Object.values($simulatedDepots).find(
+      depot => depot.depotConnection === outletKey
+    )
+    if (!outletDepot) return false
 
-  /*
-   * If the output depot is full, the network is not running
-   */
-  if (outletDepot.amount == DEPOT_CAPACITY) return false
+    /*
+     * If the output depot is full, the network is not running
+     */
+    if (outletDepot.amount == DEPOT_CAPACITY) return false
 
-  /*
-   * Get used inlet depots
-   * If any of the used inlet depots are empty, the network is not running
-   */
-  const inletKeys = $playerPod.fixedEntities.inlets
-  let usedInletKeys: string[] = []
-  for (let i = 0; i < outletOutput.inletActive.length; i++) {
-    if (outletOutput.inletActive[i]) {
-      usedInletKeys.push(inletKeys[i])
+    /*
+     * Get used inlet depots
+     * If any of the used inlet depots are empty, the network is not running
+     */
+    const inletKeys = $playerPod?.fixedEntities?.inlets
+    let usedInletKeys: string[] = []
+    for (let i = 0; i < outletOutput.inletActive.length; i++) {
+      if (outletOutput.inletActive[i]) {
+        usedInletKeys.push(inletKeys[i])
+      }
     }
-  }
-  const usedInletDepots = Object.values($simulatedDepots).filter(depot => usedInletKeys.includes(depot.depotConnection))
+    const usedInletDepots = Object.values($simulatedDepots).filter(depot =>
+      usedInletKeys.includes(depot.depotConnection)
+    )
 
-  /*
-   * If any of the used inlet depots are empty, the network is not running
-   */
-  for (let i = 0; i < usedInletDepots.length; i++) {
-    if (usedInletDepots[i].amount == 0) return false
-  }
+    /*
+     * If any of the used inlet depots are empty, the network is not running
+     */
+    for (let i = 0; i < usedInletDepots.length; i++) {
+      if (usedInletDepots[i].amount == 0) return false
+    }
 
-  /*
-   * All conditions met, the network is running
-   */
-  return true
-})
+    /*
+     * All conditions met, the network is running
+     */
+    return true
+  }
+)
 
 export const playerOrder = derived(
   [player, orders, playerPod, availableOrders],
@@ -466,21 +474,29 @@ export const depotAttachments = derived(
     const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
-      if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
-      if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
+      if (!$playerPod?.fixedEntities) return "none"
+      if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
+      if (machineEntity === $playerPod?.fixedEntities.outlet) return "O"
       return "none"
     }
 
-    Object.entries($simulatedDepots).forEach(([address, depot]) => {
-      if (depot.depotConnection !== EMPTY_CONNECTION) {
-        results.push({
-          depot: address,
-          machine: depot.depotConnection,
-          name: getConnectionName(depot.depotConnection),
-        })
-      }
-    })
+    return Object.fromEntries(
+      Object.entries($simulatedDepots)
+        .map(([address, depot]) => {
+          if (depot.depotConnection !== EMPTY_CONNECTION) {
+            return [
+              address,
+              {
+                depot: address,
+                machine: depot.depotConnection,
+                name: getConnectionName(depot.depotConnection),
+              },
+            ]
+          }
 
-    return results
+          return [address, false]
+        })
+        .filter(([_, value]) => !!value)
+    )
   }
 )

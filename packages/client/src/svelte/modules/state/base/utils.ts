@@ -60,7 +60,7 @@ export function getAvailableOrders(
   if (!playerInTutorial) {
     return Object.fromEntries(
       Object.entries(orders).filter(([, order]) =>
-        order.order ? order.order.expirationBlock > blockNumber : false
+        order.order ? (!order.tutorial && order.order.expirationBlock == 0) || order.order.expirationBlock > blockNumber : false
       )
     )
   }

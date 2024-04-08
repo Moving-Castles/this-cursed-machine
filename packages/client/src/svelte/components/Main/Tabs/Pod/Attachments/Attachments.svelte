@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, tick } from "svelte"
+  import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
   import { activeTab } from "@svelte/modules/ui/stores"
@@ -16,63 +17,73 @@
     graphBoundingBox = graph?.getBoundingClientRect()
   }
 
-  onMount(drawBBox)
+  onMount(async () => {
+    console.log("on mount")
+    // Wait for the transition to complete or it will mess with placement
+    setTimeout(drawBBox, 100)
+    // drawBBox()
+  })
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={drawBBox} />
 
-<svg
-  class="depot-connections"
-  class:visible
-  width={innerWidth}
-  height={innerHeight}
-  viewBox="0 0 {innerWidth} {innerHeight}"
->
-  <!-- Draw an ellipse to avoid -->
-  {#if graphBoundingBox}
-    <!-- Safe zone for attachment coordinates -->
-    <rect
-      id="midzone"
-      x={graphBoundingBox.left + 200}
-      y={graphBoundingBox.top - 40}
-      width={graphBoundingBox.width - 400}
-      height={40}
-      fill="none"
-    />
-    <rect
-      id="safezone-1"
-      x={graphBoundingBox.left - 100}
-      y={graphBoundingBox.top}
-      width={100}
-      height={100}
-      fill="none"
-    />
-    <rect
-      id="safezone-2"
-      x={graphBoundingBox.right}
-      y={graphBoundingBox.top}
-      width={100}
-      height={100}
-      fill="none"
-    />
-    <ellipse fill="none" stroke="none" />
-  {/if}
-  {#each $depotAttachments as attachment}
-    <Attachment {attachment} />
-  {/each}
-</svg>
+{#if graphBoundingBox}
+  {#key graphBoundingBox.x}
+    <svg
+      in:fade={{ duration: 100 }}
+      class="depot-connections"
+      class:visible
+      width={innerWidth}
+      height={innerHeight}
+      viewBox="0 0 {innerWidth} {innerHeight}"
+    >
+      <!-- Draw an ellipse to avoid -->
+
+      <!-- Safe zone for attachment coordinates -->
+      <rect
+        id="midzone"
+        x={graphBoundingBox.left + 200}
+        y={graphBoundingBox.top - 40}
+        width={graphBoundingBox.width - 400}
+        height={40}
+        fill="none"
+      />
+      <rect
+        id="safezone-1"
+        x={graphBoundingBox.left - 100}
+        y={graphBoundingBox.top}
+        width={100}
+        height={100}
+        fill="none"
+      />
+      <rect
+        id="safezone-2"
+        x={graphBoundingBox.right}
+        y={graphBoundingBox.top}
+        width={100}
+        height={100}
+        fill="none"
+      />
+      <ellipse fill="none" stroke="none" />
+      {#each Object.entries($depotAttachments) as [address, attachment] (address)}
+        <Attachment {attachment} />
+      {/each}
+    </svg>
+  {/key}
+{/if}
 
 <style lang="scss">
   .depot-connections {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
     /* background: rgba(0, 0, 255, 0.2); */
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
-
+    z-index: 1;
     display: none;
+    clip-path: inset(0px 0px 0px 500px);
+
     &.visible {
       display: block;
     }
