@@ -31,6 +31,10 @@
     padding: 1rem;
     gap: 1rem;
 
+    @media (min-width: 1200px) {
+      display: none;
+    }
+
     .msg {
       width: auto;
       display: flex;

@@ -151,10 +151,7 @@
 
       const depotIndex = Object.keys($depots).indexOf(attachment.depot)
 
-      throughCoord = makeRandomPointInsideMidzone(
-        $machines[attachment.machine].machineType,
-        depotIndex
-      )
+      // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
       throughCoord2 = makeRandomPointInsideSafeZone(
         $machines[attachment.machine].machineType
@@ -164,7 +161,7 @@
         ? [
             fromCoord,
             { x: fromCoord.x, y: fromCoord.y + OFFSET },
-            throughCoord,
+            // throughCoord,
             throughCoord2,
             {
               x:

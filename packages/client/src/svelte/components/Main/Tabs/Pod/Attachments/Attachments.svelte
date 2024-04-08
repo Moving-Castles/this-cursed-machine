@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from "svelte"
+  import { graphScale } from "@modules/ui/stores"
   import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
