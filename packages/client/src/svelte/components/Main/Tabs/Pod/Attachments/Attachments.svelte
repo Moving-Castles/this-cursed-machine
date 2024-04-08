@@ -18,23 +18,25 @@
   }
 
   onMount(async () => {
-    await tick()
-    drawBBox()
+    // Wait for the transition to complete or it will mess with placement
+    setTimeout(drawBBox, 100)
+    // drawBBox()
   })
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={drawBBox} />
 
-<svg
-  in:fade={{ duration: 100 }}
-  class="depot-connections"
-  class:visible
-  width={innerWidth}
-  height={innerHeight}
-  viewBox="0 0 {innerWidth} {innerHeight}"
->
-  <!-- Draw an ellipse to avoid -->
-  {#if graphBoundingBox}
+{#if graphBoundingBox}
+  <svg
+    in:fade={{ duration: 100 }}
+    class="depot-connections"
+    class:visible
+    width={innerWidth}
+    height={innerHeight}
+    viewBox="0 0 {innerWidth} {innerHeight}"
+  >
+    <!-- Draw an ellipse to avoid -->
+
     <!-- Safe zone for attachment coordinates -->
     <rect
       id="midzone"
@@ -64,8 +66,8 @@
     {#each Object.entries($depotAttachments) as [address, attachment] (address)}
       <Attachment {attachment} />
     {/each}
-  {/if}
-</svg>
+  </svg>
+{/if}
 
 <style lang="scss">
   .depot-connections {

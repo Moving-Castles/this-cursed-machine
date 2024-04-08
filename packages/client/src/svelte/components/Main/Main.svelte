@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  // import { fade } from "svelte/transition"
   import { flicker } from "@modules/ui/transitions"
   import { player } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
@@ -11,7 +10,9 @@
   import OrderBar from "@components/Main/Bars/OrderBar.svelte"
   import Attachments from "@components/Main/Tabs/Pod/Attachments/Attachments.svelte"
 
+  import { sleep } from "@modules/utils"
   import { TABS } from "@modules/ui/enums"
+  import { valve } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
   import {
     sendMessage,
@@ -121,19 +122,23 @@
         <div class="order-bar">
           <OrderBar />
         </div>
-        <div class="tab-container">
-          {#if $tutorialProgress === 0}
-            <div class="dim" out:flicker={{ duration: 500 }} />
-          {/if}
-          <!-- Render the CurrentComponent if it's not null -->
-          {#if currentTabComponent}
-            <svelte:component this={currentTabComponent} />
-          {/if}
+        {#key $activeTab}
+          <div transition:valve class="tab-container">
+            {#if $tutorialProgress === 0}
+              <div class="dim" out:flicker={{ duration: 500 }} />
+            {/if}
+            <!-- Render the CurrentComponent if it's not null -->
+            {#if currentTabComponent}
+              <svelte:component this={currentTabComponent} />
+            {/if}
 
-          {#if $activeTab === 0}
-            <Attachments />
-          {/if}
-        </div>
+            {#if $activeTab === 0}
+              {#await sleep(100) then}
+                <Attachments />
+              {/await}
+            {/if}
+          </div>
+        {/key}
         <div class="tab-bar">
           <TabBar {tabList} />
         </div>
