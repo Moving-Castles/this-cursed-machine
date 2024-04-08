@@ -8,7 +8,7 @@
   import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 
-<div class="pod" in:fade>
+<div class="pod">
   <div class="running">
     {$networkIsRunning}
   </div>
@@ -16,7 +16,7 @@
   <div class="stats">
     <DepotsBox />
   </div>
-  <div class="graph">
+  <div class="graph" in:fade={{ duration: 100 }}>
     <Graph />
   </div>
 </div>

@@ -27,8 +27,9 @@
   $: empty = typedDepot.amount === 0
 
   const getConnectionName = (machineEntity: string) => {
-    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
-    if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
+    if (!$playerPod?.fixedEntities) return "none"
+    if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
+    if (machineEntity === $playerPod?.fixedEntities.outlet) return "O"
     return "none"
   }
 </script>

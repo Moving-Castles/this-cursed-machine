@@ -86,7 +86,7 @@
       clearMessage()
       sendMessage(
         "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-        { disappear: true },
+        { disappear: true }
       )
     }
   }
@@ -101,8 +101,6 @@
 
 {#if $player?.carriedBy}
   <div class="dust" />
-
-  <Attachments />
 
   <div class="split-screen">
     <div class="left-col">
@@ -130,6 +128,10 @@
           <!-- Render the CurrentComponent if it's not null -->
           {#if currentTabComponent}
             <svelte:component this={currentTabComponent} />
+          {/if}
+
+          {#if $activeTab === 0}
+            <Attachments />
           {/if}
         </div>
         <div class="tab-bar">
@@ -205,6 +207,7 @@
         position: relative;
         animation: hue-rotate-animation 5s infinite linear;
         overflow-y: auto;
+        overflow: hidden;
       }
 
       .tab-bar {

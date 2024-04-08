@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, tick } from "svelte"
+  import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
   import { activeTab } from "@svelte/modules/ui/stores"
@@ -16,12 +17,16 @@
     graphBoundingBox = graph?.getBoundingClientRect()
   }
 
-  onMount(drawBBox)
+  onMount(async () => {
+    await tick()
+    drawBBox()
+  })
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={drawBBox} />
 
 <svg
+  in:fade={{ duration: 100 }}
   class="depot-connections"
   class:visible
   width={innerWidth}
@@ -56,21 +61,21 @@
       fill="none"
     />
     <ellipse fill="none" stroke="none" />
+    {#each Object.entries($depotAttachments) as [address, attachment] (address)}
+      <Attachment {attachment} />
+    {/each}
   {/if}
-  {#each Object.entries($depotAttachments) as [address, attachment] (address)}
-    <Attachment {attachment} />
-  {/each}
 </svg>
 
 <style lang="scss">
   .depot-connections {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
     /* background: rgba(0, 0, 255, 0.2); */
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
+    z-index: 1;
 
     display: none;
     &.visible {
