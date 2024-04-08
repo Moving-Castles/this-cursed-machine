@@ -383,7 +383,9 @@ export const simulatedConnections = derived(
 export const networkIsRunning = derived(
   [simulatedDepots, playerPod, simulatedMachines],
   ([$simulatedDepots, $playerPod, $simulatedMachines]) => {
-    const outletKey = $playerPod?.fixedEntities.outlet
+    if (!$playerPod?.fixedEntities) return false
+
+    const outletKey = $playerPod?.fixedEntities?.outlet
     const outletEntity = $simulatedMachines[outletKey]
     if (!outletKey || !outletEntity) return false
 
@@ -411,7 +413,7 @@ export const networkIsRunning = derived(
      * Get used inlet depots
      * If any of the used inlet depots are empty, the network is not running
      */
-    const inletKeys = $playerPod.fixedEntities.inlets
+    const inletKeys = $playerPod?.fixedEntities?.inlets
     let usedInletKeys: string[] = []
     for (let i = 0; i < outletOutput.inletActive.length; i++) {
       if (outletOutput.inletActive[i]) {
@@ -472,8 +474,9 @@ export const depotAttachments = derived(
     const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
-      if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
-      if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
+      if (!$playerPod?.fixedEntities) return "none"
+      if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
+      if (machineEntity === $playerPod?.fixedEntities.outlet) return "O"
       return "none"
     }
 

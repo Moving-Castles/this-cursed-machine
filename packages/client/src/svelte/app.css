@@ -6,7 +6,6 @@
   --white: #d7d7c3;
   /* --white: #dcdccb; */
 
-
   --background: var(--black);
   --foreground: var(--white);
 
@@ -18,7 +17,6 @@
   --color-alert: #00e5ff;
   --color-info: #bb3af2;
   --color-success: #a4fa3b;
-
 
   /* Sizing */
   --default-padding: 1ch;
@@ -52,10 +50,19 @@
   letter-spacing: 0px;
 }
 
+main {
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
+  main {
+    display: block;
+  }
+}
+
 pre {
   font-family: var(--font-family);
 }
-
 
 *::-webkit-scrollbar {
   display: none;

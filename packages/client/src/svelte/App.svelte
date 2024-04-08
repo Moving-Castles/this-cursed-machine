@@ -26,6 +26,7 @@
   import Tutorial from "@components/Tutorial/Tutorial.svelte"
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
+  import MobileWarning from "@components/Main/MobileWarning.svelte"
 
   const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX
@@ -115,6 +116,8 @@
     <Tutorial />
   {/if}
 </main>
+
+<MobileWarning />
 
 <Toasts />
 <Assistant />

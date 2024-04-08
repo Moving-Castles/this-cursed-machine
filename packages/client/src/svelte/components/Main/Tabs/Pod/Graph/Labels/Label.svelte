@@ -39,7 +39,7 @@
 
   $: {
     if (material && amount && direction) {
-      words = [String(material), String(amount)]
+      words = [">>>", material]
     }
   }
 

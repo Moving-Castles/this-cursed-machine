@@ -1,19 +1,16 @@
 <script lang="ts">
   import { playerPod } from "@modules/state/base/stores"
   import { GRID, CELL } from "./constants"
-
   import {
     simulatedMachines,
     simulatedConnections,
   } from "@modules/state/simulated/stores"
-  import type { GraphMachines, GraphConnection } from "./types"
 
   import { createLayout } from "./layout"
 
   import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
-  import type { Grid } from "./Pathfinding/types"
 
   const width = GRID.WIDTH * CELL.WIDTH
   const height = GRID.HEIGHT * CELL.HEIGHT
@@ -26,7 +23,7 @@
 
   // Calculate the new layout based on new and old state
   $: layout = createLayout(
-    $playerPod.fixedEntities,
+    $playerPod?.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
     layout.graphMachines

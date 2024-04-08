@@ -27,8 +27,9 @@
   $: empty = typedDepot.amount === 0
 
   const getConnectionName = (machineEntity: string) => {
-    if ($playerPod.fixedEntities.inlets.includes(machineEntity)) return "I"
-    if (machineEntity === $playerPod.fixedEntities.outlet) return "O"
+    if (!$playerPod?.fixedEntities) return "none"
+    if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
+    if (machineEntity === $playerPod?.fixedEntities.outlet) return "O"
     return "none"
   }
 </script>
@@ -41,9 +42,9 @@
       class="overlay flash-fast"
     />
   {/if}
-  <div class="id">
+  <!-- <div class="id">
     <div>{index + 1}</div>
-  </div>
+  </div> -->
 
   <div class="content">
     {#if empty}
@@ -126,6 +127,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      &:not(.connected) {
+        &::after {
+          content: "";
+          position: absolute;
+          width: 40px;
+          height: 1px;
+          background: white;
+          transform: rotate(45deg);
+        }
+      }
 
       &.connected {
         background: var(--color-success);
