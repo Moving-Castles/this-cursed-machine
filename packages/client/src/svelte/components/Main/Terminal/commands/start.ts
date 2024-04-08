@@ -7,6 +7,7 @@ import {
   loadingSpinner,
   writeToTerminal,
 } from "@components/Main/Terminal/functions/writeToTerminal"
+import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
 import {
   waitForCompletion,
   waitForTransaction,
@@ -25,6 +26,7 @@ async function execute() {
     writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Memory erased")
 
     tutorialProgress.set(0)
+    clearTerminalOutput()
 
     return
   } catch (error) {

@@ -10,6 +10,9 @@
   import OrderBar from "@components/Main/Bars/OrderBar.svelte"
   import Attachments from "@components/Main/Tabs/Pod/Attachments/Attachments.svelte"
 
+  // Debug
+  import Certificate from "@components/Main/Tabs/Shop/Certificate.svelte"
+
   import { sleep } from "@modules/utils"
   import { TABS } from "@modules/ui/enums"
   import { valve } from "@modules/ui/transitions"

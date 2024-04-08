@@ -19,10 +19,8 @@
   }
 
   onMount(async () => {
-    console.log("on mount")
     // Wait for the transition to complete or it will mess with placement
     setTimeout(drawBBox, 100)
-    // drawBBox()
   })
 </script>
 

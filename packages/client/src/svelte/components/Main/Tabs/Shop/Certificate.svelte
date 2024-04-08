@@ -12,11 +12,17 @@
   let modalActive = false
   let userName = ""
 
+  const onKeyDown = e => {
+    if (e.key === "Enter") sendName()
+  }
+
   function isValidName(name: string): boolean {
     // Check for minimume length of 4
     const hasMinLength = name.length >= 4
     // Check for maximum length of 24
     const isLengthValid = name.length <= 24
+
+    // Further eval?
 
     return hasMinLength && isLengthValid
   }
@@ -41,6 +47,8 @@
   }
 </script>
 
+<svelte:window on:keydown|stopPropagation={onKeyDown} />
+
 <div class="shop-item">
   <div class="section material">
     <div>CERTIFICATE</div>
@@ -58,7 +66,12 @@
 </div>
 
 {#if modalActive}
-  <div class="certificate-modal" class:working in:fly>
+  <form
+    on:submit|stopPropagation|preventDefault={sendName}
+    class="certificate-modal"
+    class:working
+    in:fly
+  >
     <div class="inner-container">
       <div class="close">
         <button on:click={toggleModal}>X</button>
@@ -74,11 +87,11 @@
           <div class="spinner"><Spinner /></div>
         {:else}
           <input type="text" bind:value={userName} placeholder="Enter name" />
-          <button on:click={sendName}>Sign</button>
+          <input type="submit" on:click={sendName} value="Sign" />
         {/if}
       </div>
     </div>
-  </div>
+  </form>
 {/if}
 
 <style lang="scss">

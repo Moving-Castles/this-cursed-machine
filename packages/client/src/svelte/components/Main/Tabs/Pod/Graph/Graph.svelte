@@ -30,8 +30,6 @@
     const p = parent?.getBoundingClientRect()
     const c = child?.getBoundingClientRect()
 
-    console.log(p.width, c.width)
-
     const PADDING = 50
 
     const growWidth = p.width - PADDING * 2
@@ -72,6 +70,19 @@
         <MachineSelector {i} {address} {machine} />
       {/each}
       <svg id="graph" {width} {height}>
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="5"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
         {#each layout.graphConnections as connection (connection.id)}
           <Connection {connection} />
         {/each}
@@ -90,7 +101,7 @@
     align-items: center;
     position: relative;
     cursor: crosshair;
-    // transform: scale(1.1);
+    overflow: hidden;
 
     --cellHeight: 10px;
     --cellWidth: 10px;
