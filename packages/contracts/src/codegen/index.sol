@@ -15,6 +15,7 @@ import { BuildTracker } from "./tables/BuildTracker.sol";
 import { SpawnIndex } from "./tables/SpawnIndex.sol";
 import { EscapeIndex } from "./tables/EscapeIndex.sol";
 import { EscapeIndexRanked } from "./tables/EscapeIndexRanked.sol";
+import { EscapeRankName } from "./tables/EscapeRankName.sol";
 import { Tutorial } from "./tables/Tutorial.sol";
 import { TutorialLevel } from "./tables/TutorialLevel.sol";
 import { Order, OrderData } from "./tables/Order.sol";

@@ -40,11 +40,20 @@ export default defineWorld({
         SpawnIndex: "uint32", // How many players have spawned?
         EscapeIndex: "uint32", // How many players have escaped?
         EscapeIndexRanked: {
+            key: ["playerEntity", "completedOrdersRank", "pointsRank"],
+            schema: {
+                playerEntity: "bytes32",
+                completedOrdersRank: "uint32",
+                pointsRank: "uint32",
+                value: "uint32"
+            }
+        },
+        EscapeRankName: {
             key: ["completedOrdersRank", "pointsRank"],
             schema: {
                 completedOrdersRank: "uint32",
                 pointsRank: "uint32",
-                value: "uint32"
+                value: "string"
             }
         },
         // ...
