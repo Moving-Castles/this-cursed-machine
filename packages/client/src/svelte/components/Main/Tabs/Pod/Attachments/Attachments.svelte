@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from "svelte"
+  import { graphScale } from "@modules/ui/stores"
   import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
@@ -18,10 +19,8 @@
   }
 
   onMount(async () => {
-    console.log("on mount")
     // Wait for the transition to complete or it will mess with placement
     setTimeout(drawBBox, 100)
-    // drawBBox()
   })
 </script>
 

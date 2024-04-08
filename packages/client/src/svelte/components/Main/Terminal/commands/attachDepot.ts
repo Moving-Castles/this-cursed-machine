@@ -13,7 +13,6 @@ import { playSound } from "@modules/sound"
 import { attachDepot as sendAttachDepot } from "@modules/action"
 
 async function execute(depotEntity: string, targetEntity: string) {
-  console.log(depotEntity)
   try {
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
     // ...

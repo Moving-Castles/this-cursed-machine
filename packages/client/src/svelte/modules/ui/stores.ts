@@ -17,3 +17,4 @@ export const inspecting: Writable<GraphConnection | GraphMachine | null> =
 export const alignTooltip = writable("center") // "center" | "left" | "right" = "center"
 export const mouseX = writable(0)
 export const mouseY = writable(0)
+export const graphScale = writable(1)

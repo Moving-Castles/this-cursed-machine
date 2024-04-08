@@ -2,17 +2,13 @@
   import { fade } from "svelte/transition"
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
 
-  import { networkIsRunning } from "@modules/state/simulated/stores"
+  // import { networkIsRunning } from "@modules/state/simulated/stores"
 
   import DepotsBox from "@components/Main/Tabs/Pod/Depots/DepotsBox.svelte"
   import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 
 <div class="pod">
-  <div class="running">
-    {$networkIsRunning}
-  </div>
-
   <div class="stats">
     <DepotsBox />
   </div>

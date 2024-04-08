@@ -1,21 +1,92 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
   import { generators, generatePoints, generateSvgArrow } from "./svg"
-  import { fade } from "svelte/transition"
+  import { linear } from "svelte/easing"
   import { inspecting } from "@modules/ui/stores"
   import { draw } from "svelte/transition"
   import { CELL } from "../constants"
-  import { sleep } from "@modules/utils"
+  import Head from "./Head.svelte"
   import Label from "../Labels/Label.svelte"
 
   export let connection: GraphConnection
 
-  const options = Object.keys(generators)
+  const DURATION = 2000
+  const ARROW_OFFSET = 10
+
+  let animationFrameId: number
+  let headRotation = 0
+  let headPoint: SVGPoint
+
+  let pathElement: SVGPathElement
 
   let hover = false
+  let animationStart: number
   let activeCurve = "basis"
 
   $: carrying = connection?.products.length > 0
+  $: fill = connection.productive
+    ? "var(--color-alert)"
+    : carrying
+      ? "var(--color-success)"
+      : "var(--color-grey-light)"
+
+  const getRotationAtPoint = (
+    maxLength: number,
+    currentLength: number,
+    forwards: boolean
+  ) => {
+    // Calculate the angle of the arrow direction
+    const delta = 0.001 // small value for calculating the derivative
+    const pointBefore = pathElement.getPointAtLength(
+      forwards
+        ? Math.max(0, currentLength - delta)
+        : Math.max(0, maxLength - currentLength - delta)
+    )
+    const pointAfter = pathElement.getPointAtLength(
+      forwards
+        ? Math.min(maxLength, currentLength + delta)
+        : Math.min(maxLength, maxLength - currentLength + delta)
+    )
+    const dy = pointAfter.y - pointBefore.y
+    const dx = pointAfter.x - pointBefore.x
+    const angleInRadians = Math.atan2(dy, dx)
+    let angleInDegrees = angleInRadians * (180 / Math.PI)
+    if (angleInDegrees < 0) {
+      angleInDegrees += 360
+    }
+    return angleInDegrees
+  }
+
+  const startPolling = e => {
+    const intro = e.type.includes("intro")
+    // Timing logic
+    animationStart = performance.now()
+
+    const animate = e => {
+      const progress = (e - animationStart) / DURATION
+      const maxLength = pathElement.getTotalLength() - ARROW_OFFSET
+      const currentLength = maxLength * progress // Assume progress is the percentage of the path drawn
+      headPoint = pathElement.getPointAtLength(
+        intro ? currentLength : maxLength - currentLength
+      )
+
+      headRotation = getRotationAtPoint(maxLength, currentLength, intro)
+
+      // Update arrowhead position here
+
+      // Placeholder for the logic to update the arrowhead's position
+      // You will need to implement the actual logic based on your application's needs
+      animationFrameId = requestAnimationFrame(animate)
+    }
+    animate(animationStart)
+  }
+  const stopPolling = e => {
+    const intro = e.type.includes("intro")
+    cancelAnimationFrame(animationFrameId)
+    headPoint = pathElement.getPointAtLength(
+      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0
+    )
+  }
 
   const onMouseEnter = () => {
     if (!carrying) return
@@ -28,25 +99,11 @@
     hover = false
   }
 
-  const testCurve = e => {
-    if (import.meta.env.DEV && e.key === ">" && e.shiftKey) {
-      const index = options.indexOf(activeCurve)
-
-      activeCurve = options[(index + 1) % options.length]
-
-      d = generators[activeCurve](
-        generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
-      )
-    }
-  }
-
   $: d = generators[activeCurve](
     generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
   )
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>
-
-<svelte:window on:keydown={testCurve} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <g
@@ -58,7 +115,12 @@
   <path transition:draw {d} class="pseudo" />
   <path
     {d}
-    transition:draw
+    on:introstart={startPolling}
+    on:outrostart={startPolling}
+    on:outroend={stopPolling}
+    on:introend={stopPolling}
+    bind:this={pathElement}
+    transition:draw={{ duration: DURATION, easing: linear }}
     class="visible"
     class:hover
     class:carrying
@@ -66,6 +128,11 @@
   />
   <Label {connection} {carrying} {hover} productive={connection.productive} />
 </g>
+{#if headPoint}
+  {#key headPoint}
+    <Head {fill} rotation={headRotation} point={headPoint} />
+  {/key}
+{/if}
 
 <style lang="scss">
   g {
