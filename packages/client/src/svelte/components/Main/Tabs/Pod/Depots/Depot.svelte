@@ -42,9 +42,9 @@
       class="overlay flash-fast"
     />
   {/if}
-  <!-- <div class="id">
+  <div class="id">
     <div>{index + 1}</div>
-  </div> -->
+  </div>
 
   <div class="content">
     {#if empty}
@@ -64,7 +64,10 @@
 
   <div class="connection" class:connected>
     {#if connected}
-      {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`}
+      ↓
+      <!-- {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`} -->
+    {:else}
+      -
     {/if}
   </div>
 </div>
@@ -76,7 +79,7 @@
     overflow: hidden;
     font-size: var(--font-size-small);
     height: 70px;
-    background: rgb(74, 74, 74);
+    background: var(--color-grey-dark);
     display: flex;
     position: relative;
 
@@ -91,14 +94,13 @@
     }
 
     .id {
-      width: 50px;
-      border-right: 1px solid var(--foreground);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: var(--font-size-normal);
+      font-size: var(--font-size);
       background: var(--foreground);
       color: var(--background);
+      padding: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .content {
@@ -115,7 +117,7 @@
 
       .material-type {
         background: var(--foreground);
-        color: rgb(74, 74, 74);
+        color: var(--color-grey-dark);
         padding: 2px;
         margin-right: 1ch;
       }
@@ -127,17 +129,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: var(--font-size) !important;
 
-      &:not(.connected) {
-        &::after {
-          content: "";
-          position: absolute;
-          width: 40px;
-          height: 1px;
-          background: white;
-          transform: rotate(45deg);
-        }
-      }
+      // &:not(.connected) {
+      //   &::after {
+      //     content: "";
+      //     position: absolute;
+      //     width: 40px;
+      //     height: 1px;
+      //     background: white;
+      //     transform: rotate(45deg);
+      //   }
+      // }
 
       &.connected {
         background: var(--color-success);

@@ -5,11 +5,11 @@ THIS CURSED MACHINE is a sci-fi body horror fulfilment center simulator. Reverse
 ## Concepts
 
 - **Pod:** Container for a player's game. Holds machines, depots, etc...
-- **Network:** Machine and connections that transform materials.
+- **Network:** Machines and connections that transform materials.
 - **Machine:** Node in the network that transforms materials.
 - **Player:** Also known as stump. The player's avatar in the game. A machine.
-- **Depot:** Storage space for materials.
-- **Offer:** A material that can be bought for $BUGS. Deposited in a depot.
-- **Order:** Request for anamount of a material. Player is rewarded with $BUGS on fulfilment.  
 - **Recipe:** Rule for how a machine transforms an input into an output.
+- **Depot:** Storage space for materials.
+- **Order:** Request for an amount of a material. Player is rewarded with $BUGS on fulfilment.  
+- **Offer:** A material that can be bought for $BUGS. Deposited in a depot.
 

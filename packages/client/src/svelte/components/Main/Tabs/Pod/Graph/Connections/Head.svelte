@@ -2,7 +2,8 @@
   // import Fist from "./Fist.svelte"
   // import Screw from "./Screw.svelte"
   // import TCMSide from "./TCMSide.svelte"
-  import Snake from "./Snake.svelte"
+  // import Snake from "./Snake.svelte"
+  import Square from "./Square.svelte"
 
   // Use SVG,
   // Make sure the direction of the element is facing up.
@@ -20,7 +21,8 @@
     90}deg) translate(-50%, -100%)"
 >
   <!-- <TCMSide {fill} /> -->
-  <Snake {fill} />
+  <!-- <Snake {fill} /> -->
+  <Square {fill} />
   <!-- <Screw {fill} /> -->
   <!-- <Fist {fill} /> -->
 </g>

@@ -31,7 +31,7 @@
     padding: 1rem;
     gap: 1rem;
 
-    @media (min-width: 1200px) {
+    @media (min-width: 900px) {
       display: none;
     }
 
