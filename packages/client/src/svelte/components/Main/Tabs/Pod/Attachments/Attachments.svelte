@@ -81,8 +81,9 @@
     width: 100vw;
     height: 100vh;
     z-index: 1;
-
     display: none;
+    clip-path: inset(0px 0px 0px 500px);
+
     &.visible {
       display: block;
     }

@@ -128,6 +128,17 @@
       justify-content: center;
       align-items: center;
 
+      &:not(.connected) {
+        &::after {
+          content: "";
+          position: absolute;
+          width: 40px;
+          height: 1px;
+          background: white;
+          transform: rotate(45deg);
+        }
+      }
+
       &.connected {
         background: var(--color-success);
         color: var(--background);
