@@ -18,6 +18,7 @@
   }
 
   onMount(async () => {
+    console.log("on mount")
     // Wait for the transition to complete or it will mess with placement
     setTimeout(drawBBox, 100)
     // drawBBox()
@@ -27,46 +28,48 @@
 <svelte:window bind:innerWidth bind:innerHeight on:resize={drawBBox} />
 
 {#if graphBoundingBox}
-  <svg
-    in:fade={{ duration: 100 }}
-    class="depot-connections"
-    class:visible
-    width={innerWidth}
-    height={innerHeight}
-    viewBox="0 0 {innerWidth} {innerHeight}"
-  >
-    <!-- Draw an ellipse to avoid -->
+  {#key graphBoundingBox.x}
+    <svg
+      in:fade={{ duration: 100 }}
+      class="depot-connections"
+      class:visible
+      width={innerWidth}
+      height={innerHeight}
+      viewBox="0 0 {innerWidth} {innerHeight}"
+    >
+      <!-- Draw an ellipse to avoid -->
 
-    <!-- Safe zone for attachment coordinates -->
-    <rect
-      id="midzone"
-      x={graphBoundingBox.left + 200}
-      y={graphBoundingBox.top - 40}
-      width={graphBoundingBox.width - 400}
-      height={40}
-      fill="none"
-    />
-    <rect
-      id="safezone-1"
-      x={graphBoundingBox.left - 100}
-      y={graphBoundingBox.top}
-      width={100}
-      height={100}
-      fill="none"
-    />
-    <rect
-      id="safezone-2"
-      x={graphBoundingBox.right}
-      y={graphBoundingBox.top}
-      width={100}
-      height={100}
-      fill="none"
-    />
-    <ellipse fill="none" stroke="none" />
-    {#each Object.entries($depotAttachments) as [address, attachment] (address)}
-      <Attachment {attachment} />
-    {/each}
-  </svg>
+      <!-- Safe zone for attachment coordinates -->
+      <rect
+        id="midzone"
+        x={graphBoundingBox.left + 200}
+        y={graphBoundingBox.top - 40}
+        width={graphBoundingBox.width - 400}
+        height={40}
+        fill="none"
+      />
+      <rect
+        id="safezone-1"
+        x={graphBoundingBox.left - 100}
+        y={graphBoundingBox.top}
+        width={100}
+        height={100}
+        fill="none"
+      />
+      <rect
+        id="safezone-2"
+        x={graphBoundingBox.right}
+        y={graphBoundingBox.top}
+        width={100}
+        height={100}
+        fill="none"
+      />
+      <ellipse fill="none" stroke="none" />
+      {#each Object.entries($depotAttachments) as [address, attachment] (address)}
+        <Attachment {attachment} />
+      {/each}
+    </svg>
+  {/key}
 {/if}
 
 <style lang="scss">

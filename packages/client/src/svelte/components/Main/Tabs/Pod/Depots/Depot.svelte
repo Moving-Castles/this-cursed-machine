@@ -42,9 +42,9 @@
       class="overlay flash-fast"
     />
   {/if}
-  <div class="id">
+  <!-- <div class="id">
     <div>{index + 1}</div>
-  </div>
+  </div> -->
 
   <div class="content">
     {#if empty}
