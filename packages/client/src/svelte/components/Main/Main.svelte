@@ -134,9 +134,7 @@
               <svelte:component this={currentTabComponent} />
             {/if}
 
-            {#if $activeTab === 0}
-              <Attachments />
-            {/if}
+            <Attachments />
           </div>
         {/key}
         <div class="tab-bar">

@@ -2,7 +2,7 @@
   import { onMount, tick } from "svelte"
   import { playerPod } from "@modules/state/base/stores"
   import { GRID, CELL } from "./constants"
-  import { graphScale } from "@modules/ui/stores"
+  import { graphScale, graphElement } from "@modules/ui/stores"
   import {
     simulatedMachines,
     simulatedConnections,
@@ -69,7 +69,13 @@
       {#each Object.entries(layout.graphMachines) as [address, machine], i (address)}
         <MachineSelector {i} {address} {machine} />
       {/each}
-      <svg id="graph" {width} {height}>
+      <svg
+        bind:this={$graphElement}
+        id="graph"
+        {width}
+        {height}
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
           <marker
             id="arrow"
@@ -103,8 +109,8 @@
     cursor: crosshair;
     overflow: hidden;
 
-    --cellHeight: 10px;
-    --cellWidth: 10px;
+    --cellHeight: 9px;
+    --cellWidth: 9px;
 
     .grid {
       position: relative;
