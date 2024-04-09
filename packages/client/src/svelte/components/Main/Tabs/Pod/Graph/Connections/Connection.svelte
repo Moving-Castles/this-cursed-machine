@@ -10,8 +10,6 @@
 
   export let connection: GraphConnection
 
-  $: console.log($selectedOption, connection.id)
-
   const DURATION = 400
   const ARROW_OFFSET = 0
 

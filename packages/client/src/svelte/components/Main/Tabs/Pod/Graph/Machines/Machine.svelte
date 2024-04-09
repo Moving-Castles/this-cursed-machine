@@ -27,6 +27,7 @@
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
   $: highlight = $selectedOption?.value === address
+  $: selectedPortIndex = $selectedOption?.value
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
@@ -34,12 +35,14 @@
         ? (MACHINE.HEIGHT - 1) * CELL.HEIGHT
         : 0
 
-    if (machine.machineType === MACHINE_TYPE.SPLITTER) {
+    if (
+      machine.machineType === MACHINE_TYPE.SPLITTER ||
+      machine.machineType === MACHINE_TYPE.CENTRIFUGE ||
+      machine.machineType === MACHINE_TYPE.GRINDER ||
+      machine.machineType === MACHINE_TYPE.RAT_CAGE ||
+      machine.machineType === MACHINE_TYPE.MEALWORM_VAT
+    ) {
       return [
-        {
-          direction: DIRECTION.INCOMING,
-          style: `top: ${verticalPosition}px; left: ${CELL.WIDTH}px;`,
-        },
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 4}px;`,
@@ -47,6 +50,10 @@
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 6}px;`,
+        },
+        {
+          direction: DIRECTION.INCOMING,
+          style: `top: ${verticalPosition}px; left: ${CELL.WIDTH}px;`,
         },
       ]
     } else if (machine.machineType === MACHINE_TYPE.MIXER) {
@@ -103,8 +110,12 @@
           : [label]}
       />
     </div>
-    {#each ports as port}
-      <div class="port {DIRECTION[port.direction]}" style={port.style} />
+    {#each ports as port, i}
+      <div
+        class:highlight={selectedPortIndex === i}
+        class="port {DIRECTION[port.direction]}"
+        style={port.style}
+      />
     {/each}
   </div>
 </div>
