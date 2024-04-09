@@ -1,14 +1,16 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
   import { generators, generatePoints, generateSvgArrow } from "./svg"
+  import { inspecting, selectedOption } from "@modules/ui/stores"
   import { linear } from "svelte/easing"
-  import { inspecting } from "@modules/ui/stores"
   import { draw } from "svelte/transition"
   import { CELL } from "../constants"
   import Head from "./Head.svelte"
   import Label from "../Labels/Label.svelte"
 
   export let connection: GraphConnection
+
+  $: console.log($selectedOption, connection.id)
 
   const DURATION = 400
   const ARROW_OFFSET = 0
@@ -29,6 +31,7 @@
     : carrying
       ? "var(--color-success)"
       : "var(--color-grey-light)"
+  $: highlight = $selectedOption?.value === connection.id
 
   const getRotationAtPoint = (
     maxLength: number,
@@ -109,6 +112,7 @@
 <g
   class:hover
   class:carrying
+  class:highlight
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >

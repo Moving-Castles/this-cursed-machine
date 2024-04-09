@@ -80,7 +80,7 @@
     height: 100vh;
     z-index: 1;
     display: none;
-    clip-path: inset(0px 0px 0px 500px);
+    clip-path: inset(122px 0px 0px 500px);
 
     &.visible {
       display: block;
