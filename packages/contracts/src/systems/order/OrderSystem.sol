@@ -145,7 +145,11 @@ contract OrderSystem is System {
 
     OrderData memory currentOrder = Order.get(currentOrderId);
 
-    require(Completed.length(currentOrderId) < currentOrder.maxPlayers, "max players reached");
+    // maxPlayers == 0 means the order has no limit
+    require(
+      currentOrder.maxPlayers == 0 || Completed.length(currentOrderId) < currentOrder.maxPlayers,
+      "max players reached"
+    );
 
     // expirationBlock == 0 means the order never expires
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
