@@ -7,14 +7,12 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { inspecting } from "@modules/ui/stores"
+  import { inspecting, selectedOption } from "@modules/ui/stores"
 
   import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
 
   export let address: string
   export let machine: GraphMachine
-
-  $: producing = machine?.products && machine?.products.length > 0
 
   const onMouseEnter = () => {
     if (!producing) return
@@ -25,8 +23,10 @@
     inspecting.set(null)
   }
 
+  $: producing = machine?.products && machine?.products.length > 0
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
+  $: highlight = $selectedOption?.value === address
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
@@ -86,6 +86,7 @@
   id="machine-{address}"
   class="machine {MACHINE_TYPE[machine.machineType]}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  class:highlight
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade

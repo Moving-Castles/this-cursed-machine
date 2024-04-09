@@ -12,8 +12,6 @@
   // Quick fix: only show when the first tab (pod) is active
   $: visible = $activeTab === 0
 
-  console.log("visible", visible)
-
   const drawBBox = () => {
     const graph = document.getElementById("graph")
     graphBoundingBox = graph?.getBoundingClientRect()
@@ -22,7 +20,6 @@
   onMount(async () => {
     // Wait for the transition to complete or it will mess with placement
     setTimeout(drawBBox, 100)
-    console.log("drawBBox")
   })
 </script>
 

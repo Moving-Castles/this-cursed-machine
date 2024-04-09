@@ -33,19 +33,19 @@
   const getRotationAtPoint = (
     maxLength: number,
     currentLength: number,
-    forwards: boolean,
+    forwards: boolean
   ) => {
     // Calculate the angle of the arrow direction
     const delta = 0.001 // small value for calculating the derivative
     const pointBefore = pathElement.getPointAtLength(
       forwards
         ? Math.max(0, currentLength - delta)
-        : Math.max(0, maxLength - currentLength - delta),
+        : Math.max(0, maxLength - currentLength - delta)
     )
     const pointAfter = pathElement.getPointAtLength(
       forwards
         ? Math.min(maxLength, currentLength + delta)
-        : Math.min(maxLength, maxLength - currentLength + delta),
+        : Math.min(maxLength, maxLength - currentLength + delta)
     )
     const dy = pointAfter.y - pointBefore.y
     const dx = pointAfter.x - pointBefore.x
@@ -67,7 +67,7 @@
       const maxLength = pathElement.getTotalLength() - ARROW_OFFSET
       const currentLength = maxLength * progress // Assume progress is the percentage of the path drawn
       headPoint = pathElement.getPointAtLength(
-        intro ? currentLength : maxLength - currentLength,
+        intro ? currentLength : maxLength - currentLength
       )
 
       headRotation = getRotationAtPoint(maxLength, currentLength, intro)
@@ -84,7 +84,7 @@
     const intro = e.type.includes("intro")
     cancelAnimationFrame(animationFrameId)
     headPoint = pathElement.getPointAtLength(
-      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0,
+      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0
     )
   }
 
@@ -100,7 +100,7 @@
   }
 
   $: d = generators[activeCurve](
-    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT),
+    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
   )
   $: points = generateSvgArrow(connection, CELL.WIDTH, CELL.HEIGHT)
 </script>

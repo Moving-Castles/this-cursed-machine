@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher, tick } from "svelte"
-  import { MACHINE_TYPE } from "@modules/state/base/enums"
   import type { SelectOption } from "@components/Main/Terminal/types"
+  import { onMount, createEventDispatcher, tick, onDestroy } from "svelte"
+  import { MACHINE_TYPE } from "@modules/state/base/enums"
   import { playSound } from "@modules/sound"
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
+  import { selectedOption } from "@modules/ui/stores"
 
   type ReturnFunction = (value: string | MACHINE_TYPE | null) => void
 
@@ -17,6 +18,16 @@
 
   let selectedIndex = 0
   let selectContainerElement: HTMLDivElement
+
+  $: {
+    const v = selectOptions[selectedIndex]
+    if (v) {
+      selectedOption.set(v)
+    } else {
+      console.log("no v")
+      selectedOption.set(false)
+    }
+  }
 
   function returnValue(value: string | MACHINE_TYPE | null) {
     if (returnFunction) {
@@ -63,6 +74,7 @@
         playSound("tcm", "selectionEsc")
         // Close the options list without making a selection
         returnValue(null)
+        selectedIndex = -1
         break
     }
   }
@@ -75,6 +87,10 @@
     selectContainerElement.focus()
     await tick()
     scrollToEnd()
+  })
+
+  onDestroy(() => {
+    selectedOption.set(false)
   })
 </script>
 
