@@ -72,6 +72,10 @@ pre {
   cursor: none;
 }
 
+.player:hover,
+.machine:hover,
+.connection:hover,
+.depot-item:hover,
 .highlight {
   animation: filterin 0.1s ease forwards;
 }

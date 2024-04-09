@@ -108,6 +108,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <g
+  class="connection"
   class:hover
   class:carrying
   class:highlight

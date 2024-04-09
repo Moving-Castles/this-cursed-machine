@@ -136,7 +136,6 @@ function defaultMachine(
     return outputs
   } else {
     // Two outputs
-
     outputs[0] = {
       machineId: input.machineId,
       materialType: outputMaterials[0],

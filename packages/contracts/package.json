@@ -5,7 +5,7 @@
   "scripts": {
     "build": "mud build",
     "clean": "forge clean && rimraf src/codegen",
-    "deploy:local": "pnpm run build && mud deploy",
+    "deploy:local": "pnpm run build && mud deploy && pnpm exec ./scripts/progression/mainGameSetup.sh",
     "dev": "pnpm mud dev-contracts",
     "mud-test-gas-report": "GAS_REPORTER_ENABLED=true mud test | pnpm gas-report --stdin --save gas-report.json",
     "lint": "pnpm run prettier && pnpm run solhint",
