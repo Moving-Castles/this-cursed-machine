@@ -18,7 +18,7 @@ contract DevSystem is System {
     Tutorial.deleteRecord(playerEntity);
 
     // Set current order
-    CurrentOrder.set(podEntity, bytes32(0));
+    CurrentOrder.set(playerEntity, bytes32(0));
 
     Name.set(playerEntity, "MEATBAG66");
 

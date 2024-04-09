@@ -85,6 +85,7 @@
     border: 5px double var(--color-success);
     color: var(--color-success);
     position: relative;
+    user-select: none;
 
     .image {
       line-height: 0;

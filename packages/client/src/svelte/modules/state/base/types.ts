@@ -84,7 +84,6 @@ declare global {
     machinesInPod: string[]
     depotsInPod: string[]
     buildTracker: number[]
-    currentOrder: string
     fixedEntities: FixedEntities
   }
 
@@ -95,6 +94,7 @@ declare global {
     spawnIndex: number
     name?: string
     carriedBy: string
+    currentOrder: string
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number

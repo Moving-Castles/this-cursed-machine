@@ -444,8 +444,8 @@ export const playerOrder = derived(
     if (!$player || !$orders || !$playerPod || !$availableOrders) return null
 
     return $player.tutorial
-      ? $orders[$playerPod.currentOrder]
-      : $availableOrders[$playerPod.currentOrder]
+      ? $orders[$player.currentOrder]
+      : $availableOrders[$player.currentOrder]
   }
 )
 

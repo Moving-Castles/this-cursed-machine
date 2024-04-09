@@ -66,7 +66,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     startGasReport("Create order as normal user");
-    bytes32 order = world.createOrder("Test order", MATERIAL_TYPE.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
+    world.createOrder("Test order", MATERIAL_TYPE.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
     endGasReport();
 
     vm.stopPrank();
@@ -144,13 +144,13 @@ contract OrderSystemTest is BaseTest {
     world.accept(orderEntity);
     endGasReport();
 
-    assertEq(CurrentOrder.get(podEntity), orderEntity);
+    assertEq(CurrentOrder.get(playerEntity), orderEntity);
 
     startGasReport("Unaccept order");
     world.unaccept();
     endGasReport();
 
-    assertEq(CurrentOrder.get(podEntity), bytes32(0));
+    assertEq(CurrentOrder.get(playerEntity), bytes32(0));
 
     vm.stopPrank();
   }
@@ -191,7 +191,7 @@ contract OrderSystemTest is BaseTest {
     world.ship(depotsInPod[1]);
     endGasReport();
 
-    assertEq(CurrentOrder.get(podEntity), bytes32(0));
+    assertEq(CurrentOrder.get(playerEntity), bytes32(0));
     assertEq(EarnedPoints.get(playerEntity), 1000);
     assertEq(Completed.get(orderEntity)[0], playerEntity);
     assertEq(Completed.get(playerEntity)[0], orderEntity);

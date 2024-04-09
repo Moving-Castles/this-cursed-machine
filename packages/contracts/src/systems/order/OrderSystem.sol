@@ -29,6 +29,7 @@ contract OrderSystem is System {
     uint32 _maxPlayers
   ) public returns (bytes32 orderEntity) {
     require(_maxPlayers > 0, "max players must be greater than 0");
+    // @todo: limit title length
 
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
@@ -114,7 +115,7 @@ contract OrderSystem is System {
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
     require(!ArrayLib.includes(Completed.get(_orderEntity), playerEntity), "order already completed");
 
-    CurrentOrder.set(podEntity, _orderEntity);
+    CurrentOrder.set(playerEntity, _orderEntity);
   }
 
   /**
@@ -122,7 +123,7 @@ contract OrderSystem is System {
    */
   function unaccept() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    CurrentOrder.set(CarriedBy.get(playerEntity), bytes32(0));
+    CurrentOrder.set(playerEntity, bytes32(0));
   }
 
   /**
@@ -139,7 +140,7 @@ contract OrderSystem is System {
     // You can't ship a depot that is connected
     require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
-    bytes32 currentOrderId = CurrentOrder.get(podEntity);
+    bytes32 currentOrderId = CurrentOrder.get(playerEntity);
     require(currentOrderId != bytes32(0), "no order");
 
     OrderData memory currentOrder = Order.get(currentOrderId);
@@ -156,7 +157,7 @@ contract OrderSystem is System {
     );
 
     // Clear currentOrder
-    CurrentOrder.set(podEntity, bytes32(0));
+    CurrentOrder.set(playerEntity, bytes32(0));
 
     // Empty depot
     MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
