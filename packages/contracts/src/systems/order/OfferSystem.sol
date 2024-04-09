@@ -36,8 +36,6 @@ contract OfferSystem is System {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    LibToken.transferToken(_world(), offerData.cost);
-
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 
     /*
@@ -45,7 +43,13 @@ contract OfferSystem is System {
      * - if it is empty, fill it
      * - if it is the same material, add to it
      */
+
+    bytes32 targetDepot;
+
     for (uint32 i = 0; i < depotsInPod.length; i++) {
+      // if depot has other material, skip
+      // if depot is empty, select it
+      // if the depot has same material
       if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
         MaterialType.set(depotsInPod[i], offerData.materialType);
         Amount.set(depotsInPod[i], offerData.amount);
@@ -55,6 +59,8 @@ contract OfferSystem is System {
         break;
       }
     }
+
+    LibToken.transferToken(_world(), offerData.cost);
 
     LibNetwork.resolve(podEntity);
   }
