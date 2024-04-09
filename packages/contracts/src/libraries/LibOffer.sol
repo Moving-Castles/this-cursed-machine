@@ -16,10 +16,7 @@ library LibOffer {
     offerEntity = getUniqueEntity();
     EntityType.set(offerEntity, ENTITY_TYPE.OFFER);
 
-    Offer.set(
-      offerEntity,
-      OfferData({ creationBlock: block.number, materialType: _materialType, amount: _amount, cost: _cost })
-    );
+    Offer.set(offerEntity, OfferData({ materialType: _materialType, amount: _amount, cost: _cost }));
 
     return offerEntity;
   }

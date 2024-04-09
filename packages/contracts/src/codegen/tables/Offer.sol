@@ -20,7 +20,6 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { MATERIAL_TYPE } from "./../common.sol";
 
 struct OfferData {
-  uint256 creationBlock;
   MATERIAL_TYPE materialType;
   uint32 amount;
   uint32 cost;
@@ -31,12 +30,12 @@ library Offer {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f666665720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0029040020010404000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0009030001040400000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, uint8, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x002904001f000303000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint8, uint32, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x0009030000030300000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -52,11 +51,10 @@ library Offer {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](4);
-    fieldNames[0] = "creationBlock";
-    fieldNames[1] = "materialType";
-    fieldNames[2] = "amount";
-    fieldNames[3] = "cost";
+    fieldNames = new string[](3);
+    fieldNames[0] = "materialType";
+    fieldNames[1] = "amount";
+    fieldNames[2] = "cost";
   }
 
   /**
@@ -74,55 +72,13 @@ library Offer {
   }
 
   /**
-   * @notice Get creationBlock.
-   */
-  function getCreationBlock(bytes32 key) internal view returns (uint256 creationBlock) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Get creationBlock.
-   */
-  function _getCreationBlock(bytes32 key) internal view returns (uint256 creationBlock) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
-  }
-
-  /**
-   * @notice Set creationBlock.
-   */
-  function setCreationBlock(bytes32 key, uint256 creationBlock) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((creationBlock)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set creationBlock.
-   */
-  function _setCreationBlock(bytes32 key, uint256 creationBlock) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((creationBlock)), _fieldLayout);
-  }
-
-  /**
    * @notice Get materialType.
    */
   function getMaterialType(bytes32 key) internal view returns (MATERIAL_TYPE materialType) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -133,7 +89,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return MATERIAL_TYPE(uint8(bytes1(_blob)));
   }
 
@@ -144,7 +100,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(materialType)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(materialType)), _fieldLayout);
   }
 
   /**
@@ -154,7 +110,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked(uint8(materialType)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(materialType)), _fieldLayout);
   }
 
   /**
@@ -164,7 +120,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -175,7 +131,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -186,7 +142,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((amount)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((amount)), _fieldLayout);
   }
 
   /**
@@ -196,7 +152,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((amount)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((amount)), _fieldLayout);
   }
 
   /**
@@ -206,7 +162,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -217,7 +173,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -228,7 +184,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((cost)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((cost)), _fieldLayout);
   }
 
   /**
@@ -238,7 +194,7 @@ library Offer {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((cost)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((cost)), _fieldLayout);
   }
 
   /**
@@ -274,8 +230,8 @@ library Offer {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, uint256 creationBlock, MATERIAL_TYPE materialType, uint32 amount, uint32 cost) internal {
-    bytes memory _staticData = encodeStatic(creationBlock, materialType, amount, cost);
+  function set(bytes32 key, MATERIAL_TYPE materialType, uint32 amount, uint32 cost) internal {
+    bytes memory _staticData = encodeStatic(materialType, amount, cost);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -289,8 +245,8 @@ library Offer {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, uint256 creationBlock, MATERIAL_TYPE materialType, uint32 amount, uint32 cost) internal {
-    bytes memory _staticData = encodeStatic(creationBlock, materialType, amount, cost);
+  function _set(bytes32 key, MATERIAL_TYPE materialType, uint32 amount, uint32 cost) internal {
+    bytes memory _staticData = encodeStatic(materialType, amount, cost);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -305,7 +261,7 @@ library Offer {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, OfferData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.creationBlock, _table.materialType, _table.amount, _table.cost);
+    bytes memory _staticData = encodeStatic(_table.materialType, _table.amount, _table.cost);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -320,7 +276,7 @@ library Offer {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, OfferData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.creationBlock, _table.materialType, _table.amount, _table.cost);
+    bytes memory _staticData = encodeStatic(_table.materialType, _table.amount, _table.cost);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -336,14 +292,12 @@ library Offer {
    */
   function decodeStatic(
     bytes memory _blob
-  ) internal pure returns (uint256 creationBlock, MATERIAL_TYPE materialType, uint32 amount, uint32 cost) {
-    creationBlock = (uint256(Bytes.getBytes32(_blob, 0)));
+  ) internal pure returns (MATERIAL_TYPE materialType, uint32 amount, uint32 cost) {
+    materialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 0)));
 
-    materialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 32)));
+    amount = (uint32(Bytes.getBytes4(_blob, 1)));
 
-    amount = (uint32(Bytes.getBytes4(_blob, 33)));
-
-    cost = (uint32(Bytes.getBytes4(_blob, 37)));
+    cost = (uint32(Bytes.getBytes4(_blob, 5)));
   }
 
   /**
@@ -357,7 +311,7 @@ library Offer {
     EncodedLengths,
     bytes memory
   ) internal pure returns (OfferData memory _table) {
-    (_table.creationBlock, _table.materialType, _table.amount, _table.cost) = decodeStatic(_staticData);
+    (_table.materialType, _table.amount, _table.cost) = decodeStatic(_staticData);
   }
 
   /**
@@ -384,13 +338,8 @@ library Offer {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(
-    uint256 creationBlock,
-    MATERIAL_TYPE materialType,
-    uint32 amount,
-    uint32 cost
-  ) internal pure returns (bytes memory) {
-    return abi.encodePacked(creationBlock, materialType, amount, cost);
+  function encodeStatic(MATERIAL_TYPE materialType, uint32 amount, uint32 cost) internal pure returns (bytes memory) {
+    return abi.encodePacked(materialType, amount, cost);
   }
 
   /**
@@ -400,12 +349,11 @@ library Offer {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    uint256 creationBlock,
     MATERIAL_TYPE materialType,
     uint32 amount,
     uint32 cost
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(creationBlock, materialType, amount, cost);
+    bytes memory _staticData = encodeStatic(materialType, amount, cost);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

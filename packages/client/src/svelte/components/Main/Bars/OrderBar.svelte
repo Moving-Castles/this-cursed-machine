@@ -5,7 +5,7 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
-  import { UI_SCALE_FACTOR} from "@modules/ui/constants"
+  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 </script>
 
 <div class="order-bar" class:hidden={$tutorialProgress < 1}>
@@ -16,8 +16,8 @@
       {#if !$playerOrder}
         NONE
       {:else}
-        {$playerOrder?.order.goalAmount / UI_SCALE_FACTOR}
-        {MATERIAL_TYPE[$playerOrder?.order.goalMaterialType]}
+        {$playerOrder?.order.amount / UI_SCALE_FACTOR}
+        {MATERIAL_TYPE[$playerOrder?.order.materialType]}
       {/if}
     </div>
 

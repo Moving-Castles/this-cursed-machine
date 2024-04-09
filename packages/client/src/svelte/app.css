@@ -43,9 +43,9 @@
   /* user-select: none; */
   margin: 0;
   padding: 0;
-  font-variation-settings:
+  /* font-variation-settings:
     "BLED" 0,
-    "SCAN" 0;
+    "SCAN" 0; */
   text-transform: uppercase;
   letter-spacing: 0px;
 }

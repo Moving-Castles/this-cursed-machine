@@ -457,8 +457,8 @@ export const shippableDepots = derived(
     return Object.fromEntries(
       Object.entries($simulatedDepots).map(([_, depot]) => {
         if (
-          depot.materialType === $playerOrder?.order.goalMaterialType &&
-          depot.amount >= $playerOrder?.order.goalAmount
+          depot.materialType === $playerOrder?.order.materialType &&
+          depot.amount >= $playerOrder?.order.amount
         ) {
           return [_, true]
         }

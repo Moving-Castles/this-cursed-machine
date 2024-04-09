@@ -16,7 +16,6 @@
 
   <div class="completed">
     <div>
-      <!-- TOKEN BALANCE -->
       <div class="token-balance">
         <NumberGoingUp
           value={$player.tokenBalances ?? 0}
@@ -43,6 +42,7 @@
         padding: 2px;
         background: var(--foreground);
         color: var(--background);
+        font-feature-settings: "ss01" 1;
       }
     }
   }

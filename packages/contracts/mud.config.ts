@@ -41,20 +41,19 @@ export default defineWorld({
             schema: {
                 key: "bytes32",
                 creationBlock: "uint256",
+                creator: "bytes32",
+                materialType: "MATERIAL_TYPE",
+                amount: "uint32",
                 expirationBlock: "uint256",
-                resourceMaterialType: "MATERIAL_TYPE",
-                resourceAmount: "uint32",
-                goalMaterialType: "MATERIAL_TYPE",
-                goalAmount: "uint32",
-                rewardAmount: "uint32",
-                maxPlayers: "uint32"
+                reward: "uint32",
+                maxPlayers: "uint32",
+                title: "string"
             }
         },
         Offer: {
             key: ["key"],
             schema: {
                 key: "bytes32",
-                creationBlock: "uint256",
                 materialType: "MATERIAL_TYPE",
                 amount: "uint32",
                 cost: "uint32",

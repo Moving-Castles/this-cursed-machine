@@ -50,22 +50,64 @@ contract OrderSystemTest is BaseTest {
 
     prankAdmin();
     // Create order
-    startGasReport("Create order");
-    world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    startGasReport("Create order as admin");
+    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
     endGasReport();
 
     vm.stopPrank();
   }
 
-  function testRevertCreateOrderNotAllowed() public {
+  function testRevertCreateOrderAsNormalUser() public {
+    setUp();
+
+    vm.startPrank(alice);
+
+    world.reward();
+
+    // Create order
+    startGasReport("Create order as normal user");
+    bytes32 order = world.createOrder("Test order", MATERIAL_TYPE.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
+    endGasReport();
+
+    vm.stopPrank();
+  }
+
+  function testRevertCreateOrderInsufficientFunds() public {
     setUp();
 
     vm.startPrank(alice);
 
     // Create order
-    vm.expectRevert("not allowed");
-    world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    vm.expectRevert("insufficient funds");
+    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
 
+    vm.stopPrank();
+  }
+
+  function testRevertMaxPlayersReached() public {
+    setUp();
+
+    // Create order
+    prankAdmin();
+    bytes32 order = world.createOrder("", MATERIAL_TYPE.NONE, 0, 1000, ONE_HOUR, 1);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.graduate();
+    world.accept(order);
+    world.ship(depotsInPod[1]);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    // Spawn player
+    bytes32 bobEntity = world.spawn();
+    world.start();
+    bytes32 bobPodEntity = CarriedBy.get(bobEntity);
+    bytes32[] memory bobDepotsInPod = DepotsInPod.get(bobPodEntity);
+    world.graduate();
+    world.accept(order);
+    vm.expectRevert("max players reached");
+    world.ship(bobDepotsInPod[1]);
     vm.stopPrank();
   }
 
@@ -74,7 +116,7 @@ contract OrderSystemTest is BaseTest {
 
     prankAdmin();
     // Create order
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -90,15 +132,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(
-      MATERIAL_TYPE.NONE,
-      0,
-      MATERIAL_TYPE.BLOOD_MEAL,
-      100000,
-      1000,
-      ONE_HOUR,
-      10
-    );
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -125,7 +159,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BLOOD, 2000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD, 2000, 1000, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -169,7 +203,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -191,7 +225,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -211,7 +245,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(MATERIAL_TYPE.NONE, 0, MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);

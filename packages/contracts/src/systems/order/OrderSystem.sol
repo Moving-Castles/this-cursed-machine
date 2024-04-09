@@ -11,33 +11,37 @@ import { TUTORIAL_LEVELS } from "../../constants.sol";
 contract OrderSystem is System {
   /**
    * @notice Create an order
-   * @dev Restricted to admin
-   * @param _resourceMaterialType Material type of the order
-   * @param _resourceAmount Amount of material
-   * @param _goalMaterialType Material type of the goal
-   * @param _goalAmount Amount of the goal
+   * @dev Free for admin, charges reward cost for non-admin
+   * @param _title Title of the order
+   * @param _materialType Material type to produce
+   * @param _amount Amount to produce
    * @param _reward Reward for completing the order
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
    */
   function createOrder(
-    MATERIAL_TYPE _resourceMaterialType,
-    uint32 _resourceAmount,
-    MATERIAL_TYPE _goalMaterialType,
-    uint32 _goalAmount,
+    string memory _title,
+    MATERIAL_TYPE _materialType,
+    uint32 _amount,
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
   ) public returns (bytes32 orderEntity) {
-    //  Restrict to admin
-    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+    require(_maxPlayers > 0, "max players must be greater than 0");
+
+    // If the caller is not admin, we charge for the reward cost
+    if (_msgSender() != GameConfig.getAdminAddress()) {
+      uint32 totalRewardCost = _reward * _maxPlayers;
+      require(LibToken.getTokenBalance(_msgSender()) > totalRewardCost, "insufficient funds");
+      LibToken.transferToken(_world(), totalRewardCost);
+    }
 
     orderEntity = LibOrder.create(
-      _resourceMaterialType,
-      _resourceAmount,
-      _goalMaterialType,
-      _goalAmount,
+      LibUtils.addressToEntityKey(_msgSender()),
+      _title,
+      _materialType,
+      _amount,
       false, // Not tutorial
       0, // Not tutorial
       _reward,
@@ -132,6 +136,7 @@ contract OrderSystem is System {
 
     require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
     require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
+    // You can't ship a depot that is connected
     require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
     bytes32 currentOrderId = CurrentOrder.get(podEntity);
@@ -139,12 +144,14 @@ contract OrderSystem is System {
 
     OrderData memory currentOrder = Order.get(currentOrderId);
 
+    require(Completed.length(currentOrderId) < currentOrder.maxPlayers, "max players reached");
+
+    // expirationBlock == 0 means the order never expires
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
 
     // Check if order goals are met
     require(
-      MaterialType.get(_depotEntity) == currentOrder.goalMaterialType &&
-        Amount.get(_depotEntity) >= currentOrder.goalAmount,
+      MaterialType.get(_depotEntity) == currentOrder.materialType && Amount.get(_depotEntity) >= currentOrder.amount,
       "order not met"
     );
 
@@ -168,8 +175,8 @@ contract OrderSystem is System {
       }
 
       // Reward player in tokens
-      LibToken.send(_msgSender(), currentOrder.rewardAmount);
-      EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.rewardAmount);
+      LibToken.send(_msgSender(), currentOrder.reward);
+      EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
 
       return;
     }
@@ -184,7 +191,7 @@ contract OrderSystem is System {
     Completed.push(playerEntity, currentOrderId);
 
     // Reward player in tokens
-    LibToken.send(_msgSender(), currentOrder.rewardAmount);
-    EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.rewardAmount);
+    LibToken.send(_msgSender(), currentOrder.reward);
+    EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }
 }

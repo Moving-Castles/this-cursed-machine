@@ -47,12 +47,20 @@
   transition:fade
 >
   {#if order?.order}
+    <div class="section title">
+      {#if working}
+        <Spinner />
+      {:else}
+        {order.order.title}
+      {/if}
+    </div>
+
     <div class="section goal">
       {#if working}
         <Spinner />
       {:else}
-        {order.order.goalAmount / UI_SCALE_FACTOR}
-        {MATERIAL_TYPE[order.order.goalMaterialType]}
+        {order.order.amount / UI_SCALE_FACTOR}
+        {MATERIAL_TYPE[order.order.materialType]}
       {/if}
     </div>
 
@@ -60,7 +68,7 @@
       {#if working}
         <Spinner />
       {:else}
-        {order.order.rewardAmount} $BUGS
+        {order.order.reward} $BUGS
       {/if}
     </div>
 
@@ -127,8 +135,12 @@
     }
 
     .section {
+      &.title {
+        width: 20%;
+      }
+
       &.goal {
-        width: 40%;
+        width: 20%;
       }
 
       &.reward {
