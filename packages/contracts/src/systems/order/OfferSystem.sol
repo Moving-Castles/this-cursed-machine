@@ -4,6 +4,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOffer, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
+import { DEPOT_CAPACITY } from "../../constants.sol";
 
 contract OfferSystem is System {
   /**
@@ -38,28 +39,37 @@ contract OfferSystem is System {
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 
-    /*
-     * Go through depots
-     * - if it is empty, fill it
-     * - if it is the same material, add to it
-     */
-
     bytes32 targetDepot;
 
+    // Go through all depots in the pod
     for (uint32 i = 0; i < depotsInPod.length; i++) {
-      // if depot has other material, skip
-      // if depot is empty, select it
-      // if the depot has same material
+      // If depot is empty: select it
       if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
-        MaterialType.set(depotsInPod[i], offerData.materialType);
-        Amount.set(depotsInPod[i], offerData.amount);
+        targetDepot = depotsInPod[i];
         break;
-      } else if (MaterialType.get(depotsInPod[i]) == offerData.materialType) {
-        Amount.set(depotsInPod[i], Amount.get(depotsInPod[i]) + offerData.amount);
+      }
+
+      // If depot has other material: skip
+      if (MaterialType.get(depotsInPod[i]) != offerData.materialType) {
+        continue;
+      }
+
+      // If the depot has same material: check if it can hold the amount
+      if (Amount.get(depotsInPod[i]) + offerData.amount <= DEPOT_CAPACITY) {
+        targetDepot = depotsInPod[i];
         break;
       }
     }
 
+    if (targetDepot == bytes32(0)) {
+      revert("no depot available");
+    }
+
+    // Add material to depot
+    MaterialType.set(targetDepot, offerData.materialType);
+    Amount.set(targetDepot, Amount.get(targetDepot) + offerData.amount);
+
+    // Transfer tokens
     LibToken.transferToken(_world(), offerData.cost);
 
     LibNetwork.resolve(podEntity);

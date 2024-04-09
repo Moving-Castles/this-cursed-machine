@@ -7,6 +7,8 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { activeTab } from "@modules/ui/stores"
+  import { TABS } from "@modules/ui/enums"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -24,12 +26,18 @@
       playSound("tcm", "TRX_no")
       return
     }
+    try {
     working = true
     playSound("tcm", "listPrint")
     const action = buy(key)
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
     working = false
+    activeTab.set(TABS.POD)
+    } catch (e) {
+      console.error(e)
+      working = false
+    }
   }
 </script>
 
