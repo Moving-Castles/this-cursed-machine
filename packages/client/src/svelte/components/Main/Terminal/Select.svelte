@@ -23,9 +23,6 @@
     const v = selectOptions[selectedIndex]
     if (v) {
       selectedOption.set(v)
-    } else {
-      console.log("no v")
-      selectedOption.set(false)
     }
   }
 
