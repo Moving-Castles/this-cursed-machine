@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
-  import { playerPod, machines } from "@modules/state/base/stores"
+  import { playerPod } from "@modules/state/base/stores"
+  import { selectedOption } from "@modules/ui/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
@@ -16,15 +17,12 @@
 
   $: canShip = $shippableDepots[address]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
-
   $: shipping = $waitingTransaction?.systemId === "ship" && canShip
-
   // Narrow the type
   $: typedDepot = depot as Depot
-
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
-
   $: empty = typedDepot.amount === 0
+  $: highlight = $selectedOption?.value === address
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -34,7 +32,12 @@
   }
 </script>
 
-<div id="depot-{address}" class="depot-item" class:shippable={canShip}>
+<div
+  id="depot-{address}"
+  class="depot-item"
+  class:shippable={canShip}
+  class:highlight
+>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}

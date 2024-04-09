@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, tick } from "svelte"
-  import { graphScale } from "@modules/ui/stores"
   import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
@@ -81,7 +80,7 @@
     height: 100vh;
     z-index: 1;
     display: none;
-    clip-path: inset(0px 0px 0px 500px);
+    clip-path: inset(122px 0px 0px 500px);
 
     &.visible {
       display: block;

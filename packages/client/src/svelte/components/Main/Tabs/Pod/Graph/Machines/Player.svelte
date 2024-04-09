@@ -4,12 +4,14 @@
   import { CELL, PLAYER } from "../constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { inspecting } from "@modules/ui/stores"
+  import { inspecting, selectedOption } from "@modules/ui/stores"
 
   export let address: string
   export let machine: GraphMachine
 
   $: producing = machine?.products && machine?.products.length > 0
+  $: highlight = $selectedOption?.value === address
+  $: selectedPortIndex = $selectedOption?.value
 
   const onMouseEnter = () => {
     if (!producing) return
@@ -25,16 +27,16 @@
   function makePorts() {
     return [
       {
-        direction: DIRECTION.INCOMING,
-        style: `top: ${CELL.WIDTH * 6}px; left: 0px;`,
-      },
-      {
         direction: DIRECTION.OUTGOING,
         style: `top: ${CELL.WIDTH * 4}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
       },
       {
         direction: DIRECTION.OUTGOING,
         style: `top: ${CELL.WIDTH * 8}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
+      },
+      {
+        direction: DIRECTION.INCOMING,
+        style: `top: ${CELL.WIDTH * 6}px; left: 0px;`,
       },
     ]
   }
@@ -47,6 +49,7 @@
   id="machine-{address}"
   class="player"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  class:highlight
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade
@@ -54,8 +57,12 @@
 >
   <div class="inner-container">
     <div class="label">YOU</div>
-    {#each ports as port}
-      <div class="port" style={port.style} />
+    {#each ports as port, i}
+      <div
+        class="port"
+        class:highlight={selectedPortIndex === i}
+        style={port.style}
+      />
     {/each}
   </div>
 </div>

@@ -72,6 +72,21 @@ pre {
   cursor: none;
 }
 
+.highlight {
+  animation: filterin 0.1s ease forwards;
+}
+
+@keyframes filterin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%)
+      drop-shadow(0px 0px 0px #ffffff);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(180%)
+      drop-shadow(0px 0px 2px #ffffff);
+  }
+}
+
 /* .flash {
   animation: strobe 200ms steps(1, end) infinite;
 } */

@@ -58,7 +58,6 @@
       // Reset tutorial
 
       tutorialProgress.set(0)
-      clearTerminalOutput()
     }
   })
 </script>
