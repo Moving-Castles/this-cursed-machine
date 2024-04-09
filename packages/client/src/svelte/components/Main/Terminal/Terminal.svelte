@@ -198,8 +198,13 @@
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-      const portLabel = (p: any) =>
-        `Port #${p.portIndex + 1} (${MATERIAL_TYPE[sourceMachineEntity.products[p.portIndex].materialType]})`
+      const portLabel = (p: any) => {
+        const product = sourceMachineEntity.products[p.portIndex]
+
+        if (!product) return `Port #${p.portIndex + 1}`
+
+        return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
+      }
 
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),

@@ -12,12 +12,16 @@
   // Quick fix: only show when the first tab (pod) is active
   $: visible = $activeTab === 0
 
+  $: if (visible) drawBBox()
+
   const drawBBox = () => {
     const graph = document.getElementById("graph")
     graphBoundingBox = graph?.getBoundingClientRect()
   }
 
   onMount(async () => {
+    await tick()
+    drawBBox()
     // Wait for the transition to complete or it will mess with placement
     setTimeout(drawBBox, 100)
   })
@@ -35,35 +39,34 @@
       height={innerHeight}
       viewBox="0 0 {innerWidth} {innerHeight}"
     >
-      <!-- Draw an ellipse to avoid -->
-
       <!-- Safe zone for attachment coordinates -->
       <rect
         id="midzone"
-        x={graphBoundingBox.left + 200}
-        y={graphBoundingBox.top - 40}
+        x={Math.max(graphBoundingBox.left + 200, 0)}
+        y={Math.max(graphBoundingBox.top - 40, 0)}
         width={graphBoundingBox.width - 400}
         height={40}
         fill="none"
       />
       <rect
         id="safezone-1"
-        x={graphBoundingBox.left - 100}
-        y={graphBoundingBox.top}
+        x={Math.max(graphBoundingBox.left - 100, 0)}
+        y={Math.max(graphBoundingBox.top, 0)}
         width={100}
         height={100}
         fill="none"
       />
       <rect
         id="safezone-2"
-        x={graphBoundingBox.right}
-        y={graphBoundingBox.top}
+        x={Math.max(graphBoundingBox.right, 0)}
+        y={Math.max(graphBoundingBox.top, 0)}
         width={100}
         height={100}
         fill="none"
       />
       <ellipse fill="none" stroke="none" />
       {#each Object.entries($depotAttachments) as [address, attachment] (address)}
+        a
         <Attachment {attachment} />
       {/each}
     </svg>

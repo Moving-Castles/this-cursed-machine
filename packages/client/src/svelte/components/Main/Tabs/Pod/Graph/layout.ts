@@ -365,8 +365,14 @@ function getStartPosition(
     // Default position
     let portPositionX = startMachine.x + 5
 
-    // The splitter has two outputs, so we need to adjust the port position
-    if (startMachine.machineType === MACHINE_TYPE.SPLITTER) {
+    // These machines have two outputs, so we need to adjust the port position
+    if (
+      startMachine.machineType === MACHINE_TYPE.SPLITTER ||
+      startMachine.machineType === MACHINE_TYPE.CENTRIFUGE ||
+      startMachine.machineType === MACHINE_TYPE.GRINDER ||
+      startMachine.machineType === MACHINE_TYPE.RAT_CAGE ||
+      startMachine.machineType === MACHINE_TYPE.MEALWORM_VAT
+    ) {
       portPositionX =
         currentConnection.portIndex.source == 0
           ? startMachine.x + 4
