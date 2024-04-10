@@ -9,7 +9,7 @@ import { GameConfig, EscapeIndex, EscapeIndexRanked } from "../codegen/index.sol
 import { COMPLETED_ORDERS_THRESHOLDS, POINTS_THRESHOLDS } from "../constants.sol";
 
 library LibEscape {
-  function escapePod(bytes32 _playerEntity, uint256 _completedOrders, uint256 _points) internal {
+  function incrementIndexesAndMint(bytes32 _playerEntity, uint256 _completedOrders, uint256 _points) internal {
     // Increment global escape index
     uint32 newEscapeIndex = GameConfig.getGlobalEscapeIndex() + 1;
     GameConfig.setGlobalEscapeIndex(newEscapeIndex);

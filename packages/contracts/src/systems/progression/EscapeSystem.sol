@@ -5,11 +5,11 @@ import { LibToken, LibUtils, LibEscape } from "../../libraries/Libraries.sol";
 import { CarriedBy, Completed, EscapeIndex, GameConfig, Tutorial, Name } from "../../codegen/index.sol";
 
 contract EscapeSystem is System {
-  function escape() public {
+  function escapePod() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // Tutorial must be completed
-    require(Tutorial.get(playerEntity) != false, "not completed");
+    require(Tutorial.get(playerEntity) == false, "not completed");
     // Must be named before escape
     require(bytes(Name.get(playerEntity)).length > 0, "name empty");
     // Must not have already escaped
@@ -27,6 +27,6 @@ contract EscapeSystem is System {
     LibToken.transferToken(_world(), points);
 
     // Update indexes and mint NFT for _msgSender()
-    LibEscape.escapePod(playerEntity, completedOrders, points);
+    LibEscape.incrementIndexesAndMint(playerEntity, completedOrders, points);
   }
 }
