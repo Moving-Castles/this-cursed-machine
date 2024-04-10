@@ -16,7 +16,7 @@ import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
-import { LibOrder, LibInitRecipes, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
+import { LibOrder, LibInitRecipes, LibInitEscapeRankNames, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
 import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
 
 uint256 constant POOL_SUPPLY = 1_000_000 wei;
@@ -54,6 +54,9 @@ contract PostDeploy is Script {
 
     // Initialize recipes
     LibInitRecipes.init();
+
+    // Initialize rank names for escaped pod NFTs
+    LibInitEscapeRankNames.init();
 
     // Create offer
     LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as 100 Bugs with scale-down in UI)
