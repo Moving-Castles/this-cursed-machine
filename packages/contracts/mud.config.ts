@@ -16,7 +16,9 @@ export default defineWorld({
             schema: {
                 adminAddress: "address",
                 tokenAddress: "address",
+                escapedStumpTokenAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
+                globalEscapeIndex: "uint32", // Global index for all players
                 scaleDown: "uint32", // Used to scale down the amounts in the UI
                 flowRate: "uint32", // Amount flowing from the inlet
                 depotCapacity: "uint32", // Amount of material that can be stored in a depot
@@ -34,6 +36,23 @@ export default defineWorld({
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
         BuildTracker: "uint32[]", // How many machines of each type have been built in pod since its creation?
         SpawnIndex: "uint32", // How many players have spawned?
+        EscapeIndex: "uint32", // How many players have escaped?
+        EscapeIndexRanked: {
+            key: ["completedOrdersRank", "pointsRank"],
+            schema: {
+                completedOrdersRank: "uint256",
+                pointsRank: "uint256",
+                value: "uint32"
+            }
+        },
+        EscapeRankName: {
+            key: ["completedOrdersRank", "pointsRank"],
+            schema: {
+                completedOrdersRank: "uint256",
+                pointsRank: "uint256",
+                value: "string"
+            }
+        },
         Tutorial: "bool",
         TutorialLevel: "uint32",
         Order: {
