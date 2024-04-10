@@ -50,7 +50,9 @@ library LibEscape {
    * @param _value Value to compare to thresholds.
    */
   function _rank(uint256[4] memory _thresholds, uint256 _value) private pure returns (uint256) {
-    for (uint256 i = _thresholds.length - 1; i >= 0; i--) {
+    uint256 i = _thresholds.length;
+    while (i > 0) {
+      i--;
       if (_value >= _thresholds[i]) {
         return i + 1;
       }
