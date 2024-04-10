@@ -12,8 +12,9 @@ import { ERC721MetadataData } from "@latticexyz/world-modules/src/modules/erc721
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
+import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
 import { LibOrder, LibInitRecipes, LibInitEscapeRankNames, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
@@ -47,6 +48,10 @@ contract PostDeploy is Script {
       "EscapedStumpT",
       ERC721MetadataData({ name: "TCM", symbol: "TCM", baseURI: "" })
     );
+
+    // Transfer token namespaces to World
+    world.transferOwnership(WorldResourceIdLib.encodeNamespace("Token"), worldAddress);
+    world.transferOwnership(WorldResourceIdLib.encodeNamespace("EscapedStumpT"), worldAddress);
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
