@@ -22,6 +22,8 @@
     4: [27],
   }
 
+  $: advanceTutorial($activeTab, $tutorialProgress, "tab")
+
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
     num => $tutorialProgress > num
   ).length
@@ -55,7 +57,6 @@
         on:click={() => {
           playSound("tcm", "selectionEnter")
           activeTab.set(key)
-          advanceTutorial(key, $tutorialProgress, "tab")
         }}
       >
         {value.label}

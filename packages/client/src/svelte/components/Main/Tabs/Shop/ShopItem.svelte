@@ -27,13 +27,13 @@
       return
     }
     try {
-    working = true
-    playSound("tcm", "listPrint")
-    const action = buy(key)
-    await waitForCompletion(action)
-    playSound("tcm", "TRX_yes")
-    working = false
-    activeTab.set(TABS.POD)
+      working = true
+      playSound("tcm", "listPrint")
+      const action = buy(key)
+      await waitForCompletion(action)
+      playSound("tcm", "TRX_yes")
+      working = false
+      activeTab.set(TABS.POD)
     } catch (e) {
       console.error(e)
       working = false

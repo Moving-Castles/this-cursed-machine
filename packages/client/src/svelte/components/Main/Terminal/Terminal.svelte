@@ -207,6 +207,8 @@
 
         if (!product) return `Port #${p.portIndex + 1}`
 
+        console.log(product, product?.materialType)
+
         return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
       }
 
@@ -243,11 +245,13 @@
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
       const portLabel = (p: any) => {
-        return `Port #${p.portIndex + 1} (${
-          MATERIAL_TYPE[
-            sourceMachineEntity?.products?.[p.portIndex].materialType
-          ]
-        })`
+        const product = sourceMachineEntity?.products?.[p.portIndex]
+
+        if (!product) return `Port #${p.portIndex + 1}`
+
+        console.log(product, product?.materialType)
+
+        return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
       }
 
       sourcePortOptions = ports.map(p => ({

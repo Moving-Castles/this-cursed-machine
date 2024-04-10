@@ -16,12 +16,12 @@
   let animationFrameId: number
   let headRotation = 0
   let headPoint: SVGPoint
-
   let pathElement: SVGPathElement
-
   let hover = false
   let animationStart: number
   let activeCurve = "basis"
+
+  console.log(connection)
 
   $: carrying = connection?.products.length > 0
   $: fill = connection.productive

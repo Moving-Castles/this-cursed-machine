@@ -15,8 +15,6 @@
   }
   $: graphBoundingBox = $graphElement?.getBoundingClientRect()
 
-  $: console.log(graphBoundingBox)
-
   // Quick fix: only show when the first tab (pod) is active
   $: visible = $activeTab === 0
 

@@ -310,6 +310,8 @@ export function calculateSimulatedConnections(
       const sourceMachine = simulatedMachines[sourceAddress]
       const targetMachine = simulatedMachines[targetAddress]
 
+      console.log(sourceMachine, machine)
+
       if (!sourceMachine || !targetMachine) return connections
 
       if (!targetMachine?.incomingConnections) return connections
@@ -323,8 +325,6 @@ export function calculateSimulatedConnections(
           // ... because we need to make sure the index of our source port gets considered when connecting
           connection => connection === `${sourceAddress}-${sourcePortIndex}`
         )
-
-      if (!sourceMachine) return
 
       let connection: Connection = {
         id: `FROM-${sourceAddress}-TO-${targetAddress}-${sourcePortIndex}`,
