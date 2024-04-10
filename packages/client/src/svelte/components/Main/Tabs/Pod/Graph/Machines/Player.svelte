@@ -4,14 +4,25 @@
   import { CELL, PLAYER } from "../constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { inspecting, selectedOption } from "@modules/ui/stores"
+  import {
+    inspecting,
+    selectedOption,
+    selectedParameters,
+  } from "@modules/ui/stores"
 
   export let address: string
   export let machine: GraphMachine
+  let selectedPortIndex = -1
 
   $: producing = machine?.products && machine?.products.length > 0
   $: highlight = $selectedOption?.value === address
-  $: selectedPortIndex = $selectedOption?.value
+  $: {
+    if ($selectedParameters) {
+      if ($selectedParameters.includes(address)) {
+        selectedPortIndex = $selectedOption?.value
+      }
+    }
+  }
 
   const onMouseEnter = () => {
     if (!producing) return

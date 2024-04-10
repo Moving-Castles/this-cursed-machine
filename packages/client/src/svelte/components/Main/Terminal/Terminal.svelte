@@ -1,5 +1,6 @@
 <script lang="ts">
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
+  import { selectedParameters } from "@modules/ui/stores"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import type { Command, SelectOption } from "@components/Main/Terminal/types"
@@ -135,6 +136,8 @@
   }
 
   const getConnectParameters = async (): Promise<any[] | false> => {
+    selectedParameters.set([])
+
     // %%%%%%%%%%%%%%%%%%%%%%%%%%
     // %% Start source machine %%
     // %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -152,6 +155,7 @@
       Select,
       sourceSelectOptions
     )
+    selectedParameters.set([sourceMachineKey])
 
     // Abort if nothing selected
     if (!sourceMachineKey) {
@@ -199,7 +203,7 @@
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
       const portLabel = (p: any) => {
-        const product = sourceMachineEntity.products[p.portIndex]
+        const product = sourceMachineEntity?.products?.[p.portIndex]
 
         if (!product) return `Port #${p.portIndex + 1}`
 
@@ -231,14 +235,20 @@
       )
 
       portIndex = sourcePort
+      selectedParameters.set([sourceMachineKey, portIndex])
     } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
       await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Select source port:")
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
 
-      const portLabel = (p: any) =>
-        `Port #${p.portIndex + 1} (${p.portIndex === 0 ? "PISS" : "BLOOD"})`
+      const portLabel = (p: any) => {
+        return `Port #${p.portIndex + 1} (${
+          MATERIAL_TYPE[
+            sourceMachineEntity?.products?.[p.portIndex].materialType
+          ]
+        })`
+      }
 
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),
@@ -265,6 +275,7 @@
       )
 
       portIndex = sourcePort
+      selectedParameters.set([sourceMachineKey, portIndex])
     }
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -318,6 +329,7 @@
     // %% End target machine %%
     // %%%%%%%%%%%%%%%%%%%%%%%%
 
+    selectedParameters.set([sourceMachineKey, portIndex, targetMachineKey])
     return [sourceMachineKey, targetMachineKey, portIndex]
   }
 
