@@ -23,8 +23,8 @@ library EscapeIndexRanked {
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0004010004000000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of (bytes32, uint32, uint32)
-  Schema constant _keySchema = Schema.wrap(0x002803005f030300000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (uint256, uint256)
+  Schema constant _keySchema = Schema.wrap(0x004002001f1f0000000000000000000000000000000000000000000000000000);
   // Hex-encoded value schema of (uint32)
   Schema constant _valueSchema = Schema.wrap(0x0004010003000000000000000000000000000000000000000000000000000000);
 
@@ -33,10 +33,9 @@ library EscapeIndexRanked {
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](3);
-    keyNames[0] = "playerEntity";
-    keyNames[1] = "completedOrdersRank";
-    keyNames[2] = "pointsRank";
+    keyNames = new string[](2);
+    keyNames[0] = "completedOrdersRank";
+    keyNames[1] = "pointsRank";
   }
 
   /**
@@ -65,15 +64,10 @@ library EscapeIndexRanked {
   /**
    * @notice Get value.
    */
-  function getValue(
-    bytes32 playerEntity,
-    uint32 completedOrdersRank,
-    uint32 pointsRank
-  ) internal view returns (uint32 value) {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function getValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint32 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -82,15 +76,10 @@ library EscapeIndexRanked {
   /**
    * @notice Get value.
    */
-  function _getValue(
-    bytes32 playerEntity,
-    uint32 completedOrdersRank,
-    uint32 pointsRank
-  ) internal view returns (uint32 value) {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function _getValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint32 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -99,15 +88,10 @@ library EscapeIndexRanked {
   /**
    * @notice Get value.
    */
-  function get(
-    bytes32 playerEntity,
-    uint32 completedOrdersRank,
-    uint32 pointsRank
-  ) internal view returns (uint32 value) {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function get(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint32 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -116,15 +100,10 @@ library EscapeIndexRanked {
   /**
    * @notice Get value.
    */
-  function _get(
-    bytes32 playerEntity,
-    uint32 completedOrdersRank,
-    uint32 pointsRank
-  ) internal view returns (uint32 value) {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function _get(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint32 value) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -133,11 +112,10 @@ library EscapeIndexRanked {
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank, uint32 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function setValue(uint256 completedOrdersRank, uint256 pointsRank, uint32 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -145,11 +123,10 @@ library EscapeIndexRanked {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank, uint32 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function _setValue(uint256 completedOrdersRank, uint256 pointsRank, uint32 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -157,11 +134,10 @@ library EscapeIndexRanked {
   /**
    * @notice Set value.
    */
-  function set(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank, uint32 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function set(uint256 completedOrdersRank, uint256 pointsRank, uint32 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -169,11 +145,10 @@ library EscapeIndexRanked {
   /**
    * @notice Set value.
    */
-  function _set(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank, uint32 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function _set(uint256 completedOrdersRank, uint256 pointsRank, uint32 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -181,11 +156,10 @@ library EscapeIndexRanked {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function deleteRecord(uint256 completedOrdersRank, uint256 pointsRank) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -193,11 +167,10 @@ library EscapeIndexRanked {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 playerEntity, uint32 completedOrdersRank, uint32 pointsRank) internal {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function _deleteRecord(uint256 completedOrdersRank, uint256 pointsRank) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -228,15 +201,10 @@ library EscapeIndexRanked {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(
-    bytes32 playerEntity,
-    uint32 completedOrdersRank,
-    uint32 pointsRank
-  ) internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](3);
-    _keyTuple[0] = playerEntity;
-    _keyTuple[1] = bytes32(uint256(completedOrdersRank));
-    _keyTuple[2] = bytes32(uint256(pointsRank));
+  function encodeKeyTuple(uint256 completedOrdersRank, uint256 pointsRank) internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(completedOrdersRank));
+    _keyTuple[1] = bytes32(uint256(pointsRank));
 
     return _keyTuple;
   }

@@ -23,8 +23,8 @@ library EscapeRankName {
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0000000100000000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of (uint32, uint32)
-  Schema constant _keySchema = Schema.wrap(0x0008020003030000000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (uint256, uint256)
+  Schema constant _keySchema = Schema.wrap(0x004002001f1f0000000000000000000000000000000000000000000000000000);
   // Hex-encoded value schema of (string)
   Schema constant _valueSchema = Schema.wrap(0x00000001c5000000000000000000000000000000000000000000000000000000);
 
@@ -64,7 +64,7 @@ library EscapeRankName {
   /**
    * @notice Get value.
    */
-  function getValue(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (string memory value) {
+  function getValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (string memory value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -76,7 +76,7 @@ library EscapeRankName {
   /**
    * @notice Get value.
    */
-  function _getValue(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (string memory value) {
+  function _getValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (string memory value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -88,7 +88,7 @@ library EscapeRankName {
   /**
    * @notice Get value.
    */
-  function get(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (string memory value) {
+  function get(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (string memory value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -100,7 +100,7 @@ library EscapeRankName {
   /**
    * @notice Get value.
    */
-  function _get(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (string memory value) {
+  function _get(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (string memory value) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -112,7 +112,7 @@ library EscapeRankName {
   /**
    * @notice Set value.
    */
-  function setValue(uint32 completedOrdersRank, uint32 pointsRank, string memory value) internal {
+  function setValue(uint256 completedOrdersRank, uint256 pointsRank, string memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -123,7 +123,7 @@ library EscapeRankName {
   /**
    * @notice Set value.
    */
-  function _setValue(uint32 completedOrdersRank, uint32 pointsRank, string memory value) internal {
+  function _setValue(uint256 completedOrdersRank, uint256 pointsRank, string memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -134,7 +134,7 @@ library EscapeRankName {
   /**
    * @notice Set value.
    */
-  function set(uint32 completedOrdersRank, uint32 pointsRank, string memory value) internal {
+  function set(uint256 completedOrdersRank, uint256 pointsRank, string memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -145,7 +145,7 @@ library EscapeRankName {
   /**
    * @notice Set value.
    */
-  function _set(uint32 completedOrdersRank, uint32 pointsRank, string memory value) internal {
+  function _set(uint256 completedOrdersRank, uint256 pointsRank, string memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -156,7 +156,7 @@ library EscapeRankName {
   /**
    * @notice Get the length of value.
    */
-  function lengthValue(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (uint256) {
+  function lengthValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -170,7 +170,7 @@ library EscapeRankName {
   /**
    * @notice Get the length of value.
    */
-  function _lengthValue(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (uint256) {
+  function _lengthValue(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -184,7 +184,7 @@ library EscapeRankName {
   /**
    * @notice Get the length of value.
    */
-  function length(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (uint256) {
+  function length(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -198,7 +198,7 @@ library EscapeRankName {
   /**
    * @notice Get the length of value.
    */
-  function _length(uint32 completedOrdersRank, uint32 pointsRank) internal view returns (uint256) {
+  function _length(uint256 completedOrdersRank, uint256 pointsRank) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -214,8 +214,8 @@ library EscapeRankName {
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
   function getItemValue(
-    uint32 completedOrdersRank,
-    uint32 pointsRank,
+    uint256 completedOrdersRank,
+    uint256 pointsRank,
     uint256 _index
   ) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
@@ -233,8 +233,8 @@ library EscapeRankName {
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
   function _getItemValue(
-    uint32 completedOrdersRank,
-    uint32 pointsRank,
+    uint256 completedOrdersRank,
+    uint256 pointsRank,
     uint256 _index
   ) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
@@ -252,8 +252,8 @@ library EscapeRankName {
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
   function getItem(
-    uint32 completedOrdersRank,
-    uint32 pointsRank,
+    uint256 completedOrdersRank,
+    uint256 pointsRank,
     uint256 _index
   ) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
@@ -271,8 +271,8 @@ library EscapeRankName {
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
   function _getItem(
-    uint32 completedOrdersRank,
-    uint32 pointsRank,
+    uint256 completedOrdersRank,
+    uint256 pointsRank,
     uint256 _index
   ) internal view returns (string memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
@@ -288,7 +288,7 @@ library EscapeRankName {
   /**
    * @notice Push a slice to value.
    */
-  function pushValue(uint32 completedOrdersRank, uint32 pointsRank, string memory _slice) internal {
+  function pushValue(uint256 completedOrdersRank, uint256 pointsRank, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -299,7 +299,7 @@ library EscapeRankName {
   /**
    * @notice Push a slice to value.
    */
-  function _pushValue(uint32 completedOrdersRank, uint32 pointsRank, string memory _slice) internal {
+  function _pushValue(uint256 completedOrdersRank, uint256 pointsRank, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -310,7 +310,7 @@ library EscapeRankName {
   /**
    * @notice Push a slice to value.
    */
-  function push(uint32 completedOrdersRank, uint32 pointsRank, string memory _slice) internal {
+  function push(uint256 completedOrdersRank, uint256 pointsRank, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -321,7 +321,7 @@ library EscapeRankName {
   /**
    * @notice Push a slice to value.
    */
-  function _push(uint32 completedOrdersRank, uint32 pointsRank, string memory _slice) internal {
+  function _push(uint256 completedOrdersRank, uint256 pointsRank, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -332,7 +332,7 @@ library EscapeRankName {
   /**
    * @notice Pop a slice from value.
    */
-  function popValue(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function popValue(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -343,7 +343,7 @@ library EscapeRankName {
   /**
    * @notice Pop a slice from value.
    */
-  function _popValue(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function _popValue(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -354,7 +354,7 @@ library EscapeRankName {
   /**
    * @notice Pop a slice from value.
    */
-  function pop(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function pop(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -365,7 +365,7 @@ library EscapeRankName {
   /**
    * @notice Pop a slice from value.
    */
-  function _pop(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function _pop(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -376,7 +376,7 @@ library EscapeRankName {
   /**
    * @notice Update a slice of value at `_index`.
    */
-  function updateValue(uint32 completedOrdersRank, uint32 pointsRank, uint256 _index, string memory _slice) internal {
+  function updateValue(uint256 completedOrdersRank, uint256 pointsRank, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -390,7 +390,12 @@ library EscapeRankName {
   /**
    * @notice Update a slice of value at `_index`.
    */
-  function _updateValue(uint32 completedOrdersRank, uint32 pointsRank, uint256 _index, string memory _slice) internal {
+  function _updateValue(
+    uint256 completedOrdersRank,
+    uint256 pointsRank,
+    uint256 _index,
+    string memory _slice
+  ) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -404,7 +409,7 @@ library EscapeRankName {
   /**
    * @notice Update a slice of value at `_index`.
    */
-  function update(uint32 completedOrdersRank, uint32 pointsRank, uint256 _index, string memory _slice) internal {
+  function update(uint256 completedOrdersRank, uint256 pointsRank, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -418,7 +423,7 @@ library EscapeRankName {
   /**
    * @notice Update a slice of value at `_index`.
    */
-  function _update(uint32 completedOrdersRank, uint32 pointsRank, uint256 _index, string memory _slice) internal {
+  function _update(uint256 completedOrdersRank, uint256 pointsRank, uint256 _index, string memory _slice) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -432,7 +437,7 @@ library EscapeRankName {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function deleteRecord(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -443,7 +448,7 @@ library EscapeRankName {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(uint32 completedOrdersRank, uint32 pointsRank) internal {
+  function _deleteRecord(uint256 completedOrdersRank, uint256 pointsRank) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
@@ -487,7 +492,7 @@ library EscapeRankName {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(uint32 completedOrdersRank, uint32 pointsRank) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(uint256 completedOrdersRank, uint256 pointsRank) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(completedOrdersRank));
     _keyTuple[1] = bytes32(uint256(pointsRank));
