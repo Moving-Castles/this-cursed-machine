@@ -5,13 +5,16 @@
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
+  import { selectedOption } from "@modules/ui/stores"
 
   export let address: string
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  $: label = `O${machine.buildIndex ?? ""}`
+  // $: label = `O${machine.buildIndex ?? ""}`
+  $: label = "→"
   $: connected = machine.depotConnection !== EMPTY_CONNECTION
+  $: highlight = $selectedOption?.value === address
 
   function makePorts() {
     return [
@@ -31,6 +34,7 @@
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   in:fade
   class:connected
+  class:highlight
   {style}
 >
   <div class="inner-container">
@@ -45,7 +49,7 @@
   .outlet {
     width: calc(var(--cellWidth) * 5);
     height: calc(var(--cellWidth) * 5);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size);
     display: flex;
     justify-content: center;
     align-items: center;

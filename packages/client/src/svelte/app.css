@@ -43,9 +43,9 @@
   /* user-select: none; */
   margin: 0;
   padding: 0;
-  font-variation-settings:
+  /* font-variation-settings:
     "BLED" 0,
-    "SCAN" 0;
+    "SCAN" 0; */
   text-transform: uppercase;
   letter-spacing: 0px;
 }
@@ -54,7 +54,7 @@ main {
   display: none;
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 900px) {
   main {
     display: block;
   }
@@ -70,6 +70,25 @@ pre {
 
 .cursor-none {
   cursor: none;
+}
+
+.player:hover,
+.machine:hover,
+.connection:hover,
+.depot-item:hover,
+.highlight {
+  animation: filterin 0.1s ease forwards;
+}
+
+@keyframes filterin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%)
+      drop-shadow(0px 0px 0px #ffffff);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(180%)
+      drop-shadow(0px 0px 2px #ffffff);
+  }
 }
 
 /* .flash {

@@ -7,14 +7,18 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { inspecting } from "@modules/ui/stores"
+  import {
+    inspecting,
+    selectedOption,
+    selectedParameters,
+  } from "@modules/ui/stores"
 
   import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
 
   export let address: string
   export let machine: GraphMachine
 
-  $: producing = machine?.products && machine?.products.length > 0
+  let selectedPortIndex = -1
 
   const onMouseEnter = () => {
     if (!producing) return
@@ -25,8 +29,17 @@
     inspecting.set(null)
   }
 
+  $: producing = machine?.products && machine?.products.length > 0
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
+  $: highlight = $selectedOption?.value === address
+  $: {
+    if ($selectedParameters) {
+      if ($selectedParameters.includes(address)) {
+        selectedPortIndex = $selectedOption?.value
+      }
+    }
+  }
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
@@ -34,12 +47,14 @@
         ? (MACHINE.HEIGHT - 1) * CELL.HEIGHT
         : 0
 
-    if (machine.machineType === MACHINE_TYPE.SPLITTER) {
+    if (
+      machine.machineType === MACHINE_TYPE.SPLITTER ||
+      machine.machineType === MACHINE_TYPE.CENTRIFUGE ||
+      machine.machineType === MACHINE_TYPE.GRINDER ||
+      machine.machineType === MACHINE_TYPE.RAT_CAGE ||
+      machine.machineType === MACHINE_TYPE.MEALWORM_VAT
+    ) {
       return [
-        {
-          direction: DIRECTION.INCOMING,
-          style: `top: ${verticalPosition}px; left: ${CELL.WIDTH}px;`,
-        },
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 4}px;`,
@@ -47,6 +62,10 @@
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 6}px;`,
+        },
+        {
+          direction: DIRECTION.INCOMING,
+          style: `top: ${verticalPosition}px; left: ${CELL.WIDTH}px;`,
         },
       ]
     } else if (machine.machineType === MACHINE_TYPE.MIXER) {
@@ -86,6 +105,7 @@
   id="machine-{address}"
   class="machine {MACHINE_TYPE[machine.machineType]}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
+  class:highlight
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade
@@ -102,8 +122,12 @@
           : [label]}
       />
     </div>
-    {#each ports as port}
-      <div class="port {DIRECTION[port.direction]}" style={port.style} />
+    {#each ports as port, i}
+      <div
+        class:highlight={selectedPortIndex === i}
+        class="port {DIRECTION[port.direction]}"
+        style={port.style}
+      />
     {/each}
   </div>
 </div>

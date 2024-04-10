@@ -13,7 +13,6 @@ import {
 import { playSound } from "@modules/sound"
 
 async function execute(depotEntity: string) {
-  console.log(depotEntity)
   try {
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
     // ...

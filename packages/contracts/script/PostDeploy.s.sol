@@ -56,7 +56,7 @@ contract PostDeploy is Script {
     LibInitRecipes.init();
 
     // Create offer
-    LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as with 100 Bug scale-down in UI)
+    LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as 100 Bugs with scale-down in UI)
 
     vm.stopBroadcast();
   }

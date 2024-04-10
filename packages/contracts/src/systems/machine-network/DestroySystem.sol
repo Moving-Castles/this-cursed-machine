@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, GameConfigData, CarriedBy, EntityType, MachinesInPod, IncomingConnections, OutgoingConnections } from "../../codegen/index.sol";
+import { CarriedBy, EntityType, MachinesInPod, IncomingConnections, OutgoingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibEntity, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DestroySystem is System {
   /**
-   * @notice Destroys the specified machine entity and cleans up all its network connections.
-   * @param _machineEntity The identifier for the machine entity to be destroyed.
+   * @notice Destroy a machine and clean up all its connections.
+   * @param _machineEntity The id for the machine entity to be destroyed.
    */
   function destroy(bytes32 _machineEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());

@@ -8,8 +8,12 @@ import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol"
 import { Product } from "../structs.sol";
 
 library LibPod {
-  function create() internal returns (bytes32) {
-    bytes32 podEntity = getUniqueEntity();
+  /**
+   * @notice Create a new pod
+   * @return podEntity The id of the pod entity.
+   */
+  function create() internal returns (bytes32 podEntity) {
+    podEntity = getUniqueEntity();
     EntityType.set(podEntity, ENTITY_TYPE.POD);
     LastResolved.set(podEntity, block.number);
     return podEntity;

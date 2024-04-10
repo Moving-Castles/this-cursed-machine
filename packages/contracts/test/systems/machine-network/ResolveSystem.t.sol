@@ -329,10 +329,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
-    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
-    // Fill depot 1 with 10000 CONGEALED_FAT
-    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
+    // Fill depot 0 with 20000 MATERIAL_TYPE.BLOOD
+    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.BLOOD);
+    // Fill depot 1 with 10000 PISS
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PISS);
 
     // Connect depot 0 to inlet 0
     world.attachDepot(depotsInPod[0], inletEntities[0]);
@@ -364,16 +364,16 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Depot 0 should have 11000 MATERIAL_TYPE.AMMONIA
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
+    // Depot 0 should have 11000 MATERIAL_TYPE.BLOOD
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BLOOD));
     assertEq(Amount.get(depotsInPod[0]), 11000);
 
-    // Depot 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
+    // Depot 1 should have 1000 MATERIAL_TYPE.PISS
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
     assertEq(Amount.get(depotsInPod[1]), 1000);
 
-    // Depot 2 should have 9000 MATERIAL_TYPE.AESOP_SOAP
-    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_SOAP));
+    // Depot 2 should have 9000 MATERIAL_TYPE.HEMATURIC_FLUID
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
     assertEq(Amount.get(depotsInPod[2]), 9000);
   }
 
@@ -382,10 +382,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill depot 0 with 20000 MATERIAL_TYPE.AMMONIA
-    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
-    // Fill depot 1 with 10000 CONGEALED_FAT
-    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
+    // Fill depot 0 with 20000 MATERIAL_TYPE.BLOOD
+    world.fillDepot(depotsInPod[0], 20000, MATERIAL_TYPE.BLOOD);
+    // Fill depot 1 with 10000 PISS
+    world.fillDepot(depotsInPod[1], 10000, MATERIAL_TYPE.PISS);
 
     // Connect depot 0 to inlet 0
     world.attachDepot(depotsInPod[0], inletEntities[0]);
@@ -399,10 +399,10 @@ contract ResolveSystemTest is BaseTest {
     // Build splitter
     bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
 
-    // Connect inlet 0 (ammonia) to mixer
+    // Connect inlet 0 (blood) to mixer
     world.connect(inletEntities[0], mixerEntity, PORT_INDEX.FIRST);
 
-    // Connect inlet 1 (pure fat) to splitter
+    // Connect inlet 1 (piss) to splitter
     world.connect(inletEntities[1], splitterEntity, PORT_INDEX.FIRST);
 
     // Connect splitter to mixer
@@ -423,16 +423,16 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Depot 0 should have 11000 MATERIAL_TYPE.AMMONIA
-    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
+    // Depot 0 should have 11000 MATERIAL_TYPE.BLOOD
+    assertEq(uint32(MaterialType.get(depotsInPod[0])), uint32(MATERIAL_TYPE.BLOOD));
     assertEq(Amount.get(depotsInPod[0]), 11000);
 
-    // Depot 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
-    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
+    // Depot 1 should have 1000 MATERIAL_TYPE.PISS
+    assertEq(uint32(MaterialType.get(depotsInPod[1])), uint32(MATERIAL_TYPE.PISS));
     assertEq(Amount.get(depotsInPod[1]), 1000);
 
-    // Depot 2 should have 4500 MATERIAL_TYPE.AESOP_SOAP
-    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.AESOP_SOAP));
+    // Depot 2 should have 4500 MATERIAL_TYPE.HEMATURIC_FLUID
+    assertEq(uint32(MaterialType.get(depotsInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
     assertEq(Amount.get(depotsInPod[2]), 4500);
   }
 

@@ -1,7 +1,7 @@
 import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
-import { MATERIAL_TYPE } from "@modules/state/base/enums"
+import { MATERIAL_TYPE, MACHINE_TYPE } from "@modules/state/base/enums"
 import { blockNumber } from "@modules/network"
 import type {
   SimulatedEntities,
@@ -304,28 +304,34 @@ export function calculateSimulatedConnections(
 
   Object.entries(simulatedMachines).forEach(([sourceAddress, machine]) => {
     if (!machine?.outgoingConnections) return
-    machine?.outgoingConnections.forEach((targetAddress, i) => {
+    machine?.outgoingConnections.forEach((targetAddress, sourcePortIndex) => {
       if (targetAddress === EMPTY_CONNECTION) return
 
       const sourceMachine = simulatedMachines[sourceAddress]
       const targetMachine = simulatedMachines[targetAddress]
 
+      console.log(sourceMachine, machine)
+
       if (!sourceMachine || !targetMachine) return connections
 
       if (!targetMachine?.incomingConnections) return connections
 
-      const targetPortIndex = targetMachine?.incomingConnections?.findIndex(
-        connection => connection === sourceAddress
-      )
-
-      if (!sourceMachine) return
+      const targetPortIndex = targetMachine?.incomingConnections
+        ?.map((conn, i) => {
+          // Map to a combined ID from the targetMachine's incoming port combined with the the port index...
+          return `${conn}-${i}`
+        })
+        ?.findIndex(
+          // ... because we need to make sure the index of our source port gets considered when connecting
+          connection => connection === `${sourceAddress}-${sourcePortIndex}`
+        )
 
       let connection: Connection = {
-        id: `FROM-${sourceAddress}-TO-${targetAddress}-${i}`,
+        id: `FROM-${sourceAddress}-TO-${targetAddress}-${sourcePortIndex}`,
         sourceMachine: sourceAddress,
         targetMachine: targetAddress,
         portIndex: {
-          source: i,
+          source: sourcePortIndex,
           target: targetPortIndex,
         },
         products: [],
@@ -337,13 +343,14 @@ export function calculateSimulatedConnections(
       // Assign material and amount, and set state to active
       if (
         sourceMachine.outputs &&
-        sourceMachine.outputs[i] &&
-        sourceMachine.outputs[i].materialType !== MATERIAL_TYPE.NONE
+        sourceMachine.outputs[sourcePortIndex] &&
+        sourceMachine.outputs[sourcePortIndex].materialType !==
+          MATERIAL_TYPE.NONE
       ) {
         connection.products = [
           {
-            materialType: sourceMachine.outputs[i].materialType,
-            amount: sourceMachine.outputs[i].amount,
+            materialType: sourceMachine.outputs[sourcePortIndex].materialType,
+            amount: sourceMachine.outputs[sourcePortIndex].amount,
           },
         ]
         connection.state = GRAPH_ENTITY_STATE.ACTIVE
@@ -444,8 +451,8 @@ export const playerOrder = derived(
     if (!$player || !$orders || !$playerPod || !$availableOrders) return null
 
     return $player.tutorial
-      ? $orders[$playerPod.currentOrder]
-      : $availableOrders[$playerPod.currentOrder]
+      ? $orders[$player.currentOrder]
+      : $availableOrders[$player.currentOrder]
   }
 )
 
@@ -457,8 +464,8 @@ export const shippableDepots = derived(
     return Object.fromEntries(
       Object.entries($simulatedDepots).map(([_, depot]) => {
         if (
-          depot.materialType === $playerOrder?.order.goalMaterialType &&
-          depot.amount >= $playerOrder?.order.goalAmount
+          depot.materialType === $playerOrder?.order.materialType &&
+          depot.amount >= $playerOrder?.order.amount
         ) {
           return [_, true]
         }

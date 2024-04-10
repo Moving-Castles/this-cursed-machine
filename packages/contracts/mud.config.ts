@@ -27,12 +27,10 @@ export default defineWorld({
                 dataStruct: true
             }
         },
-        // ...
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
         MaterialType: "MATERIAL_TYPE",
         Amount: "uint32",
-        // ...
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
@@ -55,7 +53,6 @@ export default defineWorld({
                 value: "string"
             }
         },
-        // ...
         Tutorial: "bool",
         TutorialLevel: "uint32",
         Order: {
@@ -63,32 +60,27 @@ export default defineWorld({
             schema: {
                 key: "bytes32",
                 creationBlock: "uint256",
+                creator: "bytes32",
+                materialType: "MATERIAL_TYPE",
+                amount: "uint32",
                 expirationBlock: "uint256",
-                resourceMaterialType: "MATERIAL_TYPE",
-                resourceAmount: "uint32",
-                goalMaterialType: "MATERIAL_TYPE",
-                goalAmount: "uint32",
-                rewardAmount: "uint32",
-                maxPlayers: "uint32"
+                reward: "uint32",
+                maxPlayers: "uint32",
+                title: "string"
             }
         },
         Offer: {
             key: ["key"],
             schema: {
                 key: "bytes32",
-                creationBlock: "uint256",
                 materialType: "MATERIAL_TYPE",
                 amount: "uint32",
                 cost: "uint32",
             }
         },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
-        EarnedPoints: "uint32",
-        // ...
-        LastResolved: "uint256",
-        Input: "uint256",
-        Output: "MATERIAL_TYPE",
-        // ...
+        EarnedPoints: "uint32", // Lifetime points earned by player
+        LastResolved: "uint256", // Used to keep track block past since last resolution of pod
         IncomingConnections: "bytes32[]",
         OutgoingConnections: "bytes32[]",
         DepotConnection: "bytes32",

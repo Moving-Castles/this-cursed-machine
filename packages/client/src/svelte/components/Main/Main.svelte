@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { flicker } from "@modules/ui/transitions"
   import { player } from "@modules/state/base/stores"
   import { playSound } from "@modules/sound"
 
@@ -10,9 +9,8 @@
   import OrderBar from "@components/Main/Bars/OrderBar.svelte"
   import Attachments from "@components/Main/Tabs/Pod/Attachments/Attachments.svelte"
 
-  import { sleep } from "@modules/utils"
   import { TABS } from "@modules/ui/enums"
-  import { valve } from "@modules/ui/transitions"
+  import { valve, flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
   import {
     sendMessage,
@@ -123,7 +121,7 @@
           <OrderBar />
         </div>
         {#key $activeTab}
-          <div transition:valve class="tab-container">
+          <div class="tab-container">
             {#if $tutorialProgress === 0}
               <div class="dim" out:flicker={{ duration: 500 }} />
             {/if}
@@ -132,11 +130,7 @@
               <svelte:component this={currentTabComponent} />
             {/if}
 
-            {#if $activeTab === 0}
-              {#await sleep(100) then}
-                <Attachments />
-              {/await}
-            {/if}
+            <Attachments />
           </div>
         {/key}
         <div class="tab-bar">
@@ -212,7 +206,6 @@
         position: relative;
         animation: hue-rotate-animation 5s infinite linear;
         overflow-y: auto;
-        overflow: hidden;
       }
 
       .tab-bar {

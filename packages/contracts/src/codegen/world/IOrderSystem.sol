@@ -12,14 +12,13 @@ import { MATERIAL_TYPE } from "./../common.sol";
  */
 interface IOrderSystem {
   function createOrder(
-    MATERIAL_TYPE _resourceMaterialType,
-    uint32 _resourceAmount,
-    MATERIAL_TYPE _goalMaterialType,
-    uint32 _goalAmount,
+    string memory _title,
+    MATERIAL_TYPE _materialType,
+    uint32 _amount,
     uint32 _reward,
     uint32 _duration,
     uint32 _maxPlayers
-  ) external returns (bytes32);
+  ) external returns (bytes32 orderEntity);
 
   function cancel(bytes32 _orderEntity) external;
 

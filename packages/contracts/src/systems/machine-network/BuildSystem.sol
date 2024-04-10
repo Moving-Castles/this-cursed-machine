@@ -7,16 +7,16 @@ import { LibUtils, LibEntity, LibPod } from "../../libraries/Libraries.sol";
 
 contract BuildSystem is System {
   /**
-   * @notice Creates a new machine entity and configures its ports
-   * @param _machineType The type of machine to build, specified by the MACHINE_TYPE enum.
+   * @notice Build a machine
+   * @param _machineType The type of machine to build
    * @return machineEntity The identifier for the newly created machine entity.
    */
-  function build(MACHINE_TYPE _machineType) public returns (bytes32) {
+  function build(MACHINE_TYPE _machineType) public returns (bytes32 machineEntity) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Create machine entity
-    bytes32 machineEntity = LibEntity.create(_machineType);
+    machineEntity = LibEntity.create(_machineType);
 
     // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);

@@ -11,7 +11,7 @@
       <OrderItem
         {key}
         {order}
-        active={$playerPod.currentOrder === key}
+        active={$player.currentOrder === key}
         completed={$player.completed?.includes(key)}
       />
     {/each}

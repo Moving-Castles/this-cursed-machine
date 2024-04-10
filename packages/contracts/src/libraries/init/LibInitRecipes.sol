@@ -5,6 +5,9 @@ import { LibUtils } from "../LibUtils.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 
 library LibInitRecipes {
+  /**
+   * @notice Create recipes needed for tutorial
+   */
   function init() internal {
     /*//////////////////////////////////////////////////////////////
                                  PLAYER

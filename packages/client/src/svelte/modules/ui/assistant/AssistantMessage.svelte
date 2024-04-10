@@ -5,6 +5,7 @@
   import { playSound } from "@modules/sound"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
+  import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
@@ -29,6 +30,7 @@
     playSound("tcm", "TRX_yes")
     working = false
     tutorialProgress.set(0)
+    clearTerminalOutput()
   }
 
   const close = () => dispatch("end", msg)
@@ -83,6 +85,7 @@
     border: 5px double var(--color-success);
     color: var(--color-success);
     position: relative;
+    user-select: none;
 
     .image {
       line-height: 0;

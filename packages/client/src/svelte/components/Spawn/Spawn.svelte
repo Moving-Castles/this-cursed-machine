@@ -8,6 +8,7 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
+  import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { narrative } from "@components/Spawn/narrative"
   import { player } from "@modules/state/base/stores"
 

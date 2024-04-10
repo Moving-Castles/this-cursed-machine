@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
-  import { playerPod, machines } from "@modules/state/base/stores"
+  import { playerPod } from "@modules/state/base/stores"
+  import { selectedOption } from "@modules/ui/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
@@ -16,15 +17,12 @@
 
   $: canShip = $shippableDepots[address]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
-
   $: shipping = $waitingTransaction?.systemId === "ship" && canShip
-
   // Narrow the type
   $: typedDepot = depot as Depot
-
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
-
   $: empty = typedDepot.amount === 0
+  $: highlight = $selectedOption?.value === address
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -34,7 +32,12 @@
   }
 </script>
 
-<div id="depot-{address}" class="depot-item" class:shippable={canShip}>
+<div
+  id="depot-{address}"
+  class="depot-item"
+  class:shippable={canShip}
+  class:highlight
+>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}
@@ -42,9 +45,9 @@
       class="overlay flash-fast"
     />
   {/if}
-  <!-- <div class="id">
+  <div class="id">
     <div>{index + 1}</div>
-  </div> -->
+  </div>
 
   <div class="content">
     {#if empty}
@@ -64,7 +67,10 @@
 
   <div class="connection" class:connected>
     {#if connected}
-      {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`}
+      ↓
+      <!-- {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`} -->
+    {:else}
+      -
     {/if}
   </div>
 </div>
@@ -76,7 +82,7 @@
     overflow: hidden;
     font-size: var(--font-size-small);
     height: 70px;
-    background: rgb(74, 74, 74);
+    background: var(--color-grey-dark);
     display: flex;
     position: relative;
 
@@ -91,14 +97,13 @@
     }
 
     .id {
-      width: 50px;
-      border-right: 1px solid var(--foreground);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: var(--font-size-normal);
+      font-size: var(--font-size);
       background: var(--foreground);
       color: var(--background);
+      padding: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .content {
@@ -115,7 +120,7 @@
 
       .material-type {
         background: var(--foreground);
-        color: rgb(74, 74, 74);
+        color: var(--color-grey-dark);
         padding: 2px;
         margin-right: 1ch;
       }
@@ -127,17 +132,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: var(--font-size) !important;
 
-      &:not(.connected) {
-        &::after {
-          content: "";
-          position: absolute;
-          width: 40px;
-          height: 1px;
-          background: white;
-          transform: rotate(45deg);
-        }
-      }
+      // &:not(.connected) {
+      //   &::after {
+      //     content: "";
+      //     position: absolute;
+      //     width: 40px;
+      //     height: 1px;
+      //     background: white;
+      //     transform: rotate(45deg);
+      //   }
+      // }
 
       &.connected {
         background: var(--color-success);

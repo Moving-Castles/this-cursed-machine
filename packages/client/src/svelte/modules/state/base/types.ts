@@ -49,13 +49,12 @@ declare global {
   }
 
   type OrderData = {
-    creationBlock: number
+    creator: string
+    title: string
     expirationBlock: number
-    resourceMaterialType: MATERIAL_TYPE
-    resourceAmount: number
-    goalMaterialType: MATERIAL_TYPE
-    goalAmount: number
-    rewardAmount: number
+    materialType: MATERIAL_TYPE
+    amount: number
+    reward: number
     maxPlayers: number
   }
 
@@ -85,7 +84,6 @@ declare global {
     machinesInPod: string[]
     depotsInPod: string[]
     buildTracker: number[]
-    currentOrder: string
     fixedEntities: FixedEntities
   }
 
@@ -96,6 +94,7 @@ declare global {
     spawnIndex: number
     name?: string
     carriedBy: string
+    currentOrder: string
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
