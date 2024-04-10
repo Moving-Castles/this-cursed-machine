@@ -9,6 +9,7 @@
     simulatedDepots as depots,
   } from "@modules/state/simulated/stores"
   import { draw as drawTransition } from "svelte/transition"
+  import GradientPath from "@components/Main/Tabs/Pod/Graph/Connections/GradientPath.svelte"
 
   export let attachment: Attachment
 
@@ -231,4 +232,11 @@
     fill="none"
     stroke-width="10"
   />
+  <!-- <GradientPath
+    {d}
+    fromColor="#587a00"
+    toColor="#a4fa3b"
+    strokeWidth={10}
+    dasharray={[1, 0, 0, 1, 0, 1, 0, 0, 1]}
+  /> -->
 </g>

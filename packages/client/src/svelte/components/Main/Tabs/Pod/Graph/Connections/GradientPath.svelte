@@ -1,6 +1,11 @@
 <script lang="ts">
+  import type { Spring } from "svelte/motion"
   import { onMount, onDestroy } from "svelte"
-  import { interpolateRgb, interpolateNumber } from "d3-interpolate"
+  import {
+    interpolateRgbBasis,
+    interpolateRgb,
+    interpolateNumber,
+  } from "d3-interpolate"
   import { range } from "d3-array"
   import { tweened } from "svelte/motion"
   import * as easing from "svelte/easing"
@@ -8,10 +13,21 @@
   export let d: string
   export let productive = false
   export let carrying = false
+  export let strokeWidth = 4 // default for connections
+  export let fromColor = "#999"
+  export let toColor = "#fff"
+  export let sampleCount = 1 // higher is heavier, higher is smoother
+  export let dasharray = [0, 0, 0, 0, 0, 1, 0] // change this to change the behavior of colors being pushed through
+  // export let throughputSpeed = 1000
+
+  const fromColorStore = tweened(fromColor, {
+    interpolate: interpolateRgb,
+    duration: 1000,
+  })
 
   // @todo: Map different materials to different easings
   const easingMap = {
-    0: easing.bounceInOut,
+    0: easing.cubicInOut,
   }
 
   let offset = tweened(0, { duration: 1000, easing: easingMap[0] })
@@ -26,21 +42,20 @@
   }
 
   const tick = () => {
-    let fromColor = "#fff"
-    if (carrying) fromColor = "#a4fa3b"
-    if (productive) fromColor = "#00e5ff"
+    if (carrying) fromColorStore.set("#a4fa3b")
+    if (productive) fromColorStore.set("#00e5ff")
 
-    console.log(fromColor)
-    let toColor = "#ffff"
-    let color = interpolateRgb(fromColor, toColor)
+    let color = interpolateRgbBasis(
+      dasharray.map(num => (num === 0 ? $fromColorStore : toColor))
+    )
 
-    parts = quads(samples(pathNode, 2)).map(q => {
+    parts = quads(samples(pathNode, sampleCount)).map(q => {
       const num = q.t
       const c = color(mod(num - $offset, 1))
       return {
         fill: c,
         stroke: c,
-        d: lineJoin(q[0], q[1], q[2], q[3], 4),
+        d: lineJoin(q[0], q[1], q[2], q[3], strokeWidth),
       }
     })
   }

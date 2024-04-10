@@ -1,13 +1,10 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import {
-    generators,
-    generatePoints,
-    generateSvgArrow,
-    getRotationAtPoint,
-  } from "./svg"
+  import { generators, generatePoints, getRotationAtPoint } from "./svg"
   import { inspecting, selectedOption } from "@modules/ui/stores"
-  import { linear } from "svelte/easing"
+  import { interpolateRgb } from "d3-interpolate"
+  import { spring } from "svelte/motion"
+  import { cubicOut as easing } from "svelte/easing"
   import { draw } from "svelte/transition"
   import { CELL } from "../constants"
   import Head from "./Head.svelte"
@@ -18,7 +15,7 @@
 
   const DURATION = 400
   const ARROW_OFFSET = 0
-  const drawOptions = { duration: DURATION, easing: linear }
+  const drawOptions = { duration: DURATION, easing }
 
   let animationFrameId: number
   let headRotation = 0
@@ -44,7 +41,7 @@
     const frame = e => {
       const progress = (e - animationStart) / DURATION
       const maxLength = pathElement.getTotalLength() - ARROW_OFFSET
-      const currentLength = maxLength * progress // Assume progress is the percentage of the path drawn
+      const currentLength = maxLength * easing(progress) // Assume progress is the percentage of the path drawn
 
       headPoint = pathElement.getPointAtLength(
         intro ? currentLength : maxLength - currentLength
@@ -108,10 +105,10 @@
     class:carrying
     class:productive={connection.productive}
   />
-  {#if connection.productive || carrying}
-    <GradientPath {d} {carrying} productive={connection.productive} />
-  {/if}
-  <Label {connection} {carrying} {hover} productive={connection.productive} />
+  <!-- {#if connection.productive || carrying} -->
+  <GradientPath {d} {carrying} productive={connection.productive} />
+  <!-- {/if} -->
+  <Label {connection} productive={connection.productive} />
 </g>
 {#if headPoint}
   {#key headPoint}
