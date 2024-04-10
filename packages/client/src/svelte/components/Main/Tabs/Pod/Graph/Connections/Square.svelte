@@ -2,6 +2,4 @@
   export let fill: string
 </script>
 
-<svg>
-  <rect width="10" height="10" style={fill} />
-</svg>
+<rect width="10" height="10" style={fill} />

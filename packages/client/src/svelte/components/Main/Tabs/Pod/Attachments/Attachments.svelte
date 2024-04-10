@@ -17,10 +17,6 @@
 
   // Quick fix: only show when the first tab (pod) is active
   $: visible = $activeTab === 0
-
-  onMount(async () => {
-    console.log("mount")
-  })
 </script>
 
 <svelte:window

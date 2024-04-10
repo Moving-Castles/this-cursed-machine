@@ -434,12 +434,6 @@ function getEndPosition(
         currentConnection.portIndex.target == 0
           ? endMachine.x
           : endMachine.x + 2
-      console.log(
-        "MIXER",
-        portPositionX,
-        endMachine,
-        currentConnection.portIndex.target
-      )
     }
 
     if (endMachine.placementGroup === PLACEMENT_GROUP.TOP) {
