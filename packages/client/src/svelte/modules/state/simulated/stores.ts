@@ -310,8 +310,6 @@ export function calculateSimulatedConnections(
       const sourceMachine = simulatedMachines[sourceAddress]
       const targetMachine = simulatedMachines[targetAddress]
 
-      console.log(sourceMachine, machine)
-
       if (!sourceMachine || !targetMachine) return connections
 
       if (!targetMachine?.incomingConnections) return connections

@@ -32,10 +32,11 @@
 
   requestAnimationFrame(tick)
 
-  $: material = MATERIAL_TYPE[connection?.products?.[0]?.materialType]
-  $: amount = connection?.products?.[0]?.amount / 100
   // @todo Determine the flow direction
   const direction = ">"
+
+  $: material = MATERIAL_TYPE[connection?.products?.[0]?.materialType]
+  $: amount = connection?.products?.[0]?.amount / 100
 
   $: {
     if (material && amount && direction) {

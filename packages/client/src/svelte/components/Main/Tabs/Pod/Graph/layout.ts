@@ -24,7 +24,7 @@ import { PLACEMENT_GROUP } from "./enums"
  * Outlet is aligned to the right, centered vertically
  * Player is centered horizontally and vertically
  */
-const FIXED_POSITIONS = {
+export const FIXED_POSITIONS = {
   inletOne: { x: 0, y: Math.floor((GRID.HEIGHT - ORFICE.HEIGHT * 3) / 2) },
   inletTwo: {
     x: 0,
@@ -76,7 +76,7 @@ function generateMachineCoordinates(): Coordinate[] {
   return DYNAMIC_POSITIONS
 }
 
-const DYNAMIC_POSITIONS = generateMachineCoordinates()
+export const DYNAMIC_POSITIONS = generateMachineCoordinates()
 
 function getFixedMachinePosition(
   machineId: string,

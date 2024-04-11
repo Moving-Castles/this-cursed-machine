@@ -232,11 +232,4 @@
     fill="none"
     stroke-width="10"
   />
-  <!-- <GradientPath
-    {d}
-    fromColor="#587a00"
-    toColor="#a4fa3b"
-    strokeWidth={10}
-    dasharray={[1, 0, 0, 1, 0, 1, 0, 0, 1]}
-  /> -->
 </g>

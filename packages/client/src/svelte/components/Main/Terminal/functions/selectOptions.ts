@@ -13,7 +13,8 @@ import {
   FIXED_MACHINE_TYPES,
   MACHINES_BY_LEVEL,
 } from "@components/Main/Terminal/"
-import { connectionMachineSort } from "@components/Main/Terminal/functions/helpers"
+import { machinePositionSort } from "@components/Main/Terminal/functions/helpers"
+
 import {
   machineTypeToLabel,
   materialTypeToLabel,
@@ -81,16 +82,18 @@ function createSelectOptionsDestroy(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   // All machines except player, inlet, outlet
-  Object.entries(get(simulatedMachines)).forEach(([machineId, machine]) => {
-    if (
-      !FIXED_MACHINE_TYPES.includes(machine.machineType || MACHINE_TYPE.NONE)
-    ) {
-      selectOptions.push({
-        label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
-        value: machineId,
-      })
-    }
-  })
+  Object.entries(get(simulatedMachines))
+    .sort(machinePositionSort)
+    .forEach(([address, machine]) => {
+      if (
+        !FIXED_MACHINE_TYPES.includes(machine.machineType || MACHINE_TYPE.NONE)
+      ) {
+        selectOptions.push({
+          label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
+          value: address,
+        })
+      }
+    })
 
   return selectOptions
 }
@@ -104,14 +107,16 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
 
   const machines = availableMachines(direction, get(simulatedMachines))
 
-  selectOptions = machines.map(([address, machine]) => ({
-    label:
-      machineTypeToLabel(machine.machineType) +
-      (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
-    value: address,
-  }))
+  selectOptions = machines
+    .sort(machinePositionSort)
+    .map(([address, machine]) => ({
+      label:
+        machineTypeToLabel(machine.machineType) +
+        (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
+      value: address,
+    }))
 
-  return connectionMachineSort(selectOptions)
+  return selectOptions
 }
 
 /**

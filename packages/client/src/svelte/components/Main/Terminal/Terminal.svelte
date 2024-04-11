@@ -207,8 +207,6 @@
 
         if (!product) return `Port #${p.portIndex + 1}`
 
-        console.log(product, product?.materialType)
-
         return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
       }
 
@@ -248,8 +246,6 @@
         const product = sourceMachineEntity?.products?.[p.portIndex]
 
         if (!product) return `Port #${p.portIndex + 1}`
-
-        console.log(product, product?.materialType)
 
         return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
       }

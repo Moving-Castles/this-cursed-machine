@@ -13,7 +13,7 @@
     <DepotsBox />
   </div>
   <div class="graph" in:fade={{ duration: 100 }}>
-    <Graph />
+    <Graph on:resize />
   </div>
 </div>
 <Tooltips />

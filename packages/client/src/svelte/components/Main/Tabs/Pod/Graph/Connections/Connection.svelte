@@ -13,7 +13,7 @@
 
   export let connection: GraphConnection
 
-  const DURATION = 400
+  const DURATION = 1000
   const ARROW_OFFSET = 0
   const drawOptions = { duration: DURATION, easing }
 
@@ -24,6 +24,7 @@
   let hover = false
   let animationStart: number
   let activeCurve = "basis"
+  let progress = 1
 
   $: carrying = connection?.products.length > 0
   $: fill = connection.productive
@@ -39,9 +40,12 @@
     animationStart = performance.now()
 
     const frame = e => {
-      const progress = (e - animationStart) / DURATION
+      progress = intro
+        ? easing((e - animationStart) / DURATION)
+        : 1 - easing((e - animationStart) / DURATION)
+
       const maxLength = pathElement.getTotalLength() - ARROW_OFFSET
-      const currentLength = maxLength * easing(progress) // Assume progress is the percentage of the path drawn
+      const currentLength = maxLength * easing((e - animationStart) / DURATION)
 
       headPoint = pathElement.getPointAtLength(
         intro ? currentLength : maxLength - currentLength
@@ -83,6 +87,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+
 <g
   class="connection"
   class:hover
@@ -106,7 +111,12 @@
     class:productive={connection.productive}
   />
   <!-- {#if connection.productive || carrying} -->
-  <GradientPath {d} {carrying} productive={connection.productive} />
+  <GradientPath
+    {d}
+    {carrying}
+    productive={connection.productive}
+    clip={progress}
+  />
   <!-- {/if} -->
   <Label {connection} productive={connection.productive} />
 </g>

@@ -26,6 +26,8 @@
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
   import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
+  let resized = 0
+
   const tabList = {
     [TABS.POD]: {
       label: "Pod",
@@ -127,10 +129,15 @@
             {/if}
             <!-- Render the CurrentComponent if it's not null -->
             {#if currentTabComponent}
-              <svelte:component this={currentTabComponent} />
+              <svelte:component
+                this={currentTabComponent}
+                on:resize={() => resized++}
+              />
             {/if}
 
-            <Attachments />
+            {#key resized}
+              <Attachments />
+            {/key}
           </div>
         {/key}
         <div class="tab-bar">

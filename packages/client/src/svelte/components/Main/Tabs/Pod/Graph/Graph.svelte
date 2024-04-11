@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte"
+  import { onMount, tick, createEventDispatcher } from "svelte"
   import { playerPod } from "@modules/state/base/stores"
   import { GRID, CELL } from "./constants"
   import { graphScale, graphElement } from "@modules/ui/stores"
@@ -13,6 +13,8 @@
   import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
+
+  const dispatch = createEventDispatcher()
 
   let [parent, child]: [HTMLElement | null, HTMLElement | null] = [null, null]
 
@@ -42,6 +44,8 @@
     const scaleY = heightBy / c.height
 
     graphScale.set(Math.max(1, 1 + Math.min(scaleX, scaleY)))
+
+    dispatch("resize")
   }
 
   let layout = {
