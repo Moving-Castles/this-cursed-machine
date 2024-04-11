@@ -13,6 +13,12 @@ import {
   curveStepBefore,
 } from "d3-shape"
 
+export const catMullRomDynamic = (alpha: number) =>
+  line()
+    .x(d => d.x)
+    .y(d => d.y)
+    .curve(curveCatmullRom.alpha(alpha))
+
 export const catMullRom = line()
   .x(d => d.x)
   .y(d => d.y)
@@ -64,6 +70,7 @@ export const stepAfter = line()
   .curve(curveStepAfter)
 
 export const generators = {
+  catMullRomDynamic,
   catMullRom,
   basis,
   bumpX,

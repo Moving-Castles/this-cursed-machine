@@ -13,6 +13,7 @@
   export let productive: boolean
 
   let words = []
+  let frameId: number
 
   import { getMidpoint } from "../Connections/svg"
 
@@ -30,7 +31,7 @@
     requestAnimationFrame(tick)
   }
 
-  requestAnimationFrame(tick)
+  frameId = requestAnimationFrame(tick)
 
   // @todo Determine the flow direction
   const direction = ">"
@@ -51,7 +52,10 @@
     labelY = y
   }
 
-  onDestroy(() => clearInterval(interval))
+  onDestroy(() => {
+    clearInterval(interval)
+    cancelAnimationFrame(frameId)
+  })
 </script>
 
 {#if connection?.products?.length > 0 && words.length > 0}
