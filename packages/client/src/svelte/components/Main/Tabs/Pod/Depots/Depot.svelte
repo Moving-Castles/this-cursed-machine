@@ -23,6 +23,10 @@
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
   $: empty = typedDepot.amount === 0
   $: highlight = $selectedOption?.value === address
+  $: progress =
+    (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
+      (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
+    100
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -38,6 +42,7 @@
   class:shippable={canShip}
   class:highlight
 >
+  <div class="depot-progress" style:height="{progress}%"></div>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}
@@ -90,6 +95,14 @@
       position: absolute;
       inset: 0;
       background-color: white;
+    }
+
+    .depot-progress {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      background-color: rgba(215, 215, 195, 0.2);
     }
 
     &.shippable {
