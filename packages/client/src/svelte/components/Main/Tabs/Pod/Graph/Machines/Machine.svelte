@@ -33,8 +33,17 @@
   $: producing = machine?.products && machine?.products.length > 0
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: console.log($selectedOption?.value)
+  $: {
+    if ($selectedParameters.length > 0) {
+      if ($selectedParameters.includes(address)) {
+        highlight = true
+        selectedPortIndex = $selectedOption?.value
+      }
+    } else {
+      highlight = false
+    }
+  }
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =

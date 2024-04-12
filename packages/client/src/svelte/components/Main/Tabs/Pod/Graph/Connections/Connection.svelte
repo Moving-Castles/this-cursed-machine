@@ -112,6 +112,7 @@
       {d}
       {carrying}
       productive={connection.productive}
+      toColor="#d7d7c3"
       clip={progress}
     />
   {/if}

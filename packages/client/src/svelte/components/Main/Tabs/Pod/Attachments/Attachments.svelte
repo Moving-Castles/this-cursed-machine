@@ -62,6 +62,31 @@
         fill="none"
       />
 
+      <defs>
+        <mask id="mask">
+          <rect width="100%" height="100%" fill="white" />
+          <rect
+            x={graphBoundingBox?.left || 0}
+            y={graphBoundingBox?.top + 100 || 0}
+            width={graphBoundingBox?.width || 0}
+            height={graphBoundingBox?.height - 200 || 0}
+            fill="black"
+          />
+        </mask>
+      </defs>
+
+      <!-- Only shows inside -->
+      <!-- <defs>
+        <clipPath id="clip">
+          <rect
+            x={graphBoundingBox?.left || 0}
+            y={graphBoundingBox?.top + 100 || 0}
+            width={graphBoundingBox?.width || 0}
+            height={graphBoundingBox?.height - 200 || 0}
+          />
+        </clipPath>
+      </defs> -->
+
       {#each Object.entries($depotAttachments) as [address, attachment] (address)}
         <Attachment {attachment} />
       {/each}

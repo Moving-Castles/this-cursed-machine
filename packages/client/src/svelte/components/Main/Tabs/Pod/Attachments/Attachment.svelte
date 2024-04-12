@@ -5,6 +5,7 @@
   import { generators } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
   import { MACHINE_TYPE } from "contracts/enums"
   import walkable from "@modules/utils/walkable"
+  import GradientPath from "@components/Main/Tabs/Pod/Graph/Connections/GradientPath.svelte"
   import {
     simulatedMachines as machines,
     simulatedDepots as depots,
@@ -65,7 +66,7 @@
     machineElement = document.getElementById(`machine-${attachment.machine}`)
     midzone = document.getElementById("midzone")
     safezone = document.getElementById(
-      $machines[attachment.machine].machineType === MACHINE_TYPE.INLET
+      attachedMachine?.machineType === MACHINE_TYPE.INLET
         ? "safezone-1"
         : "safezone-2"
     )
@@ -90,7 +91,7 @@
       // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
       throughCoord2 = makeRandomPointInsideSafeZone(
-        $machines[attachment.machine].machineType
+        attachedMachine?.machineType
       )
 
       const points = throughCoord
@@ -133,6 +134,8 @@
   }
 
   $: d = generators.catMullRomDynamic($alpha)(points)
+  $: attachedMachine = $machines[attachment.machine]
+  $: productive = attachedMachine?.productive
 
   let points = makePoints()
 
@@ -152,6 +155,7 @@
   data-from={attachment.depot}
   data-to={attachment.machine}
   bind:this={element}
+  mask="url(#mask)"
 >
   <path
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
@@ -161,4 +165,13 @@
     fill="none"
     stroke-width="10"
   />
+  {#if productive}
+    <GradientPath
+      strokeWidth={10}
+      {d}
+      sampleCount={1}
+      fromColor="#a4fa3b"
+      toColor="#d7d7c3"
+    />
+  {/if}
 </g>

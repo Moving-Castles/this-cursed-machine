@@ -25,3 +25,4 @@ export const selectedParameters: Writable<
 > = writable([])
 export const selectedOption: Writable<SelectOption | false> = writable(false)
 export const graphElement: Writable<SVGElement> = writable()
+export const thud = writable(false)

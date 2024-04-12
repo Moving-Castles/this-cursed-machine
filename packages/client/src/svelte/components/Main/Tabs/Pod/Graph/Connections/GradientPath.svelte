@@ -74,6 +74,9 @@
 
   // Sample the SVG path uniformly with the specified precision.
   function samples(path: SVGPathElement, precision: number) {
+    console.log(path)
+    if (!path) return []
+    if (!path?.getAttribute("d")) return []
     let n = path.getTotalLength(),
       t = [0],
       i = 0,

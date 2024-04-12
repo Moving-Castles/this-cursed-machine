@@ -76,10 +76,12 @@
   class:productive
   class="label"
 >
-  <TweenedText
-    mouseover={hover}
-    words={["", `${direction} ${material || "EMPTY"} ${direction}`]}
-  />
+  {#key material}
+    <TweenedText
+      mouseover={hover}
+      words={["", `${direction} ${material || "EMPTY"} ${direction}`]}
+    />
+  {/key}
 </text>
 
 <style lang="scss">
@@ -93,6 +95,7 @@
     paint-order: stroke;
     stroke: var(--color-grey-mid);
     white-space: pre;
+    fill: var(--color-grey-light);
 
     &.carrying {
       fill: var(--color-success);

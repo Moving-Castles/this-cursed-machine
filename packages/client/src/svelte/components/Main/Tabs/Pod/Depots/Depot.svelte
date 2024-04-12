@@ -2,11 +2,12 @@
   import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
   import { playerPod } from "@modules/state/base/stores"
+  import { simulatedMachines } from "@modules/state/simulated/stores"
   import { selectedOption } from "@modules/ui/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
+  import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DEPOT_CAPACITY } from "@modules/state/simulated/constants"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
@@ -72,8 +73,11 @@
 
   <div class="connection" class:connected>
     {#if connected}
-      ↓
-      <!-- {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`} -->
+      {#if getConnectionName(typedDepot.depotConnection) === "I"}
+        ↓
+      {:else if getConnectionName(typedDepot.depotConnection) === "O"}
+        ↑
+      {/if}
     {:else}
       -
     {/if}
