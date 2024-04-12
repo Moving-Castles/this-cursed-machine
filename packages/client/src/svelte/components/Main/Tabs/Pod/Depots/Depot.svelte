@@ -2,11 +2,12 @@
   import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
   import { playerPod } from "@modules/state/base/stores"
+  import { simulatedMachines } from "@modules/state/simulated/stores"
   import { selectedOption } from "@modules/ui/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
+  import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DEPOT_CAPACITY } from "@modules/state/simulated/constants"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
@@ -23,6 +24,10 @@
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
   $: empty = typedDepot.amount === 0
   $: highlight = $selectedOption?.value === address
+  $: progress =
+    (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
+      (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
+    100
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -38,6 +43,7 @@
   class:shippable={canShip}
   class:highlight
 >
+  <div class="depot-progress" style:height="{progress}%"></div>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}
@@ -67,8 +73,11 @@
 
   <div class="connection" class:connected>
     {#if connected}
-      ↓
-      <!-- {`${getConnectionName(typedDepot.depotConnection)}${$machines[typedDepot.depotConnection]?.buildIndex ?? ""}`} -->
+      {#if getConnectionName(typedDepot.depotConnection) === "I"}
+        ↓
+      {:else if getConnectionName(typedDepot.depotConnection) === "O"}
+        ↑
+      {/if}
     {:else}
       -
     {/if}
@@ -90,6 +99,14 @@
       position: absolute;
       inset: 0;
       background-color: white;
+    }
+
+    .depot-progress {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      background-color: rgba(215, 215, 195, 0.2);
     }
 
     &.shippable {

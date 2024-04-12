@@ -1,12 +1,12 @@
 <script lang="ts">
   import { tweened } from "svelte/motion"
-  import { linear as easing } from "svelte/easing"
+  import { expoOut as easing } from "svelte/easing"
   export let value: number
   export let goal = Infinity // optional
   export let warn = -1 // If the value falls below this number, give ominous warning
   export let step = 10
 
-  const goingUp = tweened(Number(value), { duration: 50, easing })
+  const goingUp = tweened(Number(value), { duration: 1000, easing })
 
   let previousValue = $goingUp
 

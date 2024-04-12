@@ -21,7 +21,8 @@ export const mouseX = writable(0)
 export const mouseY = writable(0)
 export const graphScale = writable(1)
 export const selectedParameters: Writable<
-  (string | MACHINE_TYPE | PORT_INDEX | null)[] | false
-> = writable(false)
+  (string | MACHINE_TYPE | PORT_INDEX | null)[]
+> = writable([])
 export const selectedOption: Writable<SelectOption | false> = writable(false)
 export const graphElement: Writable<SVGElement> = writable()
+export const thud = writable(false)

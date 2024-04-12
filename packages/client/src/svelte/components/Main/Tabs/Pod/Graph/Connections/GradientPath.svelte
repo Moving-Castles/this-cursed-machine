@@ -12,7 +12,7 @@
   export let strokeWidth = 4 // default for connections
   export let fromColor = "#999"
   export let toColor = "#fff"
-  export let sampleCount = 10 // higher is heavier, higher is smoother
+  export let sampleCount = 2 // higher is heavier, higher is smoother
   export let dasharray = [0, 0, 0, 0, 0, 1, 0] // change this to change the behavior of colors being pushed through
   export let transitionEasingFunction = easing.cubicOut
   // export let throughputSpeed = 1000
@@ -74,6 +74,9 @@
 
   // Sample the SVG path uniformly with the specified precision.
   function samples(path: SVGPathElement, precision: number) {
+    console.log(path)
+    if (!path) return []
+    if (!path?.getAttribute("d")) return []
     let n = path.getTotalLength(),
       t = [0],
       i = 0,

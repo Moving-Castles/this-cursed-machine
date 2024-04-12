@@ -2,7 +2,7 @@
   import { onMount, tick, createEventDispatcher } from "svelte"
   import { playerPod } from "@modules/state/base/stores"
   import { GRID, CELL } from "./constants"
-  import { graphScale, graphElement } from "@modules/ui/stores"
+  import { graphScale, graphElement, thud } from "@modules/ui/stores"
   import {
     simulatedMachines,
     simulatedConnections,
@@ -67,7 +67,7 @@
 
 <svelte:window on:resize={calcScale} />
 
-<div class="graph-container" bind:this={parent}>
+<div class:thud={$thud} class="graph-container" bind:this={parent}>
   <div style:transform="scale({$graphScale})" class="grid" bind:this={child}>
     <div class="top">
       {#each Object.entries(layout.graphMachines) as [address, machine], i (address)}

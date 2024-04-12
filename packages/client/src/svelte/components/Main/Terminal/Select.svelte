@@ -4,7 +4,7 @@
   import { MACHINE_TYPE } from "@modules/state/base/enums"
   import { playSound } from "@modules/sound"
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
-  import { selectedOption } from "@modules/ui/stores"
+  import { selectedOption, selectedParameters } from "@modules/ui/stores"
 
   type ReturnFunction = (value: string | MACHINE_TYPE | null) => void
 
@@ -88,6 +88,7 @@
 
   onDestroy(() => {
     selectedOption.set(false)
+    selectedParameters.set([])
   })
 </script>
 

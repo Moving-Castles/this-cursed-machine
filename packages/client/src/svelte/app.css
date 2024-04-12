@@ -116,6 +116,34 @@ pre {
   animation: strobe 200ms steps(1, end) 3;
 }
 
+.thud {
+  animation: thud 700ms steps(10, end) 1;
+}
+
+@keyframes thud {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    filter: blur(0px);
+  }
+
+  55% {
+    transform: translateY(1px);
+    /* filter: blur(2px); */
+  }
+
+  60% {
+    transform: translateY(0px);
+  }
+
+  85% {
+    filter: blur(0px);
+  }
+}
+
 @keyframes strobe {
   50% {
     opacity: 0;

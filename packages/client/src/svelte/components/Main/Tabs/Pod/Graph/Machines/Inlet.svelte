@@ -5,7 +5,7 @@
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { selectedOption } from "@modules/ui/stores"
+  import { selectedParameters, selectedOption } from "@modules/ui/stores"
 
   export let address: string
   export let machine: GraphMachine
@@ -14,7 +14,8 @@
   // $: label = `I${machine.buildIndex ?? ""}`
   $: label = "→"
   $: connected = machine.depotConnection !== EMPTY_CONNECTION
-  $: highlight = $selectedOption?.value === address
+  $: highlight =
+    $selectedParameters?.includes(address) || $selectedOption?.value === address
 
   function makePorts() {
     return [

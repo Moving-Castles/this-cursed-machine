@@ -146,6 +146,81 @@ export function getMidpoint(
   return [midX, midY]
 }
 
+function simplifyPath(points) {
+  if (points.length < 3) return points // No simplification possible if too few points
+
+  const result = [points[0]] // Start with the first point
+  let direction = {
+    x: points[1][0] - points[0][0],
+    y: points[1][1] - points[0][1],
+  }
+
+  for (let i = 2; i < points.length; i++) {
+    const newDirection = {
+      x: points[i][0] - points[i - 1][0],
+      y: points[i][1] - points[i - 1][1],
+    }
+    // Check if direction changes
+    if (newDirection.x !== direction.x || newDirection.y !== direction.y) {
+      result.push(points[i - 1]) // Add last point before the change
+      direction = newDirection // Update the direction
+    }
+  }
+
+  result.push(points[points.length - 1]) // Add the last point of the path
+  return result
+}
+
+export function getLongestHorizontalSection(
+  connection: GraphConnection,
+  cellHeight: number,
+  cellWidth: number
+): [number, number] {
+  let longestSection = [0, 0, true]
+  let longest = 0
+
+  // Simplify the path to only include corner points
+  const path = simplifyPath(connection.path)
+
+  // Make path sections by going forward one by one
+  for (let i = 0; i < path.length - 1; i++) {
+    const startPosition = path[i]
+    const endPosition = path[i + 1]
+
+    // console.log("Comparing", startPosition, endPosition)
+
+    if (startPosition[1] === endPosition[1]) {
+      // We are on a horizontal section
+      // get the length
+      let length = 0
+      let forwards = true
+
+      if (endPosition[0] > startPosition[0]) {
+        length = endPosition[0] - startPosition[0]
+      } else {
+        forwards = false
+        length = Math.abs(startPosition[0] - endPosition[0])
+      }
+
+      console.log("length", startPosition, endPosition, length, longest)
+
+      if (length > longest) {
+        let x = startPosition[0]
+        let y = startPosition[1]
+        // The longest section so far
+        longestSection = [
+          (x + (forwards ? length / 2 : -length / 2)) * cellWidth,
+          y * cellHeight,
+          forwards,
+        ]
+        longest = length
+      }
+    }
+  }
+
+  return longestSection
+}
+
 export function generateSvgArrow(
   connection: GraphConnection,
   cellHeight: number,

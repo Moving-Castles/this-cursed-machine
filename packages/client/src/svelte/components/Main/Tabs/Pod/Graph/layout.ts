@@ -319,15 +319,11 @@ export function createLayout(
     path.unshift([startPosition.x, startPosition.y])
     path.push([endPosition.x, endPosition.y])
 
+    path.forEach(point => (grid = setCostAt(grid, point[0], point[1], 100)))
+
     // Set path in graphConnections
     graphConnections[i].path = path
   }
-
-  graphConnections.forEach(connection => {
-    connection.path.forEach(
-      point => (grid = setCostAt(grid, point[0], point[1], 10))
-    )
-  })
 
   // console.timeEnd("createLayout")
   return { graphMachines, graphConnections, grid }
