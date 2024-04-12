@@ -5,6 +5,10 @@ import { COMMANDS_BY_LEVEL } from "@components/Main/Terminal/"
 import { terminalOutput } from "@components/Main/Terminal/stores"
 import { machineTypeToLabel } from "@modules/state/simulated"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
+import {
+  FIXED_POSITIONS,
+  DYNAMIC_POSITIONS,
+} from "@components/Main/Tabs/Pod/Graph/layout"
 
 /**
  * Scrolls the terminal output element to its end to ensure the latest output is visible.
@@ -69,4 +73,51 @@ export function connectionMachineSort(array: SelectOption[]): SelectOption[] {
     if (b.label === machineTypeToLabel(MACHINE_TYPE.OUTLET)) return -1
     return a.label.localeCompare(b.label)
   })
+}
+
+/** Orders an array of machine entries with
+ * player first
+ * and then clockwise from inlet 1
+ * */
+export function machinePositionSort(a, b) {
+  // FIXED POSITIONS
+  const ALL_POSITIONS = [
+    ...Object.values(FIXED_POSITIONS),
+    ...DYNAMIC_POSITIONS,
+  ]
+
+  let [aPositionIndex, bPositionIndex] = [-1, -1]
+
+  if (a[1].machineType === MACHINE_TYPE.INLET) {
+    aPositionIndex = 0
+  } else if (a[1].machineType === MACHINE_TYPE.PLAYER) {
+    aPositionIndex = 1
+    console.log("PLAYER")
+  } else if (a[1].machineType === MACHINE_TYPE.OUTLET) {
+    aPositionIndex = 2
+    console.log("OUTLET")
+  } else {
+    aPositionIndex = ALL_POSITIONS.findIndex(
+      coord => coord.x === a[1].x && coord.y === a[1].y
+    )
+  }
+
+  if (b[1].machineType === MACHINE_TYPE.INLET) {
+    bPositionIndex = 0
+  } else if (b[1].machineType === MACHINE_TYPE.PLAYER) {
+    bPositionIndex = 1
+    console.log("PLAYER")
+  } else if (b[1].machineType === MACHINE_TYPE.OUTLET) {
+    bPositionIndex = 2
+    console.log("OUTLET")
+  } else {
+    bPositionIndex = ALL_POSITIONS.findIndex(
+      coord => coord.x === b[1].x && coord.y === b[1].y
+    )
+  }
+
+  console.log("final comparison", aPositionIndex, "-", bPositionIndex)
+
+  return aPositionIndex - bPositionIndex
+  // return POSITION_MAPPING[aPositionIndex] - POSITION_MAPPING[bPositionIndex]
 }

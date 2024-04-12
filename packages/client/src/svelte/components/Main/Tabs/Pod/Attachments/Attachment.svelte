@@ -1,20 +1,19 @@
 <script lang="ts">
   import type { Attachment } from "@modules/state/simulated/types"
-  import { onMount, tick } from "svelte"
+  import * as easing from "svelte/easing"
+  import { onMount, onDestroy, tick } from "svelte"
   import { generators } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
   import { MACHINE_TYPE } from "contracts/enums"
-  import * as easing from "svelte/easing"
+  import walkable from "@modules/utils/walkable"
   import {
     simulatedMachines as machines,
     simulatedDepots as depots,
   } from "@modules/state/simulated/stores"
   import { draw as drawTransition } from "svelte/transition"
-  import GradientPath from "@components/Main/Tabs/Pod/Graph/Connections/GradientPath.svelte"
 
   export let attachment: Attachment
 
-  const options = Object.keys(generators)
-  let activeCurve = "catMullRom"
+  const alpha = walkable()
 
   let element: SVGElement
   const OFFSET = 40
@@ -33,69 +32,7 @@
     { x: 0, y: 0 },
   ] // throughCoord is a random point between two
 
-  /**
-   * Calculate if a point is on an ellipse
-   * Visual explanation of the parameters: https://media.geeksforgeeks.org/wp-content/uploads/a-11-300x199.png
-   */
-  const pointIsOnEllipse = (
-    h: number,
-    k: number,
-    x: number,
-    y: number,
-    a: number,
-    b: number
-  ) => {
-    // Find the value of angle theta
-    let theta = Math.atan2(b * (y - k), a * (x - h))
-
-    // Find the value of distance
-    let distance =
-      Math.pow((x - h) * Math.cos(theta) + (y - k) * Math.sin(theta), 2) /
-        Math.pow(a, 2) +
-      Math.pow((x - h) * Math.sin(theta) - (y - k) * Math.cos(theta), 2) /
-        Math.pow(b, 2)
-
-    if (distance < 1) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  const makeRandomPointOutsideOfEllipse = (fromCoord, toCoord) => {
-    const [minX, maxX, minY, maxY] = [
-      Math.min(fromCoord.x, toCoord.x),
-      Math.max(fromCoord.x, toCoord.x),
-      Math.min(fromCoord.y, toCoord.y),
-      Math.max(fromCoord.y, toCoord.y),
-    ]
-    let coord = {
-      x: Math.random() * (maxX - minX) + minX,
-      y: Math.random() * (maxY - minY) + minY,
-    }
-
-    if (element) {
-      const ellipse = element.parentElement?.querySelector("ellipse")
-      if (ellipse) {
-        const cx = Number(ellipse.getAttribute("cx"))
-        const cy = Number(ellipse.getAttribute("cy"))
-        const rx = Number(ellipse.getAttribute("rx"))
-        const ry = Number(ellipse.getAttribute("ry"))
-
-        // Avoid the ellipse
-        while (
-          pointIsOnEllipse(cx, cy, throughCoord.x, throughCoord.y, rx, ry)
-        ) {
-          coord = {
-            x: Math.random() * (maxX - minX) + minX,
-            y: Math.random() * (maxY - minY) + minY,
-          }
-        }
-      }
-    }
-
-    return coord
-  }
+  let points = makePoints()
 
   const makeRandomPointInsideSafeZone = machineType => {
     const { top, left, bottom, right } = safezone?.getBoundingClientRect()
@@ -122,7 +59,7 @@
     }
   }
 
-  const makePoints = () => {
+  function makePoints() {
     // Assuming depots are in order
     // The safezone on the left is used if the attachment is going to an inlet
     // The safezone on the right is used if the attachment is going to the outlet
@@ -192,32 +129,26 @@
     return []
   }
 
-  const testCurve = e => {
-    if (import.meta.env.DEV && e.key === "<" && e.shiftKey) {
-      const index = options.indexOf(activeCurve)
-
-      activeCurve = options[(index + 1) % options.length]
-
-      d = generators[activeCurve](
-        generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
-      )
-    }
-  }
-
   const redraw = () => {
-    d = generators[activeCurve](makePoints())
+    points = makePoints()
+    d = generators.catMullRomDynamic($alpha)(points)
   }
 
-  $: d = generators[activeCurve](makePoints())
+  $: d = generators.catMullRomDynamic($alpha)(points)
+
+  $: console.log($alpha)
 
   onMount(async () => {
     // Wait for parent to draw the safezone
     await tick()
     redraw()
   })
+  onDestroy(() => {
+    alpha.stop()
+  })
 </script>
 
-<svelte:window on:resize={redraw} on:keydown={testCurve} />
+<svelte:window on:resize={redraw} />
 
 <g
   data-from={attachment.depot}
@@ -232,11 +163,4 @@
     fill="none"
     stroke-width="10"
   />
-  <!-- <GradientPath
-    {d}
-    fromColor="#587a00"
-    toColor="#a4fa3b"
-    strokeWidth={10}
-    dasharray={[1, 0, 0, 1, 0, 1, 0, 0, 1]}
-  /> -->
 </g>

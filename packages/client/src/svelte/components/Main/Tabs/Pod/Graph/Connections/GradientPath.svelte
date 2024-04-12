@@ -1,26 +1,28 @@
 <script lang="ts">
-  import type { Spring } from "svelte/motion"
   import { onMount, onDestroy } from "svelte"
-  import {
-    interpolateRgbBasis,
-    interpolateRgb,
-    interpolateNumber,
-  } from "d3-interpolate"
+  import { interpolateRgbBasis, interpolateRgb } from "d3-interpolate"
   import { range } from "d3-array"
   import { tweened } from "svelte/motion"
   import * as easing from "svelte/easing"
 
+  export let clip = 1 // clip the path at this progress point. Used for transitions
   export let d: string
   export let productive = false
   export let carrying = false
   export let strokeWidth = 4 // default for connections
   export let fromColor = "#999"
   export let toColor = "#fff"
-  export let sampleCount = 1 // higher is heavier, higher is smoother
+  export let sampleCount = 10 // higher is heavier, higher is smoother
   export let dasharray = [0, 0, 0, 0, 0, 1, 0] // change this to change the behavior of colors being pushed through
+  export let transitionEasingFunction = easing.cubicOut
   // export let throughputSpeed = 1000
 
   const fromColorStore = tweened(fromColor, {
+    interpolate: interpolateRgb,
+    duration: 1000,
+  })
+
+  const toColorStore = tweened(toColor, {
     interpolate: interpolateRgb,
     duration: 1000,
   })
@@ -33,31 +35,41 @@
   let offset = tweened(0, { duration: 1000, easing: easingMap[0] })
   let interval: ReturnType<typeof setInterval>
   let pathNode: SVGPathElement
-  let inverse: ReturnType<typeof interpolateNumber>
   let parts = []
-  let fillColor = "grey"
 
   function mod(n, m) {
     return ((n % m) + m) % m
   }
 
   const tick = () => {
-    if (carrying) fromColorStore.set("#a4fa3b")
-    if (productive) fromColorStore.set("#00e5ff")
+    if (!pathNode) return
+    if (carrying) {
+      fromColorStore.set("#a4fa3b")
+    } else if (productive) {
+      fromColorStore.set("#00e5ff")
+    } else {
+      fromColorStore.set(fromColor)
+    }
 
     let color = interpolateRgbBasis(
-      dasharray.map(num => (num === 0 ? $fromColorStore : toColor))
+      dasharray.map(num => (num === 0 ? $fromColorStore : $toColorStore))
     )
 
-    parts = quads(samples(pathNode, sampleCount)).map(q => {
-      const num = q.t
-      const c = color(mod(num - $offset, 1))
-      return {
-        fill: c,
-        stroke: c,
-        d: lineJoin(q[0], q[1], q[2], q[3], strokeWidth),
-      }
-    })
+    parts = quads(samples(pathNode, sampleCount))
+      .map(q => {
+        const inv = mod(q.t - $offset, 1)
+        const c = color(inv)
+        return {
+          tInv: inv,
+          t: q.t,
+          fill: c,
+          stroke: c,
+          d: lineJoin(q[0], q[1], q[2], q[3], strokeWidth),
+        }
+      })
+      .filter(q => {
+        return q.t < clip
+      })
   }
 
   // Sample the SVG path uniformly with the specified precision.
@@ -72,7 +84,7 @@
       let p = path.getPointAtLength(t),
         a = [p.x, p.y]
 
-      a.t = t / n
+      a.t = t / n // t is an equally distributed number from 0 to 1
       return a
     })
   }
@@ -136,10 +148,9 @@
     return [u01x / u01d, u01y / u01d]
   }
 
-  $: if ($offset) tick()
+  $: if ($offset || clip) tick()
 
   onMount(() => {
-    inverse = interpolateNumber(1, 0)
     tick()
     interval = setInterval(() => {
       $offset++
@@ -154,8 +165,14 @@
 
 <!-- The clip path for this element is defined in the parent container -->
 {#if parts.length > 0}
-  {#each parts as part}
-    <path class="segment" d={part.d} stroke={part.stroke} fill={part.fill} />
+  {#each parts as part (`${part.d}-${part.stroke}`)}
+    <path
+      class="segment"
+      d={part.d}
+      stroke={part.stroke}
+      fill={part.fill}
+      clip-path="url(#clipPath)"
+    />
   {/each}
 {/if}
 
