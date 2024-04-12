@@ -15,7 +15,8 @@
   let selectedPortIndex = -1
 
   $: producing = machine?.products && machine?.products.length > 0
-  $: highlight = $selectedOption?.value === address
+  $: highlight =
+    $selectedParameters?.includes(address) || $selectedOption?.value === address
   $: {
     if ($selectedParameters) {
       if ($selectedParameters.includes(address)) {

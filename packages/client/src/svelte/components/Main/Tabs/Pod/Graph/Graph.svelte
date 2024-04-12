@@ -62,6 +62,8 @@
     layout.graphMachines
   )
 
+  $: console.log("GRAPH CONNECT ", layout.graphConnections)
+
   onMount(calcScale)
 </script>
 

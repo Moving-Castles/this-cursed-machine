@@ -63,6 +63,7 @@
   }
 
   export const resetInput = async () => {
+    selectedParameters.set([])
     userInput = ""
     inputActive = true
     scrollToEnd()
@@ -401,6 +402,9 @@
       SYMBOLS[0]
     )
 
+    // Unset store values
+    selectedParameters.set([])
+
     // Evaluate input
     const command = evaluate(userInput)
 
@@ -435,6 +439,9 @@
 
     // Finally, execute the command with the parameters
     executeCommand(command, parameters)
+
+    // Reset selected parameters
+    selectedParameters.set([])
   }
 
   const onInput = (e: KeyboardEvent) => {

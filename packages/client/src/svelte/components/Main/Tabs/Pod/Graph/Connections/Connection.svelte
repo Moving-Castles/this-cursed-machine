@@ -2,8 +2,6 @@
   import type { GraphConnection } from "../types"
   import { generators, generatePoints, getRotationAtPoint } from "./svg"
   import { inspecting, selectedOption } from "@modules/ui/stores"
-  import { interpolateRgb } from "d3-interpolate"
-  import { spring } from "svelte/motion"
   import { cubicOut as easing } from "svelte/easing"
   import { draw } from "svelte/transition"
   import { CELL } from "../constants"
@@ -104,21 +102,28 @@
     on:outroend={stopPolling}
     on:introend={stopPolling}
     bind:this={pathElement}
-    transition:draw={drawOptions}
-    class="visible"
-    class:hover
     class:carrying
-    class:productive={connection.productive}
+    class:visible={!connection.productive}
+    transition:draw={drawOptions}
+    fill="none"
   />
-  <!-- {#if connection.productive || carrying} -->
-  <GradientPath
-    {d}
-    {carrying}
-    productive={connection.productive}
-    clip={progress}
-  />
-  <!-- {/if} -->
-  <Label {connection} productive={connection.productive} />
+  {#if connection.productive}
+    <GradientPath
+      {d}
+      {carrying}
+      productive={connection.productive}
+      clip={progress}
+    />
+  {/if}
+  {#if pathElement}
+    <Label
+      {hover}
+      {connection}
+      {pathElement}
+      productive={connection.productive}
+      {carrying}
+    />
+  {/if}
 </g>
 {#if headPoint}
   {#key headPoint}

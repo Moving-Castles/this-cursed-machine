@@ -32,8 +32,6 @@
     { x: 0, y: 0 },
   ] // throughCoord is a random point between two
 
-  let points = makePoints()
-
   const makeRandomPointInsideSafeZone = machineType => {
     const { top, left, bottom, right } = safezone?.getBoundingClientRect()
     const [minX, maxX, minY, maxY] = [left, right, top, bottom]
@@ -136,7 +134,7 @@
 
   $: d = generators.catMullRomDynamic($alpha)(points)
 
-  $: console.log($alpha)
+  let points = makePoints()
 
   onMount(async () => {
     // Wait for parent to draw the safezone

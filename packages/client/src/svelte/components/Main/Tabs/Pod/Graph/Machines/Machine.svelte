@@ -19,6 +19,7 @@
   export let machine: GraphMachine
 
   let selectedPortIndex = -1
+  let highlight = false
 
   const onMouseEnter = () => {
     if (!producing) return
@@ -32,14 +33,8 @@
   $: producing = machine?.products && machine?.products.length > 0
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
-  $: highlight = $selectedOption?.value === address
-  $: {
-    if ($selectedParameters) {
-      if ($selectedParameters.includes(address)) {
-        selectedPortIndex = $selectedOption?.value
-      }
-    }
-  }
+  $: highlight =
+    $selectedParameters?.includes(address) || $selectedOption?.value === address
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
