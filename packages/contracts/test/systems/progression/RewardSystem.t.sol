@@ -26,7 +26,7 @@ contract SpawnSystemTest is BaseTest {
     world.reward();
     vm.stopPrank();
 
-    assertEq(Balances.get(tableId, worldAddress), 999000);
+    assertEq(Balances.get(tableId, worldAddress), 0);
     assertEq(Balances.get(tableId, alice), 1000);
   }
 
@@ -40,13 +40,29 @@ contract SpawnSystemTest is BaseTest {
     vm.startPrank(alice);
     world.reward();
 
-    assertEq(Balances.get(tableId, worldAddress), 999000);
+    assertEq(Balances.get(tableId, worldAddress), 0);
     assertEq(Balances.get(tableId, alice), 1000);
 
     world.charge();
 
-    assertEq(Balances.get(tableId, worldAddress), 999100);
+    assertEq(Balances.get(tableId, worldAddress), 100);
     assertEq(Balances.get(tableId, alice), 900);
+
+    vm.stopPrank();
+  }
+
+  function testGraduate() public {
+    setUp();
+
+    address token = gameConfig.tokenAddress;
+    ResourceId systemId = Puppet(token).systemId();
+    ResourceId tableId = _balancesTableId(systemId.getNamespace());
+
+    vm.startPrank(alice);
+    world.graduate();
+
+    assertEq(Balances.get(tableId, worldAddress), 0);
+    assertEq(Balances.get(tableId, alice), 10000);
 
     vm.stopPrank();
   }

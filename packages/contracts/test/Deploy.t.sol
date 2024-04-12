@@ -26,17 +26,4 @@ contract DeployTest is BaseTest {
     }
     assertTrue(codeSize > 0);
   }
-
-  function testWorldInit() public {
-    // ...
-  }
-
-  function testPoolMint() public {
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
-    assertEq(Balances.get(tableId, worldAddress), 1000000);
-    assertEq(IERC20Mintable(token).totalSupply(), 1000000);
-  }
 }

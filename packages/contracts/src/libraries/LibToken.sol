@@ -6,6 +6,7 @@ import { WorldContextConsumerLib } from "@latticexyz/world/src/WorldContext.sol"
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { IERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20.sol";
 import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
 import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
@@ -15,13 +16,13 @@ library LibToken {
   using WorldResourceIdInstance for ResourceId;
 
   /**
-   * @dev Send tokens from world
-   * @param _to address to send to
-   * @param _amount amount to send
+   * @dev Mint token to address
+   * @param _to address to mint to
+   * @param _value amount to mint
    */
-  function send(address _to, uint256 _amount) internal {
-    IERC20 token = IERC20(GameConfig.getTokenAddress());
-    token.transfer(_to, _amount);
+  function mint(address _to, uint256 _value) internal {
+    IERC20Mintable token = IERC20Mintable(GameConfig.getTokenAddress());
+    token.mint(_to, _value);
   }
 
   /**

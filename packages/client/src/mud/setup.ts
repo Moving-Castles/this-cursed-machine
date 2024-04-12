@@ -3,10 +3,11 @@
  */
 
 import { setupNetwork } from "./setupNetwork";
+import { ENVIRONMENT } from "./enums";
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
-export async function setup() {
-  const network = await setupNetwork();
+export async function setup(environment: ENVIRONMENT) {
+  const network = await setupNetwork(environment);
   return network;
 }

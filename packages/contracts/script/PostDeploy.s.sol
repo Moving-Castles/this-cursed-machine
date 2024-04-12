@@ -11,12 +11,11 @@ import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
+import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
 import { LibOrder, LibInitRecipes, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
 import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
-
-uint256 constant POOL_SUPPLY = 1_000_000 wei;
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -32,11 +31,13 @@ contract PostDeploy is Script {
     // Register and mint ERC20 token
     IERC20Mintable token = registerERC20(
       world,
-      "Token",
-      ERC20MetadataData({ decimals: 18, name: "TCM", symbol: "TCM" })
+      "BugToken",
+      ERC20MetadataData({ decimals: 18, name: "BUG", symbol: "BUG" })
     );
 
-    token.mint(worldAddress, POOL_SUPPLY);
+    // Transfer ownership of the token namespace to the world contract
+    ResourceId namespaceId = WorldResourceIdLib.encodeNamespace("BugToken");
+    world.transferOwnership(namespaceId, worldAddress);
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin

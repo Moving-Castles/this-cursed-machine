@@ -26,8 +26,7 @@ fs_permissions = [{ access = "read", path = "./"}]
 ignore=["codegen"]
 
 [profile.lattice-testnet]
-# eth_rpc_url = "https://follower.testnet-chain.linfra.xyz"
 eth_rpc_url = "https://miner.testnet-chain.linfra.xyz"
 
-[profile.redstone-holesky]
-eth_rpc_url = "https://rpc.holesky.redstone.xyz/"
+[profile.redstone-garnet]
+eth_rpc_url = "https://rpc.garnet.qry.live/"

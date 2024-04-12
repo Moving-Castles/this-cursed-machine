@@ -1,0 +1,7 @@
+export enum ENVIRONMENT {
+    DEVELOPMENT,
+    REDSTONE,
+    GARNET,
+    RHODOLITE,
+    OLD_TESTNET
+}

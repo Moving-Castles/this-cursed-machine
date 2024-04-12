@@ -4,3 +4,4 @@ dist
 .svelte-kit
 .DS_Store
 coverage
+.env2

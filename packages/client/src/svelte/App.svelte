@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { setup } from "@mud/setup"
+  import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
     createSyncProgressSystem,
@@ -14,10 +15,7 @@
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
-  import { messageToStumps } from "@modules/ui"
   import { playSound } from "@modules/sound"
-
-  import { recipes } from "./modules/state/base/stores"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -48,9 +46,27 @@
     UIState.set(UI.ESCAPED)
   }
 
+  const getEnvironment = () => {
+    switch (window.location.hostname) {
+      case "thiscursedmachine.fun":
+        return ENVIRONMENT.REDSTONE
+      case "garnet.thiscursedmachine.fun":
+        return ENVIRONMENT.GARNET
+      case "rhodolite.thiscursedmachine.fun":
+        return ENVIRONMENT.RHODOLITE
+      case "old.thiscursedmachine.fun":
+        return ENVIRONMENT.OLD_TESTNET
+      default:
+        return ENVIRONMENT.DEVELOPMENT
+    }
+  }
+
   onMount(async () => {
     // Output console message
-    messageToStumps()
+    // messageToStumps()
+
+    // Determine what chain we should connect to
+    const environment = getEnvironment()
 
     // Remove preloader
     document.querySelector(".preloader")?.remove()
@@ -59,7 +75,7 @@
     initStaticContent()
 
     // Write mud layer to svelte store
-    const mudLayer = await setup()
+    const mudLayer = await setup(environment)
     network.set(mudLayer)
 
     // Modules responsible for sending transactions

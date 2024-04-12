@@ -4,6 +4,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { CarriedBy, MachinesInPod } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibEntity, LibPod } from "../../libraries/Libraries.sol";
+import { POD_MACHINE_CAPACITY } from "../../constants.sol";
 
 contract BuildSystem is System {
   /**
@@ -13,13 +14,17 @@ contract BuildSystem is System {
    */
   function build(MACHINE_TYPE _machineType) public returns (bytes32 machineEntity) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
-    // Create machine entity
-    machineEntity = LibEntity.create(_machineType);
+    // Inlets, outlets and players are machines, but not buildable
+    require(LibEntity.isBuildableMachineType(_machineType), "not buildable");
 
     // Get player's pod entity
     bytes32 podEntity = CarriedBy.get(playerEntity);
+
+    require(MachinesInPod.length(podEntity) < POD_MACHINE_CAPACITY, "max machines reached");
+
+    // Create machine entity
+    machineEntity = LibEntity.create(_machineType);
 
     // Place in same pod as the player
     CarriedBy.set(machineEntity, podEntity);

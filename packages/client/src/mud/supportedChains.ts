@@ -15,14 +15,14 @@ type ExtendedChain = MUDChain & {
     indexerUrl?: string;
 };
 
-const redstoneHolesky = {
-    id: 17001,
-    name: "Redstone Holesky",
-    network: "redstone-holesky",
+export const redstoneGarnet = {
+    id: 17069,
+    name: "Redstone Garnet Testnet",
+    network: "redstone-garnet",
     summary: {
         location: "Holesky",
     },
-    description: "Redstone Holesky",
+    description: "Redstone Garnet Testnet",
     nativeCurrency: {
         decimals: 18,
         name: "Holesky Ether",
@@ -30,27 +30,24 @@ const redstoneHolesky = {
     },
     rpcUrls: {
         default: {
-            http: ["https://rpc.holesky.redstone.xyz"],
-            webSocket: ["wss://rpc.holesky.redstone.xyz/ws"],
+            http: ["https://rpc.garnet.qry.live"],
+            webSocket: ["https://rpc.garnet.qry.live"],
         },
         public: {
-            http: ["https://rpc.holesky.redstone.xyz"],
-            webSocket: ["wss://rpc.holesky.redstone.xyz/ws"],
+            http: ["https://rpc.garnet.qry.live"],
+            webSocket: ["https://rpc.garnet.qry.live"],
         },
     },
     blockExplorers: {
         default: {
             name: "Blockscout",
-            url: "https://explorer.holesky.redstone.xyz",
+            url: "https://explorer.garnet.qry.live",
         },
     },
-    // faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc",
-    indexerUrl: "https://17001-postgres-indexer.quarry.linfra.xyz",
-    testnet: true,
 };
 
 /*
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
-export const supportedChains: ExtendedChain[] = [mudFoundry, latticeTestnet, redstoneHolesky];
+export const supportedChains: ExtendedChain[] = [mudFoundry, latticeTestnet, redstoneGarnet];

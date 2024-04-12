@@ -1,7 +1,7 @@
 import { resourceToHex } from "@latticexyz/common";
 import { SyncFilter } from "@latticexyz/store-sync";
 
-const TokenBalancesTableId = resourceToHex({ type: "table", namespace: "Token", name: "Balances" });
+const TokenBalancesTableId = resourceToHex({ type: "table", namespace: "BugToken", name: "Balances" });
 
 
 export const syncFilters: SyncFilter[] = [
@@ -13,7 +13,7 @@ export const syncFilters: SyncFilter[] = [
 
 export const tables = {
     Token_Balances: {
-        namespace: "Token",
+        namespace: "BugToken",
         name: "Balances",
         tableId: TokenBalancesTableId,
         keySchema: {

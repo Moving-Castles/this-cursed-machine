@@ -12,7 +12,6 @@ contract DevSystem is System {
    */
   function graduate() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 podEntity = CarriedBy.get(playerEntity);
 
     TutorialLevel.deleteRecord(playerEntity);
     Tutorial.deleteRecord(playerEntity);
@@ -22,7 +21,7 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    LibToken.send(_msgSender(), 10000);
+    LibToken.mint(_msgSender(), 10000);
   }
 
   /**
@@ -39,7 +38,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    LibToken.send(_msgSender(), 1000);
+    LibToken.mint(_msgSender(), 1000);
   }
 
   /**

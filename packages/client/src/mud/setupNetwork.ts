@@ -28,6 +28,8 @@ import { createSyncFilters } from "./createSyncFilters"
 
 import { Subject, share } from "rxjs"
 
+import { ENVIRONMENT } from "./enums"
+
 /*
  * Import our MUD config, which includes strong types for
  * our tables and other config options. We use this to generate
@@ -40,8 +42,8 @@ import mudConfig from "contracts/mud.config"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 
-export async function setupNetwork() {
-  const networkConfig = await getNetworkConfig()
+export async function setupNetwork(environment: ENVIRONMENT) {
+  const networkConfig = await getNetworkConfig(environment)
 
   const filters = [...createSyncFilters(null), ...extraSyncFilters];
 

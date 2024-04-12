@@ -180,7 +180,7 @@ contract OrderSystem is System {
       }
 
       // Reward player in tokens
-      LibToken.send(_msgSender(), currentOrder.reward);
+      LibToken.mint(_msgSender(), currentOrder.reward);
       EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
 
       return;
@@ -196,7 +196,7 @@ contract OrderSystem is System {
     Completed.push(playerEntity, currentOrderId);
 
     // Reward player in tokens
-    LibToken.send(_msgSender(), currentOrder.reward);
+    LibToken.mint(_msgSender(), currentOrder.reward);
     EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }
 }
