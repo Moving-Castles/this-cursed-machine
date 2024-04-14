@@ -166,12 +166,12 @@
     stroke-width="10"
   />
   {#if productive}
-    <GradientPath
+    <!-- <GradientPath
       strokeWidth={10}
       {d}
       sampleCount={1}
       fromColor="#a4fa3b"
       toColor="#d7d7c3"
-    />
+    /> -->
   {/if}
 </g>

@@ -11,7 +11,7 @@ import { TUTORIAL_LEVELS } from "../../constants.sol";
 contract OrderSystem is System {
   /**
    * @notice Create an order
-   * @dev Free for admin, charges reward cost for non-admin
+   * @dev Free for admin, charges reward cost (_reward * _maxPlayers) for non-admin
    * @param _title Title of the order
    * @param _materialType Material type to produce
    * @param _amount Amount to produce

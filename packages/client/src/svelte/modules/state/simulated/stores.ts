@@ -139,29 +139,38 @@ export function calculateSimulatedDepots(
     ...Object.entries(initialDepotsCopy),
   ])
 
+  // Abort if the player's pod is not set up properly
   if (!playerPod?.fixedEntities) return simulatedDepots
 
+  // Get depot connected to the outlet
   const outletDepot = Object.entries(initialDepotsCopy).filter(
     ([_, depot]) => depot.depotConnection === playerPod?.fixedEntities.outlet
   )
+
+  // Get depots connected to the inlets
   const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) =>
     playerPod?.fixedEntities.inlets.includes(depot.depotConnection)
   )
+
+  // Get patches for depois
   const depotPatches = Object.entries(patches).filter(
     ([_, patch]) => patch.depot
   )
 
+  // Abort if either of these are empty
   if (
     outletDepot.length === 0 ||
     inletDepots.length === 0 ||
     depotPatches.length === 0
-  )
+  ) {
     return simulatedDepots
+  }
 
   const outletDepotPatch = depotPatches.find(
     ([key, _]) => key == outletDepot[0][0]
   )
 
+  // Abort if the outlet depot does not have a patch
   if (!outletDepotPatch) return simulatedDepots
 
   /*
@@ -343,7 +352,7 @@ export function calculateSimulatedConnections(
         sourceMachine.outputs &&
         sourceMachine.outputs[sourcePortIndex] &&
         sourceMachine.outputs[sourcePortIndex].materialType !==
-          MATERIAL_TYPE.NONE
+        MATERIAL_TYPE.NONE
       ) {
         connection.products = [
           {

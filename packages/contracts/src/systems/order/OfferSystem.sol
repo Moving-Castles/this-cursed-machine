@@ -47,12 +47,15 @@ contract OfferSystem is System {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    // If player is in tutorial, we check the non-transferable balance
+    // If player is in tutorial, we check the non transferable balance
     if (Tutorial.get(playerEntity)) {
       require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
     } else {
       require(LibToken.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
     }
+
+    // Resolve network
+    LibNetwork.resolve(podEntity);
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 
@@ -93,7 +96,5 @@ contract OfferSystem is System {
       // Deduct from real token balance
       LibToken.transferToken(_world(), offerData.cost);
     }
-
-    LibNetwork.resolve(podEntity);
   }
 }

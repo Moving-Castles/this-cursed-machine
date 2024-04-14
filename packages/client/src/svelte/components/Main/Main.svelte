@@ -24,6 +24,8 @@
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
+import Debug from "@components/Main/Atoms/Debug.svelte"
+
   import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
   let resized = 0
@@ -102,6 +104,8 @@
 
 {#if $player?.carriedBy}
   <div class="dust" />
+
+<Debug/>
 
   <div class="split-screen">
     <div class="left-col">

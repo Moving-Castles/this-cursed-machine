@@ -202,7 +202,7 @@ export function getLongestHorizontalSection(
         length = Math.abs(startPosition[0] - endPosition[0])
       }
 
-      console.log("length", startPosition, endPosition, length, longest)
+      // console.log("length", startPosition, endPosition, length, longest)
 
       if (length > longest) {
         let x = startPosition[0]

@@ -102,19 +102,20 @@
     on:outroend={stopPolling}
     on:introend={stopPolling}
     bind:this={pathElement}
+    class="visible"
     class:carrying
-    class:visible={!connection.productive}
     transition:draw={drawOptions}
     fill="none"
   />
+  <!-- class:visible={!connection.productive} -->
   {#if connection.productive}
-    <GradientPath
+    <!-- <GradientPath
       {d}
       {carrying}
       productive={connection.productive}
       toColor="#d7d7c3"
       clip={progress}
-    />
+    /> -->
   {/if}
   {#if pathElement}
     <Label
