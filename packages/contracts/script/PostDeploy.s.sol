@@ -9,6 +9,9 @@ import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-p
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
+import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
+import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/PuppetModule.sol";
+
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -27,6 +30,10 @@ contract PostDeploy is Script {
     // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
     vm.startBroadcast(deployerPrivateKey);
+
+    // Install modules
+    world.installRootModule(new StandardDelegationsModule(), new bytes(0));
+    world.installModule(new PuppetModule(), new bytes(0));
 
     // Register and mint ERC20 token
     IERC20Mintable token = registerERC20(

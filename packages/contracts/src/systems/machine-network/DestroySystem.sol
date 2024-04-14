@@ -14,9 +14,9 @@ contract DestroySystem is System {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CarriedBy.get(_machineEntity) == podEntity, "not in pod");
-
     require(EntityType.get(_machineEntity) == ENTITY_TYPE.MACHINE, "not machine");
+
+    require(CarriedBy.get(_machineEntity) == podEntity, "not in pod");
 
     // Get outgoing connections
     bytes32[] memory outgoingConnections = OutgoingConnections.get(_machineEntity);

@@ -50,13 +50,24 @@ export const playerId = derived(
   network,
   $network => $network.playerEntity || ("0x0" as string)
 )
+
 export const player = derived(
   [entities, playerId],
   ([$entities, $playerId]) => $entities[$playerId] as Player
 )
+
 export const playerPod = derived([entities, player], ([$entities, $player]) =>
   $player?.carriedBy ? ($entities[$player.carriedBy] as Pod) : ({} as Pod)
 )
+
+// If the player is in tutorial we use the non transferable balance
+export const playerTokenBalance = derived([player], ([$player]) => {
+  if ($player.tutorial) {
+    return $player.nonTransferableBalance ?? 0
+  } else {
+    return $player.tokenBalances ?? 0
+  }
+})
 
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITIES
@@ -71,6 +82,8 @@ export const machines = derived(
       ENTITY_TYPE.MACHINE
     ) as Machines
 )
+
+// Filter by player pod
 export const depots = derived(
   [entities, player],
   ([$entities, $player]) =>

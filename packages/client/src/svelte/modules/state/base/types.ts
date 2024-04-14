@@ -19,6 +19,7 @@ declare global {
     spawnIndex?: number
     tutorial?: boolean
     tutorialLevel?: number
+    nonTransferableBalance?: number
     order?: OrderData
     offer?: OfferData
     completed?: string[]
@@ -98,6 +99,7 @@ declare global {
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
+    nonTransferableBalance?: number // During tutorial we give players a non-transferable token substitute
     tokenBalances?: number
     tutorial: boolean,
     completed: string[] // Orders completed by player

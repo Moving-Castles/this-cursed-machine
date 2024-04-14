@@ -17,5 +17,7 @@ interface IOfferSystem {
     uint32 _cost
   ) external returns (bytes32 orderEntity);
 
+  function cancelOffer(bytes32 _offerEntity) external;
+
   function buy(bytes32 _offerEntity) external;
 }

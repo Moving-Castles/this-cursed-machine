@@ -20,4 +20,12 @@ library LibOffer {
 
     return offerEntity;
   }
+
+  /**
+   * @notice Destroy an offer
+   * @param _offerEntity Id of the offer entity
+   */
+  function destroy(bytes32 _offerEntity) internal {
+    Offer.deleteRecord(_offerEntity);
+  }
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player } from "@modules/state/base/stores"
+  import { player, playerTokenBalance } from "@modules/state/base/stores"
   import { fade } from "svelte/transition"
   import { MATERIAL_TYPE } from "contracts/enums"
   import { buy } from "@modules/action"
@@ -19,7 +19,7 @@
 
   let working = false
 
-  $: unafforable = (offer.offer?.cost ?? 0) > ($player.tokenBalances ?? 0)
+  $: unafforable = (offer.offer?.cost ?? 0) > $playerTokenBalance
 
   async function sendBuy() {
     if (unafforable) {

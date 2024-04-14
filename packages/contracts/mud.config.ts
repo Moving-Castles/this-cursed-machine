@@ -30,12 +30,13 @@ export default defineWorld({
         MaterialType: "MATERIAL_TYPE",
         Amount: "uint32",
         Name: "string", // Player name. Assigned after completed tutorial.
-        CarriedBy: "bytes32", // ID of the pod that the entity is in
+        CarriedBy: "bytes32", // ID of the pod that the entity is in, used for access control
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
         BuildTracker: "uint32[]", // How many machines of each type have been built in pod since its creation?
         SpawnIndex: "uint32", // How many players have spawned?
         Tutorial: "bool",
         TutorialLevel: "uint32",
+        NonTransferableBalance: "uint32", // During tutorial we give players a non-transferable token substitute
         Order: {
             key: ["key"],
             schema: {
@@ -91,15 +92,15 @@ export default defineWorld({
             root: true,
             args: [],
         },
-        {
-            name: "StandardDelegationsModule",
-            root: true,
-            args: [],
-        },
-        {
-            name: "PuppetModule",
-            root: false,
-            args: []
-        }
+        // {
+        //     name: "StandardDelegationsModule",
+        //     root: true,
+        //     args: [],
+        // },
+        // {
+        //     name: "PuppetModule",
+        //     root: false,
+        //     args: []
+        // }
     ],
 });

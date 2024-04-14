@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, DepotConnection } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, DepotConnection, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_DEPOTS } from "../../constants.sol";
@@ -44,6 +44,8 @@ contract StartSystem is System {
 
     // Create depots
     bytes32[] memory depotsInPod = new bytes32[](NUMBER_OF_DEPOTS);
+
+    // Store IDs of depots in the pod
     for (uint32 i; i < depotsInPod.length; i++) {
       depotsInPod[i] = LibDepot.create(podEntity, i);
     }
@@ -63,6 +65,8 @@ contract StartSystem is System {
     // Fill first depot, based on the config of the first tutorial level
     MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
     Amount.set(depotsInPod[0], 10000);
+
+    NonTransferableBalance.set(playerEntity, 0);
 
     return podEntity;
   }

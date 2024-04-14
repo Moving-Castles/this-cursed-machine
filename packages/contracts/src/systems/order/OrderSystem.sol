@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, FixedEntities, FixedEntitiesData, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
+import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, FixedEntities, FixedEntitiesData, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken, LibNetwork, LibReset } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
@@ -58,7 +58,7 @@ contract OrderSystem is System {
    * @dev Restricted to admin
    * @param _orderEntity Id of the order entity
    */
-  function cancel(bytes32 _orderEntity) public {
+  function cancelOrder(bytes32 _orderEntity) public {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
@@ -78,7 +78,9 @@ contract OrderSystem is System {
     require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
 
     if (Tutorial.get(playerEntity)) {
+      // A player in tutorial mode cannot accept a non-tutorial order
       require(Tutorial.get(_orderEntity), "not tutorial order");
+
       uint32 playerTutorialLevel = TutorialLevel.get(playerEntity);
       require(playerTutorialLevel == TutorialLevel.get(_orderEntity), "wrong tutorial level");
 
@@ -102,8 +104,6 @@ contract OrderSystem is System {
         OutgoingConnections.update(playerEntity, 1, bytes32(0));
         // Disconnect outlet
         IncomingConnections.update(fixedEntities.outlet, 0, bytes32(0));
-        // Resolve
-        // LibNetwork.resolve(podEntity);
       } else if (playerTutorialLevel == 2) {
         // Reset pod
         LibReset.reset(podEntity);
@@ -128,15 +128,18 @@ contract OrderSystem is System {
 
   /**
    * @notice Ship an order
-   * @dev Compares the depot to the current order goals and completes if goals are met
+   * @dev Compares the depot to the current order goals and complete the order if goals are met
    * @param _depotEntity Id of the depot entity
    */
   function ship(bytes32 _depotEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
     require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
+
+    // You can't ship a depot in another player's pods
+    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
+
     // You can't ship a depot that is connected
     require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
 
@@ -167,9 +170,9 @@ contract OrderSystem is System {
     MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
     Amount.set(_depotEntity, 0);
 
-    /*
-     * In tutorial
-     */
+    /*//////////////////////////////////////////////////////////////
+                            IN TUTORIAL
+    //////////////////////////////////////////////////////////////*/
 
     if (Tutorial.get(playerEntity)) {
       uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
@@ -179,24 +182,27 @@ contract OrderSystem is System {
         TutorialLevel.set(playerEntity, nextTutorialLevel);
       }
 
-      // Reward player in tokens
-      LibToken.mint(_msgSender(), currentOrder.reward);
-      EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
+      /*
+       * Reward player in non-transferable token substitutes
+       * We do this to avoid people botting the tutorial levels to get free tokens
+       */
+      NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) + currentOrder.reward);
 
       return;
     }
 
-    /*
-     * Not in tutorial
-     */
+    /*//////////////////////////////////////////////////////////////
+                           IN MAIN GAME
+    //////////////////////////////////////////////////////////////*/
 
     // On order: add player to completed list
     Completed.push(currentOrderId, playerEntity);
     // On player: add order to completed list
     Completed.push(playerEntity, currentOrderId);
 
-    // Reward player in tokens
+    // Reward player in real tokens
     LibToken.mint(_msgSender(), currentOrder.reward);
-    EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
+    // For statistics we keep track of the total earned points
+    // EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }
 }

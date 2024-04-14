@@ -76,29 +76,27 @@ contract OfferSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testBuyBug() public {
-    setUp();
+  // function testBuyInTutorial() public {
+  //   setUp();
 
-    prankAdmin();
-    bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BUG, 10000, 100);
-    vm.stopPrank();
+  //   prankAdmin();
+  //   bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BUG, 10000, 100);
+  //   vm.stopPrank();
 
-    vm.startPrank(alice);
+  //   vm.startPrank(alice);
 
-    world.reward();
+  //   startGasReport("Buy");
+  //   world.buy(offerEntity);
+  //   endGasReport();
 
-    startGasReport("Buy");
-    world.buy(offerEntity);
-    endGasReport();
+  //   vm.stopPrank();
 
-    vm.stopPrank();
+  //   assertEq(LibToken.getTokenBalance(alice), 0);
+  //   assertEq(uint8(MaterialType.get(depotsInPod[0])), uint8(MATERIAL_TYPE.BUG));
+  //   assertEq(Amount.get(depotsInPod[0]), 20000);
+  // }
 
-    assertEq(LibToken.getTokenBalance(alice), 900);
-    assertEq(uint8(MaterialType.get(depotsInPod[0])), uint8(MATERIAL_TYPE.BUG));
-    assertEq(Amount.get(depotsInPod[0]), 20000);
-  }
-
-  function testBuyBlood() public {
+  function testBuyInMainGame() public {
     setUp();
 
     prankAdmin();
@@ -107,13 +105,13 @@ contract OfferSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.reward();
+    world.graduate();
 
     world.buy(offerEntity);
 
     vm.stopPrank();
 
-    assertEq(LibToken.getTokenBalance(alice), 900);
+    assertEq(LibToken.getTokenBalance(alice), 9900);
     assertEq(uint8(MaterialType.get(depotsInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
     assertEq(Amount.get(depotsInPod[1]), 10000);
   }

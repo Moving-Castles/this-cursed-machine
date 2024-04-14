@@ -20,7 +20,7 @@ interface IOrderSystem {
     uint32 _maxPlayers
   ) external returns (bytes32 orderEntity);
 
-  function cancel(bytes32 _orderEntity) external;
+  function cancelOrder(bytes32 _orderEntity) external;
 
   function accept(bytes32 _orderEntity) external;
 

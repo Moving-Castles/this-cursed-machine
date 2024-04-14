@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod } from "../../codegen/index.sol";
+import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOffer, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
 import { DEPOT_CAPACITY } from "../../constants.sol";
@@ -25,6 +25,18 @@ contract OfferSystem is System {
   }
 
   /**
+   * @notice Cancel an offer
+   * @dev Restricted to admin
+   * @param _offerEntity Id of the offer entity
+   */
+  function cancelOffer(bytes32 _offerEntity) public {
+    //  Restrict to admin
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+
+    LibOffer.destroy(_offerEntity);
+  }
+
+  /**
    * @notice Buy an offer
    * @dev Resolves network after buying
    * @param _offerEntity Id of the offer entity
@@ -32,10 +44,15 @@ contract OfferSystem is System {
   function buy(bytes32 _offerEntity) public {
     OfferData memory offerData = Offer.get(_offerEntity);
 
-    require(LibToken.getTokenBalance(_msgSender()) >= offerData.cost, "insufficient balance");
-
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
+
+    // If player is in tutorial, we check the non-transferable balance
+    if (Tutorial.get(playerEntity)) {
+      require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
+    } else {
+      require(LibToken.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
+    }
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
 
@@ -69,8 +86,13 @@ contract OfferSystem is System {
     MaterialType.set(targetDepot, offerData.materialType);
     Amount.set(targetDepot, Amount.get(targetDepot) + offerData.amount);
 
-    // Transfer tokens
-    LibToken.transferToken(_world(), offerData.cost);
+    if (Tutorial.get(playerEntity)) {
+      // Deduct from non-transferable balance
+      NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
+    } else {
+      // Deduct from real token balance
+      LibToken.transferToken(_world(), offerData.cost);
+    }
 
     LibNetwork.resolve(podEntity);
   }

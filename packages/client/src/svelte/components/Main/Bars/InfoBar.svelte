@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player } from "@modules/state/base/stores"
+  import { player, playerTokenBalance } from "@modules/state/base/stores"
   import NumberGoingUp from "@components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
@@ -17,11 +17,7 @@
   <div class="completed">
     <div>
       <div class="token-balance">
-        <NumberGoingUp
-          value={$player.tokenBalances ?? 0}
-          goal={30000}
-          warn={26900}
-        /> $BUGS
+        <NumberGoingUp value={$playerTokenBalance} goal={30000} warn={26900} /> $BUGS
       </div>
     </div>
   </div>
