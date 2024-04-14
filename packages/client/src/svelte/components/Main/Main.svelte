@@ -24,7 +24,7 @@
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
-import Debug from "@components/Main/Atoms/Debug.svelte"
+  // import Debug from "@components/Main/Atoms/Debug.svelte"
 
   import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
@@ -89,7 +89,7 @@ import Debug from "@components/Main/Atoms/Debug.svelte"
       clearMessage()
       sendMessage(
         "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-        { disappear: true }
+        { disappear: true },
       )
     }
   }
@@ -105,7 +105,7 @@ import Debug from "@components/Main/Atoms/Debug.svelte"
 {#if $player?.carriedBy}
   <div class="dust" />
 
-<Debug/>
+  <!-- <Debug/> -->
 
   <div class="split-screen">
     <div class="left-col">

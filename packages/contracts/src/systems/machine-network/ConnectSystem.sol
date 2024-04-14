@@ -26,6 +26,12 @@ contract ConnectSystem is System {
     // Resolve network
     LibNetwork.resolve(podEntity);
 
+    /*
+     * Some machines have multiple outputs.
+     * These can have different output materials.
+     * _portIndex determines which output to connect from.
+     */
+
     // Determine the index for the outgoing connection based on the _portIndex
     uint indexToWrite = _portIndex == PORT_INDEX.FIRST ? 0 : 1;
 
@@ -35,6 +41,11 @@ contract ConnectSystem is System {
 
     // Insert _targetMachine at the specified index for outgoing connections
     OutgoingConnections.update(_sourceMachine, indexToWrite, _targetMachine);
+
+    /*
+     * One machine, the Mixer, has multiple inputs.
+     * Both inputs are equivalent, so we simply attach to the first available
+     */
 
     // Get the total number of incoming connections for the target machine
     uint256 incomingConnectionsLength = IncomingConnections.length(_targetMachine);

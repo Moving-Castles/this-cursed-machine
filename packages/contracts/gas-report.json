@@ -39,7 +39,7 @@
     "file": "test/systems/orders/DepotSystem.t.sol",
     "test": "testDetachDepot",
     "name": "Detach depot",
-    "gasUsed": 53330
+    "gasUsed": 53313
   },
   {
     "file": "test/systems/orders/DepotSystem.t.sol",
@@ -55,15 +55,9 @@
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",
-    "test": "testBuyBug",
-    "name": "Buy",
-    "gasUsed": 146668
-  },
-  {
-    "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testCreateOffer",
     "name": "Create offer",
-    "gasUsed": 102998
+    "gasUsed": 102992
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -81,19 +75,19 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 176846
+    "gasUsed": 176868
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testRevertCreateOrderAsNormalUser",
     "name": "Create order as normal user",
-    "gasUsed": 302263
+    "gasUsed": 302285
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 267573
+    "gasUsed": 234897
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
@@ -105,6 +99,6 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1611893
+    "gasUsed": 1623263
   }
 ]

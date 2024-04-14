@@ -7,6 +7,7 @@ import { LibUtils, LibNetwork } from "../../libraries/Libraries.sol";
 contract ResolveSystem is System {
   /**
    * @notice Manually resolve network in pod
+   * @dev Mostly used for testing purposes.
    */
   function resolve() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());

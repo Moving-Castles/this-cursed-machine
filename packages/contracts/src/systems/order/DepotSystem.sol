@@ -20,6 +20,8 @@ contract DepotSystem is System {
     require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
 
     require(DepotConnection.get(_depotEntity) == bytes32(0), "depot already connected");
+
+    // Depots can only be connected to inlets or outlets
     require(
       MachineType.get(_targetEntity) == MACHINE_TYPE.INLET || MachineType.get(_targetEntity) == MACHINE_TYPE.OUTLET,
       "not inlet/outlet"
@@ -44,8 +46,6 @@ contract DepotSystem is System {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     bytes32 _targetEntity = DepotConnection.get(_depotEntity);
-
-    require(_targetEntity != bytes32(0), "depot not connected");
 
     // Resolve network
     LibNetwork.resolve(CarriedBy.get(playerEntity));

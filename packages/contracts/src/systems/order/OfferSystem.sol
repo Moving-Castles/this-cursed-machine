@@ -54,7 +54,7 @@ contract OfferSystem is System {
       require(LibToken.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
     }
 
-    // Resolve network
+    // Resolution needs to be done before filling the depot to avoid instant conversion of materials.
     LibNetwork.resolve(podEntity);
 
     bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);

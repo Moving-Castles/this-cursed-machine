@@ -27,6 +27,10 @@ contract DestroySystem is System {
       // Only resolve if the machine is connected
       LibNetwork.resolve(podEntity);
 
+      /*
+       * When we destroy a machine, we need to clean up all connections set on other machines.
+       */
+
       // Iterate through each incoming connection
       for (uint256 i = 0; i < incomingConnections.length; i++) {
         _removeOutgoingConnection(incomingConnections[i], _machineEntity);

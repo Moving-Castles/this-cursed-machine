@@ -46,13 +46,13 @@
       const currentLength = maxLength * easing((e - animationStart) / DURATION)
 
       headPoint = pathElement.getPointAtLength(
-        intro ? currentLength : maxLength - currentLength
+        intro ? currentLength : maxLength - currentLength,
       )
       headRotation = getRotationAtPoint(
         pathElement,
         maxLength,
         currentLength,
-        intro
+        intro,
       )
 
       animationFrameId = requestAnimationFrame(frame)
@@ -64,7 +64,7 @@
     const intro = e.type.includes("intro")
     cancelAnimationFrame(animationFrameId)
     headPoint = pathElement.getPointAtLength(
-      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0
+      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0,
     )
   }
 
@@ -80,7 +80,7 @@
   }
 
   $: d = generators[activeCurve](
-    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
+    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT),
   )
 </script>
 
