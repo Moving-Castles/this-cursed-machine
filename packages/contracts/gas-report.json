@@ -3,7 +3,7 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build splitter",
-    "gasUsed": 290987
+    "gasUsed": 292213
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
@@ -57,7 +57,7 @@
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testBuyBug",
     "name": "Buy",
-    "gasUsed": 115940
+    "gasUsed": 146668
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",
@@ -75,25 +75,25 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Unaccept order",
-    "gasUsed": 21517
+    "gasUsed": 20215
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 176817
+    "gasUsed": 176846
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testRevertCreateOrderAsNormalUser",
     "name": "Create order as normal user",
-    "gasUsed": 280337
+    "gasUsed": 302263
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 261899
+    "gasUsed": 267573
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

@@ -14,31 +14,31 @@
     "test": "mud test",
     "test-verbose": "mud test --forgeOptions=' -vvv'",
     "test-single": "mud test --forgeOptions='--match-test testOneMixerTwoInlets'",
-    "test-levels": "mud test --forgeOptions='--match-contract TutorialLevelsTest'",
-    "----- TESTNET -----": "---------------------------",
+    "----- OLD TESTNET -----": "---------------------------",
     "deploy:testnet": "pnpm run build && mud deploy --profile=lattice-testnet",
     "faucet:testnet": "pnpm mud faucet --faucetUrl=https://faucet.testnet2-mud-services.linfra.xyz --address",
-    "----- REDSTONE HOLESKY -----": "---------------------------",
-    "deploy:redstone-holesky": "DEBUG=mud:* mud deploy --profile=redstone-holesky"
-  },
-  "devDependencies": {
-    "@latticexyz/cli": "2.0.6-main-66c64ee1",
-    "@latticexyz/config": "2.0.6-main-66c64ee1",
-    "@latticexyz/gas-report": "2.0.6-main-66c64ee1",
-    "@latticexyz/schema-type": "2.0.6-main-66c64ee1",
-    "@latticexyz/store": "2.0.6-main-66c64ee1",
-    "@latticexyz/world": "2.0.6-main-66c64ee1",
-    "@latticexyz/world-modules": "2.0.6-main-66c64ee1",
-    "@types/node": "^20.11.6",
-    "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
-    "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
-    "prettier": "^3.2.5",
-    "prettier-plugin-solidity": "^1.3.1",
-    "solhint": "^4.5.2",
-    "solhint-config-mud": "2.0.6-main-66c64ee1",
-    "solhint-plugin-mud": "2.0.6-main-66c64ee1"
+    "----- REDSTONE GARNET -----": "---------------------------",
+    "deploy:redstone-garnet": "DEBUG=mud:* mud deploy --profile=redstone-garnet",
+    "----- REDSTONE RHODOLITE -----": "---------------------------",
+    "deploy:redstone-rhodolite": "---------------------------",
+    "----- REDSTONE MAINNET -----": "---------------------------",
+    "deploy:redstone-mainnet": "---------------------------"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2"
+    "@latticexyz/cli": "2.0.6-main-fb2bd881",
+    "@latticexyz/config": "2.0.6-main-fb2bd881",
+    "@latticexyz/gas-report": "2.0.6-main-fb2bd881",
+    "@latticexyz/schema-type": "2.0.6-main-fb2bd881",
+    "@latticexyz/store": "2.0.6-main-fb2bd881",
+    "@latticexyz/world": "2.0.6-main-fb2bd881",
+    "@latticexyz/world-modules": "2.0.6-main-fb2bd881",
+    "@types/node": "^20.12.7",
+    "ds-test": "github:dapphub/ds-test#c9ce3f25bde29fc5eb9901842bf02850dfd2d084",
+    "forge-std": "github:foundry-rs/forge-std#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3",
+    "prettier": "^3.2.5",
+    "prettier-plugin-solidity": "^1.3.1",
+    "solhint": "^4.5.4",
+    "solhint-config-mud": "2.0.6-main-fb2bd881",
+    "solhint-plugin-mud": "2.0.6-main-fb2bd881"
   }
 }

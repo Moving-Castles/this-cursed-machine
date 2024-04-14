@@ -30,3 +30,9 @@ eth_rpc_url = "https://miner.testnet-chain.linfra.xyz"
 
 [profile.redstone-garnet]
 eth_rpc_url = "https://rpc.garnet.qry.live/"
+
+[profile.redstone-rhodolite]
+eth_rpc_url = "xxxxx"
+
+[profile.redstone-mainnet]
+eth_rpc_url = "xxxxx"
