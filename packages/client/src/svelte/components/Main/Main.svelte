@@ -120,7 +120,7 @@
             bind:this={terminalComponent}
             on:commandExecuted={() => handleCommand()}
             setBlink
-            placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
+            placeholder={$tutorialProgress === 1 ? "BLINK" : "HELP"}
           />
         {/if}
       </div>

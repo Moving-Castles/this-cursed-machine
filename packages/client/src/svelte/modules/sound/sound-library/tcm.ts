@@ -116,5 +116,9 @@ export const tcm: SoundAssets = {
   selectionEsc2: {
     src: "./sounds/tcm/selection_esc-hit_01c.mp3",
     volume: 1,
+  },
+  bugs: {
+    src: "./sounds/tcm/bugs.mp3",
+    volume: 0.6,
   }
 }
