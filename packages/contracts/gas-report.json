@@ -93,12 +93,12 @@
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 215046
+    "gasUsed": 271750
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawnAndStart",
     "name": "Start",
-    "gasUsed": 1623263
+    "gasUsed": 1643163
   }
 ]

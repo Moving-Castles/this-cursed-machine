@@ -11,7 +11,7 @@ contract SpawnSystemTest is BaseTest {
 
     vm.startPrank(alice);
     startGasReport("Spawn");
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     endGasReport();
     vm.stopPrank();
 
@@ -28,7 +28,7 @@ contract SpawnSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     startGasReport("Start");
     bytes32 podEntity = world.start();
     endGasReport();

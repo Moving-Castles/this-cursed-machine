@@ -26,8 +26,8 @@ export enum WorldFunctions {
 
 // --- API --------------------------------------------------------------
 
-export function spawn() {
-  return addToSequencer(WorldFunctions.Spawn, [])
+export function spawn(name: string) {
+  return addToSequencer(WorldFunctions.Spawn, [name])
 }
 
 export function start() {

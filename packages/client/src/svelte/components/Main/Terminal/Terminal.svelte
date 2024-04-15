@@ -50,7 +50,7 @@
 
   let inputElement: HTMLInputElement
   let userInput = ""
-  let selectContainerElement: HTMLDivElement
+  let customInputContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
   let inputActive = false
   let hasFocus = false
@@ -102,7 +102,7 @@
     }
 
     const value = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       selectOptions
     )
@@ -120,7 +120,7 @@
     let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
 
     const connectionId = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       disconnectOptions
     )
@@ -155,7 +155,7 @@
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
 
     const sourceMachineKey = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       sourceSelectOptions
     )
@@ -224,7 +224,7 @@
       }))
 
       const sourcePort = (await renderSelect(
-        selectContainerElement,
+        customInputContainerElement,
         Select,
         sourcePortOptions
       )) as PORT_INDEX
@@ -264,7 +264,7 @@
       }))
 
       const sourcePort = (await renderSelect(
-        selectContainerElement,
+        customInputContainerElement,
         Select,
         sourcePortOptions
       )) as PORT_INDEX
@@ -310,7 +310,7 @@
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "TO:")
 
     let targetMachineKey = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       targetSelectOptions
     )
@@ -352,7 +352,7 @@
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Tank:")
 
     const depotEntity = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       sourceSelectOptions
     )
@@ -387,7 +387,7 @@
     }
 
     const targetEntity = await renderSelect(
-      selectContainerElement,
+      customInputContainerElement,
       Select,
       targetSelectOptions
     )
@@ -486,8 +486,12 @@
     {/each}
   {/if}
 
-  <!-- SELECT -->
-  <div class="select-container" bind:this={selectContainerElement} />
+  <!-- CUSTOM INPUT => SELECT, NAMING -->
+  <div
+    id="custom-input-container"
+    class="custom-input-container"
+    bind:this={customInputContainerElement}
+  />
 
   <!-- INPUT -->
   {#if inputActive || noOutput}
@@ -509,7 +513,7 @@
         class="blinker"
         class:blink={userInput.length === 0}
         class:empty={userInput === ""}
-        style:transform="translate({userInput.length}ch, -3px) scaleX(1.5) "
+        style:transform="translate({userInput.length}ch, 0)"
       >
         █
       </div>

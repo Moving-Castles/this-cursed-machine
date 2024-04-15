@@ -6,7 +6,7 @@ import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amou
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken, LibNetwork, LibReset } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { TUTORIAL_LEVELS } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, DEPOT_CAPACITY } from "../../constants.sol";
 
 contract OrderSystem is System {
   /**
@@ -151,10 +151,22 @@ contract OrderSystem is System {
     if (Tutorial.get(playerEntity)) {
       uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
 
-      if (nextTutorialLevel < TUTORIAL_LEVELS) {
-        // Level up player
-        TutorialLevel.set(playerEntity, nextTutorialLevel);
+      if (nextTutorialLevel == NUMBER_OF_TUTORIAL_LEVELS) {
+        // Tutorial is done
+        Tutorial.set(playerEntity, false);
+        TutorialLevel.deleteRecord(playerEntity);
+        NonTransferableBalance.deleteRecord(playerEntity);
+
+        // Fill the player's first depot with bugs to get them started
+        bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
+        MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
+        Amount.set(depotsInPod[0], DEPOT_CAPACITY);
+
+        return;
       }
+
+      // Level up player
+      TutorialLevel.set(playerEntity, nextTutorialLevel);
 
       /*
        * Reward player in non-transferable token substitutes

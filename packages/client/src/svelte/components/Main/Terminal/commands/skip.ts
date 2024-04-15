@@ -10,7 +10,7 @@ async function execute() {
         writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Skipping intro...")
 
         writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Spawning")
-        const spawnAction = spawn()
+        const spawnAction = spawn("MEATBAG88")
         await waitForTransaction(spawnAction, loadingSpinner)
         await waitForCompletion(spawnAction, loadingLine);
         playSound("tcm", "TRX_yes")

@@ -57,6 +57,7 @@
     position: absolute;
     background: var(--background);
     color: var(--foreground);
+    // font-feature-settings: "ss02" 1;
 
     &.connected {
       background: var(--color-success);
