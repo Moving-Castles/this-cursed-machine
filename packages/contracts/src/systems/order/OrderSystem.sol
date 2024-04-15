@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, FixedEntities, FixedEntitiesData, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections, NonTransferableBalance } from "../../codegen/index.sol";
+import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibToken, LibNetwork, LibReset } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
@@ -68,12 +68,11 @@ contract OrderSystem is System {
 
   /**
    * @notice Accept an order
-   * @dev This simply indicates that a user is commiting to an order, we also do some pre wiring of the pods for tutorial levels
+   * @dev This simply indicates that a user is committed to an order
    * @param _orderEntity Id of the order entity
    */
   function accept(bytes32 _orderEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 podEntity = CarriedBy.get(playerEntity);
 
     require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
 
@@ -83,31 +82,6 @@ contract OrderSystem is System {
 
       uint32 playerTutorialLevel = TutorialLevel.get(playerEntity);
       require(playerTutorialLevel == TutorialLevel.get(_orderEntity), "wrong tutorial level");
-
-      /*
-       * For didactic purposes, we wire up the pods for the tutorial levels
-       */
-      if (playerTutorialLevel == 0 || playerTutorialLevel == 1) {
-        FixedEntitiesData memory fixedEntities = FixedEntities.get(podEntity);
-        bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
-        // Attach depot 1 to inlet 1
-        DepotConnection.set(fixedEntities.inlets[0], depotsInPod[0]);
-        DepotConnection.set(depotsInPod[0], fixedEntities.inlets[0]);
-        // Attach depot 2 to outlet
-        DepotConnection.set(fixedEntities.outlet, depotsInPod[1]);
-        DepotConnection.set(depotsInPod[1], fixedEntities.outlet);
-        // Connect Inlet 1 to Player
-        OutgoingConnections.update(fixedEntities.inlets[0], 0, playerEntity);
-        IncomingConnections.update(playerEntity, 0, fixedEntities.inlets[0]);
-        // Disconnect Player
-        OutgoingConnections.update(playerEntity, 0, bytes32(0));
-        OutgoingConnections.update(playerEntity, 1, bytes32(0));
-        // Disconnect outlet
-        IncomingConnections.update(fixedEntities.outlet, 0, bytes32(0));
-      } else if (playerTutorialLevel == 2) {
-        // Reset pod
-        LibReset.reset(podEntity);
-      }
     }
 
     OrderData memory currentOrder = Order.get(_orderEntity);
