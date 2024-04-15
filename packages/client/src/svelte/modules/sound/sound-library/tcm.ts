@@ -87,7 +87,7 @@ export const tcm: SoundAssets = {
   },
   machineFlowing: {
     src: "./sounds/tcm/machineActive.mp3",
-    volume: 0.3,
+    volume: 0.8,
   },
   machineInactive: {
     src: "./sounds/tcm/machineInactive.mp3",

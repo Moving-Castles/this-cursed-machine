@@ -68,7 +68,7 @@
     safezone = document.getElementById(
       attachedMachine?.machineType === MACHINE_TYPE.INLET
         ? "safezone-1"
-        : "safezone-2"
+        : "safezone-2",
     )
 
     const from = depotElement?.getBoundingClientRect()
@@ -91,7 +91,7 @@
       // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
       throughCoord2 = makeRandomPointInsideSafeZone(
-        attachedMachine?.machineType
+        attachedMachine?.machineType,
       )
 
       const points = throughCoord
@@ -144,6 +144,7 @@
     await tick()
     redraw()
   })
+
   onDestroy(() => {
     alpha.stop()
   })

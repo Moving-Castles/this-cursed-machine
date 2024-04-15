@@ -88,11 +88,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    // background-image: url("/images/eye3.gif");
-    background-image: url("/images/face.jpg");
     background-image: url("/images/face5.png");
-
-    // background-image: url("/images/eye2.gif");
     background-size: cover;
     border: 1px solid var(--background);
     color: var(--foreground);
