@@ -137,7 +137,7 @@
             {#if $tutorialProgress === 0}
               <div class="dim" out:flicker={{ duration: 500 }} />
             {/if}
-            {#if $tutorialProgress > 1 && $tutorialProgress !== 4}
+            {#if $tutorialProgress > 1}
               <!-- Render the CurrentComponent if it's not null -->
               {#if currentTabComponent}
                 <svelte:component

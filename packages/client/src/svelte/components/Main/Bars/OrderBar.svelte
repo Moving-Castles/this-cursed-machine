@@ -8,7 +8,11 @@
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 </script>
 
-<div class="order-bar" class:hidden={$tutorialProgress < 1}>
+<div
+  class="order-bar"
+  class:hidden={$tutorialProgress < 1}
+  class:emphasis={$tutorialProgress === 4}
+>
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">
@@ -24,7 +28,7 @@
     {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number($playerOrder.order.expirationBlock) - Number($blockNumber),
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
         )}
       </div>
     {/if}

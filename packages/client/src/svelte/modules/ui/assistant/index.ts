@@ -60,13 +60,10 @@ function updateConditions() {
   const INLET_ADDRESSES = get(playerPod)?.fixedEntities?.inlets
   const DEPOT_ADDRESSES = get(playerPod)?.depotsInPod
   const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
-  const CURRENT_ORDER = get(playerOrder)?.order
 
   const DRYER_ADDRESS = MACHINES?.find(
     ([_, machine]) => machine.machineType === MACHINE_TYPE.DRYER
   )?.[0]
-
-  console.log("UPDATE", DRYER_ADDRESS)
 
   const ADVANCE_CONDITIONS = [
     { type: "wait", value: 5000 },

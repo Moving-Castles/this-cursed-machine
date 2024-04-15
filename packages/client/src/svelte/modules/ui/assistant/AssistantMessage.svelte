@@ -3,7 +3,7 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
-  import { tutorialProgress } from "@modules/ui/assistant"
+  import { tutorialProgress, advanceConditions } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
@@ -16,17 +16,51 @@
   export let msg: AssistantMessage
 
   const parse = str => {
+    if (!$player) return str
+
     str = str.replaceAll("%PLAYER%", $player.name)
     str = str.replaceAll("%NAME%", $player.name)
-    str = str.replaceAll(
-      "%MATERIAL%",
-      MATERIAL_TYPE[$playerOrder?.order?.materialType]
-    )
+
+    if ($playerOrder) {
+      str = str.replaceAll(
+        "%MATERIAL%",
+        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+      )
+    }
+
+    const condition = $advanceConditions[$tutorialProgress]
+
+    if (!condition) return str
+
+    if (condition.type === "command") {
+      condition.value.forEach(cmd => {
+        if (cmd !== ".")
+          str = str
+            .toLowerCase()
+            .replaceAll(cmd, `<span class="command">${cmd}</span>`)
+      })
+    }
+    if (condition.type === "contract") {
+      const reverseMappings = {
+        ship: "ship",
+        attachDepot: "attach",
+        connect: "connect",
+        buy: "refill",
+        build: "build",
+      }
+
+      const cmd = reverseMappings[condition.value.systemId]
+
+      if (!cmd) return str
+      str = str
+        .toLowerCase()
+        .replaceAll(cmd, `<span class="command">${cmd}</span>`)
+    }
+
     return str
   }
 
   $: message = parse(msg?.message)
-  $: console.log(message)
 
   let working = false
   let confirming = false
@@ -69,7 +103,7 @@
     <img src="/images/eye3.gif" alt="bot" />
   </div> -->
   <div class="text">
-    {message}
+    {@html message}
   </div>
   <div class="restart">
     {#if !confirming}

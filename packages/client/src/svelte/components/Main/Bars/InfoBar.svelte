@@ -1,9 +1,13 @@
 <script lang="ts">
   import { player, playerTokenBalance } from "@modules/state/base/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import NumberGoingUp from "@components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
-<div class="info-bar">
+<div
+  class:emphasis={$tutorialProgress === 6 || $tutorialProgress === 14}
+  class="info-bar"
+>
   <div class="name">
     <span class="name-inner">
       {#if $player.name}
@@ -17,7 +21,7 @@
   <div class="completed">
     <div>
       <div class="token-balance">
-        <NumberGoingUp value={$playerTokenBalance} goal={30000} warn={26900} /> $BUGS
+        <NumberGoingUp value={$playerTokenBalance} /> $BUGS
       </div>
     </div>
   </div>

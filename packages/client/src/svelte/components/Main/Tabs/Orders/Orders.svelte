@@ -6,7 +6,7 @@
   import OrderItem from "./OrderItem.svelte"
 </script>
 
-{#if $tutorialProgress > 3}
+{#if $tutorialProgress > 4}
   <div class="container">
     <div class="order-list">
       {#each Object.entries($availableOrders) as [key, order]}

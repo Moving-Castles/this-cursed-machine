@@ -1,8 +1,9 @@
 @font-face {
-    font-family: 'Sixtyfour';
-    src: url('Sixtyfour/Sixtyfour-Regular.woff2') format('woff2'),
-        url('Sixtyfour/Sixtyfour-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Sixtyfour";
+  src:
+    url("SixtyFour/Sixtyfour-Regular.woff2") format("woff2"),
+    url("Sixtyfour/Sixtyfour-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }

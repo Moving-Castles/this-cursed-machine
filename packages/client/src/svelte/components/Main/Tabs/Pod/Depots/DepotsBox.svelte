@@ -7,7 +7,7 @@
 <div
   class="depots-box"
   class:hidden={$tutorialProgress < 1}
-  class:highlight={$tutorialProgress === -1}
+  class:emphasis={$tutorialProgress === 7}
 >
   <!-- <div class="">shipping</div> -->
   {#if $simulatedDepots}

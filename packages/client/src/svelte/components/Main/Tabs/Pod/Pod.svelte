@@ -11,7 +11,7 @@
 
 <div class="pod">
   <div class="stats">
-    {#if $tutorialProgress > 2}
+    {#if $tutorialProgress > 6}
       <DepotsBox />
     {/if}
   </div>

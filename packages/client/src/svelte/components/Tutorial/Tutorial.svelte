@@ -25,7 +25,6 @@
   $: {
     const step = $advanceConditions?.[$tutorialProgress]
     if (step) {
-      console.log(step)
       currentCondition.set(step)
     }
   }
@@ -49,7 +48,7 @@
   })
 </script>
 
-{#if import.meta.env.DEV && $player}
+<!-- {#if import.meta.env.DEV && $player}
   <div class="test">
     <button on:click={() => $tutorialProgress--}>Prev</button>
     <button on:click={() => $tutorialProgress++}>Next</button>
@@ -66,7 +65,7 @@
     {typeof $tutorialProgress}
     {$tutorialProgress}
   </div>
-{/if}
+{/if} -->
 
 <style>
   .test {

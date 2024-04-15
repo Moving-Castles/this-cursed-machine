@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import { player } from "@modules/state/base/stores"
+import { tutorialProgress } from "@modules/ui/assistant"
 import { commands } from "@components/Main/Terminal/commands"
 import { Command } from "@components/Main/Terminal/types"
 import { levelCommandFilter } from "@components/Main/Terminal/functions/helpers"
@@ -13,10 +13,7 @@ export function evaluate(input: string): Command | undefined {
   const cleanInput = input.toLowerCase().trim()
   return commands.find(
     command =>
-      levelCommandFilter(
-        get(player)?.tutorialLevel ?? 2,
-        command.id
-      ) &&
+      levelCommandFilter(get(tutorialProgress) ?? 28, command.id) &&
       (command.name === cleanInput || command.alias === cleanInput)
   )
 }
