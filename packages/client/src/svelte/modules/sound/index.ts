@@ -1,6 +1,6 @@
 import { Howl } from "howler";
-import { soundLibrary } from "./sound-library";
 import { writable } from "svelte/store";
+import { soundLibrary } from "./sound-library";
 
 export const music = writable(new Howl({ src: [""] }));
 export const fx = writable([new Howl({ src: [""] })]);

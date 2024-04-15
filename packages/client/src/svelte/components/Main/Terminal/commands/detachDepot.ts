@@ -22,7 +22,7 @@ async function execute(depotEntity: string) {
     // ...
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Detachment in progress...")
     await waitForCompletion(action, loadingLine)
-    playSound("tcm", "TRX_yes")
+    playSound("tcm", "selectionEsc2")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return

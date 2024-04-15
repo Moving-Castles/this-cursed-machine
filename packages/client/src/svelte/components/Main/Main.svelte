@@ -10,7 +10,7 @@
   import Attachments from "@components/Main/Tabs/Pod/Attachments/Attachments.svelte"
 
   import { TABS } from "@modules/ui/enums"
-  import { valve, flicker } from "@modules/ui/transitions"
+  import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
   import {
     sendMessage,

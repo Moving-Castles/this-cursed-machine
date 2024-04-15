@@ -40,6 +40,7 @@
     machines as machinesStore,
   } from "@modules/state/base/stores"
   import { terminalMessages } from "./functions/terminalMessages"
+  import { playSound } from "@modules/sound"
 
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
@@ -71,6 +72,7 @@
   }
 
   const handleInvalid = async (message: string) => {
+    playSound("tcm", "typingEnter")
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
@@ -433,12 +435,16 @@
     let parameters: any[] | false = false
 
     if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
+      playSound("tcm", "selectionEnter")
       parameters = await getSingleInputCommandParameters(command)
     } else if (command.id === COMMAND.CONNECT) {
+      playSound("tcm", "selectionEnter")
       parameters = await getConnectParameters()
     } else if (command.id === COMMAND.DISCONNECT) {
+      playSound("tcm", "selectionEnter")
       parameters = await getDisconnectParameters()
     } else if (command.id === COMMAND.ATTACH_DEPOT) {
+      playSound("tcm", "selectionEnter")
       parameters = await getAttachDepotParameters()
     }
 

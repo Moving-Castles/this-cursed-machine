@@ -1,12 +1,13 @@
 <script lang="ts">
-  // import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import type { TabDefinitions } from "../types"
   export let tabList: TabDefinitions
 
-  const HIDDEN_CONDITIONS = {
+  const HIDDEN_CONDITIONS: {
+    [key: number]: number
+  } = {
     0: 0,
     1: 0,
     2: 8,
@@ -14,7 +15,9 @@
     4: 26,
   }
 
-  const PULSE_CONDITIONS = {
+  const PULSE_CONDITIONS: {
+    [key: number]: number[]
+  } = {
     0: [20, 3],
     1: [1, 7, 15],
     2: [9, 17, 25],
@@ -25,10 +28,10 @@
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num
+    num => $tutorialProgress > num,
   ).length
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation()
     if (e.key.toLowerCase() === "tab") {
       if (e.shiftKey) {
@@ -48,15 +51,15 @@
   {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
     <div class="button-container">
       <button
-        tabIndex={key}
-        disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+        tabIndex={Number(key)}
+        disabled={$tutorialProgress <= HIDDEN_CONDITIONS[Number(key)]}
         class:enabled={value.enabled}
         class:active={Number(key) === $activeTab}
         class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
-        class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+        class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[Number(key)]}
         on:click={() => {
           playSound("tcm", "selectionEnter")
-          activeTab.set(key)
+          activeTab.set(Number(key))
         }}
       >
         {value.label}
@@ -64,8 +67,6 @@
     </div>
   {/each}
 </div>
-
-<!-- <svelte:window on:keydown={e => toggleTabByKeyboard(e)} /> -->
 
 <style lang="scss">
   .tab-bar {

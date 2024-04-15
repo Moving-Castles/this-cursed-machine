@@ -22,7 +22,7 @@ async function execute(depotEntity: string, targetEntity: string) {
     // ...
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Attachment in progress...")
     await waitForCompletion(action, loadingLine)
-    playSound("tcm", "TRX_yes")
+    playSound("tcm", "selectionEsc2")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return
@@ -35,11 +35,11 @@ async function execute(depotEntity: string, targetEntity: string) {
 }
 
 export const attachDepot: Command<[depotEntity: string, targetEntity: string]> =
-  {
-    id: COMMAND.ATTACH_DEPOT,
-    public: true,
-    name: "attach",
-    alias: "a",
-    description: "Attach depot",
-    fn: execute,
-  }
+{
+  id: COMMAND.ATTACH_DEPOT,
+  public: true,
+  name: "attach",
+  alias: "a",
+  description: "Attach depot",
+  fn: execute,
+}

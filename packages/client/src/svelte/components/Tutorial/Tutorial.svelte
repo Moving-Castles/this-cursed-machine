@@ -2,14 +2,12 @@
   // This file is responsible for the tutorial notifications and for checking tutorial progress
   // Messages are sent to the <Assistant /> component in App.svelte
   import { onMount } from "svelte"
-  import { player } from "@modules/state/base/stores"
   import {
     sendMessage,
     clearMessage,
     tutorialProgress,
     currentMessage,
   } from "@modules/ui/assistant"
-  import { playSound } from "@modules/sound"
 
   $: {
     if (typeof $tutorialProgress === "number" && $currentMessage?.explanation) {

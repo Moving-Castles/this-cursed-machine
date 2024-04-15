@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { patches } from "./patches/stores"
 import { localResolved } from "./stores"
-import { blockNumber } from "../../network"
+import { blockNumber } from "@modules/network"
 import {
   playerPod,
   player,
@@ -11,10 +11,10 @@ import {
   depots,
   recipes
 } from "../base/stores"
-import { playSound } from "../../sound"
+import { playSound } from "@modules/sound"
 import { resolve } from "./resolve"
-import { UIState } from "../../ui/stores"
-import { UI } from "../../ui/enums"
+import { UIState } from "@modules/ui/stores"
+import { UI } from "@modules/ui/enums"
 import { tutorialProgress } from "@modules/ui/assistant"
 
 /**
