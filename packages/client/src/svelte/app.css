@@ -24,7 +24,7 @@
   --tab-bar-height: 90px;
 
   /* Fonts */
-  --font-family: "SixtyFour", monospace;
+  --font-family: "SixtyfourLocal", "SixtyFour", monospace;
   --font-size-small: 9px;
   --font-size-normal: 14px;
   --font-size-large: 18px;
