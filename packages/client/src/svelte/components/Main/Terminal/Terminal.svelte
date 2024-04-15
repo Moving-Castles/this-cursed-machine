@@ -166,12 +166,16 @@
 
     let sourceMachineEntity = $simulatedMachines[sourceMachineKey]
 
+    const sourceMachineLabel =
+      "From: " +
+      machineTypeToLabel(sourceMachineEntity.machineType) +
+      (sourceMachineEntity.buildIndex !== undefined
+        ? " #" + sourceMachineEntity.buildIndex
+        : "")
+
     writeToTerminal(
       TERMINAL_OUTPUT_TYPE.INFO,
-      "From: " +
-        machineTypeToLabel(sourceMachineEntity.machineType) +
-        " #" +
-        sourceMachineEntity.buildIndex,
+      sourceMachineLabel,
       true,
       SYMBOLS[11],
     )
@@ -316,12 +320,16 @@
 
     let targetMachineEntity = $simulatedMachines[targetMachineKey]
 
+    const targetMachineLabel =
+      "To: " +
+      machineTypeToLabel(targetMachineEntity.machineType) +
+      (targetMachineEntity.buildIndex !== undefined
+        ? " #" + targetMachineEntity.buildIndex
+        : "")
+
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.INFO,
-      "To: " +
-        machineTypeToLabel(targetMachineEntity.machineType) +
-        " #" +
-        targetMachineEntity.buildIndex,
+      targetMachineLabel,
       true,
       SYMBOLS[14],
     )
