@@ -7,10 +7,26 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
+  import { MATERIAL_TYPE } from "contracts/enums"
+  import { player } from "@modules/state/base/stores"
+  import { playerOrder } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
   export let msg: AssistantMessage
+
+  const parse = str => {
+    str = str.replaceAll("%PLAYER%", $player.name)
+    str = str.replaceAll("%NAME%", $player.name)
+    str = str.replaceAll(
+      "%MATERIAL%",
+      MATERIAL_TYPE[$playerOrder?.order?.materialType]
+    )
+    return str
+  }
+
+  $: message = parse(msg?.message)
+  $: console.log(message)
 
   let working = false
   let confirming = false
@@ -53,7 +69,7 @@
     <img src="/images/eye3.gif" alt="bot" />
   </div> -->
   <div class="text">
-    {msg.message}
+    {message}
   </div>
   <div class="restart">
     {#if !confirming}
@@ -71,17 +87,16 @@
     display: flex;
     align-items: center;
     padding-top: 0;
-    text-align: center;
     background: var(--background);
     margin-top: 10px;
     overflow: hidden;
-    white-space: pre-wrap;
+    white-space: pre-line;
     text-align: left;
     font-size: 22px;
     font-size: var(--font-size);
     line-height: 1em;
     color: var(--foreground);
-    text-align: center;
+    text-align: left;
     border: 5px double var(--color-success);
     color: var(--color-success);
     position: relative;
@@ -127,7 +142,8 @@
     }
 
     .text {
-      padding: 40px;
+      text-align-last: left;
+      padding: 20px 40px;
       // padding-left: 0;
       width: 100%;
     }

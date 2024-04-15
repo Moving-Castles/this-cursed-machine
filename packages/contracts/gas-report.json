@@ -63,7 +63,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Accept order",
-    "gasUsed": 54666
+    "gasUsed": 53350
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",

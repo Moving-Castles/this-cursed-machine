@@ -42,6 +42,5 @@ export const start: Command<[]> = {
   public: true,
   name: "start",
   alias: "\\",
-  description: "Restart tutorial",
   fn: execute,
 }

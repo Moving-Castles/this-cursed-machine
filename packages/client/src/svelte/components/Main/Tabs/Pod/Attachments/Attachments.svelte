@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { depotAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
-  import { activeTab, graphElement } from "@svelte/modules/ui/stores"
+  import { activeTab, graphElement } from "@modules/ui/stores"
 
   let [innerWidth, innerHeight] = [1, 1]
   let graphBoundingBox: SVGClientRect

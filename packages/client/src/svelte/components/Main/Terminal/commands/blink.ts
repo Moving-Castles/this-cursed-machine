@@ -14,6 +14,5 @@ export const blink: Command<[terminalType: TERMINAL_TYPE]> = {
     public: true,
     name: "blink",
     alias: ".",
-    description: "...",
     fn: execute,
 }

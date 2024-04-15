@@ -82,7 +82,7 @@ contract OfferSystem is System {
     }
 
     if (targetDepot == bytes32(0)) {
-      revert("no depot available");
+      revert("no tank available");
     }
 
     // Add material to depot

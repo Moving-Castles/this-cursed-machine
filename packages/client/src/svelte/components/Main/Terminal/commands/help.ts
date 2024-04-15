@@ -24,6 +24,9 @@ async function execute(_: TERMINAL_TYPE) {
   for (let i = 0; i < commandList.length; i++) {
     let command = commandList[i]
     let outputString = `(${command.alias}) ${command.name}`
+    // if (command.objectTerm) {
+    //   outputString += ` ${command.objectTerm}`
+    // }
     playSound("tcm", "listPrint")
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.INFO,
@@ -42,6 +45,5 @@ export const help: Command<[terminalType: TERMINAL_TYPE]> = {
   public: true,
   name: "help",
   alias: "h",
-  description: "Get help",
   fn: execute,
 }

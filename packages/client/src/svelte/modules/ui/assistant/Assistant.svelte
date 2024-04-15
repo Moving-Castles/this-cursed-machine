@@ -8,8 +8,8 @@
   const onEnd = (e: CustomEvent<AssistantMessage>) => {
     assistantMessages.set(
       $assistantMessages.filter(
-        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp,
-      ),
+        (t: AssistantMessage) => t.timestamp !== e.detail.timestamp
+      )
     )
   }
 </script>
@@ -30,7 +30,7 @@
     right: 20px;
     display: flex;
     flex-direction: column-reverse;
-    width: 400px;
+    width: 480px;
     text-align: center;
   }
 </style>

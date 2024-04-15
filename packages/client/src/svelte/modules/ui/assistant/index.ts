@@ -58,6 +58,9 @@ function updateConditions() {
   const PLAYER_ADDRESS = get(playerId)
   const OUTLET_ADDRESS = get(playerPod)?.fixedEntities?.outlet
   const INLET_ADDRESSES = get(playerPod)?.fixedEntities?.inlets
+  const DEPOT_ADDRESSES = get(playerPod)?.depotsInPod
+  const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
+  const CURRENT_ORDER = get(playerOrder)?.order
 
   const DRYER_ADDRESS = MACHINES?.find(
     ([_, machine]) => machine.machineType === MACHINE_TYPE.DRYER
@@ -73,10 +76,10 @@ function updateConditions() {
     { type: "command", value: ["blink", "."] }, // 4
     { type: "contract", value: { systemId: "accept" } }, // 5
     { type: "tab", value: [0] }, // 6
-    { type: "contract", value: { systemId: "refill" } }, // 7
+    { type: "contract", value: { systemId: "buy" } }, // 7
     {
       type: "contract",
-      value: { systemId: "attachDepot" },
+      value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
     }, // 8
     { type: "contract", value: { systemId: "connect" } }, // 9
     {
@@ -87,29 +90,45 @@ function updateConditions() {
       type: "contract",
       value: {
         systemId: "attachDepot",
-        params: [PLAYER_ADDRESS, OUTLET_ADDRESS],
+        params: [DEPOT_ADDRESSES, OUTLET_ADDRESS],
       },
     }, // 11
     { type: "order" }, // 12
-    { type: "tab", value: [1] }, // 13
-    { type: "contract", value: { systemId: "accept" } }, // 14
-    { type: "contract", value: { systemId: "refill" } }, // 15
+    { type: "contract", value: { systemId: "ship" } }, // 13
+    { type: "tab", value: [1] }, // 14
+    { type: "contract", value: { systemId: "accept" } }, // 15
+    { type: "contract", value: { systemId: "buy" } }, // 16
     {
       type: "contract",
-      value: { systemId: "attachDepot", params: [INLET_ADDRESSES] },
-    }, // 16
-    {
-      type: "contract",
-      value: { systemId: "connect", params: [INLET_ADDRESSES, PLAYER_ADDRESS] },
+      value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
     }, // 17
     {
       type: "contract",
-      value: { systemId: "build", params: MACHINE_TYPE.DRYER },
+      value: { systemId: "connect", params: [PLAYER_ADDRESS] },
     }, // 18
     {
       type: "contract",
-      value: { systemId: "connect", params: [PLAYER_ADDRESS] },
+      value: { systemId: "build", params: [MACHINE_TYPE.DRYER] },
     }, // 19
+    {
+      type: "contract",
+      value: { systemId: "connect", params: [PLAYER_ADDRESS] },
+    }, // 20
+    {
+      type: "contract",
+      value: {
+        systemId: "attachDepot",
+        params: [DEPOT_ADDRESSES, OUTLET_ADDRESS],
+      },
+    }, // 21
+    { type: "order" }, // 22
+    { type: "contract", value: { systemId: "ship" } }, // 23
+    { type: "tab", value: [1] }, // 24
+    { type: "contract", value: { systemId: "accept" } }, // 25
+    { type: "tab", value: [2] }, // 26
+    { type: "read" }, // 27
+    { type: "order" }, // 28
+    { type: "contract", value: { systemId: "ship" } }, // 29
   ]
 
   advanceConditions.set(ADVANCE_CONDITIONS)
@@ -150,7 +169,6 @@ export function advanceTutorial(
   const step = $advanceConditions[level]
 
   if (step) {
-    console.log("compare", step, input)
     // Check if condition is met or not
     if (
       step.type === "command" &&
@@ -169,6 +187,7 @@ export function advanceTutorial(
     }
 
     if (step.type === "contract" && type === "contract") {
+      console.log(step.value.systemId, input.systemId)
       // Check the systemId
       if (step.value.systemId !== input.systemId) return
 

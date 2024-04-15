@@ -36,6 +36,5 @@ export const fail: Command<[]> = {
     public: false,
     name: "fail",
     alias: "z",
-    description: "Testfailure",
     fn: execute,
 }

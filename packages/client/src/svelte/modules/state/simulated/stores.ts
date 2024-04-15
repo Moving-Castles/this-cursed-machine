@@ -352,7 +352,7 @@ export function calculateSimulatedConnections(
         sourceMachine.outputs &&
         sourceMachine.outputs[sourcePortIndex] &&
         sourceMachine.outputs[sourcePortIndex].materialType !==
-        MATERIAL_TYPE.NONE
+          MATERIAL_TYPE.NONE
       ) {
         connection.products = [
           {

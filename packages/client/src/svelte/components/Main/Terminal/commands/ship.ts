@@ -5,8 +5,8 @@ import { parseError } from "@components/Main/Terminal/functions/errors"
 import {
   detachDepot as sendDetachDepot,
   ship as sendShip,
+  reset as sendReset,
 } from "@modules/action"
-import { shippableDepots } from "@modules/state/simulated/stores"
 import {
   loadingLine,
   loadingSpinner,
@@ -17,7 +17,7 @@ import {
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
 import { player } from "@modules/state/base/stores"
-import { tutorialProgress } from "@modules/ui/assistant"
+// import { tutorialProgress } from "@modules/ui/assistant"
 import { playSound } from "@modules/sound"
 import { terminalMessages } from "../functions/terminalMessages"
 import {
@@ -60,16 +60,14 @@ async function execute(depotEntity: string) {
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
 
-    playSound("tcm", "playerLvlend")
-
-    await terminalMessages.orderFulfilled()
-
-    // If the player is in the tutorial and ships, do an extra check to make sure if their tutorial level should be skipped ahead
+    // If the player is in the tutorial and ships, wipe the pod
     if ($player.tutorial) {
-      const $tutorialProgress = get(tutorialProgress)
-
-      // Compare with goals
+      const anotherAction = sendReset()
+      await waitForTransaction(anotherAction, loadingSpinner)
     }
+
+    playSound("tcm", "playerLvlend")
+    await terminalMessages.orderFulfilled()
 
     return
   } catch (error) {
@@ -88,6 +86,6 @@ export const ship: Command<[depotEntity: string]> = {
   public: true,
   name: "ship",
   alias: "s",
-  description: "Ship order",
+  objectTerm: "tank",
   fn: execute,
 }

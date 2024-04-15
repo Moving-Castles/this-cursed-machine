@@ -38,7 +38,7 @@ export const destroy: Command<[machineEntiy: string]> = {
     id: COMMAND.DESTROY,
     public: true,
     name: "destroy",
-    alias: "d",
-    description: "Remove machine",
+    alias: "x",
+    objectTerm: "machine",
     fn: execute,
 }

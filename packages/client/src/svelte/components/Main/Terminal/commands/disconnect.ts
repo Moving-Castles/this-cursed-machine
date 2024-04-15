@@ -36,7 +36,7 @@ export const disconnect: Command<[connectionEntiy: string, portIndex: PORT_INDEX
   id: COMMAND.DISCONNECT,
   public: true,
   name: "disconnect",
-  alias: "x",
-  description: "Remove connection",
+  alias: "d",
+  objectTerm: "machine",
   fn: execute,
 }

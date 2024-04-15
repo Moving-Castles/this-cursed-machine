@@ -1,7 +1,5 @@
 <script lang="ts">
-  //   import { player } from "@modules/state/base/stores"
   import { fly } from "svelte/transition"
-  //   import { playSound } from "@modules/sound"
   import { name } from "@modules/action"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
@@ -12,7 +10,7 @@
   let modalActive = false
   let userName = ""
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") sendName()
   }
 
@@ -21,8 +19,6 @@
     const hasMinLength = name.length >= 4
     // Check for maximum length of 24
     const isLengthValid = name.length <= 24
-
-    // Further eval?
 
     return hasMinLength && isLengthValid
   }

@@ -13,7 +13,6 @@
     advanceTutorial,
     advanceConditions,
   } from "@modules/ui/assistant"
-  import { playSound } from "@modules/sound"
 
   $: {
     if (typeof $tutorialProgress === "number" && $currentMessage?.explanation) {
@@ -36,7 +35,6 @@
       if ($currentCondition.type === "wait") {
         setTimeout(() => {
           advanceTutorial(null, $tutorialProgress, "wait")
-          console.log("CALLED", $tutorialProgress)
         }, $currentCondition.value)
       }
     }
@@ -51,7 +49,7 @@
   })
 </script>
 
-{#if import.meta.env.DEV}
+{#if import.meta.env.DEV && $player}
   <div class="test">
     <button on:click={() => $tutorialProgress--}>Prev</button>
     <button on:click={() => $tutorialProgress++}>Next</button>

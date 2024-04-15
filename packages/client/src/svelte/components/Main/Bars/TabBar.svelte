@@ -1,25 +1,24 @@
 <script lang="ts">
-  // import { TABS } from "@modules/ui/enums"
   import { activeTab } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import type { TabDefinitions } from "../types"
   export let tabList: TabDefinitions
 
-  const HIDDEN_CONDITIONS = {
+  const HIDDEN_CONDITIONS: {
+    [key: number]: number
+  } = {
     0: 0,
     1: 2,
-    2: 1000,
-    3: 17,
-    4: 26,
+    2: 25,
+    3: 28,
   }
 
   const PULSE_CONDITIONS = {
-    0: [6],
-    1: [3, 7, 15],
-    2: [9, 17, 25],
-    3: [18],
-    4: [27],
+    0: [],
+    1: [3],
+    2: [26],
+    3: [],
   }
 
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
@@ -28,7 +27,7 @@
     num => $tutorialProgress > num
   ).length
 
-  const onKeyDown = e => {
+  const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation()
     if (e.key.toLowerCase() === "tab") {
       if (e.shiftKey) {
@@ -69,8 +68,6 @@
   </div>
 {/if}
 
-<!-- <svelte:window on:keydown={e => toggleTabByKeyboard(e)} /> -->
-
 <style lang="scss">
   .tab-bar {
     width: 100%;
@@ -80,7 +77,7 @@
     padding-inline: 20px;
 
     .button-container {
-      width: 20%;
+      width: 25%;
 
       button {
         width: 100%;
