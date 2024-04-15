@@ -508,7 +508,7 @@
         class="blinker"
         class:blink={userInput.length === 0}
         class:empty={userInput === ""}
-        style:transform="translate({userInput.length}ch, -3px) scaleX(1.5) "
+        style:transform="translate({userInput.length}ch, 0)"
       >
         █
       </div>

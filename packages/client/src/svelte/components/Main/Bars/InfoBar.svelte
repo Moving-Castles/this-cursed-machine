@@ -38,7 +38,6 @@
         padding: 2px;
         background: var(--foreground);
         color: var(--background);
-        font-feature-settings: "ss01" 1;
       }
     }
   }
