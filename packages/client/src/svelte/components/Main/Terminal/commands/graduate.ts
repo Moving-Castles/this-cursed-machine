@@ -36,6 +36,5 @@ export const graduate: Command<[]> = {
     public: false,
     name: "graduate",
     alias: "g",
-    description: "Skip tutorial",
     fn: execute,
 }

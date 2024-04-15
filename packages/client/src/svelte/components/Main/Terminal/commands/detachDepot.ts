@@ -39,6 +39,6 @@ export const detachDepot: Command<[depotEntity: string]> = {
   public: true,
   name: "detach",
   alias: "u",
-  description: "Detach depot",
+  objectTerm: "tank",
   fn: execute,
 }

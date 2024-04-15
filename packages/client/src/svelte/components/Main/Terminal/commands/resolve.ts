@@ -31,6 +31,5 @@ export const resolve: Command<[]> = {
     public: false,
     name: "resolve",
     alias: "+",
-    description: "Resolve the network",
     fn: execute,
 }

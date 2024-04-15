@@ -7,7 +7,7 @@ import { playSound } from "@modules/sound";
 
 async function execute() {
     try {
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Destroying everything...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Wiping pod...")
         writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "THIS CANNOT BE UNDONE...")
         // ...
         const action = sendReset()
@@ -28,11 +28,11 @@ async function execute() {
     }
 }
 
-export const reset: Command<[]> = {
-    id: COMMAND.RESET,
+export const wipe: Command<[]> = {
+    id: COMMAND.WIPE,
     public: true,
-    name: "reset",
-    alias: "r",
-    description: "Reset pod",
+    name: "wipe",
+    alias: "w",
+    objectTerm: "pod",
     fn: execute,
 }

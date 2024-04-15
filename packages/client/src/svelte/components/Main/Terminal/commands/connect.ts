@@ -33,6 +33,6 @@ export const connect: Command<[sourceMachine: string, targetMachine: string, por
     public: true,
     name: "connect",
     alias: "c",
-    description: "Connect machines",
+    objectTerm: "machine",
     fn: execute,
 }

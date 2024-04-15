@@ -32,6 +32,6 @@ export const emptyDepot: Command<[depotEntity: string]> = {
     public: true,
     name: "empty",
     alias: "e",
-    description: "Empty depot",
+    objectTerm: "tank",
     fn: execute,
 }

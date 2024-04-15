@@ -5,8 +5,8 @@ export type Command<T extends any[] = any[]> = {
     id: COMMAND;
     public: boolean;
     name: string;
-    alias: string;
-    description: string;
+    alias: string; // Shortcut
+    objectTerm?: string; // What the command acts on. Used for help command
     fn: (...args: T) => Promise<void>;
 }
 

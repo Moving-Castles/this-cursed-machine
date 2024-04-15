@@ -33,6 +33,6 @@ export const build: Command<[machineType: MACHINE_TYPE]> = {
   public: true,
   name: "build",
   alias: "b",
-  description: "Build machine",
+  objectTerm: "machine",
   fn: execute,
 }

@@ -40,6 +40,6 @@ export const attachDepot: Command<[depotEntity: string, targetEntity: string]> =
   public: true,
   name: "attach",
   alias: "a",
-  description: "Attach depot",
+  objectTerm: "tank",
   fn: execute,
 }

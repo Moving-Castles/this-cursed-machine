@@ -6,7 +6,6 @@ import {
   detachDepot as sendDetachDepot,
   ship as sendShip,
 } from "@modules/action"
-import { shippableDepots } from "@modules/state/simulated/stores"
 import {
   loadingLine,
   loadingSpinner,
@@ -88,6 +87,6 @@ export const ship: Command<[depotEntity: string]> = {
   public: true,
   name: "ship",
   alias: "s",
-  description: "Ship order",
+  objectTerm: "tank",
   fn: execute,
 }

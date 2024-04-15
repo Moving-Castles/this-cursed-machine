@@ -8,7 +8,7 @@ import {
   simulatedConnections,
   simulatedDepots,
 } from "@modules/state/simulated/stores"
-import { player, depots as depotsStore } from "@modules/state/base/stores"
+import { player, depots as depotsStore, offers as offersStore } from "@modules/state/base/stores"
 import {
   FIXED_MACHINE_TYPES,
   MACHINES_BY_LEVEL,
@@ -46,6 +46,8 @@ export function createSelectOptions(
       return createSelectOptionsDetachDepot()
     case COMMAND.EMPTY_DEPOT:
       return createSelectOptionsEmptyDepot()
+    case COMMAND.REFILL_DEPOT:
+      return createSelectOptionsRefillDepot()
     case COMMAND.SHIP:
       return createSelectOptionsShip()
     default:
@@ -202,6 +204,20 @@ function createSelectOptionsEmptyDepot(): SelectOption[] {
     )
     .map(([address, depot]) => ({
       label: `Tank #${depot.buildIndex}`,
+      value: address,
+    }))
+
+  return selectOptions
+}
+
+function createSelectOptionsRefillDepot(): SelectOption[] {
+  let selectOptions: SelectOption[] = []
+
+  const offers = get(offersStore)
+
+  selectOptions = Object.entries(offers)
+    .map(([address, offer]) => ({
+      label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
       value: address,
     }))
 
