@@ -66,7 +66,8 @@ contract StartSystem is System {
     MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
     Amount.set(depotsInPod[0], 10000);
 
-    NonTransferableBalance.set(playerEntity, 0);
+    // We give the player some non-transferable tokens to start with
+    NonTransferableBalance.set(playerEntity, 500);
 
     return podEntity;
   }
