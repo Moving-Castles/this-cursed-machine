@@ -5,7 +5,7 @@ import { typeWriteToTerminal } from "./writeToTerminal"
 import { SYMBOLS } from "../index"
 import { clearTerminalOutput } from "./helpers"
 
-async function orderFullfilled() {
+async function orderFulfilled() {
   clearTerminalOutput()
 
   await typeWriteToTerminal(
@@ -61,5 +61,5 @@ async function startUp() {
 
 export const terminalMessages = {
   startUp,
-  orderFullfilled,
+  orderFulfilled,
 }

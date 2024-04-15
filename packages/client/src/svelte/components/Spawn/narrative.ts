@@ -51,7 +51,7 @@ export const narrative = [
         await writeNarrativeAction("blink if you can hear me")
     },
     async () => {
-        await writeNarrative("congratulations on qualifying for a position at TCM’s newest fulfillment centre.")
+        await writeNarrative("congratulations on qualifying for a position at TCM’s newest fulfilment centre.")
         await writeNarrative("I am your company assigned Supply Chain Unit Manager (S.C.U.M).")
         await writeNarrative("I will help you through the on-boarding process.")
         await writeNarrativeAction("blink to begin")
@@ -81,7 +81,7 @@ export const narrative = [
         await writeNarrative("From now on,")
         await writeNarrative("you will eat the bugs,")
         await writeNarrative("you will live in the pod,")
-        await writeNarrative("you will fulfill your orders.")
+        await writeNarrative("you will fulfil your orders.")
         await writeNarrative("Do not disappoint me.")
         await writeNarrativeAction("Blink to enter the pod.")
     },

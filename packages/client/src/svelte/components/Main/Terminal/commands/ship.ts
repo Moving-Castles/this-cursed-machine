@@ -41,19 +41,19 @@ async function execute(depotEntity: string) {
 
     // If the depot is connected, detach it before shipping
     if (depots[depotEntity].depotConnection !== EMPTY_CONNECTION) {
-      writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
+      writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating tank...")
       const detachAction = sendDetachDepot(depotEntity)
       await waitForTransaction(detachAction, loadingSpinner)
       writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Detachment in progress...")
       await waitForCompletion(detachAction, loadingLine)
-      await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Depot detached")
+      await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Tank detached")
       playSound("tcm", "selectionEsc2")
     }
 
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Shipping material...")
     const action = sendShip(depotEntity)
     await waitForTransaction(action, loadingSpinner)
-    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Fullfillment in progress...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Fulfilment in progress...")
 
     await waitForCompletion(action, loadingLine)
     playSound("tcm", "TRX_yes")
@@ -62,7 +62,7 @@ async function execute(depotEntity: string) {
 
     playSound("tcm", "playerLvlend")
 
-    await terminalMessages.orderFullfilled()
+    await terminalMessages.orderFulfilled()
 
     // If the player is in the tutorial and ships, do an extra check to make sure if their tutorial level should be skipped ahead
     if ($player.tutorial) {

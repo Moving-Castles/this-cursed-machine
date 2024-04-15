@@ -167,7 +167,7 @@ function createSelectOptionsAttachDepot(): SelectOption[] {
       ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
     )
     .map(([address, depot]) => ({
-      label: `Depot #${depot.buildIndex}`,
+      label: `Tank #${depot.buildIndex}`,
       value: address,
     }))
 
@@ -183,7 +183,7 @@ function createSelectOptionsDetachDepot(): SelectOption[] {
   selectOptions = Object.entries(depots)
     .filter(([_, depot]) => depot.depotConnection !== EMPTY_CONNECTION)
     .map(([address, depot]) => ({
-      label: `Depot #${depot.buildIndex}`,
+      label: `Tank #${depot.buildIndex}`,
       value: address,
     }))
 
@@ -201,7 +201,7 @@ function createSelectOptionsEmptyDepot(): SelectOption[] {
       ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
     )
     .map(([address, depot]) => ({
-      label: `Depot #${depot.buildIndex}`,
+      label: `Tank #${depot.buildIndex}`,
       value: address,
     }))
 
@@ -221,7 +221,7 @@ function createSelectOptionsShip(): SelectOption[] {
     }
 
     return {
-      label: `Depot #${depot.buildIndex} ${materialDescription}`,
+      label: `Tank #${depot.buildIndex} ${materialDescription}`,
       value: address,
     }
   })
