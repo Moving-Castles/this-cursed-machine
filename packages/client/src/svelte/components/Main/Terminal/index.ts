@@ -18,6 +18,8 @@ export const SYMBOLS = [
   "¥",
   "?",
   "»",
+  "→",
+  "√"
 ]
 
 export const FULL_COMMANDS = [

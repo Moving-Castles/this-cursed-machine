@@ -11,7 +11,7 @@ contract BuildSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Create a new entity
@@ -31,7 +31,7 @@ contract BuildSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Create a new entity
@@ -46,7 +46,7 @@ contract BuildSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Build splitter 1

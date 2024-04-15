@@ -2,7 +2,8 @@
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "types": [
-      "vite/client"
+      "vite/client",
+      "svelte"
     ],
     "target": "ESNext",
     "useDefineForClassFields": true,

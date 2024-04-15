@@ -19,7 +19,7 @@ contract ResolveSystemTest is BaseTest {
     super.setUp();
     vm.startPrank(alice);
 
-    playerEntity = world.spawn();
+    playerEntity = world.spawn("alice");
     world.start();
 
     podEntity = CarriedBy.get(playerEntity);

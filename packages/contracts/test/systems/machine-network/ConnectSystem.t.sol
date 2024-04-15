@@ -11,7 +11,7 @@ contract ConnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Build a splitter
@@ -34,7 +34,7 @@ contract ConnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Build a splitter
@@ -58,7 +58,7 @@ contract ConnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Build a splitter
@@ -82,7 +82,7 @@ contract ConnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Connect dryer to splitter

@@ -30,7 +30,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Spawn player
-    playerEntity = world.spawn();
+    playerEntity = world.spawn("alice");
     world.start();
 
     podEntity = CarriedBy.get(playerEntity);
@@ -100,7 +100,7 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(bob);
     // Spawn player
-    bytes32 bobEntity = world.spawn();
+    bytes32 bobEntity = world.spawn("alice");
     world.start();
     bytes32 bobPodEntity = CarriedBy.get(bobEntity);
     bytes32[] memory bobDepotsInPod = DepotsInPod.get(bobPodEntity);

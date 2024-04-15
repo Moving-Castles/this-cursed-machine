@@ -30,7 +30,7 @@ contract OfferSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Spawn player
-    playerEntity = world.spawn();
+    playerEntity = world.spawn("alice");
     world.start();
 
     podEntity = CarriedBy.get(playerEntity);

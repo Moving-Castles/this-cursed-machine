@@ -11,7 +11,7 @@ contract DestroySystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Create a new entity
@@ -35,7 +35,7 @@ contract DestroySystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Build a dryer

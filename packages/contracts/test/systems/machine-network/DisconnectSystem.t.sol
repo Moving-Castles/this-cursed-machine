@@ -11,7 +11,7 @@ contract DiconnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Build a splitter
@@ -41,7 +41,7 @@ contract DiconnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    bytes32 playerEntity = world.spawn();
+    bytes32 playerEntity = world.spawn("alice");
     world.start();
 
     // Build a mixer
@@ -84,7 +84,7 @@ contract DiconnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Build a splitter
@@ -105,7 +105,7 @@ contract DiconnectSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.spawn();
+    world.spawn("alice");
     world.start();
 
     // Disconnect null machine
