@@ -7,7 +7,8 @@ export const mute = [
   "order not met",
   "order already completed",
   "order expired",
-  "not completed"
+  "not completed",
+  "no tank available",
 ]
 
 export interface Toast {

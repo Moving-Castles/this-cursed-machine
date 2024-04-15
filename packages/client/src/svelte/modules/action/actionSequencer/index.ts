@@ -153,7 +153,7 @@ function handleError(error: any, action: Action) {
   // Update action status
   action.error = error
   // Trigger toast
-  toastMessage("ERROR: " + parseError(error), { type: "error" })
+  toastMessage(parseError(error), { type: "error" })
   // Add action to failed list
   failedActions.update(failedActions => [action, ...failedActions])
   // Clear active list

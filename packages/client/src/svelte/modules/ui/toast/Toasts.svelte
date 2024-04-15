@@ -8,10 +8,6 @@
   const onEnd = (e: CustomEvent<Toast>) => {
     toasts.set($toasts.filter((t: Toast) => t.timestamp !== e.detail.timestamp))
   }
-
-  // setInterval(() => {
-  //   toastMessage("Testing")
-  // }, 5000)
 </script>
 
 <div class="toast-pane">

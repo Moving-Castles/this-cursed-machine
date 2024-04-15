@@ -11,6 +11,7 @@ import {
 } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound"
 import { buy as sendRefillDepot } from "@modules/action"
+import { parseError } from "@components/Main/Terminal/functions/errors"
 
 async function execute(offerEntity: string) {
     try {
@@ -29,7 +30,10 @@ async function execute(offerEntity: string) {
     } catch (error) {
         console.error(error)
         playSound("tcm", "TRX_no")
-        await writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Command failed")
+        await writeToTerminal(
+            TERMINAL_OUTPUT_TYPE.ERROR,
+            parseError(error as string)
+        )
         return
     }
 }
