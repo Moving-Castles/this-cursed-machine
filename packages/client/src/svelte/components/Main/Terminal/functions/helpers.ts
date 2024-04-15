@@ -116,8 +116,5 @@ export function machinePositionSort(a, b) {
     )
   }
 
-  console.log("final comparison", aPositionIndex, "-", bPositionIndex)
-
   return aPositionIndex - bPositionIndex
-  // return POSITION_MAPPING[aPositionIndex] - POSITION_MAPPING[bPositionIndex]
 }

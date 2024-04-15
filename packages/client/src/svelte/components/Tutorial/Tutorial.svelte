@@ -8,6 +8,10 @@
     clearMessage,
     tutorialProgress,
     currentMessage,
+    currentCondition,
+    initTutorial,
+    advanceTutorial,
+    advanceConditions,
   } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
 
@@ -19,14 +23,35 @@
     }
   }
 
+  $: {
+    const step = $advanceConditions?.[$tutorialProgress]
+    if (step) {
+      console.log(step)
+      currentCondition.set(step)
+    }
+  }
+
+  $: {
+    if ($currentCondition) {
+      if ($currentCondition.type === "wait") {
+        setTimeout(() => {
+          advanceTutorial(null, $tutorialProgress, "wait")
+          console.log("CALLED", $tutorialProgress)
+        }, $currentCondition.value)
+      }
+    }
+  }
+
   onMount(() => {
+    initTutorial()
+
     if ($currentMessage?.explanation) {
       sendMessage($currentMessage.explanation)
     }
   })
 </script>
 
-<!-- {#if import.meta.env.DEV}
+{#if import.meta.env.DEV}
   <div class="test">
     <button on:click={() => $tutorialProgress--}>Prev</button>
     <button on:click={() => $tutorialProgress++}>Next</button>
@@ -43,7 +68,7 @@
     {typeof $tutorialProgress}
     {$tutorialProgress}
   </div>
-{/if} -->
+{/if}
 
 <style>
   .test {

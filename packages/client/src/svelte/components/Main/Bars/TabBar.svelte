@@ -8,15 +8,15 @@
 
   const HIDDEN_CONDITIONS = {
     0: 0,
-    1: 0,
-    2: 8,
+    1: 2,
+    2: 1000,
     3: 17,
     4: 26,
   }
 
   const PULSE_CONDITIONS = {
-    0: [20, 3],
-    1: [1, 7, 15],
+    0: [6],
+    1: [3, 7, 15],
     2: [9, 17, 25],
     3: [18],
     4: [27],
@@ -44,26 +44,30 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="tab-bar">
-  {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
-    <div class="button-container">
-      <button
-        tabIndex={key}
-        disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
-        class:enabled={value.enabled}
-        class:active={Number(key) === $activeTab}
-        class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
-        class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
-        on:click={() => {
-          playSound("tcm", "selectionEnter")
-          activeTab.set(key)
-        }}
-      >
-        {value.label}
-      </button>
-    </div>
-  {/each}
-</div>
+{#if $tutorialProgress > 1}
+  <div class="tab-bar">
+    {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
+      <div class="button-container">
+        <button
+          tabIndex={key}
+          disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          class:enabled={value.enabled}
+          class:active={Number(key) === $activeTab}
+          class:pulse={PULSE_CONDITIONS[Number(key)].includes(
+            $tutorialProgress
+          )}
+          class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          on:click={() => {
+            playSound("tcm", "selectionEnter")
+            activeTab.set(key)
+          }}
+        >
+          {value.label}
+        </button>
+      </div>
+    {/each}
+  </div>
+{/if}
 
 <!-- <svelte:window on:keydown={e => toggleTabByKeyboard(e)} /> -->
 
