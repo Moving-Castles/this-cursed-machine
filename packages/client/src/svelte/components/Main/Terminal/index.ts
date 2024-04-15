@@ -19,7 +19,7 @@ export const SYMBOLS = [
   "?",
   "»",
   "→",
-  "√"
+  "√",
 ]
 
 export const FULL_COMMANDS = [
@@ -40,7 +40,6 @@ export const FULL_COMMANDS = [
   COMMAND.EMPTY_DEPOT,
   COMMAND.REFILL_DEPOT,
   COMMAND.SHIP,
-  COMMAND.BUY,
   COMMAND.GRADUATE,
 ]
 
@@ -52,7 +51,6 @@ export const NO_INPUT_COMMANDS = [
   COMMAND.ORDER,
   COMMAND.FAIL,
   COMMAND.SKIP,
-  COMMAND.BUY,
   COMMAND.GRADUATE,
   COMMAND.WIPE,
   COMMAND.START,
@@ -74,27 +72,73 @@ export const MULTI_INPUT_COMMANDS = [
 ]
 
 export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
-  0: [
-    COMMAND.HELP,
-    COMMAND.BLINK,
-    COMMAND.DISCONNECT,
-    COMMAND.CONNECT,
-    COMMAND.REFILL_DEPOT,
-    COMMAND.SHIP,
-    COMMAND.GRADUATE,
-  ],
-  1: [
-    COMMAND.HELP,
-    COMMAND.BLINK,
-    COMMAND.DISCONNECT,
-    COMMAND.CONNECT,
-    COMMAND.REFILL_DEPOT,
-    COMMAND.SHIP,
-    COMMAND.BUILD,
-    COMMAND.DESTROY,
-    COMMAND.GRADUATE,
-  ],
+  0: FULL_COMMANDS,
+  1: FULL_COMMANDS,
   2: FULL_COMMANDS,
+}
+
+export const commandsByTutorialProgress = (level: number) => {
+  if (level > 28) {
+    return FULL_COMMANDS
+  }
+
+  if (level > 18) {
+    return [
+      COMMAND.BLINK,
+      COMMAND.REFILL_DEPOT,
+      COMMAND.ATTACH_DEPOT,
+      COMMAND.DETACH_DEPOT,
+      COMMAND.CONNECT,
+      COMMAND.DISCONNECT,
+      COMMAND.BUILD,
+      COMMAND.DESTROY,
+      COMMAND.SHIP,
+      COMMAND.HELP,
+    ]
+  }
+
+  if (level > 12) {
+    return [
+      COMMAND.BLINK,
+      COMMAND.REFILL_DEPOT,
+      COMMAND.ATTACH_DEPOT,
+      COMMAND.DETACH_DEPOT,
+      COMMAND.CONNECT,
+      COMMAND.DISCONNECT,
+      COMMAND.SHIP,
+      COMMAND.HELP,
+    ]
+  }
+
+  if (level > 8) {
+    return [
+      COMMAND.BLINK,
+      COMMAND.REFILL_DEPOT,
+      COMMAND.ATTACH_DEPOT,
+      COMMAND.DETACH_DEPOT,
+      COMMAND.CONNECT,
+      COMMAND.DISCONNECT,
+      COMMAND.HELP,
+    ]
+  }
+
+  if (level > 7) {
+    return [
+      COMMAND.BLINK,
+      COMMAND.REFILL_DEPOT,
+      COMMAND.ATTACH_DEPOT,
+      COMMAND.DETACH_DEPOT,
+      COMMAND.HELP,
+    ]
+  }
+
+  if (level > 6) {
+    return [COMMAND.BLINK, COMMAND.REFILL_DEPOT, COMMAND.HELP]
+  }
+
+  if (level > -1) {
+    return [COMMAND.BLINK, COMMAND.HELP]
+  }
 }
 
 export const FULL_MACHINES = [
@@ -109,7 +153,7 @@ export const FULL_MACHINES = [
 ]
 
 export const MACHINES_BY_LEVEL: { [level: number]: MACHINE_TYPE[] } = {
-  0: [],
+  0: [MACHINE_TYPE.DRYER],
   1: [MACHINE_TYPE.DRYER],
   2: [MACHINE_TYPE.DRYER],
   3: FULL_MACHINES,

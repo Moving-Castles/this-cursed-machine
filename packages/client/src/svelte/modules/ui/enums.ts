@@ -8,7 +8,6 @@ export enum UI {
 export enum TABS {
   POD,
   ORDERS,
-  SHOP,
   INBOX,
   CHAT,
 }

@@ -9,6 +9,7 @@ import {
 } from "@components/Main/Terminal/enums"
 import { levelCommandFilter } from "@components/Main/Terminal/functions/helpers"
 import { player } from "@modules/state/base/stores"
+import { tutorialProgress } from "@modules/ui/assistant"
 import { get } from "svelte/store"
 import { playSound } from "@modules/sound"
 
@@ -16,7 +17,7 @@ async function execute(_: TERMINAL_TYPE) {
   // Get subset if not full terminal
   const commandList = commands.filter(
     command =>
-      levelCommandFilter(get(player)?.tutorialLevel ?? 2, command.id) &&
+      levelCommandFilter(get(tutorialProgress) ?? 28, command.id) &&
       command.public
   )
 

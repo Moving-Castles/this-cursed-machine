@@ -2,11 +2,16 @@
   // This file is responsible for the tutorial notifications and for checking tutorial progress
   // Messages are sent to the <Assistant /> component in App.svelte
   import { onMount } from "svelte"
+  import { player } from "@modules/state/base/stores"
   import {
     sendMessage,
     clearMessage,
     tutorialProgress,
     currentMessage,
+    currentCondition,
+    initTutorial,
+    advanceTutorial,
+    advanceConditions,
   } from "@modules/ui/assistant"
 
   $: {
@@ -17,14 +22,33 @@
     }
   }
 
+  $: {
+    const step = $advanceConditions?.[$tutorialProgress]
+    if (step) {
+      currentCondition.set(step)
+    }
+  }
+
+  $: {
+    if ($currentCondition) {
+      if ($currentCondition.type === "wait") {
+        setTimeout(() => {
+          advanceTutorial(null, $tutorialProgress, "wait")
+        }, $currentCondition.value)
+      }
+    }
+  }
+
   onMount(() => {
+    initTutorial()
+
     if ($currentMessage?.explanation) {
       sendMessage($currentMessage.explanation)
     }
   })
 </script>
 
-<!-- {#if import.meta.env.DEV}
+<!-- {#if import.meta.env.DEV && $player}
   <div class="test">
     <button on:click={() => $tutorialProgress--}>Prev</button>
     <button on:click={() => $tutorialProgress++}>Next</button>

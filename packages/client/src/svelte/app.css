@@ -262,3 +262,27 @@ pre {
     opacity: 1;
   }
 }
+
+.command {
+  background-color: var(--color-success) !important;
+  color: black;
+  padding: 2px 0 0;
+  margin-top: -2px;
+  display: inline-block;
+}
+
+.emphasis {
+  animation: emphasis 1s steps(1) 3;
+}
+
+@keyframes emphasis {
+  0%,
+  100% {
+    background: var(--foreground);
+    /* color: var(--background); */
+  }
+  50% {
+    background: var(--background);
+    /* color: var(--foreground); */
+  }
+}

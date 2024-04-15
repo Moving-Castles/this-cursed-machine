@@ -3,14 +3,64 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
-  import { tutorialProgress } from "@modules/ui/assistant"
+  import { tutorialProgress, advanceConditions } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
+  import { MATERIAL_TYPE } from "contracts/enums"
+  import { player } from "@modules/state/base/stores"
+  import { playerOrder } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
   export let msg: AssistantMessage
+
+  const parse = str => {
+    if (!$player) return str
+
+    str = str.replaceAll("%PLAYER%", $player.name)
+    str = str.replaceAll("%NAME%", $player.name)
+
+    if ($playerOrder) {
+      str = str.replaceAll(
+        "%MATERIAL%",
+        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+      )
+    }
+
+    const condition = $advanceConditions[$tutorialProgress]
+
+    if (!condition) return str
+
+    if (condition.type === "command") {
+      condition.value.forEach(cmd => {
+        if (cmd !== ".")
+          str = str
+            .toLowerCase()
+            .replaceAll(cmd, `<span class="command">${cmd}</span>`)
+      })
+    }
+    if (condition.type === "contract") {
+      const reverseMappings = {
+        ship: "ship",
+        attachDepot: "attach",
+        connect: "connect",
+        buy: "refill",
+        build: "build",
+      }
+
+      const cmd = reverseMappings[condition.value.systemId]
+
+      if (!cmd) return str
+      str = str
+        .toLowerCase()
+        .replaceAll(cmd, `<span class="command">${cmd}</span>`)
+    }
+
+    return str
+  }
+
+  $: message = parse(msg?.message)
 
   let working = false
   let confirming = false
@@ -53,7 +103,7 @@
     <img src="/images/eye3.gif" alt="bot" />
   </div> -->
   <div class="text">
-    {msg.message}
+    {@html message}
   </div>
   <div class="restart">
     {#if !confirming}
@@ -71,17 +121,16 @@
     display: flex;
     align-items: center;
     padding-top: 0;
-    text-align: center;
     background: var(--background);
     margin-top: 10px;
     overflow: hidden;
-    white-space: pre-wrap;
+    white-space: pre-line;
     text-align: left;
     font-size: 22px;
     font-size: var(--font-size);
     line-height: 1em;
     color: var(--foreground);
-    text-align: center;
+    text-align: left;
     border: 5px double var(--color-success);
     color: var(--color-success);
     position: relative;
@@ -127,7 +176,8 @@
     }
 
     .text {
-      padding: 40px;
+      text-align-last: left;
+      padding: 20px 40px;
       // padding-left: 0;
       width: 100%;
     }

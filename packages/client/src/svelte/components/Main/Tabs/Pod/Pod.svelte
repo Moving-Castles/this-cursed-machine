@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   // import { networkIsRunning } from "@modules/state/simulated/stores"
 
@@ -10,7 +11,9 @@
 
 <div class="pod">
   <div class="stats">
-    <DepotsBox />
+    {#if $tutorialProgress > 6}
+      <DepotsBox />
+    {/if}
   </div>
   <div class="graph" in:fade={{ duration: 100 }}>
     <Graph on:resize />

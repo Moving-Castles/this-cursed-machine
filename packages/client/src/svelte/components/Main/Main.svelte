@@ -41,11 +41,11 @@
       component: Orders,
       enabled: true,
     },
-    [TABS.SHOP]: {
-      label: "Shop",
-      component: Shop,
-      enabled: true,
-    },
+    // [TABS.SHOP]: {
+    //   label: "Shop",
+    //   component: Shop,
+    //   enabled: true,
+    // },
     [TABS.INBOX]: {
       label: "Inbox",
       component: Inbox,
@@ -84,15 +84,15 @@
     if ($tutorialProgress === 1) playSound("tcm", "mapPop")
   }
 
-  $: {
-    if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
-      clearMessage()
-      sendMessage(
-        "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-        { disappear: true },
-      )
-    }
-  }
+  // $: {
+  //   if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
+  //     clearMessage()
+  //     sendMessage(
+  //       "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
+  //       { disappear: true },
+  //     )
+  //   }
+  // }
 
   onMount(() => {
     // TODO: check if player has escaped the pod
@@ -110,42 +110,54 @@
   <div class="split-screen">
     <div class="left-col">
       <div class="info-bar">
-        <InfoBar />
+        {#if $tutorialProgress > 4}
+          <InfoBar />
+        {/if}
       </div>
       <div class="terminal">
-        <Terminal
-          bind:this={terminalComponent}
-          on:commandExecuted={() => handleCommand()}
-          setBlink
-          placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
-        />
+        {#if $tutorialProgress > 0}
+          <Terminal
+            bind:this={terminalComponent}
+            on:commandExecuted={() => handleCommand()}
+            setBlink
+            placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
+          />
+        {/if}
       </div>
     </div>
     {#if $player}
       <div class="right-col">
         <div class="order-bar">
-          <OrderBar />
+          {#if $tutorialProgress > 3}
+            <OrderBar />
+          {/if}
         </div>
         {#key $activeTab}
           <div class="tab-container">
             {#if $tutorialProgress === 0}
               <div class="dim" out:flicker={{ duration: 500 }} />
             {/if}
-            <!-- Render the CurrentComponent if it's not null -->
-            {#if currentTabComponent}
-              <svelte:component
-                this={currentTabComponent}
-                on:resize={() => resized++}
-              />
+            {#if $tutorialProgress > 1}
+              <!-- Render the CurrentComponent if it's not null -->
+              {#if currentTabComponent}
+                <svelte:component
+                  this={currentTabComponent}
+                  on:resize={() => resized++}
+                />
+              {/if}
             {/if}
 
-            {#key resized}
-              <Attachments />
-            {/key}
+            {#if $tutorialProgress > 2}
+              {#key resized}
+                <Attachments />
+              {/key}
+            {/if}
           </div>
         {/key}
         <div class="tab-bar">
-          <TabBar {tabList} />
+          {#if $tutorialProgress > 1}
+            <TabBar {tabList} />
+          {/if}
         </div>
       </div>
     {/if}

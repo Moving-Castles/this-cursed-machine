@@ -9,26 +9,22 @@
     [key: number]: number
   } = {
     0: 0,
-    1: 0,
-    2: 8,
-    3: 17,
-    4: 26,
+    1: 2,
+    2: 25,
+    3: 28,
   }
 
-  const PULSE_CONDITIONS: {
-    [key: number]: number[]
-  } = {
-    0: [20, 3],
-    1: [1, 7, 15],
-    2: [9, 17, 25],
-    3: [18],
-    4: [27],
+  const PULSE_CONDITIONS = {
+    0: [],
+    1: [3],
+    2: [26],
+    3: [],
   }
 
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num,
+    num => $tutorialProgress > num
   ).length
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -47,26 +43,30 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="tab-bar">
-  {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
-    <div class="button-container">
-      <button
-        tabIndex={Number(key)}
-        disabled={$tutorialProgress <= HIDDEN_CONDITIONS[Number(key)]}
-        class:enabled={value.enabled}
-        class:active={Number(key) === $activeTab}
-        class:pulse={PULSE_CONDITIONS[Number(key)].includes($tutorialProgress)}
-        class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[Number(key)]}
-        on:click={() => {
-          playSound("tcm", "selectionEnter")
-          activeTab.set(Number(key))
-        }}
-      >
-        {value.label}
-      </button>
-    </div>
-  {/each}
-</div>
+{#if $tutorialProgress > 1}
+  <div class="tab-bar">
+    {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
+      <div class="button-container">
+        <button
+          tabIndex={key}
+          disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          class:enabled={value.enabled}
+          class:active={Number(key) === $activeTab}
+          class:pulse={PULSE_CONDITIONS[Number(key)].includes(
+            $tutorialProgress
+          )}
+          class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          on:click={() => {
+            playSound("tcm", "selectionEnter")
+            activeTab.set(key)
+          }}
+        >
+          {value.label}
+        </button>
+      </div>
+    {/each}
+  </div>
+{/if}
 
 <style lang="scss">
   .tab-bar {
@@ -77,7 +77,7 @@
     padding-inline: 20px;
 
     .button-container {
-      width: 20%;
+      width: 25%;
 
       button {
         width: 100%;
