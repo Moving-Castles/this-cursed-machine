@@ -44,6 +44,7 @@
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.15.13",
     "@sanity/image-url": "^1.0.2",
+    "@wagmi/core": "2.6.16",
     "contracts": "workspace:*",
     "d3-shape": "^3.2.0",
     "heap": "^0.2.7",
@@ -51,6 +52,6 @@
     "lodash": "^4.17.21",
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
-    "viem": "2.7.12"
+    "viem": "2.9.16"
   }
 }

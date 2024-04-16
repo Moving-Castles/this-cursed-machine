@@ -8,7 +8,7 @@ import { getBurnerPrivateKey } from "@latticexyz/common";
 import { getChain, getWorldFromChainId } from "./utils";
 import { ENVIRONMENT } from "./enums";
 
-export async function getNetworkConfig(environment: ENVIRONMENT) {
+export function getNetworkConfig(environment: ENVIRONMENT) {
   const params = new URLSearchParams(window.location.search);
 
   // Default to local development chain
@@ -17,7 +17,7 @@ export async function getNetworkConfig(environment: ENVIRONMENT) {
   if (environment === ENVIRONMENT.OLD_TESTNET) {
     chainId = 4242;
   } else if (environment === ENVIRONMENT.GARNET) {
-    chainId = 17069
+    chainId = 17069;
   }
 
   const chain = getChain(chainId);
@@ -26,22 +26,14 @@ export async function getNetworkConfig(environment: ENVIRONMENT) {
   if (environment === ENVIRONMENT.OLD_TESTNET) {
     chain.rpcUrls = {
       default: {
-        http: [
-          "https://miner.testnet-chain.linfra.xyz"
-        ],
-        webSocket: [
-          "wss://miner.testnet-chain.linfra.xyz"
-        ]
+        http: ["https://miner.testnet-chain.linfra.xyz"],
+        webSocket: ["wss://miner.testnet-chain.linfra.xyz"],
       },
       public: {
-        http: [
-          "https://miner.testnet-chain.linfra.xyz"
-        ],
-        webSocket: [
-          "wss://miner.testnet-chain.linfra.xyz"
-        ]
-      }
-    }
+        http: ["https://miner.testnet-chain.linfra.xyz"],
+        webSocket: ["wss://miner.testnet-chain.linfra.xyz"],
+      },
+    };
   }
 
   /*
@@ -53,7 +45,9 @@ export async function getNetworkConfig(environment: ENVIRONMENT) {
 
   const worldAddress = params.get("worldAddress") || world?.address;
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`);
+    throw new Error(
+      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`
+    );
   }
 
   /*
