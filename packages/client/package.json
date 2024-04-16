@@ -32,6 +32,7 @@
     "wait-port": "^1.1.0"
   },
   "dependencies": {
+    "@latticexyz/account-kit": "2.0.6-account-kit-de34cb1c",
     "@latticexyz/common": "2.0.6-account-kit-de34cb1c",
     "@latticexyz/dev-tools": "2.0.6-account-kit-de34cb1c",
     "@latticexyz/recs": "2.0.6-account-kit-de34cb1c",
