@@ -5,7 +5,6 @@
   import { generators } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
   import { MACHINE_TYPE } from "contracts/enums"
   import walkable from "@modules/utils/walkable"
-  import GradientPath from "@components/Main/Tabs/Pod/Graph/Connections/GradientPath.svelte"
   import {
     simulatedMachines as machines,
     simulatedDepots as depots,
@@ -15,9 +14,9 @@
   export let attachment: Attachment
 
   const alpha = walkable()
+  const OFFSET = 40
 
   let element: SVGElement
-  const OFFSET = 40
 
   let [depotElement, machineElement, midzone, safezone]: [
     HTMLElement | null,
@@ -74,9 +73,7 @@
     const from = depotElement?.getBoundingClientRect()
     const to = machineElement?.getBoundingClientRect()
 
-    // console.log(from, to)
     if (from && to && safezone) {
-      // console.log(from, to)
       fromCoord = { x: from.right - 28, y: from.bottom - 5 }
       toCoord = {
         x: attachment.name === "I" ? to.left + 5 : to.right - 5,
@@ -166,13 +163,4 @@
     fill="none"
     stroke-width="10"
   />
-  {#if productive}
-    <!-- <GradientPath
-      strokeWidth={10}
-      {d}
-      sampleCount={1}
-      fromColor="#a4fa3b"
-      toColor="#d7d7c3"
-    /> -->
-  {/if}
 </g>

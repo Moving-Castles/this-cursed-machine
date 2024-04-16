@@ -13,6 +13,9 @@
   export let carrying: boolean
   export let productive: boolean
   export let pathElement: SVGPathElement
+  // Putting the visibility toggle here because of this issue:
+  // https://github.com/sveltejs/svelte/issues/6479
+  export let visible: boolean
 
   let words = []
   // let frameId: number
@@ -76,6 +79,7 @@
   class:hover
   class:carrying
   class:productive
+  class:visible
   class="label"
 >
   {#key material}
@@ -100,6 +104,11 @@
     stroke: var(--color-grey-mid);
     white-space: pre;
     fill: var(--color-grey-light);
+
+    opacity: 0;
+    &.visible {
+      opacity: 1;
+    }
 
     &.carrying {
       fill: var(--color-success);

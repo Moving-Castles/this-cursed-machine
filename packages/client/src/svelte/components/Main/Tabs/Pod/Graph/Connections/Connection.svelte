@@ -1,75 +1,31 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import { generators, generatePoints, getRotationAtPoint } from "./svg"
+  import { generators, generatePoints } from "./svg"
   import { inspecting, selectedOption } from "@modules/ui/stores"
-  import { cubicOut as easing } from "svelte/easing"
+  import { quadIn as easing } from "svelte/easing"
   import { draw } from "svelte/transition"
   import { CELL } from "../constants"
-  import Head from "./Head.svelte"
   import Label from "../Labels/Label.svelte"
-  import GradientPath from "./GradientPath.svelte"
+  import { playSound } from "@modules/sound"
 
   export let connection: GraphConnection
 
-  const DURATION = 1000
-  const ARROW_OFFSET = 0
-  const drawOptions = { duration: DURATION, easing }
+  const DURATION = 400
+  const inDrawOptions = { duration: DURATION, easing }
+  const outDrawOptions = { duration: DURATION, easing }
+  const activeCurve = "catMullRom"
 
-  let animationFrameId: number
-  let headRotation = 0
-  let headPoint: SVGPoint
   let pathElement: SVGPathElement
   let hover = false
-  let animationStart: number
-  let activeCurve = "basis"
-  let progress = 1
+  let showLabel = true
 
-  $: carrying = connection?.products.length > 0
-  $: fill = connection.productive
-    ? "var(--color-alert)"
-    : carrying
-      ? "var(--color-success)"
-      : "var(--color-grey-light)"
-  $: highlight = $selectedOption?.value === connection.id
-
-  const startPolling = e => {
-    const intro = e.type.includes("intro")
-    // Timing logic
-    animationStart = performance.now()
-
-    const frame = e => {
-      progress = intro
-        ? easing((e - animationStart) / DURATION)
-        : 1 - easing((e - animationStart) / DURATION)
-
-      const maxLength = pathElement.getTotalLength() - ARROW_OFFSET
-      const currentLength = maxLength * easing((e - animationStart) / DURATION)
-
-      headPoint = pathElement.getPointAtLength(
-        intro ? currentLength : maxLength - currentLength,
-      )
-      headRotation = getRotationAtPoint(
-        pathElement,
-        maxLength,
-        currentLength,
-        intro,
-      )
-
-      animationFrameId = requestAnimationFrame(frame)
-    }
-    frame(animationStart)
-  }
-
-  const stopPolling = e => {
-    const intro = e.type.includes("intro")
-    cancelAnimationFrame(animationFrameId)
-    headPoint = pathElement.getPointAtLength(
-      intro ? pathElement.getTotalLength() - ARROW_OFFSET : 0,
-    )
-  }
+  $: carrying = connection?.products ? connection.products.length > 0 : false
+  $: highlight = $selectedOption
+    ? $selectedOption.value === connection.id
+    : false
 
   const onMouseEnter = () => {
-    if (!carrying) return
+    // if (!carrying) return
     inspecting.set(connection)
     hover = true
   }
@@ -82,10 +38,22 @@
   $: d = generators[activeCurve](
     generatePoints(connection, CELL.WIDTH, CELL.HEIGHT),
   )
+
+  const drawInStart = async () => {
+    showLabel = false
+    await new Promise(resolve => setTimeout(resolve, 300))
+    playSound("tcm", "selectionEnter")
+    showLabel = true
+  }
+
+  const drawOutStart = () => {
+    showLabel = false
+    playSound("tcm", "selectionEnter")
+  }
+
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-
 <g
   class="connection"
   class:hover
@@ -97,46 +65,28 @@
   <path {d} class="pseudo" />
   <path
     {d}
-    on:introstart={startPolling}
-    on:outrostart={startPolling}
-    on:outroend={stopPolling}
-    on:introend={stopPolling}
     bind:this={pathElement}
     class="visible"
     class:carrying
-    transition:draw={drawOptions}
+    in:draw={inDrawOptions}
+    out:draw={outDrawOptions}
+    on:introstart={drawInStart}
+    on:outrostart={drawOutStart}
     fill="none"
   />
-  <!-- class:visible={!connection.productive} -->
-  {#if connection.productive}
-    <!-- <GradientPath
-      {d}
-      {carrying}
-      productive={connection.productive}
-      toColor="#d7d7c3"
-      clip={progress}
-    /> -->
-  {/if}
-  {#if pathElement}
     <Label
       {hover}
       {connection}
+      visible={showLabel}
       {pathElement}
       productive={connection.productive}
       {carrying}
     />
-  {/if}
 </g>
-{#if headPoint}
-  {#key headPoint}
-    <Head {fill} rotation={headRotation} point={headPoint} />
-  {/key}
-{/if}
 
 <style lang="scss">
   g {
-    // opacity: 0.6;
-
+  
     &.hover {
       opacity: 1;
     }
@@ -159,30 +109,6 @@
 
     &.carrying {
       stroke: var(--color-success);
-
-      &.hover {
-        opacity: 0.8;
-      }
-    }
-
-    &.hover {
-      stroke: var(--color-grey-light);
-    }
-
-    &.productive {
-      stroke: var(--color-alert);
-    }
-  }
-
-  polygon {
-    fill: var(--color-grey-light);
-
-    &.hover {
-      fill: var(--color-grey-light);
-    }
-
-    &.productive {
-      fill: var(--color-alert);
     }
   }
 </style>

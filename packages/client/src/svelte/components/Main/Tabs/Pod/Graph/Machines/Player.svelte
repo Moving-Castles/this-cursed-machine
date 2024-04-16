@@ -90,7 +90,7 @@
     position: absolute;
     background-image: url("/images/face5.png");
     background-size: cover;
-    border: 1px solid var(--background);
+    // border: 1px solid var(--background);
     color: var(--foreground);
     cursor: none;
 

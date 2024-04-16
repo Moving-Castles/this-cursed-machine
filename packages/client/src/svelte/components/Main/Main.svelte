@@ -12,11 +12,7 @@
   import { TABS } from "@modules/ui/enums"
   import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
-  import {
-    sendMessage,
-    clearMessage,
-    tutorialProgress,
-  } from "@modules/ui/assistant"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
@@ -25,8 +21,6 @@
   import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
   import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
   // import Debug from "@components/Main/Atoms/Debug.svelte"
-
-  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
   let resized = 0
 
@@ -41,11 +35,6 @@
       component: Orders,
       enabled: true,
     },
-    // [TABS.SHOP]: {
-    //   label: "Shop",
-    //   component: Shop,
-    //   enabled: true,
-    // },
     [TABS.INBOX]: {
       label: "Inbox",
       component: Inbox,
@@ -95,9 +84,6 @@
   // }
 
   onMount(() => {
-    // TODO: check if player has escaped the pod
-    // If so:
-    // dispatch("escaped")
     playSound("tcm", "podBg", true, false)
   })
 </script>

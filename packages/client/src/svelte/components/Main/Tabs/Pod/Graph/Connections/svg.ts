@@ -22,7 +22,7 @@ export const catMullRomDynamic = (alpha: number) =>
 export const catMullRom = line()
   .x(d => d.x)
   .y(d => d.y)
-  .curve(curveCatmullRom.alpha(0.6))
+  .curve(curveCatmullRom.alpha(0))
 
 export const basis = line()
   .x(d => d.x)
@@ -271,30 +271,30 @@ export function generateSvgArrow(
   return arrowData
 }
 
-export function getRotationAtPoint(
-  pathElement: SVGPathElement,
-  maxLength: number,
-  currentLength: number,
-  forwards: boolean
-) {
-  // Calculate the angle of the arrow direction
-  const delta = 0.001 // small value for calculating the derivative
-  const pointBefore = pathElement.getPointAtLength(
-    forwards
-      ? Math.max(0, currentLength - delta)
-      : Math.max(0, maxLength - currentLength - delta)
-  )
-  const pointAfter = pathElement.getPointAtLength(
-    forwards
-      ? Math.min(maxLength, currentLength + delta)
-      : Math.min(maxLength, maxLength - currentLength + delta)
-  )
-  const dy = pointAfter.y - pointBefore.y
-  const dx = pointAfter.x - pointBefore.x
-  const angleInRadians = Math.atan2(dy, dx)
-  let angleInDegrees = angleInRadians * (180 / Math.PI)
-  if (angleInDegrees < 0) {
-    angleInDegrees += 360
-  }
-  return angleInDegrees
-}
+// export function getRotationAtPoint(
+//   pathElement: SVGPathElement,
+//   maxLength: number,
+//   currentLength: number,
+//   forwards: boolean
+// ) {
+//   // Calculate the angle of the arrow direction
+//   const delta = 0.001 // small value for calculating the derivative
+//   const pointBefore = pathElement.getPointAtLength(
+//     forwards
+//       ? Math.max(0, currentLength - delta)
+//       : Math.max(0, maxLength - currentLength - delta)
+//   )
+//   const pointAfter = pathElement.getPointAtLength(
+//     forwards
+//       ? Math.min(maxLength, currentLength + delta)
+//       : Math.min(maxLength, maxLength - currentLength + delta)
+//   )
+//   const dy = pointAfter.y - pointBefore.y
+//   const dx = pointAfter.x - pointBefore.x
+//   const angleInRadians = Math.atan2(dy, dx)
+//   let angleInDegrees = angleInRadians * (180 / Math.PI)
+//   if (angleInDegrees < 0) {
+//     angleInDegrees += 360
+//   }
+//   return angleInDegrees
+// }
