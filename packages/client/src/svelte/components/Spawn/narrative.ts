@@ -15,7 +15,7 @@ import {
 import { playSound } from "@modules/sound";
 import { playerAddress } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
-import { accountKitStore } from "@svelte/main";
+import { store as accountKitStore } from "@latticexyz/account-kit/bundle";
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -93,8 +93,8 @@ export const narrative = [
      * * * * * * * * * * * * * * * * * * * */
 
     // TODO: add some sort of timeout to keep this from spinning forever?
-    const openAccountModalPromise = new Promise((resolve) => {
-      const { openAccountModal } = accountKitStore.get();
+    const openAccountModalPromise = new Promise<() => void>((resolve) => {
+      const { openAccountModal } = accountKitStore.getState();
       if (openAccountModal) return resolve(openAccountModal);
       const unsub = accountKitStore.subscribe((state) => {
         if (state.openAccountModal) {
@@ -107,11 +107,11 @@ export const narrative = [
     const connect = () =>
       openAccountModalPromise.then((openAccountModal) => {
         openAccountModal();
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           const unsub = accountKitStore.subscribe((state) => {
             if (state.appAccountClient) {
               unsub();
-              resolve(state.appAccountClient);
+              resolve();
             }
             if (state.accountModalOpen === false) {
               unsub();

@@ -24,7 +24,7 @@ const wagmiConfig = createConfig({
   ),
 });
 
-const { store: accountKitStore } = mountAccountKit({
+mountAccountKit({
   wagmiConfig,
   accountKitConfig: {
     chain: networkConfig.chain,
@@ -37,8 +37,6 @@ const { store: accountKitStore } = mountAccountKit({
     },
   },
 });
-
-export { accountKitStore };
 
 const app = new App({
   target: document.getElementById("app"),
