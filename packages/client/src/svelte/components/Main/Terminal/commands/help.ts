@@ -8,7 +8,6 @@ import {
   COMMAND,
 } from "@components/Main/Terminal/enums"
 import { levelCommandFilter } from "@components/Main/Terminal/functions/helpers"
-import { player } from "@modules/state/base/stores"
 import { tutorialProgress } from "@modules/ui/assistant"
 import { get } from "svelte/store"
 import { playSound } from "@modules/sound"
@@ -21,21 +20,40 @@ async function execute(_: TERMINAL_TYPE) {
       command.public
   )
 
+  const categorisedCommands = [
+    { objectTerm: "machine", commands: commandList.filter(command => command.objectTerm === "machine") },
+    { objectTerm: "tank", commands: commandList.filter(command => command.objectTerm === "tank") },
+    { objectTerm: "pod", commands: commandList.filter(command => command.objectTerm === "pod") },
+    { objectTerm: "misc", commands: commandList.filter(command => !command.objectTerm) }
+  ]
+
   // List all available commands
-  for (let i = 0; i < commandList.length; i++) {
-    let command = commandList[i]
-    let outputString = `(${command.alias}) ${command.name}`
-    // if (command.objectTerm) {
-    //   outputString += ` ${command.objectTerm}`
-    // }
+
+  for (let i = 0; i < categorisedCommands.length; i++) {
+
+    if (categorisedCommands[i].commands.length === 0) continue
+
     playSound("tcm", "listPrint")
     await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.INFO,
-      outputString,
+      TERMINAL_OUTPUT_TYPE.NORMAL,
+      "--- " + categorisedCommands[i].objectTerm,
       false,
       SYMBOLS[13],
       20
     )
+
+    for (let x = 0; x < categorisedCommands[i].commands.length; x++) {
+      let command = categorisedCommands[i].commands[x]
+      let outputString = `(${command.alias}) ${command.name}`
+      playSound("tcm", "listPrint")
+      await writeToTerminal(
+        TERMINAL_OUTPUT_TYPE.INFO,
+        outputString,
+        false,
+        SYMBOLS[14],
+        20
+      )
+    }
   }
 
   return
