@@ -31,7 +31,7 @@
   }
 
   $: producing = machine?.products && machine?.products.length > 0
-  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
+  $: style = `background-image: url(/images/machines/${MACHINE_TYPE[machine.machineType]}.png); top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
   $: highlight =
     $selectedParameters?.includes(address) || $selectedOption?.value === address
@@ -108,7 +108,9 @@
   role="button"
 >
   <div class="inner-container">
-    <div class="label">
+    <div class="label" 
+    class:top={machine.placementGroup == PLACEMENT_GROUP.TOP} 
+    class:bottom={machine.placementGroup == PLACEMENT_GROUP.BOTTOM}>
       <TweenedText
         duration={300}
         delay={1000}
@@ -138,7 +140,6 @@
     background: var(--color-grey-dark);
     position: absolute;
     color: var(--background);
-    background-image: url("/images/machine2.png");
     background-size: cover;
     border: 1px solid var(--background);
 
@@ -151,13 +152,26 @@
       width: 100%;
       height: 100%;
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
 
       .label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
         white-space: nowrap;
         letter-spacing: -1px;
+        padding: 2px;
+
+        &.top {
+          top: 0;
+          transform: translateX(-20px) translateY(-5px);
+        }
+
+        &.bottom {
+          bottom: 0;
+          transform: translateX(-20px) translateY(5px);
+
+        }
       }
 
       .port {
@@ -169,4 +183,6 @@
       }
     }
   }
+
+
 </style>

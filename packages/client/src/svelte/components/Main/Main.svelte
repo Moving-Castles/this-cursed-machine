@@ -175,9 +175,10 @@
   .split-screen {
     display: flex;
     height: 100vh;
-    // background-image: url(/images/tcm2.png);
-    // background-size: 200px;
-    // background-repeat: repeat;
+    background-image: url(/images/tcm2.png);
+    // background-image: url(/images/graf.png);
+    background-size: 200px;
+    background-repeat: repeat;
 
     .left-col {
       height: 100%;
