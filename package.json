@@ -8,7 +8,7 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
+    "dev": "mprocs",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
@@ -16,7 +16,8 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.6-account-kit-530249e6",
+    "@latticexyz/cli": "link:../../latticexyz/mud/packages/cli",
+    "@latticexyz/account-kit": "link:../../latticexyz/mud/packages/account-kit",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "9.0.0",

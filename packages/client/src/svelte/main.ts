@@ -31,7 +31,7 @@ mountAccountKit({
     worldAddress: networkConfig.worldAddress,
     // TODO: add gasTank to MUDChain contracts
     // TODO: allow gasTankAddress to be undefined
-    gasTankAddress: networkConfig.chain.contracts?.gasTank as any,
+    gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
     appInfo: {
       name: "Get Shit Done",
     },

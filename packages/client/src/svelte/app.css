@@ -46,6 +46,9 @@
   /* font-variation-settings:
     "BLED" 0,
     "SCAN" 0; */
+}
+
+body {
   text-transform: uppercase;
   letter-spacing: 0px;
 }

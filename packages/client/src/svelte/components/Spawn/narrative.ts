@@ -68,24 +68,24 @@ async function typeWriteNarrativeSuccess(text: string) {
 }
 
 export const narrative = [
-  async () => {
-    await writeNarrative("welcome stump");
-    await writeNarrativeAction("blink if you can hear me");
-  },
-  async () => {
-    await writeNarrative(
-      "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
-    );
-    await writeNarrative(
-      "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
-    );
-    await writeNarrative("I will help you through the on-boarding process.");
-    await writeNarrativeAction("blink to begin");
-  },
-  async () => {
-    await writeNarrative("the company needs to verify your identity.");
-    await writeNarrativeAction("blink to start verification");
-  },
+  // async () => {
+  //   await writeNarrative("welcome stump");
+  //   await writeNarrativeAction("blink if you can hear me");
+  // },
+  // async () => {
+  //   await writeNarrative(
+  //     "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
+  //   );
+  //   await writeNarrative(
+  //     "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
+  //   );
+  //   await writeNarrative("I will help you through the on-boarding process.");
+  //   await writeNarrativeAction("blink to begin");
+  // },
+  // async () => {
+  //   await writeNarrative("the company needs to verify your identity.");
+  //   await writeNarrativeAction("blink to start verification");
+  // },
   async () => {
     /* * * * * * * * * * * * * * * * * * * *
      * Trigger wallet connection modal here
