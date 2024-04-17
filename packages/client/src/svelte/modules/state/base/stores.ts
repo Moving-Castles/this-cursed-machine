@@ -31,8 +31,9 @@ export const entities = writable({} as Entities)
 
 export const gameConfig = derived(
   entities,
-  $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig
+  $entities => ($entities[GAME_CONFIG_ID]?.gameConfig || {}) as GameConfig
 )
+
 export const recipes = derived(entities, $entities => getRecipes($entities))
 
 // * * * * * * * * * * * * * * * * *
