@@ -19,7 +19,7 @@ async function orderFulfilled() {
 
 async function startUp() {
   const lvl = get(tutorialProgress)
-  console.log(lvl)
+  // console.log(lvl)
   if (lvl === 1) {
     await typeWriteToTerminal(
       TERMINAL_OUTPUT_TYPE.NORMAL,

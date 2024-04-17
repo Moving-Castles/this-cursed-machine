@@ -2,8 +2,7 @@
   import { fade } from "svelte/transition"
   import { chatMessages, verifiedClients } from "@modules/signal/stores"
   import ChatMessageItem from "./ChatMessageItem.svelte"
-  // import ChatInput from "./ChatInput.svelte"
-  import MessageButton from "./MessageButton.svelte"
+  import ChatInput from "./ChatInput.svelte"
 </script>
 
 <div class="container" in:fade>
@@ -14,8 +13,7 @@
     {/each}
   </div>
   <div class="input-container">
-    <!-- <ChatInput /> -->
-    <MessageButton />
+    <ChatInput />
   </div>
 </div>
 
