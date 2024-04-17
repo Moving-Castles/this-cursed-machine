@@ -153,7 +153,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 10000000;
+    z-index: var(--z-10);
     pointer-events: none;
     background-image: url(/images/dust.png);
     opacity: 0.6;
@@ -165,7 +165,7 @@
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.9);
-    z-index: 9;
+    z-index: var(--z-9);
   }
 
   .split-screen {

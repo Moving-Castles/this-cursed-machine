@@ -46,7 +46,7 @@
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000,
+        1000
       )
       dispatch("done")
     } else {
@@ -75,7 +75,7 @@
     background-color: var(--background);
     background-size: cover;
     background-position: center;
-    z-index: 1;
+    z-index: var(--z-1);
     display: flex;
     align-items: center;
     justify-items: center;

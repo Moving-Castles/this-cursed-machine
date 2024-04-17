@@ -72,7 +72,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 999;
+    z-index: var(--z-1);
     background: var(--color-grey-mid);
   }
 </style>

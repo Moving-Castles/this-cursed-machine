@@ -21,7 +21,7 @@
 <style>
   .toast-pane {
     position: absolute;
-    z-index: 99;
+    z-index: var(--z-1);
     bottom: 10px;
     right: 10px;
     display: flex;
