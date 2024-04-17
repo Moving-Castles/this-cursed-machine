@@ -18,8 +18,6 @@
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
-  import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
-  import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
   // import Debug from "@components/Main/Atoms/Debug.svelte"
 
   let resized = 0
@@ -52,8 +50,6 @@
     | typeof Pod
     | typeof Inbox
     | typeof Orders
-    | typeof Exit
-    | typeof Shop
     | typeof Chat
 
   let currentTabComponent: ComponentType = null
