@@ -141,7 +141,7 @@ export const commandsByTutorialProgress = (level: number) => {
   }
 
   if (level > -1) {
-    return [COMMAND.BLINK, COMMAND.SKIP, COMMAND.HELP]
+    return [COMMAND.BLINK, COMMAND.HELP, COMMAND.SKIP, COMMAND.GRADUATE]
   }
 }
 
