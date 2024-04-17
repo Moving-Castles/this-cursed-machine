@@ -4,8 +4,7 @@
   import { fade } from "svelte/transition"
   import { urlFor } from "@modules/content/sanity"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-
-  let viewing = -1
+  import { viewingAttachment } from "@modules/ui/stores"
 
   $: messages = $staticContent.messages.filter(
     msg => {
@@ -19,7 +18,7 @@
   )
 
   const open = (i: number) => {
-    viewing = viewing === i ? -1 : i
+    $viewingAttachment = $viewingAttachment === i ? -1 : i
     advanceTutorial(null, $tutorialProgress, "read")
   }
 </script>
@@ -33,7 +32,7 @@
         {message.title}
       </button>
 
-      {#if viewing === i && messages?.[i]?.attachment}
+      {#if $viewingAttachment === i && messages?.[i]?.attachment}
         <div class="attachment">
           <!-- {#if import.meta.env.PROD} -->
           <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -72,5 +71,15 @@
 
   .attachment {
     margin: 1rem 0;
+    // position: fixed;
+    inset: 0;
+    // z-index: var(--z-10);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 3rem;
+    }
   }
 </style>
