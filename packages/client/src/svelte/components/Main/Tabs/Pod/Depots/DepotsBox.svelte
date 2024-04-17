@@ -22,7 +22,7 @@
     // padding: 20px;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    z-index: var(--z-1);
     overflow-y: scroll;
     display: flex;
     align-items: center;

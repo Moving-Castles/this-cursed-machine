@@ -46,7 +46,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 9999;
+    z-index: var(--z-1);
     background-color: var(--color-grey-light) !important;
     border: 1px solid var(--foreground);
     pointer-events: none;

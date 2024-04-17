@@ -100,7 +100,7 @@
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1;
+    z-index: var(--z-1);
     clip-path: inset(122px 0px 0px 500px);
 
     &.visible {

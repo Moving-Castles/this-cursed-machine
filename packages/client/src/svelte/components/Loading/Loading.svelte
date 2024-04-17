@@ -30,7 +30,7 @@
       loadingMessageElement,
       $staticContent.loading.content.content,
       1,
-      50,
+      50
     )
     await new Promise(res => setTimeout(res, 300))
     // Intro sequence done
@@ -124,7 +124,7 @@
     width: 80px;
     background: var(--color-alert);
     color: var(--background);
-    z-index: 10000;
+    z-index: var(--z-10);
     line-height: 2em;
     text-align: center;
     font-size: var(--font-size-small);
