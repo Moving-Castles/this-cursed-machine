@@ -5,12 +5,10 @@
   // import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 </script>
 
-{#if $inspecting}
+{#if $inspecting && $inspecting.products && $inspecting.products.length > 0}
   <Tooltip>
-    {#if $inspecting && $inspecting.products && $inspecting.products.length > 0}
-      {#each $inspecting.products as product}
-        {MATERIAL_TYPE[product.materialType]}<br />
-      {/each}
-    {/if}
+    {#each $inspecting.products as product}
+      {MATERIAL_TYPE[product.materialType]}<br />
+    {/each}
   </Tooltip>
 {/if}
