@@ -16,11 +16,14 @@ export const lastCompletedBlock = writable(0)
 
 export const inspecting: Writable<GraphConnection | GraphMachine | null> =
   writable(null)
+export const viewingAttachment = writable(-1)
 export const alignTooltip = writable("center") // "center" | "left" | "right" = "center"
 export const mouseX = writable(0)
 export const mouseY = writable(0)
 export const graphScale = writable(1)
-export const selectedParameters: Writable<(string | MACHINE_TYPE | PORT_INDEX | null)[]> = writable([])
+export const selectedParameters: Writable<
+  (string | MACHINE_TYPE | PORT_INDEX | null)[]
+> = writable([])
 export const selectedOption: Writable<SelectOption | false> = writable(false)
 export const graphElement: Writable<SVGElement> = writable()
 export const thud = writable(false)
