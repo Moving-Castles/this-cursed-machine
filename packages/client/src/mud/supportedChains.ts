@@ -39,6 +39,7 @@ export const redstoneGarnet = {
         },
     },
     faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc/drip",
+    indexerUrl: "https://garnet-indexer.rttskr.com",
     blockExplorers: {
         default: {
             name: "Blockscout",

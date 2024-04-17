@@ -96,10 +96,10 @@ export function machinePositionSort(a, b) {
     aPositionIndex = 0
   } else if (a[1].machineType === MACHINE_TYPE.PLAYER) {
     aPositionIndex = 1
-    console.log("PLAYER")
+    // console.log("PLAYER")
   } else if (a[1].machineType === MACHINE_TYPE.OUTLET) {
     aPositionIndex = 2
-    console.log("OUTLET")
+    // console.log("OUTLET")
   } else {
     aPositionIndex = ALL_POSITIONS.findIndex(
       coord => coord.x === a[1].x && coord.y === a[1].y
@@ -110,10 +110,10 @@ export function machinePositionSort(a, b) {
     bPositionIndex = 0
   } else if (b[1].machineType === MACHINE_TYPE.PLAYER) {
     bPositionIndex = 1
-    console.log("PLAYER")
+    // console.log("PLAYER")
   } else if (b[1].machineType === MACHINE_TYPE.OUTLET) {
     bPositionIndex = 2
-    console.log("OUTLET")
+    // console.log("OUTLET")
   } else {
     bPositionIndex = ALL_POSITIONS.findIndex(
       coord => coord.x === b[1].x && coord.y === b[1].y

@@ -184,7 +184,7 @@ export function advanceTutorial(
     }
 
     if (step.type === "contract" && type === "contract") {
-      console.log(step.value.systemId, input.systemId)
+      // console.log(step.value.systemId, input.systemId)
       // Check the systemId
       if (step.value.systemId !== input.systemId) return
 
