@@ -27,6 +27,7 @@ const wagmiConfig = createConfig({
 mountAccountKit({
   wagmiConfig,
   accountKitConfig: {
+    theme: "dark",
     chain: networkConfig.chain,
     worldAddress: networkConfig.worldAddress,
     // TODO: add gasTank to MUDChain contracts
