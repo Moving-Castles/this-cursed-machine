@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { SimulatedDepot } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
+  import { tweened } from "svelte/motion"
   import { playerPod } from "@modules/state/base/stores"
-  import { simulatedMachines } from "@modules/state/simulated/stores"
+  import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
@@ -16,6 +17,14 @@
   export let address: string
   export let index: number
 
+  const progress = tweened(
+    (Math.round(depot.amount / UI_SCALE_FACTOR) /
+      (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
+      100,
+    { easing: bounceOut }
+  )
+  const amount = tweened(Math.round(depot.amount / UI_SCALE_FACTOR))
+
   $: canShip = $shippableDepots[address]
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
   $: shipping = $waitingTransaction?.systemId === "ship" && canShip
@@ -24,10 +33,11 @@
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
   $: empty = typedDepot.amount === 0
   $: highlight = $selectedOption?.value === address
-  $: progress =
+  $: $progress =
     (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
       (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
     100
+  $: $amount = typedDepot.amount / UI_SCALE_FACTOR
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -43,7 +53,7 @@
   class:shippable={canShip}
   class:highlight
 >
-  <div class="depot-progress" style:height="{progress}%"></div>
+  <div class="depot-progress" style:height="{$progress}%"></div>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}
@@ -64,8 +74,7 @@
           {MATERIAL_TYPE[typedDepot.materialType]}
         </div>
         <div class="material-amount">
-          {Math.round(typedDepot.amount / UI_SCALE_FACTOR)}/{DEPOT_CAPACITY /
-            UI_SCALE_FACTOR}
+          {Math.round($amount)} / {DEPOT_CAPACITY / UI_SCALE_FACTOR}
         </div>
       </div>
     {/if}
@@ -107,6 +116,7 @@
       right: 0;
       width: 100%;
       background-color: rgba(215, 215, 195, 0.2);
+      // transition: height 0.2s ease-out;
     }
 
     &.shippable {

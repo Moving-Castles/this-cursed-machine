@@ -11,14 +11,14 @@
     0: 0,
     1: 2,
     2: 25,
-    3: 28,
+    3: 29,
   }
 
   const PULSE_CONDITIONS = {
-    0: [],
+    0: [6, 16],
     1: [3],
     2: [26],
-    3: [],
+    3: [30],
   }
 
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")

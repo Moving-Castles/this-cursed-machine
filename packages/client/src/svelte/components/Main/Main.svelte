@@ -92,7 +92,7 @@
   <div class="split-screen">
     <div class="left-col">
       <div class="info-bar">
-        {#if $tutorialProgress > 4}
+        {#if $tutorialProgress > 5}
           <InfoBar />
         {/if}
       </div>

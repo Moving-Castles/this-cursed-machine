@@ -66,7 +66,7 @@ function updateConditions() {
   )?.[0]
 
   const ADVANCE_CONDITIONS = [
-    { type: "wait", value: 5000 },
+    { type: "wait", value: 8000 },
     { type: "command", value: ["blink", "."] }, // 1
     { type: "command", value: ["blink", "."] }, // 2
     { type: "tab", value: [1] }, // 3
@@ -126,6 +126,7 @@ function updateConditions() {
     { type: "read" }, // 27
     { type: "order" }, // 28
     { type: "contract", value: { systemId: "ship" } }, // 29
+    { type: "tab", value: [3] }, // 30
   ]
 
   advanceConditions.set(ADVANCE_CONDITIONS)

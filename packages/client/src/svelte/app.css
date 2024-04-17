@@ -285,17 +285,45 @@ pre {
 }
 
 .emphasis {
-  animation: emphasis 1s steps(1) 3;
+  animation: emphasis 1s steps(1) infinite;
+}
+
+.emphasis-success {
+  animation: emphasis-success 1s steps(1) 3;
+}
+.emphasis-failure {
+  animation: emphasis-failure 1s steps(1) 3;
 }
 
 @keyframes emphasis {
   0%,
   100% {
     background: var(--foreground);
-    /* color: var(--background); */
   }
   50% {
     background: var(--background);
-    /* color: var(--foreground); */
+  }
+}
+
+@keyframes emphasis-success {
+  0%,
+  100% {
+    background: var(--color-success);
+    color: var(--black);
+  }
+  50% {
+    background: transparent;
+    color: var(--white);
+  }
+}
+@keyframes emphasis-failure {
+  0%,
+  100% {
+    background: var(--color-failure);
+    color: var(--black);
+  }
+  50% {
+    background: transparent;
+    color: var(--white);
   }
 }

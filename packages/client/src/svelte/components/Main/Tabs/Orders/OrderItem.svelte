@@ -1,5 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
+  import { player } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
   import { MATERIAL_TYPE } from "contracts/enums"
   import { accept, unaccept } from "@modules/action"
@@ -24,13 +25,13 @@
 
   const staticMaterial = $staticContent.materials.find(
     material =>
-      material.materialType === MATERIAL_TYPE[order.order.materialType],
+      material.materialType === MATERIAL_TYPE[order.order.materialType]
   )
   const imageURL =
     staticMaterial && staticMaterial.image
       ? urlFor(staticMaterial.image).width(400).auto("format").url()
       : ""
-      
+
   async function sendAccept() {
     working = true
     playSound("tcm", "listPrint")
@@ -71,9 +72,9 @@
         <!-- {#if Number(order.order.expirationBlock) > 0} -->
         {#if working}
           <Spinner />
-        {:else}
+        {:else if !$player.tutorial}
           {blocksToReadableTime(
-            Number(order.order.expirationBlock) - Number($blockNumber),
+            Number(order.order.expirationBlock) - Number($blockNumber)
           )}
         {/if}
         <!-- {/if} -->
@@ -86,24 +87,25 @@
       </div>
       <div class="text">
         <div>
-        {#if working}
-          <Spinner />
-        {:else}
-          <span class="goal">
-            {order.order.amount / UI_SCALE_FACTOR}
-            {MATERIAL_TYPE[order.order.materialType]}
-          </span>
-          <span class="divider">→</span>
-          <span class="reward">
-            {order.order.reward} $BUGS
-          </span>
-        {/if}
-      </div>
-
+          {#if working}
+            <Spinner />
+          {:else}
+            <span class="goal">
+              {order.order.amount / UI_SCALE_FACTOR}
+              {MATERIAL_TYPE[order.order.materialType]}
+            </span>
+            <span class="divider">→</span>
+            <span class="reward">
+              {order.order.reward} $BUGS
+            </span>
+          {/if}
+        </div>
 
         <div class="section interaction">
           {#if active}
-            <button class="cancel" on:click={() => sendUnaccept()}>Cancel</button>
+            <button class="cancel" on:click={() => sendUnaccept()}
+              >Cancel</button
+            >
           {:else}
             <button
               class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
@@ -114,8 +116,6 @@
             </button>
           {/if}
         </div>
-
-
       </div>
     </div>
   {/if}
@@ -204,7 +204,6 @@
           line-height: 30px;
           display: inline-block;
           padding-inline: 10px;
-
         }
 
         .divider {
@@ -218,7 +217,6 @@
     }
 
     .section {
-
       &.interaction {
         button {
           background: var(--color-grey-mid);
@@ -227,7 +225,6 @@
           font-family: var(--font-family);
           padding: 0;
           padding-inline: 20px;
-
 
           &.accept {
             background: var(--color-success);
@@ -244,7 +241,5 @@
         }
       }
     }
-
-
   }
 </style>
