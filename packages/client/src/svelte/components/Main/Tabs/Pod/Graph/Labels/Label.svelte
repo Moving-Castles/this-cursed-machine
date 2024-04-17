@@ -6,7 +6,7 @@
   // import { onDestroy } from "svelte"
   // import { bounceInOut as easing } from "svelte/easing"
   // import { tweened } from "svelte/motion"
-  import { getLongestHorizontalSection } from "../Connections/svg"
+  import { getLongestSection } from "../Connections/svg"
 
   export let connection: GraphConnection
   export let hover: boolean
@@ -24,21 +24,8 @@
   // let zeroOrOne = tweened(0, { easing })
   // let zeroOrOne = 1
 
+  let dir = 0
   let direction = ""
-
-  // const toggle = () => {
-  //   $zeroOrOne === 0 ? zeroOrOne.set(1) : zeroOrOne.set(0)
-  // }
-  // let interval = setInterval(toggle, 5000)
-
-  // const tick = () => {
-  //   requestAnimationFrame(tick)
-  // }
-
-  // frameId = requestAnimationFrame(tick)
-
-  // @todo Determine the flow direction
-  // const direction = ">"
 
   $: material = MATERIAL_TYPE[connection?.products?.[0]?.materialType]
   $: amount = connection?.products?.[0]?.amount / 100
@@ -54,22 +41,16 @@
 
   $: {
     if (pathElement) {
-      const [x, y, forwards] = getLongestHorizontalSection(
-        connection,
-        CELL.HEIGHT,
-        CELL.WIDTH,
-      )
+      const [x, y, d] = getLongestSection(connection, CELL.HEIGHT, CELL.WIDTH)
+
+      const dirs = ["→", "→", "←", "←"]
 
       labelX = x
       labelY = y
-      direction = forwards ? "→" : "←"
+      dir = d
+      direction = dirs[d]
     }
   }
-
-  // onDestroy(() => {
-  //   clearInterval(interval)
-  //   cancelAnimationFrame(frameId)
-  // })
 </script>
 
 <text
@@ -81,13 +62,10 @@
   class:productive
   class:visible
   class="label"
+  class:vertical={dir === 1 || dir === 3}
 >
   {#key material}
     {`${direction} ${material || "EMPTY"} ${direction}`}
-    <!-- <TweenedText
-      mouseover={hover}
-      words={["", `${direction} ${material || "EMPTY"} ${direction}`]}
-    /> -->
   {/key}
 </text>
 
@@ -97,6 +75,7 @@
     font-size: 10px;
     font-family: var(--font-family);
     transform-box: fill-box;
+    transform-origin: center;
     transform: translate(0, 8px);
     text-align: center;
     stroke-width: 3;
@@ -116,6 +95,10 @@
 
     &.hover {
       display: none;
+    }
+
+    &.vertical {
+      transform: translate(4px, 0) rotate(90deg);
     }
 
     // &.productive {
