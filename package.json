@@ -16,7 +16,7 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "link:../../latticexyz/mud/packages/cli",
+    "@latticexyz/cli": "link:/Users/rasmus/Documents/dev/moving-castles/mud/packages/cli",
     "@latticexyz/account-kit": "link:../../latticexyz/mud/packages/account-kit",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",

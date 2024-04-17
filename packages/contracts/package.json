@@ -25,20 +25,20 @@
     "deploy:redstone-mainnet": "---------------------------"
   },
   "dependencies": {
-    "@latticexyz/cli": "link:../../../../latticexyz/mud/packages/cli",
-    "@latticexyz/config": "link:../../../../latticexyz/mud/packages/config",
-    "@latticexyz/gas-report": "link:../../../../latticexyz/mud/packages/gas-report",
-    "@latticexyz/schema-type": "link:../../../../latticexyz/mud/packages/schema-type",
-    "@latticexyz/store": "link:../../../../latticexyz/mud/packages/store",
-    "@latticexyz/world": "link:../../../../latticexyz/mud/packages/world",
-    "@latticexyz/world-modules": "link:../../../../latticexyz/mud/packages/world-modules",
+    "@latticexyz/cli": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/cli",
+    "@latticexyz/config": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/config",
+    "@latticexyz/gas-report": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/gas-report",
+    "@latticexyz/schema-type": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/schema-type",
+    "@latticexyz/store": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/store",
+    "@latticexyz/world": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world",
+    "@latticexyz/world-modules": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world-modules",
     "@types/node": "^20.12.7",
     "ds-test": "github:dapphub/ds-test#c9ce3f25bde29fc5eb9901842bf02850dfd2d084",
     "forge-std": "github:foundry-rs/forge-std#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3",
     "prettier": "^3.2.5",
     "prettier-plugin-solidity": "^1.3.1",
     "solhint": "^4.5.4",
-    "solhint-config-mud": "link:../../../../latticexyz/mud/packages/solhint-config-mud",
-    "solhint-plugin-mud": "link:../../../../latticexyz/mud/packages/solhint-plugin-mud"
+    "solhint-config-mud": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-config-mud",
+    "solhint-plugin-mud": "link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-plugin-mud"
   }
 }

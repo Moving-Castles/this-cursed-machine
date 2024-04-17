@@ -12,8 +12,8 @@ importers:
         specifier: link:../../latticexyz/mud/packages/account-kit
         version: link:../../latticexyz/mud/packages/account-kit
       '@latticexyz/cli':
-        specifier: link:../../latticexyz/mud/packages/cli
-        version: link:../../latticexyz/mud/packages/cli
+        specifier: link:/Users/rasmus/Documents/dev/moving-castles/mud/packages/cli
+        version: link:../mud/packages/cli
       '@typescript-eslint/eslint-plugin':
         specifier: 7.6.0
         version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@9.0.0)(typescript@5.4.5)
@@ -39,29 +39,29 @@ importers:
         specifier: link:../../../../latticexyz/mud/packages/account-kit
         version: link:../../../../latticexyz/mud/packages/account-kit
       '@latticexyz/common':
-        specifier: link:../../../../latticexyz/mud/packages/common
-        version: link:../../../../latticexyz/mud/packages/common
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/common
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/common
       '@latticexyz/dev-tools':
-        specifier: link:../../../../latticexyz/mud/packages/dev-tools
-        version: link:../../../../latticexyz/mud/packages/dev-tools
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/dev-tools
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/dev-tools
       '@latticexyz/recs':
-        specifier: link:../../../../latticexyz/mud/packages/recs
-        version: link:../../../../latticexyz/mud/packages/recs
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/recs
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/recs
       '@latticexyz/schema-type':
-        specifier: link:../../../../latticexyz/mud/packages/schema-type
-        version: link:../../../../latticexyz/mud/packages/schema-type
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/schema-type
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/schema-type
       '@latticexyz/services':
-        specifier: link:../../../../latticexyz/mud/packages/services
-        version: link:../../../../latticexyz/mud/packages/services
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/services
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/services
       '@latticexyz/store-sync':
-        specifier: link:../../../../latticexyz/mud/packages/store-sync
-        version: link:../../../../latticexyz/mud/packages/store-sync
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/store-sync
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/store-sync
       '@latticexyz/utils':
-        specifier: link:../../../../latticexyz/mud/packages/utils
-        version: link:../../../../latticexyz/mud/packages/utils
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/utils
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/utils
       '@latticexyz/world':
-        specifier: link:../../../../latticexyz/mud/packages/world
-        version: link:../../../../latticexyz/mud/packages/world
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world
       '@sanity/block-content-to-html':
         specifier: ^2.0.0
         version: 2.0.0
@@ -151,26 +151,26 @@ importers:
   packages/contracts:
     dependencies:
       '@latticexyz/cli':
-        specifier: link:../../../../latticexyz/mud/packages/cli
-        version: link:../../../../latticexyz/mud/packages/cli
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/cli
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/cli
       '@latticexyz/config':
-        specifier: link:../../../../latticexyz/mud/packages/config
-        version: link:../../../../latticexyz/mud/packages/config
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/config
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/config
       '@latticexyz/gas-report':
-        specifier: link:../../../../latticexyz/mud/packages/gas-report
-        version: link:../../../../latticexyz/mud/packages/gas-report
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/gas-report
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/gas-report
       '@latticexyz/schema-type':
-        specifier: link:../../../../latticexyz/mud/packages/schema-type
-        version: link:../../../../latticexyz/mud/packages/schema-type
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/schema-type
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/schema-type
       '@latticexyz/store':
-        specifier: link:../../../../latticexyz/mud/packages/store
-        version: link:../../../../latticexyz/mud/packages/store
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/store
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/store
       '@latticexyz/world':
-        specifier: link:../../../../latticexyz/mud/packages/world
-        version: link:../../../../latticexyz/mud/packages/world
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world
       '@latticexyz/world-modules':
-        specifier: link:../../../../latticexyz/mud/packages/world-modules
-        version: link:../../../../latticexyz/mud/packages/world-modules
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world-modules
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/world-modules
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
@@ -190,11 +190,11 @@ importers:
         specifier: ^4.5.4
         version: 4.5.4(typescript@5.4.5)
       solhint-config-mud:
-        specifier: link:../../../../latticexyz/mud/packages/solhint-config-mud
-        version: link:../../../../latticexyz/mud/packages/solhint-config-mud
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-config-mud
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-config-mud
       solhint-plugin-mud:
-        specifier: link:../../../../latticexyz/mud/packages/solhint-plugin-mud
-        version: link:../../../../latticexyz/mud/packages/solhint-plugin-mud
+        specifier: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-plugin-mud
+        version: link:../../Users/rasmus/Documents/dev/moving-castles/mud/packages/solhint-plugin-mud
 
 packages:
 
