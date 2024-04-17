@@ -48,11 +48,12 @@
     left: 0;
     z-index: var(--z-1);
     background-color: var(--color-grey-light) !important;
-    border: 1px solid var(--foreground);
+    border: 1px solid var(--background);
     pointer-events: none;
     cursor: none;
     font-size: var(--font-size-small);
     line-height: 1.2em;
+    color: var(--background);
   }
 
   .inner {

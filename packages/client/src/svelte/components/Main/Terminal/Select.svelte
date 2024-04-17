@@ -14,6 +14,8 @@
   // Add cancel option
   selectOptions = [...selectOptions, { label: "cancel", value: null }]
 
+  let shownSelectOptions: SelectOption[] = []
+
   const dispatch = createEventDispatcher()
 
   let selectedIndex = 0
@@ -81,6 +83,15 @@
     if (selectOptions.length === 0) {
       returnValue(null)
     }
+
+    // Entry animation
+    for(let i = 0; i < selectOptions.length; i++) {
+      playSound("tcm", "listPrint")
+      shownSelectOptions = [...shownSelectOptions, selectOptions[i]]
+      scrollToEnd()
+      await new Promise((resolve) => setTimeout(resolve, 20))
+    }
+
     selectContainerElement.focus()
     await tick()
     scrollToEnd()
@@ -96,10 +107,10 @@
 
 {#if selectOptions.length > 0}
   <div class="inline-select" bind:this={selectContainerElement}>
-    {#each selectOptions as option, index (option.value)}
+    {#each shownSelectOptions as option, index (option.value)}
       <div
         class:active={selectedIndex === index}
-        class="option {option.label} option-{index}"
+        class="option {option.label}"
       >
         {option.label}
       </div>
@@ -116,7 +127,7 @@
       white-space: nowrap; /* Ensure no line breaks inside the element */
       overflow: hidden; /* Hide the overflow text */
       text-overflow: ellipsis; /* Add ellipses at the end of the text */
-      opacity: 0;
+      opacity: 1;
 
       &.active {
         color: var(--background);
@@ -141,23 +152,6 @@
             content: "x ";
           }
         }
-      }
-    }
-
-    @keyframes showOpacity {
-      0%,
-      99% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @for $i from 0 through 50 {
-      .option-#{$i} {
-        animation: showOpacity #{$i * 60}ms linear;
-        opacity: 1;
       }
     }
   }

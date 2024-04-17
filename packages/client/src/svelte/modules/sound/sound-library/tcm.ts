@@ -87,7 +87,7 @@ export const tcm: SoundAssets = {
   },
   machineFlowing: {
     src: "./sounds/tcm/machineActive.mp3",
-    volume: 0.3,
+    volume: 0.8,
   },
   machineInactive: {
     src: "./sounds/tcm/machineInactive.mp3",
@@ -116,5 +116,9 @@ export const tcm: SoundAssets = {
   selectionEsc2: {
     src: "./sounds/tcm/selection_esc-hit_01c.mp3",
     volume: 1,
+  },
+  bugs: {
+    src: "./sounds/tcm/bugs.mp3",
+    volume: 0.6,
   }
 }

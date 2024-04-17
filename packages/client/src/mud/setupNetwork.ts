@@ -14,7 +14,6 @@ import {
   ClientConfig,
   getContract
 } from "viem"
-import { createFaucetService } from "@latticexyz/services/faucet"
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
 
 import { getNetworkConfig } from "./getNetworkConfig"
@@ -110,24 +109,43 @@ export async function setupNetwork(environment: ENVIRONMENT) {
 
   /*
    * If there is a faucet, request (test) ETH if you have
-   * less than 1 ETH. Repeat every 20 seconds to ensure you don't
+   * less than 0.01 ETH. Repeat every 20 seconds to ensure you don't
    * run out.
    */
   if (networkConfig.faucetServiceUrl) {
     const address = burnerAccount.address
     console.info("[Dev Faucet]: Player address -> ", address)
 
-    const faucet = createFaucetService(networkConfig.faucetServiceUrl)
-
     const requestDrip = async () => {
       const balance = await publicClient.getBalance({ address })
       console.info(`[Dev Faucet]: Player balance -> ${balance}`)
-      const lowBalance = balance < parseEther("1")
-      if (lowBalance) {
+      const lowBalance = balance < parseEther("0.01")
+      if (networkConfig.faucetServiceUrl && lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player")
-        // Double drip
-        await faucet.dripDev({ address })
-        await faucet.dripDev({ address })
+        // Drip
+        await drip(networkConfig.faucetServiceUrl, address)
+      }
+    }
+
+    async function drip(url: string, address: string): Promise<void> {
+      const data = { address };
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        await response.json();
+      } catch (error) {
+        console.error('Error:', error);
       }
     }
 

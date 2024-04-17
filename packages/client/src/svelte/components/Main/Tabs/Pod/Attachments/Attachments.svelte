@@ -5,7 +5,7 @@
   import { activeTab, graphElement } from "@modules/ui/stores"
 
   let [innerWidth, innerHeight] = [1, 1]
-  let graphBoundingBox: SVGClientRect
+  let graphBoundingBox: DOMRect
 
   $: {
     if ($activeTab == 0) {

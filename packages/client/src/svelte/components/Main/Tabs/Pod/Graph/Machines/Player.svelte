@@ -9,6 +9,8 @@
     selectedOption,
     selectedParameters,
   } from "@modules/ui/stores"
+  import { MACHINE_TYPE } from "@modules/state/base/enums"
+  import { player } from "@modules/state/base/stores"
 
   export let address: string
   export let machine: GraphMachine
@@ -34,7 +36,7 @@
     inspecting.set(null)
   }
 
-  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
+  $: style = `background-image: url(/images/machines/${MACHINE_TYPE[machine.machineType]}.png); top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
 
   function makePorts() {
     return [
@@ -68,7 +70,7 @@
   {style}
 >
   <div class="inner-container">
-    <div class="label">YOU</div>
+    <div class="label">{$player.name}</div>
     {#each ports as port, i}
       <div
         class="port"
@@ -88,11 +90,6 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    // background-image: url("/images/eye3.gif");
-    background-image: url("/images/face.jpg");
-    background-image: url("/images/face5.png");
-
-    // background-image: url("/images/eye2.gif");
     background-size: cover;
     border: 1px solid var(--background);
     color: var(--foreground);
@@ -109,6 +106,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
+        white-space: nowrap;
+        letter-spacing: -1px;
+        padding: 2px;
+        top: 0;
+        transform: translateX(-20px) translateY(-5px);
+      }
 
       .port {
         position: absolute;

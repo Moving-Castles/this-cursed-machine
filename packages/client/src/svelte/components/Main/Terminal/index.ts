@@ -94,6 +94,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.DESTROY,
       COMMAND.SHIP,
       COMMAND.HELP,
+      COMMAND.GRADUATE
     ]
   }
 
@@ -107,6 +108,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.DISCONNECT,
       COMMAND.SHIP,
       COMMAND.HELP,
+      COMMAND.GRADUATE
     ]
   }
 
@@ -119,6 +121,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.CONNECT,
       COMMAND.DISCONNECT,
       COMMAND.HELP,
+      COMMAND.GRADUATE
     ]
   }
 
@@ -129,15 +132,16 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.ATTACH_DEPOT,
       COMMAND.DETACH_DEPOT,
       COMMAND.HELP,
+      COMMAND.GRADUATE
     ]
   }
 
   if (level > 6) {
-    return [COMMAND.BLINK, COMMAND.REFILL_DEPOT, COMMAND.HELP]
+    return [COMMAND.BLINK, COMMAND.REFILL_DEPOT, COMMAND.HELP, COMMAND.GRADUATE]
   }
 
   if (level > -1) {
-    return [COMMAND.BLINK, COMMAND.HELP]
+    return [COMMAND.BLINK, COMMAND.HELP, COMMAND.SKIP, COMMAND.GRADUATE]
   }
 }
 

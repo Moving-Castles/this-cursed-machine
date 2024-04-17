@@ -38,6 +38,7 @@ export const redstoneGarnet = {
             webSocket: ["https://rpc.garnet.qry.live"],
         },
     },
+    faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc/drip",
     blockExplorers: {
         default: {
             name: "Blockscout",

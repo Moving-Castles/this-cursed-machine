@@ -7,12 +7,14 @@
     simulatedMachines,
     simulatedConnections,
   } from "@modules/state/simulated/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
 
   import { createLayout } from "./layout"
 
   import GridComponent from "./Grid/Grid.svelte"
   import MachineSelector from "./Machines/MachineSelector.svelte"
   import Connection from "./Connections/Connection.svelte"
+  import { playSound } from "@svelte/modules/sound"
 
   const dispatch = createEventDispatcher()
 
@@ -31,6 +33,8 @@
 
     const p = parent?.getBoundingClientRect()
     const c = child?.getBoundingClientRect()
+
+    if (!p || !c) return
 
     const PADDING = 50
 
@@ -59,8 +63,18 @@
     $playerPod?.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    layout.graphMachines
+    layout.graphMachines,
   )
+
+  // Play sound when network is running
+  let networkRunningSound: Howl | undefined
+  $: if ($networkIsRunning) {
+    networkRunningSound = playSound("tcm", "machineFlowing", true)
+  } else {
+    if (networkRunningSound) {
+      networkRunningSound.stop()
+    }
+  }
 
   onMount(calcScale)
 </script>

@@ -5,7 +5,6 @@ import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/T
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
 import { tutorialProgress } from "@modules/ui/assistant";
-import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
 async function execute() {
     try {
@@ -18,7 +17,7 @@ async function execute() {
         writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "FF in progress...")
         await waitForCompletion(action, loadingLine)
         // Leave client tutorial as well
-        tutorialProgress.set(FINAL_TUTORIAL_LEVEL)
+        tutorialProgress.set(666)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
         // ...

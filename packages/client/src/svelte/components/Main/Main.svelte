@@ -12,21 +12,13 @@
   import { TABS } from "@modules/ui/enums"
   import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
-  import {
-    sendMessage,
-    clearMessage,
-    tutorialProgress,
-  } from "@modules/ui/assistant"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
-  import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
-  import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
   // import Debug from "@components/Main/Atoms/Debug.svelte"
-
-  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
   let resized = 0
 
@@ -41,11 +33,6 @@
       component: Orders,
       enabled: true,
     },
-    // [TABS.SHOP]: {
-    //   label: "Shop",
-    //   component: Shop,
-    //   enabled: true,
-    // },
     [TABS.INBOX]: {
       label: "Inbox",
       component: Inbox,
@@ -63,8 +50,6 @@
     | typeof Pod
     | typeof Inbox
     | typeof Orders
-    | typeof Exit
-    | typeof Shop
     | typeof Chat
 
   let currentTabComponent: ComponentType = null
@@ -95,9 +80,6 @@
   // }
 
   onMount(() => {
-    // TODO: check if player has escaped the pod
-    // If so:
-    // dispatch("escaped")
     playSound("tcm", "podBg", true, false)
   })
 </script>
@@ -120,7 +102,7 @@
             bind:this={terminalComponent}
             on:commandExecuted={() => handleCommand()}
             setBlink
-            placeholder={$tutorialProgress === 0 ? "BLINK" : "HELP"}
+            placeholder={$tutorialProgress === 1 ? "BLINK" : "HELP"}
           />
         {/if}
       </div>
@@ -189,9 +171,10 @@
   .split-screen {
     display: flex;
     height: 100vh;
-    // background-image: url(/images/tcm2.png);
-    // background-size: 200px;
-    // background-repeat: repeat;
+    background-image: url(/images/tcm2.png);
+    // background-image: url(/images/graf.png);
+    background-size: 200px;
+    background-repeat: repeat;
 
     .left-col {
       height: 100%;

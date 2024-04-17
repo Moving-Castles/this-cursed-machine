@@ -6,7 +6,9 @@
   export let warn = -1 // If the value falls below this number, give ominous warning
   export let step = 10
 
-  const goingUp = tweened(Number(value), { duration: 1000, easing })
+  const DURATION = 5000
+
+  const goingUp = tweened(Number(value), { duration: DURATION, easing })
 
   let previousValue = $goingUp
 

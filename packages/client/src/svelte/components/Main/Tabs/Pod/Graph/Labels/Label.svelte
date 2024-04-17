@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
-  import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
+  // import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
   import { CELL } from "../constants"
   import { MATERIAL_TYPE } from "contracts/enums"
-  import { onDestroy } from "svelte"
-  import { bounceInOut as easing } from "svelte/easing"
-  import { tweened } from "svelte/motion"
+  // import { onDestroy } from "svelte"
+  // import { bounceInOut as easing } from "svelte/easing"
+  // import { tweened } from "svelte/motion"
   import { getLongestHorizontalSection } from "../Connections/svg"
 
   export let connection: GraphConnection
@@ -13,24 +13,29 @@
   export let carrying: boolean
   export let productive: boolean
   export let pathElement: SVGPathElement
+  // Putting the visibility toggle here because of this issue:
+  // https://github.com/sveltejs/svelte/issues/6479
+  export let visible: boolean
 
   let words = []
-  let frameId: number
+  // let frameId: number
 
   let [labelX, labelY] = [0, 0]
-  let zeroOrOne = tweened(0, { easing })
+  // let zeroOrOne = tweened(0, { easing })
+  // let zeroOrOne = 1
+
   let direction = ""
 
-  const toggle = () => {
-    $zeroOrOne === 0 ? zeroOrOne.set(1) : zeroOrOne.set(0)
-  }
-  let interval = setInterval(toggle, 5000)
+  // const toggle = () => {
+  //   $zeroOrOne === 0 ? zeroOrOne.set(1) : zeroOrOne.set(0)
+  // }
+  // let interval = setInterval(toggle, 5000)
 
-  const tick = () => {
-    requestAnimationFrame(tick)
-  }
+  // const tick = () => {
+  //   requestAnimationFrame(tick)
+  // }
 
-  frameId = requestAnimationFrame(tick)
+  // frameId = requestAnimationFrame(tick)
 
   // @todo Determine the flow direction
   // const direction = ">"
@@ -52,19 +57,19 @@
       const [x, y, forwards] = getLongestHorizontalSection(
         connection,
         CELL.HEIGHT,
-        CELL.WIDTH
+        CELL.WIDTH,
       )
 
       labelX = x
       labelY = y
-      direction = forwards ? ">" : "<"
+      direction = forwards ? "→" : "←"
     }
   }
 
-  onDestroy(() => {
-    clearInterval(interval)
-    cancelAnimationFrame(frameId)
-  })
+  // onDestroy(() => {
+  //   clearInterval(interval)
+  //   cancelAnimationFrame(frameId)
+  // })
 </script>
 
 <text
@@ -74,19 +79,22 @@
   class:hover
   class:carrying
   class:productive
+  class:visible
   class="label"
 >
   {#key material}
-    <TweenedText
+    {`${direction} ${material || "EMPTY"} ${direction}`}
+    <!-- <TweenedText
       mouseover={hover}
       words={["", `${direction} ${material || "EMPTY"} ${direction}`]}
-    />
+    /> -->
   {/key}
 </text>
 
 <style lang="scss">
   .label {
     font-size: var(--font-size-small);
+    font-size: 10px;
     font-family: var(--font-family);
     transform-box: fill-box;
     transform: translate(0, 8px);
@@ -97,13 +105,22 @@
     white-space: pre;
     fill: var(--color-grey-light);
 
+    opacity: 0;
+    &.visible {
+      opacity: 1;
+    }
+
     &.carrying {
       fill: var(--color-success);
     }
 
-    &.productive {
-      fill: var(--color-alert);
+    &.hover {
+      display: none;
     }
+
+    // &.productive {
+    //   fill: var(--color-alert);
+    // }
   }
 
   .label-below {
