@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tweened } from "svelte/motion"
   import { linear as easing } from "svelte/easing"
+  import { playSound } from "@svelte/modules/sound"
   export let value: number
   export let goal = Infinity // optional
   export let warn = -1 // If the value falls below this number, give ominous warning
@@ -24,8 +25,10 @@
       setTimeout(() => {
         if (previousValue > $goingUp) {
           emphasis = "emphasis-failure"
+          playSound("tcm", "bugs")
         } else {
           emphasis = "emphasis-success"
+          playSound("tcm", "bugs")
         }
 
         console.log(emphasis)

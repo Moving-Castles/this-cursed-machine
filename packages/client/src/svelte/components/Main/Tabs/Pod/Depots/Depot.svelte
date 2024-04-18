@@ -118,6 +118,7 @@
     background: var(--color-grey-dark);
     display: flex;
     position: relative;
+    user-select: none;
 
     .overlay {
       position: absolute;
@@ -141,7 +142,7 @@
     .id {
       font-size: var(--font-size);
       background: var(--foreground);
-      color: var(--background);
+      color: var(--background) !important;
       padding: 2px;
       position: absolute;
       top: 0;
@@ -153,6 +154,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--foreground) !important;
 
       .inner-container {
         display: flex;
@@ -175,6 +177,7 @@
       justify-content: center;
       align-items: center;
       font-size: var(--font-size) !important;
+      color: var(--foreground) !important;
 
       // &:not(.connected) {
       //   &::after {

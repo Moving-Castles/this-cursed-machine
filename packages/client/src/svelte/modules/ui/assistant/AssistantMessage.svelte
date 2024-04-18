@@ -15,7 +15,7 @@
 
   export let msg: AssistantMessage
 
-  const parse = str => {
+  const parse = (str: string) => {
     if (!$player) return str
 
     str = str.replaceAll("%PLAYER%", $player.name)
@@ -24,7 +24,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+        MATERIAL_TYPE[$playerOrder?.order?.materialType],
       )
     }
 
@@ -128,11 +128,11 @@
     text-align: left;
     font-size: 22px;
     font-size: var(--font-size);
-    line-height: 1em;
+    line-height: 1.2em;
     color: var(--foreground);
     text-align: left;
-    border: 5px double var(--color-success);
-    color: var(--color-success);
+    border: 5px double var(--color-tutorial);
+    color: var(--color-tutorial);
     position: relative;
     user-select: none;
 
