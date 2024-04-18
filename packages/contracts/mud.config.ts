@@ -8,15 +8,19 @@ const enums = {
     PORT_INDEX: PORT_INDEX_ARRAY
 }
 
+const userTypes = {
+    MaterialId: { filePath: "./src/libraries/LibMaterial.sol", type: "bytes14" },
+} as const
+
 export default defineWorld({
     enums,
+    userTypes,
     // excludeSystems: ["DevSystem"],
     tables: {
         GameConfig: {
             key: [],
             schema: {
                 adminAddress: "address",
-                tokenAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
                 scaleDown: "uint32", // Used to scale down the amounts in the UI
                 flowRate: "uint32", // Amount flowing from the inlet
@@ -24,6 +28,15 @@ export default defineWorld({
             },
             codegen: {
                 dataStruct: true
+            }
+        },
+        MaterialMetadata: {
+            key: ["materialId"],
+            schema: {
+                materialId: "MaterialId",
+                tokenAddress: "address",
+                difficultyCoefficientNumerator: "uint32", // Difficulty coefficient = numerator / denominator
+                difficultyCoefficientDenominator: "uint32", // Coefficient multiplies rewards for orders of the material
             }
         },
         EntityType: "ENTITY_TYPE",

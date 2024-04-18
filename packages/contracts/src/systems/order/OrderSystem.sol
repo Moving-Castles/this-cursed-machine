@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibToken, LibNetwork, LibReset } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOrder, LibNetwork, LibReset, PublicMaterials } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, DEPOT_CAPACITY } from "../../constants.sol";
 
@@ -34,8 +34,8 @@ contract OrderSystem is System {
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint32 totalRewardCost = _reward * _maxPlayers;
-      require(LibToken.getTokenBalance(_msgSender()) > totalRewardCost, "insufficient funds");
-      LibToken.transferToken(_world(), totalRewardCost);
+      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) > totalRewardCost, "insufficient funds");
+      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(
@@ -187,7 +187,7 @@ contract OrderSystem is System {
     Completed.push(playerEntity, currentOrderId);
 
     // Reward player in real tokens
-    LibToken.mint(_msgSender(), currentOrder.reward);
+    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
     // For statistics we keep track of the total earned points
     // EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }

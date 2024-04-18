@@ -17,7 +17,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 import { MATERIAL_TYPE } from "../src/codegen/common.sol";
-import { LibOrder, LibInitRecipes, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
+import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials } from "../src/libraries/Libraries.sol";
 import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
 
 contract PostDeploy is Script {
@@ -35,20 +35,12 @@ contract PostDeploy is Script {
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
     world.installModule(new PuppetModule(), new bytes(0));
 
-    // Register and mint ERC20 token
-    IERC20Mintable token = registerERC20(
-      world,
-      "BugToken",
-      ERC20MetadataData({ decimals: 18, name: "BUG", symbol: "BUG" })
-    );
-
-    // Transfer ownership of the token namespace to the world contract
-    ResourceId namespaceId = WorldResourceIdLib.encodeNamespace("BugToken");
-    world.transferOwnership(namespaceId, worldAddress);
+    // Register the BUG token
+    LibMaterial.registerMaterial(PublicMaterials.BUG, "BUG", "BUG", 1, 1);
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
-    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(token));
+    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID));
 
     // Initialize recipes
     LibInitRecipes.init();

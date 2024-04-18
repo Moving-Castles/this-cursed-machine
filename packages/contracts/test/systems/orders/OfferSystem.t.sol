@@ -91,7 +91,7 @@ contract OfferSystemTest is BaseTest {
 
   //   vm.stopPrank();
 
-  //   assertEq(LibToken.getTokenBalance(alice), 0);
+  //   assertEq(PublicMaterials.BUG.getTokenBalance(alice), 0);
   //   assertEq(uint8(MaterialType.get(depotsInPod[0])), uint8(MATERIAL_TYPE.BUG));
   //   assertEq(Amount.get(depotsInPod[0]), 20000);
   // }
@@ -113,7 +113,7 @@ contract OfferSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(LibToken.getTokenBalance(alice), 9900);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 9900);
     assertEq(uint8(MaterialType.get(depotsInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
     assertEq(Amount.get(depotsInPod[1]), 10000);
   }

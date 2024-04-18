@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, CarriedBy, Amount, MaterialType, Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
+import { LibUtils, PublicMaterials } from "../../libraries/Libraries.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
 
 contract DevSystem is System {
@@ -21,7 +21,7 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    LibToken.mint(_msgSender(), 10000);
+    PublicMaterials.BUG.mint(_msgSender(), 10000);
   }
 
   /**
@@ -34,19 +34,19 @@ contract DevSystem is System {
   }
 
   /**
-   * @notice Send 1000 tokens from the world to the player.
+   * @notice Send 1000 BUG tokens from the world to the player.
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    LibToken.mint(_msgSender(), 1000);
+    PublicMaterials.BUG.mint(_msgSender(), 1000);
   }
 
   /**
-   * @notice Send 100 tokens from the player to the world.
+   * @notice Send 100 BUG tokens from the player to the world.
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function charge() public {
-    require(LibToken.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
-    LibToken.transferToken(_world(), 100);
+    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
+    PublicMaterials.BUG.transferToken(_world(), 100);
   }
 }

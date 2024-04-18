@@ -10,6 +10,7 @@ import { LibDepot } from "./LibDepot.sol";
 import { LibOrder } from "./LibOrder.sol";
 import { LibReset } from "./LibReset.sol";
 import { LibOffer } from "./LibOffer.sol";
-import { LibToken } from "./LibToken.sol";
+import { LibMaterial } from "./LibMaterial.sol";
+import { PublicMaterials } from "./init/PublicMaterials.sol";
 import { LibInit } from "./init/LibInit.sol";
 import { LibInitRecipes } from "./init/LibInitRecipes.sol";

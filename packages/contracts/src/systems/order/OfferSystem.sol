@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOffer, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOffer, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
 import { DEPOT_CAPACITY } from "../../constants.sol";
 
 contract OfferSystem is System {
@@ -51,7 +51,7 @@ contract OfferSystem is System {
     if (Tutorial.get(playerEntity)) {
       require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
     } else {
-      require(LibToken.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
+      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
     }
 
     // Resolution needs to be done before filling the depot to avoid instant conversion of materials.
@@ -94,7 +94,7 @@ contract OfferSystem is System {
       NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
     } else {
       // Deduct from real token balance
-      LibToken.transferToken(_world(), offerData.cost);
+      PublicMaterials.BUG.transferToken(_world(), offerData.cost);
     }
   }
 }

@@ -5,48 +5,31 @@ import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
 
-import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
-
-import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
-import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
-import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
-
 contract SpawnSystemTest is BaseTest {
-  using WorldResourceIdInstance for ResourceId;
-
   function testReward() public {
     setUp();
-
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
 
     vm.startPrank(alice);
     world.reward();
     vm.stopPrank();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000);
   }
 
   function testCharge() public {
     setUp();
 
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
     vm.startPrank(alice);
     world.reward();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000);
 
     world.charge();
 
-    assertEq(Balances.get(tableId, worldAddress), 100);
-    assertEq(Balances.get(tableId, alice), 900);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900);
 
     vm.stopPrank();
   }
@@ -54,15 +37,11 @@ contract SpawnSystemTest is BaseTest {
   function testGraduate() public {
     setUp();
 
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
     vm.startPrank(alice);
     world.graduate();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 10000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000);
 
     vm.stopPrank();
   }

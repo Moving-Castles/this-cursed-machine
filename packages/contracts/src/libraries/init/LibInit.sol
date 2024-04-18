@@ -10,14 +10,12 @@ library LibInit {
   /**
    * @notice Set game config and create tutorial orders
    * @param _adminAddress The address of the admin
-   * @param _tokenAddress The address of the token
    */
-  function init(address _adminAddress, address _tokenAddress) internal {
+  function init(address _adminAddress) internal {
     // Set game config
     GameConfig.set(
       GameConfigData({
         adminAddress: _adminAddress,
-        tokenAddress: _tokenAddress,
         globalSpawnIndex: 0,
         scaleDown: 100,
         flowRate: FLOW_RATE,
