@@ -13,6 +13,7 @@ import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 
+// Not using index.sol because of MaterialId circular import
 import { MaterialMetadata, MaterialMetadataData } from "../codegen/tables/MaterialMetadata.sol";
 
 type MaterialId is bytes14;
