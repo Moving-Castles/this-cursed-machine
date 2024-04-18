@@ -5,7 +5,7 @@ import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
 
-contract SpawnSystemTest is BaseTest {
+contract RewardSystemTest is BaseTest {
   function testReward() public {
     setUp();
 
