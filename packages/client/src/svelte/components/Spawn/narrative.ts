@@ -82,10 +82,10 @@ export const narrative = [
   //   await writeNarrative("I will help you through the on-boarding process.");
   //   await writeNarrativeAction("blink to begin");
   // },
-  // async () => {
-  //   await writeNarrative("the company needs to verify your identity.");
-  //   await writeNarrativeAction("blink to start verification");
-  // },
+  async () => {
+    await writeNarrative("the company needs to verify your identity.");
+    await writeNarrativeAction("blink to start verification");
+  },
   async () => {
     /* * * * * * * * * * * * * * * * * * * *
      * Trigger wallet connection modal here

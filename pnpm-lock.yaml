@@ -18,8 +18,8 @@ importers:
         specifier: 2.0.7-account-kit-e29266b9
         version: 2.0.7-account-kit-e29266b9(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.22.4)
       '@pimlicolabs/alto':
-        specifier: github:latticexyz/alto#3192a9a
-        version: github.com/latticexyz/alto/3192a9a
+        specifier: github:pwrstudio/alto
+        version: github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37
       '@typescript-eslint/eslint-plugin':
         specifier: 7.6.0
         version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@9.0.0)(typescript@5.4.5)
@@ -2602,7 +2602,7 @@ packages:
       '@latticexyz/store': 2.0.7-account-kit-e29266b9(typescript@5.4.5)
       '@latticexyz/world': 2.0.7-account-kit-e29266b9(typescript@5.4.5)
       '@latticexyz/world-modules': 2.0.7-account-kit-e29266b9(typescript@5.4.5)
-      '@pimlicolabs/alto': github.com/latticexyz/alto/3192a9a
+      '@pimlicolabs/alto': github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37
       '@radix-ui/react-dialog': 1.0.5(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-dropdown-menu': 2.0.6(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-select': 2.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -3504,7 +3504,6 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
-      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -6355,8 +6354,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001610
-      electron-to-chromium: 1.4.738
+      caniuse-lite: 1.0.30001611
+      electron-to-chromium: 1.4.740
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
@@ -6452,8 +6451,8 @@ packages:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
-  /caniuse-lite@1.0.30001610:
-    resolution: {integrity: sha512-QFutAY4NgaelojVMjY63o6XlZyORPaLfyMnsl3HgnWdJUcX6K0oaJymHjH8PT5Gk7sTm8rvC/c5COUQKXqmOMA==}
+  /caniuse-lite@1.0.30001611:
+    resolution: {integrity: sha512-19NuN1/3PjA3QI8Eki55N8my4LzfkMCRLgCVfrl/slbSAchQfV0+GwjPrK3rq37As4UCLlM/DHajbKkAqbv92Q==}
 
   /chai@4.4.1:
     resolution: {integrity: sha512-13sOfMv2+DWduEU+/xbun3LScLoqN17nBeTLUsmDfKdoiC1fr0n9PU4guu4AhRcOVFk/sW8LyZWHuhWtQZiF+g==}
@@ -7122,8 +7121,8 @@ packages:
     dependencies:
       jake: 10.8.7
 
-  /electron-to-chromium@1.4.738:
-    resolution: {integrity: sha512-lwKft2CLFztD+vEIpesrOtCrko/TFnEJlHFdRhazU7Y/jx5qc4cqsocfVrBg4So4gGe9lvxnbLIoev47WMpg+A==}
+  /electron-to-chromium@1.4.740:
+    resolution: {integrity: sha512-Yvg5i+iyv7Xm18BRdVPVm8lc7kgxM3r6iwqCH2zB7QZy1kZRNmd0Zqm0zcD9XoFREE5/5rwIuIAOT+/mzGcnZg==}
 
   /elliptic@6.5.4:
     resolution: {integrity: sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ==}
@@ -9321,9 +9320,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
-
-  /napi-wasm@1.1.0:
-    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -12116,10 +12112,11 @@ packages:
     version: 1.2.0
     dev: false
 
-  github.com/latticexyz/alto/3192a9a:
-    resolution: {tarball: https://codeload.github.com/latticexyz/alto/tar.gz/3192a9a}
+  github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37:
+    resolution: {tarball: https://codeload.github.com/pwrstudio/alto/tar.gz/58efb3f0789b1e8f12b3b300a120f8db73b29f37}
     name: root
     version: 0.0.1
     engines: {node: '>=18.0.0'}
     hasBin: true
+    prepare: true
     requiresBuild: true
