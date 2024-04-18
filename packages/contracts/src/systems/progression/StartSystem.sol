@@ -62,10 +62,6 @@ contract StartSystem is System {
     TutorialLevel.set(playerEntity, 0);
     Tutorial.set(playerEntity, true);
 
-    // Fill first depot, based on the config of the first tutorial level
-    MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
-    Amount.set(depotsInPod[0], 10000);
-
     // We give the player some non-transferable tokens to start with
     NonTransferableBalance.set(playerEntity, 500);
 

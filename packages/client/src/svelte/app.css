@@ -17,6 +17,7 @@
   --color-alert: #00e5ff;
   --color-info: #bb3af2;
   --color-success: #a4fa3b;
+  --color-tutorial: #f6ff00;
 
   /* Sizing */
   --default-padding: 1ch;
@@ -263,7 +264,7 @@ pre {
     background: var(--color-grey-mid);
   }
   100% {
-    background: var(--color-success);
+    background: var(--color-tutorial);
   }
 }
 
@@ -277,7 +278,7 @@ pre {
 }
 
 .command {
-  background-color: var(--color-success) !important;
+  background-color: var(--color-tutorial) !important;
   color: black;
   padding: 2px 0 0;
   margin-top: -2px;
@@ -298,10 +299,13 @@ pre {
 @keyframes emphasis {
   0%,
   100% {
-    background: var(--foreground);
+    background: var(--color-tutorial);
+    color: var(--background);
   }
   50% {
     background: var(--background);
+    color: var(--foreground);
+
   }
 }
 

@@ -8,7 +8,7 @@
   import { shippableDepots } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
+  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DEPOT_CAPACITY } from "@modules/state/simulated/constants"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
@@ -21,22 +21,37 @@
     (Math.round(depot.amount / UI_SCALE_FACTOR) /
       (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
       100,
-    { easing: bounceOut }
+    { easing: bounceOut },
   )
+
   const amount = tweened(Math.round(depot.amount / UI_SCALE_FACTOR))
 
-  $: canShip = $shippableDepots[address]
-  $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
-  $: shipping = $waitingTransaction?.systemId === "ship" && canShip
   // Narrow the type
   $: typedDepot = depot as Depot
+
+  // Tutorial check
+  $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
+
+  // Tank is shippable
+  $: canShip = $shippableDepots[address]
+
+  // Tanks is shipping
+  $: shipping = $waitingTransaction?.systemId === "ship" && canShip
+
+  // Tanks is connected
   $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
+
+  // Tanks is empty
   $: empty = typedDepot.amount === 0
+
+  // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
+
   $: $progress =
     (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
       (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
     100
+
   $: $amount = typedDepot.amount / UI_SCALE_FACTOR
 
   const getConnectionName = (machineEntity: string) => {
@@ -62,12 +77,12 @@
     />
   {/if}
   <div class="id">
-    <div>{index + 1}</div>
+    <div>TANK {index + 1}</div>
   </div>
 
   <div class="content">
     {#if empty}
-      <div>EMPTY</div>
+      <div>0 / {DEPOT_CAPACITY / UI_SCALE_FACTOR}</div>
     {:else}
       <div class="inner-container">
         <div class="material-type">
@@ -103,6 +118,7 @@
     background: var(--color-grey-dark);
     display: flex;
     position: relative;
+    user-select: none;
 
     .overlay {
       position: absolute;
@@ -126,8 +142,8 @@
     .id {
       font-size: var(--font-size);
       background: var(--foreground);
-      color: var(--background);
-      padding: 5px;
+      color: var(--background) !important;
+      padding: 2px;
       position: absolute;
       top: 0;
       left: 0;
@@ -138,6 +154,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--foreground) !important;
 
       .inner-container {
         display: flex;
@@ -160,6 +177,7 @@
       justify-content: center;
       align-items: center;
       font-size: var(--font-size) !important;
+      color: var(--foreground) !important;
 
       // &:not(.connected) {
       //   &::after {
