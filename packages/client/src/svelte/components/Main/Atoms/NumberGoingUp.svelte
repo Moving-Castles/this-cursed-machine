@@ -6,7 +6,7 @@
   export let warn = -1 // If the value falls below this number, give ominous warning
   export let step = 10
 
-  const DURATION = 5000
+  const DURATION = 1000
 
   let emphasis = ""
   let tweening = false

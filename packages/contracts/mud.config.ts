@@ -10,6 +10,7 @@ const enums = {
 
 export default defineWorld({
     enums,
+    // excludeSystems: ["DevSystem"],
     tables: {
         GameConfig: {
             key: [],
