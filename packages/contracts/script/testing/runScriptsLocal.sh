@@ -1,11 +1,11 @@
 #!/bin/bash
-echo "waiting for 3m..."
-sleep 60
-echo "...2m left..."
-sleep 60
-echo "...1m left..."
-sleep 60
-echo "running"
+# echo "waiting for 3m..."
+# sleep 60
+# echo "...2m left..."
+# sleep 60
+# echo "...1m left..."
+# sleep 60
+# echo "running"
 
 # Local defaults
 LOCAL_WORLD_ADDRESS=0xc14fbdb7808d9e2a37c1a45b635c8c3ff64a1cc1

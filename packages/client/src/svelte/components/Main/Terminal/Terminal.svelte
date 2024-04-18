@@ -402,6 +402,7 @@
   }
 
   const onSubmit = async () => {
+    console.log("Submit")
     // De-activate input-field
     inputActive = false
 

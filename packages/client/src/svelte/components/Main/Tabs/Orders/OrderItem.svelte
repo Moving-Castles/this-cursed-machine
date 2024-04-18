@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
   import { player } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
@@ -17,8 +18,11 @@
 
   export let key: string
   export let order: Order
-  export let active: boolean
+  export let active = false
   export let completed: boolean
+  export let selected: boolean
+
+  const dispatch = createEventDispatcher()
 
   let working = false
 
@@ -43,7 +47,7 @@
     playSound("tcm", "listPrint")
     const action = accept(key)
     await waitForCompletion(action)
-    playSound("tcm", "TRX_yes")
+    playSound("tcm", "bugs")
     working = false
   }
 
@@ -56,19 +60,39 @@
     working = false
   }
 
+  const onKeyPress = e => {
+    if (e.key === "Enter" && !working && !active && selected) {
+      sendAccept()
+    }
+  }
+
   $: stumps = Object.entries($players).filter(([_, p]) => {
     return p.currentOrder === key
   })
+
+  onMount(() => {
+    if (active) {
+      // Scroll to the active element first
+      dispatch("scroll")
+    }
+  })
 </script>
 
+<svelte:window on:keypress={onKeyPress} />
+
 <div
+  on:mouseenter
   class="order-item"
   class:working
   class:active
   class:completed
+  class:selected
   transition:fade
 >
   {#if order?.order}
+    {#if active}
+      <div class="overlay" />
+    {/if}
     <div class="material">
       {#if imageURL}
         <img
@@ -103,7 +127,7 @@
             {#if working}
               <Spinner />
             {:else}
-              Order #1234
+              Order #{key.slice(-6)}
             {/if}
           </p>
           <div class="content">
@@ -112,9 +136,12 @@
               {spacedName}
             </div>
             <p class="subtitle">
-              <span class="category">SOLID</span>,
-              <span class="category">ELECTRONIC</span>,
-              <span class="category">ORGANISM</span>
+              {#if staticMaterial.category}
+                {#each staticMaterial.category as category, i}
+                  <span class="category">{category}</span
+                  >{#if i < staticMaterial.category.length - 1},{/if}
+                {/each}
+              {/if}
             </p>
           </div>
         </div>
@@ -122,8 +149,10 @@
         <div class="col col-reward">
           <p class="header">Reward</p>
           <div class="content">
-            <div class="center">{order.order.reward}</div>
-            <p class="bugs">$BUGS</p>
+            <div class="center">
+              {order.order.reward}<br />
+              <p class="bugs">$BUGS</p>
+            </div>
           </div>
         </div>
 
@@ -199,6 +228,18 @@
     background: var(--color-grey-dark);
     padding: 1rem;
     gap: 1rem;
+
+    > .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      animation: 5s active ease infinite;
+    }
+
+    &.selected {
+      border: 1px solid var(--color-success);
+    }
 
     &.completed {
       opacity: 0.3;
@@ -313,6 +354,7 @@
 
     &.active {
       border: 1px solid var(--color-success);
+
       .section {
         &.accept {
           button {
@@ -359,59 +401,14 @@
     }
   }
 
-  //   .main {
-  //     height: calc(100% - 30px);
-  //     display: flex;
-  //     justify-content: space-between;
-  //     align-items: center;
-  //     // background: yellow;
+  @keyframes active {
+    0%,
+    100% {
+      background-color: transparent;
+    }
 
-  //     .image {
-  //       height: 100%;
-  //       display: flex;
-  //       justify-content: center;
-  //       align-items: center;
-  //       width: 200px;
-
-  //       img {
-  //         height: 160px;
-  //         width: 160px;
-  //         border: 1px solid var(--foreground);
-  //         // mix-blend-mode: lighten;
-  //       }
-  //     }
-
-  //     .text {
-  //       height: 100%;
-  //       display: flex;
-  //       align-items: center;
-  //       justify-content: space-between;
-  //       width: calc(100% - 180px);
-  //       padding-left: 20px;
-  //       padding-right: 20px;
-
-  //       .goal,
-  //       .reward {
-  //         // font-size: 20px;
-  //         font-family: var(--font-family);
-  //         background: var(--foreground);
-  //         color: var(--background);
-  //         height: 30px;
-  //         line-height: 30px;
-  //         display: inline-block;
-  //         padding-inline: 10px;
-  //       }
-
-  //       .divider {
-  //         margin: 0 5px;
-  //       }
-  //     }
-  //   }
-
-  //   .section {
-  //     &.interaction {
-
-  //     }
-  //   }
-  // }
+    50% {
+      background-color: rgba(146, 250, 59, 0.2);
+    }
+  }
 </style>
