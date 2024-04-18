@@ -8,8 +8,9 @@
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
-  import { playSound } from "@modules/sound"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { working } from "@modules/ui/stores"
+  import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import { players } from "@modules/state/base/stores"
@@ -23,8 +24,6 @@
   export let selected: boolean
 
   const dispatch = createEventDispatcher()
-
-  let working = false
 
   const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
     "_",
@@ -43,25 +42,25 @@
       : ""
 
   async function sendAccept() {
-    working = true
+    $working = true
     playSound("tcm", "listPrint")
     const action = accept(key)
     await waitForCompletion(action)
     playSound("tcm", "bugs")
-    working = false
+    $working = false
   }
 
   async function sendUnaccept() {
-    working = true
+    $working = true
     playSound("tcm", "listPrint")
     const action = unaccept()
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
-    working = false
+    $working = false
   }
 
   const onKeyPress = e => {
-    if (e.key === "Enter" && !working && !active && selected) {
+    if (e.key === "Enter" && !$working && !active && selected) {
       sendAccept()
     }
   }
@@ -83,7 +82,7 @@
 <div
   on:mouseenter
   class="order-item"
-  class:working
+  class:working={$working}
   class:active
   class:completed
   class:selected
@@ -124,7 +123,7 @@
       <div class="top">
         <div class="col col-order">
           <p class="header">
-            {#if working}
+            {#if $working}
               <Spinner />
             {:else}
               Order #{key.slice(-6)}
@@ -158,7 +157,7 @@
 
         <div class="col col-actions">
           <p class="header">
-            {#if working}
+            {#if $working}
               <Spinner />
             {:else if !$player.tutorial && order.order.expirationBlock != 0}
               {blocksToReadableTime(
@@ -190,14 +189,14 @@
 
       <div class="bottom">
         <p class="stumps" class:active={stumps.length > 0}>
-          {#if working}
+          {#if $working}
             <Spinner />
           {:else}
             {stumps.length} stmp{stumps.length !== 1 ? "s" : ""} at work
           {/if}
         </p>
         <p>
-          {#if working}
+          {#if $working}
             <Spinner />
           {:else if order.order.maxPlayers === 0}
             {order?.completed?.length || 0} stmps completed
