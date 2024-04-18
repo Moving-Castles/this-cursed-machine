@@ -168,6 +168,8 @@ contract OrderSystemTest is BaseTest {
 
     world.accept(orderEntity);
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     // Connect depot 0 to inlet
     world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
 
@@ -252,6 +254,8 @@ contract OrderSystemTest is BaseTest {
 
     // Fast forward out of tutorial
     world.graduate();
+
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
 
     world.accept(orderEntity);
 

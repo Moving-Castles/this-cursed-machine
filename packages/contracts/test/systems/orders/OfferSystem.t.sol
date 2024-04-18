@@ -107,6 +107,8 @@ contract OfferSystemTest is BaseTest {
 
     world.graduate();
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     world.buy(offerEntity);
 
     vm.stopPrank();

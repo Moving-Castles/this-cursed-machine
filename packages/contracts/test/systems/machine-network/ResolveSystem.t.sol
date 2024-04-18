@@ -64,6 +64,8 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
@@ -101,6 +103,8 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet 1
@@ -136,6 +140,8 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
@@ -167,6 +173,8 @@ contract ResolveSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
+
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
 
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
@@ -206,6 +214,8 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
     // Connect depot 0 to inlet
@@ -237,6 +247,8 @@ contract ResolveSystemTest is BaseTest {
     setUp();
 
     vm.startPrank(alice);
+
+    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
 
     uint32 initialInletAmount = Amount.get(depotsInPod[0]);
 
