@@ -131,7 +131,7 @@
     line-height: 1.2em;
     color: var(--foreground);
     text-align: left;
-    border: 5px double var(--color-tutorial);
+    border: 2px dashed var(--color-tutorial);
     color: var(--color-tutorial);
     position: relative;
     user-select: none;
