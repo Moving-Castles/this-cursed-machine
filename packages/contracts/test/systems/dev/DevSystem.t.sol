@@ -11,8 +11,9 @@ import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.s
 import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
 import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
+import { ONE_TOKEN_UNIT } from "../../../src/constants.sol";
 
-contract SpawnSystemTest is BaseTest {
+contract DevSystemTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
 
   function testReward() public {
@@ -27,7 +28,7 @@ contract SpawnSystemTest is BaseTest {
     vm.stopPrank();
 
     assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000);
+    assertEq(Balances.get(tableId, alice), 1000 * ONE_TOKEN_UNIT);
   }
 
   function testCharge() public {
@@ -41,12 +42,12 @@ contract SpawnSystemTest is BaseTest {
     world.reward();
 
     assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000);
+    assertEq(Balances.get(tableId, alice), 1000 * ONE_TOKEN_UNIT);
 
     world.charge();
 
-    assertEq(Balances.get(tableId, worldAddress), 100);
-    assertEq(Balances.get(tableId, alice), 900);
+    assertEq(Balances.get(tableId, worldAddress), 100 * ONE_TOKEN_UNIT);
+    assertEq(Balances.get(tableId, alice), 900 * ONE_TOKEN_UNIT);
 
     vm.stopPrank();
   }
@@ -62,7 +63,7 @@ contract SpawnSystemTest is BaseTest {
     world.graduate();
 
     assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 10000);
+    assertEq(Balances.get(tableId, alice), 10000 * ONE_TOKEN_UNIT);
 
     vm.stopPrank();
   }

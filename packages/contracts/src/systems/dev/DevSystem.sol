@@ -4,6 +4,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, CarriedBy, Amount, MaterialType, Tutorial, Name } from "../../codegen/index.sol";
 import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
+import { ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
@@ -21,7 +22,7 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    LibToken.mint(_msgSender(), 10000);
+    LibToken.mint(_msgSender(), 10000 * ONE_TOKEN_UNIT);
   }
 
   /**
@@ -38,7 +39,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    LibToken.mint(_msgSender(), 1000);
+    LibToken.mint(_msgSender(), 1000 * ONE_TOKEN_UNIT);
   }
 
   /**
@@ -46,7 +47,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function charge() public {
-    require(LibToken.getTokenBalance(_msgSender()) >= 100, "insufficient balance");
-    LibToken.transferToken(_world(), 100);
+    require(LibToken.getTokenBalance(_msgSender()) >= 100 * ONE_TOKEN_UNIT, "insufficient balance");
+    LibToken.transferToken(_world(), 100 * ONE_TOKEN_UNIT);
   }
 }
