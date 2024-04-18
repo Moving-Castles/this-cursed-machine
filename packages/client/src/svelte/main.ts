@@ -32,9 +32,10 @@ mountAccountKit({
     worldAddress: networkConfig.worldAddress,
     // TODO: add gasTank to MUDChain contracts
     // TODO: allow gasTankAddress to be undefined
-    gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
+    // gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
+    gasTankAddress: "0x932c23946aba851829553ddd5e22d68b57a81f0d",
     appInfo: {
-      name: "Get Shit Done",
+      name: "This Cursed Machine",
     },
   },
 });
