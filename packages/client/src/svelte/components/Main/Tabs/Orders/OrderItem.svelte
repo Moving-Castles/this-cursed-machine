@@ -11,6 +11,7 @@
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
+  import { players } from "@modules/state/base/stores"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -20,6 +21,11 @@
   export let completed: boolean
 
   let working = false
+
+  const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
+    "_",
+    " "
+  )
 
   const PULSE_CONDITIONS = [2, 8, 16]
 
@@ -49,6 +55,10 @@
     playSound("tcm", "TRX_yes")
     working = false
   }
+
+  $: stumps = Object.entries($players).filter(([_, p]) => {
+    return p.currentOrder === key
+  })
 </script>
 
 <div
@@ -59,63 +69,114 @@
   transition:fade
 >
   {#if order?.order}
-    <div class="title">
-      <div>
-        {#if working}
-          <Spinner />
-        {:else}
-          {order.order.title}
-        {/if}
-      </div>
-
-      <div>
-        <!-- {#if Number(order.order.expirationBlock) > 0} -->
-        {#if working}
-          <Spinner />
-        {:else if !$player.tutorial}
-          {blocksToReadableTime(
-            Number(order.order.expirationBlock) - Number($blockNumber)
-          )}
-        {/if}
-        <!-- {/if} -->
-      </div>
+    <div class="material">
+      {#if imageURL}
+        <img
+          class="overlay"
+          src="/images/tcm2.png"
+          alt="PROPERTY OF TCM CORP"
+        />
+        <img
+          class="material-image"
+          crossorigin="anonymous"
+          src={imageURL}
+          alt="{spacedName} SPECIMEN"
+        />
+      {:else}
+        <img
+          class="overlay"
+          src="/images/tcm2.png"
+          alt="PROPERTY OF TCM CORP"
+        />
+        <span class="specimen">
+          MISSING<br />
+          {spacedName}<br />
+          SPECIMEN
+        </span>
+      {/if}
     </div>
 
-    <div class="main">
-      <div class="image">
-        <img crossorigin="anonymous" src={imageURL} alt="material" />
+    <div class="inner">
+      <div class="top">
+        <div class="col col-order">
+          <p class="header">
+            {#if working}
+              <Spinner />
+            {:else}
+              Order #1234
+            {/if}
+          </p>
+          <div class="content">
+            <div class="center">
+              {order.order.amount / UI_SCALE_FACTOR}
+              {spacedName}
+            </div>
+            <p class="subtitle">
+              <span class="category">SOLID</span>,
+              <span class="category">ELECTRONIC</span>,
+              <span class="category">ORGANISM</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col col-reward">
+          <p class="header">Reward</p>
+          <div class="content">
+            <div class="center">{order.order.reward}</div>
+            <p class="bugs">$BUGS</p>
+          </div>
+        </div>
+
+        <div class="col col-actions">
+          <p class="header">
+            {#if working}
+              <Spinner />
+            {:else if !$player.tutorial && order.order.expirationBlock != 0}
+              {blocksToReadableTime(
+                Number(order.order.expirationBlock) - Number($blockNumber)
+              )}
+            {:else}
+              \
+            {/if}
+          </p>
+          <div class="content">
+            <div class="center">
+              {#if active}
+                <button class="cancel" on:click={() => sendUnaccept()}
+                  >Cancel</button
+                >
+              {:else}
+                <button
+                  class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
+                  class="accept"
+                  on:click={() => sendAccept()}
+                >
+                  Accept
+                </button>
+              {/if}
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="text">
-        <div>
+
+      <div class="bottom">
+        <p class="stumps" class:active={stumps.length > 0}>
           {#if working}
             <Spinner />
           {:else}
-            <span class="goal">
-              {order.order.amount / UI_SCALE_FACTOR}
-              {MATERIAL_TYPE[order.order.materialType]}
-            </span>
-            <span class="divider">→</span>
-            <span class="reward">
-              {order.order.reward} $BUGS
-            </span>
+            {stumps.length} stmp{stumps.length !== 1 ? "s" : ""} at work
           {/if}
-        </div>
-
-        <div class="section interaction">
-          {#if active}
-            <button class="cancel" on:click={() => sendUnaccept()}
-              >Cancel</button
-            >
+        </p>
+        <p>
+          {#if working}
+            <Spinner />
+          {:else if order.order.maxPlayers === 0}
+            {order?.completed?.length || 0} stmps completed
           {:else}
-            <button
-              class:pulse={PULSE_CONDITIONS.includes($tutorialProgress)}
-              class="accept"
-              on:click={() => sendAccept()}
-            >
-              Accept
-            </button>
+            {order.order.maxPlayers - (order?.completed?.length || 0)}/50
+            available
           {/if}
-        </div>
+        </p>
       </div>
     </div>
   {/if}
@@ -130,13 +191,124 @@
     border-left: 1px solid var(--color-grey-dark);
     backdrop-filter: blur(5px);
     display: flex;
-    flex-direction: column;
-    height: 240px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    height: auto;
     margin-bottom: 20px;
     background: var(--color-grey-dark);
+    padding: 1rem;
+    gap: 1rem;
+
+    &.completed {
+      opacity: 0.3;
+    }
 
     &.working {
       pointer-events: none;
+    }
+    .material {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      border: 1px solid var(--color-white);
+      font-size: var(--font-size-small);
+      position: relative;
+      border: 1px solid var(--foreground);
+
+      .material-image,
+      .overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+      }
+
+      .overlay {
+        z-index: var(--z-10);
+      }
+      // transform: rotate(-45deg);
+
+      .specimen {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        transform: translate(-50%, -50%) rotate(45deg);
+        z-index: 0;
+        color: var(--color-failure);
+      }
+    }
+
+    .inner {
+      width: 100%;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+
+      .top {
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+
+        .col {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: space-between;
+          height: 100%;
+
+          &.col-order {
+            width: 200px;
+          }
+
+          &.col-actions {
+            align-items: flex-end;
+          }
+
+          .header {
+            font-size: var(--font-size-small);
+            margin-top: 0.2rem;
+            margin-bottom: 2rem;
+          }
+
+          .content {
+            height: 100%;
+
+            .center {
+              margin-bottom: 1rem;
+              font-size: var(--font-size-large);
+              height: calc(var(--font-size-large) * 4);
+              // color: white;
+            }
+          }
+
+          .category {
+            text-decoration: underline;
+          }
+
+          .bugs,
+          .subtitle {
+            font-size: var(--font-size-small);
+          }
+
+          .bugs {
+            color: var(--color-success);
+          }
+        }
+      }
+
+      .bottom {
+        display: flex;
+        font-size: var(--font-size-small);
+        justify-content: space-between;
+
+        .stumps {
+          &.active {
+            color: var(--color-success);
+          }
+        }
+      }
     }
 
     &.active {
@@ -162,84 +334,84 @@
       justify-content: space-between;
       color: var(--color-grey-light);
     }
+  }
 
-    .main {
-      height: calc(100% - 30px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      // background: yellow;
+  button {
+    background: var(--color-grey-mid);
+    border: 0;
+    height: 30px;
+    font-family: var(--font-family);
+    font-size: var(--font-size-large);
+    padding: 0;
+    padding-inline: 20px;
 
-      .image {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 200px;
-
-        img {
-          height: 160px;
-          width: 160px;
-          border: 1px solid var(--foreground);
-          // mix-blend-mode: lighten;
-        }
-      }
-
-      .text {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: calc(100% - 180px);
-        padding-left: 20px;
-        padding-right: 20px;
-
-        .goal,
-        .reward {
-          // font-size: 20px;
-          font-family: var(--font-family);
-          background: var(--foreground);
-          color: var(--background);
-          height: 30px;
-          line-height: 30px;
-          display: inline-block;
-          padding-inline: 10px;
-        }
-
-        .divider {
-          margin: 0 5px;
-        }
-      }
+    &.accept {
+      background: var(--color-success);
     }
 
-    &.completed {
-      opacity: 0.3;
+    &.cancel {
+      background: var(--color-grey-light);
     }
 
-    .section {
-      &.interaction {
-        button {
-          background: var(--color-grey-mid);
-          border: 0;
-          height: 30px;
-          font-family: var(--font-family);
-          padding: 0;
-          padding-inline: 20px;
-
-          &.accept {
-            background: var(--color-success);
-          }
-
-          &.cancel {
-            background: var(--color-grey-light);
-          }
-
-          &:hover {
-            opacity: 0.8;
-            cursor: pointer;
-          }
-        }
-      }
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
     }
   }
+
+  //   .main {
+  //     height: calc(100% - 30px);
+  //     display: flex;
+  //     justify-content: space-between;
+  //     align-items: center;
+  //     // background: yellow;
+
+  //     .image {
+  //       height: 100%;
+  //       display: flex;
+  //       justify-content: center;
+  //       align-items: center;
+  //       width: 200px;
+
+  //       img {
+  //         height: 160px;
+  //         width: 160px;
+  //         border: 1px solid var(--foreground);
+  //         // mix-blend-mode: lighten;
+  //       }
+  //     }
+
+  //     .text {
+  //       height: 100%;
+  //       display: flex;
+  //       align-items: center;
+  //       justify-content: space-between;
+  //       width: calc(100% - 180px);
+  //       padding-left: 20px;
+  //       padding-right: 20px;
+
+  //       .goal,
+  //       .reward {
+  //         // font-size: 20px;
+  //         font-family: var(--font-family);
+  //         background: var(--foreground);
+  //         color: var(--background);
+  //         height: 30px;
+  //         line-height: 30px;
+  //         display: inline-block;
+  //         padding-inline: 10px;
+  //       }
+
+  //       .divider {
+  //         margin: 0 5px;
+  //       }
+  //     }
+  //   }
+
+  //   .section {
+  //     &.interaction {
+
+  //     }
+  //   }
+  // }
 </style>
