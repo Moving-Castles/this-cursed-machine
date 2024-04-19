@@ -38,6 +38,8 @@ export function createSelectOptions(
   direction: DIRECTION = DIRECTION.OUTGOING
 ): SelectOption[] {
   switch (commandType) {
+    case COMMAND.WIPE:
+      return createSelectOptionsWipe()
     case COMMAND.BUILD:
       return createSelectOptionsBuild()
     case COMMAND.DESTROY:
@@ -59,6 +61,10 @@ export function createSelectOptions(
     default:
       return [] as SelectOption[]
   }
+}
+
+function createSelectOptionsWipe(): SelectOption[] {
+  return [{ label: "CONFIRM", value: "true", available: true }]
 }
 
 /**
