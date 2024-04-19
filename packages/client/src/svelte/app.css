@@ -113,7 +113,7 @@ pre {
     filter: contrast(100%) grayscale(0%) brightness(100%);
   }
   100% {
-    filter: contrast(50%) grayscale(100%) brightness(30%)
+    filter: contrast(50%) grayscale(100%) brightness(70%)
       drop-shadow(0px 0px 2px var(--black));
   }
 }

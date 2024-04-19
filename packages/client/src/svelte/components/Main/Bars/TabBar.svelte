@@ -48,7 +48,6 @@
     {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
       <div class="button-container">
         <button
-          tabIndex={key}
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           class:enabled={value.enabled}
           class:active={Number(key) === $activeTab}
