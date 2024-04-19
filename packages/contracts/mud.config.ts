@@ -35,8 +35,7 @@ export default defineWorld({
             schema: {
                 materialId: "MaterialId",
                 tokenAddress: "address",
-                difficultyCoefficientNumerator: "uint32", // Difficulty coefficient = numerator / denominator
-                difficultyCoefficientDenominator: "uint32", // Coefficient multiplies rewards for orders of the material
+                difficultyCoefficient: "uint32[2]", // Multiplies rewards for orders of the material, consists of numerator and denominator
             }
         },
         EntityType: "ENTITY_TYPE",

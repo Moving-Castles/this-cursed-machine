@@ -27,8 +27,7 @@ library LibMaterial {
     MaterialId _materialId,
     string memory _name,
     string memory _symbol,
-    uint32 _difficultyCoefficientNumerator,
-    uint32 _difficultyCoefficientDenominator
+    uint32[2] memory _difficultyCoefficient
   ) internal {
     IBaseWorld world = IBaseWorld(WorldContextConsumerLib._world());
 
@@ -46,11 +45,7 @@ library LibMaterial {
     // Set other material metadata
     MaterialMetadata.set(
       _materialId,
-      MaterialMetadataData({
-        tokenAddress: address(token),
-        difficultyCoefficientNumerator: _difficultyCoefficientNumerator,
-        difficultyCoefficientDenominator: _difficultyCoefficientDenominator
-      })
+      MaterialMetadataData({ tokenAddress: address(token), difficultyCoefficient: _difficultyCoefficient })
     );
   }
 

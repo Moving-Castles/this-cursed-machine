@@ -16,3 +16,30 @@ uint32 constant FLOW_RATE = 1000;
 uint32 constant POD_MACHINE_CAPACITY = 14;
 uint32 constant NUMBER_OF_TANKS = 3;
 uint32 constant TANK_CAPACITY = 50000;
+
+library OrderDifficulty {
+  // None (1:1 conversion), for trivial materials that aren't meant to be ordered
+  function NONE() internal pure returns (uint32[2] memory) {
+    return [uint32(1), 1];
+  }
+
+  // Easy (1:1.2 conversion)
+  function EASY() internal pure returns (uint32[2] memory) {
+    return [uint32(12), 10];
+  }
+
+  // Intermediate (1:1.5 conversion)
+  function INTERMEDIATE() internal pure returns (uint32[2] memory) {
+    return [uint32(15), 10];
+  }
+
+  // Medium (1:2 conversion)
+  function MEDIUM() internal pure returns (uint32[2] memory) {
+    return [uint32(20), 10];
+  }
+
+  // Hard (1:3 conversion)
+  function HARD() internal pure returns (uint32[2] memory) {
+    return [uint32(30), 10];
+  }
+}

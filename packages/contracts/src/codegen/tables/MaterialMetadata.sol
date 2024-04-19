@@ -21,8 +21,7 @@ import { MaterialId } from "./../../libraries/LibMaterial.sol";
 
 struct MaterialMetadataData {
   address tokenAddress;
-  uint32 difficultyCoefficientNumerator;
-  uint32 difficultyCoefficientDenominator;
+  uint32[2] difficultyCoefficient;
 }
 
 library MaterialMetadata {
@@ -30,12 +29,12 @@ library MaterialMetadata {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d6174657269616c4d65746164617461);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x001c030014040400000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0014010114000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes14)
   Schema constant _keySchema = Schema.wrap(0x000e01004d000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x001c030061030300000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, uint32[])
+  Schema constant _valueSchema = Schema.wrap(0x0014010161650000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -51,10 +50,9 @@ library MaterialMetadata {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
+    fieldNames = new string[](2);
     fieldNames[0] = "tokenAddress";
-    fieldNames[1] = "difficultyCoefficientNumerator";
-    fieldNames[2] = "difficultyCoefficientDenominator";
+    fieldNames[1] = "difficultyCoefficient";
   }
 
   /**
@@ -114,119 +112,132 @@ library MaterialMetadata {
   }
 
   /**
-   * @notice Get difficultyCoefficientNumerator.
+   * @notice Get difficultyCoefficient.
    */
-  function getDifficultyCoefficientNumerator(
+  function getDifficultyCoefficient(
     MaterialId materialId
-  ) internal view returns (uint32 difficultyCoefficientNumerator) {
+  ) internal view returns (uint32[2] memory difficultyCoefficient) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
+    return toStaticArray_uint32_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /**
-   * @notice Get difficultyCoefficientNumerator.
+   * @notice Get difficultyCoefficient.
    */
-  function _getDifficultyCoefficientNumerator(
+  function _getDifficultyCoefficient(
     MaterialId materialId
-  ) internal view returns (uint32 difficultyCoefficientNumerator) {
+  ) internal view returns (uint32[2] memory difficultyCoefficient) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
+    return toStaticArray_uint32_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /**
-   * @notice Set difficultyCoefficientNumerator.
+   * @notice Set difficultyCoefficient.
    */
-  function setDifficultyCoefficientNumerator(MaterialId materialId, uint32 difficultyCoefficientNumerator) internal {
+  function setDifficultyCoefficient(MaterialId materialId, uint32[2] memory difficultyCoefficient) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    StoreSwitch.setStaticField(
+    StoreSwitch.setDynamicField(
       _tableId,
       _keyTuple,
-      1,
-      abi.encodePacked((difficultyCoefficientNumerator)),
-      _fieldLayout
+      0,
+      EncodeArray.encode(fromStaticArray_uint32_2(difficultyCoefficient))
     );
   }
 
   /**
-   * @notice Set difficultyCoefficientNumerator.
+   * @notice Set difficultyCoefficient.
    */
-  function _setDifficultyCoefficientNumerator(MaterialId materialId, uint32 difficultyCoefficientNumerator) internal {
+  function _setDifficultyCoefficient(MaterialId materialId, uint32[2] memory difficultyCoefficient) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((difficultyCoefficientNumerator)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get difficultyCoefficientDenominator.
-   */
-  function getDifficultyCoefficientDenominator(
-    MaterialId materialId
-  ) internal view returns (uint32 difficultyCoefficientDenominator) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get difficultyCoefficientDenominator.
-   */
-  function _getDifficultyCoefficientDenominator(
-    MaterialId materialId
-  ) internal view returns (uint32 difficultyCoefficientDenominator) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set difficultyCoefficientDenominator.
-   */
-  function setDifficultyCoefficientDenominator(
-    MaterialId materialId,
-    uint32 difficultyCoefficientDenominator
-  ) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
-
-    StoreSwitch.setStaticField(
+    StoreCore.setDynamicField(
       _tableId,
       _keyTuple,
-      2,
-      abi.encodePacked((difficultyCoefficientDenominator)),
-      _fieldLayout
+      0,
+      EncodeArray.encode(fromStaticArray_uint32_2(difficultyCoefficient))
     );
   }
 
+  // The length of difficultyCoefficient
+  uint256 constant lengthDifficultyCoefficient = 2;
+
   /**
-   * @notice Set difficultyCoefficientDenominator.
+   * @notice Get an item of difficultyCoefficient.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _setDifficultyCoefficientDenominator(
-    MaterialId materialId,
-    uint32 difficultyCoefficientDenominator
-  ) internal {
+  function getItemDifficultyCoefficient(MaterialId materialId, uint256 _index) internal view returns (uint32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    StoreCore.setStaticField(
-      _tableId,
-      _keyTuple,
-      2,
-      abi.encodePacked((difficultyCoefficientDenominator)),
-      _fieldLayout
-    );
+    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 4;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint32(bytes4(new bytes(0))));
+    }
+
+    unchecked {
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      return (uint32(bytes4(_blob)));
+    }
+  }
+
+  /**
+   * @notice Get an item of difficultyCoefficient.
+   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
+   */
+  function _getItemDifficultyCoefficient(MaterialId materialId, uint256 _index) internal view returns (uint32) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
+    uint256 dynamicLength = _byteLength / 4;
+    uint256 staticLength = 2;
+
+    if (_index < staticLength && _index >= dynamicLength) {
+      return (uint32(bytes4(new bytes(0))));
+    }
+
+    unchecked {
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 4, (_index + 1) * 4);
+      return (uint32(bytes4(_blob)));
+    }
+  }
+
+  /**
+   * @notice Update an element of difficultyCoefficient at `_index`.
+   */
+  function updateDifficultyCoefficient(MaterialId materialId, uint256 _index, uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of difficultyCoefficient at `_index`.
+   */
+  function _updateDifficultyCoefficient(MaterialId materialId, uint256 _index, uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 4), uint40(_encoded.length), _encoded);
+    }
   }
 
   /**
@@ -262,20 +273,11 @@ library MaterialMetadata {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(
-    MaterialId materialId,
-    address tokenAddress,
-    uint32 difficultyCoefficientNumerator,
-    uint32 difficultyCoefficientDenominator
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      tokenAddress,
-      difficultyCoefficientNumerator,
-      difficultyCoefficientDenominator
-    );
+  function set(MaterialId materialId, address tokenAddress, uint32[2] memory difficultyCoefficient) internal {
+    bytes memory _staticData = encodeStatic(tokenAddress);
 
-    EncodedLengths _encodedLengths;
-    bytes memory _dynamicData;
+    EncodedLengths _encodedLengths = encodeLengths(difficultyCoefficient);
+    bytes memory _dynamicData = encodeDynamic(difficultyCoefficient);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
@@ -286,20 +288,11 @@ library MaterialMetadata {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(
-    MaterialId materialId,
-    address tokenAddress,
-    uint32 difficultyCoefficientNumerator,
-    uint32 difficultyCoefficientDenominator
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      tokenAddress,
-      difficultyCoefficientNumerator,
-      difficultyCoefficientDenominator
-    );
+  function _set(MaterialId materialId, address tokenAddress, uint32[2] memory difficultyCoefficient) internal {
+    bytes memory _staticData = encodeStatic(tokenAddress);
 
-    EncodedLengths _encodedLengths;
-    bytes memory _dynamicData;
+    EncodedLengths _encodedLengths = encodeLengths(difficultyCoefficient);
+    bytes memory _dynamicData = encodeDynamic(difficultyCoefficient);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
@@ -311,14 +304,10 @@ library MaterialMetadata {
    * @notice Set the full data using the data struct.
    */
   function set(MaterialId materialId, MaterialMetadataData memory _table) internal {
-    bytes memory _staticData = encodeStatic(
-      _table.tokenAddress,
-      _table.difficultyCoefficientNumerator,
-      _table.difficultyCoefficientDenominator
-    );
+    bytes memory _staticData = encodeStatic(_table.tokenAddress);
 
-    EncodedLengths _encodedLengths;
-    bytes memory _dynamicData;
+    EncodedLengths _encodedLengths = encodeLengths(_table.difficultyCoefficient);
+    bytes memory _dynamicData = encodeDynamic(_table.difficultyCoefficient);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
@@ -330,14 +319,10 @@ library MaterialMetadata {
    * @notice Set the full data using the data struct.
    */
   function _set(MaterialId materialId, MaterialMetadataData memory _table) internal {
-    bytes memory _staticData = encodeStatic(
-      _table.tokenAddress,
-      _table.difficultyCoefficientNumerator,
-      _table.difficultyCoefficientDenominator
-    );
+    bytes memory _staticData = encodeStatic(_table.tokenAddress);
 
-    EncodedLengths _encodedLengths;
-    bytes memory _dynamicData;
+    EncodedLengths _encodedLengths = encodeLengths(_table.difficultyCoefficient);
+    bytes memory _dynamicData = encodeDynamic(_table.difficultyCoefficient);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
@@ -348,36 +333,39 @@ library MaterialMetadata {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(
-    bytes memory _blob
-  )
-    internal
-    pure
-    returns (address tokenAddress, uint32 difficultyCoefficientNumerator, uint32 difficultyCoefficientDenominator)
-  {
+  function decodeStatic(bytes memory _blob) internal pure returns (address tokenAddress) {
     tokenAddress = (address(Bytes.getBytes20(_blob, 0)));
+  }
 
-    difficultyCoefficientNumerator = (uint32(Bytes.getBytes4(_blob, 20)));
-
-    difficultyCoefficientDenominator = (uint32(Bytes.getBytes4(_blob, 24)));
+  /**
+   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
+   */
+  function decodeDynamic(
+    EncodedLengths _encodedLengths,
+    bytes memory _blob
+  ) internal pure returns (uint32[2] memory difficultyCoefficient) {
+    uint256 _start;
+    uint256 _end;
+    unchecked {
+      _end = _encodedLengths.atIndex(0);
+    }
+    difficultyCoefficient = toStaticArray_uint32_2(SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
   }
 
   /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   *
-   *
+   * @param _encodedLengths Encoded lengths of dynamic fields.
+   * @param _dynamicData Tightly packed dynamic fields.
    */
   function decode(
     bytes memory _staticData,
-    EncodedLengths,
-    bytes memory
+    EncodedLengths _encodedLengths,
+    bytes memory _dynamicData
   ) internal pure returns (MaterialMetadataData memory _table) {
-    (
-      _table.tokenAddress,
-      _table.difficultyCoefficientNumerator,
-      _table.difficultyCoefficientDenominator
-    ) = decodeStatic(_staticData);
+    (_table.tokenAddress) = decodeStatic(_staticData);
+
+    (_table.difficultyCoefficient) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -404,12 +392,29 @@ library MaterialMetadata {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(
-    address tokenAddress,
-    uint32 difficultyCoefficientNumerator,
-    uint32 difficultyCoefficientDenominator
-  ) internal pure returns (bytes memory) {
-    return abi.encodePacked(tokenAddress, difficultyCoefficientNumerator, difficultyCoefficientDenominator);
+  function encodeStatic(address tokenAddress) internal pure returns (bytes memory) {
+    return abi.encodePacked(tokenAddress);
+  }
+
+  /**
+   * @notice Tightly pack dynamic data lengths using this table's schema.
+   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
+   */
+  function encodeLengths(
+    uint32[2] memory difficultyCoefficient
+  ) internal pure returns (EncodedLengths _encodedLengths) {
+    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
+    unchecked {
+      _encodedLengths = EncodedLengthsLib.pack(difficultyCoefficient.length * 4);
+    }
+  }
+
+  /**
+   * @notice Tightly pack dynamic (variable length) data using this table's schema.
+   * @return The dynamic data, encoded into a sequence of bytes.
+   */
+  function encodeDynamic(uint32[2] memory difficultyCoefficient) internal pure returns (bytes memory) {
+    return abi.encodePacked(EncodeArray.encode(fromStaticArray_uint32_2(difficultyCoefficient)));
   }
 
   /**
@@ -420,17 +425,12 @@ library MaterialMetadata {
    */
   function encode(
     address tokenAddress,
-    uint32 difficultyCoefficientNumerator,
-    uint32 difficultyCoefficientDenominator
+    uint32[2] memory difficultyCoefficient
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(
-      tokenAddress,
-      difficultyCoefficientNumerator,
-      difficultyCoefficientDenominator
-    );
+    bytes memory _staticData = encodeStatic(tokenAddress);
 
-    EncodedLengths _encodedLengths;
-    bytes memory _dynamicData;
+    EncodedLengths _encodedLengths = encodeLengths(difficultyCoefficient);
+    bytes memory _dynamicData = encodeDynamic(difficultyCoefficient);
 
     return (_staticData, _encodedLengths, _dynamicData);
   }
@@ -444,4 +444,43 @@ library MaterialMetadata {
 
     return _keyTuple;
   }
+}
+
+/**
+ * @notice Cast a dynamic array to a static array.
+ * @dev In memory static arrays are just dynamic arrays without the 32 length bytes,
+ * so this function moves the pointer to the first element of the dynamic array.
+ * If the length of the dynamic array is smaller than the static length,
+ * the function returns an uninitialized array to avoid memory corruption.
+ * @param _value The dynamic array to cast.
+ * @return _result The static array.
+ */
+function toStaticArray_uint32_2(uint32[] memory _value) pure returns (uint32[2] memory _result) {
+  if (_value.length < 2) {
+    // return an uninitialized array if the length is smaller than the fixed length to avoid memory corruption
+    return _result;
+  } else {
+    // in memory static arrays are just dynamic arrays without the 32 length bytes
+    // (without the length check this could lead to memory corruption)
+    assembly {
+      _result := add(_value, 0x20)
+    }
+  }
+}
+
+/**
+ * @notice Copy a static array to a dynamic array.
+ * @dev Static arrays don't have a length prefix, so this function copies the memory from the static array to a new dynamic array.
+ * @param _value The static array to copy.
+ * @return _result The dynamic array.
+ */
+function fromStaticArray_uint32_2(uint32[2] memory _value) pure returns (uint32[] memory _result) {
+  _result = new uint32[](2);
+  uint256 fromPointer;
+  uint256 toPointer;
+  assembly {
+    fromPointer := _value
+    toPointer := add(_result, 0x20)
+  }
+  Memory.copy(fromPointer, toPointer, 64);
 }

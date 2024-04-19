@@ -35,8 +35,8 @@ contract PostDeploy is Script {
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
     world.installModule(new PuppetModule(), new bytes(0));
 
-    // Register the BUG token
-    LibMaterial.registerMaterial(PublicMaterials.BUG, "BUG", "BUG", 1, 1);
+    // Register public materials
+    PublicMaterials.init();
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
