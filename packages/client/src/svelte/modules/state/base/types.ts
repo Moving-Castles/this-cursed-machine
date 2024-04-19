@@ -23,6 +23,7 @@ declare global {
     order?: OrderData
     offer?: OfferData
     completed?: string[]
+    producedMaterials?: MATERIAL_TYPE[]
     lastResolved?: number
     input?: number
     output?: MATERIAL_TYPE
@@ -101,7 +102,8 @@ declare global {
     nonTransferableBalance?: number // During tutorial we give players a non-transferable token substitute
     tokenBalances?: number
     tutorial: boolean,
-    completed: string[] // Orders completed by player
+    completed?: string[] // Orders completed by player
+    producedMaterials?: MATERIAL_TYPE[]
   }
 
   type Machine = {

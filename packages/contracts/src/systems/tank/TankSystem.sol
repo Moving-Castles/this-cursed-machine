@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, MaterialType, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork, LibToken } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
@@ -117,6 +117,16 @@ contract TankSystem is System {
     MaterialType.set(_tankEntity, MATERIAL_TYPE.NONE);
     Amount.set(_tankEntity, 0);
 
+    // On order: add player to completed list
+    Completed.push(currentOrderId, playerEntity);
+    // On player: add order to completed list
+    Completed.push(playerEntity, currentOrderId);
+
+    // Add material to list of materials produced by player if it is not already there
+    if (!LibUtils.arrayIncludes(ProducedMaterials.get(playerEntity), uint8(currentOrder.materialType))) {
+      ProducedMaterials.push(playerEntity, uint8(currentOrder.materialType));
+    }
+
     /*//////////////////////////////////////////////////////////////
                             IN TUTORIAL
     //////////////////////////////////////////////////////////////*/
@@ -153,11 +163,6 @@ contract TankSystem is System {
     /*//////////////////////////////////////////////////////////////
                            IN MAIN GAME
     //////////////////////////////////////////////////////////////*/
-
-    // On order: add player to completed list
-    Completed.push(currentOrderId, playerEntity);
-    // On player: add order to completed list
-    Completed.push(playerEntity, currentOrderId);
 
     // Reward player in real tokens
     LibToken.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);

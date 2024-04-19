@@ -19,6 +19,7 @@ import { NonTransferableBalance } from "./tables/NonTransferableBalance.sol";
 import { Order, OrderData } from "./tables/Order.sol";
 import { Offer, OfferData } from "./tables/Offer.sol";
 import { Completed } from "./tables/Completed.sol";
+import { ProducedMaterials } from "./tables/ProducedMaterials.sol";
 import { LastResolved } from "./tables/LastResolved.sol";
 import { IncomingConnections } from "./tables/IncomingConnections.sol";
 import { OutgoingConnections } from "./tables/OutgoingConnections.sol";
