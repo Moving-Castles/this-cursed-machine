@@ -21,7 +21,7 @@
     (Math.round(depot.amount / UI_SCALE_FACTOR) /
       (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
       100,
-    { easing: bounceOut },
+    { easing: bounceOut }
   )
 
   const amount = tweened(Math.round(depot.amount / UI_SCALE_FACTOR))
@@ -46,6 +46,7 @@
 
   // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
 
   $: $progress =
     (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
@@ -67,6 +68,7 @@
   class="depot-item"
   class:shippable={canShip}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
 >
   <div class="depot-progress" style:height="{$progress}%"></div>
   {#if shipping}

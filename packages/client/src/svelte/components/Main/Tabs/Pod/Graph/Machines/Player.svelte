@@ -17,8 +17,8 @@
   let selectedPortIndex = -1
 
   $: producing = machine?.products && machine?.products.length > 0
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
   $: {
     if ($selectedParameters) {
       if ($selectedParameters.includes(address)) {
@@ -64,6 +64,7 @@
   class="player"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade

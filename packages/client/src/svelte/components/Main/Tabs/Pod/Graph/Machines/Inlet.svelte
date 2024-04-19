@@ -5,7 +5,7 @@
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { selectedParameters, selectedOption } from "@modules/ui/stores"
+  import { selectedOption } from "@modules/ui/stores"
 
   export let address: string
   export let machine: GraphMachine
@@ -14,8 +14,8 @@
   // $: label = `I${machine.buildIndex ?? ""}`
   $: label = "→"
   $: connected = machine.depotConnection !== EMPTY_CONNECTION
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
 
   function makePorts() {
     return [
@@ -34,6 +34,7 @@
   class="inlet"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
   in:fade
   class:connected
   {style}

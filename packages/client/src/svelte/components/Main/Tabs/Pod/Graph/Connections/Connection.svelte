@@ -23,6 +23,7 @@
   $: highlight = $selectedOption
     ? $selectedOption.value === connection.id
     : false
+  $: disabledHighlight = highlight && $selectedOption?.available === false
 
   const onMouseEnter = () => {
     // if (!carrying) return
@@ -36,7 +37,7 @@
   }
 
   $: d = generators[activeCurve](
-    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT),
+    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
   )
 
   const drawInStart = async () => {
@@ -50,7 +51,6 @@
     showLabel = false
     playSound("tcm", "selectionEnter")
   }
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -59,6 +59,7 @@
   class:hover
   class:carrying
   class:highlight
+  class:disabled-highlight={disabledHighlight}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
@@ -74,19 +75,18 @@
     on:outrostart={drawOutStart}
     fill="none"
   />
-    <Label
-      {hover}
-      {connection}
-      visible={showLabel}
-      {pathElement}
-      productive={connection.productive}
-      {carrying}
-    />
+  <Label
+    {hover}
+    {connection}
+    visible={showLabel}
+    {pathElement}
+    productive={connection.productive}
+    {carrying}
+  />
 </g>
 
 <style lang="scss">
   g {
-  
     &.hover {
       opacity: 1;
     }

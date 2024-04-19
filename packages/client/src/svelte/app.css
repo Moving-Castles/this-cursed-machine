@@ -90,18 +90,31 @@ pre {
 .machine:hover,
 .connection:hover,
 .depot-item:hover,
-.highlight {
+.highlight:not(.disabled-highlight) {
   animation: filterin 0.1s ease forwards;
+}
+
+.disabled-highlight {
+  animation: filterdisabledin 0.1s ease forwards;
 }
 
 @keyframes filterin {
   0% {
-    filter: contrast(100%) grayscale(0%) brightness(100%)
-      drop-shadow(0px 0px 0px #ffffff);
+    filter: contrast(100%) grayscale(0%) brightness(100%);
   }
   100% {
-    filter: contrast(50%) grayscale(100%) brightness(180%)
-      drop-shadow(0px 0px 2px #ffffff);
+    filter: contrast(50%) grayscale(100%) brightness(130%)
+      drop-shadow(0px 0px 2px var(--white)) contrast(300%);
+  }
+}
+
+@keyframes filterdisabledin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(30%)
+      drop-shadow(0px 0px 2px var(--black));
   }
 }
 
@@ -305,7 +318,6 @@ pre {
   50% {
     background: var(--background);
     color: var(--foreground);
-
   }
 }
 
