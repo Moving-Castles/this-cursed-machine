@@ -6,7 +6,7 @@ import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amou
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibNetwork, LibReset, PublicMaterials } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, DEPOT_CAPACITY } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, DEPOT_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract OrderSystem is System {
   /**
@@ -15,7 +15,7 @@ contract OrderSystem is System {
    * @param _title Title of the order
    * @param _materialType Material type to produce
    * @param _amount Amount to produce
-   * @param _reward Reward for completing the order
+   * @param _reward Reward for completing the order in whole token units (1 token = 1e18)
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
@@ -34,8 +34,11 @@ contract OrderSystem is System {
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint32 totalRewardCost = _reward * _maxPlayers;
-      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) > totalRewardCost, "insufficient funds");
-      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+      require(
+        PublicMaterials.BUG.getTokenBalance(_msgSender()) > totalRewardCost * ONE_TOKEN_UNIT,
+        "insufficient funds"
+      );
+      PublicMaterials.BUG.transferToken(_world(), totalRewardCost * ONE_TOKEN_UNIT);
     }
 
     orderEntity = LibOrder.create(
@@ -187,7 +190,7 @@ contract OrderSystem is System {
     Completed.push(playerEntity, currentOrderId);
 
     // Reward player in real tokens
-    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
+    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);
     // For statistics we keep track of the total earned points
     // EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }

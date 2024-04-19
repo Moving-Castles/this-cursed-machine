@@ -4,7 +4,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOffer, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
-import { DEPOT_CAPACITY } from "../../constants.sol";
+import { DEPOT_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract OfferSystem is System {
   /**
@@ -12,7 +12,7 @@ contract OfferSystem is System {
    * @dev Restricted to admin
    * @param _materialType Material type of the offer
    * @param _amount Amount of material
-   * @param _cost Cost of the offer
+   * @param _cost Cost of the offer in whole token units (1 token = 1e18)
    * @return orderEntity Id of the offer entity
    */
   function createOffer(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) public returns (bytes32 orderEntity) {
@@ -51,7 +51,10 @@ contract OfferSystem is System {
     if (Tutorial.get(playerEntity)) {
       require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
     } else {
-      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) > offerData.cost, "insufficient balance");
+      require(
+        PublicMaterials.BUG.getTokenBalance(_msgSender()) > offerData.cost * ONE_TOKEN_UNIT,
+        "insufficient balance"
+      );
     }
 
     // Resolution needs to be done before filling the depot to avoid instant conversion of materials.
@@ -94,7 +97,7 @@ contract OfferSystem is System {
       NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
     } else {
       // Deduct from real token balance
-      PublicMaterials.BUG.transferToken(_world(), offerData.cost);
+      PublicMaterials.BUG.transferToken(_world(), offerData.cost * ONE_TOKEN_UNIT);
     }
   }
 }

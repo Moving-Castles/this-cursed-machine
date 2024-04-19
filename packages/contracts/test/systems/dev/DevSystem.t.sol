@@ -5,7 +5,17 @@ import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
 
-contract RewardSystemTest is BaseTest {
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+
+import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
+import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
+import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
+import { ONE_TOKEN_UNIT } from "../../../src/constants.sol";
+
+contract DevSystemTest is BaseTest {
+  using WorldResourceIdInstance for ResourceId;
+
   function testReward() public {
     setUp();
 
@@ -14,7 +24,7 @@ contract RewardSystemTest is BaseTest {
     vm.stopPrank();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_TOKEN_UNIT);
   }
 
   function testCharge() public {
@@ -24,12 +34,12 @@ contract RewardSystemTest is BaseTest {
     world.reward();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_TOKEN_UNIT);
 
     world.charge();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900 * ONE_TOKEN_UNIT);
 
     vm.stopPrank();
   }
@@ -41,7 +51,7 @@ contract RewardSystemTest is BaseTest {
     world.graduate();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000 * ONE_TOKEN_UNIT);
 
     vm.stopPrank();
   }

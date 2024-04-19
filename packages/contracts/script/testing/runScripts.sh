@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Local defaults
-LOCAL_WORLD_ADDRESS=0xc14fbdb7808d9e2a37c1a45b635c8c3ff64a1cc1
+LOCAL_WORLD_ADDRESS=0xd6c8022f1af8e9d7c3825557a1374ee518c65a4e
 LOCAL_RPC=http://localhost:8545
 
 # Garnet
