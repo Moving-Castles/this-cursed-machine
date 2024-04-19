@@ -59,8 +59,8 @@ library LibMaterial {
    * @param _to address to mint to
    * @param _value amount to mint
    */
-  function mint(MaterialId materialId, address _to, uint256 _value) internal {
-    IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(materialId));
+  function mint(MaterialId _materialId, address _to, uint256 _value) internal {
+    IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(_materialId));
     token.mint(_to, _value);
   }
 
@@ -69,8 +69,8 @@ library LibMaterial {
    * @param _to address to transfer to
    * @param _value amount to transfer
    */
-  function transferToken(MaterialId materialId, address _to, uint256 _value) internal {
-    address token = MaterialMetadata.getTokenAddress(materialId);
+  function transferToken(MaterialId _materialId, address _to, uint256 _value) internal {
+    address token = MaterialMetadata.getTokenAddress(_materialId);
     ResourceId systemId = Puppet(token).systemId();
 
     bytes memory callData = abi.encodeCall(IERC20.transfer, (_to, _value));
@@ -83,12 +83,12 @@ library LibMaterial {
 
   /**
    * @dev Get token balance for an account
-   * @param account address to get balance for
+   * @param _account address to get balance for
    */
-  function getTokenBalance(MaterialId materialId, address account) internal view returns (uint) {
-    address token = MaterialMetadata.getTokenAddress(materialId);
+  function getTokenBalance(MaterialId _materialId, address _account) internal view returns (uint) {
+    address token = MaterialMetadata.getTokenAddress(_materialId);
     ResourceId systemId = Puppet(token).systemId();
     ResourceId tableId = _balancesTableId(systemId.getNamespace());
-    return Balances.get(tableId, account);
+    return Balances.get(tableId, _account);
   }
 }
