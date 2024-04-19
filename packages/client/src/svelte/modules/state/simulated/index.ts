@@ -61,7 +61,6 @@ export const availablePorts = (machine: Machine, direction: DIRECTION) => {
     machine,
     address,
   }))
-  ports = ports.filter(connection => connection.address === EMPTY_CONNECTION)
   ports = ports.flat()
   return ports
 }

@@ -5,7 +5,7 @@ import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 
-contract BuildSystemTest is BaseTest {
+contract ResetSystemTest is BaseTest {
   bytes32 playerEntity;
   bytes32 podEntity;
   bytes32[] inletEntities;

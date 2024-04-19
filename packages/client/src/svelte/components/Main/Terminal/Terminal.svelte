@@ -215,6 +215,7 @@
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+      console.log(ports)
 
       const portLabel = (p: any) => {
         const product = sourceMachineEntity?.products?.[p.portIndex]
@@ -227,6 +228,8 @@
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),
         value: p.portIndex,
+        available:
+          p.machine.outgoingConnections[p.portIndex] === EMPTY_CONNECTION,
       }))
 
       const sourcePort = (await renderSelect(
@@ -267,6 +270,8 @@
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),
         value: p.portIndex,
+        available:
+          p.machine.outgoingConnections[p.portIndex] === EMPTY_CONNECTION,
       }))
 
       const sourcePort = (await renderSelect(

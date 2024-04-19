@@ -5,7 +5,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
-import { FLOW_RATE, ONE_MINUTE, ONE_HOUR } from "../../../src/constants.sol";
+import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_TOKEN_UNIT } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -113,7 +113,7 @@ contract OfferSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    assertEq(LibToken.getTokenBalance(alice), 9900);
+    assertEq(LibToken.getTokenBalance(alice), 9900 * ONE_TOKEN_UNIT);
     assertEq(uint8(MaterialType.get(depotsInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
     assertEq(Amount.get(depotsInPod[1]), 10000);
   }

@@ -129,7 +129,6 @@
         class:disabled={!option.available}
       >
         {option.label}
-        {option.available}
       </div>
     {/each}
   </div>

@@ -127,8 +127,6 @@ function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
       available: machineIsAvailable(direction, machine),
     }))
 
-  console.log(selectOptions)
-
   return selectOptions
 }
 
@@ -221,11 +219,12 @@ function createSelectOptionsRefillDepot(): SelectOption[] {
   const offers = get(offersStore)
   const balance = get(playerTokenBalance)
 
+  console.log(offers)
+
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
     label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
     value: address,
-    // Cost is set in whole bugs. Balance will be
-    available: balance / ONE_TOKEN_UNIT > offer.offer.cost,
+    available: balance > offer.offer.cost,
   }))
 
   return selectOptions

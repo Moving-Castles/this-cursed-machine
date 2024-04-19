@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, DepotConnection, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity, LibDepot, LibToken } from "../../libraries/Libraries.sol";
+import { LibUtils, LibPod, LibEntity, LibDepot } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_DEPOTS } from "../../constants.sol";
 
 contract StartSystem is System {
