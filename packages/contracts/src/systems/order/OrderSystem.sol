@@ -2,11 +2,11 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, DepotConnection, Tutorial, TutorialLevel, Completed, DepotsInPod, EarnedPoints, OutgoingConnections, IncomingConnections, NonTransferableBalance } from "../../codegen/index.sol";
+import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibNetwork, LibReset, PublicMaterials } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOrder, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, DEPOT_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract OrderSystem is System {
   /**
@@ -74,7 +74,7 @@ contract OrderSystem is System {
    * @dev This simply indicates that a user is committed to an order
    * @param _orderEntity Id of the order entity
    */
-  function accept(bytes32 _orderEntity) public {
+  function acceptOrder(bytes32 _orderEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
@@ -98,100 +98,8 @@ contract OrderSystem is System {
   /**
    * @notice Unaccept the current order
    */
-  function unaccept() public {
+  function unacceptOrder() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     CurrentOrder.set(playerEntity, bytes32(0));
-  }
-
-  /**
-   * @notice Ship an order
-   * @dev Compares the depot to the current order goals and complete the order if goals are met
-   * @param _depotEntity Id of the depot entity
-   */
-  function ship(bytes32 _depotEntity) public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
-    bytes32 podEntity = CarriedBy.get(playerEntity);
-
-    require(EntityType.get(_depotEntity) == ENTITY_TYPE.DEPOT, "not depot");
-
-    // You can't ship a depot in another player's pods
-    require(CarriedBy.get(_depotEntity) == podEntity, "not in pod");
-
-    // You can't ship a depot that is connected
-    require(DepotConnection.get(_depotEntity) == bytes32(0), "depot connected");
-
-    bytes32 currentOrderId = CurrentOrder.get(playerEntity);
-    require(currentOrderId != bytes32(0), "no order");
-
-    OrderData memory currentOrder = Order.get(currentOrderId);
-
-    // maxPlayers == 0 means the order has no limit
-    require(
-      currentOrder.maxPlayers == 0 || Completed.length(currentOrderId) < currentOrder.maxPlayers,
-      "max players reached"
-    );
-
-    // expirationBlock == 0 means the order never expires
-    require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-
-    // Check if order goals are met
-    require(
-      MaterialType.get(_depotEntity) == currentOrder.materialType && Amount.get(_depotEntity) >= currentOrder.amount,
-      "order not met"
-    );
-
-    // Clear currentOrder
-    CurrentOrder.set(playerEntity, bytes32(0));
-
-    // Empty depot
-    MaterialType.set(_depotEntity, MATERIAL_TYPE.NONE);
-    Amount.set(_depotEntity, 0);
-
-    /*//////////////////////////////////////////////////////////////
-                            IN TUTORIAL
-    //////////////////////////////////////////////////////////////*/
-
-    if (Tutorial.get(playerEntity)) {
-      uint32 nextTutorialLevel = TutorialLevel.get(playerEntity) + 1;
-
-      if (nextTutorialLevel == NUMBER_OF_TUTORIAL_LEVELS) {
-        // Tutorial is done
-        Tutorial.set(playerEntity, false);
-        TutorialLevel.deleteRecord(playerEntity);
-        NonTransferableBalance.deleteRecord(playerEntity);
-
-        // Fill the player's first depot with bugs to get them started
-        bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
-        MaterialType.set(depotsInPod[0], MATERIAL_TYPE.BUG);
-        Amount.set(depotsInPod[0], DEPOT_CAPACITY);
-
-        return;
-      }
-
-      // Level up player
-      TutorialLevel.set(playerEntity, nextTutorialLevel);
-
-      /*
-       * Reward player in non-transferable token substitutes
-       * We do this to avoid people botting the tutorial levels to get free tokens
-       */
-      NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) + currentOrder.reward);
-
-      return;
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                           IN MAIN GAME
-    //////////////////////////////////////////////////////////////*/
-
-    // On order: add player to completed list
-    Completed.push(currentOrderId, playerEntity);
-    // On player: add order to completed list
-    Completed.push(playerEntity, currentOrderId);
-
-    // Reward player in real tokens
-    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);
-    // For statistics we keep track of the total earned points
-    // EarnedPoints.set(playerEntity, EarnedPoints.get(playerEntity) + currentOrder.reward);
   }
 }

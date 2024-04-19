@@ -143,4 +143,18 @@ library LibUtils {
       return a - b;
     }
   }
+
+  /**
+   * @dev Check if an element is included in an array
+   * @param array The array to check
+   * @param element The element to check for
+   */
+  function arrayIncludes(uint8[] memory array, uint8 element) internal pure returns (bool) {
+    for (uint256 i = 0; i < array.length; i++) {
+      if (array[i] == element) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

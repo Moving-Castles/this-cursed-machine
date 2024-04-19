@@ -1,6 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types"
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
-import { build as sendBuild } from "@modules/action"
+import { buildMachine as sendBuildMachine } from "@modules/action"
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
@@ -10,7 +10,7 @@ async function execute(machineType: MACHINE_TYPE) {
   try {
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Requesting material")
 
-    const action = sendBuild(machineType)
+    const action = sendBuildMachine(machineType)
     // ...
     await waitForTransaction(action, loadingSpinner)
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, `Building ${MACHINE_TYPE[machineType]}`)
@@ -28,8 +28,8 @@ async function execute(machineType: MACHINE_TYPE) {
   }
 }
 
-export const build: Command<[machineType: MACHINE_TYPE]> = {
-  id: COMMAND.BUILD,
+export const buildMachine: Command<[machineType: MACHINE_TYPE]> = {
+  id: COMMAND.BUILD_MACHINE,
   public: true,
   name: "build",
   alias: "b",

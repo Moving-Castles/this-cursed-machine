@@ -33,8 +33,15 @@
   $: producing = machine?.products && machine?.products.length > 0
   $: style = `background-image: url(/images/machines/${MACHINE_TYPE[machine.machineType]}.png); top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   $: label = `${MACHINE_TYPE[machine.machineType]} ${machine.buildIndex ?? ""}`
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
+  $: {
+    if ($selectedParameters) {
+      if ($selectedParameters.includes(address)) {
+        selectedPortIndex = $selectedOption?.value
+      }
+    }
+  }
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
@@ -101,6 +108,7 @@
   class="machine {MACHINE_TYPE[machine.machineType]}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade
@@ -108,9 +116,11 @@
   role="button"
 >
   <div class="inner-container">
-    <div class="label" 
-    class:top={machine.placementGroup == PLACEMENT_GROUP.TOP} 
-    class:bottom={machine.placementGroup == PLACEMENT_GROUP.BOTTOM}>
+    <div
+      class="label"
+      class:top={machine.placementGroup == PLACEMENT_GROUP.TOP}
+      class:bottom={machine.placementGroup == PLACEMENT_GROUP.BOTTOM}
+    >
       <TweenedText
         duration={300}
         delay={1000}
@@ -122,6 +132,8 @@
     {#each ports as port, i}
       <div
         class:highlight={selectedPortIndex === i}
+        class:disabled-highlight={selectedPortIndex === i &&
+          $selectedOption?.available === false}
         class="port {DIRECTION[port.direction]}"
         style={port.style}
       />
@@ -170,7 +182,6 @@
         &.bottom {
           bottom: 0;
           transform: translateX(-20px) translateY(5px);
-
         }
       }
 
@@ -183,6 +194,4 @@
       }
     }
   }
-
-
 </style>

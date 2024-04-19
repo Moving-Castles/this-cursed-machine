@@ -8,16 +8,16 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client' 'pnpm run orders'",
+    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
-    "orders": "wait-port localhost:8545 &&  cd packages/contracts/script/testing && ./runScriptsLocal.sh",
+    "orders": "cd packages/contracts/script/testing && ./runScriptsLocal.sh",
     "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.7-main-632a7525",
+    "@latticexyz/cli": "2.0.7-main-534e7729",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "9.0.0",

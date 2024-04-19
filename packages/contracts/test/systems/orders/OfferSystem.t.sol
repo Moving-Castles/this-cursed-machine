@@ -21,7 +21,7 @@ contract OfferSystemTest is BaseTest {
   bytes32 podEntity;
   bytes32[] inletEntities;
   bytes32 outletEntity;
-  bytes32[] depotsInPod;
+  bytes32[] tanksInPod;
   bytes32[] tutorialLevels;
   FixedEntitiesData fixedEntities;
 
@@ -38,7 +38,7 @@ contract OfferSystemTest is BaseTest {
     inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
-    depotsInPod = DepotsInPod.get(podEntity);
+    tanksInPod = TanksInPod.get(podEntity);
 
     fixedEntities = FixedEntities.get(podEntity);
 
@@ -86,14 +86,14 @@ contract OfferSystemTest is BaseTest {
   //   vm.startPrank(alice);
 
   //   startGasReport("Buy");
-  //   world.buy(offerEntity);
+  //   world.buyOffer(offerEntity);
   //   endGasReport();
 
   //   vm.stopPrank();
 
   //   assertEq(PublicMaterials.BUG.getTokenBalance(alice), 0);
-  //   assertEq(uint8(MaterialType.get(depotsInPod[0])), uint8(MATERIAL_TYPE.BUG));
-  //   assertEq(Amount.get(depotsInPod[0]), 20000);
+  //   assertEq(uint8(MaterialType.get(tanksInPod[0])), uint8(MATERIAL_TYPE.BUG));
+  //   assertEq(Amount.get(tanksInPod[0]), 20000);
   // }
 
   function testBuyInMainGame() public {
@@ -107,14 +107,14 @@ contract OfferSystemTest is BaseTest {
 
     world.graduate();
 
-    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
 
-    world.buy(offerEntity);
+    world.buyOffer(offerEntity);
 
     vm.stopPrank();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(alice), 9900 * ONE_TOKEN_UNIT);
-    assertEq(uint8(MaterialType.get(depotsInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
-    assertEq(Amount.get(depotsInPod[1]), 10000);
+    assertEq(uint8(MaterialType.get(tanksInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
+    assertEq(Amount.get(tanksInPod[1]), 10000);
   }
 }

@@ -87,13 +87,13 @@ export const machines = derived(
 )
 
 // Filter by player pod
-export const depots = derived(
+export const tanks = derived(
   [entities, player],
   ([$entities, $player]) =>
     filterByEntitytype(
       filterByCarriedBy($entities, $player?.carriedBy ?? ""),
-      ENTITY_TYPE.DEPOT
-    ) as Depots
+      ENTITY_TYPE.TANK
+    ) as Tanks
 )
 
 export const players = derived(

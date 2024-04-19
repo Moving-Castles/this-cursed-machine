@@ -1,27 +1,21 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { destroy as sendDestroy } from "@modules/action";
+import { wipePod as sendWipePod } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
-import { simulatedMachines } from "@modules/state/simulated/stores";
-import { get } from "svelte/store";
-import { MACHINE_TYPE } from "@modules/state/base/enums";
 import { playSound } from "@modules/sound";
 
-async function execute(machineEntity: string) {
+async function execute() {
     try {
-        const machine = get(simulatedMachines)[machineEntity]
-
-        // @todo: handle this better
-        if (!machine || !machine.machineType) return
-
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, `Destroying ${MACHINE_TYPE[machine.machineType]}`)
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Wiping pod...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "THIS CANNOT BE UNDONE...")
         // ...
-        const action = sendDestroy(machineEntity)
+        const action = sendWipePod()
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        await waitForCompletion(action, loadingLine);
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Destruction in progress...")
+        await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
         // ...
@@ -34,11 +28,11 @@ async function execute(machineEntity: string) {
     }
 }
 
-export const destroy: Command<[machineEntiy: string]> = {
-    id: COMMAND.DESTROY,
+export const wipePod: Command<[]> = {
+    id: COMMAND.WIPE_POD,
     public: true,
-    name: "destroy",
-    alias: "x",
-    objectTerm: "machine",
+    name: "wipe",
+    alias: "w",
+    objectTerm: "pod",
     fn: execute,
 }

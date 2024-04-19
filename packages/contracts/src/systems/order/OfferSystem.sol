@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, DepotsInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
+import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, TanksInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOffer, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
-import { DEPOT_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract OfferSystem is System {
   /**
@@ -41,7 +41,7 @@ contract OfferSystem is System {
    * @dev Resolves network after buying
    * @param _offerEntity Id of the offer entity
    */
-  function buy(bytes32 _offerEntity) public {
+  function buyOffer(bytes32 _offerEntity) public {
     OfferData memory offerData = Offer.get(_offerEntity);
 
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
@@ -57,40 +57,40 @@ contract OfferSystem is System {
       );
     }
 
-    // Resolution needs to be done before filling the depot to avoid instant conversion of materials.
+    // Resolution needs to be done before filling the tank to avoid instant conversion of materials.
     LibNetwork.resolve(podEntity);
 
-    bytes32[] memory depotsInPod = DepotsInPod.get(podEntity);
+    bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
 
-    bytes32 targetDepot;
+    bytes32 targetTank;
 
-    // Go through all depots in the pod
-    for (uint32 i = 0; i < depotsInPod.length; i++) {
-      // If depot is empty: select it
-      if (MaterialType.get(depotsInPod[i]) == MATERIAL_TYPE.NONE) {
-        targetDepot = depotsInPod[i];
+    // Go through all tanks in the pod
+    for (uint32 i = 0; i < tanksInPod.length; i++) {
+      // If tank is empty: select it
+      if (MaterialType.get(tanksInPod[i]) == MATERIAL_TYPE.NONE) {
+        targetTank = tanksInPod[i];
         break;
       }
 
-      // If depot has other material: skip
-      if (MaterialType.get(depotsInPod[i]) != offerData.materialType) {
+      // If tank has other material: skip
+      if (MaterialType.get(tanksInPod[i]) != offerData.materialType) {
         continue;
       }
 
-      // If the depot has same material: check if it can hold the amount
-      if (Amount.get(depotsInPod[i]) + offerData.amount <= DEPOT_CAPACITY) {
-        targetDepot = depotsInPod[i];
+      // If the tank has same material: check if it can hold the amount
+      if (Amount.get(tanksInPod[i]) + offerData.amount <= TANK_CAPACITY) {
+        targetTank = tanksInPod[i];
         break;
       }
     }
 
-    if (targetDepot == bytes32(0)) {
+    if (targetTank == bytes32(0)) {
       revert("no tank available");
     }
 
-    // Add material to depot
-    MaterialType.set(targetDepot, offerData.materialType);
-    Amount.set(targetDepot, Amount.get(targetDepot) + offerData.amount);
+    // Add material to tank
+    MaterialType.set(targetTank, offerData.materialType);
+    Amount.set(targetTank, Amount.get(targetTank) + offerData.amount);
 
     if (Tutorial.get(playerEntity)) {
       // Deduct from non-transferable balance

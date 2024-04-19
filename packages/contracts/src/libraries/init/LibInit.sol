@@ -4,7 +4,7 @@ import { GameConfig, GameConfigData } from "../../codegen/index.sol";
 import { LibOrder } from "../LibOrder.sol";
 import { LibUtils } from "../LibUtils.sol";
 import { MATERIAL_TYPE } from "../../codegen/common.sol";
-import { FLOW_RATE, DEPOT_CAPACITY } from "../../constants.sol";
+import { FLOW_RATE, TANK_CAPACITY } from "../../constants.sol";
 
 library LibInit {
   /**
@@ -19,7 +19,7 @@ library LibInit {
         globalSpawnIndex: 0,
         scaleDown: 100,
         flowRate: FLOW_RATE,
-        depotCapacity: DEPOT_CAPACITY
+        tankCapacity: TANK_CAPACITY
       })
     );
 

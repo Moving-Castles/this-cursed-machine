@@ -18,24 +18,24 @@ export enum TERMINAL_OUTPUT_TYPE {
 }
 
 export enum COMMAND {
-  BLINK,
-  HELP,
-  BUILD,
-  DESTROY,
+  // Machine
+  BUILD_MACHINE,
+  REMOVE_MACHINE,
   CONNECT,
   DISCONNECT,
-  RESOLVE,
-  WIPE,
-  TRANSFER,
-  ORDER,
+  // Tank
+  PLUG_TANK,
+  UNPLUG_TANK,
+  EMPTY_TANK,
+  FILL_TANK,
+  SHIP_TANK,
+  // Pod
+  WIPE_POD,
+  // Misc.
+  BLINK,
+  HELP,
+  // Hidden
   SKIP,
-  START,
-  FAIL,
-  ATTACH_DEPOT,
-  DETACH_DEPOT,
-  EMPTY_DEPOT,
-  REFILL_DEPOT,
-  SHIP,
-  BUY,
   GRADUATE,
+  RESOLVE
 }

@@ -5,8 +5,8 @@ import { MATERIAL_TYPE, MACHINE_TYPE } from "@modules/state/base/enums"
 import { blockNumber } from "@modules/network"
 import type {
   SimulatedEntities,
-  SimulatedDepots,
-  SimulatedDepot,
+  SimulatedTanks,
+  SimulatedTank,
   SimulatedMachines,
   Connection,
   SimulatedMachine,
@@ -14,7 +14,7 @@ import type {
 } from "./types"
 import {
   machines,
-  depots,
+  tanks,
   playerPod,
   player,
   orders,
@@ -23,7 +23,7 @@ import {
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
 import { GRAPH_ENTITY_STATE } from "./enums"
-import { FLOW_RATE, DEPOT_CAPACITY } from "@modules/state/simulated/constants"
+import { FLOW_RATE, TANK_CAPACITY } from "@modules/state/simulated/constants"
 
 export function processInputPatches(
   simulated: SimulatedEntities,
@@ -99,7 +99,7 @@ export function applyPatches(
   ])
 
   const filteredPatches = Object.entries(patches).filter(
-    ([_, patch]) => !patch.depot
+    ([_, patch]) => !patch.tank
   )
 
   // Iterate over each patch in the patches store.
@@ -112,79 +112,79 @@ export function applyPatches(
   return simulatedMachines
 }
 
-export function calculateSimulatedDepots(
-  depots: Depots,
+export function calculateSimulatedTanks(
+  tanks: Tanks,
   patches: SimulatedEntities,
   blocksSinceLastResolution: number,
   playerPod: Pod
-): SimulatedDepots {
+): SimulatedTanks {
   /*
-   * This function updates the inlet and outlet depots
+   * This function updates the inlet and outlet tanks
    *
-   * Should work the same as contracts/src/libraries/LibDepot.sol:write
+   * Should work the same as contracts/src/libraries/LibTank.sol:write
    *
    * Generally the output is what is produced by the outlet machine * blocks past
    *
    * But, we need to take into account the following limiting factors:
-   * - The amount of material in the inlet depots
-   * - The capacity of the outlet depot
+   * - The amount of material in the inlet tanks
+   * - The capacity of the outlet tank
    *
    * We need to find the lowest of the two limiting factors and cap the number of blocks by that
    */
 
   // Create deep copy to avoid accidentally mutating the original object.
-  const initialDepotsCopy = deepClone(depots)
+  const initialTanksCopy = deepClone(tanks)
 
-  let simulatedDepots: SimulatedDepots = Object.fromEntries([
-    ...Object.entries(initialDepotsCopy),
+  let simulatedTanks: SimulatedTanks = Object.fromEntries([
+    ...Object.entries(initialTanksCopy),
   ])
 
   // Abort if the player's pod is not set up properly
-  if (!playerPod?.fixedEntities) return simulatedDepots
+  if (!playerPod?.fixedEntities) return simulatedTanks
 
-  // Get depot connected to the outlet
-  const outletDepot = Object.entries(initialDepotsCopy).filter(
-    ([_, depot]) => depot.depotConnection === playerPod?.fixedEntities.outlet
+  // Get tank connected to the outlet
+  const outletTank = Object.entries(initialTanksCopy).filter(
+    ([_, tank]) => tank.tankConnection === playerPod?.fixedEntities.outlet
   )
 
-  // Get depots connected to the inlets
-  const inletDepots = Object.entries(initialDepotsCopy).filter(([_, depot]) =>
-    playerPod?.fixedEntities.inlets.includes(depot.depotConnection)
+  // Get tanks connected to the inlets
+  const inletTanks = Object.entries(initialTanksCopy).filter(([_, tank]) =>
+    playerPod?.fixedEntities.inlets.includes(tank.tankConnection)
   )
 
   // Get patches for depois
-  const depotPatches = Object.entries(patches).filter(
-    ([_, patch]) => patch.depot
+  const tankPatches = Object.entries(patches).filter(
+    ([_, patch]) => patch.tank
   )
 
   // Abort if either of these are empty
   if (
-    outletDepot.length === 0 ||
-    inletDepots.length === 0 ||
-    depotPatches.length === 0
+    outletTank.length === 0 ||
+    inletTanks.length === 0 ||
+    tankPatches.length === 0
   ) {
-    return simulatedDepots
+    return simulatedTanks
   }
 
-  const outletDepotPatch = depotPatches.find(
-    ([key, _]) => key == outletDepot[0][0]
+  const outletTankPatch = tankPatches.find(
+    ([key, _]) => key == outletTank[0][0]
   )
 
-  // Abort if the outlet depot does not have a patch
-  if (!outletDepotPatch) return simulatedDepots
+  // Abort if the outlet tank does not have a patch
+  if (!outletTankPatch) return simulatedTanks
 
   /*
-   * Filter out the inlet depots that are not contributing to the output
+   * Filter out the inlet tanks that are not contributing to the output
    */
-  const usedInletDepots = getUsedInletDepots(
-    inletDepots,
+  const usedInletTanks = getUsedInletTanks(
+    inletTanks,
     playerPod.fixedEntities.inlets,
-    depotPatches
+    tankPatches
   )
-  const usedInletDepotsKeys = usedInletDepots.map(([key, _]) => key)
+  const usedInletTanksKeys = usedInletTanks.map(([key, _]) => key)
 
-  const lowestInputAmount = findLowestValue(usedInletDepots)
-  if (lowestInputAmount === 0) return simulatedDepots
+  const lowestInputAmount = findLowestValue(usedInletTanks)
+  if (lowestInputAmount === 0) return simulatedTanks
 
   /*
    * With a flow rate of FLOW_RATE per block,
@@ -193,12 +193,12 @@ export function calculateSimulatedDepots(
   const inletExhaustionBlock = lowestInputAmount / FLOW_RATE
 
   /*
-   * When is the outlet depot full?
-   * available capacity of the depot / flow rate of the outlet product
+   * When is the outlet tank full?
+   * available capacity of the tank / flow rate of the outlet product
    */
   const outletFullBlock =
-    (DEPOT_CAPACITY - outletDepot[0][1].amount) /
-    outletDepotPatch[1].inputs[0].amount
+    (TANK_CAPACITY - outletTank[0][1].amount) /
+    outletTankPatch[1].inputs[0].amount
 
   /*
    * Stop block is the lowest of the two limiting factors
@@ -213,56 +213,56 @@ export function calculateSimulatedDepots(
       ? blocksSinceLastResolution
       : stopBlock
 
-  for (const [key, patch] of depotPatches) {
-    if (!simulatedDepots[key]) continue
+  for (const [key, patch] of tankPatches) {
+    if (!simulatedTanks[key]) continue
 
     /*
-     * Write to outlet depot
+     * Write to outlet tank
      * Add if material is same, otherwise replace
      */
     if (Array.isArray(patch.inputs) && patch.inputs[0]) {
       const patchInput = patch.inputs[0]
       const cumulativeOutputAmount = patchInput.amount * cappedBlocks
-      if (initialDepotsCopy[key].materialType === patchInput.materialType) {
-        simulatedDepots[key].amount =
-          (initialDepotsCopy[key].amount ?? 0) + cumulativeOutputAmount
+      if (initialTanksCopy[key].materialType === patchInput.materialType) {
+        simulatedTanks[key].amount =
+          (initialTanksCopy[key].amount ?? 0) + cumulativeOutputAmount
       } else {
-        simulatedDepots[key].materialType = patchInput.materialType
-        simulatedDepots[key].amount = cumulativeOutputAmount
+        simulatedTanks[key].materialType = patchInput.materialType
+        simulatedTanks[key].amount = cumulativeOutputAmount
       }
     }
 
     /*
-     * Write to inlet depots
-     * Check that the inlet depot contributed to the output
-     * Empty depot if we exhausted it
+     * Write to inlet tanks
+     * Check that the inlet tank contributed to the output
+     * Empty tank if we exhausted it
      */
     if (
       Array.isArray(patch.outputs) &&
       patch.outputs[0] &&
-      usedInletDepotsKeys.includes(key)
+      usedInletTanksKeys.includes(key)
     ) {
       const consumedInletAmount = cappedBlocks * FLOW_RATE
-      if (consumedInletAmount === initialDepotsCopy[key].amount) {
-        simulatedDepots[key].materialType = MATERIAL_TYPE.NONE
-        simulatedDepots[key].amount = 0
+      if (consumedInletAmount === initialTanksCopy[key].amount) {
+        simulatedTanks[key].materialType = MATERIAL_TYPE.NONE
+        simulatedTanks[key].amount = 0
       } else {
-        simulatedDepots[key].amount =
-          initialDepotsCopy[key].amount - consumedInletAmount
+        simulatedTanks[key].amount =
+          initialTanksCopy[key].amount - consumedInletAmount
       }
     }
   }
 
   // Return the updated simulated state.
-  return simulatedDepots
+  return simulatedTanks
 }
 
-function findLowestValue(usedInletDepots: [string, Depot][]): number {
-  let lowestEntry: [string, Depot] | null = null
+function findLowestValue(usedInletTanks: [string, Tank][]): number {
+  let lowestEntry: [string, Tank] | null = null
 
-  for (const [key, depot] of usedInletDepots) {
-    if (!lowestEntry || depot.amount < lowestEntry[1].amount) {
-      lowestEntry = [key, depot]
+  for (const [key, tank] of usedInletTanks) {
+    if (!lowestEntry || tank.amount < lowestEntry[1].amount) {
+      lowestEntry = [key, tank]
     }
   }
 
@@ -273,18 +273,18 @@ function findLowestValue(usedInletDepots: [string, Depot][]): number {
 
 /*
  * Checks the output patch of the outlet to see which inlets contributed to the output.
- * Then finds the depots connected to those inlets
+ * Then finds the tanks connected to those inlets
  */
-function getUsedInletDepots(
-  inletDepots: [string, Depot][],
+function getUsedInletTanks(
+  inletTanks: [string, Tank][],
   inlets: string[],
-  depotPatches: [string, SimulatedDepot][]
-): [string, Depot][] {
+  tankPatches: [string, SimulatedTank][]
+): [string, Tank][] {
   let inletActive: boolean[] | null = null
-  let usedInletDepots: [string, Depot][] = []
+  let usedInletTanks: [string, Tank][] = []
 
   // Find the outlet patch – it is the only one with inputs
-  for (const [, patch] of depotPatches) {
+  for (const [, patch] of tankPatches) {
     if (Array.isArray(patch.inputs) && patch.inputs[0]) {
       // Get the boolean array indicating which of the inlets contributed to the final output
       inletActive = patch.inputs[0].inletActive
@@ -292,18 +292,18 @@ function getUsedInletDepots(
     }
   }
 
-  if (inletActive == null) return usedInletDepots
+  if (inletActive == null) return usedInletTanks
 
-  // Iterate over the inlet depots and check if the inlet it is connected is active
-  for (let i = 0; i < inletDepots.length; i++) {
-    const inletIndex = inlets.indexOf(inletDepots[i][1].depotConnection)
+  // Iterate over the inlet tanks and check if the inlet it is connected is active
+  for (let i = 0; i < inletTanks.length; i++) {
+    const inletIndex = inlets.indexOf(inletTanks[i][1].tankConnection)
 
     if (inletActive[inletIndex]) {
-      usedInletDepots.push(inletDepots[i])
+      usedInletTanks.push(inletTanks[i])
     }
   }
 
-  return usedInletDepots
+  return usedInletTanks
 }
 
 export function calculateSimulatedConnections(
@@ -352,7 +352,7 @@ export function calculateSimulatedConnections(
         sourceMachine.outputs &&
         sourceMachine.outputs[sourcePortIndex] &&
         sourceMachine.outputs[sourcePortIndex].materialType !==
-          MATERIAL_TYPE.NONE
+        MATERIAL_TYPE.NONE
       ) {
         connection.products = [
           {
@@ -376,13 +376,13 @@ export const simulatedMachines = derived(
   ([$machines, $patches]) => applyPatches($machines, $patches)
 )
 
-// Simulated state = on-chain state of the depots + patches produced by the local resolver
+// Simulated state = on-chain state of the tanks + patches produced by the local resolver
 // We re-calculate every block based on the blocks passed since the last resolution
-export const simulatedDepots = derived(
-  [depots, patches, blocksSinceLastResolution, playerPod],
-  ([$depots, $patches, $blocksSinceLastResolution, $playerPod]) =>
-    calculateSimulatedDepots(
-      $depots,
+export const simulatedTanks = derived(
+  [tanks, patches, blocksSinceLastResolution, playerPod],
+  ([$tanks, $patches, $blocksSinceLastResolution, $playerPod]) =>
+    calculateSimulatedTanks(
+      $tanks,
       $patches,
       $blocksSinceLastResolution,
       $playerPod
@@ -395,8 +395,8 @@ export const simulatedConnections = derived(
 )
 
 export const networkIsRunning = derived(
-  [simulatedDepots, playerPod, simulatedMachines],
-  ([$simulatedDepots, $playerPod, $simulatedMachines]) => {
+  [simulatedTanks, playerPod, simulatedMachines],
+  ([$simulatedTanks, $playerPod, $simulatedMachines]) => {
     if (!$playerPod?.fixedEntities) return false
 
     const outletKey = $playerPod?.fixedEntities?.outlet
@@ -411,21 +411,21 @@ export const networkIsRunning = derived(
     if (!outletOutput) return false
 
     /*
-     * If the outlet is not connected to a depot, the network is not running
+     * If the outlet is not connected to a tank, the network is not running
      */
-    const outletDepot = Object.values($simulatedDepots).find(
-      depot => depot.depotConnection === outletKey
+    const outletTank = Object.values($simulatedTanks).find(
+      tank => tank.tankConnection === outletKey
     )
-    if (!outletDepot) return false
+    if (!outletTank) return false
 
     /*
-     * If the output depot is full, the network is not running
+     * If the output tank is full, the network is not running
      */
-    if (outletDepot.amount == DEPOT_CAPACITY) return false
+    if (outletTank.amount == TANK_CAPACITY) return false
 
     /*
-     * Get used inlet depots
-     * If any of the used inlet depots are empty, the network is not running
+     * Get used inlet tanks
+     * If any of the used inlet tanks are empty, the network is not running
      */
     const inletKeys = $playerPod?.fixedEntities?.inlets
     let usedInletKeys: string[] = []
@@ -434,15 +434,15 @@ export const networkIsRunning = derived(
         usedInletKeys.push(inletKeys[i])
       }
     }
-    const usedInletDepots = Object.values($simulatedDepots).filter(depot =>
-      usedInletKeys.includes(depot.depotConnection)
+    const usedInletTanks = Object.values($simulatedTanks).filter(tank =>
+      usedInletKeys.includes(tank.tankConnection)
     )
 
     /*
-     * If any of the used inlet depots are empty, the network is not running
+     * If any of the used inlet tanks are empty, the network is not running
      */
-    for (let i = 0; i < usedInletDepots.length; i++) {
-      if (usedInletDepots[i].amount == 0) return false
+    for (let i = 0; i < usedInletTanks.length; i++) {
+      if (usedInletTanks[i].amount == 0) return false
     }
 
     /*
@@ -463,16 +463,16 @@ export const playerOrder = derived(
   }
 )
 
-// Can a depot ship?
-export const shippableDepots = derived(
-  [blockNumber, simulatedDepots, playerOrder],
-  ([$blockNumber, $simulatedDepots, $playerOrder]) => {
+// Can a tank ship?
+export const shippableTanks = derived(
+  [blockNumber, simulatedTanks, playerOrder],
+  ([$blockNumber, $simulatedTanks, $playerOrder]) => {
     if (!$blockNumber) return {}
     return Object.fromEntries(
-      Object.entries($simulatedDepots).map(([_, depot]) => {
+      Object.entries($simulatedTanks).map(([_, tank]) => {
         if (
-          depot.materialType === $playerOrder?.order.materialType &&
-          depot.amount >= $playerOrder?.order.amount
+          tank.materialType === $playerOrder?.order.materialType &&
+          tank.amount >= $playerOrder?.order.amount
         ) {
           return [_, true]
         }
@@ -482,9 +482,9 @@ export const shippableDepots = derived(
   }
 )
 
-export const depotAttachments = derived(
-  [simulatedDepots, playerPod],
-  ([$simulatedDepots, $playerPod]) => {
+export const tankAttachments = derived(
+  [simulatedTanks, playerPod],
+  ([$simulatedTanks, $playerPod]) => {
     const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
@@ -495,15 +495,15 @@ export const depotAttachments = derived(
     }
 
     return Object.fromEntries(
-      Object.entries($simulatedDepots)
-        .map(([address, depot]) => {
-          if (depot.depotConnection !== EMPTY_CONNECTION) {
+      Object.entries($simulatedTanks)
+        .map(([address, tank]) => {
+          if (tank.tankConnection !== EMPTY_CONNECTION) {
             return [
               address,
               {
-                depot: address,
-                machine: depot.depotConnection,
-                name: getConnectionName(depot.depotConnection),
+                tank: address,
+                machine: tank.tankConnection,
+                name: getConnectionName(tank.tankConnection),
               },
             ]
           }

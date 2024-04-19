@@ -24,7 +24,7 @@ export default defineWorld({
                 globalSpawnIndex: "uint32", // Global index for all players
                 scaleDown: "uint32", // Used to scale down the amounts in the UI
                 flowRate: "uint32", // Amount flowing from the inlet
-                depotCapacity: "uint32", // Amount of material that can be stored in a depot
+                tankCapacity: "uint32", // Amount of material that can be stored in a tank
             },
             codegen: {
                 dataStruct: true
@@ -75,13 +75,13 @@ export default defineWorld({
             }
         },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
-        EarnedPoints: "uint32", // Lifetime points earned by player
+        ProducedMaterials: "uint8[]", // List of materials produced by player
         LastResolved: "uint256", // Used to keep track block past since last resolution of pod
         IncomingConnections: "bytes32[]",
         OutgoingConnections: "bytes32[]",
-        DepotConnection: "bytes32",
+        TankConnection: "bytes32",
         MachinesInPod: "bytes32[]",
-        DepotsInPod: "bytes32[]",
+        TanksInPod: "bytes32[]",
         FixedEntities: {
             key: ["key"],
             schema: {

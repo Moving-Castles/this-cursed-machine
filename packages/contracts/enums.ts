@@ -4,7 +4,7 @@ enum ENTITY_TYPE {
     OFFER,
     POD,
     MACHINE,
-    DEPOT
+    TANK
 }
 
 enum MACHINE_TYPE {

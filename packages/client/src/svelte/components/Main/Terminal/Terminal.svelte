@@ -1,10 +1,9 @@
 <script lang="ts">
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { selectedParameters } from "@modules/ui/stores"
+  import { activeTab, selectedParameters } from "@modules/ui/stores"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import type { Command, SelectOption } from "@components/Main/Terminal/types"
-  import { tutorialProgress } from "@modules/ui/assistant"
   import {
     TERMINAL_TYPE,
     DIRECTION,
@@ -16,7 +15,7 @@
     SYMBOLS,
     NO_INPUT_COMMANDS,
     SINGLE_INPUT_COMMANDS,
-  } from "@components/Main/Terminal/"
+  } from "@components/Main/Terminal"
   import { terminalOutput } from "@components/Main/Terminal/stores"
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
@@ -28,7 +27,7 @@
   import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
   import Select from "@components/Main/Terminal/Select.svelte"
-  import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
+
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
   import {
     simulatedMachines,
@@ -43,13 +42,16 @@
   import { terminalMessages } from "./functions/terminalMessages"
   import { playSound } from "@modules/sound"
 
+  import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
+  import TerminalInput from "@components/Main/Terminal/TerminalInput.svelte"
+
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
   export let setBlink = false
   export let noOutput = false
 
   let inputElement: HTMLInputElement
-  let userInput = ""
+  let value = ""
   let customInputContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
   let inputActive = false
@@ -58,15 +60,15 @@
   const dispatch = createEventDispatcher()
 
   const focusInput = async (e?: any) => {
-    if (e && e.target.tagName.toUpperCase() !== "INPUT") {
-      await tick()
+    console.log(inputElement)
+    if (inputElement) {
       inputElement?.focus()
     }
   }
 
   export const resetInput = async () => {
     selectedParameters.set([])
-    userInput = ""
+    value = ""
     inputActive = true
     scrollToEnd()
     focusInput()
@@ -78,7 +80,7 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5]
+      SYMBOLS[5],
     )
     resetInput()
   }
@@ -90,9 +92,7 @@
     dispatch("commandExecuted", { command, parameters })
   }
 
-  const getSingleInputCommandParameters = async (
-    command: Command
-  ): Promise<any[] | false> => {
+  const getConfirmation = async command => {
     const selectOptions = createSelectOptions(command.id)
 
     // Abort if no options
@@ -116,13 +116,45 @@
     return [value]
   }
 
+  const getSingleInputCommandParameters = async (
+    command: Command,
+  ): Promise<any[] | false> => {
+    const selectOptions = createSelectOptions(command.id)
+
+    // Abort if no options
+    if (selectOptions.length === 0) {
+      await handleInvalid("Nothing")
+      return false
+    }
+
+    const value = await renderSelect(
+      customInputContainerElement,
+      Select,
+      selectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!value) {
+      await handleInvalid("Nothing selected")
+      return false
+    }
+
+    return [value]
+  }
+
   const getDisconnectParameters = async (): Promise<any[] | false> => {
     let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
+
+    // Abort if no options
+    if (disconnectOptions.length === 0) {
+      await handleInvalid("Nothing to disconnect")
+      return false
+    }
 
     const connectionId = await renderSelect(
       customInputContainerElement,
       Select,
-      disconnectOptions
+      disconnectOptions,
     )
 
     // Abort if nothing selected
@@ -149,7 +181,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING
+      DIRECTION.OUTGOING,
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
@@ -157,7 +189,7 @@
     const sourceMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
     selectedParameters.set([sourceMachineKey])
 
@@ -180,7 +212,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       sourceMachineLabel,
       true,
-      SYMBOLS[11]
+      SYMBOLS[11],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,6 +241,7 @@
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
+      console.log(ports)
 
       const portLabel = (p: any) => {
         const product = sourceMachineEntity?.products?.[p.portIndex]
@@ -221,12 +254,14 @@
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),
         value: p.portIndex,
+        available:
+          p.machine.outgoingConnections[p.portIndex] === EMPTY_CONNECTION,
       }))
 
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -239,7 +274,7 @@
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -261,12 +296,14 @@
       sourcePortOptions = ports.map(p => ({
         label: portLabel(p),
         value: p.portIndex,
+        available:
+          p.machine.outgoingConnections[p.portIndex] === EMPTY_CONNECTION,
       }))
 
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -279,7 +316,7 @@
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -298,7 +335,7 @@
     // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING
+      DIRECTION.INCOMING,
     ).filter(option => option.value !== sourceMachineKey)
 
     // Abort if no available targets
@@ -312,7 +349,7 @@
     let targetMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -334,7 +371,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       targetMachineLabel,
       true,
-      SYMBOLS[14]
+      SYMBOLS[14],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -345,20 +382,20 @@
     return [sourceMachineKey, targetMachineKey, portIndex]
   }
 
-  const getAttachDepotParameters = async (): Promise<any[] | false> => {
-    // Get depots
-    let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
+  const getAttachTankParameters = async (): Promise<any[] | false> => {
+    // Get tanks
+    let sourceSelectOptions = createSelectOptions(COMMAND.PLUG_TANK)
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Tank:")
 
-    const depotEntity = await renderSelect(
+    const tankEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
 
     // Abort if nothing selected
-    if (!depotEntity) {
+    if (!tankEntity) {
       handleInvalid("No tank selected")
       return false
     }
@@ -371,25 +408,24 @@
 
     // Add unattached inlets to the options
     for (const inletEntity of inlets) {
-      if (machines[inletEntity].depotConnection !== EMPTY_CONNECTION) continue
       targetSelectOptions.push({
         label: `Inlet #${machines[inletEntity].buildIndex}`,
         value: inletEntity,
+        available: machines[inletEntity].tankConnection === EMPTY_CONNECTION,
       })
     }
 
     // Add outlet if unattached
-    if (machines[outlet].depotConnection === EMPTY_CONNECTION) {
-      targetSelectOptions.push({
-        label: "Outlet",
-        value: outlet,
-      })
-    }
+    targetSelectOptions.push({
+      label: "Outlet",
+      value: outlet,
+      available: machines[outlet].tankConnection === EMPTY_CONNECTION,
+    })
 
     const targetEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -398,27 +434,26 @@
       return false
     }
 
-    return [depotEntity, targetEntity]
+    return [tankEntity, targetEntity]
   }
 
   const onSubmit = async () => {
-    console.log("Submit")
     // De-activate input-field
     inputActive = false
 
     // Write input to terminal
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.COMMAND,
-      userInput.length == 0 ? "&nbsp;" : userInput,
+      value.length == 0 ? "&nbsp;" : value,
       false,
-      SYMBOLS[0]
+      SYMBOLS[0],
     )
 
     // Unset store values
     selectedParameters.set([])
 
     // Evaluate input
-    const command = evaluate(userInput)
+    const command = evaluate(value)
 
     // Handle invalid command
     if (!command) {
@@ -426,15 +461,19 @@
       return
     }
 
+    // We prompt the user for the information needed to execute the command
+    let parameters: any[] | false = false
+
     // First, simply execute the command if it has no parameters
     if (NO_INPUT_COMMANDS.includes(command.id)) {
+      // We add a select for commands that need to be confirmed
+      if (command.id === COMMAND.WIPE) {
+        parameters = await getConfirmation(command)
+        if (!parameters) return
+      }
       await executeCommand(command, [])
       return
     }
-
-    // We prompt the user for the information needed to execute the command
-
-    let parameters: any[] | false = false
 
     if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
       playSound("tcm", "selectionEnter")
@@ -445,9 +484,9 @@
     } else if (command.id === COMMAND.DISCONNECT) {
       playSound("tcm", "selectionEnter")
       parameters = await getDisconnectParameters()
-    } else if (command.id === COMMAND.ATTACH_DEPOT) {
+    } else if (command.id === COMMAND.PLUG_TANK) {
       playSound("tcm", "selectionEnter")
-      parameters = await getAttachDepotParameters()
+      parameters = await getAttachTankParameters()
     }
 
     // Something went wrong in the parameter selection
@@ -458,10 +497,22 @@
 
     // Reset selected parameters
     selectedParameters.set([])
+
+    focusInput()
   }
 
   const onInput = (e: KeyboardEvent) => {
+    console.log("oejoeoej")
     playInputSound(e)
+    focusInput()
+  }
+
+  const onFocus = () => {
+    hasFocus = true
+  }
+  const onBlur = () => {
+    if ($activeTab == 0) setTimeout(focusInput, 10)
+    hasFocus = false
   }
 
   onMount(async () => {
@@ -469,7 +520,7 @@
       await terminalMessages.startUp()
       inputActive = true
     }
-    inputElement?.focus()
+    focusInput()
   })
 
   onDestroy(() => {
@@ -477,9 +528,17 @@
   })
 </script>
 
-<svelte:window on:keydown={focusInput} />
+<svelte:window
+  on:keydown={() => {
+    if ($activeTab == 0) {
+      focusInput()
+    }
+  }}
+/>
 
-<div id="terminal" class="terminal" class:noOutput>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div id="terminal" class="terminal" class:noOutput on:click={focusInput}>
   <!-- OUTPUT -->
   {#if !noOutput}
     {#each $terminalOutput as output, index (index)}
@@ -494,31 +553,19 @@
     bind:this={customInputContainerElement}
   />
 
-  <!-- INPUT -->
+  <!-- Input -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   {#if inputActive || noOutput}
-    <form on:submit|preventDefault={onSubmit}>
-      <span class="prompt-symbol">
-        {SYMBOLS[0]}
-      </span>
-      <input
-        class="terminal-input"
-        type="text"
-        on:focus={() => (hasFocus = true)}
-        on:blur={() => (hasFocus = false)}
-        {placeholder}
-        on:keydown={onInput}
-        bind:this={inputElement}
-        bind:value={userInput}
-      />
-      <div
-        class="blinker"
-        class:blink={userInput.length === 0}
-        class:empty={userInput === ""}
-        style:transform="translate({userInput.length}ch, 0)"
-      >
-        █
-      </div>
-    </form>
+    <TerminalInput
+      {onSubmit}
+      {placeholder}
+      {onInput}
+      {onFocus}
+      {onBlur}
+      bind:inputElement
+      bind:value
+      {focusInput}
+    />
   {/if}
 </div>
 
@@ -538,58 +585,6 @@
       height: 100vh;
       padding: var(--default-padding);
       padding-bottom: 10ch;
-    }
-
-    form {
-      font-family: var(--font-family);
-      border: none;
-      outline: none;
-      left: 1em;
-      display: flex;
-
-      .prompt-symbol {
-        white-space: nowrap;
-        vertical-align: middle;
-        margin-right: 1ch;
-        color: inherit;
-      }
-
-      input {
-        caret-color: transparent;
-        font-family: inherit;
-        font-size: inherit;
-        color: inherit;
-        line-height: inherit;
-        width: 60ch;
-        max-width: 100%;
-        background-color: inherit;
-        border: none;
-        padding: 0;
-        position: relative; /* To position the pseudo-element */
-
-        &::placeholder {
-          opacity: 1;
-          color: var(--color-grey-mid);
-        }
-
-        &:focus {
-          border: none;
-          outline: none;
-        }
-      }
-
-      .blinker {
-        opacity: 1;
-        position: absolute;
-        left: 3ch;
-        display: inline-block;
-        transform-origin: top left;
-        // mix-blend-mode: difference;
-
-        // &.empty {
-        //   color: var(--color-grey-mid);
-        // }
-      }
     }
   }
 </style>

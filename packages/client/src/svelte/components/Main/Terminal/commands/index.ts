@@ -1,41 +1,45 @@
 import type { Command } from "@components/Main/Terminal/types"
 
-import { blink } from "@components/Main/Terminal/commands/blink"
-import { help } from "@components/Main/Terminal/commands/help"
-import { build } from "@components/Main/Terminal/commands/build"
+// Machine
+import { buildMachine } from "@components/Main/Terminal/commands/buildMachine"
+import { removeMachine } from "@components/Main/Terminal/commands/removeMachine"
 import { connect } from "@components/Main/Terminal/commands/connect"
 import { disconnect } from "@components/Main/Terminal/commands/disconnect"
-import { destroy } from "@components/Main/Terminal/commands/destroy"
-import { wipe } from "@components/Main/Terminal/commands/wipe"
-import { attachDepot } from "@components/Main/Terminal/commands/attachDepot"
-import { detachDepot } from "@components/Main/Terminal/commands/detachDepot"
-import { emptyDepot } from "@components/Main/Terminal/commands/emptyDepot"
-import { refillDepot } from "@components/Main/Terminal/commands/refillDepot"
-import { ship } from "@components/Main/Terminal/commands/ship"
-import { start } from "@components/Main/Terminal/commands/start"
-// Testing
+// Tank
+import { plugTank } from "@components/Main/Terminal/commands/plugTank"
+import { unplugTank } from "@components/Main/Terminal/commands/unplugTank"
+import { emptyTank } from "@components/Main/Terminal/commands/emptyTank"
+import { fillTank } from "@components/Main/Terminal/commands/fillTank"
+import { shipTank } from "@components/Main/Terminal/commands/shipTank"
+// Pod
+import { wipePod } from "@components/Main/Terminal/commands/wipePod"
+// Misc.
+import { blink } from "@components/Main/Terminal/commands/blink"
+import { help } from "@components/Main/Terminal/commands/help"
+// Hidden
 import { skip } from "@components/Main/Terminal/commands/skip"
 import { graduate } from "@components/Main/Terminal/commands/graduate"
 import { resolve } from "@components/Main/Terminal/commands/resolve"
-import { fail } from "@components/Main/Terminal/commands/fail"
 
 export const commands: Command[] = [
-  build,
-  destroy,
+  // Machine
+  buildMachine,
+  removeMachine,
   connect,
   disconnect,
-  attachDepot,
-  detachDepot,
-  emptyDepot,
-  refillDepot,
-  wipe,
-  ship,
+  // Tank
+  plugTank,
+  unplugTank,
+  emptyTank,
+  fillTank,
+  shipTank,
+  // Pod
+  wipePod,
+  // Misc.
   help,
   blink,
-  start,
   // Testing
   resolve,
   skip,
-  fail,
   graduate,
 ]

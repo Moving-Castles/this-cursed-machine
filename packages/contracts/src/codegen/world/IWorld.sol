@@ -10,13 +10,13 @@ import { IBuildSystem } from "./IBuildSystem.sol";
 import { IConnectSystem } from "./IConnectSystem.sol";
 import { IDestroySystem } from "./IDestroySystem.sol";
 import { IDisconnectSystem } from "./IDisconnectSystem.sol";
-import { IResetSystem } from "./IResetSystem.sol";
 import { IResolveSystem } from "./IResolveSystem.sol";
-import { IDepotSystem } from "./IDepotSystem.sol";
+import { IWipeSystem } from "./IWipeSystem.sol";
 import { IOfferSystem } from "./IOfferSystem.sol";
 import { IOrderSystem } from "./IOrderSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { IStartSystem } from "./IStartSystem.sol";
+import { ITankSystem } from "./ITankSystem.sol";
 
 /**
  * @title IWorld
@@ -32,11 +32,11 @@ interface IWorld is
   IConnectSystem,
   IDestroySystem,
   IDisconnectSystem,
-  IResetSystem,
   IResolveSystem,
-  IDepotSystem,
+  IWipeSystem,
   IOfferSystem,
   IOrderSystem,
   ISpawnSystem,
-  IStartSystem
+  IStartSystem,
+  ITankSystem
 {}
