@@ -16,7 +16,7 @@
     SYMBOLS,
     NO_INPUT_COMMANDS,
     SINGLE_INPUT_COMMANDS,
-  } from "@components/Main/Terminal/"
+  } from "@components/Main/Terminal"
   import { terminalOutput } from "@components/Main/Terminal/stores"
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
@@ -88,6 +88,30 @@
     await command.fn(...parameters)
     // Note: It is the parent's responsibility to reset the input on this event
     dispatch("commandExecuted", { command, parameters })
+  }
+
+  const getConfirmation = async command => {
+    const selectOptions = createSelectOptions(command.id)
+
+    // Abort if no options
+    if (selectOptions.length === 0) {
+      await handleInvalid("Nothing")
+      return false
+    }
+
+    const value = await renderSelect(
+      customInputContainerElement,
+      Select,
+      selectOptions
+    )
+
+    // Abort if nothing selected
+    if (!value) {
+      await handleInvalid("Nothing selected")
+      return false
+    }
+
+    return [value]
   }
 
   const getSingleInputCommandParameters = async (
@@ -412,7 +436,6 @@
   }
 
   const onSubmit = async () => {
-    console.log("Submit")
     // De-activate input-field
     inputActive = false
 
@@ -436,15 +459,19 @@
       return
     }
 
+    // We prompt the user for the information needed to execute the command
+    let parameters: any[] | false = false
+
     // First, simply execute the command if it has no parameters
     if (NO_INPUT_COMMANDS.includes(command.id)) {
+      // We add a select for commands that need to be confirmed
+      if (command.id === COMMAND.WIPE) {
+        parameters = await getConfirmation(command)
+        if (!parameters) return
+      }
       await executeCommand(command, [])
       return
     }
-
-    // We prompt the user for the information needed to execute the command
-
-    let parameters: any[] | false = false
 
     if (SINGLE_INPUT_COMMANDS.includes(command.id)) {
       playSound("tcm", "selectionEnter")

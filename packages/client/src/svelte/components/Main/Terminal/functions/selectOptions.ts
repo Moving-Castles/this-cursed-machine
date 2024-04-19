@@ -23,7 +23,6 @@ import { machinePositionSort } from "@components/Main/Terminal/functions/helpers
 import {
   machineTypeToLabel,
   materialTypeToLabel,
-  availableMachines,
   machineIsAvailable,
 } from "@modules/state/simulated"
 import { UI_SCALE_FACTOR } from "@modules/ui/constants"
@@ -56,9 +55,15 @@ export function createSelectOptions(
       return createSelectOptionsRefillTank()
     case COMMAND.SHIP_TANK:
       return createSelectOptionsShip()
+    case COMMAND.WIPE_POD:
+      return createSelectOptionsWipe()
     default:
       return [] as SelectOption[]
   }
+}
+
+function createSelectOptionsWipe(): SelectOption[] {
+  return [{ label: "CONFIRM", value: "true", available: true }]
 }
 
 /**
