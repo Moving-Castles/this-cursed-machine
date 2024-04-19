@@ -1,7 +1,23 @@
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
 import { DIRECTION } from "@components/Main/Terminal/enums"
-import type { SimulatedMachines } from "./types"
+import type { SimulatedMachine, SimulatedMachines } from "./types"
+
+export const machineIsAvailable = (
+  direction: DIRECTION,
+  machine: SimulatedMachine
+) => {
+  const connectionKey =
+    direction === DIRECTION.OUTGOING
+      ? "outgoingConnections"
+      : "incomingConnections"
+
+  return (
+    machine[connectionKey]?.filter(
+      connection => connection === EMPTY_CONNECTION
+    ).length > 0
+  )
+}
 
 export const availableMachines = (
   direction: DIRECTION,

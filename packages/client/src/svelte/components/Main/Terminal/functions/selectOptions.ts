@@ -8,7 +8,12 @@ import {
   simulatedConnections,
   simulatedDepots,
 } from "@modules/state/simulated/stores"
-import { player, depots as depotsStore, offers as offersStore } from "@modules/state/base/stores"
+import {
+  player,
+  depots as depotsStore,
+  offers as offersStore,
+  playerTokenBalance,
+} from "@modules/state/base/stores"
 import {
   FIXED_MACHINE_TYPES,
   MACHINES_BY_LEVEL,
@@ -19,6 +24,7 @@ import {
   machineTypeToLabel,
   materialTypeToLabel,
   availableMachines,
+  machineIsAvailable,
 } from "@modules/state/simulated"
 import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
@@ -69,6 +75,7 @@ function createSelectOptionsBuild(): SelectOption[] {
     selectOptions.push({
       label: MACHINE_TYPE[availableMachines[i]],
       value: availableMachines[i],
+      available: true,
     })
   }
 
@@ -93,6 +100,7 @@ function createSelectOptionsDestroy(): SelectOption[] {
         selectOptions.push({
           label: `${machineTypeToLabel(machine.machineType)} #${machine.buildIndex}`,
           value: address,
+          available: true,
         })
       }
     })
@@ -107,16 +115,19 @@ function createSelectOptionsDestroy(): SelectOption[] {
 function createSelectOptionsConnect(direction: DIRECTION): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const machines = availableMachines(direction, get(simulatedMachines))
+  const machines = get(simulatedMachines)
 
-  selectOptions = machines
+  selectOptions = Object.entries(machines)
     .sort(machinePositionSort)
     .map(([address, machine]) => ({
       label:
         machineTypeToLabel(machine.machineType) +
         (machine.hasOwnProperty("buildIndex") ? " #" + machine.buildIndex : ""),
       value: address,
+      available: machineIsAvailable(direction, machine),
     }))
+
+  console.log(selectOptions)
 
   return selectOptions
 }
@@ -152,6 +163,7 @@ function createSelectOptionsDisconnect(): SelectOption[] {
     return {
       label,
       value: connection.id,
+      available: true,
     }
   })
 
@@ -164,14 +176,11 @@ function createSelectOptionsAttachDepot(): SelectOption[] {
   const depots = get(depotsStore)
 
   // Only depots that are not attached can be attached
-  selectOptions = Object.entries(depots)
-    .filter(
-      ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
-    )
-    .map(([address, depot]) => ({
-      label: `Tank #${depot.buildIndex}`,
-      value: address,
-    }))
+  selectOptions = Object.entries(depots).map(([address, depot]) => ({
+    label: `Tank #${depot.buildIndex}`,
+    value: address,
+    available: depot.depotConnection === EMPTY_CONNECTION,
+  }))
 
   return selectOptions
 }
@@ -182,12 +191,11 @@ function createSelectOptionsDetachDepot(): SelectOption[] {
   const depots = get(depotsStore)
 
   // Only depots that are attached can be detached
-  selectOptions = Object.entries(depots)
-    .filter(([_, depot]) => depot.depotConnection !== EMPTY_CONNECTION)
-    .map(([address, depot]) => ({
-      label: `Tank #${depot.buildIndex}`,
-      value: address,
-    }))
+  selectOptions = Object.entries(depots).map(([address, depot]) => ({
+    label: `Tank #${depot.buildIndex}`,
+    value: address,
+    available: depot.depotConnection !== EMPTY_CONNECTION,
+  }))
 
   return selectOptions
 }
@@ -198,14 +206,11 @@ function createSelectOptionsEmptyDepot(): SelectOption[] {
   const depots = get(depotsStore)
 
   // Only depots that are not attached be emptied
-  selectOptions = Object.entries(depots)
-    .filter(
-      ([_, depotDetails]) => depotDetails.depotConnection === EMPTY_CONNECTION
-    )
-    .map(([address, depot]) => ({
-      label: `Tank #${depot.buildIndex}`,
-      value: address,
-    }))
+  selectOptions = Object.entries(depots).map(([address, depot]) => ({
+    label: `Tank #${depot.buildIndex}`,
+    value: address,
+    available: depot.depotConnection === EMPTY_CONNECTION && depot.amount !== 0,
+  }))
 
   return selectOptions
 }
@@ -214,12 +219,14 @@ function createSelectOptionsRefillDepot(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   const offers = get(offersStore)
+  const balance = get(playerTokenBalance)
 
-  selectOptions = Object.entries(offers)
-    .map(([address, offer]) => ({
-      label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
-      value: address,
-    }))
+  selectOptions = Object.entries(offers).map(([address, offer]) => ({
+    label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
+    value: address,
+    // Cost is set in whole bugs. Balance will be
+    available: balance / ONE_TOKEN_UNIT > offer.offer.cost,
+  }))
 
   return selectOptions
 }
@@ -239,6 +246,7 @@ function createSelectOptionsShip(): SelectOption[] {
     return {
       label: `Tank #${depot.buildIndex} ${materialDescription}`,
       value: address,
+      available: depot.materialType !== MATERIAL_TYPE.NONE,
     }
   })
 

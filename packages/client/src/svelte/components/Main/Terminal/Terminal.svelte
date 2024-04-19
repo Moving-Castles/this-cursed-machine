@@ -119,6 +119,12 @@
   const getDisconnectParameters = async (): Promise<any[] | false> => {
     let disconnectOptions = createSelectOptions(COMMAND.DISCONNECT)
 
+    // Abort if no options
+    if (disconnectOptions.length === 0) {
+      await handleInvalid("Nothing to disconnect")
+      return false
+    }
+
     const connectionId = await renderSelect(
       customInputContainerElement,
       Select,
@@ -371,20 +377,19 @@
 
     // Add unattached inlets to the options
     for (const inletEntity of inlets) {
-      if (machines[inletEntity].depotConnection !== EMPTY_CONNECTION) continue
       targetSelectOptions.push({
         label: `Inlet #${machines[inletEntity].buildIndex}`,
         value: inletEntity,
+        available: machines[inletEntity].depotConnection === EMPTY_CONNECTION,
       })
     }
 
     // Add outlet if unattached
-    if (machines[outlet].depotConnection === EMPTY_CONNECTION) {
-      targetSelectOptions.push({
-        label: "Outlet",
-        value: outlet,
-      })
-    }
+    targetSelectOptions.push({
+      label: "Outlet",
+      value: outlet,
+      available: machines[outlet].depotConnection === EMPTY_CONNECTION,
+    })
 
     const targetEntity = await renderSelect(
       customInputContainerElement,
