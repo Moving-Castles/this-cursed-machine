@@ -69,7 +69,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 293357
+    "gasUsed": 296154
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

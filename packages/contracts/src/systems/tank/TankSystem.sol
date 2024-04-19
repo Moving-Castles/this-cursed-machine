@@ -113,9 +113,10 @@ contract TankSystem is System {
     // Clear currentOrder
     CurrentOrder.set(playerEntity, bytes32(0));
 
-    // Empty tank
-    MaterialType.set(_tankEntity, MATERIAL_TYPE.NONE);
-    Amount.set(_tankEntity, 0);
+    // Deduct material amount from tank
+    uint32 newAmount = Amount.get(_tankEntity) - currentOrder.amount;
+    Amount.set(_tankEntity, newAmount);
+    MaterialType.set(_tankEntity, newAmount == 0 ? MATERIAL_TYPE.NONE : MaterialType.get(_tankEntity));
 
     // On order: add player to completed list
     Completed.push(currentOrderId, playerEntity);
