@@ -1,20 +1,27 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { emptyDepot as sendEmptyDepot } from "@modules/action";
+import { removeMachine as sendRemoveMachine } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
+import { simulatedMachines } from "@modules/state/simulated/stores";
+import { get } from "svelte/store";
+import { MACHINE_TYPE } from "@modules/state/base/enums";
 import { playSound } from "@modules/sound";
 
-async function execute(depotEntity: string) {
+async function execute(machineEntity: string) {
     try {
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
+        const machine = get(simulatedMachines)[machineEntity]
+
+        // @todo: handle this better
+        if (!machine || !machine.machineType) return
+
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, `Destroying ${MACHINE_TYPE[machine.machineType]}`)
         // ...
-        const action = sendEmptyDepot(depotEntity,)
+        const action = sendRemoveMachine(machineEntity)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Emptying depot...")
-        await waitForCompletion(action, loadingLine)
+        await waitForCompletion(action, loadingLine);
         playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
         // ...
@@ -27,11 +34,11 @@ async function execute(depotEntity: string) {
     }
 }
 
-export const emptyDepot: Command<[depotEntity: string]> = {
-    id: COMMAND.EMPTY_DEPOT,
+export const removeMachine: Command<[machineEntiy: string]> = {
+    id: COMMAND.REMOVE_MACHINE,
     public: true,
-    name: "empty",
-    alias: "e",
-    objectTerm: "tank",
+    name: "remove",
+    alias: "r",
+    objectTerm: "machine",
     fn: execute,
 }

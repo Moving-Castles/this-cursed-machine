@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { simulatedDepots } from "@modules/state/simulated/stores"
+  import { simulatedTanks } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
-  import Depot from "./Depot.svelte"
+  import Tank from "./Tank.svelte"
 </script>
 
 <div
-  class="depots-box"
+  class="tanks-box"
   class:hidden={$tutorialProgress < 1}
   class:emphasis={$tutorialProgress === 7}
 >
   <!-- <div class="">shipping</div> -->
-  {#if $simulatedDepots}
-    {#each Object.entries($simulatedDepots) as [address, depot], index}
-      <Depot {address} {depot} {index} />
+  {#if $simulatedTanks}
+    {#each Object.entries($simulatedTanks) as [address, tank], index}
+      <Tank {address} {tank} {index} />
     {/each}
   {/if}
 </div>
 
 <style lang="scss">
-  .depots-box {
+  .tanks-box {
     // padding: 20px;
     width: 100%;
     height: 100%;

@@ -6,68 +6,68 @@ import { MACHINE_TYPE } from 'contracts/enums'
 import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
 
 test("(1) resolve: no connections", () => {
-    const { depots, machines, inlets, outlet, recipes } = setUp()
+    const { tanks, machines, inlets, outlet, recipes } = setUp()
 
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test1)
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test1)
 })
 
-test("(2) resolve: depot 1 to inlet", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+test("(2) resolve: tank 1 to inlet", () => {
+    let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"] = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"] = "TANK_ONE"
 
     // Should be empty
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test2)
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test2)
 })
 
-test("(3) resolve: depot 1 to inlet, inlet to player", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+test("(3) resolve: tank 1 to inlet, inlet to player", () => {
+    let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
     machines["PLAYER"].incomingConnections.push("INLET_ONE")
 
     // Should be:
-    // No depot patches as circuit is not closed
+    // No tank patches as circuit is not closed
     // 1000 bug from inlet
     // 500 blood and 500 piss from player
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test3)
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test3)
 })
 
-test("(4) resolve: depot 1 to inlet, inlet to player, depot2 to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+test("(4) resolve: tank 1 to inlet, inlet to player, tank2 to outlet", () => {
+    let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
     machines["PLAYER"].incomingConnections.push("INLET_ONE")
 
-    // Connect DEPOT 2 to OUTLET
-    depots["DEPOT_TWO"].depotConnection = "OUTLET"
-    machines["OUTLET"].depotConnection = "DEPOT_TWO"
+    // Connect TANK 2 to OUTLET
+    tanks["TANK_TWO"].tankConnection = "OUTLET"
+    machines["OUTLET"].tankConnection = "TANK_TWO"
 
     // Should be:
-    // No depot patches as circuit is not closed
+    // No tank patches as circuit is not closed
     // 1000 bug from inlet
     // 500 blood and 500 piss from player
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test4)
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test4)
 })
 
-test("(5) resolve: depot 1 to inlet, inlet to player, player (piss) to outlet, depot2 to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes } = setUp()
+test("(5) resolve: tank 1 to inlet, inlet to player, player (piss) to outlet, tank2 to outlet", () => {
+    let { tanks, machines, inlets, outlet, recipes } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
@@ -77,25 +77,25 @@ test("(5) resolve: depot 1 to inlet, inlet to player, player (piss) to outlet, d
     machines["PLAYER"].outgoingConnections.push("OUTLET")
     machines["OUTLET"].incomingConnections.push("PLAYER")
 
-    // Connect DEPOT 2 to OUTLET
-    depots["DEPOT_TWO"].depotConnection = "OUTLET"
-    machines["OUTLET"].depotConnection = "DEPOT_TWO"
+    // Connect TANK 2 to OUTLET
+    tanks["TANK_TWO"].tankConnection = "OUTLET"
+    machines["OUTLET"].tankConnection = "TANK_TWO"
 
     // Should be:
-    // Circuit closed, depot patches created
+    // Circuit closed, tank patches created
     // 1000 bug from inlet
     // 500 blood and 500 piss from player
     // 500 piss to outlet
-    // 500 piss to depot 2
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test5)
+    // 500 piss to tank 2
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test5)
 })
 
-test("(6) resolve: depot 1 to inlet, inlet to player, player (blood) to outlet", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+test("(6) resolve: tank 1 to inlet, inlet to player, player (blood) to outlet", () => {
+    let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
@@ -106,16 +106,16 @@ test("(6) resolve: depot 1 to inlet, inlet to player, player (blood) to outlet",
     machines["OUTLET"].incomingConnections.push("PLAYER")
 
     // Should be:
-    // Circuit open, no depot patches created
+    // Circuit open, no tank patches created
     // 1000 bug from inlet
     // 500 blood and 500 piss from player
     // 500 blood to outlet
-    // 500 blood to depot 2
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test6)
+    // 500 blood to tank 2
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test6)
 })
 
 test("(7) resolve: create AESOP_ORGANIC_HAND_SOAP", () => {
-    //     let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+    //     let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     //     // - Build Splitter
     //     machines["SPLITTER"] = createMachine(MACHINE_TYPE.SPLITTER, 1)
@@ -128,9 +128,9 @@ test("(7) resolve: create AESOP_ORGANIC_HAND_SOAP", () => {
     //     // - Build mixer
     //     machines["MIXER"] = createMachine(MACHINE_TYPE.MIXER, 1)
 
-    //     // Connect DEPOT 1 to INLET 1
-    //     depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    //     machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    //     // Connect TANK 1 to INLET 1
+    //     tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    //     machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     //     // - Connect inlet to Splitter
     //     machines["INLET_ONE"].outgoingConnections.push("SPLITTER")
@@ -164,19 +164,19 @@ test("(7) resolve: create AESOP_ORGANIC_HAND_SOAP", () => {
     //     machines["MIXER"].outgoingConnections.push("OUTLET");
     //     machines["OUTLET"].incomingConnections.push("MIXER");
 
-    //     // Connect DEPOT 2 to OUTLET
-    //     depots["DEPOT_TWO"].depotConnection = "OUTLET"
-    //     machines["OUTLET"].depotConnection = "DEPOT_TWO"
+    //     // Connect TANK 2 to OUTLET
+    //     tanks["TANK_TWO"].tankConnection = "OUTLET"
+    //     machines["OUTLET"].tankConnection = "TANK_TWO"
 
-    //     expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test7)
+    //     expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test7)
 })
 
 test("(8) resolve: clear on disconnect", () => {
-    let { depots, machines, inlets, outlet, recipes, fixedEntities } = setUp()
+    let { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
@@ -186,27 +186,27 @@ test("(8) resolve: clear on disconnect", () => {
     machines["PLAYER"].outgoingConnections = [null, "OUTLET"]
     machines["OUTLET"].incomingConnections.push("PLAYER")
 
-    // Connect DEPOT 2 to OUTLET
-    depots["DEPOT_TWO"].depotConnection = "OUTLET"
-    machines["OUTLET"].depotConnection = "DEPOT_TWO"
+    // Connect TANK 2 to OUTLET
+    tanks["TANK_TWO"].tankConnection = "OUTLET"
+    machines["OUTLET"].tankConnection = "TANK_TWO"
 
     // Should be:
-    // Circuit open, no depot patches created
+    // Circuit open, no tank patches created
     // 1000 bug from inlet
     // 500 blood and 500 piss from player
     // 500 blood to outlet
-    // 500 blood to depot 2
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test8)
+    // 500 blood to tank 2
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test8)
 
-    // Disconnect DEPOT 2 from OUTLET
-    depots["DEPOT_TWO"].depotConnection = EMPTY_CONNECTION
-    machines["OUTLET"].depotConnection = EMPTY_CONNECTION
+    // Disconnect TANK 2 from OUTLET
+    tanks["TANK_TWO"].tankConnection = EMPTY_CONNECTION
+    machines["OUTLET"].tankConnection = EMPTY_CONNECTION
 
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual(outputPatches.test8_2)
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual(outputPatches.test8_2)
 
-    // Disconnect DEPOT 1 from INLET 1
-    depots["DEPOT_ONE"].depotConnection = EMPTY_CONNECTION
-    machines["INLET_ONE"].depotConnection = EMPTY_CONNECTION
+    // Disconnect TANK 1 from INLET 1
+    tanks["TANK_ONE"].tankConnection = EMPTY_CONNECTION
+    machines["INLET_ONE"].tankConnection = EMPTY_CONNECTION
 
-    expect(resolve(machines, inlets, outlet, depots, recipes)).toStrictEqual({})
+    expect(resolve(machines, inlets, outlet, tanks, recipes)).toStrictEqual({})
 })

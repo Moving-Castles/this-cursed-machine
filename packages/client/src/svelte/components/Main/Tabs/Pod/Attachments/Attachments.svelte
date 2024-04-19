@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { depotAttachments } from "@modules/state/simulated/stores"
+  import { tankAttachments } from "@modules/state/simulated/stores"
   import Attachment from "./Attachment.svelte"
   import { activeTab, graphElement } from "@modules/ui/stores"
 
@@ -28,7 +28,7 @@
   <svg
     in:fade={{ duration: 100 }}
     xmlns="http://www.w3.org/2000/svg"
-    class="depot-connections"
+    class="tank-connections"
     class:visible
     width={innerWidth}
     height={innerHeight}
@@ -86,7 +86,7 @@
         </clipPath>
       </defs> -->
 
-      {#each Object.entries($depotAttachments) as [address, attachment] (address)}
+      {#each Object.entries($tankAttachments) as [address, attachment] (address)}
         <Attachment {attachment} />
       {/each}
     {/if}
@@ -94,7 +94,7 @@
 {/key}
 
 <style lang="scss">
-  .depot-connections {
+  .tank-connections {
     position: fixed;
     pointer-events: none;
     inset: 0;

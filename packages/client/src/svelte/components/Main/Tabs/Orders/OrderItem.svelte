@@ -4,7 +4,7 @@
   import { player } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
   import { MATERIAL_TYPE } from "contracts/enums"
-  import { accept, unaccept } from "@modules/action"
+  import { acceptOrder, unacceptOrder } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
@@ -27,14 +27,14 @@
 
   const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
     "_",
-    " "
+    " ",
   )
 
   const PULSE_CONDITIONS = [2, 8, 16]
 
   const staticMaterial = $staticContent.materials.find(
     material =>
-      material.materialType === MATERIAL_TYPE[order.order.materialType]
+      material.materialType === MATERIAL_TYPE[order.order.materialType],
   )
   const imageURL =
     staticMaterial && staticMaterial.image
@@ -44,7 +44,7 @@
   async function sendAccept() {
     $working = true
     playSound("tcm", "listPrint")
-    const action = accept(key)
+    const action = acceptOrder(key)
     await waitForCompletion(action)
     playSound("tcm", "bugs")
     $working = false
@@ -53,7 +53,7 @@
   async function sendUnaccept() {
     $working = true
     playSound("tcm", "listPrint")
-    const action = unaccept()
+    const action = unacceptOrder()
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
     $working = false
@@ -161,7 +161,7 @@
               <Spinner />
             {:else if !$player.tutorial && order.order.expirationBlock != 0}
               {blocksToReadableTime(
-                Number(order.order.expirationBlock) - Number($blockNumber)
+                Number(order.order.expirationBlock) - Number($blockNumber),
               )}
             {:else}
               \

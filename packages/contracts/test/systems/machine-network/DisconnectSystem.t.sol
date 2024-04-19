@@ -15,7 +15,7 @@ contract DiconnectSystemTest is BaseTest {
     world.start();
 
     // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitterEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Connect player (first output == piss) to splitter
     world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
@@ -25,7 +25,7 @@ contract DiconnectSystemTest is BaseTest {
     assertEq(IncomingConnections.get(splitterEntity)[0], playerEntity);
 
     // Disconnect player from splitter
-    startGasReport("Disconnect player from splitter");
+    startGasReport("Disconnect");
     world.disconnect(playerEntity, PORT_INDEX.FIRST);
     endGasReport();
 
@@ -45,7 +45,7 @@ contract DiconnectSystemTest is BaseTest {
     world.start();
 
     // Build a mixer
-    bytes32 mixerEntity = world.build(MACHINE_TYPE.MIXER);
+    bytes32 mixerEntity = world.buildMachine(MACHINE_TYPE.MIXER);
 
     // Connect player (first output == piss) to mixer
     world.connect(playerEntity, mixerEntity, PORT_INDEX.FIRST);
@@ -88,10 +88,10 @@ contract DiconnectSystemTest is BaseTest {
     world.start();
 
     // Build a splitter
-    world.build(MACHINE_TYPE.SPLITTER);
+    world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Build a dryer
-    bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
+    bytes32 dryerEntity = world.buildMachine(MACHINE_TYPE.DRYER);
 
     // Connect dryer to splitter
     vm.expectRevert("no connection to disconnect");

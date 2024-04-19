@@ -26,12 +26,12 @@ contract DevSystem is System {
   }
 
   /**
-   * @notice Fill depot with material
+   * @notice Fill tank with material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillDepot(bytes32 _depotEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {
-    MaterialType.set(_depotEntity, _materialType);
-    Amount.set(_depotEntity, _amount);
+  function fillTank(bytes32 _tankEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {
+    MaterialType.set(_tankEntity, _materialType);
+    Amount.set(_tankEntity, _amount);
   }
 
   /**

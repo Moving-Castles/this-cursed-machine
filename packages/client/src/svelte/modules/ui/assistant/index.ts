@@ -4,7 +4,7 @@ import { MACHINE_TYPE } from "contracts/enums"
 import { writable, derived, get } from "svelte/store"
 import { playerId, playerPod } from "@modules/state/base/stores"
 import {
-  shippableDepots,
+  shippableTanks,
   simulatedMachines,
 } from "@modules/state/simulated/stores"
 
@@ -58,12 +58,8 @@ function updateConditions() {
   const PLAYER_ADDRESS = get(playerId)
   const OUTLET_ADDRESS = get(playerPod)?.fixedEntities?.outlet
   const INLET_ADDRESSES = get(playerPod)?.fixedEntities?.inlets
-  const DEPOT_ADDRESSES = get(playerPod)?.depotsInPod
-  const BUG_DEPOT = get(playerPod)?.depotsInPod?.[0]
-
-  const DRYER_ADDRESS = MACHINES?.find(
-    ([_, machine]) => machine.machineType === MACHINE_TYPE.DRYER
-  )?.[0]
+  const TANK_ADDRESSES = get(playerPod)?.tanksInPod
+  const BUG_TANK = get(playerPod)?.tanksInPod?.[0]
 
   const ADVANCE_CONDITIONS = [
     { type: "wait", value: 8000 },
@@ -71,12 +67,12 @@ function updateConditions() {
     { type: "command", value: ["blink", "."] }, // 2
     { type: "tab", value: [1] }, // 3
     { type: "command", value: ["blink", "."] }, // 4
-    { type: "contract", value: { systemId: "accept" } }, // 5
+    { type: "contract", value: { systemId: "acceptOrder" } }, // 5
     { type: "tab", value: [0] }, // 6
-    { type: "contract", value: { systemId: "buy" } }, // 7
+    { type: "contract", value: { systemId: "buyOffer" } }, // 7
     {
       type: "contract",
-      value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
+      value: { systemId: "plugTank", params: [BUG_TANK, INLET_ADDRESSES] },
     }, // 8
     { type: "contract", value: { systemId: "connect" } }, // 9
     {
@@ -86,18 +82,18 @@ function updateConditions() {
     {
       type: "contract",
       value: {
-        systemId: "attachDepot",
-        params: [DEPOT_ADDRESSES, OUTLET_ADDRESS],
+        systemId: "plugTank",
+        params: [TANK_ADDRESSES, OUTLET_ADDRESS],
       },
     }, // 11
     { type: "order" }, // 12
-    { type: "contract", value: { systemId: "ship" } }, // 13
+    { type: "contract", value: { systemId: "shipTank" } }, // 13
     { type: "tab", value: [1] }, // 14
-    { type: "contract", value: { systemId: "accept" } }, // 15
-    { type: "contract", value: { systemId: "buy" } }, // 16
+    { type: "contract", value: { systemId: "acceptOrder" } }, // 15
+    { type: "contract", value: { systemId: "buyOffer" } }, // 16
     {
       type: "contract",
-      value: { systemId: "attachDepot", params: [BUG_DEPOT, INLET_ADDRESSES] },
+      value: { systemId: "plugTank", params: [BUG_TANK, INLET_ADDRESSES] },
     }, // 17
     {
       type: "contract",
@@ -105,7 +101,7 @@ function updateConditions() {
     }, // 18
     {
       type: "contract",
-      value: { systemId: "build", params: [MACHINE_TYPE.DRYER] },
+      value: { systemId: "buildMachine", params: [MACHINE_TYPE.DRYER] },
     }, // 19
     {
       type: "contract",
@@ -114,18 +110,18 @@ function updateConditions() {
     {
       type: "contract",
       value: {
-        systemId: "attachDepot",
-        params: [DEPOT_ADDRESSES, OUTLET_ADDRESS],
+        systemId: "plugTank",
+        params: [TANK_ADDRESSES, OUTLET_ADDRESS],
       },
     }, // 21
     { type: "order" }, // 22
-    { type: "contract", value: { systemId: "ship" } }, // 23
+    { type: "contract", value: { systemId: "shipTank" } }, // 23
     { type: "tab", value: [1] }, // 24
-    { type: "contract", value: { systemId: "accept" } }, // 25
+    { type: "contract", value: { systemId: "acceptOrder" } }, // 25
     { type: "tab", value: [2] }, // 26
     { type: "read" }, // 27
     { type: "order" }, // 28
-    { type: "contract", value: { systemId: "ship" } }, // 29
+    { type: "contract", value: { systemId: "shipTank" } }, // 29
     { type: "tab", value: [3] }, // 30
   ]
 
@@ -228,7 +224,7 @@ export function advanceTutorial(
 
     // Ready to ship ?
     if (step.type === "order" && type === "order") {
-      if (Object.values(get(shippableDepots)).some(e => e === true)) {
+      if (Object.values(get(shippableTanks)).some(e => e === true)) {
         markComplete(level)
       }
     }

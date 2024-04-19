@@ -2,10 +2,10 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, DepotsInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, DepotConnection, NonTransferableBalance } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, TanksInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, TankConnection, NonTransferableBalance } from "../../codegen/index.sol";
 import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibPod, LibEntity, LibDepot } from "../../libraries/Libraries.sol";
-import { NUMBER_OF_DEPOTS } from "../../constants.sol";
+import { LibUtils, LibPod, LibEntity, LibTank } from "../../libraries/Libraries.sol";
+import { NUMBER_OF_TANKS } from "../../constants.sol";
 
 contract StartSystem is System {
   /**
@@ -28,7 +28,7 @@ contract StartSystem is System {
       BuildIndex.set(inletEntities[i], i + 1);
       CarriedBy.set(inletEntities[i], podEntity);
       MachinesInPod.push(podEntity, inletEntities[i]);
-      DepotConnection.set(inletEntities[i], bytes32(0));
+      TankConnection.set(inletEntities[i], bytes32(0));
     }
 
     // Place player in pod
@@ -39,17 +39,17 @@ contract StartSystem is System {
     bytes32 outletEntity = LibEntity.create(MACHINE_TYPE.OUTLET);
     CarriedBy.set(outletEntity, podEntity);
     MachinesInPod.push(podEntity, outletEntity);
-    DepotConnection.set(outletEntity, bytes32(0));
+    TankConnection.set(outletEntity, bytes32(0));
     BuildIndex.set(outletEntity, 1);
 
-    // Create depots
-    bytes32[] memory depotsInPod = new bytes32[](NUMBER_OF_DEPOTS);
+    // Create tanks
+    bytes32[] memory tanksInPod = new bytes32[](NUMBER_OF_TANKS);
 
-    // Store IDs of depots in the pod
-    for (uint32 i; i < depotsInPod.length; i++) {
-      depotsInPod[i] = LibDepot.create(podEntity, i);
+    // Store IDs of tanks in the pod
+    for (uint32 i; i < tanksInPod.length; i++) {
+      tanksInPod[i] = LibTank.create(podEntity, i);
     }
-    DepotsInPod.set(podEntity, depotsInPod);
+    TanksInPod.set(podEntity, tanksInPod);
 
     // Save fixed entities
     FixedEntities.set(podEntity, FixedEntitiesData({ outlet: outletEntity, inlets: inletEntities }));

@@ -59,29 +59,29 @@ export function consolidatePatches(patches: SimulatedEntities[]): SimulatedEntit
     return newPatches;
 }
 
-export function createOutletDepotPatches(
+export function createOutletTankPatches(
     circuitClosed: Boolean,
     outputPatches: Product[],
     outlet: string,
-    outletDepot: string | null
+    outletTank: string | null
 ): SimulatedEntities {
     const newPatches = {} as SimulatedEntities;
 
     // Abort if circuit is not closed
     if (!circuitClosed) return newPatches;
 
-    // Abort if no connected depot
-    if (!outletDepot) return newPatches;
+    // Abort if no connected tank
+    if (!outletTank) return newPatches;
 
     // Get the output from the outlet
     const outletOutput = outputPatches.filter(patch => patch.machineId === outlet);
 
     if (outletOutput[0]) {
-        // Create patch for depot
-        newPatches[outletDepot] = {
-            depot: true,
+        // Create patch for tank
+        newPatches[outletTank] = {
+            tank: true,
             inputs: [{
-                machineId: outletDepot,
+                machineId: outletTank,
                 sourceMachineId: outletOutput[0].machineId,
                 materialType: outletOutput[0].materialType,
                 amount: outletOutput[0].amount,
@@ -93,7 +93,7 @@ export function createOutletDepotPatches(
     return newPatches;
 }
 
-export function createInletDepotPatches(
+export function createInletTankPatches(
     circuitClosed: Boolean,
     inputPatches: Product[],
     inlets: string[],
@@ -109,15 +109,15 @@ export function createInletDepotPatches(
 
     for (let i = 0; i < inletInputs.length; i++) {
 
-        const depotId = machines[inletInputs[i].machineId]?.depotConnection;
+        const tankId = machines[inletInputs[i].machineId]?.tankConnection;
 
-        if (!depotId) continue;
+        if (!tankId) continue;
 
-        // Create patch for depot
-        newPatches[depotId] = {
-            depot: true,
+        // Create patch for tank
+        newPatches[tankId] = {
+            tank: true,
             outputs: [{
-                machineId: depotId,
+                machineId: tankId,
                 sourceMachineId: null,
                 materialType: inletInputs[i].materialType,
                 amount: inletInputs[i].amount,

@@ -10,14 +10,14 @@ import {
     waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound"
-import { buy as sendRefillDepot } from "@modules/action"
+import { buyOffer as sendBuyOffer } from "@modules/action"
 import { parseError } from "@components/Main/Terminal/functions/errors"
 
 async function execute(offerEntity: string) {
     try {
         writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Filling tank...")
         // ...
-        const action = sendRefillDepot(offerEntity)
+        const action = sendBuyOffer(offerEntity)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
@@ -38,12 +38,12 @@ async function execute(offerEntity: string) {
     }
 }
 
-export const refillDepot: Command<[offerEntity: string]> =
+export const fillTank: Command<[offerEntity: string]> =
 {
-    id: COMMAND.REFILL_DEPOT,
+    id: COMMAND.FILL_TANK,
     public: true,
-    name: "refill",
-    alias: "r",
+    name: "fill",
+    alias: "f",
     objectTerm: "tank",
     fn: execute,
 }

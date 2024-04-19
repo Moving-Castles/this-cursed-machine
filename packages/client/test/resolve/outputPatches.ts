@@ -96,13 +96,13 @@ export const outputPatches = {
         },
     },
     "test5": {
-        DEPOT_ONE: {
-            depot: true,
+        TANK_ONE: {
+            tank: true,
             outputs: [
                 {
                     amount: 1000,
                     inletActive: [true, false],
-                    machineId: "DEPOT_ONE",
+                    machineId: "TANK_ONE",
                     materialType: 1,
                     sourceMachineId: null
                 },
@@ -176,13 +176,13 @@ export const outputPatches = {
             ],
             productive: true
         },
-        DEPOT_TWO: {
-            depot: true,
+        TANK_TWO: {
+            tank: true,
             inputs: [
                 {
                     amount: 500,
                     inletActive: [true, false],
-                    machineId: "DEPOT_TWO",
+                    machineId: "TANK_TWO",
                     materialType: 2,
                     sourceMachineId: "OUTLET"
                 },
@@ -260,13 +260,13 @@ export const outputPatches = {
         },
     },
     "test7": {
-        DEPOT_ONE: {
-            depot: true,
+        TANK_ONE: {
+            tank: true,
             outputs: [
                 {
                     amount: 1000,
                     inletActive: [true, false],
-                    machineId: "DEPOT_ONE",
+                    machineId: "TANK_ONE",
                     materialType: 1,
                     sourceMachineId: null
                 },
@@ -453,13 +453,13 @@ export const outputPatches = {
             ],
             productive: true
         },
-        DEPOT_TWO: {
-            depot: true,
+        TANK_TWO: {
+            tank: true,
             inputs: [
                 {
                     amount: 250,
                     inletActive: [true, false],
-                    machineId: "DEPOT_TWO",
+                    machineId: "TANK_TWO",
                     materialType: 8,
                     sourceMachineId: "OUTLET"
                 },
@@ -467,13 +467,13 @@ export const outputPatches = {
         },
     },
     "test8": {
-        DEPOT_ONE: {
-            depot: true,
+        TANK_ONE: {
+            tank: true,
             outputs: [
                 {
                     amount: 1000,
                     inletActive: [true, false],
-                    machineId: "DEPOT_ONE",
+                    machineId: "TANK_ONE",
                     materialType: 1,
                     sourceMachineId: null
                 },
@@ -547,13 +547,13 @@ export const outputPatches = {
             ],
             productive: true
         },
-        DEPOT_TWO: {
-            depot: true,
+        TANK_TWO: {
+            tank: true,
             inputs: [
                 {
                     amount: 500,
                     inletActive: [true, false],
-                    machineId: "DEPOT_TWO",
+                    machineId: "TANK_TWO",
                     materialType: 3,
                     sourceMachineId: "OUTLET"
                 },

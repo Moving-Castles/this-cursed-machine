@@ -3,14 +3,14 @@
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
   import { tutorialProgress } from "@modules/ui/assistant"
 
-  import DepotsBox from "@components/Main/Tabs/Pod/Depots/DepotsBox.svelte"
+  import TanksBox from "@components/Main/Tabs/Pod/Tanks/TanksBox.svelte"
   import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 
 <div class="pod">
   <div class="stats">
     {#if $tutorialProgress > 6}
-      <DepotsBox />
+      <TanksBox />
     {/if}
   </div>
   <div class="graph" in:fade={{ duration: 100 }}>

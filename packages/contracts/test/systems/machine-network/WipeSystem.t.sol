@@ -5,12 +5,12 @@ import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { ENTITY_TYPE, MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 
-contract ResetSystemTest is BaseTest {
+contract WipeSystemTest is BaseTest {
   bytes32 playerEntity;
   bytes32 podEntity;
   bytes32[] inletEntities;
   bytes32 outletEntity;
-  bytes32[] depotsInPod;
+  bytes32[] tanksInPod;
   FixedEntitiesData fixedEntities;
 
   function setUp() public override {
@@ -27,7 +27,7 @@ contract ResetSystemTest is BaseTest {
 
     fixedEntities = FixedEntities.get(podEntity);
 
-    depotsInPod = DepotsInPod.get(podEntity);
+    tanksInPod = TanksInPod.get(podEntity);
 
     vm.stopPrank();
   }
@@ -37,17 +37,17 @@ contract ResetSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
+    // Connect tank 0 to inlet
+    world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
 
-    // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
+    // Connect tank 1 to outlet
+    world.plugTank(tanksInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
     // Build splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitterEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Connect player (piss) to splitter
     world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
@@ -60,15 +60,15 @@ contract ResetSystemTest is BaseTest {
     vm.roll(block.number + blocksToWait);
 
     // Resolve
-    startGasReport("Reset pod");
-    world.reset();
+    startGasReport("Wipe pod");
+    world.wipePod();
     endGasReport();
 
     // 4 = number of fixed entities
     assertEq(MachinesInPod.get(podEntity).length, 4);
 
-    for (uint i; i < depotsInPod.length; i++) {
-      assertEq(DepotConnection.get(depotsInPod[i]), bytes32(0));
+    for (uint i; i < tanksInPod.length; i++) {
+      assertEq(TankConnection.get(tanksInPod[i]), bytes32(0));
     }
 
     vm.stopPrank();

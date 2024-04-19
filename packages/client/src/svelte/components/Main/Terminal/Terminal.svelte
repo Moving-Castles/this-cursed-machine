@@ -78,7 +78,7 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5]
+      SYMBOLS[5],
     )
     resetInput()
   }
@@ -91,7 +91,7 @@
   }
 
   const getSingleInputCommandParameters = async (
-    command: Command
+    command: Command,
   ): Promise<any[] | false> => {
     const selectOptions = createSelectOptions(command.id)
 
@@ -104,7 +104,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -128,7 +128,7 @@
     const connectionId = await renderSelect(
       customInputContainerElement,
       Select,
-      disconnectOptions
+      disconnectOptions,
     )
 
     // Abort if nothing selected
@@ -155,7 +155,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING
+      DIRECTION.OUTGOING,
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
@@ -163,7 +163,7 @@
     const sourceMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
     selectedParameters.set([sourceMachineKey])
 
@@ -186,7 +186,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       sourceMachineLabel,
       true,
-      SYMBOLS[11]
+      SYMBOLS[11],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -235,7 +235,7 @@
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -248,7 +248,7 @@
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -277,7 +277,7 @@
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -290,7 +290,7 @@
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Port: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -309,7 +309,7 @@
     // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING
+      DIRECTION.INCOMING,
     ).filter(option => option.value !== sourceMachineKey)
 
     // Abort if no available targets
@@ -323,7 +323,7 @@
     let targetMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -345,7 +345,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       targetMachineLabel,
       true,
-      SYMBOLS[14]
+      SYMBOLS[14],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -356,20 +356,20 @@
     return [sourceMachineKey, targetMachineKey, portIndex]
   }
 
-  const getAttachDepotParameters = async (): Promise<any[] | false> => {
-    // Get depots
-    let sourceSelectOptions = createSelectOptions(COMMAND.ATTACH_DEPOT)
+  const getAttachTankParameters = async (): Promise<any[] | false> => {
+    // Get tanks
+    let sourceSelectOptions = createSelectOptions(COMMAND.PLUG_TANK)
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Tank:")
 
-    const depotEntity = await renderSelect(
+    const tankEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
 
     // Abort if nothing selected
-    if (!depotEntity) {
+    if (!tankEntity) {
       handleInvalid("No tank selected")
       return false
     }
@@ -385,7 +385,7 @@
       targetSelectOptions.push({
         label: `Inlet #${machines[inletEntity].buildIndex}`,
         value: inletEntity,
-        available: machines[inletEntity].depotConnection === EMPTY_CONNECTION,
+        available: machines[inletEntity].tankConnection === EMPTY_CONNECTION,
       })
     }
 
@@ -393,13 +393,13 @@
     targetSelectOptions.push({
       label: "Outlet",
       value: outlet,
-      available: machines[outlet].depotConnection === EMPTY_CONNECTION,
+      available: machines[outlet].tankConnection === EMPTY_CONNECTION,
     })
 
     const targetEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -408,7 +408,7 @@
       return false
     }
 
-    return [depotEntity, targetEntity]
+    return [tankEntity, targetEntity]
   }
 
   const onSubmit = async () => {
@@ -421,7 +421,7 @@
       TERMINAL_OUTPUT_TYPE.COMMAND,
       userInput.length == 0 ? "&nbsp;" : userInput,
       false,
-      SYMBOLS[0]
+      SYMBOLS[0],
     )
 
     // Unset store values
@@ -455,9 +455,9 @@
     } else if (command.id === COMMAND.DISCONNECT) {
       playSound("tcm", "selectionEnter")
       parameters = await getDisconnectParameters()
-    } else if (command.id === COMMAND.ATTACH_DEPOT) {
+    } else if (command.id === COMMAND.PLUG_TANK) {
       playSound("tcm", "selectionEnter")
-      parameters = await getAttachDepotParameters()
+      parameters = await getAttachTankParameters()
     }
 
     // Something went wrong in the parameter selection

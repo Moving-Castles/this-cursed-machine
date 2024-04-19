@@ -1,20 +1,19 @@
 import type { Command } from "@components/Main/Terminal/types";
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { reset as sendReset } from "@modules/action";
+import { emptyTank as sendEmptyTank } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
 
-async function execute() {
+async function execute(tankEntity: string) {
     try {
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Wiping pod...")
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "THIS CANNOT BE UNDONE...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating tank...")
         // ...
-        const action = sendReset()
+        const action = sendEmptyTank(tankEntity,)
         // ...
         await waitForTransaction(action, loadingSpinner)
         // ...
-        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Destruction in progress...")
+        writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Emptying tank...")
         await waitForCompletion(action, loadingLine)
         playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
@@ -28,11 +27,11 @@ async function execute() {
     }
 }
 
-export const wipe: Command<[]> = {
-    id: COMMAND.WIPE,
+export const emptyTank: Command<[tankEntity: string]> = {
+    id: COMMAND.EMPTY_TANK,
     public: true,
-    name: "wipe",
-    alias: "w",
-    objectTerm: "pod",
+    name: "empty",
+    alias: "e",
+    objectTerm: "tank",
     fn: execute,
 }

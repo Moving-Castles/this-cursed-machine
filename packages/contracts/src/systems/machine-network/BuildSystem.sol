@@ -12,7 +12,7 @@ contract BuildSystem is System {
    * @param _machineType The type of machine to build
    * @return machineEntity The identifier for the newly created machine entity.
    */
-  function build(MACHINE_TYPE _machineType) public returns (bytes32 machineEntity) {
+  function buildMachine(MACHINE_TYPE _machineType) public returns (bytes32 machineEntity) {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // Inlets, outlets and players are machines, but not buildable

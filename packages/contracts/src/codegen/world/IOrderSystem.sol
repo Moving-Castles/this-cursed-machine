@@ -22,9 +22,7 @@ interface IOrderSystem {
 
   function cancelOrder(bytes32 _orderEntity) external;
 
-  function accept(bytes32 _orderEntity) external;
+  function acceptOrder(bytes32 _orderEntity) external;
 
-  function unaccept() external;
-
-  function ship(bytes32 _depotEntity) external;
+  function unacceptOrder() external;
 }

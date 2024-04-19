@@ -7,7 +7,7 @@
   import walkable from "@modules/utils/walkable"
   import {
     simulatedMachines as machines,
-    simulatedDepots as depots,
+    simulatedTanks as tanks,
   } from "@modules/state/simulated/stores"
   import { draw as drawTransition } from "svelte/transition"
 
@@ -18,7 +18,7 @@
 
   let element: SVGElement
 
-  let [depotElement, machineElement, midzone, safezone]: [
+  let [tankElement, machineElement, midzone, safezone]: [
     HTMLElement | null,
     HTMLElement | null,
     HTMLElement | null,
@@ -58,10 +58,10 @@
   }
 
   function makePoints() {
-    // Assuming depots are in order
+    // Assuming tanks are in order
     // The safezone on the left is used if the attachment is going to an inlet
     // The safezone on the right is used if the attachment is going to the outlet
-    depotElement = document.getElementById(`depot-${attachment.depot}`)
+    tankElement = document.getElementById(`tank-${attachment.tank}`)
     machineElement = document.getElementById(`machine-${attachment.machine}`)
     midzone = document.getElementById("midzone")
     safezone = document.getElementById(
@@ -70,7 +70,7 @@
         : "safezone-2",
     )
 
-    const from = depotElement?.getBoundingClientRect()
+    const from = tankElement?.getBoundingClientRect()
     const to = machineElement?.getBoundingClientRect()
 
     if (from && to && safezone) {
@@ -80,10 +80,10 @@
         y: to.top + to.height / 2,
       }
 
-      // unless the machine is inlet AND depot is the first
-      // unless the machine is outlet and depot is the third
+      // unless the machine is inlet AND tank is the first
+      // unless the machine is outlet and tank is the third
 
-      const depotIndex = Object.keys($depots).indexOf(attachment.depot)
+      const tankIndex = Object.keys($tanks).indexOf(attachment.tank)
 
       // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
@@ -150,7 +150,7 @@
 <svelte:window on:resize={redraw} />
 
 <g
-  data-from={attachment.depot}
+  data-from={attachment.tank}
   data-to={attachment.machine}
   bind:this={element}
   mask="url(#mask)"

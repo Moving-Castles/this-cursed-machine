@@ -13,7 +13,7 @@
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
   // $: label = `O${machine.buildIndex ?? ""}`
   $: label = "→"
-  $: connected = machine.depotConnection !== EMPTY_CONNECTION
+  $: connected = machine.tankConnection !== EMPTY_CONNECTION
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && !$selectedOption?.available
 

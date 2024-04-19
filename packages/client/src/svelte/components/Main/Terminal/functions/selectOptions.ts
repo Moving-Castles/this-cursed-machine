@@ -6,11 +6,11 @@ import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
 import {
   simulatedMachines,
   simulatedConnections,
-  simulatedDepots,
+  simulatedTanks,
 } from "@modules/state/simulated/stores"
 import {
   player,
-  depots as depotsStore,
+  tanks as tanksStore,
   offers as offersStore,
   playerTokenBalance,
 } from "@modules/state/base/stores"
@@ -38,23 +38,23 @@ export function createSelectOptions(
   direction: DIRECTION = DIRECTION.OUTGOING
 ): SelectOption[] {
   switch (commandType) {
-    case COMMAND.BUILD:
+    case COMMAND.BUILD_MACHINE:
       return createSelectOptionsBuild()
-    case COMMAND.DESTROY:
+    case COMMAND.REMOVE_MACHINE:
       return createSelectOptionsDestroy()
     case COMMAND.CONNECT:
       return createSelectOptionsConnect(direction)
     case COMMAND.DISCONNECT:
       return createSelectOptionsDisconnect()
-    case COMMAND.ATTACH_DEPOT:
-      return createSelectOptionsAttachDepot()
-    case COMMAND.DETACH_DEPOT:
-      return createSelectOptionsDetachDepot()
-    case COMMAND.EMPTY_DEPOT:
-      return createSelectOptionsEmptyDepot()
-    case COMMAND.REFILL_DEPOT:
-      return createSelectOptionsRefillDepot()
-    case COMMAND.SHIP:
+    case COMMAND.PLUG_TANK:
+      return createSelectOptionsAttachTank()
+    case COMMAND.UNPLUG_TANK:
+      return createSelectOptionsDetachTank()
+    case COMMAND.EMPTY_TANK:
+      return createSelectOptionsEmptyTank()
+    case COMMAND.FILL_TANK:
+      return createSelectOptionsRefillTank()
+    case COMMAND.SHIP_TANK:
       return createSelectOptionsShip()
     default:
       return [] as SelectOption[]
@@ -168,52 +168,52 @@ function createSelectOptionsDisconnect(): SelectOption[] {
   return selectOptions
 }
 
-function createSelectOptionsAttachDepot(): SelectOption[] {
+function createSelectOptionsAttachTank(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const depots = get(depotsStore)
+  const tanks = get(tanksStore)
 
-  // Only depots that are not attached can be attached
-  selectOptions = Object.entries(depots).map(([address, depot]) => ({
-    label: `Tank #${depot.buildIndex}`,
+  // Only tanks that are not attached can be attached
+  selectOptions = Object.entries(tanks).map(([address, tank]) => ({
+    label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: depot.depotConnection === EMPTY_CONNECTION,
+    available: tank.tankConnection === EMPTY_CONNECTION,
   }))
 
   return selectOptions
 }
 
-function createSelectOptionsDetachDepot(): SelectOption[] {
+function createSelectOptionsDetachTank(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const depots = get(depotsStore)
+  const tanks = get(tanksStore)
 
-  // Only depots that are attached can be detached
-  selectOptions = Object.entries(depots).map(([address, depot]) => ({
-    label: `Tank #${depot.buildIndex}`,
+  // Only tanks that are attached can be detached
+  selectOptions = Object.entries(tanks).map(([address, tank]) => ({
+    label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: depot.depotConnection !== EMPTY_CONNECTION,
+    available: tank.tankConnection !== EMPTY_CONNECTION,
   }))
 
   return selectOptions
 }
 
-function createSelectOptionsEmptyDepot(): SelectOption[] {
+function createSelectOptionsEmptyTank(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  const depots = get(depotsStore)
+  const tanks = get(tanksStore)
 
-  // Only depots that are not attached be emptied
-  selectOptions = Object.entries(depots).map(([address, depot]) => ({
-    label: `Tank #${depot.buildIndex}`,
+  // Only tanks that are not attached be emptied
+  selectOptions = Object.entries(tanks).map(([address, tank]) => ({
+    label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: depot.depotConnection === EMPTY_CONNECTION && depot.amount !== 0,
+    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== 0,
   }))
 
   return selectOptions
 }
 
-function createSelectOptionsRefillDepot(): SelectOption[] {
+function createSelectOptionsRefillTank(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
   const offers = get(offersStore)
@@ -233,19 +233,19 @@ function createSelectOptionsRefillDepot(): SelectOption[] {
 function createSelectOptionsShip(): SelectOption[] {
   let selectOptions: SelectOption[] = []
 
-  // Only detached depots can be shipped
-  const availableDepots = Object.entries(get(simulatedDepots))
+  // Only detached tanks can be shipped
+  const availableTanks = Object.entries(get(simulatedTanks))
 
-  selectOptions = availableDepots.map(([address, depot]) => {
+  selectOptions = availableTanks.map(([address, tank]) => {
     let materialDescription = "(empty)"
-    if (depot.materialType !== MATERIAL_TYPE.NONE) {
-      materialDescription = `(${depot.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(depot.materialType)})`
+    if (tank.materialType !== MATERIAL_TYPE.NONE) {
+      materialDescription = `(${tank.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(tank.materialType)})`
     }
 
     return {
-      label: `Tank #${depot.buildIndex} ${materialDescription}`,
+      label: `Tank #${tank.buildIndex} ${materialDescription}`,
       value: address,
-      available: depot.materialType !== MATERIAL_TYPE.NONE,
+      available: tank.materialType !== MATERIAL_TYPE.NONE,
     }
   })
 

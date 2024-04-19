@@ -1,6 +1,5 @@
 import type { Command } from "@components/Main/Terminal/types"
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
-import { detachDepot as sendDetachDepot } from "@modules/action"
 import {
   loadingLine,
   loadingSpinner,
@@ -11,16 +10,17 @@ import {
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound"
+import { plugTank as sendPlugTank } from "@modules/action"
 
-async function execute(depotEntity: string) {
+async function execute(tankEntity: string, targetEntity: string) {
   try {
-    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating tank...")
     // ...
-    const action = sendDetachDepot(depotEntity)
+    const action = sendPlugTank(tankEntity, targetEntity)
     // ...
     await waitForTransaction(action, loadingSpinner)
     // ...
-    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Detachment in progress...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Plugging in...")
     await waitForCompletion(action, loadingLine)
     playSound("tcm", "selectionEsc2")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
@@ -34,11 +34,12 @@ async function execute(depotEntity: string) {
   }
 }
 
-export const detachDepot: Command<[depotEntity: string]> = {
-  id: COMMAND.DETACH_DEPOT,
+export const plugTank: Command<[tankEntity: string, targetEntity: string]> =
+{
+  id: COMMAND.PLUG_TANK,
   public: true,
-  name: "detach",
-  alias: "u",
+  name: "plug",
+  alias: "p",
   objectTerm: "tank",
   fn: execute,
 }
