@@ -62,7 +62,7 @@
   let terminalComponent: any
 
   const handleCommand = async () => {
-    terminalComponent.resetInput()
+    terminalComponent?.resetInput()
   }
 
   $: {

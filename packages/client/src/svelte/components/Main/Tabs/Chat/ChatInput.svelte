@@ -1,13 +1,23 @@
 <script lang="ts">
+  import { onMount, createEventDispatcher } from "svelte"
   import { sendChatMessage } from "@modules/signal"
   import type { ChatMessage } from "@modules/signal/types"
   import { player, playerAddress } from "@modules/state/base/stores"
   import { v4 as uuid } from "uuid"
   import { network } from "@modules/network"
+  import { playSound } from "@modules/sound"
+  import TerminalInput from "../../Terminal/TerminalInput.svelte"
+
+  export let inputElement: HTMLInputElement
+
+  const dispatch = createEventDispatcher()
 
   let message = ""
 
   function sendMessage() {
+    dispatch("send")
+
+    if (message === "") return
     const newMessage: ChatMessage = {
       id: uuid(),
       name: $player.name ?? "Unknown",
@@ -17,14 +27,21 @@
       address: $playerAddress,
     }
     sendChatMessage(newMessage)
-    message = "TESTss"
+    playSound("tcm", "TRX_yes")
+    message = ""
   }
+
+  onMount(() => {
+    inputElement?.focus()
+  })
 </script>
 
-<div>
-  <input type="text" placeholder="message" bind:value={message} />
-  <button on:click={sendMessage}>Send</button>
-</div>
+<TerminalInput
+  onSubmit={sendMessage}
+  bind:value={message}
+  bind:inputElement
+  placeholder="message"
+/>
 
 <style lang="scss">
   .container {

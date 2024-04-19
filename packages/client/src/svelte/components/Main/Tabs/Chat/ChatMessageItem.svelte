@@ -8,7 +8,7 @@
   <div class="message-header">
     <div class="message-author">
       {#if $verifiedClients.includes(message.address.toLowerCase())}
-        <span class="verified">✅</span>
+        <!-- <span class="verified">✅</span> -->
       {/if}
       {message.name}
     </div>
@@ -19,7 +19,7 @@
 
 <style lang="scss">
   .message {
-    padding: 10px;
+    padding: 10px 0;
     border-bottom: 1px solid #ccc;
   }
 
@@ -44,5 +44,6 @@
 
   .message-content {
     margin-top: 5px;
+    word-break: break-all;
   }
 </style>

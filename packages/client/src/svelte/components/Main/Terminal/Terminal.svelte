@@ -1,10 +1,9 @@
 <script lang="ts">
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { selectedParameters } from "@modules/ui/stores"
+  import { activeTab, selectedParameters } from "@modules/ui/stores"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import type { Command, SelectOption } from "@components/Main/Terminal/types"
-  import { tutorialProgress } from "@modules/ui/assistant"
   import {
     TERMINAL_TYPE,
     DIRECTION,
@@ -28,7 +27,7 @@
   import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
   import Select from "@components/Main/Terminal/Select.svelte"
-  import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
+
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
   import {
     simulatedMachines,
@@ -43,13 +42,16 @@
   import { terminalMessages } from "./functions/terminalMessages"
   import { playSound } from "@modules/sound"
 
+  import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
+  import TerminalInput from "@components/Main/Terminal/TerminalInput.svelte"
+
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
   export let setBlink = false
   export let noOutput = false
 
   let inputElement: HTMLInputElement
-  let userInput = ""
+  let value = ""
   let customInputContainerElement: HTMLDivElement
   let interval: ReturnType<typeof setInterval>
   let inputActive = false
@@ -58,15 +60,15 @@
   const dispatch = createEventDispatcher()
 
   const focusInput = async (e?: any) => {
-    if (e && e.target.tagName.toUpperCase() !== "INPUT") {
-      await tick()
+    console.log(inputElement)
+    if (inputElement) {
       inputElement?.focus()
     }
   }
 
   export const resetInput = async () => {
     selectedParameters.set([])
-    userInput = ""
+    value = ""
     inputActive = true
     scrollToEnd()
     focusInput()
@@ -442,7 +444,7 @@
     // Write input to terminal
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.COMMAND,
-      userInput.length == 0 ? "&nbsp;" : userInput,
+      value.length == 0 ? "&nbsp;" : value,
       false,
       SYMBOLS[0]
     )
@@ -451,7 +453,7 @@
     selectedParameters.set([])
 
     // Evaluate input
-    const command = evaluate(userInput)
+    const command = evaluate(value)
 
     // Handle invalid command
     if (!command) {
@@ -495,10 +497,22 @@
 
     // Reset selected parameters
     selectedParameters.set([])
+
+    focusInput()
   }
 
   const onInput = (e: KeyboardEvent) => {
+    console.log("oejoeoej")
     playInputSound(e)
+    focusInput()
+  }
+
+  const onFocus = () => {
+    hasFocus = true
+  }
+  const onBlur = () => {
+    if ($activeTab == 0) setTimeout(focusInput, 10)
+    hasFocus = false
   }
 
   onMount(async () => {
@@ -506,7 +520,7 @@
       await terminalMessages.startUp()
       inputActive = true
     }
-    inputElement?.focus()
+    focusInput()
   })
 
   onDestroy(() => {
@@ -514,9 +528,17 @@
   })
 </script>
 
-<svelte:window on:keydown={focusInput} />
+<svelte:window
+  on:keydown={() => {
+    if ($activeTab == 0) {
+      focusInput()
+    }
+  }}
+/>
 
-<div id="terminal" class="terminal" class:noOutput>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div id="terminal" class="terminal" class:noOutput on:click={focusInput}>
   <!-- OUTPUT -->
   {#if !noOutput}
     {#each $terminalOutput as output, index (index)}
@@ -531,31 +553,19 @@
     bind:this={customInputContainerElement}
   />
 
-  <!-- INPUT -->
+  <!-- Input -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   {#if inputActive || noOutput}
-    <form on:submit|preventDefault={onSubmit}>
-      <span class="prompt-symbol">
-        {SYMBOLS[0]}
-      </span>
-      <input
-        class="terminal-input"
-        type="text"
-        on:focus={() => (hasFocus = true)}
-        on:blur={() => (hasFocus = false)}
-        {placeholder}
-        on:keydown={onInput}
-        bind:this={inputElement}
-        bind:value={userInput}
-      />
-      <div
-        class="blinker"
-        class:blink={userInput.length === 0}
-        class:empty={userInput === ""}
-        style:transform="translate({userInput.length}ch, 0)"
-      >
-        █
-      </div>
-    </form>
+    <TerminalInput
+      {onSubmit}
+      {placeholder}
+      {onInput}
+      {onFocus}
+      {onBlur}
+      bind:inputElement
+      bind:value
+      {focusInput}
+    />
   {/if}
 </div>
 
@@ -575,58 +585,6 @@
       height: 100vh;
       padding: var(--default-padding);
       padding-bottom: 10ch;
-    }
-
-    form {
-      font-family: var(--font-family);
-      border: none;
-      outline: none;
-      left: 1em;
-      display: flex;
-
-      .prompt-symbol {
-        white-space: nowrap;
-        vertical-align: middle;
-        margin-right: 1ch;
-        color: inherit;
-      }
-
-      input {
-        caret-color: transparent;
-        font-family: inherit;
-        font-size: inherit;
-        color: inherit;
-        line-height: inherit;
-        width: 60ch;
-        max-width: 100%;
-        background-color: inherit;
-        border: none;
-        padding: 0;
-        position: relative; /* To position the pseudo-element */
-
-        &::placeholder {
-          opacity: 1;
-          color: var(--color-grey-mid);
-        }
-
-        &:focus {
-          border: none;
-          outline: none;
-        }
-      }
-
-      .blinker {
-        opacity: 1;
-        position: absolute;
-        left: 3ch;
-        display: inline-block;
-        transform-origin: top left;
-        // mix-blend-mode: difference;
-
-        // &.empty {
-        //   color: var(--color-grey-mid);
-        // }
-      }
     }
   }
 </style>
