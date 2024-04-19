@@ -21,7 +21,7 @@ contract OrderSystemTest is BaseTest {
   bytes32 podEntity;
   bytes32[] inletEntities;
   bytes32 outletEntity;
-  bytes32[] depotsInPod;
+  bytes32[] tanksInPod;
   bytes32[] tutorialLevels;
   FixedEntitiesData fixedEntities;
 
@@ -38,7 +38,7 @@ contract OrderSystemTest is BaseTest {
     inletEntities = FixedEntities.get(podEntity).inlets;
     outletEntity = FixedEntities.get(podEntity).outlet;
 
-    depotsInPod = DepotsInPod.get(podEntity);
+    tanksInPod = TanksInPod.get(podEntity);
 
     fixedEntities = FixedEntities.get(podEntity);
 
@@ -94,8 +94,8 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
     world.graduate();
-    world.accept(order);
-    world.ship(depotsInPod[1]);
+    world.acceptOrder(order);
+    world.shipTank(tanksInPod[1]);
     vm.stopPrank();
 
     vm.startPrank(bob);
@@ -103,11 +103,11 @@ contract OrderSystemTest is BaseTest {
     bytes32 bobEntity = world.spawn("alice");
     world.start();
     bytes32 bobPodEntity = CarriedBy.get(bobEntity);
-    bytes32[] memory bobDepotsInPod = DepotsInPod.get(bobPodEntity);
+    bytes32[] memory bobTanksInPod = TanksInPod.get(bobPodEntity);
     world.graduate();
-    world.accept(order);
+    world.acceptOrder(order);
     vm.expectRevert("max players reached");
-    world.ship(bobDepotsInPod[1]);
+    world.shipTank(bobTanksInPod[1]);
     vm.stopPrank();
   }
 
@@ -122,7 +122,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     vm.expectRevert("not tutorial order");
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
     vm.stopPrank();
   }
@@ -141,13 +141,13 @@ contract OrderSystemTest is BaseTest {
     world.graduate();
 
     startGasReport("Accept order");
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
     endGasReport();
 
     assertEq(CurrentOrder.get(playerEntity), orderEntity);
 
     startGasReport("Unaccept order");
-    world.unaccept();
+    world.unacceptOrder();
     endGasReport();
 
     assertEq(CurrentOrder.get(playerEntity), bytes32(0));
@@ -166,15 +166,15 @@ contract OrderSystemTest is BaseTest {
 
     world.graduate();
 
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
-    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
 
-    // Connect depot 0 to inlet
-    world.attachDepot(depotsInPod[0], fixedEntities.inlets[0]);
+    // Connect tank 0 to inlet
+    world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
 
-    // Connect depot 1 to outlet
-    world.attachDepot(depotsInPod[1], fixedEntities.outlet);
+    // Connect tank 1 to outlet
+    world.plugTank(tanksInPod[1], fixedEntities.outlet);
 
     // Connect inlet to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
@@ -186,15 +186,14 @@ contract OrderSystemTest is BaseTest {
 
     vm.roll(block.number + blocksToWait);
 
-    // Detach depot and resolve
-    world.detachDepot(fixedEntities.outlet);
+    // Detach tank and resolve
+    world.unplugTank(fixedEntities.outlet);
 
     startGasReport("Ship");
-    world.ship(depotsInPod[1]);
+    world.shipTank(tanksInPod[1]);
     endGasReport();
 
     assertEq(CurrentOrder.get(playerEntity), bytes32(0));
-    // assertEq(EarnedPoints.get(playerEntity), 1000);
     assertEq(Completed.get(orderEntity)[0], playerEntity);
     assertEq(Completed.get(playerEntity)[0], orderEntity);
 
@@ -213,12 +212,12 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
     vm.roll(block.number + ONE_MINUTE + 1);
 
     vm.expectRevert("order expired");
-    world.ship(depotsInPod[1]);
+    world.shipTank(tanksInPod[1]);
 
     vm.stopPrank();
   }
@@ -238,7 +237,7 @@ contract OrderSystemTest is BaseTest {
     vm.roll(block.number + ONE_MINUTE + 1);
 
     vm.expectRevert("order expired");
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
     vm.stopPrank();
   }
@@ -255,14 +254,14 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    world.fillDepot(depotsInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
 
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
-    world.ship(depotsInPod[0]);
+    world.shipTank(tanksInPod[0]);
 
     vm.expectRevert("order already completed");
-    world.accept(orderEntity);
+    world.acceptOrder(orderEntity);
 
     vm.stopPrank();
   }

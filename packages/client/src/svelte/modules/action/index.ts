@@ -2,21 +2,26 @@ import { MACHINE_TYPE, PORT_INDEX } from "../state/base/enums"
 import { addToSequencer } from "./actionSequencer"
 
 export enum WorldFunctions {
+  // Progression
   Spawn = "spawn",
   Start = "start",
+  // Machines
+  BuildMachine = "buildMachine",
+  RemoveMachine = "removeMachine",
   Connect = "connect",
   Disconnect = "disconnect",
-  Build = "build",
-  Destroy = "destroy",
-  Name = "name",
-  AttachDepot = "attachDepot",
-  DetachDepot = "detachDepot",
-  EmptyDepot = "emptyDepot",
-  Ship = "ship",
-  Accept = "accept",
-  Unaccept = "unaccept",
-  Buy = "buy",
-  Reset = "reset",
+  // Tanks
+  PlugTank = "plugTank",
+  UnplugTank = "unplugTank",
+  EmptyTank = "emptyTank",
+  ShipTank = "shipTank",
+  // Pod
+  WipePod = "wipePod",
+  // Orders
+  AcceptOrder = "acceptOrder",
+  UnacceptOrder = "unacceptOrder",
+  // Offers
+  BuyOffer = "buyOffer",
   // Testing
   Resolve = "resolve",
   Reward = "reward",
@@ -26,12 +31,28 @@ export enum WorldFunctions {
 
 // --- API --------------------------------------------------------------
 
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Progression
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
 export function spawn(name: string) {
   return addToSequencer(WorldFunctions.Spawn, [name])
 }
 
 export function start() {
   return addToSequencer(WorldFunctions.Start, [])
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Machines
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
+export function buildMachine(machineType: MACHINE_TYPE) {
+  return addToSequencer(WorldFunctions.BuildMachine, [machineType])
+}
+
+export function removeMachine(machineEntity: string) {
+  return addToSequencer(WorldFunctions.RemoveMachine, [machineEntity])
 }
 
 export function connect(
@@ -50,54 +71,61 @@ export function disconnect(sourceMachine: string, portIndex: PORT_INDEX) {
   return addToSequencer(WorldFunctions.Disconnect, [sourceMachine, portIndex])
 }
 
-export function build(machineType: MACHINE_TYPE) {
-  return addToSequencer(WorldFunctions.Build, [machineType])
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Tanks
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
+export function plugTank(tankEntity: string, targetEntity: string) {
+  return addToSequencer(WorldFunctions.PlugTank, [tankEntity, targetEntity])
 }
 
-export function destroy(machineEntity: string) {
-  return addToSequencer(WorldFunctions.Destroy, [machineEntity])
+export function unplugTank(tankEntity: string) {
+  return addToSequencer(WorldFunctions.UnplugTank, [tankEntity])
 }
+
+export function emptyTank(tankEntity: string) {
+  return addToSequencer(WorldFunctions.EmptyTank, [tankEntity])
+}
+
+export function shipTank(tankEntity: string) {
+  return addToSequencer(WorldFunctions.ShipTank, [tankEntity])
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Pod
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
+export function wipePod() {
+  return addToSequencer(WorldFunctions.WipePod, [])
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Orders
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
+export function acceptOrder(orderEntity: string) {
+  return addToSequencer(WorldFunctions.AcceptOrder, [orderEntity])
+}
+
+export function unacceptOrder() {
+  return addToSequencer(WorldFunctions.UnacceptOrder, [])
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Offers
+ * * * * * * * * * * * * * * * * * * * * * * * */
+
+export function buyOffer(offerEntity: string) {
+  return addToSequencer(WorldFunctions.BuyOffer, [offerEntity])
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * *
+ * Testing
+ * * * * * * * * * * * * * * * * * * * * * * * */
 
 export function resolve() {
   return addToSequencer(WorldFunctions.Resolve, [])
 }
-
-export function reset() {
-  return addToSequencer(WorldFunctions.Reset, [])
-}
-
-export function name(name: string) {
-  return addToSequencer(WorldFunctions.Name, [name])
-}
-
-export function attachDepot(depotEntity: string, targetEntity: string) {
-  return addToSequencer(WorldFunctions.AttachDepot, [depotEntity, targetEntity])
-}
-
-export function detachDepot(depotEntity: string) {
-  return addToSequencer(WorldFunctions.DetachDepot, [depotEntity])
-}
-
-export function emptyDepot(depotEntity: string) {
-  return addToSequencer(WorldFunctions.EmptyDepot, [depotEntity])
-}
-
-export function ship(depotEntity: string) {
-  return addToSequencer(WorldFunctions.Ship, [depotEntity])
-}
-
-export function accept(orderEntity: string) {
-  return addToSequencer(WorldFunctions.Accept, [orderEntity])
-}
-export function unaccept() {
-  return addToSequencer(WorldFunctions.Unaccept, [])
-}
-
-export function buy(offerEntity: string) {
-  return addToSequencer(WorldFunctions.Buy, [offerEntity])
-}
-
-// ...
 
 export function reward() {
   return addToSequencer(WorldFunctions.Reward, [])

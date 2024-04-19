@@ -15,8 +15,8 @@ contract BuildSystemTest is BaseTest {
     world.start();
 
     // Create a new entity
-    startGasReport("Build splitter");
-    bytes32 machineEntity = world.build(MACHINE_TYPE.SPLITTER);
+    startGasReport("Build machine");
+    bytes32 machineEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
     endGasReport();
 
     vm.stopPrank();
@@ -36,7 +36,7 @@ contract BuildSystemTest is BaseTest {
 
     // Create a new entity
     vm.expectRevert("not buildable");
-    world.build(MACHINE_TYPE.PLAYER);
+    world.buildMachine(MACHINE_TYPE.PLAYER);
 
     vm.stopPrank();
   }
@@ -50,19 +50,19 @@ contract BuildSystemTest is BaseTest {
     world.start();
 
     // Build splitter 1
-    bytes32 splitter1 = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitter1 = world.buildMachine(MACHINE_TYPE.SPLITTER);
     assertEq(uint8(BuildIndex.get(splitter1)), 1);
 
     // Build splitter 2
-    bytes32 splitter2 = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitter2 = world.buildMachine(MACHINE_TYPE.SPLITTER);
     assertEq(uint8(BuildIndex.get(splitter2)), 2);
 
     // Destroy splitter 1 & splitter 2
-    world.destroy(splitter1);
-    world.destroy(splitter2);
+    world.removeMachine(splitter1);
+    world.removeMachine(splitter2);
 
     // Build splitter 3
-    bytes32 splitter3 = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitter3 = world.buildMachine(MACHINE_TYPE.SPLITTER);
     assertEq(uint8(BuildIndex.get(splitter3)), 3);
 
     vm.stopPrank();

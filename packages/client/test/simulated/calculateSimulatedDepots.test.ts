@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { calculateSimulatedDepots } from "../../src/svelte/modules/state/simulated/stores"
+import { calculateSimulatedTanks } from "../../src/svelte/modules/state/simulated/stores"
 import { ENTITY_TYPE } from 'contracts/enums'
 import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
 import { deepClone } from '../../src/svelte/modules/utils'
@@ -14,129 +14,129 @@ const playerPod = {
     }
 }
 
-const depots = {
-    DEPOT_ONE: {
-        entityType: ENTITY_TYPE.DEPOT,
+const tanks = {
+    TANK_ONE: {
+        entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
-        depotConnection: "INLET_ONE",
+        tankConnection: "INLET_ONE",
         materialType: 1, // BUG
         amount: 20000,
     },
-    DEPOT_TWO: {
-        entityType: ENTITY_TYPE.DEPOT,
+    TANK_TWO: {
+        entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
-        depotConnection: "OUTLET",
+        tankConnection: "OUTLET",
         materialType: 2, // PISS
         amount: 1000,
     }
 }
 
 const patches = {
-    DEPOT_ONE: {
-        depot: true,
+    TANK_ONE: {
+        tank: true,
         outputs: [
             {
                 amount: FLOW_RATE,
                 inletActive: [true, false],
-                machineId: "DEPOT_ONE",
+                machineId: "TANK_ONE",
                 materialType: 1,
             },
         ],
     },
-    DEPOT_TWO: {
-        depot: true,
+    TANK_TWO: {
+        tank: true,
         inputs: [
             {
                 amount: FLOW_RATE / 4,
                 inletActive: [true, false],
-                machineId: "DEPOT_TWO",
+                machineId: "TANK_TWO",
                 materialType: 2, // PISS
             },
         ],
     }
 }
 
-test("(1) calculateSimulatedDepots, 1 block", () => {
+test("(1) calculateSimulatedTanks, 1 block", () => {
     const BLOCKS_SINCE_LAST_RESOLUTION = 1;
 
     const expectedOutput = {
-        DEPOT_ONE: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_ONE: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "INLET_ONE",
+            tankConnection: "INLET_ONE",
             materialType: 1, // BUG
-            amount: depots.DEPOT_ONE.amount - (patches.DEPOT_ONE.outputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
+            amount: tanks.TANK_ONE.amount - (patches.TANK_ONE.outputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
         },
-        DEPOT_TWO: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_TWO: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "OUTLET",
+            tankConnection: "OUTLET",
             materialType: 2, // PISS
-            amount: depots.DEPOT_TWO.amount + (patches.DEPOT_TWO.inputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
+            amount: tanks.TANK_TWO.amount + (patches.TANK_TWO.inputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
         }
     }
 
-    expect(calculateSimulatedDepots(depots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+    expect(calculateSimulatedTanks(tanks, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })
 
-test("(2) calculateSimulatedDepots, 10 block", () => {
+test("(2) calculateSimulatedTanks, 10 block", () => {
     const BLOCKS_SINCE_LAST_RESOLUTION = 10;
 
     const expectedOutput = {
-        DEPOT_ONE: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_ONE: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "INLET_ONE",
+            tankConnection: "INLET_ONE",
             materialType: 1, // BUG
             amount: 10000 // initial amount in D1 - (1000 * 10)
         },
-        DEPOT_TWO: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_TWO: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "OUTLET",
+            tankConnection: "OUTLET",
             materialType: 2, // PISS
             amount: 3500 // Initial amount in D2 + (output patch amount * blocks since last resolution) => 1000 + (250 * 10)
         }
     }
 
-    expect(calculateSimulatedDepots(depots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+    expect(calculateSimulatedTanks(tanks, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })
 
-test("(3) calculateSimulatedDepots, 10 block, replace outlet depot material", () => {
+test("(3) calculateSimulatedTanks, 10 block, replace outlet tank material", () => {
     const BLOCKS_SINCE_LAST_RESOLUTION = 5;
 
-    patches.DEPOT_TWO.inputs[0].materialType = 3; // BLOOD, new material
+    patches.TANK_TWO.inputs[0].materialType = 3; // BLOOD, new material
 
     const expectedOutput = {
-        DEPOT_ONE: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_ONE: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "INLET_ONE",
+            tankConnection: "INLET_ONE",
             materialType: 1, // BUG
-            amount: depots.DEPOT_ONE.amount - (patches.DEPOT_ONE.outputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
+            amount: tanks.TANK_ONE.amount - (patches.TANK_ONE.outputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION)
         },
-        DEPOT_TWO: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_TWO: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "OUTLET",
+            tankConnection: "OUTLET",
             materialType: 3, // BLOOD, new material
-            amount: patches.DEPOT_TWO.inputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION // new material, new count
+            amount: patches.TANK_TWO.inputs[0].amount * BLOCKS_SINCE_LAST_RESOLUTION // new material, new count
         }
     }
 
-    expect(calculateSimulatedDepots(depots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+    expect(calculateSimulatedTanks(tanks, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })
 
-test("(4) calculateSimulatedDepots, 100 block, cap input by 0, cap output by input amount", () => {
+test("(4) calculateSimulatedTanks, 100 block, cap input by 0, cap output by input amount", () => {
     const BLOCKS_SINCE_LAST_RESOLUTION = 100;
 
-    patches.DEPOT_TWO.inputs[0].materialType = 2;
+    patches.TANK_TWO.inputs[0].materialType = 2;
 
     const expectedOutput = {
-        DEPOT_ONE: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_ONE: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "INLET_ONE",
+            tankConnection: "INLET_ONE",
             materialType: 0, // NONE because empty
             amount: 0 // capped at 0 because (100 * 1000 = 100000 > 20000 
         },
@@ -145,46 +145,46 @@ test("(4) calculateSimulatedDepots, 100 block, cap input by 0, cap output by inp
         // 25000 is more than (20000 / 4), so it should be capped at 20000 / 4 = 5000
         // So amount should be 1000 + 5000 = 6000
         // ????????
-        DEPOT_TWO: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_TWO: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "OUTLET",
+            tankConnection: "OUTLET",
             materialType: 2, // PISS
             amount: 6000 // ????????
         }
     }
 
-    expect(calculateSimulatedDepots(depots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+    expect(calculateSimulatedTanks(tanks, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })
 
-test("(5) calculateSimulatedDepots, cap at outlet depot full", () => {
+test("(5) calculateSimulatedTanks, cap at outlet tank full", () => {
     const BLOCKS_SINCE_LAST_RESOLUTION = 100;
 
-    const modifiedDepots = deepClone(depots);
+    const modifiedTanks = deepClone(tanks);
 
-    modifiedDepots.DEPOT_TWO.amount = 8000;
+    modifiedTanks.TANK_TWO.amount = 8000;
 
     // Stop block is: 
-    // available capacity in outlet depot / output patch amount
+    // available capacity in outlet tank / output patch amount
     // 2000 / 250 = 8
 
     const expectedOutput = {
-        DEPOT_ONE: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_ONE: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "INLET_ONE",
+            tankConnection: "INLET_ONE",
             materialType: 1,
             amount: 12000 // 20000 - (1000 * 8)
         },
 
-        DEPOT_TWO: {
-            entityType: ENTITY_TYPE.DEPOT,
+        TANK_TWO: {
+            entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
-            depotConnection: "OUTLET",
+            tankConnection: "OUTLET",
             materialType: 2, // PISS
-            amount: 10000 // 8000 + (250 * 8) => Depot max capacity
+            amount: 10000 // 8000 + (250 * 8) => Tank max capacity
         }
     }
 
-    expect(calculateSimulatedDepots(modifiedDepots, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
+    expect(calculateSimulatedTanks(modifiedTanks, patches, BLOCKS_SINCE_LAST_RESOLUTION, playerPod)).toStrictEqual(expectedOutput)
 })

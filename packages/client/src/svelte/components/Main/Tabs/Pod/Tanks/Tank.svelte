@@ -1,59 +1,59 @@
 <script lang="ts">
-  import type { SimulatedDepot } from "@modules/state/simulated/types"
+  import type { SimulatedTank } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
   import { tweened } from "svelte/motion"
   import { playerPod } from "@modules/state/base/stores"
   import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
-  import { shippableDepots } from "@modules/state/simulated/stores"
+  import { shippableTanks } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { DEPOT_CAPACITY } from "@modules/state/simulated/constants"
+  import { TANK_CAPACITY } from "@modules/state/simulated/constants"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
 
-  export let depot: SimulatedDepot
+  export let tank: SimulatedTank
   export let address: string
   export let index: number
 
   const progress = tweened(
-    (Math.round(depot.amount / UI_SCALE_FACTOR) /
-      (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
+    (Math.round(tank.amount / UI_SCALE_FACTOR) /
+      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
       100,
-    { easing: bounceOut }
+    { easing: bounceOut },
   )
 
-  const amount = tweened(Math.round(depot.amount / UI_SCALE_FACTOR))
+  const amount = tweened(Math.round(tank.amount / UI_SCALE_FACTOR))
 
   // Narrow the type
-  $: typedDepot = depot as Depot
+  $: typedTank = tank as Tank
 
   // Tutorial check
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Tank is shippable
-  $: canShip = $shippableDepots[address]
+  $: canShip = $shippableTanks[address]
 
   // Tanks is shipping
   $: shipping = $waitingTransaction?.systemId === "ship" && canShip
 
   // Tanks is connected
-  $: connected = typedDepot.depotConnection !== EMPTY_CONNECTION
+  $: connected = typedTank.tankConnection !== EMPTY_CONNECTION
 
   // Tanks is empty
-  $: empty = typedDepot.amount === 0
+  $: empty = typedTank.amount === 0
 
   // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
 
   $: $progress =
-    (Math.round(typedDepot.amount / UI_SCALE_FACTOR) /
-      (DEPOT_CAPACITY / UI_SCALE_FACTOR)) *
+    (Math.round(typedTank.amount / UI_SCALE_FACTOR) /
+      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
     100
 
-  $: $amount = typedDepot.amount / UI_SCALE_FACTOR
+  $: $amount = typedTank.amount / UI_SCALE_FACTOR
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -64,13 +64,13 @@
 </script>
 
 <div
-  id="depot-{address}"
-  class="depot-item"
+  id="tank-{address}"
+  class="tank-item"
   class:shippable={canShip}
   class:highlight
   class:disabled-highlight={disabledHighlight}
 >
-  <div class="depot-progress" style:height="{$progress}%"></div>
+  <div class="tank-progress" style:height="{$progress}%"></div>
   {#if shipping}
     <div
       in:fade={{ duration: 400 }}
@@ -84,14 +84,14 @@
 
   <div class="content">
     {#if empty}
-      <div>0 / {DEPOT_CAPACITY / UI_SCALE_FACTOR}</div>
+      <div>0 / {TANK_CAPACITY / UI_SCALE_FACTOR}</div>
     {:else}
       <div class="inner-container">
         <div class="material-type">
-          {MATERIAL_TYPE[typedDepot.materialType]}
+          {MATERIAL_TYPE[typedTank.materialType]}
         </div>
         <div class="material-amount">
-          {Math.round($amount)} / {DEPOT_CAPACITY / UI_SCALE_FACTOR}
+          {Math.round($amount)} / {TANK_CAPACITY / UI_SCALE_FACTOR}
         </div>
       </div>
     {/if}
@@ -99,9 +99,9 @@
 
   <div class="connection" class:connected>
     {#if connected}
-      {#if getConnectionName(typedDepot.depotConnection) === "I"}
+      {#if getConnectionName(typedTank.tankConnection) === "I"}
         ↓
-      {:else if getConnectionName(typedDepot.depotConnection) === "O"}
+      {:else if getConnectionName(typedTank.tankConnection) === "O"}
         ↑
       {/if}
     {:else}
@@ -111,7 +111,7 @@
 </div>
 
 <style lang="scss">
-  .depot-item {
+  .tank-item {
     border: 1px solid var(--foreground);
     width: calc(33% - 5px);
     overflow: hidden;
@@ -128,7 +128,7 @@
       background-color: white;
     }
 
-    .depot-progress {
+    .tank-progress {
       position: absolute;
       bottom: 0;
       right: 0;

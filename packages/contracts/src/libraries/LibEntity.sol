@@ -61,7 +61,7 @@ library LibEntity {
    * @param _podEntity The identifier for the pod entity that the machine entity is associated with.
    * @param _entity The identifier for the entity whose records are to be deleted.
    */
-  function destroy(bytes32 _podEntity, bytes32 _entity) internal {
+  function remove(bytes32 _podEntity, bytes32 _entity) internal {
     EntityType.deleteRecord(_entity);
     MachineType.deleteRecord(_entity);
     BuildIndex.deleteRecord(_entity);

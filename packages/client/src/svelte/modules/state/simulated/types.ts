@@ -3,7 +3,7 @@ import { Product } from "../resolver/patches/types"
 import { GRAPH_ENTITY_STATE } from "./enums"
 
 type Patches = {
-  depot?: boolean
+  tank?: boolean
   inputs?: Product[]
   outputs?: Product[]
   productive?: boolean
@@ -32,7 +32,7 @@ export type Connection = {
 } & GraphEntityState
 
 export type SimulatedEntity = Entity & Patches
-export type SimulatedDepot = Depot & Patches
+export type SimulatedTank = Tank & Patches
 export type SimulatedMachine = Machine & Patches & GraphEntityState
 
 export type SimulatedEntities = {
@@ -43,12 +43,12 @@ export type SimulatedMachines = {
   [key: string]: SimulatedMachine
 }
 
-export type SimulatedDepots = {
-  [key: string]: SimulatedDepot
+export type SimulatedTanks = {
+  [key: string]: SimulatedTank
 }
 
 export type Attachment = {
-  depot: string
+  tank: string
   machine: string
   name: "I" | "O" | "none"
 }

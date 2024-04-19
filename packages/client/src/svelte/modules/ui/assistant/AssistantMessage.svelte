@@ -42,11 +42,11 @@
     }
     if (condition.type === "contract") {
       const reverseMappings = {
-        ship: "ship",
-        attachDepot: "attach",
+        shipTank: "ship",
+        plugTank: "plug",
         connect: "connect",
-        buy: "refill",
-        build: "build",
+        buyOffer: "fill",
+        buildMAchine: "build",
       }
 
       const cmd = reverseMappings[condition.value.systemId]

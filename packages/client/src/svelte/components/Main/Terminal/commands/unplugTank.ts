@@ -1,5 +1,6 @@
 import type { Command } from "@components/Main/Terminal/types"
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+import { unplugTank as sendUnplugTank } from "@modules/action"
 import {
   loadingLine,
   loadingSpinner,
@@ -10,17 +11,16 @@ import {
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound"
-import { attachDepot as sendAttachDepot } from "@modules/action"
 
-async function execute(depotEntity: string, targetEntity: string) {
+async function execute(tankEntity: string) {
   try {
-    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating depot...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating tank...")
     // ...
-    const action = sendAttachDepot(depotEntity, targetEntity)
+    const action = sendUnplugTank(tankEntity)
     // ...
     await waitForTransaction(action, loadingSpinner)
     // ...
-    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Attachment in progress...")
+    writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Unplugging...")
     await waitForCompletion(action, loadingLine)
     playSound("tcm", "selectionEsc2")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
@@ -34,12 +34,11 @@ async function execute(depotEntity: string, targetEntity: string) {
   }
 }
 
-export const attachDepot: Command<[depotEntity: string, targetEntity: string]> =
-{
-  id: COMMAND.ATTACH_DEPOT,
+export const unplugTank: Command<[tankEntity: string]> = {
+  id: COMMAND.UNPLUG_TANK,
   public: true,
-  name: "attach",
-  alias: "a",
+  name: "unplug",
+  alias: "u",
   objectTerm: "tank",
   fn: execute,
 }

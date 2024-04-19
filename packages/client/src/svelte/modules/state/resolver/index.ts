@@ -8,7 +8,7 @@ import {
   machines,
   inlets,
   outlet,
-  depots,
+  tanks,
   recipes
 } from "../base/stores"
 import { playSound } from "@modules/sound"
@@ -44,7 +44,7 @@ export async function initStateSimulator() {
       console.log('%c ******************* ', "background: #effb04; color: #000")
 
       // Resolve locally
-      patches.set(resolve(get(machines), get(inlets), get(outlet), get(depots), get(recipes)))
+      patches.set(resolve(get(machines), get(inlets), get(outlet), get(tanks), get(recipes)))
 
       // Update localResolved
       localResolved.set(playerPodValue.lastResolved)

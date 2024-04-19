@@ -89,7 +89,7 @@ pre {
 .player:hover,
 .machine:hover,
 .connection:hover,
-.depot-item:hover,
+.tank-item:hover,
 .highlight:not(.disabled-highlight) {
   animation: filterin 0.1s ease forwards;
 }

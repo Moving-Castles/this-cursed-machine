@@ -3,9 +3,9 @@ import { get } from "svelte/store"
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
 import { parseError } from "@components/Main/Terminal/functions/errors"
 import {
-  detachDepot as sendDetachDepot,
-  ship as sendShip,
-  reset as sendReset,
+  unplugTank as sendUnplugTank,
+  shipTank as sendShipTank,
+  wipePod as sendWipePod,
 } from "@modules/action"
 import {
   loadingLine,
@@ -17,32 +17,31 @@ import {
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils"
 import { player } from "@modules/state/base/stores"
-// import { tutorialProgress } from "@modules/ui/assistant"
 import { playSound } from "@modules/sound"
 import { terminalMessages } from "../functions/terminalMessages"
 import {
-  simulatedDepots,
-  shippableDepots,
+  simulatedTanks,
+  shippableTanks,
 } from "@modules/state/simulated/stores"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
-async function execute(depotEntity: string) {
+async function execute(tankEntity: string) {
   try {
     const $player = get(player)
-    const depots = get(simulatedDepots)
-    const $shippableDepots = get(shippableDepots)
+    const tanks = get(simulatedTanks)
+    const $shippableTanks = get(shippableTanks)
 
-    const canShip = $shippableDepots[depotEntity]
+    const canShip = $shippableTanks[tankEntity]
 
     if (!canShip)
       writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Not ready to ship")
 
-    if (!depots[depotEntity] || !canShip) return
+    if (!tanks[tankEntity] || !canShip) return
 
-    // If the depot is connected, detach it before shipping
-    if (depots[depotEntity].depotConnection !== EMPTY_CONNECTION) {
+    // If the tank is connected, detach it before shipping
+    if (tanks[tankEntity].tankConnection !== EMPTY_CONNECTION) {
       writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Locating tank...")
-      const detachAction = sendDetachDepot(depotEntity)
+      const detachAction = sendUnplugTank(tankEntity)
       await waitForTransaction(detachAction, loadingSpinner)
       writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Detachment in progress...")
       await waitForCompletion(detachAction, loadingLine)
@@ -51,7 +50,7 @@ async function execute(depotEntity: string) {
     }
 
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Shipping material...")
-    const action = sendShip(depotEntity)
+    const action = sendShipTank(tankEntity)
     await waitForTransaction(action, loadingSpinner)
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Fulfilment in progress...")
 
@@ -62,7 +61,7 @@ async function execute(depotEntity: string) {
 
     // If the player is in the tutorial and ships, wipe the pod
     if ($player.tutorial) {
-      const anotherAction = sendReset()
+      const anotherAction = sendWipePod()
       await waitForTransaction(anotherAction, loadingSpinner)
     }
 
@@ -81,8 +80,8 @@ async function execute(depotEntity: string) {
   }
 }
 
-export const ship: Command<[depotEntity: string]> = {
-  id: COMMAND.SHIP,
+export const shipTank: Command<[tankEntity: string]> = {
+  id: COMMAND.SHIP_TANK,
   public: true,
   name: "ship",
   alias: "s",

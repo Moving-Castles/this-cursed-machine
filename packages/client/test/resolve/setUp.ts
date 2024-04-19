@@ -5,7 +5,7 @@ export function createMachine(machineType: MACHINE_TYPE, buildIndex: number) {
     return {
         entity: ENTITY_TYPE.MACHINE,
         machineType,
-        depotConnection: "",
+        tankConnection: "",
         incomingConnections: [],
         outgoingConnections: [],
         buildIndex
@@ -13,25 +13,25 @@ export function createMachine(machineType: MACHINE_TYPE, buildIndex: number) {
 }
 
 export function setUp() {
-    let depots = {}
+    let tanks = {}
 
-    depots["DEPOT_ONE"] = {
-        entityType: ENTITY_TYPE.DEPOT,
+    tanks["TANK_ONE"] = {
+        entityType: ENTITY_TYPE.TANK,
         materialType: MATERIAL_TYPE.BUG,
         amount: 20000,
-        depotConnection: "",
+        tankConnection: "",
         buildIndex: 1
     }
 
-    depots["DEPOT_TWO"] = {
-        entityType: ENTITY_TYPE.DEPOT,
-        depotConnection: "",
+    tanks["TANK_TWO"] = {
+        entityType: ENTITY_TYPE.TANK,
+        tankConnection: "",
         buildIndex: 2,
     }
 
-    depots["DEPOT_THREE"] = {
-        entityType: ENTITY_TYPE.DEPOT,
-        depotConnection: "",
+    tanks["TANK_THREE"] = {
+        entityType: ENTITY_TYPE.TANK,
+        tankConnection: "",
         buildIndex: 3
     }
 
@@ -63,5 +63,5 @@ export function setUp() {
 
     const recipes = RECIPES
 
-    return { depots, machines, inlets, outlet, recipes, fixedEntities }
+    return { tanks, machines, inlets, outlet, recipes, fixedEntities }
 }
