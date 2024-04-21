@@ -18,8 +18,8 @@ importers:
         specifier: 2.0.7-account-kit-f2f48ad0
         version: 2.0.7-account-kit-f2f48ad0(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.22.5)
       '@pimlicolabs/alto':
-        specifier: github:pwrstudio/alto
-        version: github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37
+        specifier: github:latticexyz/alto#3192a9a
+        version: github.com/latticexyz/alto/3192a9a
       '@typescript-eslint/eslint-plugin':
         specifier: 7.6.0
         version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@9.0.0)(typescript@5.4.5)
@@ -2602,7 +2602,7 @@ packages:
       '@latticexyz/store': 2.0.7-account-kit-f2f48ad0(typescript@5.4.5)
       '@latticexyz/world': 2.0.7-account-kit-f2f48ad0(typescript@5.4.5)
       '@latticexyz/world-modules': 2.0.7-account-kit-f2f48ad0(typescript@5.4.5)
-      '@pimlicolabs/alto': github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37
+      '@pimlicolabs/alto': github.com/latticexyz/alto/3192a9a
       '@radix-ui/react-dialog': 1.0.5(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-dropdown-menu': 2.0.6(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-select': 2.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -12092,8 +12092,8 @@ packages:
     version: 1.2.0
     dev: false
 
-  github.com/pwrstudio/alto/58efb3f0789b1e8f12b3b300a120f8db73b29f37:
-    resolution: {tarball: https://codeload.github.com/pwrstudio/alto/tar.gz/58efb3f0789b1e8f12b3b300a120f8db73b29f37}
+  github.com/latticexyz/alto/3192a9a:
+    resolution: {tarball: https://codeload.github.com/latticexyz/alto/tar.gz/3192a9a}
     name: root
     version: 0.0.1
     engines: {node: '>=18.0.0'}
