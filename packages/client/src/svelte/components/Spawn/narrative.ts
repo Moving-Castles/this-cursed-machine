@@ -16,6 +16,8 @@ import { playSound } from "@modules/sound";
 import { playerAddress } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
 import { store as accountKitStore } from "@latticexyz/account-kit/bundle";
+import type { AppAccountClient } from "@latticexyz/account-kit/common";
+import { network } from "@svelte/modules/network";
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -87,10 +89,9 @@ export const narrative = [
     await writeNarrativeAction("blink to start verification");
   },
   async () => {
-    /* * * * * * * * * * * * * * * * * * * *
-     * Trigger wallet connection modal here
-     * Ideally allowing to await the result
-     * * * * * * * * * * * * * * * * * * * */
+    /* * * * * * * * * * * * * * * * *
+     * Trigger wallet connection modal
+     * * * * * * * * * * * * * * * * */
 
     // TODO: add some sort of timeout to keep this from spinning forever?
     const openAccountModalPromise = new Promise<() => void>((resolve) => {
@@ -107,11 +108,11 @@ export const narrative = [
     const connect = () =>
       openAccountModalPromise.then((openAccountModal) => {
         openAccountModal();
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<AppAccountClient>((resolve, reject) => {
           const unsub = accountKitStore.subscribe((state) => {
             if (state.appAccountClient) {
               unsub();
-              resolve();
+              resolve(state.appAccountClient);
             }
             if (state.accountModalOpen === false) {
               unsub();
@@ -122,7 +123,9 @@ export const narrative = [
       });
 
     await writeNarrative("[Wallet connection started here]");
-    await connect();
+    const appAccountClient = await connect();
+    console.log("appAccountClient", appAccountClient);
+    console.log("get(network).walletClient", get(network).walletClient);
     await writeNarrative("Your account address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
     await writeNarrativeAction("blink to continue");
