@@ -227,7 +227,7 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
     label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
     value: address,
-    available: balance > offer.offer.cost,
+    available: balance >= offer.offer.cost,
   }))
 
   return selectOptions
