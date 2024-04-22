@@ -60,7 +60,7 @@
   const dispatch = createEventDispatcher()
 
   const focusInput = async (e?: any) => {
-    console.log(inputElement)
+    // console.log(inputElement)
     if (inputElement) {
       inputElement?.focus()
     }
@@ -104,7 +104,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -241,7 +241,7 @@
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-      console.log(ports)
+      // console.log(ports)
 
       const portLabel = (p: any) => {
         const product = sourceMachineEntity?.products?.[p.portIndex]
@@ -502,7 +502,6 @@
   }
 
   const onInput = (e: KeyboardEvent) => {
-    console.log("oejoeoej")
     playInputSound(e)
     focusInput()
   }
