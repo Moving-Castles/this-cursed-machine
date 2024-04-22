@@ -1,7 +1,7 @@
 import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
-import { MATERIAL_TYPE, MACHINE_TYPE } from "@modules/state/base/enums"
+import { MaterialIdNone } from "@modules/state/base/constants"
 import { blockNumber } from "@modules/network"
 import type {
   SimulatedEntities,
@@ -66,9 +66,9 @@ export function processOutputPatches(
   updatedEntity.products = []
 
   for (const output of patch.outputs) {
-    if (output.materialType === MATERIAL_TYPE.NONE) continue
+    if (output.materialId === MaterialIdNone) continue
     updatedEntity.products.push({
-      materialType: output.materialType,
+      materialId: output.materialId,
       amount: output.amount,
     })
   }
@@ -221,11 +221,11 @@ export function calculateSimulatedTanks(
     if (Array.isArray(patch.inputs) && patch.inputs[0]) {
       const patchInput = patch.inputs[0]
       const cumulativeOutputAmount = patchInput.amount * cappedBlocks
-      if (initialTanksCopy[key].materialType === patchInput.materialType) {
+      if (initialTanksCopy[key].materialId === patchInput.materialId) {
         simulatedTanks[key].amount =
           (initialTanksCopy[key].amount ?? 0) + cumulativeOutputAmount
       } else {
-        simulatedTanks[key].materialType = patchInput.materialType
+        simulatedTanks[key].materialId = patchInput.materialId
         simulatedTanks[key].amount = cumulativeOutputAmount
       }
     }
@@ -242,7 +242,7 @@ export function calculateSimulatedTanks(
     ) {
       const consumedInletAmount = cappedBlocks * FLOW_RATE
       if (consumedInletAmount === initialTanksCopy[key].amount) {
-        simulatedTanks[key].materialType = MATERIAL_TYPE.NONE
+        simulatedTanks[key].materialId = MaterialIdNone
         simulatedTanks[key].amount = 0
       } else {
         simulatedTanks[key].amount =
@@ -349,12 +349,11 @@ export function calculateSimulatedConnections(
       if (
         sourceMachine.outputs &&
         sourceMachine.outputs[sourcePortIndex] &&
-        sourceMachine.outputs[sourcePortIndex].materialType !==
-          MATERIAL_TYPE.NONE
+        sourceMachine.outputs[sourcePortIndex].materialId !== MaterialIdNone
       ) {
         connection.products = [
           {
-            materialType: sourceMachine.outputs[sourcePortIndex].materialType,
+            materialId: sourceMachine.outputs[sourcePortIndex].materialId,
             amount: sourceMachine.outputs[sourcePortIndex].amount,
           },
         ]
@@ -469,7 +468,7 @@ export const shippableTanks = derived(
     return Object.fromEntries(
       Object.entries($simulatedTanks).map(([_, tank]) => {
         if (
-          tank.materialType === $playerOrder?.order.materialType &&
+          tank.materialId === $playerOrder?.order.materialId &&
           tank.amount >= $playerOrder?.order.amount
         ) {
           return [_, true]

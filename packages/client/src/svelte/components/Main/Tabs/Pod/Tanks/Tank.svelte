@@ -2,13 +2,12 @@
   import type { SimulatedTank } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
   import { tweened } from "svelte/motion"
-  import { playerPod } from "@modules/state/base/stores"
+  import { materialMetadata, playerPod } from "@modules/state/base/stores"
   import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
   import { shippableTanks } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { TANK_CAPACITY } from "@modules/state/simulated/constants"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
@@ -91,7 +90,7 @@
     {:else}
       <div class="inner-container">
         <div class="material-type">
-          {MATERIAL_TYPE[typedTank.materialType]}
+          {$materialMetadata[typedTank.materialId]?.name}
         </div>
         <div class="material-amount">
           <span class="portion-left">

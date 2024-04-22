@@ -1,4 +1,5 @@
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
+import { MACHINE_TYPE } from "../base/enums"
+import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
 import { process } from "./machines"
@@ -81,7 +82,7 @@ export function resolve(
         inputs.push({
           machineId: machineKey,
           sourceMachineId: null,
-          materialType: tanks[tank].materialType,
+          materialId: tanks[tank].materialId,
           amount: FLOW_RATE,
           inletActive: newInletActive,
         })
@@ -130,7 +131,7 @@ export function resolve(
       // Handle outlet
       if (machine.machineType === MACHINE_TYPE.OUTLET) {
         // Continue if no output
-        if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) return
+        if (currentOutputs[0].materialId == MaterialIdNone) return
 
         // We have reached the outlet, and it is connect to a tank, so circuit is closed
         if (
@@ -147,7 +148,7 @@ export function resolve(
         if (machine?.outgoingConnections?.[k] === "0") continue
 
         // Fill output
-        if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
+        if (currentOutputs[k]?.materialId !== MaterialIdNone) {
           const output = currentOutputs[k]
           if (output) {
             output.sourceMachineId = machineKey

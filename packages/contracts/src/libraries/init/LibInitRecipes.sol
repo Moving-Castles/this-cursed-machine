@@ -18,7 +18,7 @@ library LibInitRecipes {
                                  MIXER
     //////////////////////////////////////////////////////////////*/
 
-    a.mixer([m.BLOOD, m.PISS], m.HEMATURIC);
+    a.mixer([m.BLOOD, m.PISS], m.HEMATURIC_FLUID);
 
     /*//////////////////////////////////////////////////////////////
                                  DRYER
@@ -27,10 +27,10 @@ library LibInitRecipes {
     a.dryer(m.BUG, m.DUST);
     a.dryer(m.PISS, m.UREA);
     a.dryer(m.UREA, m.FERTILIZER);
-    a.dryer(m.WATER, m.AMPHETAMINE);
+    a.dryer(m.EVIAN, m.LOW_GRADE_AMPHETAMINE);
     a.dryer(m.BLOOD, m.BLOOD_CLOT);
     a.dryer(m.BLOOD_CLOT, m.BLOOD_MEAL);
     a.dryer(m.DUST, m.ORGANIC_WASTE);
-    a.dryer(m.LUBRICANT, m.FAT);
+    a.dryer(m.INDUSTRIAL_LUBRICANT, m.CONGEALED_FAT);
   }
 }

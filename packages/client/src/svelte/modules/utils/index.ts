@@ -1,4 +1,4 @@
-import { getAddress } from "viem"
+import { concat, encodePacked, getAddress, keccak256 } from "viem"
 import { BLOCKTIME } from "./constants"
 
 export function toCamelCase(s: string): string {
@@ -148,24 +148,17 @@ export function capAtZero(num: number): number {
 }
 
 /**
- * Generate a unique identifier for a pair of `number` values.
- *
- * @notice This function uses the Cantor pairing function to produce a unique
- * identifier from two `number` values. The order of input values does not affect
- * the generated identifier, meaning that (a, b) will produce the same output
- * as (b, a). Note that the input values should represent valid `MATERIAL_TYPE`
- * enum values to ensure consistent behavior.
- *
- * @param a First `number` value representing a `MATERIAL_TYPE`.
- * @param b Second `number` value representing a `MATERIAL_TYPE`.
- * @returns A unique identifier derived from the inputs (a, b).
+ * Get id for a combination of 2 materials
+ * @param a Material id
+ * @param b Material id
  */
-export function getUniqueIdentifier(a: number, b: number): number {
-  // Ensure a is always smaller than or equal to b
+export function getMaterialCombinationId(a: MaterialId, b: MaterialId): string {
+  // Always sort the ids in ascending order to make the combination order-agnostic
   if (a > b) {
-    ;[a, b] = [b, a]
+    return keccak256(concat([a, b]))
+  } else {
+    return keccak256(concat([b, a]))
   }
-  return ((a + b) * (a + b + 1)) / 2 + b
 }
 
 export const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a

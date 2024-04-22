@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
-  import { player } from "@modules/state/base/stores"
+  import { materialMetadata, player } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
-  import { MATERIAL_TYPE } from "contracts/enums"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
@@ -25,7 +24,8 @@
 
   const dispatch = createEventDispatcher()
 
-  const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
+  const name = $materialMetadata[order.order.materialId]?.name
+  const spacedName = name?.replaceAll(
     "_",
     " ",
   )
@@ -34,8 +34,8 @@
 
   const staticMaterial = $staticContent.materials.find(
     material =>
-      material.materialType === MATERIAL_TYPE[order.order.materialType],
-  )
+      material.materialType === name,
+  ) ?? {}
   const imageURL =
     staticMaterial && staticMaterial.image
       ? urlFor(staticMaterial.image).width(400).auto("format").url()

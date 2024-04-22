@@ -33,6 +33,6 @@ The player has to pass through a tutorial, completing a series of orders to unlo
 
 ## Token
 
-`$BUG` is an ERC20 token. It is given as reward for fulfilling orders. It can be "deposited" in a tank to be used as material of the type `MATERIAL_TYPE.BUG`.
+`$BUG` is an ERC20 token. It is given as reward for fulfilling orders. It can be "deposited" in a tank to be used as material with the id `PublicMaterials.BUG`.
 
 During the tutorial the player is given a non-transferable $BUG-substitute, stored in the `NonTransferableBalance` table, that works identically in the UI. This is to avoid automation to extract tokens.

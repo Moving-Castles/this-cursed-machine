@@ -80,3 +80,21 @@ export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
     )
   )
 }
+
+export function getMaterialMetadata(entities: Entities): Record<MaterialId, MaterialMetadata> {
+  const materialMetadata: Record<MaterialId, MaterialMetadata> = {}
+  Object.entries(entities)
+    .filter(([_, entity]) => entity.hasOwnProperty("materialMetadata"))
+    .forEach(value => {
+      const { materialId } = decodeEntity(
+        { materialId: "bytes14" },
+        value[0] as Entity
+      )
+      materialMetadata[materialId] = {
+        materialId,
+        ...value[1].materialMetadata
+      } as MaterialMetadata
+    })
+
+  return materialMetadata
+}

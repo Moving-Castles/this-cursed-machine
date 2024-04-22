@@ -384,8 +384,8 @@ contract ResolveSystemTest is BaseTest {
     assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 1000);
 
-    // Tank 2 should have 9000 PublicMaterials.HEMATURIC
-    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC.unwrap());
+    // Tank 2 should have 9000 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
     assertEq(Amount.get(tanksInPod[2]), 9000);
   }
 
@@ -443,8 +443,8 @@ contract ResolveSystemTest is BaseTest {
     assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 1000);
 
-    // Tank 2 should have 4500 PublicMaterials.HEMATURIC
-    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC.unwrap());
+    // Tank 2 should have 4500 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
     assertEq(Amount.get(tanksInPod[2]), 4500);
   }
 
@@ -455,8 +455,8 @@ contract ResolveSystemTest is BaseTest {
 
     // Fill tank 0 with 20000 PublicMaterials.UREA
     world.fillTank(tanksInPod[0], 20000, PublicMaterials.UREA);
-    // Fill tank 1 with 10000 FAT
-    world.fillTank(tanksInPod[1], 10000, PublicMaterials.FAT);
+    // Fill tank 1 with 10000 CONGEALED_FAT
+    world.fillTank(tanksInPod[1], 10000, PublicMaterials.CONGEALED_FAT);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -483,12 +483,12 @@ contract ResolveSystemTest is BaseTest {
     assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.UREA.unwrap());
     assertEq(Amount.get(tanksInPod[0]), 20000);
 
-    // Tank 1 should have 1000 PublicMaterials.FAT
-    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.FAT.unwrap());
+    // Tank 1 should have 1000 PublicMaterials.CONGEALED_FAT
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 1000);
 
-    // Tank 2 should have 9000 PublicMaterials.FAT
-    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.FAT.unwrap());
+    // Tank 2 should have 9000 PublicMaterials.CONGEALED_FAT
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
     assertEq(Amount.get(tanksInPod[2]), 9000);
   }
 
@@ -544,8 +544,8 @@ contract ResolveSystemTest is BaseTest {
      *
      */
 
-    // Tank 2 (outlet tank) should have 5000 PublicMaterials.HEMATURIC
-    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC.unwrap());
+    // Tank 2 (outlet tank) should have 5000 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
     assertEq(Amount.get(tanksInPod[2]), 5000);
 
     // Tank 0 should have 0 PublicMaterials.NONE (exhausted)

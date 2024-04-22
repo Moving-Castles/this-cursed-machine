@@ -11,8 +11,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
-  import { MATERIAL_TYPE } from "contracts/enums"
-  import { player } from "@modules/state/base/stores"
+  import { materialMetadata, player } from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
@@ -28,7 +27,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 

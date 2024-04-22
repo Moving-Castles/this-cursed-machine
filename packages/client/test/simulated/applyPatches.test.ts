@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { applyPatches } from "../../src/svelte/modules/state/simulated/stores"
 import { ENTITY_TYPE, MACHINE_TYPE } from 'contracts/enums'
+import { MaterialIds } from '../resolve'
 
 const machines = {
     INLET_ONE: {
@@ -20,7 +21,7 @@ const patches = {
                 amount: 1000,
                 inletActive: [true, false],
                 machineId: "INLET_ONE",
-                materialType: 1,
+                materialId: MaterialIds.BUG,
             },
         ],
         outputs: [
@@ -28,7 +29,7 @@ const patches = {
                 amount: 1000,
                 inletActive: [true, false],
                 machineId: "INLET_ONE",
-                materialType: 1,
+                materialId: MaterialIds.BUG,
             },
         ],
         productive: false
@@ -49,7 +50,7 @@ test("(1) applyPatches", () => {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1
+                    materialId: MaterialIds.BUG
                 }
             ],
             outputs: [
@@ -57,13 +58,13 @@ test("(1) applyPatches", () => {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1
+                    materialId: MaterialIds.BUG
                 }
             ],
             products: [
                 {
                     amount: 1000,
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                 }
             ],
             state: 1,

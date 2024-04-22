@@ -1,6 +1,13 @@
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "./enums"
+import { Hex } from "viem";
+import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 
 declare global {
+  // * * * * * * * * * * * * * * * * *
+  // MATERIAL ID
+  // * * * * * * * * * * * * * * * * *
+
+  type MaterialId = Hex;
+
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPE
   // * * * * * * * * * * * * * * * * *
@@ -10,7 +17,7 @@ declare global {
     gameConfig?: GameConfig
     entityType?: ENTITY_TYPE
     machineType?: MACHINE_TYPE
-    materialType?: MATERIAL_TYPE
+    materialId?: MaterialId
     amount?: number
     name?: string
     carriedBy?: string
@@ -23,10 +30,10 @@ declare global {
     order?: OrderData
     offer?: OfferData
     completed?: string[]
-    producedMaterials?: MATERIAL_TYPE[]
+    producedMaterials?: MaterialId[]
     lastResolved?: number
     input?: number
-    output?: MATERIAL_TYPE
+    output?: MaterialId
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
     tankConnection?: string
@@ -53,7 +60,7 @@ declare global {
     creator: string
     title: string
     expirationBlock: number
-    materialType: MATERIAL_TYPE
+    materialId: MaterialId
     amount: number
     reward: number
     maxPlayers: number
@@ -61,14 +68,13 @@ declare global {
 
   type OfferData = {
     creationBlock: number
-    materialType: MATERIAL_TYPE
+    materialId: MaterialId
     amount: number
     cost: number
   }
 
   type GameConfig = {
     adminAddress: string,
-    tokenAddress: string,
     globalSpawnIndex: number,
     scaleDown: number,
     flowRate: number,
@@ -103,7 +109,7 @@ declare global {
     tokenBalances?: number
     tutorial: boolean,
     completed?: string[] // Orders completed by player
-    producedMaterials?: MATERIAL_TYPE[]
+    producedMaterials?: MaterialId[]
   }
 
   type Machine = {
@@ -120,7 +126,7 @@ declare global {
     entityType: ENTITY_TYPE.TANK,
     carriedBy: string
     amount: number
-    materialType: MATERIAL_TYPE
+    materialId: MaterialId
     buildIndex: number
     tankConnection: string
   }
@@ -140,8 +146,15 @@ declare global {
 
   type Recipe = {
     machineType: number
-    input: number
-    outputs: number[]
+    input: string
+    outputs: MaterialId[]
+  }
+
+  type MaterialMetadata = {
+    materialId: MaterialId
+    tokenAddress: string
+    difficultyCoefficient: number[]
+    name: string
   }
 
   // * * * * * * * * * * * * * * * * *

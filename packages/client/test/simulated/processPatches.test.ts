@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { processOutputPatches, processInputPatches } from "../../src/svelte/modules/state/simulated/stores"
+import { MaterialIds } from '../resolve'
 
 const simulated = {
     INLET_ONE: {}
@@ -11,7 +12,7 @@ const patch = {
             amount: 1000,
             inletActive: [true, false],
             machineId: "INLET_ONE",
-            materialType: 1,
+            materialId: MaterialIds.BUG,
         },
     ],
     outputs: [
@@ -19,7 +20,7 @@ const patch = {
             amount: 1000,
             inletActive: [true, false],
             machineId: "INLET_ONE",
-            materialType: 1,
+            materialId: MaterialIds.BUG,
         },
     ],
     productive: false
@@ -33,7 +34,7 @@ test("(1) processInputPatches", () => {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1
+                    materialId: MaterialIds.BUG
                 }
             ]
         }
@@ -50,13 +51,13 @@ test("(2) processOutputPatches", () => {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1
+                    materialId: MaterialIds.BUG
                 }
             ],
             products: [
                 {
                     amount: 1000,
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                 }
             ],
             state: 1,

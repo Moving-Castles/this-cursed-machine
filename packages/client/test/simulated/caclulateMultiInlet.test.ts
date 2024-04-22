@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { calculateSimulatedTanks } from "../../src/svelte/modules/state/simulated/stores"
 import { ENTITY_TYPE } from 'contracts/enums'
+import { MaterialIds } from '../resolve'
 
 const FLOW_RATE = 1000
 
@@ -17,7 +18,7 @@ const tanks = {
         entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
         tankConnection: "INLET_ONE",
-        materialType: 7, // AMMONIA
+        materialId: MaterialIds.AMMONIA,
         amount: 20000,
         buildIndex: 1,
     },
@@ -25,7 +26,7 @@ const tanks = {
         entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
         tankConnection: "INLET_TWO",
-        materialType: 9, // PURE_FAT
+        materialId: MaterialIds.CONGEALED_FAT,
         amount: 10000,
         buildIndex: 2,
     },
@@ -33,7 +34,7 @@ const tanks = {
         entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
         tankConnection: "OUTLET",
-        materialType: 0, // NONE
+        materialId: MaterialIds.NONE,
         amount: 0,
         buildIndex: 3,
     }
@@ -47,7 +48,7 @@ const patches = {
                 amount: FLOW_RATE,
                 inletActive: [true, false],
                 machineId: "TANK_ONE",
-                materialType: 1,
+                materialId: MaterialIds.BUG,
             },
         ],
     },
@@ -58,7 +59,7 @@ const patches = {
                 amount: FLOW_RATE,
                 inletActive: [false, true],
                 machineId: "TANK_TWO",
-                materialType: 1,
+                materialId: MaterialIds.BUG,
             },
         ],
     },
@@ -68,7 +69,7 @@ const patches = {
             {
                 amount: FLOW_RATE,
                 machineId: "TANK_THREE",
-                materialType: 8, // AESOP_ORGANIC_HAND_SOAP
+                materialId: MaterialIds.SOAP,
                 inletActive: [true, true],
             },
         ],
@@ -83,7 +84,7 @@ test("(1) testResolveMixer", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "INLET_ONE",
-            materialType: 7, // AMMONIA
+            materialId: MaterialIds.AMMONIA,
             amount: 11000,
             buildIndex: 1,
         },
@@ -91,7 +92,7 @@ test("(1) testResolveMixer", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "INLET_TWO",
-            materialType: 9, // PURE_FAT
+            materialId: MaterialIds.CONGEALED_FAT,
             amount: 1000,
             buildIndex: 2
         },
@@ -99,7 +100,7 @@ test("(1) testResolveMixer", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "OUTLET",
-            materialType: 8, // AESOP_ORGANIC_HAND_SOAP
+            materialId: MaterialIds.SOAP,
             amount: 9000,
             buildIndex: 3
         }
@@ -116,7 +117,7 @@ test("(1) testResolveMixer, overflow", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "INLET_ONE",
-            materialType: 7, // AMMONIA
+            materialId: MaterialIds.AMMONIA,
             amount: 10000,
             buildIndex: 1
         },
@@ -124,7 +125,7 @@ test("(1) testResolveMixer, overflow", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "INLET_TWO",
-            materialType: 0, // NONE
+            materialId: MaterialIds.NONE,
             amount: 0,
             buildIndex: 2
 
@@ -133,7 +134,7 @@ test("(1) testResolveMixer, overflow", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "OUTLET",
-            materialType: 8, // AESOP_ORGANIC_HAND_SOAP
+            materialId: MaterialIds.SOAP,
             amount: 10000,
             buildIndex: 3
         }

@@ -10,6 +10,7 @@ import {
   getRecipes,
   getAvailableOrders,
   getExpiredOrders,
+  getMaterialMetadata,
 } from "./utils"
 import { writable, derived } from "svelte/store"
 import { blockNumber, network } from "@modules/network"
@@ -36,6 +37,8 @@ export const gameConfig = derived(
 )
 
 export const recipes = derived(entities, $entities => getRecipes($entities))
+
+export const materialMetadata = derived(entities, $entities => getMaterialMetadata($entities))
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES

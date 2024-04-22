@@ -22,7 +22,6 @@
   import {
     MACHINE_TYPE,
     PORT_INDEX,
-    MATERIAL_TYPE,
   } from "@modules/state/base/enums"
   import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
@@ -38,6 +37,7 @@
   import {
     playerPod,
     machines as machinesStore,
+    materialMetadata,
   } from "@modules/state/base/stores"
   import { terminalMessages } from "./functions/terminalMessages"
   import { playSound } from "@modules/sound"
@@ -246,7 +246,7 @@
 
         if (!product) return `Port #${p.portIndex + 1}`
 
-        return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
+        return `Port #${p.portIndex + 1} (${$materialMetadata[product?.materialId]?.name})`
       }
 
       sourcePortOptions = ports.map(p => ({
@@ -288,7 +288,7 @@
 
         if (!product) return `Port #${p.portIndex + 1}`
 
-        return `Port #${p.portIndex + 1} (${MATERIAL_TYPE[product?.materialType]})`
+        return `Port #${p.portIndex + 1} (${$materialMetadata[product?.materialId]?.name})`
       }
 
       sourcePortOptions = ports.map(p => ({

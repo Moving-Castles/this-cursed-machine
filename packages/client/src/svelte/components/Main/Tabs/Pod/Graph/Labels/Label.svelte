@@ -1,8 +1,9 @@
 <script lang="ts">
+  import {hexToString } from "viem"
+  import { materialMetadata } from "@svelte/modules/state/base/stores";
   import type { GraphConnection } from "../types"
   // import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
   import { CELL } from "../constants"
-  import { MATERIAL_TYPE } from "contracts/enums"
   // import { onDestroy } from "svelte"
   // import { bounceInOut as easing } from "svelte/easing"
   // import { tweened } from "svelte/motion"
@@ -27,7 +28,7 @@
   let dir = 0
   let direction = ""
 
-  $: material = MATERIAL_TYPE[connection?.products?.[0]?.materialType]
+  $: material = $materialMetadata[connection?.products?.[0]?.materialId]?.name
   $: amount = connection?.products?.[0]?.amount / 100
 
   $: {

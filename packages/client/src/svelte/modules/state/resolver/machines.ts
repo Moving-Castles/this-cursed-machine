@@ -1,10 +1,11 @@
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
+import { MACHINE_TYPE } from "../base/enums"
+import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
-import { deepClone, getUniqueIdentifier } from "../../utils"
+import { deepClone, getMaterialCombinationId } from "../../utils"
 
 const EMPTY_PRODUCT: Product = {
   machineId: "",
-  materialType: MATERIAL_TYPE.NONE,
+  materialId: MaterialIdNone,
   amount: 0,
   inletActive: [false, false],
 }
@@ -32,8 +33,8 @@ export function process(
  * Splits the first product from the input array into two products with half the amount.
  * If the input array is empty, it returns an array of two empty products.
  *
- * @param {Product[]} inputs - An array of products, where each product has properties: machineId, materialType, and amount.
- * @returns {Product[]} An array containing two products with the same machineId and materialType as the first product from the input array, but with half the amount.
+ * @param {Product[]} inputs - An array of products, where each product has properties: machineId, materialId, and amount.
+ * @returns {Product[]} An array containing two products with the same machineId and materialId as the first product from the input array, but with half the amount.
  */
 function splitter(inputs: Product[]): Product[] {
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
@@ -46,14 +47,14 @@ function splitter(inputs: Product[]): Product[] {
 
   outputs[0] = {
     machineId: input.machineId,
-    materialType: input.materialType,
+    materialId: input.materialId,
     amount: halfAmount,
     inletActive: input.inletActive,
   }
 
   outputs[1] = {
     machineId: input.machineId,
-    materialType: input.materialType,
+    materialId: input.materialId,
     amount: halfAmount,
     inletActive: input.inletActive,
   }
@@ -64,7 +65,7 @@ function splitter(inputs: Product[]): Product[] {
 /**
  * Processes the input products using a mixer machine to generate a combined product.
  *
- * @notice The function checks a list of predefined recipes to determine the output product's material type based on the material types of the input products. If a matching recipe is found, the output product is created using the machine ID of the first input product and the specified amount. If no matching recipe is found, the output material type is set to `MATERIAL_TYPE.NONE`.
+ * @notice The function checks a list of predefined recipes to determine the output product's material type based on the material types of the input products. If a matching recipe is found, the output product is created using the machine ID of the first input product and the specified amount. If no matching recipe is found, the output material type is set to `MaterialIdNone`.
  * @param {Product[]} inputs - An array of input products to be processed by the mixer. The array should contain exactly two products for a successful mixing process.
  * @returns {Product[]} An array containing the processed product. If the input does not meet the requirements or no matching recipe is found, it returns an array with an empty product.
  */
@@ -76,9 +77,9 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
   const outputMaterials = getRecipe(
     recipes,
     MACHINE_TYPE.MIXER,
-    getUniqueIdentifier(
-      Number(inputs[0].materialType),
-      Number(inputs[1].materialType)
+    getMaterialCombinationId(
+      inputs[0].materialId,
+      inputs[1].materialId
     )
   )
 
@@ -91,7 +92,7 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 
   outputs[0] = {
     machineId: inputs[0].machineId,
-    materialType: outputMaterials[0],
+    materialId: outputMaterials[0],
     amount: lowestAmountProduct.amount,
     inletActive: combinedInletActive,
   }
@@ -102,7 +103,7 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 /**
  * Processes the input products using a specified simple machine to generate an output product.
  *
- * @notice The function checks a list of predefined recipes to determine the output product's material type based on the material type of the input product and the specified machine type. If a matching recipe is found, the output product is created using the machine ID of the input product and its amount. If no matching recipe is found, the output material type is set to `MATERIAL_TYPE.NONE`.
+ * @notice The function checks a list of predefined recipes to determine the output product's material type based on the material type of the input product and the specified machine type. If a matching recipe is found, the output product is created using the machine ID of the input product and its amount. If no matching recipe is found, the output material type is set to `MaterialIdNone`.
  * @param {MACHINE_TYPE} machineType - The type of simple machine used for processing.
  * @param {Product[]} inputs - An array of input products to be processed. The function primarily checks the first product in the array.
  * @returns {Product[]} An array containing the processed product. If the input does not meet the requirements or no matching recipe is found, it returns an array with an empty product.
@@ -121,14 +122,14 @@ function defaultMachine(
   const outputMaterials = getRecipe(
     recipes,
     machineType,
-    Number(inputs[0].materialType)
+    inputs[0].materialId
   )
 
-  if (outputMaterials[1] === MATERIAL_TYPE.NONE) {
+  if (outputMaterials[1] === MaterialIdNone) {
     // One output
     outputs[0] = {
       machineId: input.machineId,
-      materialType: outputMaterials[0],
+      materialId: outputMaterials[0],
       amount: input.amount,
       inletActive: input.inletActive,
     }
@@ -138,14 +139,14 @@ function defaultMachine(
     // Two outputs
     outputs[0] = {
       machineId: input.machineId,
-      materialType: outputMaterials[0],
+      materialId: outputMaterials[0],
       amount: input.amount / 2,
       inletActive: input.inletActive,
     }
 
     outputs[1] = {
       machineId: input.machineId,
-      materialType: outputMaterials[1],
+      materialId: outputMaterials[1],
       amount: input.amount / 2,
       inletActive: input.inletActive,
     }
@@ -161,11 +162,11 @@ function getLowestAmountProduct(A: Product, B: Product): Product {
 function getRecipe(
   recipes: Recipe[],
   machineType: MACHINE_TYPE,
-  input: number
-): MATERIAL_TYPE[] {
+  input: string
+): MaterialId[] {
   return (
     recipes.find(
       recipe => recipe.machineType === machineType && recipe.input === input
-    )?.outputs || [MATERIAL_TYPE.NONE, MATERIAL_TYPE.NONE]
+    )?.outputs || [MaterialIdNone, MaterialIdNone]
   )
 }
