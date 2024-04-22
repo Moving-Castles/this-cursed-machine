@@ -24,7 +24,7 @@
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num
+    num => $tutorialProgress > num,
   ).length
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -50,9 +50,9 @@
         <button
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           class:enabled={value.enabled}
-          class:active={Number(key) === $activeTab}
+          class:active={Number(key) === Number($activeTab)}
           class:pulse={PULSE_CONDITIONS[Number(key)].includes(
-            $tutorialProgress
+            $tutorialProgress,
           )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           on:click={() => {

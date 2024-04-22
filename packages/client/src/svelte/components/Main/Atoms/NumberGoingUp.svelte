@@ -31,8 +31,6 @@
           playSound("tcm", "bugs")
         }
 
-        console.log(emphasis)
-
         setTimeout(() => {
           emphasis = ""
           // console.log(emphasis)
