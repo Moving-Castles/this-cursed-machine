@@ -5,6 +5,7 @@
   import { generators } from "@components/Main/Tabs/Pod/Graph/Connections/svg"
   import { MACHINE_TYPE } from "contracts/enums"
   import walkable from "@modules/utils/walkable"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
   import {
     simulatedMachines as machines,
     simulatedTanks as tanks,
@@ -154,12 +155,15 @@
   data-to={attachment.machine}
   bind:this={element}
   mask="url(#mask)"
+  class="run-potential {$networkIsRunning && productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
 >
   <path
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}
     {d}
-    stroke={productive ? "var(--white)" : "var(--color-success)"}
+    stroke={productive ? "var(--color-success)" : "var(--white)"}
     fill="none"
     stroke-width="10"
   />

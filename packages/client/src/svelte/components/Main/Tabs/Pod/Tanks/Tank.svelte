@@ -5,7 +5,11 @@
   import { playerPod } from "@modules/state/base/stores"
   import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
-  import { shippableTanks } from "@modules/state/simulated/stores"
+  import {
+    networkIsRunning,
+    shippableTanks,
+    simulatedMachines,
+  } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
@@ -55,6 +59,8 @@
 
   $: $amount = typedTank.amount / UI_SCALE_FACTOR
 
+  $: connectedMachine = $simulatedMachines[tank.tankConnection]
+
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
     if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
@@ -65,10 +71,11 @@
 
 <div
   id="tank-{address}"
-  class="tank-item"
+  class="tank-item run-potential"
   class:shippable={canShip}
   class:highlight
   class:disabled-highlight={disabledHighlight}
+  class:running={$networkIsRunning && connectedMachine?.productive}
 >
   <div class="tank-progress" style:height="{$progress}%"></div>
   {#if shipping}
@@ -106,7 +113,12 @@
     {/if}
   </div>
 
-  <div class="connection" class:connected class:productive={true}>
+  <div
+    class="connection"
+    class:connected
+    class:productive={connectedMachine?.productive}
+    class:running={$networkIsRunning && connectedMachine?.productive}
+  >
     {#if connected}
       {#if getConnectionName(typedTank.tankConnection) === "I"}
         ↓
@@ -203,23 +215,12 @@
       font-size: var(--font-size) !important;
       color: var(--foreground);
 
-      // &:not(.connected) {
-      //   &::after {
-      //     content: "";
-      //     position: absolute;
-      //     width: 40px;
-      //     height: 1px;
-      //     background: white;
-      //     transform: rotate(45deg);
-      //   }
-      // }
-
       &.connected {
-        background: var(--color-success);
         color: var(--background);
+        background: var(--foreground);
 
         &.productive {
-          background: var(--white);
+          background: var(--color-success);
         }
       }
     }

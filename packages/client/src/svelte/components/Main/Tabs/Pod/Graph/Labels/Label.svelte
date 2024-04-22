@@ -90,7 +90,11 @@
     }
 
     &.carrying {
-      fill: var(--color-success);
+      fill: var(--white);
+
+      &.productive {
+        fill: var(--color-success);
+      }
     }
 
     &.hover {
@@ -100,10 +104,6 @@
     &.vertical {
       transform: translate(4px, 0) rotate(90deg);
     }
-
-    // &.productive {
-    //   fill: var(--color-alert);
-    // }
   }
 
   .label-below {

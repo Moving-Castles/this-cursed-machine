@@ -7,6 +7,7 @@
   import { CELL } from "../constants"
   import Label from "../Labels/Label.svelte"
   import { playSound } from "@modules/sound"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
 
   export let connection: GraphConnection
 
@@ -55,7 +56,9 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <g
-  class="connection"
+  class="connection run-potential {$networkIsRunning && connection.productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:hover
   class:carrying
   class:highlight
@@ -109,10 +112,10 @@
     fill: none;
 
     &.carrying {
-      stroke: var(--color-success);
+      stroke: var(--white);
 
       &.productive {
-        stroke: var(--white);
+        stroke: var(--color-success);
       }
     }
   }

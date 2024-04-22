@@ -6,6 +6,7 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   import { selectedOption } from "@modules/ui/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
 
   export let address: string
   export let machine: GraphMachine
@@ -31,11 +32,13 @@
 
 <div
   id="machine-{address}"
-  class="inlet"
+  class="inlet run-potential {$networkIsRunning && machine.productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:disabled-highlight={disabledHighlight}
   class:highlight
-  class:productive={machine.productive}
+  class:productive={machine.productive && machine.productive}
   in:fade
   class:connected
   {style}
@@ -66,11 +69,12 @@
     // font-feature-settings: "ss02" 1;
 
     &.connected {
-      background: var(--color-success);
+      background: var(--white);
       color: var(--background);
 
       &.productive {
-        background: var(--white);
+        background: var(--color-success);
+        color: var(--background);
       }
     }
 
