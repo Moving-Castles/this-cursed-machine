@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, TanksInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOffer, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
+import { GameConfig, CarriedBy, ContainedMaterial, Offer, OfferData, Amount, TanksInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
+import { LibUtils, LibOffer, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract OfferSystem is System {
   /**
    * @notice Create an offer
    * @dev Restricted to admin
-   * @param _materialType Material type of the offer
+   * @param _materialId Material id of the offer
    * @param _amount Amount of material
    * @param _cost Cost of the offer in whole token units (1 token = 1e18)
    * @return orderEntity Id of the offer entity
    */
-  function createOffer(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) public returns (bytes32 orderEntity) {
+  function createOffer(MaterialId _materialId, uint32 _amount, uint32 _cost) public returns (bytes32 orderEntity) {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
-    orderEntity = LibOffer.create(_materialType, _amount, _cost);
+    orderEntity = LibOffer.create(_materialId, _amount, _cost);
 
     return orderEntity;
   }
@@ -67,13 +67,13 @@ contract OfferSystem is System {
     // Go through all tanks in the pod
     for (uint32 i = 0; i < tanksInPod.length; i++) {
       // If tank is empty: select it
-      if (MaterialType.get(tanksInPod[i]) == MATERIAL_TYPE.NONE) {
+      if (!ContainedMaterial.get(tanksInPod[i]).isRegistered()) {
         targetTank = tanksInPod[i];
         break;
       }
 
       // If tank has other material: skip
-      if (MaterialType.get(tanksInPod[i]) != offerData.materialType) {
+      if (ContainedMaterial.get(tanksInPod[i]) != offerData.materialId) {
         continue;
       }
 
@@ -89,7 +89,7 @@ contract OfferSystem is System {
     }
 
     // Add material to tank
-    MaterialType.set(targetTank, offerData.materialType);
+    ContainedMaterial.set(targetTank, offerData.materialId);
     Amount.set(targetTank, Amount.get(targetTank) + offerData.amount);
 
     if (Tutorial.get(playerEntity)) {

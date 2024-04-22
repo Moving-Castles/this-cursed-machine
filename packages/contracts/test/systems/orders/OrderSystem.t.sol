@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
+import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 import { FLOW_RATE, ONE_MINUTE, ONE_HOUR } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
@@ -51,7 +51,7 @@ contract OrderSystemTest is BaseTest {
     prankAdmin();
     // Create order
     startGasReport("Create order as admin");
-    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
     endGasReport();
 
     vm.stopPrank();
@@ -66,7 +66,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     startGasReport("Create order as normal user");
-    world.createOrder("Test order", MATERIAL_TYPE.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
+    world.createOrder("Test order", PublicMaterials.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
     endGasReport();
 
     vm.stopPrank();
@@ -79,7 +79,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     vm.expectRevert("insufficient funds");
-    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
 
     vm.stopPrank();
   }
@@ -89,7 +89,8 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     prankAdmin();
-    bytes32 order = world.createOrder("", MATERIAL_TYPE.NONE, 0, 1000, ONE_HOUR, 1);
+    bytes32 order = world.createOrder("", PublicMaterials.BLOOD_MEAL, 0, 1000, ONE_HOUR, 1);
+    ContainedMaterial.set(tanksInPod[1], PublicMaterials.BLOOD_MEAL);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -116,7 +117,7 @@ contract OrderSystemTest is BaseTest {
 
     prankAdmin();
     // Create order
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -132,7 +133,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -159,7 +160,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD, 2000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD, 2000, 1000, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -168,7 +169,7 @@ contract OrderSystemTest is BaseTest {
 
     world.acceptOrder(orderEntity);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, PublicMaterials.BUG);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -204,7 +205,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -226,7 +227,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -246,7 +247,7 @@ contract OrderSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 1000, 0, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -254,7 +255,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, PublicMaterials.BUG);
 
     world.acceptOrder(orderEntity);
 

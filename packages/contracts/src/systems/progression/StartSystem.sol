@@ -2,8 +2,8 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, TanksInPod, MaterialType, Amount, Tutorial, BuildIndex, BuildTracker, TankConnection, NonTransferableBalance } from "../../codegen/index.sol";
-import { MACHINE_TYPE, MATERIAL_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, TanksInPod, Amount, Tutorial, BuildIndex, BuildTracker, TankConnection, NonTransferableBalance } from "../../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibTank } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TANKS } from "../../constants.sol";
 

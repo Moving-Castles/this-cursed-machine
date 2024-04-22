@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 import { query, QueryFragment, QueryType } from "@latticexyz/world-modules/src/modules/keysintable/query.sol";
 import { EntityType, LastResolved, BuildIndex, BuildTracker } from "../codegen/index.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../structs.sol";
 
 library LibPod {

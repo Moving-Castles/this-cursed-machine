@@ -2,9 +2,9 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibNetwork, PublicMaterials } from "../../libraries/Libraries.sol";
+import { GameConfig, EntityType, CarriedBy, ContainedMaterial, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
+import { LibUtils, LibOrder, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
 
@@ -13,7 +13,7 @@ contract OrderSystem is System {
    * @notice Create an order
    * @dev Free for admin, charges reward cost (_reward * _maxPlayers) for non-admin
    * @param _title Title of the order
-   * @param _materialType Material type to produce
+   * @param _materialId Material id to produce
    * @param _amount Amount to produce
    * @param _reward Reward for completing the order in whole token units (1 token = 1e18)
    * @param _duration Duration of the order
@@ -22,7 +22,7 @@ contract OrderSystem is System {
    */
   function createOrder(
     string memory _title,
-    MATERIAL_TYPE _materialType,
+    MaterialId _materialId,
     uint32 _amount,
     uint32 _reward,
     uint32 _duration,
@@ -44,7 +44,7 @@ contract OrderSystem is System {
     orderEntity = LibOrder.create(
       LibUtils.addressToEntityKey(_msgSender()),
       _title,
-      _materialType,
+      _materialId,
       _amount,
       false, // Not tutorial
       0, // Not tutorial

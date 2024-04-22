@@ -2,10 +2,11 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, TankConnection, BuildIndex } from "../codegen/index.sol";
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, BuildIndex } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../structs.sol";
 import { FLOW_RATE, TANK_CAPACITY } from "../constants.sol";
+import { LibMaterial } from "./LibMaterial.sol";
 
 library LibTank {
   struct InletTankAmount {
@@ -22,7 +23,7 @@ library LibTank {
     tankEntity = getUniqueEntity();
     EntityType.set(tankEntity, ENTITY_TYPE.TANK);
     CarriedBy.set(tankEntity, _podEntity);
-    MaterialType.set(tankEntity, MATERIAL_TYPE.NONE);
+    ContainedMaterial.set(tankEntity, LibMaterial.NONE);
     Amount.set(tankEntity, 0);
     BuildIndex.set(tankEntity, _index + 1);
     TankConnection.set(tankEntity, bytes32(0));
@@ -85,10 +86,10 @@ library LibTank {
 
     uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
 
-    if (MaterialType.get(_outletTankEntity) == _output.materialType) {
+    if (ContainedMaterial.get(_outletTankEntity) == _output.materialId) {
       Amount.set(_outletTankEntity, Amount.get(_outletTankEntity) + cumulativeOutputAmount);
     } else {
-      MaterialType.set(_outletTankEntity, _output.materialType);
+      ContainedMaterial.set(_outletTankEntity, _output.materialId);
       Amount.set(_outletTankEntity, cumulativeOutputAmount);
     }
 
@@ -104,7 +105,7 @@ library LibTank {
         ? usedInletAmounts[i].amount - consumedInletAmount
         : 0;
       if (newAmount == 0) {
-        MaterialType.set(_inletTankEntities[usedInletAmounts[i].index], MATERIAL_TYPE.NONE);
+        ContainedMaterial.set(_inletTankEntities[usedInletAmounts[i].index], LibMaterial.NONE);
       }
       Amount.set(_inletTankEntities[usedInletAmounts[i].index], newAmount);
     }

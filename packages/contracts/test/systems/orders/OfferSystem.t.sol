@@ -4,7 +4,7 @@ import { console } from "forge-std/console.sol";
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
+import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
 import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_TOKEN_UNIT } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
@@ -52,12 +52,12 @@ contract OfferSystemTest is BaseTest {
 
     // Create order
     startGasReport("Create offer");
-    bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
+    bytes32 offerEntity = world.createOffer(PublicMaterials.BLOOD, 10000, 100);
     endGasReport();
 
     OfferData memory offerData = Offer.get(offerEntity);
 
-    assertEq(uint8(offerData.materialType), uint8(MATERIAL_TYPE.BLOOD));
+    assertEq(offerData.materialId.unwrap(), PublicMaterials.BLOOD.unwrap());
     assertEq(offerData.amount, 10000);
     assertEq(offerData.cost, 100);
 
@@ -71,7 +71,7 @@ contract OfferSystemTest is BaseTest {
 
     // Create order
     vm.expectRevert("not allowed");
-    world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
+    world.createOffer(PublicMaterials.BLOOD, 10000, 100);
 
     vm.stopPrank();
   }
@@ -80,7 +80,7 @@ contract OfferSystemTest is BaseTest {
   //   setUp();
 
   //   prankAdmin();
-  //   bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BUG, 10000, 100);
+  //   bytes32 offerEntity = world.createOffer(PublicMaterials.BUG, 10000, 100);
   //   vm.stopPrank();
 
   //   vm.startPrank(alice);
@@ -92,7 +92,7 @@ contract OfferSystemTest is BaseTest {
   //   vm.stopPrank();
 
   //   assertEq(PublicMaterials.BUG.getTokenBalance(alice), 0);
-  //   assertEq(uint8(MaterialType.get(tanksInPod[0])), uint8(MATERIAL_TYPE.BUG));
+  //   assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.BUG.unwrap());
   //   assertEq(Amount.get(tanksInPod[0]), 20000);
   // }
 
@@ -100,21 +100,21 @@ contract OfferSystemTest is BaseTest {
     setUp();
 
     prankAdmin();
-    bytes32 offerEntity = world.createOffer(MATERIAL_TYPE.BLOOD, 10000, 100);
+    bytes32 offerEntity = world.createOffer(PublicMaterials.BLOOD, 10000, 100);
     vm.stopPrank();
 
     vm.startPrank(alice);
 
     world.graduate();
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 10000, PublicMaterials.BUG);
 
     world.buyOffer(offerEntity);
 
     vm.stopPrank();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(alice), 9900 * ONE_TOKEN_UNIT);
-    assertEq(uint8(MaterialType.get(tanksInPod[1])), uint8(MATERIAL_TYPE.BLOOD));
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.BLOOD.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 10000);
   }
 }

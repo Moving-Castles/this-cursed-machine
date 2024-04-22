@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CurrentOrder, CarriedBy, Amount, MaterialType, Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, PublicMaterials } from "../../libraries/Libraries.sol";
-import { MATERIAL_TYPE } from "../../codegen/common.sol";
+import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name } from "../../codegen/index.sol";
+import { LibUtils, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { ONE_TOKEN_UNIT } from "../../constants.sol";
 
 contract DevSystem is System {
@@ -29,8 +28,8 @@ contract DevSystem is System {
    * @notice Fill tank with material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillTank(bytes32 _tankEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {
-    MaterialType.set(_tankEntity, _materialType);
+  function fillTank(bytes32 _tankEntity, uint32 _amount, MaterialId _materialId) public {
+    ContainedMaterial.set(_tankEntity, _materialId);
     Amount.set(_tankEntity, _amount);
   }
 

@@ -7,7 +7,7 @@ import { GameConfig, GameConfigData } from "./tables/GameConfig.sol";
 import { MaterialMetadata, MaterialMetadataData } from "./tables/MaterialMetadata.sol";
 import { EntityType } from "./tables/EntityType.sol";
 import { MachineType } from "./tables/MachineType.sol";
-import { MaterialType } from "./tables/MaterialType.sol";
+import { ContainedMaterial } from "./tables/ContainedMaterial.sol";
 import { Amount } from "./tables/Amount.sol";
 import { Name } from "./tables/Name.sol";
 import { CarriedBy } from "./tables/CarriedBy.sol";

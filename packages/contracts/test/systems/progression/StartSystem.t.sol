@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../../../src/codegen/common.sol";
 
 contract StartSystemTest is BaseTest {
   function testStart() public {

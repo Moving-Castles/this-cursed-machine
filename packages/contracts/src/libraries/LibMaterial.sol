@@ -20,8 +20,20 @@ type MaterialId is bytes14;
 
 using LibMaterial for MaterialId global;
 
+function eq(MaterialId _a, MaterialId _b) pure returns (bool) {
+  return MaterialId.unwrap(_a) == MaterialId.unwrap(_b);
+}
+
+function ne(MaterialId _a, MaterialId _b) pure returns (bool) {
+  return MaterialId.unwrap(_a) != MaterialId.unwrap(_b);
+}
+
+using { eq as ==, ne as != } for MaterialId global;
+
 library LibMaterial {
   using WorldResourceIdInstance for ResourceId;
+
+  MaterialId constant NONE = MaterialId.wrap(bytes14(0));
 
   function registerMaterial(
     MaterialId _materialId,
@@ -85,5 +97,42 @@ library LibMaterial {
     ResourceId systemId = Puppet(token).systemId();
     ResourceId tableId = _balancesTableId(systemId.getNamespace());
     return Balances.get(tableId, _account);
+  }
+
+  /**
+   * Get id for a combination of 1 material
+   * @param _a Material id
+   */
+  function getMaterialCombinationId(MaterialId _a) internal pure returns (bytes32) {
+    return keccak256(abi.encodePacked(_a));
+  }
+
+  /**
+   * Get id for a combination of 2 materials
+   * @param _a Material id
+   * @param _b Material id
+   */
+  function getMaterialCombinationId(MaterialId _a, MaterialId _b) internal pure returns (bytes32) {
+    // Always sort the ids in ascending order to make the combination order-agnostic
+    if (MaterialId.unwrap(_a) > MaterialId.unwrap(_b)) {
+      return keccak256(abi.encodePacked(_b, _a));
+    } else {
+      return keccak256(abi.encodePacked(_a, _b));
+    }
+  }
+
+  /**
+   * Whether the material has been registered
+   */
+  function isRegistered(MaterialId _materialId) internal view returns (bool) {
+    if (_materialId.unwrap() == bytes14(0)) {
+      // Always consider 0 id unregistered, even if by some mistake a token for it is added
+      return false;
+    }
+    return MaterialMetadata.getTokenAddress(_materialId) != address(0);
+  }
+
+  function unwrap(MaterialId _materialId) internal pure returns (bytes14) {
+    return MaterialId.unwrap(_materialId);
   }
 }
