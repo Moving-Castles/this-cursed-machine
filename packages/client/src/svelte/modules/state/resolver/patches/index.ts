@@ -1,6 +1,7 @@
 import type { Product } from "./types"
 import type { SimulatedEntities } from "../../simulated/types"
 import { deepClone } from "@modules/utils"
+// import { MACHINE_TYPE } from "contracts/enums"
 
 export function organizePatches(
   dataArray: any[],
