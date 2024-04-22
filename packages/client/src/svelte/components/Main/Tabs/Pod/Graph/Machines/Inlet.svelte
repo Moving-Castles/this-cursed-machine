@@ -33,8 +33,9 @@
   id="machine-{address}"
   class="inlet"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
-  class:highlight
   class:disabled-highlight={disabledHighlight}
+  class:highlight
+  class:productive={machine.productive}
   in:fade
   class:connected
   {style}
@@ -42,7 +43,11 @@
   <div class="inner-container">
     <div class="label">{label}</div>
     {#each ports as port}
-      <div class="port" style={port.style} />
+      <div
+        class:productive={machine.productive}
+        class="port"
+        style={port.style}
+      />
     {/each}
   </div>
 </div>
@@ -63,6 +68,10 @@
     &.connected {
       background: var(--color-success);
       color: var(--background);
+
+      &.productive {
+        background: var(--white);
+      }
     }
 
     &.active {
@@ -82,6 +91,10 @@
         width: var(--cellWidth);
         height: var(--cellHeight);
         background: var(--foreground);
+
+        &.productive {
+          background: var(--black);
+        }
       }
     }
   }

@@ -30,6 +30,7 @@
   const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation()
     if (e.key.toLowerCase() === "tab") {
+      e.preventDefault()
       if (e.shiftKey) {
         activeTab.set(($activeTab - 1) % availableTabsLength)
       } else {
@@ -44,22 +45,25 @@
 <svelte:window on:keydown={onKeyDown} />
 
 {#if $tutorialProgress > 1}
-  <div class="tab-bar">
+  <div tabindex="-1" class="tab-bar">
     {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
-      <div class="button-container">
+      <div
+        class="button-container"
+        tabindex={key}
+        on:click={() => {
+          activeTab.set(key)
+          playSound("tcm", "selectionEnter")
+        }}
+      >
         <div
           class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           class:enabled={value.enabled}
-          class:active={Number(key) === $activeTab}
+          class:active={Number(key) === Number($activeTab)}
           class:pulse={PULSE_CONDITIONS[Number(key)].includes(
             $tutorialProgress
           )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
-          on:click={() => {
-            activeTab.set(key)
-            playSound("tcm", "selectionEnter")
-          }}
         >
           {value.label}
         </div>

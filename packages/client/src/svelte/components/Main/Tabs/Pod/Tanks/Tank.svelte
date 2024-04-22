@@ -106,7 +106,7 @@
     {/if}
   </div>
 
-  <div class="connection" class:connected>
+  <div class="connection" class:connected class:productive={true}>
     {#if connected}
       {#if getConnectionName(typedTank.tankConnection) === "I"}
         ↓
@@ -201,7 +201,7 @@
       justify-content: center;
       align-items: center;
       font-size: var(--font-size) !important;
-      color: var(--foreground) !important;
+      color: var(--foreground);
 
       // &:not(.connected) {
       //   &::after {
@@ -217,6 +217,10 @@
       &.connected {
         background: var(--color-success);
         color: var(--background);
+
+        &.productive {
+          background: var(--white);
+        }
       }
     }
 

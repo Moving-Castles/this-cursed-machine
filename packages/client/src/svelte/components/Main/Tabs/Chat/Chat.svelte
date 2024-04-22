@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { tick } from "svelte"
   import { fade } from "svelte/transition"
   import { chatMessages, verifiedClients } from "@modules/signal/stores"
   import ChatMessageItem from "./ChatMessageItem.svelte"
   import ChatInput from "./ChatInput.svelte"
+  import { onMount } from "svelte"
 
   let clientHeight = 0
   let clientWidth = 0
@@ -18,20 +18,21 @@
   $: unreadMessages = $chatMessages.filter(msg => msg.timestamp > lastChecked)
 
   const scrollBottom = async () => {
-    // console.log(messagesContainer.scrollHeight)
-    await tick()
-    await tick()
-    await tick()
-    messagesContainer.scrollTo(0, messagesContainer.scrollHeight)
     polling = true
-    setTimeout(() => {
+    await new Promise(r => setTimeout(r, 100))
+    messagesContainer.scrollTo(0, messagesContainer.scrollHeight)
+    await new Promise(r => setTimeout(r, 100))
+    if ($chatMessages[$chatMessages.length - 1]) {
       lastChecked = $chatMessages[$chatMessages.length - 1].timestamp
-      polling = false
-    }, 100)
+    }
+    polling = false
   }
+
+  onMount(scrollBottom)
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   bind:clientHeight
   bind:clientWidth
@@ -40,12 +41,12 @@
 >
   <div class="head">
     <div>
-      ({$verifiedClients.length}) Stump{#if $verifiedClients.length !== 1}s{/if}
+      {$verifiedClients.length} Stump{#if $verifiedClients.length !== 1}s{/if}
       online
     </div>
-    <p class="warn">
+    <span class="warn">
       Violations of the TCM Limited free speech policy will be punished
-    </p>
+    </span>
   </div>
   <div
     bind:this={messagesContainer}
@@ -65,6 +66,7 @@
     </div>
 
     {#if unreadMessages.length > 0 && !polling && messagesContainerHeight > messagesContainer.clientHeight}
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div on:click={scrollBottom} class="catch-up">
         {unreadMessages.length} UNREAD
       </div>
@@ -78,14 +80,20 @@
     width: 100%;
     overflow: hidden;
   }
+
   .container {
-    padding: 4rem var(--default-padding);
+    padding-inline: var(--default-padding);
+    padding-top: 3rem;
+    padding-bottom: 4rem;
     overflow-y: scroll;
     scroll-behavior: smooth;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
 
     .message-container {
       overflow-y: scroll;
-      margin-bottom: 4rem;
+      margin-bottom: 0rem;
     }
   }
 
@@ -106,23 +114,33 @@
     .warn {
       text-align: right;
       font-size: var(--font-size-small);
+      color: var(--color-failure);
     }
   }
 
   .head {
     top: 0;
-    height: 5rem;
+    padding: 2em;
+    padding-inline: var(--default-padding);
+    padding-bottom: 1em;
+    font-size: var(--font-size-small);
+    border-bottom: 1px solid var(--color-grey-dark);
   }
 
   .foot {
     height: 3rem;
     bottom: 0;
 
+    border-top: 1px solid var(--color-grey-dark);
+
     .catch-up {
-      color: var(--color-failure);
+      background: var(--color-scuccess);
+      color: var(--background);
+      padding: 2px;
       position: absolute;
       right: 1rem;
       bottom: 1rem;
+      cursor: pointer;
     }
   }
 </style>

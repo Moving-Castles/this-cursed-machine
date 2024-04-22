@@ -2,7 +2,7 @@
   import { onMount, createEventDispatcher } from "svelte"
   import { sendChatMessage } from "@modules/signal"
   import type { ChatMessage } from "@modules/signal/types"
-  import { player, playerAddress } from "@modules/state/base/stores"
+  import { playerAddress } from "@modules/state/base/stores"
   import { v4 as uuid } from "uuid"
   import { network } from "@modules/network"
   import { playSound } from "@modules/sound"
@@ -20,7 +20,6 @@
     if (message === "") return
     const newMessage: ChatMessage = {
       id: uuid(),
-      name: $player.name ?? "Unknown",
       world: $network.worldContract.address,
       message,
       timestamp: Date.now(),
