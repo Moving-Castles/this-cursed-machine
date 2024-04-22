@@ -9,7 +9,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { UI_SCALE_FACTOR } from "@modules/ui/constants"
-  import { working } from "@modules/ui/stores"
+  import { orderAcceptInProgress } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
@@ -19,8 +19,11 @@
 
   export let key: string
   export let order: Order
+  // The order is currently accepted
   export let active = false
+  // Player has completed this order, and can't accept it again
   export let completed: boolean
+  // Player has selected the order in the UI
   export let selected: boolean
 
   const dispatch = createEventDispatcher()
@@ -32,39 +35,54 @@
 
   const PULSE_CONDITIONS = [2, 8, 16]
 
+  // Get the order metadata from the database
   const staticMaterial = $staticContent.materials.find(
     material =>
       material.materialType === MATERIAL_TYPE[order.order.materialType],
   )
+
+  // Create image URL
   const imageURL =
     staticMaterial && staticMaterial.image
       ? urlFor(staticMaterial.image).width(400).auto("format").url()
       : ""
 
+  // Player is in the process of accepting the order
+  $: working = $orderAcceptInProgress === key
+  // Player is in the process of accepting another order
+  $: unavailable =
+    $orderAcceptInProgress !== key && $orderAcceptInProgress !== "0x0"
+
   async function sendAccept() {
-    $working = true
+    $orderAcceptInProgress = key
     playSound("tcm", "listPrint")
     const action = acceptOrder(key)
     await waitForCompletion(action)
-    playSound("tcm", "bugs")
-    $working = false
+    playSound("tcm", "TRX_yes")
+    $orderAcceptInProgress = "0x0"
   }
 
   async function sendUnaccept() {
-    $working = true
+    $orderAcceptInProgress = key
     playSound("tcm", "listPrint")
     const action = unacceptOrder()
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
-    $working = false
+    $orderAcceptInProgress = "0x0"
   }
 
-  const onKeyPress = e => {
-    if (e.key === "Enter" && !$working && !active && selected) {
+  const onKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      // Abort if the order system is busy
+      if (working || unavailable || active) return
+      // Abort if the order is not selected
+      if (!selected) return
+      // Otherwise, accept the order
       sendAccept()
     }
   }
 
+  // Get the number of players working on this order
   $: stumps = Object.entries($players).filter(([_, p]) => {
     return p.currentOrder === key
   })
@@ -79,10 +97,12 @@
 
 <svelte:window on:keypress={onKeyPress} />
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   on:mouseenter
   class="order-item"
-  class:working={$working}
+  class:working
+  class:unavailable
   class:active
   class:completed
   class:selected
@@ -123,7 +143,7 @@
       <div class="top">
         <div class="col col-order">
           <p class="header">
-            {#if $working}
+            {#if working}
               <Spinner />
             {:else}
               Order #{key.slice(-6)}
@@ -157,14 +177,10 @@
 
         <div class="col col-actions">
           <p class="header">
-            {#if $working}
-              <Spinner />
-            {:else if !$player.tutorial && order.order.expirationBlock != 0}
+            {#if !$player.tutorial && order.order.expirationBlock != 0}
               {blocksToReadableTime(
                 Number(order.order.expirationBlock) - Number($blockNumber),
               )}
-            {:else}
-              \
             {/if}
           </p>
           <div class="content">
@@ -189,17 +205,17 @@
 
       <div class="bottom">
         <p class="stumps" class:active={stumps.length > 0}>
-          {#if $working}
+          {#if working}
             <Spinner />
           {:else}
-            {stumps.length} stmp{stumps.length !== 1 ? "s" : ""} at work
+            {stumps.length} stump{stumps.length !== 1 ? "s" : ""} at work
           {/if}
         </p>
         <p>
-          {#if $working}
+          {#if working}
             <Spinner />
           {:else if order.order.maxPlayers === 0}
-            {order?.completed?.length || 0} stmps completed
+            {order?.completed?.length || 0} stumps completed
           {:else}
             {order.order.maxPlayers - (order?.completed?.length || 0)}/50
             available
@@ -247,6 +263,12 @@
     &.working {
       pointer-events: none;
     }
+
+    &.unavailable {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
     .material {
       width: 200px;
       height: 200px;
