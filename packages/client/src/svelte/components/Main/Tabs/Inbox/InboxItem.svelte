@@ -57,6 +57,16 @@
         border-radius: 50%;
         background: var(--color-success);
         margin-right: 20px;
+        animation: 0.7s linear 0s infinite alternate pulse;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
       }
 
       .sender {
