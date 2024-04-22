@@ -41,9 +41,3 @@
   bind:inputElement
   placeholder="message"
 />
-
-<style lang="scss">
-  .container {
-    padding: 20px;
-  }
-</style>

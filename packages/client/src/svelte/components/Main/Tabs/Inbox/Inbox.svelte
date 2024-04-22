@@ -2,84 +2,59 @@
   import { staticContent } from "@modules/content"
   import { player } from "@modules/state/base/stores"
   import { fade } from "svelte/transition"
-  import { urlFor } from "@modules/content/sanity"
-  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { viewingAttachment } from "@modules/ui/stores"
+  import InboxItem from "./InboxItem.svelte"
 
-  $: messages = $staticContent.messages.filter(
-    msg => {
-      if ($player.tutorial) {
-        return $player.tutorial && msg.tutorial
-      } else {
-        return msg
-      }
+  $: messages = $staticContent.messages.filter(msg => {
+    if ($player.tutorial) {
+      return $player.tutorial && msg.tutorial
+    } else {
+      return msg
     }
-    // msg => msg
-  )
-
-  const open = (i: number) => {
-    $viewingAttachment = $viewingAttachment === i ? -1 : i
-    advanceTutorial(null, $tutorialProgress, "read")
-  }
+  })
 </script>
 
-<div class="inbox" in:fade>
-  {#each messages as message, i}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div on:click={() => open(i)} class="message">
-      <button class="opener" class:pulse={$tutorialProgress === 19}>
-        {message.title}
-      </button>
+<div class="head">
+  <div>{messages?.length ?? 0} messages</div>
+  <span class="warn">
+    Violations of the TCM Premium Titanum NDA™ will be punished
+  </span>
+</div>
 
-      {#if $viewingAttachment === i && messages?.[i]?.attachment}
-        <div class="attachment">
-          <!-- {#if import.meta.env.PROD} -->
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-          <img
-            crossorigin="anonymous"
-            on:click={() => (i = -1)}
-            src={urlFor(messages?.[i]?.attachment).url()}
-            alt={message.title}
-          />
-        </div>
-      {/if}
-    </div>
+<div class="inbox" in:fade>
+  {#each messages as message}
+    <InboxItem {message} />
   {/each}
 </div>
 
 <style lang="scss">
-  .inbox {
-    padding: 20px;
-  }
-
-  .opener {
+  .head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
     width: 100%;
-    height: 10rem;
-    vertical-align: middle;
-    font-family: var(--font-family);
-    background: var(--foreground);
-    color: var(--background);
-    border: none;
-  }
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: var(--z-1);
+    padding: 2em;
+    padding-inline: var(--default-padding);
+    padding-bottom: 1em;
+    font-size: var(--font-size-small);
+    border-bottom: 1px solid var(--color-grey-dark);
 
-  .opener:hover {
-    background: var(--background);
-    color: var(--foreground);
-  }
-
-  .attachment {
-    margin: 1rem 0;
-    // position: fixed;
-    inset: 0;
-    // z-index: var(--z-10);
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 3rem;
+    .warn {
+      text-align: right;
+      font-size: var(--font-size-small);
+      color: var(--color-failure);
     }
+  }
+
+  .inbox {
+    padding-inline: var(--default-padding);
+    padding-top: 3rem;
   }
 </style>

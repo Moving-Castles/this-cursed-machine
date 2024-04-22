@@ -48,6 +48,7 @@
       Violations of the TCM Limited free speech policy will be punished
     </span>
   </div>
+
   <div
     bind:this={messagesContainer}
     class="container"
