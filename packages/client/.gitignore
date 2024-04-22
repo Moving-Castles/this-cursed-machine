@@ -5,3 +5,4 @@ dist
 .DS_Store
 coverage
 .env2
+.env.sentry-build-plugin
