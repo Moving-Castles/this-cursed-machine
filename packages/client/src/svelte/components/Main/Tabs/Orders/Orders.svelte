@@ -24,7 +24,9 @@
       playSound("tcm", "selectionScroll")
     }
 
-    element.parentElement.scrollTop = selected * 250
+    if (element && element.parentElement) {
+      element.parentElement.scrollTop = selected * 250
+    }
   }
 
   const goTo = i => {

@@ -16,7 +16,7 @@
 
   const PULSE_CONDITIONS = {
     0: [6, 16],
-    1: [3],
+    1: [3, 14, 24],
     2: [26],
     3: [30],
   }
@@ -47,7 +47,8 @@
   <div class="tab-bar">
     {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
       <div class="button-container">
-        <button
+        <div
+          class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           class:enabled={value.enabled}
           class:active={Number(key) === $activeTab}
@@ -56,12 +57,12 @@
           )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
           on:click={() => {
-            playSound("tcm", "selectionEnter")
             activeTab.set(key)
+            playSound("tcm", "selectionEnter")
           }}
         >
           {value.label}
-        </button>
+        </div>
       </div>
     {/each}
   </div>
@@ -78,7 +79,7 @@
     .button-container {
       width: 25%;
 
-      button {
+      .tab-button {
         width: 100%;
         padding: 10px;
         background: var(--color-grey-mid);
@@ -88,6 +89,7 @@
         opacity: 0.3;
         pointer-events: none;
         user-select: none;
+        text-align: center;
 
         &:last-child {
           border-right: 1px solid var(--color-grey-dark);
@@ -109,6 +111,7 @@
 
           &.active {
             background: var(--foreground);
+            color: var(--background);
           }
 
           &:disabled:hover {

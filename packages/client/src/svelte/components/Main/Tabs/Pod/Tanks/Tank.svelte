@@ -21,7 +21,7 @@
     (Math.round(tank.amount / UI_SCALE_FACTOR) /
       (TANK_CAPACITY / UI_SCALE_FACTOR)) *
       100,
-    { easing: bounceOut },
+    { easing: bounceOut }
   )
 
   const amount = tweened(Math.round(tank.amount / UI_SCALE_FACTOR))
@@ -84,14 +84,23 @@
 
   <div class="content">
     {#if empty}
-      <div>0 / {TANK_CAPACITY / UI_SCALE_FACTOR}</div>
+      <div class="material-amount">
+        <span class="portion-left">0</span> /
+        <span class="portion-right">{TANK_CAPACITY / UI_SCALE_FACTOR}</span>
+      </div>
     {:else}
       <div class="inner-container">
         <div class="material-type">
           {MATERIAL_TYPE[typedTank.materialType]}
         </div>
         <div class="material-amount">
-          {Math.round($amount)} / {TANK_CAPACITY / UI_SCALE_FACTOR}
+          <span class="portion-left">
+            {Math.round($amount)}
+          </span>
+          /
+          <span class="portion-right">
+            {TANK_CAPACITY / UI_SCALE_FACTOR}
+          </span>
         </div>
       </div>
     {/if}
@@ -121,6 +130,19 @@
     display: flex;
     position: relative;
     user-select: none;
+
+    .material-amount {
+      .portion-left {
+        display: inline-block;
+        width: 3ch;
+        text-align: right;
+      }
+
+      .portion-right {
+        display: inline-block;
+        width: 3ch;
+      }
+    }
 
     .overlay {
       position: absolute;

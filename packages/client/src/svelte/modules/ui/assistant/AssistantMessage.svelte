@@ -3,7 +3,11 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
-  import { tutorialProgress, advanceConditions } from "@modules/ui/assistant"
+  import {
+    tutorialProgress,
+    completedSteps,
+    advanceConditions,
+  } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
@@ -24,7 +28,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType],
+        MATERIAL_TYPE[$playerOrder?.order?.materialType]
       )
     }
 
@@ -80,6 +84,7 @@
     playSound("tcm", "TRX_yes")
     working = false
     tutorialProgress.set(0)
+    completedSteps.set([])
     clearTerminalOutput()
   }
 
