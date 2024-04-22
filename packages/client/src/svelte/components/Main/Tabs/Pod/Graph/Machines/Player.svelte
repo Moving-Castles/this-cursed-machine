@@ -9,6 +9,7 @@
     selectedOption,
     selectedParameters,
   } from "@modules/ui/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
   import { player } from "@modules/state/base/stores"
 
@@ -61,7 +62,9 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   id="machine-{address}"
-  class="player"
+  class="player run-potential {$networkIsRunning && producing
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
   class:disabled-highlight={disabledHighlight}
