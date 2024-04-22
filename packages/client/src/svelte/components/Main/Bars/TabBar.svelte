@@ -24,7 +24,7 @@
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num
+    num => $tutorialProgress > num,
   ).length
 
   const onKeyDown = (e: KeyboardEvent) => {
@@ -47,6 +47,9 @@
 {#if $tutorialProgress > 1}
   <div tabindex="-1" class="tab-bar">
     {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <div
         class="button-container"
         tabindex={key}
@@ -61,7 +64,7 @@
           class:enabled={value.enabled}
           class:active={Number(key) === Number($activeTab)}
           class:pulse={PULSE_CONDITIONS[Number(key)].includes(
-            $tutorialProgress
+            $tutorialProgress,
           )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         >
@@ -94,6 +97,10 @@
         pointer-events: none;
         user-select: none;
         text-align: center;
+
+        &.pulse {
+          color: var(--background) !important;
+        }
 
         &:last-child {
           border-right: 1px solid var(--color-grey-dark);

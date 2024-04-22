@@ -277,7 +277,7 @@ pre {
 
 .command {
   background-color: var(--color-tutorial) !important;
-  color: black;
+  color: var(--background);
   padding: 2px 0 0;
   margin-top: -2px;
   display: inline-block;
