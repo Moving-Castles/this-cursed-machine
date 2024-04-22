@@ -36,6 +36,7 @@ export default defineWorld({
                 materialId: "MaterialId",
                 tokenAddress: "address",
                 difficultyCoefficient: "uint32[2]", // Multiplies rewards for orders of the material, consists of numerator and denominator
+                name: "string",
             }
         },
         EntityType: "ENTITY_TYPE",

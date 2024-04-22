@@ -45,7 +45,7 @@ library LibMaterial {
     // Set other material metadata
     MaterialMetadata.set(
       _materialId,
-      MaterialMetadataData({ tokenAddress: address(token), difficultyCoefficient: _difficultyCoefficient })
+      MaterialMetadataData({ tokenAddress: address(token), difficultyCoefficient: _difficultyCoefficient, name: _name })
     );
   }
 
