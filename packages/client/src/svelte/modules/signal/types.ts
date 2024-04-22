@@ -8,7 +8,6 @@ export type ChatMessage = {
     world: string
     timestamp: number
     address: string
-    name: string
     message: string
 }
 

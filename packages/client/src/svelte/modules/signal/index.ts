@@ -1,7 +1,7 @@
 import { get } from "svelte/store"
 import { network } from "../network"
 import { players } from "../state/base/stores"
-import { getUniqueValues, padAddress } from "../utils"
+import { getUniqueValues, addressToId } from "../utils"
 import type { ChatMessage, Client, MessageObject } from "./types"
 import { SIGNAL_SERVER_URL, MESSAGE } from "./constants"
 import { chatMessages, verifiedClients } from "./stores"
@@ -22,12 +22,14 @@ export function initSignalNetwork() {
         // VERIFIED CLIENTS
         if (msgObj.topic === "verifiedClients") {
 
+            console.log('verifiedclients');
+
             // TODO: do this on server ??
             // Verified clients changed: dedupe and filter to players in current world
             verifiedClients.update((verifiedClients) => {
                 verifiedClients = getUniqueValues(
                     msgObj.verifiedClients
-                        .filter((client: Client) => get(players)[padAddress(client.address)])
+                        // .filter((client: Client) => get(players)[addressToId(client.address)])
                         .map((client: Client) => client.address))
 
                 return verifiedClients;

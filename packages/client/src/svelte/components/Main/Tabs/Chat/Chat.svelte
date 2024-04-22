@@ -22,7 +22,9 @@
     await new Promise(r => setTimeout(r, 100))
     messagesContainer.scrollTo(0, messagesContainer.scrollHeight)
     await new Promise(r => setTimeout(r, 100))
-    lastChecked = $chatMessages[$chatMessages.length - 1].timestamp
+    if ($chatMessages[$chatMessages.length - 1]) {
+      lastChecked = $chatMessages[$chatMessages.length - 1].timestamp
+    }
     polling = false
   }
 

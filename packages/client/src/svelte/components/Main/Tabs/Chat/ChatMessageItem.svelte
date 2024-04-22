@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { playerAddress } from "@svelte/modules/state/base/stores"
-  import { verifiedClients } from "@modules/signal/stores"
+  import { players, playerAddress } from "@svelte/modules/state/base/stores"
+  import { addressToId } from "@modules/utils"
   import type { ChatMessage } from "@modules/signal/types"
   export let message: ChatMessage
 
@@ -18,11 +18,8 @@
 <div class="message" in:fade>
   <div class="message-header">
     <div class="message-author">
-      {#if $verifiedClients.includes(message.address.toLowerCase())}
-        <!-- <span class="verified">✅</span> -->
-      {/if}
       <span class="author-name" class:self={message.address === $playerAddress}>
-        {message.name}
+        {$players[addressToId(message.address)]?.name || "unknown"}
       </span>
     </div>
     <div class="message-timestamp">{message.timestamp}</div>
