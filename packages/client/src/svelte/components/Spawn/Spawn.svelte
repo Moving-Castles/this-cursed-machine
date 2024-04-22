@@ -35,7 +35,9 @@
       }
     }
 
-    terminalComponent.resetInput()
+    if (terminalComponent) {
+      terminalComponent.resetInput()
+    }
   }
 
   onMount(async () => {
@@ -46,12 +48,14 @@
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("done")
     } else {
       await narrative[0]()
-      terminalComponent.resetInput()
+      if (terminalComponent) {
+        terminalComponent.resetInput()
+      }
       // Reset tutorial
       tutorialProgress.set(0)
       completedSteps.set([])
