@@ -34,7 +34,7 @@ contract OrderSystem is System {
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint32 totalRewardCost = _reward * _maxPlayers;
-      require(LibToken.getTokenBalance(_msgSender()) > totalRewardCost * ONE_TOKEN_UNIT, "insufficient funds");
+      require(LibToken.getTokenBalance(_msgSender()) >= totalRewardCost * ONE_TOKEN_UNIT, "insufficient funds");
       LibToken.transferToken(_world(), totalRewardCost * ONE_TOKEN_UNIT);
     }
 

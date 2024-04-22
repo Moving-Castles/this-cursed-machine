@@ -49,9 +49,9 @@ contract OfferSystem is System {
 
     // If player is in tutorial, we check the non transferable balance
     if (Tutorial.get(playerEntity)) {
-      require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
+      require(NonTransferableBalance.get(playerEntity) >= offerData.cost, "insufficient balance");
     } else {
-      require(LibToken.getTokenBalance(_msgSender()) > offerData.cost * ONE_TOKEN_UNIT, "insufficient balance");
+      require(LibToken.getTokenBalance(_msgSender()) >= offerData.cost * ONE_TOKEN_UNIT, "insufficient balance");
     }
 
     // Resolution needs to be done before filling the tank to avoid instant conversion of materials.
