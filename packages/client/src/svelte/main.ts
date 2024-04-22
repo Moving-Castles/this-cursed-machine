@@ -4,6 +4,8 @@ import App from "./App.svelte";
 import * as Sentry from "@sentry/svelte";
 
 Sentry.init({
+  // environment: "staging",
+  environment: "development",
   dsn: "https://b051335e30dca124d200533a100e6892@o433904.ingest.us.sentry.io/4507126123921408",
   integrations: [
     Sentry.browserTracingIntegration(),
