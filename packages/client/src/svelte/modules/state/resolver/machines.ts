@@ -15,6 +15,7 @@ export function process(
   inputs: Product[],
   recipes: Recipe[]
 ): Product[] {
+  // console.log('process')
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MACHINE_TYPE.PLAYER) {
     return defaultMachine(recipes, machineType, inputs)
@@ -124,6 +125,8 @@ function defaultMachine(
     machineType,
     inputs[0].materialId
   )
+
+  // console.log("outputMaterials", outputMaterials)
 
   if (outputMaterials[1] === MaterialIdNone) {
     // One output

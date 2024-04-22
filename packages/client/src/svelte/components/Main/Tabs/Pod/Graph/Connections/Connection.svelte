@@ -10,6 +10,8 @@
 
   export let connection: GraphConnection
 
+  $: console.log("connection", connection)
+
   const DURATION = 400
   const inDrawOptions = { duration: DURATION, easing }
   const outDrawOptions = { duration: DURATION, easing }
@@ -37,7 +39,7 @@
   }
 
   $: d = generators[activeCurve](
-    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT)
+    generatePoints(connection, CELL.WIDTH, CELL.HEIGHT),
   )
 
   const drawInStart = async () => {
