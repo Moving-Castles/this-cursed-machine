@@ -224,8 +224,6 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   const offers = get(offersStore)
   const balance = get(playerTokenBalance)
 
-  // console.log(offers)
-
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
     label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
     value: address,

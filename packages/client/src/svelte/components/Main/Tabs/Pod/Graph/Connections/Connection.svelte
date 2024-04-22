@@ -69,6 +69,7 @@
     bind:this={pathElement}
     class="visible"
     class:carrying
+    class:productive={connection.productive}
     in:draw={inDrawOptions}
     out:draw={outDrawOptions}
     on:introstart={drawInStart}
@@ -109,6 +110,10 @@
 
     &.carrying {
       stroke: var(--color-success);
+
+      &.productive {
+        stroke: var(--white);
+      }
     }
   }
 </style>

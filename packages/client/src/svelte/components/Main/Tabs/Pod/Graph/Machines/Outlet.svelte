@@ -30,18 +30,23 @@
 </script>
 
 <div
+  in:fade
   id="machine-{address}"
   class="outlet"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
-  in:fade
   class:highlight
   class:disabled-highlight={disabledHighlight}
+  class:productive={machine.productive}
   {style}
 >
   <div class="inner-container">
     <div class="label">{label}</div>
     {#each ports as port}
-      <div class="port" style={port.style} />
+      <div
+        class:productive={machine.productive}
+        class="port"
+        style={port.style}
+      />
     {/each}
   </div>
 </div>
@@ -67,6 +72,11 @@
       border: 1px solid var(--color-success);
     }
 
+    &.productive {
+      background: var(--white);
+      color: var(--black);
+    }
+
     .inner-container {
       width: 100%;
       height: 100%;
@@ -80,6 +90,10 @@
         width: var(--cellWidth);
         height: var(--cellHeight);
         background: var(--foreground);
+
+        &.productive {
+          background: var(--black);
+        }
       }
     }
   }

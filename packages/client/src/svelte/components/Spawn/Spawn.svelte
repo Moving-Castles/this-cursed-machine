@@ -5,7 +5,7 @@
     TERMINAL_OUTPUT_TYPE,
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
-  import { tutorialProgress } from "@modules/ui/assistant"
+  import { tutorialProgress, completedSteps } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
@@ -58,6 +58,7 @@
       }
       // Reset tutorial
       tutorialProgress.set(0)
+      completedSteps.set([])
     }
   })
 </script>

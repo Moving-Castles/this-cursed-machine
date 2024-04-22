@@ -67,7 +67,7 @@
     safezone = document.getElementById(
       attachedMachine?.machineType === MACHINE_TYPE.INLET
         ? "safezone-1"
-        : "safezone-2",
+        : "safezone-2"
     )
 
     const from = tankElement?.getBoundingClientRect()
@@ -88,7 +88,7 @@
       // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
       throughCoord2 = makeRandomPointInsideSafeZone(
-        attachedMachine?.machineType,
+        attachedMachine?.machineType
       )
 
       const points = throughCoord
@@ -159,7 +159,7 @@
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}
     {d}
-    stroke="var(--color-success)"
+    stroke={productive ? "var(--white)" : "var(--color-success)"}
     fill="none"
     stroke-width="10"
   />
