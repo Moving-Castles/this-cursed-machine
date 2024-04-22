@@ -35,7 +35,7 @@ contract OrderSystem is System {
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint32 totalRewardCost = _reward * _maxPlayers;
       require(
-        PublicMaterials.BUG.getTokenBalance(_msgSender()) > totalRewardCost * ONE_TOKEN_UNIT,
+        PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost * ONE_TOKEN_UNIT,
         "insufficient funds"
       );
       PublicMaterials.BUG.transferToken(_world(), totalRewardCost * ONE_TOKEN_UNIT);

@@ -153,9 +153,7 @@ export function calculateSimulatedTanks(
   )
 
   // Get patches for depois
-  const tankPatches = Object.entries(patches).filter(
-    ([_, patch]) => patch.tank
-  )
+  const tankPatches = Object.entries(patches).filter(([_, patch]) => patch.tank)
 
   // Abort if either of these are empty
   if (
@@ -343,7 +341,7 @@ export function calculateSimulatedConnections(
         },
         products: [],
         state: GRAPH_ENTITY_STATE.IDLE,
-        productive: sourceMachine.productive ?? false,
+        productive: targetMachine.productive ?? false,
       }
 
       // If the source machine has an output:
@@ -352,7 +350,7 @@ export function calculateSimulatedConnections(
         sourceMachine.outputs &&
         sourceMachine.outputs[sourcePortIndex] &&
         sourceMachine.outputs[sourcePortIndex].materialType !==
-        MATERIAL_TYPE.NONE
+          MATERIAL_TYPE.NONE
       ) {
         connection.products = [
           {

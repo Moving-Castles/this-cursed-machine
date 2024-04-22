@@ -21,9 +21,6 @@ export function initSignalNetwork() {
 
         // VERIFIED CLIENTS
         if (msgObj.topic === "verifiedClients") {
-
-            console.log('verifiedclients');
-
             // TODO: do this on server ??
             // Verified clients changed: dedupe and filter to players in current world
             verifiedClients.update((verifiedClients) => {

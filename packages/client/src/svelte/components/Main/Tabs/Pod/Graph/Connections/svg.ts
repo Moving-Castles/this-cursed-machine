@@ -209,8 +209,6 @@ export function getLongestSection(
       }
     }
 
-    // console.log(direction, length)
-
     if (length > longest && direction % 2 === 0) {
       const x = startPosition[0]
       const y = startPosition[1]
@@ -233,8 +231,6 @@ export function getLongestSection(
       longest = length
     }
   }
-
-  // console.log(longestSection)
 
   return longestSection
 }

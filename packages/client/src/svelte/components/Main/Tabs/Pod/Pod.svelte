@@ -17,7 +17,8 @@
     <Graph on:resize />
   </div>
 </div>
-<Tooltips />
+
+<!-- <Tooltips /> -->
 
 <style lang="scss">
   .stats {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { players, playerAddress } from "@svelte/modules/state/base/stores"
-  import { addressToId } from "@modules/utils"
+  import { addressToId, timeSince } from "@modules/utils"
   import type { ChatMessage } from "@modules/signal/types"
   export let message: ChatMessage
 
@@ -22,7 +22,7 @@
         {$players[addressToId(message.address)]?.name || "unknown"}
       </span>
     </div>
-    <div class="message-timestamp">{message.timestamp}</div>
+    <div class="message-timestamp">{timeSince(message.timestamp)}</div>
   </div>
   <div class="message-content">
     <span class:warning>{message.message}</span>
@@ -66,7 +66,8 @@
 
   .message-timestamp {
     font-size: 0.8em;
-    color: var(--color-grey-dark);
+    color: var(--color-grey-light);
+    font-size: var(--font-size-small);
   }
 
   .message-content {

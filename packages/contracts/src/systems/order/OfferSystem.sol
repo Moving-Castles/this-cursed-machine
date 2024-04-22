@@ -49,10 +49,10 @@ contract OfferSystem is System {
 
     // If player is in tutorial, we check the non transferable balance
     if (Tutorial.get(playerEntity)) {
-      require(NonTransferableBalance.get(playerEntity) > offerData.cost, "insufficient balance");
+      require(NonTransferableBalance.get(playerEntity) >= offerData.cost, "insufficient balance");
     } else {
       require(
-        PublicMaterials.BUG.getTokenBalance(_msgSender()) > offerData.cost * ONE_TOKEN_UNIT,
+        PublicMaterials.BUG.getTokenBalance(_msgSender()) >= offerData.cost * ONE_TOKEN_UNIT,
         "insufficient balance"
       );
     }

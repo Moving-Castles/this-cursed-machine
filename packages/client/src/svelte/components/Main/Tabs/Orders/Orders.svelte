@@ -5,15 +5,15 @@
   import { playSound } from "@modules/sound"
   import OrderItem from "./OrderItem.svelte"
 
-  function mod(n, m) {
+  function mod(n: number, m: number) {
     return ((n % m) + m) % m
   }
 
-  let element
+  let element: HTMLDivElement
 
   let selected = -1
 
-  const cycle = e => {
+  const cycle = (e: KeyboardEvent) => {
     e.stopPropagation()
     const options = Object.keys($availableOrders).length
     if (e.key === "ArrowDown") {
@@ -24,10 +24,12 @@
       playSound("tcm", "selectionScroll")
     }
 
-    element.parentElement.scrollTop = selected * 250
+    if (element?.parentElement) {
+      element.parentElement.scrollTop = selected * 250
+    }
   }
 
-  const goTo = i => {
+  const goTo = (i: number) => {
     selected = i
     playSound("tcm", "selectionScroll")
   }
@@ -46,7 +48,7 @@
           {key}
           {order}
           active={$player.currentOrder === key}
-          completed={$player.completed?.includes(key)}
+          completed={$player.completed?.includes(key) || false}
         />
       {/each}
     </div>

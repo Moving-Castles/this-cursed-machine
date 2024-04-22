@@ -8,17 +8,23 @@ import {
   simulatedMachines,
 } from "@modules/state/simulated/stores"
 
-import { storableNumber } from "@modules/utils/storable"
+import { storableNumber, storableArray } from "@modules/utils/storable"
 import { staticContent } from "@modules/content"
 
 export type Step = {
+  index: number
   type: "wait" | "tab" | "contract" | "command" | "order" | "read" | "custom"
   value: number[] | Record<string, string | string[]>
+  skip?: number
 }
 
 export const tutorialProgress = storableNumber(0, "tutorialProgress")
 export const tutorialCompleted = writable([])
 export const currentCondition: Writable<Step | null> = writable(null)
+export const completedSteps: Writable<number[]> = storableArray(
+  [],
+  "completedSteps"
+)
 
 export const advanceConditions: Writable<Step[]> = writable([])
 
@@ -61,68 +67,93 @@ function updateConditions() {
   const TANK_ADDRESSES = get(playerPod)?.tanksInPod
   const BUG_TANK = get(playerPod)?.tanksInPod?.[0]
 
+  // Defined in each step are the other steps you are allowed to skip to.
+  // Sequential steps will have no skip value, and steps that can be done in another order will have the max skip step index defined. Skips are only looking forward
   const ADVANCE_CONDITIONS = [
-    { type: "wait", value: 8000 },
-    { type: "command", value: ["blink", "."] }, // 1
-    { type: "command", value: ["blink", "."] }, // 2
-    { type: "tab", value: [1] }, // 3
-    { type: "command", value: ["blink", "."] }, // 4
-    { type: "contract", value: { systemId: "acceptOrder" } }, // 5
-    { type: "tab", value: [0] }, // 6
-    { type: "contract", value: { systemId: "buyOffer" } }, // 7
+    // IN SEQUENCE
+    { index: 0, type: "wait", value: 8000 },
+    { index: 1, type: "command", value: ["blink", "."] },
+    { index: 2, type: "command", value: ["blink", "."] },
+    { index: 3, type: "tab", value: [1] },
+    { index: 4, type: "command", value: ["blink", "."] },
+    { index: 5, type: "contract", value: { systemId: "acceptOrder" } },
+    { index: 6, type: "tab", value: [0] },
+    { index: 7, type: "contract", value: { systemId: "buyOffer" } },
     {
+      index: 8,
       type: "contract",
-      value: { systemId: "plugTank", params: [BUG_TANK, INLET_ADDRESSES] },
-    }, // 8
-    { type: "contract", value: { systemId: "connect" } }, // 9
+      value: {
+        systemId: "plugTank",
+        params: [BUG_TANK, INLET_ADDRESSES],
+      },
+    },
+    { index: 9, type: "contract", value: { systemId: "connect" } },
     {
+      index: 10,
       type: "contract",
-      value: { systemId: "connect", params: [PLAYER_ADDRESS, OUTLET_ADDRESS] },
-    }, // 10
+      value: {
+        systemId: "connect",
+        params: [PLAYER_ADDRESS, OUTLET_ADDRESS],
+      },
+    },
     {
+      index: 11,
       type: "contract",
       value: {
         systemId: "plugTank",
         params: [TANK_ADDRESSES, OUTLET_ADDRESS],
       },
     }, // 11
-    { type: "order" }, // 12
-    { type: "contract", value: { systemId: "shipTank" } }, // 13
-    { type: "tab", value: [1] }, // 14
-    { type: "contract", value: { systemId: "acceptOrder" } }, // 15
-    { type: "contract", value: { systemId: "buyOffer" } }, // 16
+    { index: 12, type: "order" }, // 12
+    // IN SEQUENCE
+    { index: 13, type: "contract", value: { systemId: "shipTank" } }, // 13
+    { index: 14, type: "tab", value: [1] }, // 14
+    // MIXED ORDER 15 - 22
     {
+      index: 15,
+      type: "contract",
+      value: { systemId: "acceptOrder" },
+    }, // 15
+    { index: 16, type: "contract", value: { systemId: "buyOffer" }, skip: 19 }, // 16
+    {
+      index: 17,
       type: "contract",
       value: { systemId: "plugTank", params: [BUG_TANK, INLET_ADDRESSES] },
+      skip: 19,
     }, // 17
     {
+      index: 18,
       type: "contract",
       value: { systemId: "connect", params: [PLAYER_ADDRESS] },
     }, // 18
     {
+      index: 19,
       type: "contract",
       value: { systemId: "buildMachine", params: [MACHINE_TYPE.DRYER] },
     }, // 19
     {
+      index: 20,
       type: "contract",
       value: { systemId: "connect", params: [PLAYER_ADDRESS] },
     }, // 20
     {
+      index: 21,
       type: "contract",
       value: {
         systemId: "plugTank",
         params: [TANK_ADDRESSES, OUTLET_ADDRESS],
       },
     }, // 21
-    { type: "order" }, // 22
-    { type: "contract", value: { systemId: "shipTank" } }, // 23
-    { type: "tab", value: [1] }, // 24
-    { type: "contract", value: { systemId: "acceptOrder" } }, // 25
-    { type: "tab", value: [2] }, // 26
-    { type: "read" }, // 27
-    { type: "order" }, // 28
-    { type: "contract", value: { systemId: "shipTank" } }, // 29
-    { type: "tab", value: [3] }, // 30
+    { index: 22, type: "order" }, // 22
+    // IN SEQUENCE
+    { index: 23, type: "contract", value: { systemId: "shipTank" } }, // 23
+    { index: 24, type: "tab", value: [1] }, // 24
+    { index: 25, type: "contract", value: { systemId: "acceptOrder" } }, // 25
+    { index: 26, type: "tab", value: [2] }, // 26
+    { index: 27, type: "read" }, // 27
+    { index: 28, type: "order" }, // 28
+    { index: 29, type: "contract", value: { systemId: "shipTank" } }, // 29
+    { index: 30, type: "tab", value: [3] }, // 30
   ]
 
   advanceConditions.set(ADVANCE_CONDITIONS)
@@ -160,73 +191,85 @@ export function advanceTutorial(
 ) {
   const $advanceConditions = get(advanceConditions)
 
-  const step = $advanceConditions[level]
+  const currentStep = $advanceConditions[level]
 
-  if (step) {
-    // Check if condition is met or not
-    if (
-      step.type === "command" &&
-      type === "command" &&
-      typeof input === "string"
-    ) {
-      if (step.value.includes(input.toLowerCase())) {
-        markComplete(level)
+  if (currentStep) {
+    let otherSteps = []
+
+    if (currentStep.skip) {
+      for (let i = level; i < currentStep.skip; i++) {
+        otherSteps.push($advanceConditions[i])
       }
     }
 
-    if (step.type === "tab" && type === "tab") {
-      if (step.value.includes(Number(input))) {
-        markComplete(level)
-      }
-    }
+    const allStepsToCheck = [currentStep, ...otherSteps]
 
-    if (step.type === "contract" && type === "contract") {
-      // console.log(step.value.systemId, input.systemId)
-      // Check the systemId
-      if (step.value.systemId !== input.systemId) return
-
-      // Check if all the params correspond to all the input params
-      if (step.value.params) {
-        let satisfies = true
-
-        step.value.params.forEach(prm => {
-          const all = step.value.params.flat()
-
-          if (Array.isArray(prm)) {
-            input.params.forEach(address => {
-              if (!all.includes(address)) {
-                satisfies = false
-              }
-            })
-          } else {
-            if (!input.params.includes(prm)) satisfies = false
-          }
-        })
-
-        if (!satisfies) return
+    allStepsToCheck.forEach(step => {
+      // Check if condition is met or not
+      if (
+        step.type === "command" &&
+        type === "command" &&
+        typeof input === "string"
+      ) {
+        if (step.value.includes(input.toLowerCase())) {
+          markComplete(step.index)
+        }
       }
 
-      markComplete(level)
-    }
-
-    // Read message ?
-    if (step.type === "read" && type === "read") {
-      markComplete(level)
-    }
-
-    if (step.type === "custom" && type === "custom" && step.value === input) {
-      markComplete(level)
-    }
-
-    if (step.type === "wait" && type === "wait") {
-      markComplete(level)
-    }
-
-    // Ready to ship ?
-    if (step.type === "order" && type === "order") {
-      if (Object.values(get(shippableTanks)).some(e => e === true)) {
-        markComplete(level)
+      if (step.type === "tab" && type === "tab") {
+        if (step.value.includes(Number(input))) {
+          markComplete(step.index)
+        }
       }
-    }
+
+      if (step.type === "contract" && type === "contract") {
+        // console.log(step.value.systemId, input.systemId)
+        // Check the systemId
+        if (step.value.systemId !== input.systemId) return
+
+        // Check if all the params correspond to all the input params
+        if (step.value.params) {
+          let satisfies = true
+
+          step.value.params.forEach(prm => {
+            const all = step.value.params.flat()
+
+            if (Array.isArray(prm)) {
+              input.params.forEach(address => {
+                if (!all.includes(address)) {
+                  satisfies = false
+                }
+              })
+            } else {
+              if (!input.params.includes(prm)) satisfies = false
+            }
+          })
+
+          if (!satisfies) return
+        }
+
+        markComplete(step.index)
+      }
+
+      // Read message ?
+      if (step.type === "read" && type === "read") {
+        markComplete(step.index)
+      }
+
+      if (step.type === "custom" && type === "custom" && step.value === input) {
+        markComplete(step.index)
+      }
+
+      if (step.type === "wait" && type === "wait") {
+        markComplete(step.index)
+      }
+
+      // Ready to ship ?
+      if (step.type === "order" && type === "order") {
+        if (Object.values(get(shippableTanks)).some(e => e === true)) {
+          markComplete(step.index)
+        }
+      }
+    })
   }
 }
