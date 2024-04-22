@@ -39,6 +39,8 @@ export function initSignalNetwork() {
         // Chat
         if (msgObj.topic === "chat") {
             chatMessages.update(messages => {
+                // Abort if the message is not for the current world
+                if (msgObj.data.world !== get(network).worldContract.address) return messages
                 messages.push(msgObj.data)
                 return messages
             })

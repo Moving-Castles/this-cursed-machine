@@ -114,6 +114,7 @@
     .warn {
       text-align: right;
       font-size: var(--font-size-small);
+      color: var(--color-failure);
     }
   }
 
