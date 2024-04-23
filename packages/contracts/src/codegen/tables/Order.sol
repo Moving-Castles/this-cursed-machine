@@ -21,7 +21,7 @@ import { MaterialId } from "./../../libraries/LibMaterial.sol";
 
 struct OrderData {
   uint256 creationBlock;
-  bytes32 creator;
+  address creator;
   MaterialId materialId;
   uint32 amount;
   uint256 expirationBlock;
@@ -35,12 +35,12 @@ library Order {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f726465720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x007a070120200e04200404000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x006e070120140e04200404000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, bytes32, bytes14, uint32, uint256, uint32, uint32, string)
-  Schema constant _valueSchema = Schema.wrap(0x007a07011f5f4d031f0303c50000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, address, bytes14, uint32, uint256, uint32, uint32, string)
+  Schema constant _valueSchema = Schema.wrap(0x006e07011f614d031f0303c50000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -126,29 +126,29 @@ library Order {
   /**
    * @notice Get creator.
    */
-  function getCreator(bytes32 key) internal view returns (bytes32 creator) {
+  function getCreator(bytes32 key) internal view returns (address creator) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Get creator.
    */
-  function _getCreator(bytes32 key) internal view returns (bytes32 creator) {
+  function _getCreator(bytes32 key) internal view returns (address creator) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Set creator.
    */
-  function setCreator(bytes32 key, bytes32 creator) internal {
+  function setCreator(bytes32 key, address creator) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -158,7 +158,7 @@ library Order {
   /**
    * @notice Set creator.
    */
-  function _setCreator(bytes32 key, bytes32 creator) internal {
+  function _setCreator(bytes32 key, address creator) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -573,7 +573,7 @@ library Order {
   function set(
     bytes32 key,
     uint256 creationBlock,
-    bytes32 creator,
+    address creator,
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
@@ -606,7 +606,7 @@ library Order {
   function _set(
     bytes32 key,
     uint256 creationBlock,
-    bytes32 creator,
+    address creator,
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
@@ -689,7 +689,7 @@ library Order {
     pure
     returns (
       uint256 creationBlock,
-      bytes32 creator,
+      address creator,
       MaterialId materialId,
       uint32 amount,
       uint256 expirationBlock,
@@ -699,17 +699,17 @@ library Order {
   {
     creationBlock = (uint256(Bytes.getBytes32(_blob, 0)));
 
-    creator = (Bytes.getBytes32(_blob, 32));
+    creator = (address(Bytes.getBytes20(_blob, 32)));
 
-    materialId = MaterialId.wrap(Bytes.getBytes14(_blob, 64));
+    materialId = MaterialId.wrap(Bytes.getBytes14(_blob, 52));
 
-    amount = (uint32(Bytes.getBytes4(_blob, 78)));
+    amount = (uint32(Bytes.getBytes4(_blob, 66)));
 
-    expirationBlock = (uint256(Bytes.getBytes32(_blob, 82)));
+    expirationBlock = (uint256(Bytes.getBytes32(_blob, 70)));
 
-    reward = (uint32(Bytes.getBytes4(_blob, 114)));
+    reward = (uint32(Bytes.getBytes4(_blob, 102)));
 
-    maxPlayers = (uint32(Bytes.getBytes4(_blob, 118)));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 106)));
   }
 
   /**
@@ -777,7 +777,7 @@ library Order {
    */
   function encodeStatic(
     uint256 creationBlock,
-    bytes32 creator,
+    address creator,
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
@@ -814,7 +814,7 @@ library Order {
    */
   function encode(
     uint256 creationBlock,
-    bytes32 creator,
+    address creator,
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,

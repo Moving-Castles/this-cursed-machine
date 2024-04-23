@@ -19,7 +19,7 @@ contract CreateOrder is Script {
 
     vm.startBroadcast(deployerPrivateKey);
 
-    bytes32 admin = bytes32(0);
+    address admin = address(0);
 
     // 80 INDUSTRIAL_LUBRICANT => 160 points
     LibOrder.create(admin, "", PublicMaterials.INDUSTRIAL_LUBRICANT, 8000, false, 0, 160, 0, 0);
