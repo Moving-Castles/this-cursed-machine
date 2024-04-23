@@ -50,7 +50,7 @@
 <div class="head">
   <div>{messages?.length ?? 0} messages</div>
   <span class="warn">
-    Violations of the TCM Premium Titanum NDA™ will be punished
+    Violations of the TCM Titanium Grade NDA™ will be punished
   </span>
 </div>
 
@@ -99,7 +99,7 @@
 
   .inbox {
     padding-inline: var(--default-padding);
-    margin-top: 3rem;
+    margin-top: 4rem;
     height: calc(100vh - 180px);
     overflow-y: hidden;
   }

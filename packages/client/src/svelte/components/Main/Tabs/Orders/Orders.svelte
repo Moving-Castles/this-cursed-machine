@@ -33,6 +33,13 @@
 
 <svelte:window on:keydown|stopPropagation={cycle} />
 
+<div class="head">
+  <div>
+    {Object.keys($availableOrders).length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
+  </div>
+  <span class="warn">“Accept, ship, repeat”</span>
+</div>
+
 {#if $tutorialProgress > 4}
   <div bind:this={element} class="container">
     <div class="order-list">
@@ -53,6 +60,36 @@
 
 <style lang="scss">
   .container {
-    padding: 20px;
+    padding: var(--default-padding);
+    padding-top: 4rem;
+    position: relative;
+  }
+
+  .head {
+    padding: var(--default-padding);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: var(--z-1);
+
+    top: 0;
+    left: 0;
+    padding: 2em;
+    padding-inline: var(--default-padding);
+    padding-bottom: 1em;
+    font-size: var(--font-size-small);
+    border-bottom: 1px solid var(--color-grey-dark);
+
+    .warn {
+      text-align: right;
+      font-size: var(--font-size-small);
+      color: var(--color-failure);
+    }
   }
 </style>
