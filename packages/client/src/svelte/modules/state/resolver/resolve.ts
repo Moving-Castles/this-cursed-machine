@@ -145,7 +145,7 @@ export function resolve(
       // Distribute the machine's outputs to the connected machines.
       for (let k = 0; k < machine?.outgoingConnections.length; k++) {
         // No connection
-        if (machine?.outgoingConnections?.[k] === "0") continue
+        if (machine?.outgoingConnections?.[k] === EMPTY_CONNECTION) continue
 
         // Fill output
         if (currentOutputs[k]?.materialId !== MaterialIdNone) {

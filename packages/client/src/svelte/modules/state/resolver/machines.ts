@@ -74,7 +74,7 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 
   if (inputs.length !== 2) return outputs
 
-  const outputMaterials = getRecipe(
+  const outputMaterials = findRecipe(
     recipes,
     MACHINE_TYPE.MIXER,
     getMaterialCombinationId(
@@ -119,7 +119,7 @@ function defaultMachine(
 
   if (!input) return outputs
 
-  const outputMaterials = getRecipe(
+  const outputMaterials = findRecipe(
     recipes,
     machineType,
     inputs[0].materialId
@@ -159,7 +159,7 @@ function getLowestAmountProduct(A: Product, B: Product): Product {
   return A.amount < B.amount ? A : B
 }
 
-function getRecipe(
+function findRecipe(
   recipes: Recipe[],
   machineType: MACHINE_TYPE,
   input: string
