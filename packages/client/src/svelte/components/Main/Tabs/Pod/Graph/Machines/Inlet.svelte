@@ -12,8 +12,8 @@
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  // $: label = `I${machine.buildIndex ?? ""}`
   $: label = "→"
+  $: outerLabel = `INLET ${machine.buildIndex ?? ""}`
   $: connected = machine.tankConnection !== EMPTY_CONNECTION
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
@@ -44,6 +44,10 @@
   {style}
 >
   <div class="inner-container">
+    <div class="outer-label">
+      {outerLabel}
+    </div>
+
     <div class="label">{label}</div>
     {#each ports as port}
       <div
@@ -89,6 +93,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .outer-label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
+        white-space: nowrap;
+        letter-spacing: -1px;
+        padding: 2px;
+        font-size: var(--font-size-small);
+        top: 0;
+        transform: translateX(-20px) translateY(-5px);
+      }
 
       .port {
         position: absolute;
