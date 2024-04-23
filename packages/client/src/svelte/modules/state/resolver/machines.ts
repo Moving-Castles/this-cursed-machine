@@ -1,3 +1,4 @@
+import { keccak256 } from "viem"
 import { MACHINE_TYPE } from "../base/enums"
 import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
@@ -122,7 +123,7 @@ function defaultMachine(
   const outputMaterials = findRecipe(
     recipes,
     machineType,
-    inputs[0].materialId
+    keccak256(input.materialId)
   )
 
   if (outputMaterials[1] === MaterialIdNone) {
