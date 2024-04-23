@@ -3,7 +3,11 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
-  import { tutorialProgress, advanceConditions } from "@modules/ui/assistant"
+  import {
+    tutorialProgress,
+    advanceConditions,
+    tutorialCompleted,
+  } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
@@ -15,7 +19,7 @@
 
   export let msg: AssistantMessage
 
-  const parse = str => {
+  const parse = (str: string) => {
     if (!$player) return str
 
     str = str.replaceAll("%PLAYER%", $player.name)
@@ -24,7 +28,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+        MATERIAL_TYPE[$playerOrder?.order?.materialType],
       )
     }
 
@@ -42,10 +46,11 @@
     }
     if (condition.type === "contract") {
       const reverseMappings = {
-        ship: "ship",
-        attachDepot: "attach",
+        shipTank: "ship",
+        plugTank: "plug",
         connect: "connect",
-        buy: "refill",
+        buyOffer: "fill",
+        buildMachine: "build",
         build: "build",
       }
 
@@ -80,6 +85,7 @@
     playSound("tcm", "TRX_yes")
     working = false
     tutorialProgress.set(0)
+    tutorialCompleted.set([])
     clearTerminalOutput()
   }
 
@@ -105,14 +111,16 @@
   <div class="text">
     {@html message}
   </div>
-  <div class="restart">
-    {#if !confirming}
-      <button on:click={startConfirm}>Start over</button>
-    {:else}
-      <button on:click={sendStart}>I want to restart</button>
-      <button on:click={() => (confirming = false)}>x</button>
-    {/if}
-  </div>
+  {#if !working}
+    <div class="restart">
+      {#if !confirming}
+        <button on:click={startConfirm}>Restart employee training</button>
+      {:else}
+        <button on:click={sendStart}>I want to restart</button>
+        <button on:click={() => (confirming = false)}>x</button>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -128,11 +136,11 @@
     text-align: left;
     font-size: 22px;
     font-size: var(--font-size);
-    line-height: 1em;
+    line-height: 1.2em;
     color: var(--foreground);
     text-align: left;
-    border: 5px double var(--color-success);
-    color: var(--color-success);
+    border: 2px dashed var(--color-tutorial);
+    color: var(--color-tutorial);
     position: relative;
     user-select: none;
 

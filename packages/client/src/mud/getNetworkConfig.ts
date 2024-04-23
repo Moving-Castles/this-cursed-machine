@@ -70,7 +70,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
       jsonRpcUrl: params.get("rpc") ?? chain.rpcUrls.default.http[0],
       wsRpcUrl: params.get("wsRpc") ?? chain.rpcUrls.default.webSocket?.[0],
     },
-    privateKey: getBurnerPrivateKey(),
+    privateKey: params.get("privateKey") ?? getBurnerPrivateKey(),
     useBurner: params.has("useBurner"),
     chainId,
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,

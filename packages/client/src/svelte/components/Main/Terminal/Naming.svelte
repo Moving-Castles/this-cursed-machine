@@ -14,6 +14,15 @@
   let inputElement: HTMLInputElement
   let userInput = ""
 
+  function isValidName(name: string): boolean {
+    // Check for minimume length of 4
+    const hasMinLength = name.length >= 4
+    // Check for maximum length of 24
+    const isLengthValid = name.length <= 24
+
+    return hasMinLength && isLengthValid
+  }
+
   function returnValue(value: string | null) {
     if (returnFunction) {
       // Returns the value to the function that created the component

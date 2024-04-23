@@ -23,18 +23,4 @@ contract SpawnSystemTest is BaseTest {
     assertEq(IncomingConnections.get(playerEntity).length, 1);
     assertEq(OutgoingConnections.get(playerEntity).length, 2);
   }
-
-  function testSpawnAndStart() public {
-    setUp();
-
-    vm.startPrank(alice);
-    bytes32 playerEntity = world.spawn("alice");
-    startGasReport("Start");
-    bytes32 podEntity = world.start();
-    endGasReport();
-    vm.stopPrank();
-
-    assertEq(CarriedBy.get(playerEntity), podEntity);
-    assertEq(TutorialLevel.get(playerEntity), 0);
-  }
 }

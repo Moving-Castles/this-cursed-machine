@@ -22,7 +22,7 @@ export const catMullRomDynamic = (alpha: number) =>
 export const catMullRom = line()
   .x(d => d.x)
   .y(d => d.y)
-  .curve(curveCatmullRom.alpha(0.6))
+  .curve(curveCatmullRom.alpha(0))
 
 export const basis = line()
   .x(d => d.x)
@@ -171,12 +171,12 @@ function simplifyPath(points) {
   return result
 }
 
-export function getLongestHorizontalSection(
+export function getLongestSection(
   connection: GraphConnection,
   cellHeight: number,
   cellWidth: number
-): [number, number] {
-  let longestSection = [0, 0, true]
+): [number, number, number] {
+  let longestSection = [0, 0, 0] // x, y, direction 0 east 1 south 2 west 3 north
   let longest = 0
 
   // Simplify the path to only include corner points
@@ -186,35 +186,49 @@ export function getLongestHorizontalSection(
   for (let i = 0; i < path.length - 1; i++) {
     const startPosition = path[i]
     const endPosition = path[i + 1]
+    let length = 0
+    let direction = 0 // east
 
-    // console.log("Comparing", startPosition, endPosition)
-
+    // Are we on hor or vert section?
     if (startPosition[1] === endPosition[1]) {
       // We are on a horizontal section
-      // get the length
-      let length = 0
-      let forwards = true
-
       if (endPosition[0] > startPosition[0]) {
         length = endPosition[0] - startPosition[0]
       } else {
-        forwards = false
+        direction = 2
         length = Math.abs(startPosition[0] - endPosition[0])
       }
-
-      // console.log("length", startPosition, endPosition, length, longest)
-
-      if (length > longest) {
-        let x = startPosition[0]
-        let y = startPosition[1]
-        // The longest section so far
-        longestSection = [
-          (x + (forwards ? length / 2 : -length / 2)) * cellWidth,
-          y * cellHeight,
-          forwards,
-        ]
-        longest = length
+    } else if (startPosition[0] === endPosition[0]) {
+      // We are on a vertical section
+      if (endPosition[1] > startPosition[1]) {
+        direction = 1
+        length = endPosition[1] - startPosition[1]
+      } else {
+        direction = 3
+        length = Math.abs(startPosition[1] - endPosition[1])
       }
+    }
+
+    if (length > longest && direction % 2 === 0) {
+      const x = startPosition[0]
+      const y = startPosition[1]
+      // The longest section so far
+      longestSection = [
+        (x + (direction === 0 ? length / 2 : -length / 2)) * cellWidth,
+        y * cellHeight,
+        direction,
+      ]
+      longest = length
+    } else if (length > longest && direction % 2 !== 0) {
+      const x = startPosition[0]
+      const y = startPosition[1]
+      // The longest section so far
+      longestSection = [
+        x * cellWidth,
+        (y + (direction === 1 ? length / 2 : -length / 2)) * cellHeight,
+        direction,
+      ]
+      longest = length
     }
   }
 
@@ -271,30 +285,30 @@ export function generateSvgArrow(
   return arrowData
 }
 
-export function getRotationAtPoint(
-  pathElement: SVGPathElement,
-  maxLength: number,
-  currentLength: number,
-  forwards: boolean
-) {
-  // Calculate the angle of the arrow direction
-  const delta = 0.001 // small value for calculating the derivative
-  const pointBefore = pathElement.getPointAtLength(
-    forwards
-      ? Math.max(0, currentLength - delta)
-      : Math.max(0, maxLength - currentLength - delta)
-  )
-  const pointAfter = pathElement.getPointAtLength(
-    forwards
-      ? Math.min(maxLength, currentLength + delta)
-      : Math.min(maxLength, maxLength - currentLength + delta)
-  )
-  const dy = pointAfter.y - pointBefore.y
-  const dx = pointAfter.x - pointBefore.x
-  const angleInRadians = Math.atan2(dy, dx)
-  let angleInDegrees = angleInRadians * (180 / Math.PI)
-  if (angleInDegrees < 0) {
-    angleInDegrees += 360
-  }
-  return angleInDegrees
-}
+// export function getRotationAtPoint(
+//   pathElement: SVGPathElement,
+//   maxLength: number,
+//   currentLength: number,
+//   forwards: boolean
+// ) {
+//   // Calculate the angle of the arrow direction
+//   const delta = 0.001 // small value for calculating the derivative
+//   const pointBefore = pathElement.getPointAtLength(
+//     forwards
+//       ? Math.max(0, currentLength - delta)
+//       : Math.max(0, maxLength - currentLength - delta)
+//   )
+//   const pointAfter = pathElement.getPointAtLength(
+//     forwards
+//       ? Math.min(maxLength, currentLength + delta)
+//       : Math.min(maxLength, maxLength - currentLength + delta)
+//   )
+//   const dy = pointAfter.y - pointBefore.y
+//   const dx = pointAfter.x - pointBefore.x
+//   const angleInRadians = Math.atan2(dy, dx)
+//   let angleInDegrees = angleInRadians * (180 / Math.PI)
+//   if (angleInDegrees < 0) {
+//     angleInDegrees += 360
+//   }
+//   return angleInDegrees
+// }

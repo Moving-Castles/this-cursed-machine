@@ -17,9 +17,10 @@
   --color-alert: #00e5ff;
   --color-info: #bb3af2;
   --color-success: #a4fa3b;
+  --color-tutorial: #f6ff00;
 
   /* Sizing */
-  --default-padding: 1ch;
+  --default-padding: 14px;
   --top-bar-height: 40px;
   --tab-bar-height: 90px;
 
@@ -31,6 +32,19 @@
 
   /* Misc */
   --default-border-style: 5px double var(--color-grey-dark);
+
+  /** Layers */
+  --z-0: 0;
+  --z-1: 1;
+  --z-2: 2;
+  --z-3: 3;
+  --z-4: 4;
+  --z-5: 5;
+  --z-6: 6;
+  --z-7: 7;
+  --z-8: 8;
+  --z-9: 9;
+  --z-10: 10;
 }
 
 * {
@@ -78,19 +92,71 @@ pre {
 .player:hover,
 .machine:hover,
 .connection:hover,
-.depot-item:hover,
-.highlight {
+.tank-item:hover,
+.highlight:not(.disabled-highlight) {
   animation: filterin 0.1s ease forwards;
 }
 
-@keyframes filterin {
+.disabled-highlight {
+  animation: filterdisabledin 0.1s ease forwards;
+}
+
+.running-1 {
+  animation: run 0.1s ease infinite alternate;
+}
+
+.running-2 {
+  animation: run 0.3s ease infinite alternate;
+}
+
+.running-3 {
+  animation: run 0.5 ease infinite alternate;
+}
+
+@keyframes run {
   0% {
-    filter: contrast(100%) grayscale(0%) brightness(100%)
-      drop-shadow(0px 0px 0px #ffffff);
+    filter: blur(0px);
+    translate: 0px 0px;
+  }
+  10% {
+    filter: blur(0.2px);
+    transform: translate(1px, 1px);
+  }
+  20% {
+    filter: blur(0.4px);
+    transform: translate(-1px, -1px);
+  }
+  30% {
+    filter: blur(0.6px);
+    transform: translate(1px, -1px);
+  }
+  40% {
+    filter: blur(0.8px);
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    filter: blur(1px);
+    transform: translate(0px, 0px);
+  }
+  60% {
+    filter: blur(1.2px);
+    transform: translate(1px, -1px);
+  }
+  70% {
+    filter: blur(1.4px);
+    transform: translate(-1px, 1px);
+  }
+  80% {
+    filter: blur(1.6px);
+    transform: translate(1px, 1px);
+  }
+  90% {
+    filter: blur(1.8px);
+    transform: translate(-1px, -1px);
   }
   100% {
-    filter: contrast(50%) grayscale(100%) brightness(180%)
-      drop-shadow(0px 0px 2px #ffffff);
+    filter: blur(2px);
+    translate: 0px 0px;
   }
 }
 
@@ -123,42 +189,6 @@ pre {
   animation: thud 700ms steps(10, end) 1;
 }
 
-@keyframes thud {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    filter: blur(0px);
-  }
-
-  55% {
-    transform: translateY(1px);
-    /* filter: blur(2px); */
-  }
-
-  60% {
-    transform: translateY(0px);
-  }
-
-  85% {
-    filter: blur(0px);
-  }
-}
-
-@keyframes strobe {
-  50% {
-    opacity: 0;
-  }
-}
-
-@keyframes strobe-slow {
-  20% {
-    opacity: 0;
-  }
-}
-
 body,
 html {
   background: var(--background);
@@ -180,7 +210,7 @@ svg {
 }
 
 .action {
-  z-index: 999900000;
+  z-index: var(--z-10);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(90deg);
@@ -231,7 +261,7 @@ pre {
   width: 100%;
   height: 100%;
   background-color: var(--foreground);
-  z-index: 100000;
+  z-index: var(--z-10);
   opacity: 0.8;
 }
 
@@ -248,12 +278,100 @@ pre {
   animation: pulse-opacity 0.8s infinite alternate ease-out;
 }
 
+.command {
+  background-color: var(--color-tutorial) !important;
+  color: var(--background);
+  padding: 2px 0 0;
+  margin-top: -2px;
+  display: inline-block;
+}
+
+.emphasis {
+  animation: emphasis 1s steps(1) infinite;
+}
+
+.emphasis-success {
+  animation: emphasis-success 1s steps(1) 3;
+}
+.emphasis-failure {
+  animation: emphasis-failure 1s steps(1) 3;
+}
+
+/** Bunch of animations :) */
+
+@keyframes running {
+  0%,
+  100% {
+    opacity: 0;
+    /* filter: blur(0px); */
+  }
+
+  50% {
+    opacity: 1;
+    /* filter: blur(20px); */
+  }
+}
+
+@keyframes filterin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(130%)
+      drop-shadow(0px 0px 2px var(--white)) contrast(300%);
+  }
+}
+
+@keyframes filterdisabledin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(70%)
+      drop-shadow(0px 0px 2px var(--black));
+  }
+}
+
+@keyframes emphasis {
+  0%,
+  100% {
+    background: var(--color-tutorial);
+    color: var(--background);
+  }
+  50% {
+    background: var(--background);
+    color: var(--foreground);
+  }
+}
+
+@keyframes emphasis-success {
+  0%,
+  100% {
+    background: var(--color-success);
+    color: var(--black);
+  }
+  50% {
+    background: transparent;
+    color: var(--white);
+  }
+}
+@keyframes emphasis-failure {
+  0%,
+  100% {
+    background: var(--color-failure);
+    color: var(--black);
+  }
+  50% {
+    background: transparent;
+    color: var(--white);
+  }
+}
 @keyframes pulse {
   0% {
     background: var(--color-grey-mid);
   }
   100% {
-    background: var(--color-success);
+    background: var(--color-tutorial);
   }
 }
 
@@ -266,26 +384,38 @@ pre {
   }
 }
 
-.command {
-  background-color: var(--color-success) !important;
-  color: black;
-  padding: 2px 0 0;
-  margin-top: -2px;
-  display: inline-block;
-}
-
-.emphasis {
-  animation: emphasis 1s steps(1) 3;
-}
-
-@keyframes emphasis {
+@keyframes thud {
   0%,
   100% {
-    background: var(--foreground);
-    /* color: var(--background); */
+    transform: translateY(0);
   }
+
   50% {
-    background: var(--background);
-    /* color: var(--foreground); */
+    filter: blur(0px);
+  }
+
+  55% {
+    transform: translateY(1px);
+    /* filter: blur(2px); */
+  }
+
+  60% {
+    transform: translateY(0px);
+  }
+
+  85% {
+    filter: blur(0px);
+  }
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes strobe-slow {
+  20% {
+    opacity: 0;
   }
 }

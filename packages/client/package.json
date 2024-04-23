@@ -14,6 +14,7 @@
     "staticPath": "src/public"
   },
   "devDependencies": {
+    "@latticexyz/dev-tools": "2.0.7-main-7183364f",
     "@sveltejs/adapter-auto": "^3.2.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@tsconfig/svelte": "^5.0.4",
@@ -28,8 +29,7 @@
     "sass": "^1.75.0",
     "svelte": "^4.2.15",
     "vite": "5.2.8",
-    "vitest": "^1.5.0",
-    "wait-port": "^1.1.0"
+    "vitest": "^1.5.0"
   },
   "dependencies": {
     "@latticexyz/account-kit": "2.0.7-account-kit-49e54f3e",
@@ -45,6 +45,8 @@
     "@sanity/client": "^6.15.17",
     "@sanity/image-url": "^1.0.2",
     "@wagmi/core": "2.6.16",
+    "@sentry/svelte": "^7.111.0",
+    "@sentry/vite-plugin": "^2.16.1",
     "contracts": "workspace:*",
     "d3-shape": "^3.2.0",
     "heap": "^0.2.7",

@@ -16,7 +16,7 @@ async function execute(sourceMachine: string, targetMachine: string, portIndex: 
         // ...
         writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Connection in progress...")
         await waitForCompletion(action, loadingLine)
-        playSound("tcm", "TRX_yes")
+        // playSound("tcm", "TRX_yes")
         await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
         // ...
         return;

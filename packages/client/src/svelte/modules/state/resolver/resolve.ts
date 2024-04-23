@@ -8,8 +8,8 @@ import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import {
   organizePatches,
   consolidatePatches,
-  createOutletDepotPatches,
-  createInletDepotPatches,
+  createOutletTankPatches,
+  createInletTankPatches,
   backtraceOutletConnection,
 } from "./patches"
 
@@ -26,7 +26,7 @@ export function resolve(
   machines: Machines,
   inlets: Machines,
   outlets: Machines,
-  depots: Depots,
+  tanks: Tanks,
   recipes: Recipe[]
 ): SimulatedEntities {
   // Counter for the number of iterations over the network
@@ -39,7 +39,7 @@ export function resolve(
   let inputs: Product[] = []
 
   // Set to true in the resolve loop if there is a connection between the inlet and the outlet,
-  // and both orifices are connected to depots
+  // and both orifices are connected to tanks
   let circuitClosed = false
 
   // Store the products for intermediary state
@@ -47,15 +47,15 @@ export function resolve(
   let patchOutputs: Product[] = []
   let patchInputs: Product[] = []
 
-  const inletDepots = Object.values(inlets).map(
-    inlet => inlet?.depotConnection ?? null
+  const inletTanks = Object.values(inlets).map(
+    inlet => inlet?.tankConnection ?? null
   )
-  const outletDepots = Object.values(outlets).map(
-    outlet => outlet?.depotConnection ?? null
+  const outletTanks = Object.values(outlets).map(
+    outlet => outlet?.tankConnection ?? null
   )
 
-  // Abort early if neither inlets are connected to depot or if outlet is not connected to depot
-  // if (inletDepots.every(depot => depot === null) || outletDepots.every(depot => depot === null)) return {} as SimulatedEntities
+  // Abort early if neither inlets are connected to tank or if outlet is not connected to tank
+  // if (inletTanks.every(tank => tank === null) || outletTanks.every(tank => tank === null)) return {} as SimulatedEntities
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
@@ -69,10 +69,10 @@ export function resolve(
         // Is it inlet one or two?
         let inletIndex = machineKey == Object.keys(inlets)[0] ? 0 : 1
 
-        let depot = inletDepots[inletIndex]
+        let tank = inletTanks[inletIndex]
 
-        // Skip if inlet is not connected to depot
-        if (!depot || depot == EMPTY_CONNECTION) return
+        // Skip if inlet is not connected to tank
+        if (!tank || tank == EMPTY_CONNECTION) return
 
         const newInletActive: boolean[] = [false, false]
         // Set active for inlet
@@ -81,7 +81,7 @@ export function resolve(
         inputs.push({
           machineId: machineKey,
           sourceMachineId: null,
-          materialType: depots[depot].materialType,
+          materialType: tanks[tank].materialType,
           amount: FLOW_RATE,
           inletActive: newInletActive,
         })
@@ -132,10 +132,10 @@ export function resolve(
         // Continue if no output
         if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) return
 
-        // We have reached the outlet, and it is connect to a depot, so circuit is closed
+        // We have reached the outlet, and it is connect to a tank, so circuit is closed
         if (
-          machine.depotConnection &&
-          machine.depotConnection !== EMPTY_CONNECTION
+          machine.tankConnection &&
+          machine.tankConnection !== EMPTY_CONNECTION
         ) {
           circuitClosed = true
         }
@@ -166,19 +166,19 @@ export function resolve(
 
   /*
    * We take the patches produced by the resolution and organize them into a structure that can be applied to the state.
-   * Special treatment is given to the depots.
+   * Special treatment is given to the tanks.
    */
   return backtraceOutletConnection(
     consolidatePatches([
       organizePatches(patchInputs, "machineId", "inputs"),
       organizePatches(patchOutputs, "machineId", "outputs"),
-      createOutletDepotPatches(
+      createOutletTankPatches(
         circuitClosed,
         patchOutputs,
         Object.keys(outlets)[0],
-        outletDepots[0]
+        outletTanks[0]
       ),
-      createInletDepotPatches(
+      createInletTankPatches(
         circuitClosed,
         patchInputs,
         Object.keys(inlets),

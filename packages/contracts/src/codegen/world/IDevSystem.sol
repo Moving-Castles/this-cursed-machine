@@ -13,7 +13,7 @@ import { MATERIAL_TYPE } from "./../common.sol";
 interface IDevSystem {
   function graduate() external;
 
-  function fillDepot(bytes32 _depotEntity, uint32 _amount, MATERIAL_TYPE _materialType) external;
+  function fillTank(bytes32 _tankEntity, uint32 _amount, MATERIAL_TYPE _materialType) external;
 
   function reward() external;
 

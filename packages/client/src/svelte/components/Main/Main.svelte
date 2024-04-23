@@ -12,21 +12,13 @@
   import { TABS } from "@modules/ui/enums"
   import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
-  import {
-    sendMessage,
-    clearMessage,
-    tutorialProgress,
-  } from "@modules/ui/assistant"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
-  import Exit from "@components/Main/Tabs/Exit/Exit.svelte"
-  import Shop from "@components/Main/Tabs/Shop/Shop.svelte"
   // import Debug from "@components/Main/Atoms/Debug.svelte"
-
-  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
 
   let resized = 0
 
@@ -41,11 +33,6 @@
       component: Orders,
       enabled: true,
     },
-    // [TABS.SHOP]: {
-    //   label: "Shop",
-    //   component: Shop,
-    //   enabled: true,
-    // },
     [TABS.INBOX]: {
       label: "Inbox",
       component: Inbox,
@@ -63,8 +50,6 @@
     | typeof Pod
     | typeof Inbox
     | typeof Orders
-    | typeof Exit
-    | typeof Shop
     | typeof Chat
 
   let currentTabComponent: ComponentType = null
@@ -77,27 +62,16 @@
   let terminalComponent: any
 
   const handleCommand = async () => {
-    terminalComponent.resetInput()
+    if (terminalComponent) {
+      terminalComponent.resetInput()
+    }
   }
 
   $: {
     if ($tutorialProgress === 1) playSound("tcm", "mapPop")
   }
 
-  // $: {
-  //   if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
-  //     clearMessage()
-  //     sendMessage(
-  //       "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-  //       { disappear: true },
-  //     )
-  //   }
-  // }
-
   onMount(() => {
-    // TODO: check if player has escaped the pod
-    // If so:
-    // dispatch("escaped")
     playSound("tcm", "podBg", true, false)
   })
 </script>
@@ -110,12 +84,12 @@
   <div class="split-screen">
     <div class="left-col">
       <div class="info-bar">
-        {#if $tutorialProgress > 4}
+        {#if $tutorialProgress > 5}
           <InfoBar />
         {/if}
       </div>
       <div class="terminal">
-        {#if $tutorialProgress > 0}
+        {#if ($activeTab == 0 && $tutorialProgress != 0) || ($tutorialProgress < 5 && $tutorialProgress > 0)}
           <Terminal
             bind:this={terminalComponent}
             on:commandExecuted={() => handleCommand()}
@@ -171,7 +145,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 10000000;
+    z-index: var(--z-10);
     pointer-events: none;
     background-image: url(/images/dust.png);
     opacity: 0.6;
@@ -183,15 +157,16 @@
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.9);
-    z-index: 9;
+    z-index: var(--z-9);
   }
 
   .split-screen {
     display: flex;
     height: 100vh;
-    // background-image: url(/images/tcm2.png);
-    // background-size: 200px;
-    // background-repeat: repeat;
+    background-image: url(/images/tcm2.png);
+    // background-image: url(/images/graf.png);
+    background-size: 200px;
+    background-repeat: repeat;
 
     .left-col {
       height: 100%;

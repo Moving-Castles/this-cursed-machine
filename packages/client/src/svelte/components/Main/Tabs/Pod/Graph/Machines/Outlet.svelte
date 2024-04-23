@@ -2,20 +2,19 @@
   import { fade } from "svelte/transition"
   import type { GraphMachine } from "../types"
   import { CELL } from "../constants"
-  import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
-  import { selectedParameters, selectedOption } from "@modules/ui/stores"
+  import { selectedOption } from "@modules/ui/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
 
   export let address: string
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  // $: label = `O${machine.buildIndex ?? ""}`
   $: label = "→"
-  $: connected = machine.depotConnection !== EMPTY_CONNECTION
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: outerLabel = `OUTLET ${machine.buildIndex ?? ""}`
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && !$selectedOption?.available
 
   function makePorts() {
     return [
@@ -30,17 +29,29 @@
 </script>
 
 <div
-  id="machine-{address}"
-  class="outlet"
-  class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   in:fade
+  id="machine-{address}"
+  class="outlet run-potential {$networkIsRunning && machine.productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
+  class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
+  class:productive={machine.productive}
   {style}
 >
   <div class="inner-container">
+    <div class="outer-label">
+      {outerLabel}
+    </div>
+
     <div class="label">{label}</div>
     {#each ports as port}
-      <div class="port" style={port.style} />
+      <div
+        class:productive={machine.productive}
+        class="port"
+        style={port.style}
+      />
     {/each}
   </div>
 </div>
@@ -66,6 +77,11 @@
       border: 1px solid var(--color-success);
     }
 
+    &.productive {
+      background: var(--color-success);
+      color: var(--black);
+    }
+
     .inner-container {
       width: 100%;
       height: 100%;
@@ -74,11 +90,28 @@
       justify-content: center;
       align-items: center;
 
+      .outer-label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
+        white-space: nowrap;
+        letter-spacing: -1px;
+        padding: 2px;
+        font-size: var(--font-size-small);
+        top: 0;
+        transform: translateX(-10px) translateY(-5px);
+      }
+
       .port {
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
         background: var(--foreground);
+
+        &.productive {
+          background: var(--black);
+        }
       }
     }
   }

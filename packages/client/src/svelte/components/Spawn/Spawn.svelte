@@ -35,7 +35,9 @@
       }
     }
 
-    terminalComponent.resetInput()
+    if (terminalComponent) {
+      terminalComponent.resetInput()
+    }
   }
 
   onMount(async () => {
@@ -46,12 +48,14 @@
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000,
+        1000
       )
       dispatch("done")
     } else {
       await narrative[0]()
-      terminalComponent.resetInput()
+      if (terminalComponent) {
+        terminalComponent.resetInput()
+      }
       // Reset tutorial
       tutorialProgress.set(0)
     }
@@ -75,7 +79,7 @@
     background-color: var(--background);
     background-size: cover;
     background-position: center;
-    z-index: 1;
+    z-index: var(--z-1);
     display: flex;
     align-items: center;
     justify-items: center;

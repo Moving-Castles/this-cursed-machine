@@ -5,11 +5,11 @@ import { setUp } from "../resolve/setUp"
 
 
 test("(1) calculateSimulatedConnections", () => {
-    const { depots, machines, inlets, outlet, recipes } = setUp()
+    const { tanks, machines, inlets, outlet, recipes } = setUp()
 
-    // Connect DEPOT 1 to INLET 1
-    depots["DEPOT_ONE"].depotConnection = "INLET_ONE"
-    machines["INLET_ONE"].depotConnection = "DEPOT_ONE"
+    // Connect TANK 1 to INLET 1
+    tanks["TANK_ONE"].tankConnection = "INLET_ONE"
+    machines["INLET_ONE"].tankConnection = "TANK_ONE"
 
     // Connect INLET 1 to PLAYER
     machines["INLET_ONE"].outgoingConnections.push("PLAYER")
@@ -19,11 +19,11 @@ test("(1) calculateSimulatedConnections", () => {
     machines["PLAYER"].outgoingConnections.push("OUTLET")
     machines["OUTLET"].incomingConnections.push("PLAYER")
 
-    // Connect DEPOT 2 to OUTLET
-    depots["DEPOT_TWO"].depotConnection = "OUTLET"
-    machines["OUTLET"].depotConnection = "DEPOT_TWO"
+    // Connect TANK 2 to OUTLET
+    tanks["TANK_TWO"].tankConnection = "OUTLET"
+    machines["OUTLET"].tankConnection = "TANK_TWO"
 
-    const patches = resolve(machines, inlets, outlet, depots, recipes)
+    const patches = resolve(machines, inlets, outlet, tanks, recipes)
     const simulatedMachines = applyPatches(machines, patches)
     const simulatedConnections = calculateSimulatedConnections(simulatedMachines);
 

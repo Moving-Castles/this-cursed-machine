@@ -9,14 +9,17 @@
     selectedOption,
     selectedParameters,
   } from "@modules/ui/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
+  import { MACHINE_TYPE } from "@modules/state/base/enums"
+  import { player } from "@modules/state/base/stores"
 
   export let address: string
   export let machine: GraphMachine
   let selectedPortIndex = -1
 
   $: producing = machine?.products && machine?.products.length > 0
-  $: highlight =
-    $selectedParameters?.includes(address) || $selectedOption?.value === address
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
   $: {
     if ($selectedParameters) {
       if ($selectedParameters.includes(address)) {
@@ -34,7 +37,7 @@
     inspecting.set(null)
   }
 
-  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
+  $: style = `background-image: url(/images/machines/${MACHINE_TYPE[machine.machineType]}.png); top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
 
   function makePorts() {
     return [
@@ -59,16 +62,19 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   id="machine-{address}"
-  class="player"
+  class="player run-potential {$networkIsRunning && producing
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
+  class:disabled-highlight={disabledHighlight}
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
   in:fade
   {style}
 >
   <div class="inner-container">
-    <div class="label">YOU</div>
+    <div class="label">{$player.name}</div>
     {#each ports as port, i}
       <div
         class="port"
@@ -88,7 +94,6 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    background-image: url("/images/face5.png");
     background-size: cover;
     border: 1px solid var(--background);
     color: var(--foreground);
@@ -105,6 +110,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
+        white-space: nowrap;
+        letter-spacing: -1px;
+        padding: 2px;
+        top: 0;
+        transform: translateX(-20px) translateY(-5px);
+      }
 
       .port {
         position: absolute;

@@ -1,0 +1,235 @@
+<script lang="ts">
+  import type { SimulatedTank } from "@modules/state/simulated/types"
+  import { fade } from "svelte/transition"
+  import { tweened } from "svelte/motion"
+  import { playerPod } from "@modules/state/base/stores"
+  import { bounceOut } from "svelte/easing"
+  import { selectedOption } from "@modules/ui/stores"
+  import {
+    networkIsRunning,
+    shippableTanks,
+    simulatedMachines,
+  } from "@modules/state/simulated/stores"
+  import { waitingTransaction } from "@modules/action/actionSequencer"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+  import { MATERIAL_TYPE } from "@modules/state/base/enums"
+  import { EMPTY_CONNECTION } from "@modules/utils/constants"
+  import { TANK_CAPACITY } from "@modules/state/simulated/constants"
+  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+
+  export let tank: SimulatedTank
+  export let address: string
+  export let index: number
+
+  const progress = tweened(
+    (Math.round(tank.amount / UI_SCALE_FACTOR) /
+      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
+      100,
+    { easing: bounceOut }
+  )
+
+  const amount = tweened(Math.round(tank.amount / UI_SCALE_FACTOR))
+
+  // Narrow the type
+  $: typedTank = tank as Tank
+
+  // Tutorial check
+  $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
+
+  // Tank is shippable
+  $: canShip = $shippableTanks[address]
+
+  // Tanks is shipping
+  $: shipping = $waitingTransaction?.systemId === "ship" && canShip
+
+  // Tanks is connected
+  $: connected = typedTank.tankConnection !== EMPTY_CONNECTION
+
+  // Tanks is empty
+  $: empty = typedTank.amount === 0
+
+  // Tanks is highlighted
+  $: highlight = $selectedOption?.value === address
+  $: disabledHighlight = highlight && $selectedOption?.available === false
+
+  $: $progress =
+    (Math.round(typedTank.amount / UI_SCALE_FACTOR) /
+      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
+    100
+
+  $: $amount = typedTank.amount / UI_SCALE_FACTOR
+
+  $: connectedMachine = $simulatedMachines[tank.tankConnection]
+
+  const getConnectionName = (machineEntity: string) => {
+    if (!$playerPod?.fixedEntities) return "none"
+    if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
+    if (machineEntity === $playerPod?.fixedEntities.outlet) return "O"
+    return "none"
+  }
+</script>
+
+<div
+  id="tank-{address}"
+  class="tank-item run-potential"
+  class:shippable={canShip}
+  class:highlight
+  class:disabled-highlight={disabledHighlight}
+  class:running={$networkIsRunning && connectedMachine?.productive}
+>
+  <div class="tank-progress" style:height="{$progress}%"></div>
+  {#if shipping}
+    <div
+      in:fade={{ duration: 400 }}
+      out:fade={{ duration: 100 }}
+      class="overlay flash-fast"
+    />
+  {/if}
+  <div class="id">
+    <div>TANK {index + 1}</div>
+  </div>
+
+  <div class="content">
+    {#if empty}
+      <div class="material-amount">
+        <span class="portion-left">0</span> /
+        <span class="portion-right">{TANK_CAPACITY / UI_SCALE_FACTOR}</span>
+      </div>
+    {:else}
+      <div class="inner-container">
+        <div class="material-type">
+          {MATERIAL_TYPE[typedTank.materialType]}
+        </div>
+        <div class="material-amount">
+          <span class="portion-left">
+            {Math.round($amount)}
+          </span>
+          /
+          <span class="portion-right">
+            {TANK_CAPACITY / UI_SCALE_FACTOR}
+          </span>
+        </div>
+      </div>
+    {/if}
+  </div>
+
+  <div
+    class="connection"
+    class:connected
+    class:productive={connectedMachine?.productive}
+    class:running={$networkIsRunning && connectedMachine?.productive}
+  >
+    {#if connected}
+      {#if getConnectionName(typedTank.tankConnection) === "I"}
+        ↓
+      {:else if getConnectionName(typedTank.tankConnection) === "O"}
+        ↑
+      {/if}
+    {:else}
+      -
+    {/if}
+  </div>
+</div>
+
+<style lang="scss">
+  .tank-item {
+    border: 1px solid var(--foreground);
+    width: calc(33% - 5px);
+    overflow: hidden;
+    font-size: var(--font-size-small);
+    height: 70px;
+    background: var(--color-grey-dark);
+    display: flex;
+    position: relative;
+    user-select: none;
+
+    .material-amount {
+      .portion-left {
+        display: inline-block;
+        width: 3ch;
+        text-align: right;
+      }
+
+      .portion-right {
+        display: inline-block;
+        width: 3ch;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: white;
+    }
+
+    .tank-progress {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      background-color: rgba(215, 215, 195, 0.2);
+      // transition: height 0.2s ease-out;
+    }
+
+    &.shippable {
+      border: 1px solid var(--color-success);
+    }
+
+    .id {
+      font-size: var(--font-size);
+      background: var(--foreground);
+      color: var(--background) !important;
+      padding: 2px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--foreground) !important;
+
+      .inner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .material-type {
+        background: var(--foreground);
+        color: var(--color-grey-dark);
+        padding: 2px;
+        margin-right: 1ch;
+      }
+    }
+
+    .connection {
+      width: 50px;
+      border-left: 1px solid var(--foreground);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: var(--font-size) !important;
+      color: var(--foreground);
+
+      &.connected {
+        color: var(--background);
+        background: var(--foreground);
+
+        &.productive {
+          background: var(--color-success);
+        }
+      }
+    }
+
+    button {
+      font-size: var(--font-size-small);
+      padding: 5px;
+      border: 1px solid var(--foreground);
+      margin: 1px;
+    }
+  }
+</style>

@@ -23,15 +23,15 @@ declare global {
     order?: OrderData
     offer?: OfferData
     completed?: string[]
-    earnedPoints?: number
+    producedMaterials?: MATERIAL_TYPE[]
     lastResolved?: number
     input?: number
     output?: MATERIAL_TYPE
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
-    depotConnection?: string
+    tankConnection?: string
     machinesInPod?: string[]
-    depotsInPod?: string[]
+    tanksInPod?: string[]
     fixedEntities?: FixedEntities
     currentOrder?: string
     tokenBalances?: number
@@ -72,7 +72,7 @@ declare global {
     globalSpawnIndex: number,
     scaleDown: number,
     flowRate: number,
-    depotCapacity: number,
+    tankCapacity: number,
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -83,7 +83,7 @@ declare global {
     entityType: ENTITY_TYPE.POD
     lastResolved: number
     machinesInPod: string[]
-    depotsInPod: string[]
+    tanksInPod: string[]
     buildTracker: number[]
     fixedEntities: FixedEntities
   }
@@ -103,7 +103,7 @@ declare global {
     tokenBalances?: number
     tutorial: boolean,
     completed: string[] // Orders completed by player
-    earnedPoints: number
+    producedMaterials: MATERIAL_TYPE[]
   }
 
   type Machine = {
@@ -113,16 +113,16 @@ declare global {
     buildIndex: number
     incomingConnections: string[]
     outgoingConnections: string[]
-    depotConnection?: string // Only on inlet and outlet
+    tankConnection?: string // Only on inlet and outlet
   }
 
-  type Depot = {
-    entityType: ENTITY_TYPE.DEPOT,
+  type Tank = {
+    entityType: ENTITY_TYPE.TANK,
     carriedBy: string
     amount: number
     materialType: MATERIAL_TYPE
     buildIndex: number
-    depotConnection: string
+    tankConnection: string
   }
 
   type Order = {
@@ -164,8 +164,8 @@ declare global {
     [index: string]: Pod
   }
 
-  type Depots = {
-    [index: string]: Depot
+  type Tanks = {
+    [index: string]: Tank
   }
 
   type Orders = {

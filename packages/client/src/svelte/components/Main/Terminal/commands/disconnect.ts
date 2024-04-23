@@ -20,7 +20,7 @@ async function execute(sourceMachine: string, portIndex: PORT_INDEX) {
     // ...
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Disconnecting...")
     await waitForCompletion(action, loadingLine)
-    playSound("tcm", "TRX_yes")
+    // playSound("tcm", "TRX_yes")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return

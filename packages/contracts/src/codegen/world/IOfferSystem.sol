@@ -19,5 +19,5 @@ interface IOfferSystem {
 
   function cancelOffer(bytes32 _offerEntity) external;
 
-  function buy(bytes32 _offerEntity) external;
+  function buyOffer(bytes32 _offerEntity) external;
 }

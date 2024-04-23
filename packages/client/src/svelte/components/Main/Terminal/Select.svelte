@@ -12,7 +12,12 @@
   export let selectOptions: SelectOption[] = []
 
   // Add cancel option
-  selectOptions = [...selectOptions, { label: "cancel", value: null }]
+  selectOptions = [
+    ...selectOptions,
+    { label: "cancel", value: null, available: true },
+  ]
+
+  let shownSelectOptions: SelectOption[] = []
 
   const dispatch = createEventDispatcher()
 
@@ -48,15 +53,27 @@
     switch (key) {
       case "ArrowUp":
         // Navigate to the previous option
-        playSound("tcm", "selectionScroll")
         selectedIndex = Math.max(selectedIndex - 1, 0)
+        if (selectOptions[selectedIndex]?.available) {
+          playSound("tcm", "selectionScroll")
+        } else {
+          playSound("tcm", "listPrint")
+        }
         break
       case "ArrowDown":
         // Navigate to the next option
-        playSound("tcm", "selectionScroll")
         selectedIndex = Math.min(selectedIndex + 1, selectOptions.length - 1)
+        if (selectOptions[selectedIndex]?.available) {
+          playSound("tcm", "selectionScroll")
+        } else {
+          playSound("tcm", "listPrint")
+        }
         break
       case "Enter":
+        if (!selectOptions[selectedIndex]?.available) {
+          playSound("tcm", "listPrint")
+          break
+        }
         if (selectOptions[selectedIndex]?.value === null) {
           playSound("tcm", "selectionEsc")
           // Close the options list without making a selection
@@ -81,6 +98,15 @@
     if (selectOptions.length === 0) {
       returnValue(null)
     }
+
+    // Entry animation
+    for (let i = 0; i < selectOptions.length; i++) {
+      playSound("tcm", "listPrint")
+      shownSelectOptions = [...shownSelectOptions, selectOptions[i]]
+      scrollToEnd()
+      await new Promise(resolve => setTimeout(resolve, 20))
+    }
+
     selectContainerElement.focus()
     await tick()
     scrollToEnd()
@@ -96,10 +122,11 @@
 
 {#if selectOptions.length > 0}
   <div class="inline-select" bind:this={selectContainerElement}>
-    {#each selectOptions as option, index (option.value)}
+    {#each shownSelectOptions as option, index (option.value)}
       <div
         class:active={selectedIndex === index}
-        class="option {option.label} option-{index}"
+        class="option {option.label}"
+        class:disabled={!option.available}
       >
         {option.label}
       </div>
@@ -116,12 +143,20 @@
       white-space: nowrap; /* Ensure no line breaks inside the element */
       overflow: hidden; /* Hide the overflow text */
       text-overflow: ellipsis; /* Add ellipses at the end of the text */
-      opacity: 0;
+      opacity: 1;
+
+      &.disabled {
+        color: var(--color-grey-dark);
+      }
 
       &.active {
         color: var(--background);
         background: var(--color-info);
         margin-left: 0;
+
+        &.disabled {
+          background: var(--color-grey-mid);
+        }
 
         &::before {
           content: "> ";
@@ -141,23 +176,6 @@
             content: "x ";
           }
         }
-      }
-    }
-
-    @keyframes showOpacity {
-      0%,
-      99% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @for $i from 0 through 50 {
-      .option-#{$i} {
-        animation: showOpacity #{$i * 60}ms linear;
-        opacity: 1;
       }
     }
   }

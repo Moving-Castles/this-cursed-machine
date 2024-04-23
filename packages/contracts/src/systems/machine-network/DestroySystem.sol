@@ -7,10 +7,10 @@ import { LibUtils, LibEntity, LibNetwork } from "../../libraries/Libraries.sol";
 
 contract DestroySystem is System {
   /**
-   * @notice Destroy a machine and clean up all its connections.
-   * @param _machineEntity The id for the machine entity to be destroyed.
+   * @notice Removes a machine and clean up all its connections.
+   * @param _machineEntity The id for the machine entity to be removed
    */
-  function destroy(bytes32 _machineEntity) public {
+  function removeMachine(bytes32 _machineEntity) public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
     bytes32 podEntity = CarriedBy.get(playerEntity);
 
@@ -28,7 +28,7 @@ contract DestroySystem is System {
       LibNetwork.resolve(podEntity);
 
       /*
-       * When we destroy a machine, we need to clean up all connections set on other machines.
+       * When we remove a machine, we need to clean up all connections set on other machines.
        */
 
       // Iterate through each incoming connection
@@ -43,7 +43,7 @@ contract DestroySystem is System {
     }
 
     // Destroy machine entity
-    LibEntity.destroy(podEntity, _machineEntity);
+    LibEntity.remove(podEntity, _machineEntity);
   }
 
   function _removeOutgoingConnection(bytes32 _sourceMachine, bytes32 _connectedMachine) internal {
@@ -54,7 +54,7 @@ contract DestroySystem is System {
     uint256 length = OutgoingConnections.length(_sourceMachine);
     for (uint256 i = 0; i < length; i++) {
       if (OutgoingConnections.getItem(_sourceMachine, i) == _connectedMachine) {
-        // Remove the reference to the destroyed machine
+        // Remove the reference to the removed machine
         OutgoingConnections.update(_sourceMachine, i, bytes32(0));
         break;
       }
@@ -69,7 +69,7 @@ contract DestroySystem is System {
     uint256 length = IncomingConnections.length(_targetMachine);
     for (uint256 i = 0; i < length; i++) {
       if (IncomingConnections.getItem(_targetMachine, i) == _connectedMachine) {
-        // Remove the reference to the destroyed machine
+        // Remove the reference to the removed machine
         IncomingConnections.update(_targetMachine, i, bytes32(0));
         break;
       }

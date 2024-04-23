@@ -9,7 +9,7 @@ const machines = {
         carriedBy: "POD_ID",
         outgoingConnections: [],
         incomingConnections: [],
-        depotConnection: "xxx"
+        tankConnection: "xxx"
     }
 }
 
@@ -43,7 +43,7 @@ test("(1) applyPatches", () => {
             carriedBy: "POD_ID",
             outgoingConnections: [],
             incomingConnections: [],
-            depotConnection: "xxx",
+            tankConnection: "xxx",
             inputs: [
                 {
                     amount: 1000,

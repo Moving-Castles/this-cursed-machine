@@ -5,9 +5,9 @@ export type Client = {
 
 export type ChatMessage = {
     id: string
+    world: string
     timestamp: number
     address: string
-    name: string
     message: string
 }
 

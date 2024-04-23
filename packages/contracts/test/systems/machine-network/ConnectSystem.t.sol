@@ -15,10 +15,10 @@ contract ConnectSystemTest is BaseTest {
     world.start();
 
     // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitterEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Connect player (first output == piss) to splitter
-    startGasReport("Connect player to splitter");
+    startGasReport("Connect");
     world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
     endGasReport();
 
@@ -38,10 +38,10 @@ contract ConnectSystemTest is BaseTest {
     world.start();
 
     // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitterEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Build a dryer
-    bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
+    bytes32 dryerEntity = world.buildMachine(MACHINE_TYPE.DRYER);
 
     // Connect player to splitter
     world.connect(playerEntity, splitterEntity, PORT_INDEX.FIRST);
@@ -62,10 +62,10 @@ contract ConnectSystemTest is BaseTest {
     world.start();
 
     // Build a splitter
-    bytes32 splitterEntity = world.build(MACHINE_TYPE.SPLITTER);
+    bytes32 splitterEntity = world.buildMachine(MACHINE_TYPE.SPLITTER);
 
     // Build a dryer
-    bytes32 dryerEntity = world.build(MACHINE_TYPE.DRYER);
+    bytes32 dryerEntity = world.buildMachine(MACHINE_TYPE.DRYER);
 
     // Connect dryer to splitter
     world.connect(dryerEntity, splitterEntity, PORT_INDEX.FIRST);

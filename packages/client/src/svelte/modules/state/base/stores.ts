@@ -14,6 +14,7 @@ import {
 import { writable, derived } from "svelte/store"
 import { blockNumber, network } from "@modules/network"
 import { GAME_CONFIG_ID } from "@modules/state/base/constants"
+import { ONE_TOKEN_UNIT } from "@svelte/modules/ui/constants"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
@@ -31,8 +32,9 @@ export const entities = writable({} as Entities)
 
 export const gameConfig = derived(
   entities,
-  $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig
+  $entities => ($entities[GAME_CONFIG_ID]?.gameConfig || {}) as GameConfig
 )
+
 export const recipes = derived(entities, $entities => getRecipes($entities))
 
 // * * * * * * * * * * * * * * * * *
@@ -63,12 +65,13 @@ export const playerPod = derived([entities, player], ([$entities, $player]) =>
 // If the player is in tutorial we use the non transferable balance
 export const playerTokenBalance = derived([player], ([$player]) => {
   if ($player.tutorial) {
-    return $player.nonTransferableBalance ?? 0
+    // Make sure nonTransferableBalance is treated as BigInt
+    return BigInt($player.nonTransferableBalance ?? 0);
   } else {
-    return $player.tokenBalances ?? 0
+    // Ensure tokenBalances is multiplied correctly with ONE_TOKEN_UNIT
+    return BigInt($player.tokenBalances ?? 0) / ONE_TOKEN_UNIT;
   }
 })
-
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITIES
 // * * * * * * * * * * * * * * * * *
@@ -84,13 +87,13 @@ export const machines = derived(
 )
 
 // Filter by player pod
-export const depots = derived(
+export const tanks = derived(
   [entities, player],
   ([$entities, $player]) =>
     filterByEntitytype(
       filterByCarriedBy($entities, $player?.carriedBy ?? ""),
-      ENTITY_TYPE.DEPOT
-    ) as Depots
+      ENTITY_TYPE.TANK
+    ) as Tanks
 )
 
 export const players = derived(

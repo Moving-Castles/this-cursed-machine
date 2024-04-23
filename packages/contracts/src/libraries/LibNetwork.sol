@@ -2,11 +2,11 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, DepotConnection, FixedEntities, FixedEntitiesData, BuildIndex } from "../codegen/index.sol";
+import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, TankConnection, FixedEntities, FixedEntitiesData, BuildIndex } from "../codegen/index.sol";
 import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { LibPod } from "./LibPod.sol";
 import { LibMachine } from "./LibMachine.sol";
-import { LibDepot } from "./LibDepot.sol";
+import { LibTank } from "./LibTank.sol";
 import { LibUtils } from "./LibUtils.sol";
 import { FLOW_RATE } from "../constants.sol";
 import { Product } from "../structs.sol";
@@ -20,7 +20,7 @@ library LibNetwork {
 
   /**
    * @notice Resolve the network in a pod
-   * @dev The outcome of this function is to update the depots in the pod
+   * @dev The outcome of this function is to update the tanks in the pod
    * @param _podEntity The id of the pod entity
    */
   function resolve(bytes32 _podEntity) internal {
@@ -38,17 +38,17 @@ library LibNetwork {
 
     FixedEntitiesData memory fixedEntities = FixedEntities.get(_podEntity);
 
-    // Connected depots.
-    // 0 => inlet one depot
-    // 1 => inlet two depot
-    // 2 => outlet depot
-    bytes32[] memory connectedDepots = new bytes32[](3);
-    connectedDepots[0] = DepotConnection.get(fixedEntities.inlets[0]);
-    connectedDepots[1] = DepotConnection.get(fixedEntities.inlets[1]);
-    connectedDepots[2] = DepotConnection.get(fixedEntities.outlet);
+    // Connected tanks.
+    // 0 => inlet one tank
+    // 1 => inlet two tank
+    // 2 => outlet tank
+    bytes32[] memory connectedTanks = new bytes32[](3);
+    connectedTanks[0] = TankConnection.get(fixedEntities.inlets[0]);
+    connectedTanks[1] = TankConnection.get(fixedEntities.inlets[1]);
+    connectedTanks[2] = TankConnection.get(fixedEntities.outlet);
 
-    // Abort if neither inlets are connected to depot or if outlet is not connected to depot
-    if ((connectedDepots[0] == bytes32(0) && connectedDepots[1] == bytes32(0)) || connectedDepots[2] == bytes32(0)) {
+    // Abort if neither inlets are connected to tank or if outlet is not connected to tank
+    if ((connectedTanks[0] == bytes32(0) && connectedTanks[1] == bytes32(0)) || connectedTanks[2] == bytes32(0)) {
       LastResolved.set(_podEntity, block.number);
       return;
     }
@@ -65,9 +65,9 @@ library LibNetwork {
 
         // Handle inlets
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
-          // Get material from depot
-          uint depotIndex = BuildIndex.get(node) - 1;
-          MATERIAL_TYPE materialType = MaterialType.get(connectedDepots[depotIndex]);
+          // Get material from tank
+          uint tankIndex = BuildIndex.get(node) - 1;
+          MATERIAL_TYPE materialType = MaterialType.get(connectedTanks[tankIndex]);
 
           // Mark as resolved and continue if inlet is empty
           if (materialType == MATERIAL_TYPE.NONE) {
@@ -78,7 +78,7 @@ library LibNetwork {
 
           bool[2] memory newInletActive;
           // Set active for inlet
-          newInletActive[depotIndex] = true;
+          newInletActive[tankIndex] = true;
 
           inputs[counter.inputs] = Product({
             machineId: node,
@@ -119,10 +119,10 @@ library LibNetwork {
         if (node == fixedEntities.outlet) {
           // Continue if no output
           if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
-          // Write to depot
-          LibDepot.write(
-            [connectedDepots[0], connectedDepots[1]],
-            connectedDepots[2],
+          // Write to tank
+          LibTank.write(
+            [connectedTanks[0], connectedTanks[1]],
+            connectedTanks[2],
             block.number - LastResolved.get(_podEntity), // Blocks since last resolved
             currentOutputs[0]
           );
