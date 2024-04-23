@@ -25,20 +25,20 @@
     "deploy:redstone-mainnet": "---------------------------"
   },
   "dependencies": {
-    "@latticexyz/cli": "2.0.7-main-c3c8fb85",
-    "@latticexyz/config": "2.0.7-main-c3c8fb85",
-    "@latticexyz/gas-report": "2.0.7-main-c3c8fb85",
-    "@latticexyz/schema-type": "2.0.7-main-c3c8fb85",
-    "@latticexyz/store": "2.0.7-main-c3c8fb85",
-    "@latticexyz/world": "2.0.7-main-c3c8fb85",
-    "@latticexyz/world-modules": "2.0.7-main-c3c8fb85",
+    "@latticexyz/cli": "2.0.7-main-7183364f",
+    "@latticexyz/config": "2.0.7-main-7183364f",
+    "@latticexyz/gas-report": "2.0.7-main-7183364f",
+    "@latticexyz/schema-type": "2.0.7-main-7183364f",
+    "@latticexyz/store": "2.0.7-main-7183364f",
+    "@latticexyz/world": "2.0.7-main-7183364f",
+    "@latticexyz/world-modules": "2.0.7-main-7183364f",
     "@types/node": "^20.12.7",
     "ds-test": "github:dapphub/ds-test#c9ce3f25bde29fc5eb9901842bf02850dfd2d084",
     "forge-std": "github:foundry-rs/forge-std#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3",
     "prettier": "^3.2.5",
     "prettier-plugin-solidity": "^1.3.1",
     "solhint": "^4.5.4",
-    "solhint-config-mud": "2.0.7-main-c3c8fb85",
-    "solhint-plugin-mud": "2.0.7-main-c3c8fb85"
+    "solhint-config-mud": "2.0.7-main-7183364f",
+    "solhint-plugin-mud": "2.0.7-main-7183364f"
   }
 }

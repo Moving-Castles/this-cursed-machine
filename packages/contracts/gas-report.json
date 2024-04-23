@@ -63,7 +63,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testRevertCreateOrderAsNormalUser",
     "name": "Create order as normal user",
-    "gasUsed": 302439
+    "gasUsed": 302442
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
