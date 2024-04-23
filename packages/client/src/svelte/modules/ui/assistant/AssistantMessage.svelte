@@ -28,7 +28,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType]
+        MATERIAL_TYPE[$playerOrder?.order?.materialType],
       )
     }
 
@@ -110,14 +110,16 @@
   <div class="text">
     {@html message}
   </div>
-  <div class="restart">
-    {#if !confirming}
-      <button on:click={startConfirm}>Start over</button>
-    {:else}
-      <button on:click={sendStart}>I want to restart</button>
-      <button on:click={() => (confirming = false)}>x</button>
-    {/if}
-  </div>
+  {#if !working}
+    <div class="restart">
+      {#if !confirming}
+        <button on:click={startConfirm}>Restart employee training</button>
+      {:else}
+        <button on:click={sendStart}>I want to restart</button>
+        <button on:click={() => (confirming = false)}>x</button>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

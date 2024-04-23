@@ -87,7 +87,7 @@ contract OrderSystem is System {
     OrderData memory currentOrder = Order.get(_orderEntity);
 
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-    require(!ArrayLib.includes(Completed.get(_orderEntity), playerEntity), "order already completed");
+    require(!ArrayLib.includes(Completed.get(playerEntity), _orderEntity), "order already completed");
 
     CurrentOrder.set(playerEntity, _orderEntity);
   }
