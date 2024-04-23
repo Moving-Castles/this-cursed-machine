@@ -4,10 +4,7 @@
   import NumberGoingUp from "@components/Main/Atoms/NumberGoingUp.svelte"
 </script>
 
-<div
-  class:emphasis={$tutorialProgress === 6 || $tutorialProgress === 14}
-  class="info-bar"
->
+<div class:emphasis={$tutorialProgress === 7} class="info-bar">
   <div class="name">
     <span class="name-inner">
       {#if $player.name}

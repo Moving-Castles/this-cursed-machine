@@ -30,15 +30,15 @@
 
   const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
     "_",
-    " ",
+    " "
   )
 
-  const PULSE_CONDITIONS = [2, 8, 16]
+  const PULSE_CONDITIONS = [5, 15, 25]
 
   // Get the order metadata from the database
   const staticMaterial = $staticContent.materials.find(
     material =>
-      material.materialType === MATERIAL_TYPE[order.order.materialType],
+      material.materialType === MATERIAL_TYPE[order.order.materialType]
   )
 
   // Create image URL
@@ -179,7 +179,7 @@
           <p class="header">
             {#if !$player.tutorial && order.order.expirationBlock != 0}
               {blocksToReadableTime(
-                Number(order.order.expirationBlock) - Number($blockNumber),
+                Number(order.order.expirationBlock) - Number($blockNumber)
               )}
             {/if}
           </p>

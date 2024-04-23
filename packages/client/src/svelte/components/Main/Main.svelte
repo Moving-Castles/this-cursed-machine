@@ -103,6 +103,7 @@
           <Terminal
             bind:this={terminalComponent}
             on:commandExecuted={() => handleCommand()}
+            disabled={$activeTab > 0 && $tutorialProgress > 4}
             setBlink
             placeholder={$tutorialProgress === 1 ? "BLINK" : "HELP"}
           />

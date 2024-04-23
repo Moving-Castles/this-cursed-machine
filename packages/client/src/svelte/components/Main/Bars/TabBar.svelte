@@ -61,9 +61,9 @@
         <div
           class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          class:pulse={PULSE_CONDITIONS[Number(key)].includes(
           class:enabled={value.enabled}
           class:active={Number(key) === Number($activeTab)}
-          class:pulse={PULSE_CONDITIONS[Number(key)].includes(
             $tutorialProgress,
           )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
