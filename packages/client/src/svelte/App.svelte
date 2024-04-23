@@ -16,6 +16,7 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
+  import { mount } from "@latticexyz/dev-tools"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -24,7 +25,6 @@
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
   import MobileWarning from "@components/Main/MobileWarning.svelte"
-  import { mount } from "@latticexyz/dev-tools"
 
   const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX

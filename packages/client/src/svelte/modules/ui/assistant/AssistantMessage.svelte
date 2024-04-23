@@ -5,8 +5,8 @@
   import { playSound } from "@modules/sound"
   import {
     tutorialProgress,
-    completedSteps,
     advanceConditions,
+    tutorialCompleted,
   } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
@@ -50,7 +50,8 @@
         plugTank: "plug",
         connect: "connect",
         buyOffer: "fill",
-        buildMAchine: "build",
+        buildMachine: "build",
+        build: "build",
       }
 
       const cmd = reverseMappings[condition.value.systemId]
@@ -84,7 +85,7 @@
     playSound("tcm", "TRX_yes")
     working = false
     tutorialProgress.set(0)
-    completedSteps.set([])
+    tutorialCompleted.set([])
     clearTerminalOutput()
   }
 
