@@ -26,7 +26,8 @@
     "eslint": "9.0.0",
     "mprocs": "^0.6.4",
     "rimraf": "^5.0.5",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "wait-port": "^1.1.0"
   },
   "engines": {
     "node": "18.x",

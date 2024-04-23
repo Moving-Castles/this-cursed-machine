@@ -125,7 +125,7 @@ export const narrative = [
     await writeNarrative("[Wallet connection started here]");
     const appAccountClient = await connect();
     console.log("appAccountClient", appAccountClient);
-    console.log("get(network).walletClient", get(network).walletClient);
+
     await writeNarrative("Your account address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
     await writeNarrativeAction("blink to continue");
