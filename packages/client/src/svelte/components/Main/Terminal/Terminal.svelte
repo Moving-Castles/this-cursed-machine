@@ -1,6 +1,10 @@
 <script lang="ts">
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { activeTab, selectedParameters } from "@modules/ui/stores"
+  import {
+    activeTab,
+    selectedParameters,
+    terminalBooted,
+  } from "@modules/ui/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
@@ -63,8 +67,11 @@
 
   const focusInput = async (e?: any) => {
     if (disabled) return
+    // inputActive = true
+    await tick() // wait for input element if not there.
     if (inputElement) {
       inputElement?.focus()
+      inputActive = true
     }
   }
 
@@ -479,9 +486,14 @@
     hasFocus = false
   }
 
+  $: console.log(inputActive)
+
   onMount(async () => {
     if (terminalType === TERMINAL_TYPE.FULL) {
-      await terminalMessages.startUp()
+      if (!$terminalBooted) {
+        await terminalMessages.startUp()
+        $terminalBooted = true
+      }
       inputActive = true
     }
     focusInput()
@@ -554,7 +566,10 @@
 
     .disabled-overlay {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200vh;
       background: rgba(0, 0, 0, 0.8);
       backdrop-filter: grayscale(100%);
     }

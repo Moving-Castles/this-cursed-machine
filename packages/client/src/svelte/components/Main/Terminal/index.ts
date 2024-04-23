@@ -38,7 +38,7 @@ export const FULL_COMMANDS = [
   COMMAND.GRADUATE,
   COMMAND.RESOLVE,
   COMMAND.BLINK,
-  COMMAND.HELP
+  COMMAND.HELP,
 ]
 
 export const NO_INPUT_COMMANDS = [
@@ -87,8 +87,10 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.BUILD_MACHINE,
       COMMAND.REMOVE_MACHINE,
       COMMAND.SHIP_TANK,
+      COMMAND.EMPTY_TANK,
+      COMMAND.WIPE_POD,
       COMMAND.HELP,
-      COMMAND.GRADUATE
+      COMMAND.GRADUATE,
     ]
   }
 
@@ -101,8 +103,10 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.CONNECT,
       COMMAND.DISCONNECT,
       COMMAND.SHIP_TANK,
+      COMMAND.EMPTY_TANK,
+      COMMAND.WIPE_POD,
       COMMAND.HELP,
-      COMMAND.GRADUATE
+      COMMAND.GRADUATE,
     ]
   }
 
@@ -114,8 +118,10 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.UNPLUG_TANK,
       COMMAND.CONNECT,
       COMMAND.DISCONNECT,
+      COMMAND.EMPTY_TANK,
+      COMMAND.WIPE_POD,
       COMMAND.HELP,
-      COMMAND.GRADUATE
+      COMMAND.GRADUATE,
     ]
   }
 
@@ -126,7 +132,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.PLUG_TANK,
       COMMAND.UNPLUG_TANK,
       COMMAND.HELP,
-      COMMAND.GRADUATE
+      COMMAND.GRADUATE,
     ]
   }
 

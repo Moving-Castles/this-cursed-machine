@@ -2,7 +2,7 @@
   import { createEventDispatcher, onMount, onDestroy } from "svelte"
   import { slide } from "svelte/transition"
   import { urlFor } from "@modules/content/sanity"
-  import { tutorialProgress } from "@modules/ui/assistant"
+  import { tutorialProgress, advanceTutorial } from "@modules/ui/assistant"
   import { stepsEasing } from "@modules/utils"
   import type { InboxMessage } from "./types"
 
@@ -22,6 +22,7 @@
 
   $: if (open) {
     dispatch("open")
+    advanceTutorial(null, $tutorialProgress, "read")
     scroll?.focus()
   }
   $: {
@@ -29,7 +30,6 @@
       clippedSender = message.sender.slice(i, i + chars)
     }
   }
-
   $: if (!selected && !open) i = 0
 
   const scrollContent = e => {
@@ -47,11 +47,6 @@
     }
   }
 
-  function toggleMessage(e) {
-    // open = !open
-    // advanceTutorial(null, $tutorialProgress, "read")
-  }
-
   onMount(() => {
     interval = setInterval(() => {
       i = (i + 1) % message.sender.length
@@ -63,11 +58,10 @@
   })
 </script>
 
-<div on:keydown={toggleMessage} on:click tabindex="-1" class="message">
+<div on:click tabindex="-1" class="message">
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
-    on:click={toggleMessage}
     tabindex="-1"
     class="listing"
     class:selected

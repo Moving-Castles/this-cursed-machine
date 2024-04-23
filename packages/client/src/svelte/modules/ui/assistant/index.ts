@@ -190,8 +190,9 @@ export function advanceTutorial(
   type: "tab" | "contract" | "command" | "order" | "read" | "wait" | "custom"
 ) {
   const $advanceConditions = get(advanceConditions)
-
   const currentStep = $advanceConditions[level]
+
+  console.log("ADVANCE ", type)
 
   if (currentStep) {
     let otherSteps = []
@@ -205,6 +206,27 @@ export function advanceTutorial(
     const allStepsToCheck = [currentStep, ...otherSteps]
 
     allStepsToCheck.forEach(step => {
+      console.log("Checking step ,", step)
+      // Ready to ship ?
+      if (type === "order") {
+        if (Object.values(get(shippableTanks)).some(e => e === true)) {
+          if (step.type !== "order") {
+            // Find the next type index with order
+            const actualStep = get(tutorialProgress)
+            console.log(actualStep)
+
+            for (let i = actualStep; i < $advanceConditions.length; i++) {
+              if ($advanceConditions[i]?.type === "order") {
+                markComplete($advanceConditions[i]?.index)
+                return false
+              }
+            }
+          } else {
+            markComplete(step.index)
+          }
+        }
+      }
+
       // Check if condition is met or not
       if (
         step.type === "command" &&
@@ -262,13 +284,6 @@ export function advanceTutorial(
 
       if (step.type === "wait" && type === "wait") {
         markComplete(step.index)
-      }
-
-      // Ready to ship ?
-      if (step.type === "order" && type === "order") {
-        if (Object.values(get(shippableTanks)).some(e => e === true)) {
-          markComplete(step.index)
-        }
       }
     })
   }
