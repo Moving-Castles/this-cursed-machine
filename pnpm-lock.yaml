@@ -38,9 +38,6 @@ importers:
       '@latticexyz/common':
         specifier: 2.0.7-main-7183364f
         version: 2.0.7-main-7183364f(typescript@5.4.5)(zod@3.23.3)
-      '@latticexyz/dev-tools':
-        specifier: 2.0.7-main-7183364f
-        version: 2.0.7-main-7183364f(@latticexyz/common@2.0.7-main-7183364f)(@latticexyz/recs@2.0.7-main-7183364f)(@latticexyz/store-sync@2.0.7-main-7183364f)(@latticexyz/store@2.0.7-main-7183364f)(@latticexyz/utils@2.0.7-main-7183364f)(@latticexyz/world@2.0.7-main-7183364f)(typescript@5.4.5)(zod@3.23.3)
       '@latticexyz/recs':
         specifier: 2.0.7-main-7183364f
         version: 2.0.7-main-7183364f(typescript@5.4.5)(zod@3.23.3)
@@ -99,6 +96,9 @@ importers:
         specifier: 2.7.12
         version: 2.7.12(typescript@5.4.5)(zod@3.23.3)
     devDependencies:
+      '@latticexyz/dev-tools':
+        specifier: 2.0.7-main-7183364f
+        version: 2.0.7-main-7183364f(@latticexyz/common@2.0.7-main-7183364f)(@latticexyz/recs@2.0.7-main-7183364f)(@latticexyz/store-sync@2.0.7-main-7183364f)(@latticexyz/store@2.0.7-main-7183364f)(@latticexyz/utils@2.0.7-main-7183364f)(@latticexyz/world@2.0.7-main-7183364f)(typescript@5.4.5)(zod@3.23.3)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.0
         version: 3.2.0(@sveltejs/kit@2.5.7)
@@ -1220,7 +1220,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/cli@2.0.7-main-7183364f(google-protobuf@3.21.2):
     resolution: {integrity: sha512-wXUSoCel0XcoClncrhYVJdnXl72CEWn/ggvIogzYrNRAjXUHzk5aVmGKvZfdvWrU7GPsO5UIr7JhwBGHpJ+k6g==}
@@ -1304,7 +1303,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/config@2.0.7-main-7183364f(typescript@5.4.2):
     resolution: {integrity: sha512-NRRSwpd7+sa9M5ej1E9YFJS5Si2bO8vY34rUcOmdhANOCnviNWQL/a6CD3PvZMf3LdJeWfc1YHR4n5f6xohlvg==}
@@ -1337,7 +1335,6 @@ packages:
       - supports-color
       - typescript
       - utf-8-validate
-    dev: false
 
   /@latticexyz/dev-tools@2.0.7-main-7183364f(@latticexyz/common@2.0.7-main-7183364f)(@latticexyz/recs@2.0.7-main-7183364f)(@latticexyz/store-sync@2.0.7-main-7183364f)(@latticexyz/store@2.0.7-main-7183364f)(@latticexyz/utils@2.0.7-main-7183364f)(@latticexyz/world@2.0.7-main-7183364f)(typescript@5.4.5)(zod@3.23.3):
     resolution: {integrity: sha512-4rborsW6Z+1k/0sBgvDON1qDGa6mfyzD2Ygg5XsgreJoSxydONerbvDiloUOircPz6Qdrplz5+2UaMDOuKp3pg==}
@@ -1373,7 +1370,7 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
+    dev: true
 
   /@latticexyz/gas-report@2.0.7-main-7183364f:
     resolution: {integrity: sha512-Q3SrxjyjSa2udi+cbyTPSBf8KWF6MToF0dZ7XjVLNaeW5cDMOI1wX6FLogKgAj+cBxrLZLn/6pt9o7fcJttkxA==}
@@ -1416,7 +1413,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/query@2.0.7-main-7183364f(typescript@5.4.5)(zod@3.23.3):
     resolution: {integrity: sha512-dGISwypZXq9QH9KRM7my0DoPZFme8qYxRtM+OCUxpuj2rMERQzmNC+ihO1Chwa1qEOmgDWuwqSu1rfT1HRO1Ww==}
@@ -1432,7 +1428,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/react@2.0.7-main-7183364f(typescript@5.4.5)(zod@3.23.3):
     resolution: {integrity: sha512-viHl54jZHGQGRT/L2/mNtYK71ASpG8m2xKz/EdpVsOfht+JWtdrrWLgp7nZze9NI9Jl0eOS5DviP8d7tpJBFuw==}
@@ -1449,7 +1444,7 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
+    dev: true
 
   /@latticexyz/recs@2.0.7-main-7183364f(typescript@5.4.5)(zod@3.23.3):
     resolution: {integrity: sha512-1qT5ET5+M2wNeHjb/qz7yjuR1P+Ra3np6FvbQXkF+jLeAGsn4VPodudJ4CW00Msu40ZLT6JdrJXRDwenDwgpTA==}
@@ -1463,7 +1458,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/schema-type@2.0.7-main-7183364f(typescript@5.4.2)(zod@3.23.3):
     resolution: {integrity: sha512-Ixo1gRZlCGbA0pdg3NwQF6DRPMUILmjCtLzc0tcyFob0ahWZuqqEILpKtchXihRmMaGBhQ5f7G9D1DnELgSTSA==}
@@ -1486,7 +1480,6 @@ packages:
       - typescript
       - utf-8-validate
       - zod
-    dev: false
 
   /@latticexyz/services@2.0.7-main-7183364f(google-protobuf@3.21.2):
     resolution: {integrity: sha512-F4/83WSYuQTYI51UTYcA2Jzm//kR09E3/93JD5nral4YoudAI6QugiWUsyYKRvSyb6RP1petVf78PjxsurEvGQ==}
@@ -1548,7 +1541,6 @@ packages:
       - supports-color
       - typescript
       - utf-8-validate
-    dev: false
 
   /@latticexyz/store@2.0.7-main-7183364f(typescript@5.4.2):
     resolution: {integrity: sha512-4Q6F8/poW+5cTVt6lmPRQdNlKBfnItTVFIMWO+H5SxHK0StQ+RRN2iq5wgm0CpY1+sX7F1NknPdHJ+wkv7czhw==}
@@ -1585,7 +1577,6 @@ packages:
       - supports-color
       - typescript
       - utf-8-validate
-    dev: false
 
   /@latticexyz/utils@2.0.7-main-7183364f:
     resolution: {integrity: sha512-P8IYYXl/Qs39ZCThsKeI1yyASqgmmUQ0sF8yopZWybxtqsNTVBXKt6PvNldJox7i7e8D+IG5CRoSt6ujki2ZPA==}
@@ -1662,7 +1653,6 @@ packages:
       - supports-color
       - typescript
       - utf-8-validate
-    dev: false
 
   /@noble/curves@1.2.0:
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
@@ -1762,7 +1752,7 @@ packages:
   /@remix-run/router@1.15.3:
     resolution: {integrity: sha512-Oy8rmScVrVxWZVOpEF57ovlnhpZ8CCPlnIIumVcV9nFdiSIrus99+Lw78ekXyGvVDlIsFJbSfmSovJUhCWYV3w==}
     engines: {node: '>=14.0.0'}
-    dev: false
+    dev: true
 
   /@rollup/rollup-android-arm-eabi@4.16.3:
     resolution: {integrity: sha512-1ACInKIT0pXmTYuPoJAL8sOT0lV3PEACFSVxnD03hGIojJ1CmbzZmLJyk2xew+yxqTlmx7xydkiJcBzdp0V+AQ==}
@@ -2278,11 +2268,9 @@ packages:
       '@trpc/server': 10.34.0
     dependencies:
       '@trpc/server': 10.34.0
-    dev: false
 
   /@trpc/server@10.34.0:
     resolution: {integrity: sha512-2VMW44Fpaoyqb50dBtzdSWMhqt8lmoJiocEyBBeDb03R0W+XrzbVD5kU/wqKPlcp1DWeNCkOEIMtetMZCfo1hA==}
-    dev: false
 
   /@tsconfig/svelte@5.0.4:
     resolution: {integrity: sha512-BV9NplVgLmSi4mwKzD8BD/NQ8erOY/nUE/GpgWe2ckx+wIQF5RyRirn/QsSSCPeulVpc3RA/iJt6DpfTIZps0Q==}
@@ -2570,7 +2558,6 @@ packages:
     dependencies:
       typescript: 5.4.5
       zod: 3.23.3
-    dev: false
 
   /abort-controller-x@0.4.3:
     resolution: {integrity: sha512-VtUwTNU8fpMwvWGn4xE93ywbogTYsuT+AUxAXOeelbXuQVIwNmC5YLeho9sH4vZ4ITW8414TTAOG1nW6uIVHCA==}
@@ -2826,7 +2813,6 @@ packages:
 
   /change-case@5.4.4:
     resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
-    dev: false
 
   /check-error@1.0.3:
     resolution: {integrity: sha512-iKEoDYaRmd1mxM90a2OEfWhjsjPpYPuQ+lMYsoxB126+t8fw7ySEO48nmDg5COTjxDI65/Y2OWpeEHk3ZOe8zg==}
@@ -2928,7 +2914,6 @@ packages:
     engines: {node: '>=12.13'}
     dependencies:
       is-what: 4.1.16
-    dev: false
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -3136,7 +3121,6 @@ packages:
       kysely: 0.26.3
       postgres: 3.4.4
       sql.js: 1.10.3
-    dev: false
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -3894,7 +3878,6 @@ packages:
   /is-what@4.1.16:
     resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
     engines: {node: '>=12.13'}
-    dev: false
 
   /isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
@@ -3970,7 +3953,6 @@ packages:
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
-    dev: false
 
   /js-tokens@9.0.0:
     resolution: {integrity: sha512-WriZw1luRMlmV3LGJaR6QOJjWwgLUTf89OwT2lUOyjX2dJGBwgmIkbcz+7WFZjrZM635JOIR517++e/67CP9dQ==}
@@ -4024,7 +4006,6 @@ packages:
   /kysely@0.26.3:
     resolution: {integrity: sha512-yWSgGi9bY13b/W06DD2OCDDHQmq1kwTGYlQ4wpZkMOJqMGCstVCFIvxCCVG4KfY1/3G0MhDAcZsip/Lw8/vJWw==}
     engines: {node: '>=14.0.0'}
-    dev: false
 
   /latest-version@7.0.0:
     resolution: {integrity: sha512-KvNT4XqAMzdcL6ka6Tl3i2lYeFDgXNCuIX+xNx6ZMVR1dFq+idXd9FLKNMOIx0t9mJ9/HudyX4oZWXZQ0UJHeg==}
@@ -4099,7 +4080,6 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: false
 
   /loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
@@ -4520,7 +4500,6 @@ packages:
   /postgres@3.4.4:
     resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
     engines: {node: '>=12'}
-    dev: false
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -4640,7 +4619,7 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
+    dev: true
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
@@ -4657,7 +4636,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-router: 6.22.3(react@18.2.0)
-    dev: false
+    dev: true
 
   /react-router@6.22.3(react@18.2.0):
     resolution: {integrity: sha512-dr2eb3Mj5zK2YISHK++foM9w4eBnO23eKnZEDs7c880P6oKbrjz/Svg9+nxqtHQK+oMW4OtjZca0RqPglXxguQ==}
@@ -4667,14 +4646,13 @@ packages:
     dependencies:
       '@remix-run/router': 1.15.3
       react: 18.2.0
-    dev: false
+    dev: true
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
@@ -4820,7 +4798,7 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
+    dev: true
 
   /scrypt-js@3.0.1:
     resolution: {integrity: sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==}
@@ -4936,7 +4914,6 @@ packages:
 
   /sql.js@1.10.3:
     resolution: {integrity: sha512-H46aWtQkdyjZwFQgraUruy5h/DyJBbAK3EA/WEMqiqF6PGPfKBSKBj/er3dVyYqVIoYfRf5TFM/loEjtQIrqJg==}
-    dev: false
 
   /stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
@@ -5011,7 +4988,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       copy-anything: 3.0.5
-    dev: false
 
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -5066,7 +5042,7 @@ packages:
 
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
-    dev: false
+    dev: true
 
   /test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
@@ -5218,7 +5194,7 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
+    dev: true
 
   /use-sync-external-store@1.2.0(react@18.2.0):
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
@@ -5226,7 +5202,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -5308,7 +5283,6 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
-    dev: false
 
   /vite-node@1.5.0(sass@1.75.0):
     resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==}
@@ -5593,7 +5567,6 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
 
   github.com/dapphub/ds-test/c9ce3f25bde29fc5eb9901842bf02850dfd2d084:
     resolution: {tarball: https://codeload.github.com/dapphub/ds-test/tar.gz/c9ce3f25bde29fc5eb9901842bf02850dfd2d084}
