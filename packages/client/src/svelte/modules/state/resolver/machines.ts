@@ -1,3 +1,4 @@
+import { keccak256 } from "viem"
 import { MACHINE_TYPE } from "../base/enums"
 import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
@@ -75,7 +76,7 @@ function mixer(recipes: Recipe[], inputs: Product[]): Product[] {
 
   if (inputs.length !== 2) return outputs
 
-  const outputMaterials = getRecipe(
+  const outputMaterials = findRecipe(
     recipes,
     MACHINE_TYPE.MIXER,
     getMaterialCombinationId(
@@ -125,10 +126,10 @@ function defaultMachine(
 
   if (!input) return outputs
 
-  const outputMaterials = getRecipe(
+  const outputMaterials = findRecipe(
     recipes,
     machineType,
-    inputs[0].materialId
+    keccak256(input.materialId)
   )
 
   console.log("outputMaterials", outputMaterials)
@@ -167,7 +168,7 @@ function getLowestAmountProduct(A: Product, B: Product): Product {
   return A.amount < B.amount ? A : B
 }
 
-function getRecipe(
+function findRecipe(
   recipes: Recipe[],
   machineType: MACHINE_TYPE,
   input: string

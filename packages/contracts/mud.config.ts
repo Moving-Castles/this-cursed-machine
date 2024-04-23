@@ -56,7 +56,7 @@ export default defineWorld({
             schema: {
                 key: "bytes32",
                 creationBlock: "uint256",
-                creator: "bytes32",
+                creator: "address",
                 materialId: "MaterialId",
                 amount: "uint32",
                 expirationBlock: "uint256",

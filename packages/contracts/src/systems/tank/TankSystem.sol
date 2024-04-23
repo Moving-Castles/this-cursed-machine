@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
@@ -167,5 +167,10 @@ contract TankSystem is System {
 
     // Reward player in real tokens
     PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);
+
+    // Mint order material to creator it not admin
+    if (currentOrder.creator != GameConfig.getAdminAddress()) {
+      LibMaterial.mint(currentOrder.materialId, currentOrder.creator, currentOrder.amount);
+    }
   }
 }

@@ -20,7 +20,7 @@ library LibOrder {
    */
 
   function create(
-    bytes32 _creator,
+    address _creator,
     string memory _title,
     MaterialId _materialId,
     uint32 _amount,

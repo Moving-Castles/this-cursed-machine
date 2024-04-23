@@ -17,8 +17,10 @@
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
 
-  import { materialMetadata } from "@modules/state/base/stores"
+  import { materialMetadata, player } from "@modules/state/base/stores"
   $: console.log("$materialMetadata", $materialMetadata)
+
+  $: console.log("$player", $player)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"

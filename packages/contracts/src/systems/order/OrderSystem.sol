@@ -42,7 +42,7 @@ contract OrderSystem is System {
     }
 
     orderEntity = LibOrder.create(
-      LibUtils.addressToEntityKey(_msgSender()),
+      _msgSender(),
       _title,
       _materialId,
       _amount,

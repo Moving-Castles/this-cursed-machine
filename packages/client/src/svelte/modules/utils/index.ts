@@ -1,4 +1,4 @@
-import { concat, encodePacked, getAddress, keccak256 } from "viem"
+import { concat, getAddress, keccak256 } from "viem"
 import { BLOCKTIME } from "./constants"
 
 export function toCamelCase(s: string): string {
@@ -148,7 +148,7 @@ export function capAtZero(num: number): number {
 }
 
 /**
- * Get id for a combination of 2 materials
+ * Get id for a combination of two materials
  * @param a Material id
  * @param b Material id
  */
