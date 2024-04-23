@@ -227,24 +227,27 @@ export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-
 export function timeSince(timestamp: number): string {
-  const now = Date.now(); // Current time in milliseconds
-  const elapsed = now - timestamp; // Elapsed time in milliseconds
+  const now = Date.now() // Current time in milliseconds
+  const elapsed = now - timestamp // Elapsed time in milliseconds
 
   // Convert milliseconds to minutes, hours, and days
-  const minutes = Math.floor(elapsed / 60000);
-  const hours = Math.floor(elapsed / 3600000);
-  const days = Math.floor(elapsed / 86400000);
+  const minutes = Math.floor(elapsed / 60000)
+  const hours = Math.floor(elapsed / 3600000)
+  const days = Math.floor(elapsed / 86400000)
 
   // Return the time in the largest appropriate unit
   if (days > 0) {
-    return `${days} day${days !== 1 ? 's' : ''}`;
+    return `${days} day${days !== 1 ? "s" : ""}`
   } else if (hours > 0) {
-    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+    return `${hours} hour${hours !== 1 ? "s" : ""}`
   } else if (minutes > 0) {
-    return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    return `${minutes} minute${minutes !== 1 ? "s" : ""}`
   } else {
-    return 'now';
+    return "now"
   }
+}
+
+export function mod(n: number, m: number) {
+  return ((n % m) + m) % m
 }

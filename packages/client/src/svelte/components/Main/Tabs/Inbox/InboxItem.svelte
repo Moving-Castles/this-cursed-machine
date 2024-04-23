@@ -1,41 +1,119 @@
 <script lang="ts">
-  import { fade } from "svelte/transition"
+  import { createEventDispatcher, onMount, onDestroy } from "svelte"
+  import { slide } from "svelte/transition"
   import { urlFor } from "@modules/content/sanity"
-  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+  import { tutorialProgress } from "@modules/ui/assistant"
+  import { stepsEasing } from "@modules/utils"
   import type { InboxMessage } from "./types"
 
+  const dispatch = createEventDispatcher()
+
   export let message: InboxMessage
+  export let selected = false
+  export let open = false
 
-  let open = false
+  let interval: ReturnType<typeof setInterval>
+  let speed = 100
+  let chars = 14
 
-  function toggleMessage() {
-    open = !open
-    advanceTutorial(null, $tutorialProgress, "read")
+  let scroll: HTMLDIVElement
+  let i = 0
+  let clippedSender = message?.sender.slice(i, i + chars).padEnd(chars, " ")
+
+  $: if (open) {
+    dispatch("open")
+    scroll?.focus()
   }
+  $: {
+    if ((selected || open) && message.sender.length > chars) {
+      clippedSender = message.sender.slice(i, i + chars)
+    }
+  }
+
+  $: if (!selected && !open) i = 0
+
+  const scrollContent = e => {
+    if (e.key === "ArrowDown") {
+      scroll.scrollTop += chars
+    } else if (e.key === "ArrowUp") {
+      scroll.scrollTop -= chars
+    }
+    if (e.key === "Escape") {
+      dispatch("close")
+      if (message.sender.length > chars) {
+        clippedSender = message.sender.slice(i, i + chars)
+      }
+      i = 0
+    }
+  }
+
+  function toggleMessage(e) {
+    // open = !open
+    // advanceTutorial(null, $tutorialProgress, "read")
+  }
+
+  onMount(() => {
+    interval = setInterval(() => {
+      i = (i + 1) % message.sender.length
+    }, speed)
+  })
+
+  onDestroy(() => {
+    clearInterval(interval)
+  })
 </script>
 
-<div class="message">
+<div on:keydown={toggleMessage} on:click tabindex="-1" class="message">
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     on:click={toggleMessage}
+    tabindex="-1"
     class="listing"
+    class:selected
     class:open
     class:pulse={$tutorialProgress === 19}
   >
     <div class="indicator" />
-    <div class="sender">Sender</div>
+    <div class="sender">{clippedSender}</div>
     <div class="title">{message.title}</div>
     <div class="time">{message._updatedAt}</div>
   </div>
 
   {#if open}
-    <div class="content" in:fade>
-      <img
-        crossorigin="anonymous"
-        src={urlFor(message.attachment).url()}
-        alt={message.title}
-      />
+    <div
+      bind:this={scroll}
+      on:keydown={scrollContent}
+      class="content"
+      tabindex="-1"
+      transition:slide={{ duration: 100, easing: stepsEasing }}
+    >
+      <div class="content-track">
+        {#if message.description}
+          <p class="message-body">
+            {message.description}
+          </p>
+        {/if}
+        {#each message.attachments as attachment}
+          <figure>
+            <img
+              crossorigin="anonymous"
+              src={urlFor(attachment.image).url()}
+              alt={attachment.image.filename}
+            />
+            {#if attachment.filename}
+              <figcaption>{attachment.filename}</figcaption>
+            {/if}
+          </figure>
+        {/each}
+
+        <div class="comms-disclaimer">
+          All content Courtesy of TCM Corp. Any communication relayed to stumps
+          shall not be forwarded to other stumps. <em
+            >Any stumps caught with TCM content will be prosecuted</em
+          >
+        </div>
+      </div>
     </div>
   {/if}
 </div>
@@ -50,6 +128,7 @@
       display: flex;
       align-items: center;
       user-select: none;
+      white-space: nowrap;
 
       .indicator {
         width: 1rem;
@@ -57,7 +136,7 @@
         border-radius: 50%;
         background: var(--color-success);
         margin-right: 20px;
-        animation: 0.7s linear 0s infinite alternate pulse;
+        animation: 0.7s steps(5) 0s infinite alternate pulse;
       }
 
       @keyframes pulse {
@@ -70,13 +149,17 @@
       }
 
       .sender {
-        width: 10ch;
+        width: 14ch;
         margin-right: 40px;
         color: var(--color-grey-light);
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .title {
         flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .time {
@@ -84,6 +167,7 @@
         font-size: var(--font-size-small);
       }
 
+      &.selected,
       &:hover {
         background: var(--foreground);
         color: var(--color-grey-dark);
@@ -115,13 +199,43 @@
 
     .content {
       margin: 1rem 0;
+      padding: 1rem 1rem 3rem;
       inset: 0;
+      height: calc(100vh - 360px);
+      overflow-y: scroll;
+      scroll-behavior: auto;
 
-      img {
+      .message-body {
+        padding: 1rem 1rem 3rem;
+      }
+
+      figure {
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 1rem;
+
+        img {
+          width: 100%;
+          object-fit: contain;
+        }
+        margin: 1rem 0 3rem;
+
+        figcaption {
+          padding: 1rem 0;
+        }
+      }
+    }
+
+    .comms-disclaimer {
+      width: 100%;
+      color: var(--color-failure);
+      font-size: var(--font-size-small);
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 0 1rem;
+
+      em {
+        font-style: normal;
+        background: var(--color-failure);
+        color: var(--black);
       }
     }
   }

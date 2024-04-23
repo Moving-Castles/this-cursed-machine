@@ -3,18 +3,14 @@
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
+  import { mod } from "@modules/utils"
   import OrderItem from "./OrderItem.svelte"
-
-  function mod(n: number, m: number) {
-    return ((n % m) + m) % m
-  }
 
   let element: HTMLDivElement
 
   let selected = -1
 
   const cycle = (e: KeyboardEvent) => {
-    e.stopPropagation()
     const options = Object.keys($availableOrders).length
     if (e.key === "ArrowDown") {
       selected = mod(selected + 1, options)

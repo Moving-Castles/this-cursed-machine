@@ -2,7 +2,14 @@
   import { staticContent } from "@modules/content"
   import { player } from "@modules/state/base/stores"
   import { fade } from "svelte/transition"
+  import { playSound } from "@modules/sound"
+  import { mod } from "@modules/utils"
   import InboxItem from "./InboxItem.svelte"
+
+  let selected = 0
+  let openItem = -1
+
+  let element: HTMLDivElement
 
   $: messages = $staticContent.messages.filter(msg => {
     if ($player.tutorial) {
@@ -11,7 +18,34 @@
       return msg
     }
   })
+
+  const cycle = (e: KeyboardEvent) => {
+    if (openItem < 0) {
+      if (e.key === "ArrowDown") {
+        selected = mod(selected + 1, messages.length)
+        playSound("tcm", "selectionScroll")
+      } else if (e.key === "ArrowUp") {
+        selected = mod(selected - 1, messages.length)
+        playSound("tcm", "selectionScroll")
+      }
+
+      if (e.key === "Enter") {
+        openItem = selected
+        playSound("tcm", "selectionScroll")
+      }
+
+      if (e.key === "Escape") {
+        openItem = -1
+      }
+
+      if (element?.parentElement) {
+        element.parentElement.scrollTop = selected * 250
+      }
+    }
+  }
 </script>
+
+<svelte:window on:keydown|stopPropagation={cycle} />
 
 <div class="head">
   <div>{messages?.length ?? 0} messages</div>
@@ -20,9 +54,19 @@
   </span>
 </div>
 
-<div class="inbox" in:fade>
-  {#each messages as message}
-    <InboxItem {message} />
+<div class="inbox" in:fade bind:this={element}>
+  {#each messages as message, i}
+    <InboxItem
+      on:click={() => (openItem = openItem === i ? -1 : i)}
+      on:close={() => (openItem = -1)}
+      on:open={() => {
+        selected = -1
+        openItem = i
+      }}
+      {message}
+      selected={selected === i}
+      open={openItem === i}
+    />
   {/each}
 </div>
 
@@ -55,6 +99,8 @@
 
   .inbox {
     padding-inline: var(--default-padding);
-    padding-top: 3rem;
+    margin-top: 3rem;
+    height: calc(100vh - 180px);
+    overflow-y: hidden;
   }
 </style>
