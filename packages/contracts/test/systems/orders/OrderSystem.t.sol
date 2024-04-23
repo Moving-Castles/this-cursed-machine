@@ -5,7 +5,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
-import { FLOW_RATE, ONE_MINUTE, ONE_HOUR } from "../../../src/constants.sol";
+import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_TOKEN_UNIT } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -45,6 +45,17 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
+  function setUpBob() public {
+    super.setUp();
+    vm.startPrank(alice);
+
+    // Spawn player
+    playerEntity = world.spawn("alice");
+    world.start();
+
+    vm.stopPrank();
+  }
+
   function testCreateOrderAsAdmin() public {
     setUp();
 
@@ -57,19 +68,69 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertCreateOrderAsNormalUser() public {
-    setUp();
+  function testCreateOrderAsUser() public {
+    /*//////////////////////////////////////////////////////////////
+                         BOB CREATES ORDER
+    //////////////////////////////////////////////////////////////*/
 
-    vm.startPrank(alice);
+    setUpBob();
+    vm.startPrank(bob);
 
+    // Get bug tokens
     world.reward();
 
     // Create order
-    startGasReport("Create order as normal user");
-    world.createOrder("Test order", PublicMaterials.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
+    startGasReport("Create order as user");
+    bytes32 testOrder = world.createOrder("Test order", PublicMaterials.PISS, 5000, 5000, ONE_HOUR, 1);
     endGasReport();
 
+    OrderData memory orderData = Order.get(testOrder);
+
+    assertEq(orderData.creator, bob);
+
     vm.stopPrank();
+
+    /*//////////////////////////////////////////////////////////////
+                        ALICE FULLFILLS ORDER
+    //////////////////////////////////////////////////////////////*/
+
+    // Setup alice
+    setUp();
+    vm.startPrank(alice);
+
+    world.graduate();
+
+    // Accept test order
+    world.acceptOrder(testOrder);
+
+    world.fillTank(tanksInPod[0], 10000, PublicMaterials.BUG);
+
+    // Connect tank 0 to inlet
+    world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
+
+    // Connect tank 1 to outlet
+    world.plugTank(tanksInPod[1], fixedEntities.outlet);
+
+    // Connect inlet to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (piss) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Wait
+    uint32 blocksToWait = 20;
+    vm.roll(block.number + blocksToWait);
+
+    // Unplug & Ship
+    world.unplugTank(tanksInPod[1]);
+    world.shipTank(tanksInPod[1]);
+
+    vm.stopPrank();
+
+    // Alice got 10000 BUG tokens for graduating + 50 BUG tokens for completing the order
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 15000 * ONE_TOKEN_UNIT);
+    // Bob got 5000 PISS tokens for creating the order
+    assertEq(PublicMaterials.PISS.getTokenBalance(bob), 5000 * ONE_TOKEN_UNIT);
   }
 
   function testRevertCreateOrderInsufficientFunds() public {

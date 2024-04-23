@@ -26,7 +26,7 @@ library LibOrder {
     uint32 _amount,
     bool _isTutorial,
     uint32 _tutorialLevel,
-    uint32 _reward,
+    uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers
   ) internal returns (bytes32) {

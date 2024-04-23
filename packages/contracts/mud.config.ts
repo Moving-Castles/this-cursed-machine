@@ -50,7 +50,7 @@ export default defineWorld({
         SpawnIndex: "uint32", // How many players have spawned?
         Tutorial: "bool",
         TutorialLevel: "uint32",
-        NonTransferableBalance: "uint32", // During tutorial we give players a non-transferable token substitute
+        NonTransferableBalance: "uint256", // During tutorial we give players a non-transferable token substitute
         Order: {
             key: ["key"],
             schema: {
@@ -60,7 +60,7 @@ export default defineWorld({
                 materialId: "MaterialId",
                 amount: "uint32",
                 expirationBlock: "uint256",
-                reward: "uint32",
+                reward: "uint256",
                 maxPlayers: "uint32",
                 title: "string"
             }

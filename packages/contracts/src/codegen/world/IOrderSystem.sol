@@ -15,7 +15,7 @@ interface IOrderSystem {
     string memory _title,
     MaterialId _materialId,
     uint32 _amount,
-    uint32 _reward,
+    uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers
   ) external returns (bytes32 orderEntity);

@@ -25,7 +25,7 @@ struct OrderData {
   MaterialId materialId;
   uint32 amount;
   uint256 expirationBlock;
-  uint32 reward;
+  uint256 reward;
   uint32 maxPlayers;
   string title;
 }
@@ -35,12 +35,12 @@ library Order {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f726465720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x006e070120140e04200404000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x008a070120140e04202004000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, address, bytes14, uint32, uint256, uint32, uint32, string)
-  Schema constant _valueSchema = Schema.wrap(0x006e07011f614d031f0303c50000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, address, bytes14, uint32, uint256, uint256, uint32, string)
+  Schema constant _valueSchema = Schema.wrap(0x008a07011f614d031f1f03c50000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -294,29 +294,29 @@ library Order {
   /**
    * @notice Get reward.
    */
-  function getReward(bytes32 key) internal view returns (uint32 reward) {
+  function getReward(bytes32 key) internal view returns (uint256 reward) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get reward.
    */
-  function _getReward(bytes32 key) internal view returns (uint32 reward) {
+  function _getReward(bytes32 key) internal view returns (uint256 reward) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set reward.
    */
-  function setReward(bytes32 key, uint32 reward) internal {
+  function setReward(bytes32 key, uint256 reward) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -326,7 +326,7 @@ library Order {
   /**
    * @notice Set reward.
    */
-  function _setReward(bytes32 key, uint32 reward) internal {
+  function _setReward(bytes32 key, uint256 reward) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -577,7 +577,7 @@ library Order {
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
-    uint32 reward,
+    uint256 reward,
     uint32 maxPlayers,
     string memory title
   ) internal {
@@ -610,7 +610,7 @@ library Order {
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
-    uint32 reward,
+    uint256 reward,
     uint32 maxPlayers,
     string memory title
   ) internal {
@@ -693,7 +693,7 @@ library Order {
       MaterialId materialId,
       uint32 amount,
       uint256 expirationBlock,
-      uint32 reward,
+      uint256 reward,
       uint32 maxPlayers
     )
   {
@@ -707,9 +707,9 @@ library Order {
 
     expirationBlock = (uint256(Bytes.getBytes32(_blob, 70)));
 
-    reward = (uint32(Bytes.getBytes4(_blob, 102)));
+    reward = (uint256(Bytes.getBytes32(_blob, 102)));
 
-    maxPlayers = (uint32(Bytes.getBytes4(_blob, 106)));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 134)));
   }
 
   /**
@@ -781,7 +781,7 @@ library Order {
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
-    uint32 reward,
+    uint256 reward,
     uint32 maxPlayers
   ) internal pure returns (bytes memory) {
     return abi.encodePacked(creationBlock, creator, materialId, amount, expirationBlock, reward, maxPlayers);
@@ -818,7 +818,7 @@ library Order {
     MaterialId materialId,
     uint32 amount,
     uint256 expirationBlock,
-    uint32 reward,
+    uint256 reward,
     uint32 maxPlayers,
     string memory title
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {

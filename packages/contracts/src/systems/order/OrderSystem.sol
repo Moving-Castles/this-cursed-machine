@@ -24,16 +24,16 @@ contract OrderSystem is System {
     string memory _title,
     MaterialId _materialId,
     uint32 _amount,
-    uint32 _reward,
+    uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers
   ) public returns (bytes32 orderEntity) {
     require(_maxPlayers > 0, "max players must be greater than 0");
-    // @todo: limit title length
 
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
-      uint32 totalRewardCost = _reward * _maxPlayers;
+      // Scale down
+      uint256 totalRewardCost = (_reward / 100) * _maxPlayers;
       require(
         PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost * ONE_TOKEN_UNIT,
         "insufficient funds"
