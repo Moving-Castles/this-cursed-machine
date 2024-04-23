@@ -33,14 +33,14 @@
 
 <svelte:window on:keydown|stopPropagation={cycle} />
 
-<div class="head">
-  <div>
-    {Object.keys($availableOrders).length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
-  </div>
-  <span class="warn">“Accept, ship, repeat”</span>
-</div>
-
 {#if $tutorialProgress > 4}
+  <div class="head">
+    <div>
+      {Object.keys($availableOrders).length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
+    </div>
+    <span class="warn">“Accept, ship, repeat”</span>
+  </div>
+
   <div bind:this={element} class="container">
     <div class="order-list">
       {#each Object.entries($availableOrders) as [key, order], i (key)}
