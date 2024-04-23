@@ -2,6 +2,7 @@ export enum ENVIRONMENT {
     DEVELOPMENT,
     REDSTONE,
     GARNET,
+    GARNET_WALLET,
     RHODOLITE,
     OLD_TESTNET
 }

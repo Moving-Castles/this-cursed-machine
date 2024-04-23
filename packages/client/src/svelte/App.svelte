@@ -54,6 +54,8 @@
     switch (window.location.hostname) {
       case "thiscursedmachine.fun":
         return ENVIRONMENT.REDSTONE
+      case "garnet-wallet.thiscursedmachine.fun":
+        return ENVIRONMENT.GARNET_WALLET
       case "garnet.thiscursedmachine.fun":
         return ENVIRONMENT.GARNET
       case "rhodolite.thiscursedmachine.fun":
