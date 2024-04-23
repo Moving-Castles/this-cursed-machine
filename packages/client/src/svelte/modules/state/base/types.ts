@@ -102,8 +102,8 @@ declare global {
     nonTransferableBalance?: number // During tutorial we give players a non-transferable token substitute
     tokenBalances?: number
     tutorial: boolean,
-    completed?: string[] // Orders completed by player
-    producedMaterials?: MATERIAL_TYPE[]
+    completed: string[] // Orders completed by player
+    producedMaterials: MATERIAL_TYPE[]
   }
 
   type Machine = {

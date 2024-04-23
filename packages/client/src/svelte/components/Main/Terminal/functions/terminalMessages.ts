@@ -10,7 +10,7 @@ async function orderFulfilled() {
 
   await typeWriteToTerminal(
     TERMINAL_OUTPUT_TYPE.SUCCESS,
-    "ORDER FULLFILLED",
+    "ORDER FULFILLED",
     SYMBOLS[7],
     10,
     800
