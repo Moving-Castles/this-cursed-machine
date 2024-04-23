@@ -14,6 +14,7 @@
     "staticPath": "src/public"
   },
   "devDependencies": {
+    "@latticexyz/dev-tools": "2.0.7-main-7183364f",
     "@sveltejs/adapter-auto": "^3.2.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@tsconfig/svelte": "^5.0.4",
@@ -32,7 +33,6 @@
   },
   "dependencies": {
     "@latticexyz/common": "2.0.7-main-7183364f",
-    "@latticexyz/dev-tools": "2.0.7-main-7183364f",
     "@latticexyz/recs": "2.0.7-main-7183364f",
     "@latticexyz/schema-type": "2.0.7-main-7183364f",
     "@latticexyz/services": "2.0.7-main-7183364f",

@@ -24,6 +24,7 @@
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
   import MobileWarning from "@components/Main/MobileWarning.svelte"
+  import { mount } from "@latticexyz/dev-tools"
 
   const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX
@@ -102,6 +103,20 @@
 
     // Signal network
     initSignalNetwork()
+
+    // Devtools
+    mount({
+      config: mudLayer.config,
+      publicClient: mudLayer.publicClient,
+      walletClient: mudLayer.walletClient,
+      latestBlock$: mudLayer.latestBlock$,
+      storedBlockLogs$: mudLayer.storedBlockLogs$,
+      worldAddress: mudLayer.worldAddress,
+      worldAbi: mudLayer.worldContract.abi,
+      write$: mudLayer.write$,
+      // if you're using recs
+      // recsWorld: ,
+    })
   })
 
   // Fade out intro sound when ready
