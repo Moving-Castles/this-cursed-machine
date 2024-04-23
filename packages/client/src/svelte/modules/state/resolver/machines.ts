@@ -15,7 +15,7 @@ export function process(
   inputs: Product[],
   recipes: Recipe[]
 ): Product[] {
-  // console.log('process')
+  console.log('process')
   if (inputs.length === 0) return [EMPTY_PRODUCT]
   if (machineType === MACHINE_TYPE.PLAYER) {
     return defaultMachine(recipes, machineType, inputs)
@@ -114,9 +114,14 @@ function defaultMachine(
   machineType: MACHINE_TYPE,
   inputs: Product[]
 ): Product[] {
+
+  console.log('%c %%%% DEFAULT MACHINE %%%% ', "background: #ffff00; color: #000")
+
   const outputs: Product[] = [EMPTY_PRODUCT, EMPTY_PRODUCT] // Initializing with two distinct empty objects
 
   const input = inputs[0]
+
+  console.log('input', input)
 
   if (!input) return outputs
 
@@ -126,7 +131,7 @@ function defaultMachine(
     inputs[0].materialId
   )
 
-  // console.log("outputMaterials", outputMaterials)
+  console.log("outputMaterials", outputMaterials)
 
   if (outputMaterials[1] === MaterialIdNone) {
     // One output
@@ -167,9 +172,16 @@ function getRecipe(
   machineType: MACHINE_TYPE,
   input: string
 ): MaterialId[] {
-  return (
-    recipes.find(
-      recipe => recipe.machineType === machineType && recipe.input === input
-    )?.outputs || [MaterialIdNone, MaterialIdNone]
-  )
+
+  console.log('recipes', recipes)
+  console.log('machineType', machineType)
+  console.log('input', input)
+
+  const recipe = recipes.find(r => r.machineType === machineType && r.input === input)
+
+  console.log('recipe', recipe)
+
+  if (!recipe) return [MaterialIdNone, MaterialIdNone]
+
+  return recipe.outputs || [MaterialIdNone, MaterialIdNone]
 }

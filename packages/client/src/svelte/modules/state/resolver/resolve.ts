@@ -30,6 +30,9 @@ export function resolve(
   tanks: Tanks,
   recipes: Recipe[]
 ): SimulatedEntities {
+
+  console.log('%c %%%% RESOLE STARTED %%%% ', "background: #00ff00; color: #000")
+
   // Counter for the number of iterations over the network
   let iterationCounter = 0
 
@@ -60,8 +63,18 @@ export function resolve(
 
   // Iterate until all machines in the network are resolved
   while (resolvedNodes.length < Object.keys(machines).length) {
+
+    console.log('%c %%%% TOP OF WHILE %%%% ', "background: #0000ff; color: #000")
+    console.log('_____ while loop interation:', iterationCounter)
+    console.log('_____ resolvedNodes:', resolvedNodes)
+
     // For each machine in the list
     Object.entries(machines).forEach(([machineKey, machine]) => {
+
+      console.log('%c %%%% TOP OF MACHINE FOREACH %%%% ', "background: #ff0000; color: #000")
+      console.log('machineKey', machineKey)
+      console.log('machine', machine)
+
       // Skip if node is already resolved
       if (resolvedNodes.includes(machineKey)) return
 
@@ -72,10 +85,13 @@ export function resolve(
 
         let tank = inletTanks[inletIndex]
 
+        console.log('tank', tank)
+
         // Skip if inlet is not connected to tank
         if (!tank || tank == EMPTY_CONNECTION) return
 
         const newInletActive: boolean[] = [false, false]
+
         // Set active for inlet
         newInletActive[inletIndex] = true
 
@@ -93,7 +109,7 @@ export function resolve(
         input => input.machineId === machineKey
       )
 
-      // console.log('currentInputs', currentInputs)
+      console.log('currentInputs', currentInputs)
 
       // Skip if node has no input
       if (currentInputs.length === 0) return
@@ -110,6 +126,8 @@ export function resolve(
       for (let k = 0; k < currentInputs.length; k++) {
         patchInputs.push(deepClone(currentInputs[k]))
       }
+
+      // console.log('currentInputs', currentInputs)
 
       // Process the inputs of the machine to get the outputs
       const currentOutputs = process(
@@ -142,10 +160,17 @@ export function resolve(
         }
       }
 
+
+      console.log('machine?.outgoingConnections', machine?.outgoingConnections)
+
       // Distribute the machine's outputs to the connected machines.
       for (let k = 0; k < machine?.outgoingConnections.length; k++) {
+
+        console.log('machine?.outgoingConnections?.[k]', machine?.outgoingConnections?.[k])
         // No connection
-        if (machine?.outgoingConnections?.[k] === "0") continue
+        if (machine?.outgoingConnections?.[k] === EMPTY_CONNECTION) continue
+
+        console.log('currentOutputs[k]', currentOutputs[k])
 
         // Fill output
         if (currentOutputs[k]?.materialId !== MaterialIdNone) {
@@ -162,7 +187,10 @@ export function resolve(
     // Increment the counter.
     iterationCounter++
     // Break out of the loop if it seems like an infinite loop is occurring.
-    if (iterationCounter === Object.values(machines).length * 2) break
+    if (iterationCounter === Object.values(machines).length * 2) {
+      console.log("&&&&& Infinite loop detected")
+      break
+    }
   }
 
   /*

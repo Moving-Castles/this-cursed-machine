@@ -1,6 +1,7 @@
 import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 import { Entity } from "@latticexyz/recs"
 import { decodeEntity } from "@latticexyz/store-sync/recs"
+import { MaterialIdNone } from "./constants"
 
 export function filterByEntitytype(
   entities: Entities,
@@ -31,7 +32,7 @@ export function filterByCarriedBy(entities: Entities, id: string): Entities {
 }
 
 export function getRecipes(entities: Entities): Recipe[] {
-  // First filters to entites that has recipe property
+  // First filters to entities that has recipe property
   // Then decodes the composite key to get the machineType and input
   const recipes: Recipe[] = Object.entries(entities)
     .filter(([_, entity]) => entity.hasOwnProperty("recipe"))
@@ -42,8 +43,8 @@ export function getRecipes(entities: Entities): Recipe[] {
       )
       return {
         machineType: parseInt(machineType, 16),
-        input: parseInt(input, 16),
-        outputs: recipe[1].recipe?.outputs ?? [0, 0],
+        input: input,
+        outputs: recipe[1].recipe?.outputs ?? [MaterialIdNone, MaterialIdNone],
       } as Recipe
     })
 
