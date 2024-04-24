@@ -13,6 +13,6 @@ export const startActionTimer = () => {
 export function handleQueuedActionTimeout() {
   toastMessage("Action timed out. Try reloading.", {
     type: "error",
-    disappear: false,
+    disappear: true,
   })
 }

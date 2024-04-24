@@ -16,7 +16,7 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-  import { mount } from "@latticexyz/dev-tools"
+  // import { mount } from "@latticexyz/dev-tools"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -110,18 +110,18 @@
 
     // Devtools
     if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
-      mount({
-        config: mudLayer.config,
-        publicClient: mudLayer.publicClient,
-        walletClient: mudLayer.walletClient,
-        latestBlock$: mudLayer.latestBlock$,
-        storedBlockLogs$: mudLayer.storedBlockLogs$,
-        worldAddress: mudLayer.worldAddress,
-        worldAbi: mudLayer.worldContract.abi,
-        write$: mudLayer.write$,
-        // if you're using recs
-        // recsWorld: ,
-      })
+      // mount({
+      //   config: mudLayer.config,
+      //   publicClient: mudLayer.publicClient,
+      //   walletClient: mudLayer.walletClient,
+      //   latestBlock$: mudLayer.latestBlock$,
+      //   storedBlockLogs$: mudLayer.storedBlockLogs$,
+      //   worldAddress: mudLayer.worldAddress,
+      //   worldAbi: mudLayer.worldContract.abi,
+      //   write$: mudLayer.write$,
+      //   // if you're using recs
+      //   // recsWorld: ,
+      // })
     }
   })
 

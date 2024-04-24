@@ -1,4 +1,4 @@
-import { writable, get } from "svelte/store";
+import { writable, get } from "svelte/store"
 
 export type ToastType = "warning" | "error"
 
@@ -20,7 +20,10 @@ export interface Toast {
 
 export const toasts = writable([] as Toast[])
 
-export function toastMessage(message: string, toastOptions?: { type?: ToastType, disappear?: boolean }) {
+export function toastMessage(
+  message: string,
+  toastOptions?: { type?: ToastType; disappear?: boolean }
+) {
   if (mute.includes(message)) {
     console.warn("This message was muted", message)
     return
@@ -29,7 +32,7 @@ export function toastMessage(message: string, toastOptions?: { type?: ToastType,
     message,
     type: toastOptions?.type || "warning",
     timestamp: performance.now(),
-    disappear: toastOptions?.disappear || true
+    disappear: true,
   }
   toasts.set([...get(toasts), toast])
 }

@@ -74,9 +74,7 @@
   const onKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       // Abort if the order system is busy
-      if (working || unavailable || active) return
-      // Abort if the order is not selected
-      if (!selected) return
+      if (working || unavailable || active || !selected || completed) return
       // Otherwise, accept the order
       sendAccept()
     }
