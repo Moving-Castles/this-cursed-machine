@@ -119,6 +119,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.CONNECT,
       COMMAND.DISCONNECT,
       COMMAND.EMPTY_TANK,
+      COMMAND.SHIP_TANK,
       COMMAND.WIPE_POD,
       COMMAND.HELP,
       COMMAND.GRADUATE,
