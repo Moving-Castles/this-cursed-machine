@@ -21,6 +21,7 @@
       previousValue = $goingUp
       $goingUp = Number(value)
       tweening = true
+      let interval = setInterval(() => playSound("tcm", "bugsUp"), 70)
 
       setTimeout(() => {
         if (previousValue > $goingUp) {
@@ -30,6 +31,8 @@
           emphasis = "emphasis-success"
           playSound("tcm", "bugs")
         }
+
+        clearInterval(interval)
 
         setTimeout(() => {
           emphasis = ""

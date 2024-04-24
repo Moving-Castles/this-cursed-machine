@@ -28,7 +28,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType],
+        MATERIAL_TYPE[$playerOrder?.order?.materialType]
       )
     }
 
@@ -92,6 +92,7 @@
   const close = () => dispatch("end", msg)
 
   onMount(() => {
+    playSound("tcm", "asisstantHit")
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }
