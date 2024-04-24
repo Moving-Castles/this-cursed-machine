@@ -74,6 +74,7 @@
   class:shippable={canShip}
   class:highlight
   class:disabled-highlight={disabledHighlight}
+  class:emphasis={index === 0 && $tutorialProgress === 7}
   class:running={$networkIsRunning && connectedMachine?.productive}
 >
   <div class="tank-progress" style:height="{$progress}%"></div>

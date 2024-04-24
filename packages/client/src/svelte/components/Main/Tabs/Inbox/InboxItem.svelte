@@ -198,7 +198,7 @@
       height: calc(100vh - 360px);
       overflow-y: scroll;
       scroll-behavior: auto;
-      border-bottom: 10px solid white;
+      border-bottom: 1px dashed var(--white);
 
       .message-body {
         padding: 1rem 1rem 3rem;

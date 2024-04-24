@@ -108,7 +108,7 @@
         </div>
         {#key $activeTab}
           <div class="tab-container">
-            {#if $tutorialProgress === 0}
+            {#if $tutorialProgress < 2}
               <div class="dim" out:flicker={{ duration: 500 }} />
             {/if}
             {#if $tutorialProgress > 1}

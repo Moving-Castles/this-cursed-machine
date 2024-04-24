@@ -3,6 +3,7 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
+  import { activeTab } from "@modules/ui/stores"
   import {
     tutorialProgress,
     advanceConditions,
@@ -86,6 +87,7 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
+    $activeTab = 0
     clearTerminalOutput()
   }
 
