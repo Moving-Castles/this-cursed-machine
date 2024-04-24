@@ -191,7 +191,7 @@ export function checkSkipNextOrder() {
   const currentStepIndex = get(tutorialProgress)
   const $advanceConditions = get(advanceConditions)
 
-  const currentStep = $advanceConditions[currentStepIndex]
+  const currentStep = $advanceConditions[currentStepIndex - 1]
 
   if (currentStep.value?.systemId !== "shipTank") {
     for (let i = currentStepIndex; i < $advanceConditions.length; i++) {

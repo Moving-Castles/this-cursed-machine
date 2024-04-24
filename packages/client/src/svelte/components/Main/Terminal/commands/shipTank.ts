@@ -59,10 +59,11 @@ async function execute(tankEntity: string) {
 
     // If the player is in the tutorial and ships, wipe the pod
     if ($player.tutorial) {
+      checkSkipNextOrder()
+
       const anotherAction = sendWipePod()
       await waitForTransaction(anotherAction, loadingSpinner)
       // Now find out if we need to skip the tutorial ahead
-      checkSkipNextOrder()
     }
 
     playSound("tcm", "playerLvlend")

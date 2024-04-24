@@ -486,8 +486,6 @@
     hasFocus = false
   }
 
-  $: console.log(inputActive)
-
   onMount(async () => {
     if (terminalType === TERMINAL_TYPE.FULL) {
       if (!$terminalBooted) {
