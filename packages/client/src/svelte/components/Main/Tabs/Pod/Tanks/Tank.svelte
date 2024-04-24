@@ -5,13 +5,13 @@
   import { playerPod } from "@modules/state/base/stores"
   import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import {
     networkIsRunning,
     shippableTanks,
     simulatedMachines,
   } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
-  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { TANK_CAPACITY } from "@modules/state/simulated/constants"
@@ -33,7 +33,6 @@
   // Narrow the type
   $: typedTank = tank as Tank
 
-  // Tutorial check
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Tank is shippable
