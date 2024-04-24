@@ -39,7 +39,7 @@ contract PostDeploy is Script {
     IERC20Mintable token = registerERC20(
       world,
       "BugToken",
-      ERC20MetadataData({ decimals: 18, name: "TEST_BUGS", symbol: "TEST_BUGS" })
+      ERC20MetadataData({ decimals: 18, name: "Test Bugs", symbol: "TEST_BUGS" })
     );
 
     // Transfer ownership of the token namespace to the world contract

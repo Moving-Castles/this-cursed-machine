@@ -14,35 +14,13 @@ export async function getNetworkConfig(environment: ENVIRONMENT) {
   // Default to local development chain
   let chainId = 31337;
 
-  if (environment === ENVIRONMENT.OLD_TESTNET) {
-    chainId = 4242;
-  } else if (environment === ENVIRONMENT.GARNET) {
+  if ([ENVIRONMENT.GARNET, ENVIRONMENT.GARNET_WALLET].includes(environment)) {
     chainId = 17069
+  } else if ([ENVIRONMENT.REDSTONE, ENVIRONMENT.REDSTONE_TEST].includes(environment)) {
+    chainId = 690
   }
 
   const chain = getChain(chainId);
-
-  // Temporary work around for old testnet
-  if (environment === ENVIRONMENT.OLD_TESTNET) {
-    chain.rpcUrls = {
-      default: {
-        http: [
-          "https://miner.testnet-chain.linfra.xyz"
-        ],
-        webSocket: [
-          "wss://miner.testnet-chain.linfra.xyz"
-        ]
-      },
-      public: {
-        http: [
-          "https://miner.testnet-chain.linfra.xyz"
-        ],
-        webSocket: [
-          "wss://miner.testnet-chain.linfra.xyz"
-        ]
-      }
-    }
-  }
 
   /*
    * Get the address of the World. If you want to use a
