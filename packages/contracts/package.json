@@ -22,7 +22,7 @@
     "----- REDSTONE RHODOLITE -----": "---------------------------",
     "deploy:redstone-rhodolite": "---------------------------",
     "----- REDSTONE MAINNET -----": "---------------------------",
-    "deploy:redstone-mainnet": "---------------------------"
+    "deploy:redstone-mainnet": "DEBUG=mud:* mud deploy --profile=redstone"
   },
   "dependencies": {
     "@latticexyz/cli": "2.0.7-main-7183364f",

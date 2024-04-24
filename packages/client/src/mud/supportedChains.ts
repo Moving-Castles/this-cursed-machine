@@ -10,6 +10,7 @@
  *
  */
 import { MUDChain, latticeTestnet, mudFoundry } from "@latticexyz/common/chains";
+import { redstone } from "./redstoneChain";
 
 type ExtendedChain = MUDChain & {
     indexerUrl?: string;
@@ -52,4 +53,4 @@ export const redstoneGarnet = {
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
-export const supportedChains: ExtendedChain[] = [mudFoundry, latticeTestnet, redstoneGarnet];
+export const supportedChains: ExtendedChain[] = [mudFoundry, latticeTestnet, redstoneGarnet, redstone];
