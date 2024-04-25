@@ -15,13 +15,12 @@ const userTypes = {
 export default defineWorld({
     enums,
     userTypes,
-    // excludeSystems: ["DevSystem"],
     tables: {
         GameConfig: {
             key: [],
             schema: {
                 adminAddress: "address",
-                globalSpawnIndex: "uint32", // Global index for all players
+                globalSpawnIndex: "uint32", // How many players have spawned since the beginning of the world?
                 flowRate: "uint256", // Amount flowing from the inlet
                 tankCapacity: "uint256", // Amount of material that can be stored in a tank
             },
@@ -39,8 +38,8 @@ export default defineWorld({
         },
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
-        ContainedMaterial: "MaterialId",
-        Amount: "uint256",
+        ContainedMaterial: "MaterialId", // Type of material in tank
+        Amount: "uint256", // Amount of material in tank
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in, used for access control
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
@@ -67,19 +66,19 @@ export default defineWorld({
             key: ["key"],
             schema: {
                 key: "bytes32",
-                materialId: "MaterialId",
-                amount: "uint256",
-                cost: "uint256",
+                materialId: "MaterialId", // Type of material offered
+                amount: "uint256", // Amount of material offered
+                cost: "uint256", // Cost of material in $BUGS
             }
         },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
         ProducedMaterials: `${MATERIAL_ID_TYPE}[]`, // List of materials produced by player
         LastResolved: "uint256", // Used to keep track block past since last resolution of pod
-        IncomingConnections: "bytes32[]",
-        OutgoingConnections: "bytes32[]",
-        TankConnection: "bytes32",
-        MachinesInPod: "bytes32[]",
-        TanksInPod: "bytes32[]",
+        IncomingConnections: "bytes32[]", // Incoming connections on a machine
+        OutgoingConnections: "bytes32[]", // Outgoing connections on a machine
+        TankConnection: "bytes32", // Set on tanks and inlets/outlet to connect them
+        MachinesInPod: "bytes32[]", // IDs of machines in pod
+        TanksInPod: "bytes32[]", // IDs of tanks in pod
         FixedEntities: {
             key: ["key"],
             schema: {
@@ -88,7 +87,7 @@ export default defineWorld({
                 inlets: "bytes32[]"
             }
         },
-        CurrentOrder: "bytes32",
+        CurrentOrder: "bytes32", // ID of the order the player has accepted
         Recipe: {
             key: ["machineType", "input"],
             schema: {
@@ -103,16 +102,6 @@ export default defineWorld({
             name: "UniqueEntityModule",
             root: true,
             args: [],
-        },
-        // {
-        //     name: "StandardDelegationsModule",
-        //     root: true,
-        //     args: [],
-        // },
-        // {
-        //     name: "PuppetModule",
-        //     root: false,
-        //     args: []
-        // }
+        }
     ],
 });
