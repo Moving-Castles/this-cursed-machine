@@ -1,2 +1,4 @@
-export const FLOW_RATE = 1000
-export const TANK_CAPACITY = 50000
+import { ONE_UNIT } from "@modules/ui/constants"
+
+export const FLOW_RATE = BigInt(10) * ONE_UNIT
+export const TANK_CAPACITY = BigInt(500) * ONE_UNIT

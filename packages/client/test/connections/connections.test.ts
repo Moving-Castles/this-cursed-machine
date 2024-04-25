@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 import { resolve } from "../../src/svelte/modules/state/resolver/resolve"
 import { calculateSimulatedConnections, applyPatches } from "../../src/svelte/modules/state/simulated/stores"
 import { setUp } from "../resolve/setUp"
+import { MaterialIds } from '../resolve'
 
 
 test("(1) calculateSimulatedConnections", () => {
@@ -39,7 +40,7 @@ test("(1) calculateSimulatedConnections", () => {
             products: [
                 {
                     amount: 1000,
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                 }
             ],
             state: 1,
@@ -56,7 +57,7 @@ test("(1) calculateSimulatedConnections", () => {
             products: [
                 {
                     amount: 500,
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 }
             ],
             state: 1,

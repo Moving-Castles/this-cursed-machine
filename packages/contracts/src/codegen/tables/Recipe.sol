@@ -26,10 +26,10 @@ library Recipe {
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0000000100000000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of (uint8, uint256)
-  Schema constant _keySchema = Schema.wrap(0x00210200001f0000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint8[])
-  Schema constant _valueSchema = Schema.wrap(0x0000000162000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (uint8, bytes32)
+  Schema constant _keySchema = Schema.wrap(0x00210200005f0000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bytes14[])
+  Schema constant _valueSchema = Schema.wrap(0x00000001af000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -67,93 +67,93 @@ library Recipe {
   /**
    * @notice Get outputs.
    */
-  function getOutputs(MACHINE_TYPE machineType, uint256 input) internal view returns (uint8[2] memory outputs) {
+  function getOutputs(MACHINE_TYPE machineType, bytes32 input) internal view returns (bytes14[2] memory outputs) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint8_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return toStaticArray_bytes14_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes14());
   }
 
   /**
    * @notice Get outputs.
    */
-  function _getOutputs(MACHINE_TYPE machineType, uint256 input) internal view returns (uint8[2] memory outputs) {
+  function _getOutputs(MACHINE_TYPE machineType, bytes32 input) internal view returns (bytes14[2] memory outputs) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint8_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return toStaticArray_bytes14_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes14());
   }
 
   /**
    * @notice Get outputs.
    */
-  function get(MACHINE_TYPE machineType, uint256 input) internal view returns (uint8[2] memory outputs) {
+  function get(MACHINE_TYPE machineType, bytes32 input) internal view returns (bytes14[2] memory outputs) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint8_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return toStaticArray_bytes14_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes14());
   }
 
   /**
    * @notice Get outputs.
    */
-  function _get(MACHINE_TYPE machineType, uint256 input) internal view returns (uint8[2] memory outputs) {
+  function _get(MACHINE_TYPE machineType, bytes32 input) internal view returns (bytes14[2] memory outputs) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return toStaticArray_uint8_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    return toStaticArray_bytes14_2(SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes14());
   }
 
   /**
    * @notice Set outputs.
    */
-  function setOutputs(MACHINE_TYPE machineType, uint256 input, uint8[2] memory outputs) internal {
+  function setOutputs(MACHINE_TYPE machineType, bytes32 input, bytes14[2] memory outputs) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint8_2(outputs)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_bytes14_2(outputs)));
   }
 
   /**
    * @notice Set outputs.
    */
-  function _setOutputs(MACHINE_TYPE machineType, uint256 input, uint8[2] memory outputs) internal {
+  function _setOutputs(MACHINE_TYPE machineType, bytes32 input, bytes14[2] memory outputs) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint8_2(outputs)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_bytes14_2(outputs)));
   }
 
   /**
    * @notice Set outputs.
    */
-  function set(MACHINE_TYPE machineType, uint256 input, uint8[2] memory outputs) internal {
+  function set(MACHINE_TYPE machineType, bytes32 input, bytes14[2] memory outputs) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint8_2(outputs)));
+    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_bytes14_2(outputs)));
   }
 
   /**
    * @notice Set outputs.
    */
-  function _set(MACHINE_TYPE machineType, uint256 input, uint8[2] memory outputs) internal {
+  function _set(MACHINE_TYPE machineType, bytes32 input, bytes14[2] memory outputs) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_uint8_2(outputs)));
+    StoreCore.setDynamicField(_tableId, _keyTuple, 0, EncodeArray.encode(fromStaticArray_bytes14_2(outputs)));
   }
 
   // The length of outputs
@@ -166,22 +166,22 @@ library Recipe {
    * @notice Get an item of outputs.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemOutputs(MACHINE_TYPE machineType, uint256 input, uint256 _index) internal view returns (uint8) {
+  function getItemOutputs(MACHINE_TYPE machineType, bytes32 input, uint256 _index) internal view returns (bytes14) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 1;
+    uint256 dynamicLength = _byteLength / 14;
     uint256 staticLength = 2;
 
     if (_index < staticLength && _index >= dynamicLength) {
-      return (uint8(bytes1(new bytes(0))));
+      return (bytes14(new bytes(0)));
     }
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 14, (_index + 1) * 14);
+      return (bytes14(_blob));
     }
   }
 
@@ -189,22 +189,22 @@ library Recipe {
    * @notice Get an item of outputs.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemOutputs(MACHINE_TYPE machineType, uint256 input, uint256 _index) internal view returns (uint8) {
+  function _getItemOutputs(MACHINE_TYPE machineType, bytes32 input, uint256 _index) internal view returns (bytes14) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 1;
+    uint256 dynamicLength = _byteLength / 14;
     uint256 staticLength = 2;
 
     if (_index < staticLength && _index >= dynamicLength) {
-      return (uint8(bytes1(new bytes(0))));
+      return (bytes14(new bytes(0)));
     }
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 14, (_index + 1) * 14);
+      return (bytes14(_blob));
     }
   }
 
@@ -212,22 +212,22 @@ library Recipe {
    * @notice Get an item of outputs.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItem(MACHINE_TYPE machineType, uint256 input, uint256 _index) internal view returns (uint8) {
+  function getItem(MACHINE_TYPE machineType, bytes32 input, uint256 _index) internal view returns (bytes14) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 1;
+    uint256 dynamicLength = _byteLength / 14;
     uint256 staticLength = 2;
 
     if (_index < staticLength && _index >= dynamicLength) {
-      return (uint8(bytes1(new bytes(0))));
+      return (bytes14(new bytes(0)));
     }
 
     unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
+      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 14, (_index + 1) * 14);
+      return (bytes14(_blob));
     }
   }
 
@@ -235,88 +235,88 @@ library Recipe {
    * @notice Get an item of outputs.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItem(MACHINE_TYPE machineType, uint256 input, uint256 _index) internal view returns (uint8) {
+  function _getItem(MACHINE_TYPE machineType, bytes32 input, uint256 _index) internal view returns (bytes14) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    uint256 dynamicLength = _byteLength / 1;
+    uint256 dynamicLength = _byteLength / 14;
     uint256 staticLength = 2;
 
     if (_index < staticLength && _index >= dynamicLength) {
-      return (uint8(bytes1(new bytes(0))));
+      return (bytes14(new bytes(0)));
     }
 
     unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (uint8(bytes1(_blob)));
-    }
-  }
-
-  /**
-   * @notice Update an element of outputs at `_index`.
-   */
-  function updateOutputs(MACHINE_TYPE machineType, uint256 input, uint256 _index, uint8 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
-
-    unchecked {
-      bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 14, (_index + 1) * 14);
+      return (bytes14(_blob));
     }
   }
 
   /**
    * @notice Update an element of outputs at `_index`.
    */
-  function _updateOutputs(MACHINE_TYPE machineType, uint256 input, uint256 _index, uint8 _element) internal {
+  function updateOutputs(MACHINE_TYPE machineType, bytes32 input, uint256 _index, bytes14 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 14), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of outputs at `_index`.
    */
-  function update(MACHINE_TYPE machineType, uint256 input, uint256 _index, uint8 _element) internal {
+  function _updateOutputs(MACHINE_TYPE machineType, bytes32 input, uint256 _index, bytes14 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 14), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Update an element of outputs at `_index`.
    */
-  function _update(MACHINE_TYPE machineType, uint256 input, uint256 _index, uint8 _element) internal {
+  function update(MACHINE_TYPE machineType, bytes32 input, uint256 _index, bytes14 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     unchecked {
       bytes memory _encoded = abi.encodePacked((_element));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
+      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 14), uint40(_encoded.length), _encoded);
+    }
+  }
+
+  /**
+   * @notice Update an element of outputs at `_index`.
+   */
+  function _update(MACHINE_TYPE machineType, bytes32 input, uint256 _index, bytes14 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256(uint8(machineType)));
+    _keyTuple[1] = input;
+
+    unchecked {
+      bytes memory _encoded = abi.encodePacked((_element));
+      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 14), uint40(_encoded.length), _encoded);
     }
   }
 
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(MACHINE_TYPE machineType, uint256 input) internal {
+  function deleteRecord(MACHINE_TYPE machineType, bytes32 input) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -324,10 +324,10 @@ library Recipe {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(MACHINE_TYPE machineType, uint256 input) internal {
+  function _deleteRecord(MACHINE_TYPE machineType, bytes32 input) internal {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -336,10 +336,10 @@ library Recipe {
    * @notice Tightly pack dynamic data lengths using this table's schema.
    * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
    */
-  function encodeLengths(uint8[2] memory outputs) internal pure returns (EncodedLengths _encodedLengths) {
+  function encodeLengths(bytes14[2] memory outputs) internal pure returns (EncodedLengths _encodedLengths) {
     // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
     unchecked {
-      _encodedLengths = EncodedLengthsLib.pack(outputs.length * 1);
+      _encodedLengths = EncodedLengthsLib.pack(outputs.length * 14);
     }
   }
 
@@ -347,8 +347,8 @@ library Recipe {
    * @notice Tightly pack dynamic (variable length) data using this table's schema.
    * @return The dynamic data, encoded into a sequence of bytes.
    */
-  function encodeDynamic(uint8[2] memory outputs) internal pure returns (bytes memory) {
-    return abi.encodePacked(EncodeArray.encode(fromStaticArray_uint8_2(outputs)));
+  function encodeDynamic(bytes14[2] memory outputs) internal pure returns (bytes memory) {
+    return abi.encodePacked(EncodeArray.encode(fromStaticArray_bytes14_2(outputs)));
   }
 
   /**
@@ -357,7 +357,7 @@ library Recipe {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint8[2] memory outputs) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+  function encode(bytes14[2] memory outputs) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData;
     EncodedLengths _encodedLengths = encodeLengths(outputs);
     bytes memory _dynamicData = encodeDynamic(outputs);
@@ -368,10 +368,10 @@ library Recipe {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(MACHINE_TYPE machineType, uint256 input) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(MACHINE_TYPE machineType, bytes32 input) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256(uint8(machineType)));
-    _keyTuple[1] = bytes32(uint256(input));
+    _keyTuple[1] = input;
 
     return _keyTuple;
   }
@@ -386,7 +386,7 @@ library Recipe {
  * @param _value The dynamic array to cast.
  * @return _result The static array.
  */
-function toStaticArray_uint8_2(uint8[] memory _value) pure returns (uint8[2] memory _result) {
+function toStaticArray_bytes14_2(bytes14[] memory _value) pure returns (bytes14[2] memory _result) {
   if (_value.length < 2) {
     // return an uninitialized array if the length is smaller than the fixed length to avoid memory corruption
     return _result;
@@ -405,8 +405,8 @@ function toStaticArray_uint8_2(uint8[] memory _value) pure returns (uint8[2] mem
  * @param _value The static array to copy.
  * @return _result The dynamic array.
  */
-function fromStaticArray_uint8_2(uint8[2] memory _value) pure returns (uint8[] memory _result) {
-  _result = new uint8[](2);
+function fromStaticArray_bytes14_2(bytes14[2] memory _value) pure returns (bytes14[] memory _result) {
+  _result = new bytes14[](2);
   uint256 fromPointer;
   uint256 toPointer;
   assembly {

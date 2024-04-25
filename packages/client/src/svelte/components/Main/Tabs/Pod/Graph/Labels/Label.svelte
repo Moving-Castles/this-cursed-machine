@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { hexToString } from "viem"
+  import { materialMetadata } from "@svelte/modules/state/base/stores"
   import type { GraphConnection } from "../types"
   // import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
   import { CELL } from "../constants"
-  import { MATERIAL_TYPE } from "contracts/enums"
   // import { onDestroy } from "svelte"
   // import { bounceInOut as easing } from "svelte/easing"
   // import { tweened } from "svelte/motion"
   import { getLongestSection } from "../Connections/svg"
+  import { displayAmount } from "@modules/utils"
 
   export let connection: GraphConnection
   export let hover: boolean
@@ -27,8 +29,8 @@
   let dir = 0
   let direction = ""
 
-  $: material = MATERIAL_TYPE[connection?.products?.[0]?.materialType]
-  $: amount = connection?.products?.[0]?.amount / 100
+  $: material = $materialMetadata[connection?.products?.[0]?.materialId]?.name
+  $: amount = displayAmount(connection?.products?.[0]?.amount)
 
   $: {
     if (material && amount && direction) {

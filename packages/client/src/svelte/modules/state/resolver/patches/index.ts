@@ -87,7 +87,7 @@ export function createOutletTankPatches(
         {
           machineId: outletTank,
           sourceMachineId: outletOutput[0].machineId,
-          materialType: outletOutput[0].materialType,
+          materialId: outletOutput[0].materialId,
           amount: outletOutput[0].amount,
           inletActive: outletOutput[0].inletActive,
         },
@@ -126,7 +126,7 @@ export function createInletTankPatches(
         {
           machineId: tankId,
           sourceMachineId: null,
-          materialType: inletInputs[i].materialType,
+          materialId: inletInputs[i].materialId,
           amount: inletInputs[i].amount,
           inletActive: inletInputs[i].inletActive,
         },

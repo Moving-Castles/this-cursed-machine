@@ -4,8 +4,8 @@ import { console } from "forge-std/console.sol";
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, PORT_INDEX, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
-import { FLOW_RATE, ONE_MINUTE, ONE_HOUR } from "../../../src/constants.sol";
+import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
+import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_UNIT } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -33,6 +33,28 @@ contract OrderSystemTest is BaseTest {
     playerEntity = world.spawn("alice");
     world.start();
 
+    vm.stopPrank();
+
+    // Set pod variables for this player
+    usePlayerEntity(alice);
+  }
+
+  function spawnBob() internal {
+    vm.startPrank(bob);
+
+    // Spawn player
+    playerEntity = world.spawn("bob");
+    world.start();
+
+    vm.stopPrank();
+
+    // Set pod variables for this player
+    usePlayerEntity(bob);
+  }
+
+  function usePlayerEntity(address _playerAddress) internal {
+    playerEntity = LibUtils.addressToEntityKey(_playerAddress);
+
     podEntity = CarriedBy.get(playerEntity);
 
     inletEntities = FixedEntities.get(podEntity).inlets;
@@ -41,55 +63,96 @@ contract OrderSystemTest is BaseTest {
     tanksInPod = TanksInPod.get(podEntity);
 
     fixedEntities = FixedEntities.get(podEntity);
-
-    vm.stopPrank();
   }
 
   function testCreateOrderAsAdmin() public {
-    setUp();
-
     prankAdmin();
     // Create order
     startGasReport("Create order as admin");
-    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     endGasReport();
 
     vm.stopPrank();
   }
 
-  function testRevertCreateOrderAsNormalUser() public {
-    setUp();
+  function testCreateOrderAsUser() public {
+    /*//////////////////////////////////////////////////////////////
+                         BOB CREATES ORDER
+    //////////////////////////////////////////////////////////////*/
+    spawnBob();
+    vm.startPrank(bob);
 
-    vm.startPrank(alice);
-
+    // Get bug tokens
     world.reward();
 
     // Create order
-    startGasReport("Create order as normal user");
-    world.createOrder("Test order", MATERIAL_TYPE.BLOOD_MEAL, 100000, 100, ONE_HOUR, 1);
+    startGasReport("Create order as user");
+    bytes32 testOrder = world.createOrder("Test order", PublicMaterials.PISS, 50, 50, ONE_HOUR, 1);
     endGasReport();
 
+    OrderData memory orderData = Order.get(testOrder);
+
+    assertEq(orderData.creator, bob);
+
     vm.stopPrank();
+
+    /*//////////////////////////////////////////////////////////////
+                        ALICE FULLFILLS ORDER
+    //////////////////////////////////////////////////////////////*/
+
+    usePlayerEntity(alice);
+    vm.startPrank(alice);
+
+    world.graduate();
+
+    // Accept test order
+    world.acceptOrder(testOrder);
+
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+
+    // Connect tank 0 to inlet
+    world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
+
+    // Connect tank 1 to outlet
+    world.plugTank(tanksInPod[1], fixedEntities.outlet);
+
+    // Connect inlet to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (piss) to outlet
+    world.connect(playerEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Wait
+    uint32 blocksToWait = 20;
+    vm.roll(block.number + blocksToWait);
+
+    // Unplug & Ship
+    world.unplugTank(tanksInPod[1]);
+    world.shipTank(tanksInPod[1]);
+
+    vm.stopPrank();
+
+    // Alice got 10000 BUG tokens for graduating + 50 BUG tokens for completing the order
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10050 * ONE_UNIT);
+    // Bob got 50 PISS tokens for creating the order
+    assertEq(PublicMaterials.PISS.getTokenBalance(bob), 50 * ONE_UNIT);
   }
 
   function testRevertCreateOrderInsufficientFunds() public {
-    setUp();
-
     vm.startPrank(alice);
 
     // Create order
     vm.expectRevert("insufficient funds");
-    world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
 
     vm.stopPrank();
   }
 
   function testRevertMaxPlayersReached() public {
-    setUp();
-
     // Create order
     prankAdmin();
-    bytes32 order = world.createOrder("", MATERIAL_TYPE.NONE, 0, 1000, ONE_HOUR, 1);
+    bytes32 order = world.createOrder("", PublicMaterials.BLOOD_MEAL, 0, 100, ONE_HOUR, 1);
+    ContainedMaterial.set(tanksInPod[1], PublicMaterials.BLOOD_MEAL);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -112,11 +175,9 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testRevertPlayerInTutorial() public {
-    setUp();
-
     prankAdmin();
     // Create order
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 1000, 0, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -128,11 +189,9 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testAcceptAndUnacceptOrder() public {
-    setUp();
-
     // Create order
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -156,10 +215,8 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testShip() public {
-    setUp();
-
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BLOOD, 2000, 1000, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD, 20, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -168,7 +225,7 @@ contract OrderSystemTest is BaseTest {
 
     world.acceptOrder(orderEntity);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -201,10 +258,8 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testRevertShipOrderExpired() public {
-    setUp();
-
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -223,10 +278,8 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testRevertAcceptOrderExpired() public {
-    setUp();
-
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -243,10 +296,8 @@ contract OrderSystemTest is BaseTest {
   }
 
   function testRevertOrderAlreadyCompleted() public {
-    setUp();
-
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", MATERIAL_TYPE.BUG, 1000, 0, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -254,7 +305,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
     world.acceptOrder(orderEntity);
 

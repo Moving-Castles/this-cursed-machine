@@ -1,6 +1,13 @@
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "./enums"
+import { Hex } from "viem";
+import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 
 declare global {
+  // * * * * * * * * * * * * * * * * *
+  // MATERIAL ID
+  // * * * * * * * * * * * * * * * * *
+
+  type MaterialId = Hex;
+
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPE
   // * * * * * * * * * * * * * * * * *
@@ -10,8 +17,8 @@ declare global {
     gameConfig?: GameConfig
     entityType?: ENTITY_TYPE
     machineType?: MACHINE_TYPE
-    materialType?: MATERIAL_TYPE
-    amount?: number
+    materialId?: MaterialId
+    amount?: bigint
     name?: string
     carriedBy?: string
     buildIndex?: number
@@ -19,14 +26,12 @@ declare global {
     spawnIndex?: number
     tutorial?: boolean
     tutorialLevel?: number
-    nonTransferableBalance?: number
+    nonTransferableBalance?: bigint
     order?: OrderData
     offer?: OfferData
     completed?: string[]
-    producedMaterials?: MATERIAL_TYPE[]
-    lastResolved?: number
-    input?: number
-    output?: MATERIAL_TYPE
+    producedMaterials?: MaterialId[]
+    lastResolved?: bigint
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
     tankConnection?: string
@@ -34,7 +39,7 @@ declare global {
     tanksInPod?: string[]
     fixedEntities?: FixedEntities
     currentOrder?: string
-    tokenBalances?: number
+    tokenBalances?: bigint
     recipe?: {
       outputs: number[]
     }
@@ -53,26 +58,24 @@ declare global {
     creator: string
     title: string
     expirationBlock: number
-    materialType: MATERIAL_TYPE
-    amount: number
-    reward: number
+    materialId: MaterialId
+    amount: bigint
+    reward: bigint
     maxPlayers: number
   }
 
   type OfferData = {
     creationBlock: number
-    materialType: MATERIAL_TYPE
-    amount: number
-    cost: number
+    materialId: MaterialId
+    amount: bigint
+    cost: bigint
   }
 
   type GameConfig = {
     adminAddress: string,
-    tokenAddress: string,
     globalSpawnIndex: number,
-    scaleDown: number,
-    flowRate: number,
-    tankCapacity: number,
+    flowRate: bigint
+    tankCapacity: bigint
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -81,7 +84,7 @@ declare global {
 
   type Pod = {
     entityType: ENTITY_TYPE.POD
-    lastResolved: number
+    lastResolved: bigint
     machinesInPod: string[]
     tanksInPod: string[]
     buildTracker: number[]
@@ -99,11 +102,11 @@ declare global {
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
-    nonTransferableBalance?: number // During tutorial we give players a non-transferable token substitute
-    tokenBalances?: number
+    nonTransferableBalance?: bigint // During tutorial we give players a non-transferable token substitute
+    tokenBalances?: bigint
     tutorial: boolean,
-    completed: string[] // Orders completed by player
-    producedMaterials: MATERIAL_TYPE[]
+    completed?: string[] // Orders completed by player
+    producedMaterials?: MaterialId[]
   }
 
   type Machine = {
@@ -119,8 +122,8 @@ declare global {
   type Tank = {
     entityType: ENTITY_TYPE.TANK,
     carriedBy: string
-    amount: number
-    materialType: MATERIAL_TYPE
+    amount: bigint
+    materialId: MaterialId
     buildIndex: number
     tankConnection: string
   }
@@ -140,8 +143,14 @@ declare global {
 
   type Recipe = {
     machineType: number
-    input: number
-    outputs: number[]
+    input: string
+    outputs: MaterialId[]
+  }
+
+  type MaterialMetadata = {
+    materialId: MaterialId
+    tokenAddress: string
+    name: string
   }
 
   // * * * * * * * * * * * * * * * * *

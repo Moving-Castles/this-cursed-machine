@@ -1,4 +1,3 @@
-import { MATERIAL_TYPE } from "contracts/enums"
 import { Product } from "../resolver/patches/types"
 import { GRAPH_ENTITY_STATE } from "./enums"
 
@@ -15,8 +14,8 @@ type Patches = {
 type GraphEntityState = {
   state: GRAPH_ENTITY_STATE
   products: {
-    materialType: MATERIAL_TYPE
-    amount: number
+    materialId: MaterialId
+    amount: bigint
   }[]
 }
 

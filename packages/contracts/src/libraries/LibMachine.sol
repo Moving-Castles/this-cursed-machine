@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
-import { MachineType, MaterialType, Recipe } from "../codegen/index.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../codegen/common.sol";
-import { LibUtils } from "./LibUtils.sol";
+import { MachineType, Recipe } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { LibMaterial, MaterialId } from "./LibMaterial.sol";
 import { Product } from "../structs.sol";
 
 library LibMachine {
@@ -44,14 +44,14 @@ library LibMachine {
     // Output 1
     outputs[0] = Product({
       machineId: _input.machineId,
-      materialType: _input.materialType,
+      materialId: _input.materialId,
       amount: _input.amount / 2,
       inletActive: _input.inletActive
     });
     // Output 2
     outputs[1] = Product({
       machineId: _input.machineId,
-      materialType: _input.materialType,
+      materialId: _input.materialId,
       amount: _input.amount / 2,
       inletActive: _input.inletActive
     });
@@ -72,9 +72,9 @@ library LibMachine {
       return outputs;
     }
 
-    uint8[2] memory resultMaterials = Recipe.get(
+    bytes14[2] memory resultMaterials = Recipe.get(
       MACHINE_TYPE.MIXER,
-      LibUtils.getUniqueIdentifier(uint8(_inputs[0].materialType), uint8(_inputs[1].materialType))
+      LibMaterial.getMaterialCombinationId(_inputs[0].materialId, _inputs[1].materialId)
     );
 
     // Return the lowest amount
@@ -89,7 +89,7 @@ library LibMachine {
 
     outputs[0] = Product({
       machineId: _inputs[0].machineId,
-      materialType: uintToMaterialTypeEnum(resultMaterials[0]),
+      materialId: MaterialId.wrap(resultMaterials[0]),
       amount: lowestAmountProduct.amount,
       inletActive: combinedInletActive
     });
@@ -106,9 +106,9 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product memory _input
   ) internal view returns (Product[] memory _outputs) {
-    uint8[2] memory resultMaterials = Recipe.get(_machineType, uint256(_input.materialType));
+    bytes14[2] memory resultMaterials = Recipe.get(_machineType, _input.materialId.getMaterialCombinationId());
 
-    if (resultMaterials[1] == uint8(MATERIAL_TYPE.NONE)) {
+    if (!MaterialId.wrap(resultMaterials[1]).isRegistered()) {
       // One output
 
       Product[] memory outputs = new Product[](1);
@@ -116,7 +116,7 @@ library LibMachine {
       // Output 1
       outputs[0] = Product({
         machineId: _input.machineId,
-        materialType: uintToMaterialTypeEnum(resultMaterials[0]),
+        materialId: MaterialId.wrap(resultMaterials[0]),
         amount: _input.amount,
         inletActive: _input.inletActive
       });
@@ -130,7 +130,7 @@ library LibMachine {
       // Output 1
       outputs[0] = Product({
         machineId: _input.machineId,
-        materialType: uintToMaterialTypeEnum(resultMaterials[0]),
+        materialId: MaterialId.wrap(resultMaterials[0]),
         amount: _input.amount / 2,
         inletActive: _input.inletActive
       });
@@ -138,7 +138,7 @@ library LibMachine {
       // Output 2
       outputs[1] = Product({
         machineId: _input.machineId,
-        materialType: uintToMaterialTypeEnum(resultMaterials[1]),
+        materialId: MaterialId.wrap(resultMaterials[1]),
         amount: _input.amount / 2,
         inletActive: _input.inletActive
       });
@@ -152,10 +152,5 @@ library LibMachine {
     Product memory _B
   ) internal pure returns (Product memory _lowestAmountProduct) {
     return _A.amount < _B.amount ? _A : _B;
-  }
-
-  function uintToMaterialTypeEnum(uint8 _num) public pure returns (MATERIAL_TYPE) {
-    require(_num <= uint(MATERIAL_TYPE.END), "Integer out of enum range");
-    return MATERIAL_TYPE(_num);
   }
 }
