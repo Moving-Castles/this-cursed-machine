@@ -27,7 +27,7 @@ async function execute(offerEntity: string) {
     // playSound("tcm", "TRX_yes")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
-    playSound("tcm", "bugs")
+    // playSound("tcm", "bugs")
     return
   } catch (error) {
     console.error(error)
