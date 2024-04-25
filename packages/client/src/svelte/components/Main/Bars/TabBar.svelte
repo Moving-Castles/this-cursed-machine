@@ -47,22 +47,25 @@
 {#if $tutorialProgress > 1}
   <div tabindex="-1" class="tab-bar">
     {#each Object.entries(tabList) as [key, value] (`${key}-${$tutorialProgress}`)}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <div
         class="button-container"
         tabindex={key}
         on:click={() => {
-          activeTab.set(key)
-          playSound("tcm", "selectionEnter")
+          if ($tutorialProgress > HIDDEN_CONDITIONS[key]) {
+            activeTab.set(key)
+            playSound("tcm", "selectionEnter")
+          }
         }}
       >
         <div
           class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
+          class:pulse={PULSE_CONDITIONS[key].includes($tutorialProgress)}
           class:enabled={value.enabled}
           class:active={Number(key) === Number($activeTab)}
-          class:pulse={PULSE_CONDITIONS[Number(key)].includes(
-            $tutorialProgress
-          )}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
         >
           {value.label}
@@ -94,6 +97,10 @@
         pointer-events: none;
         user-select: none;
         text-align: center;
+
+        &.pulse {
+          color: var(--background) !important;
+        }
 
         &:last-child {
           border-right: 1px solid var(--color-grey-dark);

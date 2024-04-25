@@ -7,7 +7,6 @@
 <div
   class="tanks-box"
   class:hidden={$tutorialProgress < 1}
-  class:emphasis={$tutorialProgress === 7}
 >
   <!-- <div class="">shipping</div> -->
   {#if $simulatedTanks}

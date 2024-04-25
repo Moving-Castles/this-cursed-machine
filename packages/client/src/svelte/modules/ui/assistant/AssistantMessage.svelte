@@ -3,10 +3,11 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
+  import { activeTab } from "@modules/ui/stores"
   import {
     tutorialProgress,
-    completedSteps,
     advanceConditions,
+    tutorialCompleted,
   } from "@modules/ui/assistant"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
@@ -49,7 +50,8 @@
         plugTank: "plug",
         connect: "connect",
         buyOffer: "fill",
-        buildMAchine: "build",
+        buildMachine: "build",
+        build: "build",
       }
 
       const cmd = reverseMappings[condition.value.systemId]
@@ -83,13 +85,15 @@
     playSound("tcm", "TRX_yes")
     working = false
     tutorialProgress.set(0)
-    completedSteps.set([])
+    tutorialCompleted.set([])
+    $activeTab = 0
     clearTerminalOutput()
   }
 
   const close = () => dispatch("end", msg)
 
   onMount(() => {
+    playSound("tcm", "asisstantHit")
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }
@@ -109,14 +113,16 @@
   <div class="text">
     {@html message}
   </div>
-  <div class="restart">
-    {#if !confirming}
-      <button on:click={startConfirm}>Start over</button>
-    {:else}
-      <button on:click={sendStart}>I want to restart</button>
-      <button on:click={() => (confirming = false)}>x</button>
-    {/if}
-  </div>
+  {#if !working}
+    <div class="restart">
+      {#if !confirming}
+        <button on:click={startConfirm}>Restart employee training</button>
+      {:else}
+        <button on:click={sendStart}>I want to restart</button>
+        <button on:click={() => (confirming = false)}>x</button>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

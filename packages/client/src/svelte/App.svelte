@@ -16,6 +16,7 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
+  // import { mount } from "@latticexyz/dev-tools"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -50,6 +51,10 @@
     switch (window.location.hostname) {
       case "thiscursedmachine.fun":
         return ENVIRONMENT.REDSTONE
+      case "redstone-test.thiscursedmachine.fun":
+        return ENVIRONMENT.REDSTONE_TEST
+      case "garnet-wallet.thiscursedmachine.fun":
+        return ENVIRONMENT.GARNET_WALLET
       case "garnet.thiscursedmachine.fun":
         return ENVIRONMENT.GARNET
       case "rhodolite.thiscursedmachine.fun":
@@ -102,6 +107,22 @@
 
     // Signal network
     initSignalNetwork()
+
+    // Devtools
+    if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
+      // mount({
+      //   config: mudLayer.config,
+      //   publicClient: mudLayer.publicClient,
+      //   walletClient: mudLayer.walletClient,
+      //   latestBlock$: mudLayer.latestBlock$,
+      //   storedBlockLogs$: mudLayer.storedBlockLogs$,
+      //   worldAddress: mudLayer.worldAddress,
+      //   worldAbi: mudLayer.worldContract.abi,
+      //   write$: mudLayer.write$,
+      //   // if you're using recs
+      //   // recsWorld: ,
+      // })
+    }
   })
 
   // Fade out intro sound when ready

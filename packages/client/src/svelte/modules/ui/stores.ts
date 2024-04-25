@@ -27,4 +27,5 @@ export const selectedParameters: Writable<
 export const selectedOption: Writable<SelectOption | false> = writable(false)
 export const graphElement: Writable<SVGElement> = writable()
 export const thud = writable(false)
-export const working = writable(false)
+export const orderAcceptInProgress = writable("0x0")
+export const terminalBooted = writable(false)

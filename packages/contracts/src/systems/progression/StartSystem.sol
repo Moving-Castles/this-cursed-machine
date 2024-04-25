@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, TanksInPod, Amount, Tutorial, BuildIndex, BuildTracker, TankConnection, NonTransferableBalance } from "../../codegen/index.sol";
+import { TutorialLevel, CarriedBy, EntityType, MachinesInPod, FixedEntities, FixedEntitiesData, TanksInPod, Amount, Tutorial, BuildIndex, BuildTracker, TankConnection, NonTransferableBalance, CurrentOrder, ProducedMaterials, Completed, IncomingConnections, OutgoingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibPod, LibEntity, LibTank } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TANKS } from "../../constants.sol";
@@ -61,6 +61,15 @@ contract StartSystem is System {
     // Go to first tutorial level
     TutorialLevel.set(playerEntity, 0);
     Tutorial.set(playerEntity, true);
+
+    // Reset player
+    CurrentOrder.set(playerEntity, bytes32(0));
+    ProducedMaterials.set(playerEntity, new bytes14[](0));
+    Completed.set(playerEntity, new bytes32[](0));
+
+    // Reset player connections
+    IncomingConnections.set(playerEntity, new bytes32[](1));
+    OutgoingConnections.set(playerEntity, new bytes32[](2));
 
     // We give the player some non-transferable tokens to start with
     NonTransferableBalance.set(playerEntity, 500);

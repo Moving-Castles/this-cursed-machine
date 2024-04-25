@@ -27,15 +27,10 @@
     {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber),
         )}
       </div>
     {/if}
-  </div>
-
-  <div class="completed-orders">
-    <span class="inverted">COMPLETED:</span>
-    {$player.completed?.length ?? 0}
   </div>
 </div>
 

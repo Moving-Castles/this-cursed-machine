@@ -71,16 +71,6 @@
     if ($tutorialProgress === 1) playSound("tcm", "mapPop")
   }
 
-  // $: {
-  //   if ($tutorialProgress == FINAL_TUTORIAL_LEVEL) {
-  //     clearMessage()
-  //     sendMessage(
-  //       "You're with your kind now. I will come back when we have more work for you. Don't go anywhere",
-  //       { disappear: true },
-  //     )
-  //   }
-  // }
-
   onMount(() => {
     playSound("tcm", "podBg", true, false)
   })
@@ -99,7 +89,7 @@
         {/if}
       </div>
       <div class="terminal">
-        {#if $tutorialProgress > 0}
+        {#if ($activeTab == 0 && $tutorialProgress != 0) || ($tutorialProgress < 5 && $tutorialProgress > 0)}
           <Terminal
             bind:this={terminalComponent}
             on:commandExecuted={() => handleCommand()}
@@ -118,7 +108,7 @@
         </div>
         {#key $activeTab}
           <div class="tab-container">
-            {#if $tutorialProgress === 0}
+            {#if $tutorialProgress < 2}
               <div class="dim" out:flicker={{ duration: 500 }} />
             {/if}
             {#if $tutorialProgress > 1}

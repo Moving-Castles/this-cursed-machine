@@ -24,10 +24,6 @@ contract SpawnSystem is System {
     GameConfig.setGlobalSpawnIndex(newSpawnIndex);
     SpawnIndex.set(playerEntity, newSpawnIndex);
 
-    // Player has 1 input and 2 outputs
-    IncomingConnections.set(playerEntity, new bytes32[](1));
-    OutgoingConnections.set(playerEntity, new bytes32[](2));
-
     return playerEntity;
   }
 }

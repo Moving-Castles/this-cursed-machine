@@ -7,6 +7,7 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { PLACEMENT_GROUP } from "../enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
   import {
     inspecting,
     selectedOption,
@@ -105,7 +106,9 @@
 <!-- svelte-ignore a11y-interactive-supports-focus -->
 <div
   id="machine-{address}"
-  class="machine {MACHINE_TYPE[machine.machineType]}"
+  class="machine run-potential {MACHINE_TYPE[machine.machineType]} {$networkIsRunning && machine.productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:highlight
   class:disabled-highlight={disabledHighlight}

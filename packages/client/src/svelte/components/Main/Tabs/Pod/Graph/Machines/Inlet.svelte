@@ -6,13 +6,14 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   import { selectedOption } from "@modules/ui/stores"
+  import { networkIsRunning } from "@modules/state/simulated/stores"
 
   export let address: string
   export let machine: GraphMachine
 
   $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
-  // $: label = `I${machine.buildIndex ?? ""}`
   $: label = "→"
+  $: outerLabel = `INLET ${machine.buildIndex ?? ""}`
   $: connected = machine.tankConnection !== EMPTY_CONNECTION
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
@@ -31,16 +32,22 @@
 
 <div
   id="machine-{address}"
-  class="inlet"
+  class="inlet run-potential {$networkIsRunning && machine.productive
+    ? `running-${Math.floor(Math.random() * 3) + 1}`
+    : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
   class:disabled-highlight={disabledHighlight}
   class:highlight
-  class:productive={machine.productive}
+  class:productive={machine.productive && machine.productive}
   in:fade
   class:connected
   {style}
 >
   <div class="inner-container">
+    <div class="outer-label">
+      {outerLabel}
+    </div>
+
     <div class="label">{label}</div>
     {#each ports as port}
       <div
@@ -66,11 +73,12 @@
     // font-feature-settings: "ss02" 1;
 
     &.connected {
-      background: var(--color-success);
+      background: var(--white);
       color: var(--background);
 
       &.productive {
-        background: var(--white);
+        background: var(--color-success);
+        color: var(--background);
       }
     }
 
@@ -85,6 +93,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .outer-label {
+        position: absolute;
+        left: 0;
+        background: var(--foreground);
+        color: var(--background);
+        white-space: nowrap;
+        letter-spacing: -1px;
+        padding: 2px;
+        font-size: var(--font-size-small);
+        top: 0;
+        transform: translateX(-20px) translateY(-5px);
+      }
 
       .port {
         position: absolute;

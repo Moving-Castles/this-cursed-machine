@@ -20,7 +20,5 @@ contract SpawnSystemTest is BaseTest {
     assertEq(uint8(MachineType.get(playerEntity)), uint8(MACHINE_TYPE.PLAYER));
     assertEq(TutorialLevel.get(playerEntity), 0);
     assertEq(SpawnIndex.get(playerEntity), 1);
-    assertEq(IncomingConnections.get(playerEntity).length, 1);
-    assertEq(OutgoingConnections.get(playerEntity).length, 2);
   }
 }

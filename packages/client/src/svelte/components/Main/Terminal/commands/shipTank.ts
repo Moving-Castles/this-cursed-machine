@@ -1,4 +1,5 @@
 import type { Command } from "@components/Main/Terminal/types"
+import { checkSkipNextOrder } from "@modules/ui/assistant"
 import { get } from "svelte/store"
 import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
 import { parseError } from "@components/Main/Terminal/functions/errors"
@@ -19,10 +20,7 @@ import {
 import { player } from "@modules/state/base/stores"
 import { playSound } from "@modules/sound"
 import { terminalMessages } from "../functions/terminalMessages"
-import {
-  simulatedTanks,
-  shippableTanks,
-} from "@modules/state/simulated/stores"
+import { simulatedTanks, shippableTanks } from "@modules/state/simulated/stores"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 
 async function execute(tankEntity: string) {
@@ -61,8 +59,11 @@ async function execute(tankEntity: string) {
 
     // If the player is in the tutorial and ships, wipe the pod
     if ($player.tutorial) {
+      checkSkipNextOrder()
+
       const anotherAction = sendWipePod()
       await waitForTransaction(anotherAction, loadingSpinner)
+      // Now find out if we need to skip the tutorial ahead
     }
 
     playSound("tcm", "playerLvlend")

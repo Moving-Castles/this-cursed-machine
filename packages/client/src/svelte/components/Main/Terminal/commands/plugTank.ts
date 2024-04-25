@@ -22,7 +22,7 @@ async function execute(tankEntity: string, targetEntity: string) {
     // ...
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Plugging in...")
     await waitForCompletion(action, loadingLine)
-    playSound("tcm", "selectionEsc2")
+    playSound("tcm", "plugTank")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return
@@ -34,8 +34,7 @@ async function execute(tankEntity: string, targetEntity: string) {
   }
 }
 
-export const plugTank: Command<[tankEntity: string, targetEntity: string]> =
-{
+export const plugTank: Command<[tankEntity: string, targetEntity: string]> = {
   id: COMMAND.PLUG_TANK,
   public: true,
   name: "plug",

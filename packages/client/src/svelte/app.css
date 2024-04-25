@@ -98,23 +98,62 @@ pre {
   animation: filterdisabledin 0.1s ease forwards;
 }
 
-@keyframes filterin {
-  0% {
-    filter: contrast(100%) grayscale(0%) brightness(100%);
-  }
-  100% {
-    filter: contrast(50%) grayscale(100%) brightness(130%)
-      drop-shadow(0px 0px 2px var(--white)) contrast(300%);
-  }
+.running-1 {
+  animation: run 0.1s ease infinite alternate;
 }
 
-@keyframes filterdisabledin {
+.running-2 {
+  animation: run 0.3s ease infinite alternate;
+}
+
+.running-3 {
+  animation: run 0.5 ease infinite alternate;
+}
+
+@keyframes run {
   0% {
-    filter: contrast(100%) grayscale(0%) brightness(100%);
+    filter: blur(0px);
+    translate: 0px 0px;
+  }
+  10% {
+    filter: blur(0.2px);
+    transform: translate(1px, 1px);
+  }
+  20% {
+    filter: blur(0.4px);
+    transform: translate(-1px, -1px);
+  }
+  30% {
+    filter: blur(0.6px);
+    transform: translate(1px, -1px);
+  }
+  40% {
+    filter: blur(0.8px);
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    filter: blur(1px);
+    transform: translate(0px, 0px);
+  }
+  60% {
+    filter: blur(1.2px);
+    transform: translate(1px, -1px);
+  }
+  70% {
+    filter: blur(1.4px);
+    transform: translate(-1px, 1px);
+  }
+  80% {
+    filter: blur(1.6px);
+    transform: translate(1px, 1px);
+  }
+  90% {
+    filter: blur(1.8px);
+    transform: translate(-1px, -1px);
   }
   100% {
-    filter: contrast(50%) grayscale(100%) brightness(70%)
-      drop-shadow(0px 0px 2px var(--black));
+    filter: blur(2px);
+    translate: 0px 0px;
   }
 }
 
@@ -145,42 +184,6 @@ pre {
 
 .thud {
   animation: thud 700ms steps(10, end) 1;
-}
-
-@keyframes thud {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    filter: blur(0px);
-  }
-
-  55% {
-    transform: translateY(1px);
-    /* filter: blur(2px); */
-  }
-
-  60% {
-    transform: translateY(0px);
-  }
-
-  85% {
-    filter: blur(0px);
-  }
-}
-
-@keyframes strobe {
-  50% {
-    opacity: 0;
-  }
-}
-
-@keyframes strobe-slow {
-  20% {
-    opacity: 0;
-  }
 }
 
 body,
@@ -272,27 +275,9 @@ pre {
   animation: pulse-opacity 0.8s infinite alternate ease-out;
 }
 
-@keyframes pulse {
-  0% {
-    background: var(--color-grey-mid);
-  }
-  100% {
-    background: var(--color-tutorial);
-  }
-}
-
-@keyframes pulse-opacity {
-  0% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .command {
   background-color: var(--color-tutorial) !important;
-  color: black;
+  color: var(--background);
   padding: 2px 0 0;
   margin-top: -2px;
   display: inline-block;
@@ -307,6 +292,41 @@ pre {
 }
 .emphasis-failure {
   animation: emphasis-failure 1s steps(1) 3;
+}
+
+/** Bunch of animations :) */
+
+@keyframes running {
+  0%,
+  100% {
+    opacity: 0;
+    /* filter: blur(0px); */
+  }
+
+  50% {
+    opacity: 1;
+    /* filter: blur(20px); */
+  }
+}
+
+@keyframes filterin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(130%)
+      drop-shadow(0px 0px 2px var(--white)) contrast(300%);
+  }
+}
+
+@keyframes filterdisabledin {
+  0% {
+    filter: contrast(100%) grayscale(0%) brightness(100%);
+  }
+  100% {
+    filter: contrast(50%) grayscale(100%) brightness(70%)
+      drop-shadow(0px 0px 2px var(--black));
+  }
 }
 
 @keyframes emphasis {
@@ -341,5 +361,58 @@ pre {
   50% {
     background: transparent;
     color: var(--white);
+  }
+}
+@keyframes pulse {
+  0% {
+    background: var(--color-grey-mid);
+  }
+  100% {
+    background: var(--color-tutorial);
+  }
+}
+
+@keyframes pulse-opacity {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes thud {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    filter: blur(0px);
+  }
+
+  55% {
+    transform: translateY(1px);
+    /* filter: blur(2px); */
+  }
+
+  60% {
+    transform: translateY(0px);
+  }
+
+  85% {
+    filter: blur(0px);
+  }
+}
+
+@keyframes strobe {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes strobe-slow {
+  20% {
+    opacity: 0;
   }
 }

@@ -18,5 +18,7 @@ contract StartSystemTest is BaseTest {
 
     assertEq(CarriedBy.get(playerEntity), podEntity);
     assertEq(TutorialLevel.get(playerEntity), 0);
+    assertEq(IncomingConnections.get(playerEntity).length, 1);
+    assertEq(OutgoingConnections.get(playerEntity).length, 2);
   }
 }

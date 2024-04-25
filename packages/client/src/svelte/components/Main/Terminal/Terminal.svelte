@@ -1,6 +1,11 @@
 <script lang="ts">
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
-  import { activeTab, selectedParameters } from "@modules/ui/stores"
+  import {
+    activeTab,
+    selectedParameters,
+    terminalBooted,
+  } from "@modules/ui/stores"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { get } from "svelte/store"
   import { tick, createEventDispatcher, onMount, onDestroy } from "svelte"
   import type { Command, SelectOption } from "@components/Main/Terminal/types"
@@ -19,10 +24,7 @@
   import { terminalOutput } from "@components/Main/Terminal/stores"
   import { evaluate } from "@components/Main/Terminal/functions/evaluate"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
-  import {
-    MACHINE_TYPE,
-    PORT_INDEX,
-  } from "@modules/state/base/enums"
+  import { MACHINE_TYPE, PORT_INDEX } from "@modules/state/base/enums"
   import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { createSelectOptions } from "@components/Main/Terminal/functions/selectOptions"
   import Select from "@components/Main/Terminal/Select.svelte"
@@ -47,6 +49,7 @@
 
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
+  export let disabled = false
   export let setBlink = false
   export let noOutput = false
 
@@ -60,8 +63,12 @@
   const dispatch = createEventDispatcher()
 
   const focusInput = async (e?: any) => {
+    if (disabled) return
+    // inputActive = true
+    await tick() // wait for input element if not there.
     if (inputElement) {
       inputElement?.focus()
+      inputActive = true
     }
   }
 
@@ -79,12 +86,13 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5]
+      SYMBOLS[5],
     )
     resetInput()
   }
 
   const executeCommand = async (command: Command, parameters: any[]) => {
+    if (disabled) return
     // Execute function
     await command.fn(...parameters)
     // Note: It is the parent's responsibility to reset the input on this event
@@ -103,7 +111,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -116,7 +124,7 @@
   }
 
   const getSingleInputCommandParameters = async (
-    command: Command
+    command: Command,
   ): Promise<any[] | false> => {
     const selectOptions = createSelectOptions(command.id)
 
@@ -129,7 +137,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -153,7 +161,7 @@
     const connectionId = await renderSelect(
       customInputContainerElement,
       Select,
-      disconnectOptions
+      disconnectOptions,
     )
 
     // Abort if nothing selected
@@ -180,7 +188,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING
+      DIRECTION.OUTGOING,
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
@@ -188,7 +196,7 @@
     const sourceMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
     selectedParameters.set([sourceMachineKey])
 
@@ -211,7 +219,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       sourceMachineLabel,
       true,
-      SYMBOLS[11]
+      SYMBOLS[11],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,12 +239,15 @@
       // Use the first available
       portIndex = ports[0].portIndex
     } else if (
-      sourceMachineEntity.machineType === MACHINE_TYPE.CENTRIFUGE ||
-      sourceMachineEntity.machineType === MACHINE_TYPE.GRINDER ||
-      sourceMachineEntity.machineType === MACHINE_TYPE.RAT_CAGE ||
-      sourceMachineEntity.machineType === MACHINE_TYPE.MEALWORM_VAT
+      [
+        MACHINE_TYPE.PLAYER,
+        MACHINE_TYPE.CENTRIFUGE,
+        MACHINE_TYPE.GRINDER,
+        MACHINE_TYPE.RAT_CAGE,
+        MACHINE_TYPE.MEALWORM_VAT,
+      ].includes(sourceMachineEntity.machineType)
     ) {
-      await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Select source port:")
+      await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Select output:")
       let sourcePortOptions: SelectOption[] = []
 
       const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
@@ -244,9 +255,11 @@
       const portLabel = (p: any) => {
         const product = sourceMachineEntity?.products?.[p.portIndex]
 
-        if (!product) return `Port #${p.portIndex + 1}`
+        if (!product) {
+          return `${machineTypeToLabel(sourceMachineEntity.machineType)}: output #${p.portIndex + 1}`
+        }
 
-        return `Port #${p.portIndex + 1} (${$materialMetadata[product?.materialId]?.name})`
+        return `${machineTypeToLabel(sourceMachineEntity.machineType)}: output #${p.portIndex + 1} (${$materialMetadata[product?.materialId]?.name})`
       }
 
       sourcePortOptions = ports.map(p => ({
@@ -259,62 +272,20 @@
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
       if (!sourcePort && sourcePort !== 0) {
-        handleInvalid("No port selected")
+        handleInvalid("No output selected")
         return false
       }
 
       await writeToTerminal(
         TERMINAL_OUTPUT_TYPE.NORMAL,
-        "Port: #" + (sourcePort + 1),
+        "OUTPUT: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
-      )
-
-      portIndex = sourcePort
-      selectedParameters.set([sourceMachineKey, portIndex])
-    } else if (sourceMachineEntity.machineType === MACHINE_TYPE.PLAYER) {
-      await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Select source port:")
-      let sourcePortOptions: SelectOption[] = []
-
-      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-
-      const portLabel = (p: any) => {
-        const product = sourceMachineEntity?.products?.[p.portIndex]
-
-        if (!product) return `Port #${p.portIndex + 1}`
-
-        return `Port #${p.portIndex + 1} (${$materialMetadata[product?.materialId]?.name})`
-      }
-
-      sourcePortOptions = ports.map(p => ({
-        label: portLabel(p),
-        value: p.portIndex,
-        available:
-          p.machine.outgoingConnections[p.portIndex] === EMPTY_CONNECTION,
-      }))
-
-      const sourcePort = (await renderSelect(
-        customInputContainerElement,
-        Select,
-        sourcePortOptions
-      )) as PORT_INDEX
-
-      // Abort if nothing selected
-      if (!sourcePort && sourcePort !== 0) {
-        handleInvalid("No port selected")
-        return false
-      }
-
-      await writeToTerminal(
-        TERMINAL_OUTPUT_TYPE.NORMAL,
-        "Port: #" + (sourcePort + 1),
-        true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -333,7 +304,7 @@
     // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING
+      DIRECTION.INCOMING,
     ).filter(option => option.value !== sourceMachineKey)
 
     // Abort if no available targets
@@ -347,7 +318,7 @@
     let targetMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -369,7 +340,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       targetMachineLabel,
       true,
-      SYMBOLS[14]
+      SYMBOLS[14],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -389,7 +360,7 @@
     const tankEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
 
     // Abort if nothing selected
@@ -423,7 +394,7 @@
     const targetEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -444,7 +415,7 @@
       TERMINAL_OUTPUT_TYPE.COMMAND,
       value.length == 0 ? "&nbsp;" : value,
       false,
-      SYMBOLS[0]
+      SYMBOLS[0],
     )
 
     // Unset store values
@@ -514,7 +485,10 @@
 
   onMount(async () => {
     if (terminalType === TERMINAL_TYPE.FULL) {
-      await terminalMessages.startUp()
+      if (!$terminalBooted) {
+        await terminalMessages.startUp()
+        $terminalBooted = true
+      }
       inputActive = true
     }
     focusInput()
@@ -528,6 +502,9 @@
 <svelte:window
   on:keydown={() => {
     if ($activeTab == 0) {
+      focusInput()
+    }
+    if ($activeTab == 1 && $tutorialProgress === 4) {
       focusInput()
     }
   }}
@@ -564,6 +541,10 @@
       {focusInput}
     />
   {/if}
+
+  {#if disabled}
+    <div class="disabled-overlay" />
+  {/if}
 </div>
 
 <style lang="scss">
@@ -577,6 +558,16 @@
     max-width: 69ch;
     text-transform: uppercase;
     backdrop-filter: blur(5px);
+
+    .disabled-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 200vh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: grayscale(100%);
+    }
 
     &:not(.noOutput) {
       height: 100vh;

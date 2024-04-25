@@ -58,6 +58,10 @@ export async function initStateSimulator() {
   // Check if the network is running
   networkIsRunning.subscribe(async isRunning => {
     if (!isRunning) {
+
+      // Player is not spawned yet
+      if (!get(player)?.carriedBy) return
+
       console.log('%c ********************** ', "background: #effb04; color: #000")
       console.log('%c **** NETWORK STOP **** ', "background: #effb04; color: #000")
       console.log('%c ********************** ', "background: #effb04; color: #000")

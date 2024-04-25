@@ -12,12 +12,11 @@
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
-    "orders": "cd packages/contracts/script/testing && ./runScriptsLocal.sh",
     "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.7-main-c3c8fb85",
+    "@latticexyz/cli": "2.0.7-main-f0fea5af",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "9.0.0",

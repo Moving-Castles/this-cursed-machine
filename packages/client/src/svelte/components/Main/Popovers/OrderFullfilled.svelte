@@ -10,7 +10,7 @@
 </script>
 
 <div class="popover">
-  <div class="text">FULLFILLED</div>
+  <div class="text">FULFILLED</div>
 </div>
 
 <style lang="scss">
