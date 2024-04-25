@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from "../../../src/codegen/common.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../../../src/codegen/common.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -11,7 +11,7 @@ import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.s
 import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
 import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
-import { ONE_TOKEN_UNIT } from "../../../src/constants.sol";
+import { ONE_UNIT } from "../../../src/constants.sol";
 
 contract DevSystemTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
@@ -19,35 +19,27 @@ contract DevSystemTest is BaseTest {
   function testReward() public {
     setUp();
 
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
     vm.startPrank(alice);
     world.reward();
     vm.stopPrank();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
   }
 
   function testCharge() public {
     setUp();
 
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
     vm.startPrank(alice);
     world.reward();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 1000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
 
     world.charge();
 
-    assertEq(Balances.get(tableId, worldAddress), 100 * ONE_TOKEN_UNIT);
-    assertEq(Balances.get(tableId, alice), 900 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100 * ONE_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900 * ONE_UNIT);
 
     vm.stopPrank();
   }
@@ -55,15 +47,11 @@ contract DevSystemTest is BaseTest {
   function testGraduate() public {
     setUp();
 
-    address token = gameConfig.tokenAddress;
-    ResourceId systemId = Puppet(token).systemId();
-    ResourceId tableId = _balancesTableId(systemId.getNamespace());
-
     vm.startPrank(alice);
     world.graduate();
 
-    assertEq(Balances.get(tableId, worldAddress), 0);
-    assertEq(Balances.get(tableId, alice), 10000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000 * ONE_UNIT);
 
     vm.stopPrank();
   }

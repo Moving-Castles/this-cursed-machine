@@ -1,226 +1,33 @@
+import { stringToHex } from "viem";
+import { getMaterialCombinationId } from "../../src/svelte/modules/utils";
+
+export const MaterialIds = {
+    NONE: "0x",
+    BUG: stringToHex("t_BUG", { size: 14 }),
+    PISS: stringToHex("t_PISS", { size: 14 }),
+    BLOOD: stringToHex("t_BLOOD", { size: 14 }),
+    UREA: stringToHex("t_UREA", { size: 14 }),
+    INDUSTRIAL_LUBRICANT: stringToHex("t_INDUSTRIAL_L", { size: 14 }),
+    CONGEALED_FAT: stringToHex("t_CONGEALED_FA", { size: 14 }),
+    AMMONIA: stringToHex("t_AMMONIA", { size: 14 }),
+    SOAP: stringToHex("t_SOAP", { size: 14 }),
+}
+
 export const RECIPES = [
     {
         machineType: 3,
-        input: 1,
+        input: MaterialIds.BUG,
         outputs: [
-            2,
-            3
-        ]
-    },
-    {
-        machineType: 3,
-        input: 17,
-        outputs: [
-            2,
-            5
-        ]
-    },
-    {
-        machineType: 6,
-        input: 1,
-        outputs: [
-            20,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 2,
-        outputs: [
-            8,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 8,
-        outputs: [
-            10,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 16,
-        outputs: [
-            17,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 3,
-        outputs: [
-            5,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 5,
-        outputs: [
-            4,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 20,
-        outputs: [
-            21,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 15,
-        outputs: [
-            12,
-            0
-        ]
-    },
-    {
-        machineType: 6,
-        input: 12,
-        outputs: [
-            13,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 1,
-        outputs: [
-            15,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 12,
-        outputs: [
-            14,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 8,
-        outputs: [
-            9,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 17,
-        outputs: [
-            18,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 18,
-        outputs: [
-            19,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 19,
-        outputs: [
-            18,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 2,
-        outputs: [
-            16,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 16,
-        outputs: [
-            16,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 5,
-        outputs: [
-            3,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 4,
-        outputs: [
-            3,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 3,
-        outputs: [
-            21,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 21,
-        outputs: [
-            22,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 7,
-        outputs: [
-            22,
-            0
-        ]
-    },
-    {
-        machineType: 7,
-        input: 15,
-        outputs: [
-            14,
-            0
+            MaterialIds.PISS,
+            MaterialIds.BLOOD
         ]
     },
     {
         machineType: 5,
-        input: 18,
+        input: getMaterialCombinationId(MaterialIds.BLOOD, MaterialIds.PISS),
         outputs: [
-            7,
-            0
-        ]
-    },
-    {
-        machineType: 5,
-        input: 243,
-        outputs: [
-            11,
-            0
-        ]
-    },
-    {
-        machineType: 5,
-        input: 165,
-        outputs: [
-            6,
-            0
+            MaterialIds.AMMONIA,
+            MaterialIds.NONE
         ]
     }
 ]

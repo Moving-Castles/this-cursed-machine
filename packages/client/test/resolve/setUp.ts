@@ -1,5 +1,5 @@
-import { RECIPES } from '.'
-import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_TYPE } from 'contracts/enums'
+import { MaterialIds, RECIPES } from '.'
+import { ENTITY_TYPE, MACHINE_TYPE } from 'contracts/enums'
 
 export function createMachine(machineType: MACHINE_TYPE, buildIndex: number) {
     return {
@@ -17,7 +17,7 @@ export function setUp() {
 
     tanks["TANK_ONE"] = {
         entityType: ENTITY_TYPE.TANK,
-        materialType: MATERIAL_TYPE.BUG,
+        materialId: MaterialIds.BUG,
         amount: 20000,
         tankConnection: "",
         buildIndex: 1

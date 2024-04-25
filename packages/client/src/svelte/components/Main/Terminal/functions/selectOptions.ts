@@ -2,7 +2,8 @@ import { get } from "svelte/store"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { SelectOption } from "@components/Main/Terminal/types"
 import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
-import { MACHINE_TYPE, MATERIAL_TYPE } from "@modules/state/base/enums"
+import { MACHINE_TYPE } from "@modules/state/base/enums"
+import { MaterialIdNone } from "@modules/state/base/constants"
 import {
   simulatedMachines,
   simulatedConnections,
@@ -13,6 +14,7 @@ import {
   tanks as tanksStore,
   offers as offersStore,
   playerTokenBalance,
+  materialMetadata,
 } from "@modules/state/base/stores"
 import {
   FIXED_MACHINE_TYPES,
@@ -22,10 +24,9 @@ import { machinePositionSort } from "@components/Main/Terminal/functions/helpers
 
 import {
   machineTypeToLabel,
-  materialTypeToLabel,
   machineIsAvailable,
 } from "@modules/state/simulated"
-import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+import { displayAmount } from "@modules/utils"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -158,7 +159,7 @@ function createSelectOptionsDisconnect(): SelectOption[] {
       : ""
     const connectionProduct =
       connection?.products?.length > 0
-        ? `(${materialTypeToLabel(connection.products[0].materialType)})`
+        ? `(${get(materialMetadata)[connection.products[0].materialId].name})`
         : ""
 
     const label = `${machineTypeToLabel(sourceMachine.machineType)}${sourceMachineBuildIndex} to ${machineTypeToLabel(targetMachine.machineType)}${targetMachineBuildIndex} ${connectionProduct}`
@@ -212,7 +213,7 @@ function createSelectOptionsEmptyTank(): SelectOption[] {
   selectOptions = Object.entries(tanks).map(([address, tank]) => ({
     label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== 0,
+    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== BigInt(0),
   }))
 
   return selectOptions
@@ -225,9 +226,9 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   const balance = get(playerTokenBalance)
 
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
-    label: `${offer.offer.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(offer.offer.materialType)}`,
+    label: `${displayAmount(offer.offer.amount)} ${get(materialMetadata)[offer.offer.materialId].name}`,
     value: address,
-    available: balance >= offer.offer.cost,
+    available: balance >= displayAmount(offer.offer.cost),
   }))
 
   return selectOptions
@@ -241,14 +242,14 @@ function createSelectOptionsShip(): SelectOption[] {
 
   selectOptions = availableTanks.map(([address, tank]) => {
     let materialDescription = "(empty)"
-    if (tank.materialType !== MATERIAL_TYPE.NONE) {
-      materialDescription = `(${tank.amount / UI_SCALE_FACTOR} ${materialTypeToLabel(tank.materialType)})`
+    if (tank.materialId !== MaterialIdNone) {
+      materialDescription = `(${displayAmount(tank.amount)} ${get(materialMetadata)[tank.materialId].name})`
     }
 
     return {
       label: `Tank #${tank.buildIndex} ${materialDescription}`,
       value: address,
-      available: tank.materialType !== MATERIAL_TYPE.NONE,
+      available: tank.materialId !== MaterialIdNone,
     }
   })
 

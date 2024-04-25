@@ -1,19 +1,18 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
-  import { player } from "@modules/state/base/stores"
+  import { materialMetadata, player } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
-  import { MATERIAL_TYPE } from "contracts/enums"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
   import { orderAcceptInProgress } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import { players } from "@modules/state/base/stores"
+  import { displayAmount } from "@modules/utils"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -28,20 +27,15 @@
 
   const dispatch = createEventDispatcher()
 
-  const spacedName = MATERIAL_TYPE[order.order.materialType].replaceAll(
-    "_",
-    " "
-  )
+  const name = $materialMetadata[order.order.materialId]?.name
+  const spacedName = name?.replaceAll("_", " ")
 
   const PULSE_CONDITIONS = [5, 15, 25]
 
   // Get the order metadata from the database
-  const staticMaterial = $staticContent.materials.find(
-    material =>
-      material.materialType === MATERIAL_TYPE[order.order.materialType]
-  )
-
-  // Create image URL
+  const staticMaterial =
+    $staticContent.materials.find(material => material.materialType === name) ??
+    {}
   const imageURL =
     staticMaterial && staticMaterial.image
       ? urlFor(staticMaterial.image).width(400).auto("format").url()
@@ -161,7 +155,7 @@
           </p>
           <div class="content">
             <div class="center">
-              {order.order.amount / UI_SCALE_FACTOR}
+              {displayAmount(order.order.amount)}
               {spacedName}
             </div>
             <p class="subtitle">
@@ -179,7 +173,7 @@
           <p class="header">Reward</p>
           <div class="content">
             <div class="center">
-              {order.order.reward}<br />
+              {displayAmount(order.order.reward)}<br />
               <p class="bugs">$BUGS</p>
             </div>
           </div>
@@ -189,7 +183,7 @@
           <p class="header">
             {#if !$player.tutorial && order.order.expirationBlock != 0}
               {blocksToReadableTime(
-                Number(order.order.expirationBlock) - Number($blockNumber)
+                Number(order.order.expirationBlock) - Number($blockNumber),
               )}
             {/if}
           </p>

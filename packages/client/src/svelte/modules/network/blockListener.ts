@@ -11,7 +11,7 @@ export function initBlockListener() {
     clearTimeout(blockTimeout)
     blockTimeout = window.setTimeout(handleBlockTimeout, TIMEOUT)
     // For convenience, we store the block number in a svelte store
-    blockNumber.set(Number(block.number))
+    blockNumber.set(block.number ?? BigInt(0))
   })
 }
 

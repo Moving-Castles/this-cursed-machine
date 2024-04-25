@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CurrentOrder, CarriedBy, Amount, MaterialType, Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, LibToken } from "../../libraries/Libraries.sol";
-import { MATERIAL_TYPE } from "../../codegen/common.sol";
-import { ONE_TOKEN_UNIT } from "../../constants.sol";
+import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name } from "../../codegen/index.sol";
+import { LibUtils, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
+import { ONE_UNIT } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
@@ -22,32 +21,35 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    LibToken.mint(_msgSender(), 10000 * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), 10000 * ONE_UNIT);
   }
 
   /**
    * @notice Fill tank with material
+   * @param _tankEntity Id of tank entity
+   * @param _amount Amount of material in whole units
+   * @param _materialId Material id of the material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillTank(bytes32 _tankEntity, uint32 _amount, MATERIAL_TYPE _materialType) public {
-    MaterialType.set(_tankEntity, _materialType);
-    Amount.set(_tankEntity, _amount);
+  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
+    ContainedMaterial.set(_tankEntity, _materialId);
+    Amount.set(_tankEntity, _amount * ONE_UNIT);
   }
 
   /**
-   * @notice Send 1000 tokens from the world to the player.
+   * @notice Send 1000 BUG tokens from the world to the player.
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    LibToken.mint(_msgSender(), 1000 * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), 1000 * ONE_UNIT);
   }
 
   /**
-   * @notice Send 100 tokens from the player to the world.
+   * @notice Send 100 BUG tokens from the player to the world.
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function charge() public {
-    require(LibToken.getTokenBalance(_msgSender()) >= 100 * ONE_TOKEN_UNIT, "insufficient balance");
-    LibToken.transferToken(_world(), 100 * ONE_TOKEN_UNIT);
+    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
+    PublicMaterials.BUG.transferToken(_world(), 100 * ONE_UNIT);
   }
 }

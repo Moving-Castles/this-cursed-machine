@@ -16,9 +16,8 @@ import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
-import { MATERIAL_TYPE } from "../src/codegen/common.sol";
-import { LibOrder, LibInitRecipes, LibInit, LibOffer } from "../src/libraries/Libraries.sol";
-import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
+import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials } from "../src/libraries/Libraries.sol";
+import { ONE_MINUTE, ONE_DAY, ONE_HOUR, ONE_UNIT } from "../src/constants.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -35,26 +34,18 @@ contract PostDeploy is Script {
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
     world.installModule(new PuppetModule(), new bytes(0));
 
-    // Register and mint ERC20 token
-    IERC20Mintable token = registerERC20(
-      world,
-      "BugToken",
-      ERC20MetadataData({ decimals: 18, name: "Test Bugs", symbol: "TEST_BUGS" })
-    );
-
-    // Transfer ownership of the token namespace to the world contract
-    ResourceId namespaceId = WorldResourceIdLib.encodeNamespace("BugToken");
-    world.transferOwnership(namespaceId, worldAddress);
+    // Register public materials
+    PublicMaterials.init();
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
-    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID), address(token));
+    LibInit.init(NamespaceOwner.get(ROOT_NAMESPACE_ID));
 
     // Initialize recipes
     LibInitRecipes.init();
 
     // Create offer
-    LibOffer.create(MATERIAL_TYPE.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as 100 Bugs with scale-down in UI)
+    LibOffer.create(PublicMaterials.BUG, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
 
     vm.stopBroadcast();
   }
