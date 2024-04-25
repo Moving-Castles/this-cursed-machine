@@ -38,8 +38,7 @@ library LibMaterial {
   function registerMaterial(
     MaterialId _materialId,
     string memory _name,
-    string memory _symbol,
-    uint32[2] memory _difficultyCoefficient
+    string memory _symbol
   ) internal {
     IBaseWorld world = IBaseWorld(WorldContextConsumerLib._world());
 
@@ -57,7 +56,7 @@ library LibMaterial {
     // Set other material metadata
     MaterialMetadata.set(
       _materialId,
-      MaterialMetadataData({ tokenAddress: address(token), difficultyCoefficient: _difficultyCoefficient, name: _name })
+      MaterialMetadataData({ tokenAddress: address(token), name: _name })
     );
   }
 

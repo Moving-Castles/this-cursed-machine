@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { MaterialId, LibMaterial } from "../LibMaterial.sol";
-import { OrderDifficulty } from "../../constants.sol";
 
 library PublicMaterials {
   MaterialId constant BUG = MaterialId.wrap("t_BUG");
@@ -24,32 +23,22 @@ library PublicMaterials {
   MaterialId constant INDUSTRIAL_LUBRICANT = MaterialId.wrap("t_INDUSTRIAL_L");
 
   function init() internal {
-    LibMaterial.registerMaterial(BUG, "BUG", "BUG", OrderDifficulty.NONE());
-    LibMaterial.registerMaterial(PISS, "PISS", "PISS", OrderDifficulty.NONE());
-    LibMaterial.registerMaterial(BLOOD, "BLOOD", "BLOOD", OrderDifficulty.NONE());
+    LibMaterial.registerMaterial(BUG, "BUG", "BUG");
+    LibMaterial.registerMaterial(PISS, "PISS", "PISS");
+    LibMaterial.registerMaterial(BLOOD, "BLOOD", "BLOOD");
 
-    LibMaterial.registerMaterial(HEMATURIC_FLUID, "HEMATURIC_FLUID", "HEMATURIC_FLUID", OrderDifficulty.INTERMEDIATE());
+    LibMaterial.registerMaterial(HEMATURIC_FLUID, "HEMATURIC_FLUID", "HEMATURIC_FLUID");
 
-    LibMaterial.registerMaterial(DUST, "DUST", "DUST", OrderDifficulty.INTERMEDIATE());
-    LibMaterial.registerMaterial(UREA, "UREA", "UREA", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(FERTILIZER, "FERTILIZER", "FERTILIZER", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(
-      LOW_GRADE_AMPHETAMINE,
-      "LOW_GRADE_AMPHETAMINE",
-      "LOW_GRADE_AMPHETAMINE",
-      OrderDifficulty.EASY()
-    );
-    LibMaterial.registerMaterial(BLOOD_CLOT, "BLOOD_CLOT", "BLOOD_CLOT", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BLOOD_MEAL", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORGANIC_WASTE", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(CONGEALED_FAT, "CONGEALED_FAT", "CONGEALED_FAT", OrderDifficulty.EASY());
+    LibMaterial.registerMaterial(DUST, "DUST", "DUST");
+    LibMaterial.registerMaterial(UREA, "UREA", "UREA");
+    LibMaterial.registerMaterial(FERTILIZER, "FERTILIZER", "FERTILIZER");
+    LibMaterial.registerMaterial(LOW_GRADE_AMPHETAMINE, "LOW_GRADE_AMPHETAMINE", "LOW_GRADE_AMPHETAMINE");
+    LibMaterial.registerMaterial(BLOOD_CLOT, "BLOOD_CLOT", "BLOOD_CLOT");
+    LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BLOOD_MEAL");
+    LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORGANIC_WASTE");
+    LibMaterial.registerMaterial(CONGEALED_FAT, "CONGEALED_FAT", "CONGEALED_FAT");
 
-    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN", OrderDifficulty.EASY());
-    LibMaterial.registerMaterial(
-      INDUSTRIAL_LUBRICANT,
-      "INDUSTRIAL_LUBRICANT",
-      "INDUSTRIAL_LUBRICANT",
-      OrderDifficulty.NONE()
-    );
+    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN");
+    LibMaterial.registerMaterial(INDUSTRIAL_LUBRICANT, "INDUSTRIAL_LUBRICANT", "INDUSTRIAL_LUBRICANT");
   }
 }

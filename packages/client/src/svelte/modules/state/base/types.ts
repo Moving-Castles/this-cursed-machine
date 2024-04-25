@@ -150,7 +150,6 @@ declare global {
   type MaterialMetadata = {
     materialId: MaterialId
     tokenAddress: string
-    difficultyCoefficient: number[]
     name: string
   }
 
