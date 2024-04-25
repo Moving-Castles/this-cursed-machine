@@ -7,7 +7,7 @@ import { deepClone, getMaterialCombinationId } from "../../utils"
 const EMPTY_PRODUCT: Product = {
   machineId: "",
   materialId: MaterialIdNone,
-  amount: 0,
+  amount: BigInt(0),
   inletActive: [false, false],
 }
 
@@ -44,7 +44,7 @@ function splitter(inputs: Product[]): Product[] {
 
   if (!input) return outputs
 
-  const halfAmount = Number(input.amount) / 2
+  const halfAmount = input.amount / BigInt(2)
 
   outputs[0] = {
     machineId: input.machineId,
@@ -141,14 +141,14 @@ function defaultMachine(
     outputs[0] = {
       machineId: input.machineId,
       materialId: outputMaterials[0],
-      amount: input.amount / 2,
+      amount: input.amount / BigInt(2),
       inletActive: input.inletActive,
     }
 
     outputs[1] = {
       machineId: input.machineId,
       materialId: outputMaterials[1],
-      amount: input.amount / 2,
+      amount: input.amount / BigInt(2),
       inletActive: input.inletActive,
     }
 

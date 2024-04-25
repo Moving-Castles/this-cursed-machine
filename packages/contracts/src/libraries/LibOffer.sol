@@ -9,11 +9,11 @@ library LibOffer {
   /**
    * @notice Create a new offer
    * @param _materialId Material id of the offer
-   * @param _amount Amount of material in the offer
-   * @param _cost Cost of the offer
+   * @param _amount Amount of material in the offer in whole units
+   * @param _cost Cost of the offer in whole units
    * @return offerEntity The id of the offer entity.
    */
-  function create(MaterialId _materialId, uint32 _amount, uint32 _cost) internal returns (bytes32 offerEntity) {
+  function create(MaterialId _materialId, uint256 _amount, uint256 _cost) internal returns (bytes32 offerEntity) {
     offerEntity = getUniqueEntity();
     EntityType.set(offerEntity, ENTITY_TYPE.OFFER);
 

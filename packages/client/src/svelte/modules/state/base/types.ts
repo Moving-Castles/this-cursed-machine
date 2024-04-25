@@ -18,7 +18,7 @@ declare global {
     entityType?: ENTITY_TYPE
     machineType?: MACHINE_TYPE
     materialId?: MaterialId
-    amount?: number
+    amount?: bigint
     name?: string
     carriedBy?: string
     buildIndex?: number
@@ -26,14 +26,12 @@ declare global {
     spawnIndex?: number
     tutorial?: boolean
     tutorialLevel?: number
-    nonTransferableBalance?: number
+    nonTransferableBalance?: bigint
     order?: OrderData
     offer?: OfferData
     completed?: string[]
     producedMaterials?: MaterialId[]
-    lastResolved?: number
-    input?: number
-    output?: MaterialId
+    lastResolved?: bigint
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
     incomingConnections?: string[]
     tankConnection?: string
@@ -41,7 +39,7 @@ declare global {
     tanksInPod?: string[]
     fixedEntities?: FixedEntities
     currentOrder?: string
-    tokenBalances?: number
+    tokenBalances?: bigint
     recipe?: {
       outputs: number[]
     }
@@ -61,24 +59,23 @@ declare global {
     title: string
     expirationBlock: number
     materialId: MaterialId
-    amount: number
-    reward: number
+    amount: bigint
+    reward: bigint
     maxPlayers: number
   }
 
   type OfferData = {
     creationBlock: number
     materialId: MaterialId
-    amount: number
-    cost: number
+    amount: bigint
+    cost: bigint
   }
 
   type GameConfig = {
     adminAddress: string,
     globalSpawnIndex: number,
-    scaleDown: number,
-    flowRate: number,
-    tankCapacity: number,
+    flowRate: bigint
+    tankCapacity: bigint
   }
 
   // * * * * * * * * * * * * * * * * *
@@ -87,7 +84,7 @@ declare global {
 
   type Pod = {
     entityType: ENTITY_TYPE.POD
-    lastResolved: number
+    lastResolved: bigint
     machinesInPod: string[]
     tanksInPod: string[]
     buildTracker: number[]
@@ -105,8 +102,8 @@ declare global {
     incomingConnections: string[]
     outgoingConnections: string[]
     tutorialLevel?: number
-    nonTransferableBalance?: number // During tutorial we give players a non-transferable token substitute
-    tokenBalances?: number
+    nonTransferableBalance?: bigint // During tutorial we give players a non-transferable token substitute
+    tokenBalances?: bigint
     tutorial: boolean,
     completed?: string[] // Orders completed by player
     producedMaterials?: MaterialId[]
@@ -125,7 +122,7 @@ declare global {
   type Tank = {
     entityType: ENTITY_TYPE.TANK,
     carriedBy: string
-    amount: number
+    amount: bigint
     materialId: MaterialId
     buildIndex: number
     tankConnection: string

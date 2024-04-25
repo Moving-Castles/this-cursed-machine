@@ -15,7 +15,7 @@ type GraphEntityState = {
   state: GRAPH_ENTITY_STATE
   products: {
     materialId: MaterialId
-    amount: number
+    amount: bigint
   }[]
 }
 

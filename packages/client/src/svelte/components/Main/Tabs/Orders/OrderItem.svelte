@@ -7,12 +7,12 @@
   import { blocksToReadableTime } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
   import { orderAcceptInProgress } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
   import { players } from "@modules/state/base/stores"
+  import { displayAmount } from "@modules/utils"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
@@ -143,7 +143,7 @@
           </p>
           <div class="content">
             <div class="center">
-              {order.order.amount / UI_SCALE_FACTOR}
+              {displayAmount(order.order.amount)}
               {spacedName}
             </div>
             <p class="subtitle">
@@ -161,7 +161,7 @@
           <p class="header">Reward</p>
           <div class="content">
             <div class="center">
-              {order.order.reward}<br />
+              {displayAmount(order.order.reward)}<br />
               <p class="bugs">$BUGS</p>
             </div>
           </div>

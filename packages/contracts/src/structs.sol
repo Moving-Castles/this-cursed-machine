@@ -7,6 +7,6 @@ import { MaterialId } from "./libraries/LibMaterial.sol";
 struct Product {
   bytes32 machineId;
   MaterialId materialId;
-  uint32 amount;
+  uint256 amount;
   bool[2] inletActive;
 }

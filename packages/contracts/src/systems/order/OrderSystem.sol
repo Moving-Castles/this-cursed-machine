@@ -6,7 +6,7 @@ import { GameConfig, EntityType, CarriedBy, ContainedMaterial, Order, OrderData,
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_UNIT } from "../../constants.sol";
 
 contract OrderSystem is System {
   /**
@@ -14,8 +14,8 @@ contract OrderSystem is System {
    * @dev Free for admin, charges reward cost (_reward * _maxPlayers) for non-admin
    * @param _title Title of the order
    * @param _materialId Material id to produce
-   * @param _amount Amount to produce
-   * @param _reward Reward for completing the order in whole token units (1 token = 1e18)
+   * @param _amount Amount to produce in whole units
+   * @param _reward Reward for completing the order in whole units
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
@@ -23,7 +23,7 @@ contract OrderSystem is System {
   function createOrder(
     string memory _title,
     MaterialId _materialId,
-    uint32 _amount,
+    uint256 _amount,
     uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers
@@ -32,23 +32,19 @@ contract OrderSystem is System {
 
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
-      // Scale down
-      uint256 totalRewardCost = (_reward / 100) * _maxPlayers;
-      require(
-        PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost * ONE_TOKEN_UNIT,
-        "insufficient funds"
-      );
-      PublicMaterials.BUG.transferToken(_world(), totalRewardCost * ONE_TOKEN_UNIT);
+      uint256 totalRewardCost = (_reward * ONE_UNIT) * _maxPlayers;
+      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(
       _msgSender(),
       _title,
       _materialId,
-      _amount,
+      _amount * ONE_UNIT,
       false, // Not tutorial
       0, // Not tutorial
-      _reward,
+      _reward * ONE_UNIT,
       _duration,
       _maxPlayers
     );

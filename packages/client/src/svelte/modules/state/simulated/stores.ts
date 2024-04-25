@@ -115,7 +115,7 @@ export function applyPatches(
 export function calculateSimulatedTanks(
   tanks: Tanks,
   patches: SimulatedEntities,
-  blocksSinceLastResolution: number,
+  blocksSinceLastResolution: bigint,
   playerPod: Pod
 ): SimulatedTanks {
   /*
@@ -182,7 +182,7 @@ export function calculateSimulatedTanks(
   const usedInletTanksKeys = usedInletTanks.map(([key, _]) => key)
 
   const lowestInputAmount = findLowestValue(usedInletTanks)
-  if (lowestInputAmount === 0) return simulatedTanks
+  if (lowestInputAmount === BigInt(0)) return simulatedTanks
 
   /*
    * With a flow rate of FLOW_RATE per block,
@@ -243,7 +243,7 @@ export function calculateSimulatedTanks(
       const consumedInletAmount = cappedBlocks * FLOW_RATE
       if (consumedInletAmount === initialTanksCopy[key].amount) {
         simulatedTanks[key].materialId = MaterialIdNone
-        simulatedTanks[key].amount = 0
+        simulatedTanks[key].amount = BigInt(0)
       } else {
         simulatedTanks[key].amount =
           initialTanksCopy[key].amount - consumedInletAmount
@@ -255,7 +255,7 @@ export function calculateSimulatedTanks(
   return simulatedTanks
 }
 
-function findLowestValue(usedInletTanks: [string, Tank][]): number {
+function findLowestValue(usedInletTanks: [string, Tank][]): bigint {
   let lowestEntry: [string, Tank] | null = null
 
   for (const [key, tank] of usedInletTanks) {
@@ -264,9 +264,9 @@ function findLowestValue(usedInletTanks: [string, Tank][]): number {
     }
   }
 
-  if (!lowestEntry) return 0
+  if (!lowestEntry) return BigInt(0)
 
-  return lowestEntry[1].amount ?? 0
+  return lowestEntry[1].amount ?? BigInt(0)
 }
 
 /*
@@ -439,7 +439,7 @@ export const networkIsRunning = derived(
      * If any of the used inlet tanks are empty, the network is not running
      */
     for (let i = 0; i < usedInletTanks.length; i++) {
-      if (usedInletTanks[i].amount == 0) return false
+      if (usedInletTanks[i].amount == BigInt(0)) return false
     }
 
     /*

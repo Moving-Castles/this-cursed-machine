@@ -4,7 +4,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY } from "../../constants.sol";
 
 contract TankSystem is System {
   /**
@@ -114,7 +114,7 @@ contract TankSystem is System {
     CurrentOrder.set(playerEntity, bytes32(0));
 
     // Deduct material amount from tank
-    uint32 newAmount = Amount.get(_tankEntity) - currentOrder.amount;
+    uint256 newAmount = Amount.get(_tankEntity) - currentOrder.amount;
     Amount.set(_tankEntity, newAmount);
     ContainedMaterial.set(_tankEntity, newAmount == 0 ? LibMaterial.NONE : ContainedMaterial.get(_tankEntity));
 
@@ -166,11 +166,11 @@ contract TankSystem is System {
     //////////////////////////////////////////////////////////////*/
 
     // Reward player in real tokens
-    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
 
     // If the order was not created by admin, mint the material to the creator
     if (currentOrder.creator != GameConfig.getAdminAddress()) {
-      LibMaterial.mint(currentOrder.materialId, currentOrder.creator, currentOrder.amount * ONE_TOKEN_UNIT);
+      LibMaterial.mint(currentOrder.materialId, currentOrder.creator, currentOrder.amount);
     }
   }
 }

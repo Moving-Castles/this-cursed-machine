@@ -13,7 +13,7 @@ import { MaterialId } from "./../../libraries/Libraries.sol";
 interface IDevSystem {
   function graduate() external;
 
-  function fillTank(bytes32 _tankEntity, uint32 _amount, MaterialId _materialId) external;
+  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) external;
 
   function reward() external;
 

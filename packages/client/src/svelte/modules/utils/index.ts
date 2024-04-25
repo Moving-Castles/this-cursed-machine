@@ -1,5 +1,6 @@
 import { concat, encodePacked, getAddress, keccak256 } from "viem"
 import { BLOCKTIME } from "./constants"
+import { ONE_UNIT } from "../ui/constants"
 
 export function toCamelCase(s: string): string {
   return (
@@ -243,4 +244,11 @@ export function timeSince(timestamp: number): string {
 
 export function mod(n: number, m: number) {
   return ((n % m) + m) % m
+}
+
+// Scale down big ints to displayable numbers
+export function displayAmount(amount: bigint | undefined) {
+  if (amount === undefined) return 0
+  if (amount === BigInt(0)) return 0
+  return Number(amount / ONE_UNIT)
 }

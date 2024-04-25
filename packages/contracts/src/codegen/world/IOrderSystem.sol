@@ -14,7 +14,7 @@ interface IOrderSystem {
   function createOrder(
     string memory _title,
     MaterialId _materialId,
-    uint32 _amount,
+    uint256 _amount,
     uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers

@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name } from "../../codegen/index.sol";
 import { LibUtils, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
-import { ONE_TOKEN_UNIT } from "../../constants.sol";
+import { ONE_UNIT } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
@@ -21,16 +21,19 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    PublicMaterials.BUG.mint(_msgSender(), 10000 * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), 10000 * ONE_UNIT);
   }
 
   /**
    * @notice Fill tank with material
+   * @param _tankEntity Id of tank entity
+   * @param _amount Amount of material in whole units
+   * @param _materialId Material id of the material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillTank(bytes32 _tankEntity, uint32 _amount, MaterialId _materialId) public {
+  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
     ContainedMaterial.set(_tankEntity, _materialId);
-    Amount.set(_tankEntity, _amount);
+    Amount.set(_tankEntity, _amount * ONE_UNIT);
   }
 
   /**
@@ -38,7 +41,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    PublicMaterials.BUG.mint(_msgSender(), 1000 * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), 1000 * ONE_UNIT);
   }
 
   /**
@@ -46,7 +49,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function charge() public {
-    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100 * ONE_TOKEN_UNIT, "insufficient balance");
-    PublicMaterials.BUG.transferToken(_world(), 100 * ONE_TOKEN_UNIT);
+    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
+    PublicMaterials.BUG.transferToken(_world(), 100 * ONE_UNIT);
   }
 }

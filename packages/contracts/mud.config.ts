@@ -22,9 +22,8 @@ export default defineWorld({
             schema: {
                 adminAddress: "address",
                 globalSpawnIndex: "uint32", // Global index for all players
-                scaleDown: "uint32", // Used to scale down the amounts in the UI
-                flowRate: "uint32", // Amount flowing from the inlet
-                tankCapacity: "uint32", // Amount of material that can be stored in a tank
+                flowRate: "uint256", // Amount flowing from the inlet
+                tankCapacity: "uint256", // Amount of material that can be stored in a tank
             },
             codegen: {
                 dataStruct: true
@@ -42,7 +41,7 @@ export default defineWorld({
         EntityType: "ENTITY_TYPE",
         MachineType: "MACHINE_TYPE",
         ContainedMaterial: "MaterialId",
-        Amount: "uint32",
+        Amount: "uint256",
         Name: "string", // Player name. Assigned after completed tutorial.
         CarriedBy: "bytes32", // ID of the pod that the entity is in, used for access control
         BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
@@ -58,7 +57,7 @@ export default defineWorld({
                 creationBlock: "uint256",
                 creator: "address",
                 materialId: "MaterialId",
-                amount: "uint32",
+                amount: "uint256",
                 expirationBlock: "uint256",
                 reward: "uint256",
                 maxPlayers: "uint32",
@@ -70,8 +69,8 @@ export default defineWorld({
             schema: {
                 key: "bytes32",
                 materialId: "MaterialId",
-                amount: "uint32",
-                cost: "uint32",
+                amount: "uint256",
+                cost: "uint256",
             }
         },
         Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed

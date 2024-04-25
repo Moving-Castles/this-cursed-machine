@@ -14,20 +14,18 @@
   import { waitingTransaction } from "@modules/action/actionSequencer"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { TANK_CAPACITY } from "@modules/state/simulated/constants"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { displayAmount } from "@modules/utils"
 
   export let tank: SimulatedTank
   export let address: string
   export let index: number
 
   const progress = tweened(
-    (Math.round(tank.amount / UI_SCALE_FACTOR) /
-      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
-      100,
+    (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100,
     { easing: bounceOut },
   )
 
-  const amount = tweened(Math.round(tank.amount / UI_SCALE_FACTOR))
+  const amount = tweened(displayAmount(tank.amount))
 
   // Narrow the type
   $: typedTank = tank as Tank
@@ -44,18 +42,15 @@
   $: connected = typedTank.tankConnection !== EMPTY_CONNECTION
 
   // Tanks is empty
-  $: empty = typedTank.amount === 0
+  $: empty = typedTank.amount === BigInt(0)
 
   // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
 
-  $: $progress =
-    (Math.round(typedTank.amount / UI_SCALE_FACTOR) /
-      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
-    100
+  $: $progress = (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100
 
-  $: $amount = typedTank.amount / UI_SCALE_FACTOR
+  $: $amount = displayAmount(typedTank.amount)
 
   $: connectedMachine = $simulatedMachines[tank.tankConnection]
 
@@ -92,7 +87,7 @@
     {#if empty}
       <div class="material-amount">
         <span class="portion-left">0</span> /
-        <span class="portion-right">{TANK_CAPACITY / UI_SCALE_FACTOR}</span>
+        <span class="portion-right">{displayAmount(TANK_CAPACITY)}</span>
       </div>
     {:else}
       <div class="inner-container">
@@ -105,7 +100,7 @@
           </span>
           /
           <span class="portion-right">
-            {TANK_CAPACITY / UI_SCALE_FACTOR}
+            {displayAmount(TANK_CAPACITY)}
           </span>
         </div>
       </div>

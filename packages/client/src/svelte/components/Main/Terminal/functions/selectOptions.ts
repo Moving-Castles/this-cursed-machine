@@ -26,7 +26,7 @@ import {
   machineTypeToLabel,
   machineIsAvailable,
 } from "@modules/state/simulated"
-import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+import { displayAmount } from "@modules/utils"
 
 /**
  * Generates select options based on the provided command type and port type.
@@ -213,7 +213,7 @@ function createSelectOptionsEmptyTank(): SelectOption[] {
   selectOptions = Object.entries(tanks).map(([address, tank]) => ({
     label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== 0,
+    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== BigInt(0),
   }))
 
   return selectOptions
@@ -226,9 +226,9 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   const balance = get(playerTokenBalance)
 
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
-    label: `${offer.offer.amount / UI_SCALE_FACTOR} ${get(materialMetadata)[offer.offer.materialId].name}`,
+    label: `${displayAmount(offer.offer.amount)} ${get(materialMetadata)[offer.offer.materialId].name}`,
     value: address,
-    available: balance >= offer.offer.cost,
+    available: balance >= displayAmount(offer.offer.cost),
   }))
 
   return selectOptions
@@ -243,7 +243,7 @@ function createSelectOptionsShip(): SelectOption[] {
   selectOptions = availableTanks.map(([address, tank]) => {
     let materialDescription = "(empty)"
     if (tank.materialId !== MaterialIdNone) {
-      materialDescription = `(${tank.amount / UI_SCALE_FACTOR} ${get(materialMetadata)[tank.materialId].name})`
+      materialDescription = `(${displayAmount(tank.amount)} ${get(materialMetadata)[tank.materialId].name})`
     }
 
     return {

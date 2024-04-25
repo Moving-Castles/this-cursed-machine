@@ -11,7 +11,7 @@ import { LibMaterial } from "./LibMaterial.sol";
 library LibTank {
   struct InletTankAmount {
     uint32 index;
-    uint32 amount;
+    uint256 amount;
   }
 
   /**
@@ -62,29 +62,27 @@ library LibTank {
      * With a flow rate of FLOW_RATE per block,
      * how long does it take for the lowest input to be exhausted?
      */
-    uint32 inletExhaustionBlock = lowestInput.amount / FLOW_RATE;
+    uint256 inletExhaustionBlock = lowestInput.amount / FLOW_RATE;
 
     /*
      * When is the outlet tank full?
      * available capacity of the tank / flow rate of the outlet product
      */
-    uint32 outletFullBlock = (TANK_CAPACITY - Amount.get(_outletTankEntity)) / _output.amount;
+    uint256 outletFullBlock = (TANK_CAPACITY - Amount.get(_outletTankEntity)) / _output.amount;
 
     /*
      * Stop block is the lowest of the two limiting factors
      */
-    uint32 stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
+    uint256 stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
 
-    uint32 cappedBlocks = stopBlock > uint32(_blocksSinceLastResolution)
-      ? uint32(_blocksSinceLastResolution)
-      : stopBlock;
+    uint256 cappedBlocks = stopBlock > _blocksSinceLastResolution ? _blocksSinceLastResolution : stopBlock;
 
     /*
      * Write to outlet tank
      * Add if material is same, otherwise replace
      */
 
-    uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
+    uint256 cumulativeOutputAmount = _output.amount * cappedBlocks;
 
     if (ContainedMaterial.get(_outletTankEntity) == _output.materialId) {
       Amount.set(_outletTankEntity, Amount.get(_outletTankEntity) + cumulativeOutputAmount);
@@ -98,10 +96,10 @@ library LibTank {
      * Empty tank if we exhausted it
      */
 
-    uint32 consumedInletAmount = cappedBlocks * FLOW_RATE;
+    uint256 consumedInletAmount = cappedBlocks * FLOW_RATE;
 
     for (uint i = 0; i < usedInletAmounts.length; i++) {
-      uint32 newAmount = usedInletAmounts[i].amount > consumedInletAmount
+      uint256 newAmount = usedInletAmounts[i].amount > consumedInletAmount
         ? usedInletAmounts[i].amount - consumedInletAmount
         : 0;
       if (newAmount == 0) {

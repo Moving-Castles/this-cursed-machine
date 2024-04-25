@@ -11,7 +11,7 @@ import { MaterialId } from "./../../libraries/Libraries.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IOfferSystem {
-  function createOffer(MaterialId _materialId, uint32 _amount, uint32 _cost) external returns (bytes32 orderEntity);
+  function createOffer(MaterialId _materialId, uint256 _amount, uint256 _cost) external returns (bytes32 orderEntity);
 
   function cancelOffer(bytes32 _offerEntity) external;
 

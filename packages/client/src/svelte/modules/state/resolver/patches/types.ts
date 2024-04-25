@@ -2,6 +2,6 @@ export type Product = {
     machineId: string
     sourceMachineId?: string | null
     materialId: MaterialId
-    amount: number
+    amount: bigint
     inletActive: boolean[]
 }

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { materialMetadata, player } from "@modules/state/base/stores"
+  import { materialMetadata} from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { blocksToReadableTime } from "@modules/utils"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { displayAmount } from "@modules/utils"
 </script>
 
 <div
@@ -19,7 +19,7 @@
       {#if !$playerOrder}
         NONE
       {:else}
-        {$playerOrder?.order.amount / UI_SCALE_FACTOR}
+        {displayAmount($playerOrder?.order.amount)}
         {$materialMetadata[$playerOrder?.order.materialId]?.name}
       {/if}
     </div>

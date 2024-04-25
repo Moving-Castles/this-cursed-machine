@@ -3,49 +3,49 @@
     "file": "test/systems/machine-network/BuildSystem.t.sol",
     "test": "testBuild",
     "name": "Build machine",
-    "gasUsed": 292213
+    "gasUsed": 292214
   },
   {
     "file": "test/systems/machine-network/ConnectSystem.t.sol",
     "test": "testConnect",
     "name": "Connect",
-    "gasUsed": 116234
+    "gasUsed": 116282
   },
   {
     "file": "test/systems/machine-network/DestroySystem.t.sol",
     "test": "testDestroy",
     "name": "Destroy machine",
-    "gasUsed": 126656
+    "gasUsed": 126710
   },
   {
     "file": "test/systems/machine-network/DisconnectSystem.t.sol",
     "test": "testDisconnect",
     "name": "Disconnect",
-    "gasUsed": 72162
+    "gasUsed": 72223
   },
   {
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 141746
+    "gasUsed": 148423
   },
   {
     "file": "test/systems/machine-network/WipeSystem.t.sol",
     "test": "testReset",
     "name": "Wipe pod",
-    "gasUsed": 363337
+    "gasUsed": 363755
   },
   {
     "file": "test/systems/orders/OfferSystem.t.sol",
     "test": "testCreateOffer",
     "name": "Create offer",
-    "gasUsed": 103032
+    "gasUsed": 147834
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Accept order",
-    "gasUsed": 51328
+    "gasUsed": 53584
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -57,48 +57,48 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 176846
+    "gasUsed": 228474
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
-    "test": "testRevertCreateOrderAsNormalUser",
-    "name": "Create order as normal user",
-    "gasUsed": 302442
+    "test": "testCreateOrderAsUser",
+    "name": "Create order as user",
+    "gasUsed": 330559
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship",
-    "gasUsed": 290154
+    "gasUsed": 297169
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawn",
     "name": "Spawn",
-    "gasUsed": 196498
+    "gasUsed": 196065
   },
   {
     "file": "test/systems/progression/StartSystem.t.sol",
     "test": "testStart",
     "name": "Start",
-    "gasUsed": 1701781
+    "gasUsed": 1701831
   },
   {
     "file": "test/systems/tank/TankSystem.t.sol",
     "test": "testDetachTank",
     "name": "Unplug tank",
-    "gasUsed": 53561
+    "gasUsed": 53609
   },
   {
     "file": "test/systems/tank/TankSystem.t.sol",
     "test": "testEmptyTank",
     "name": "Empty tank",
-    "gasUsed": 39922
+    "gasUsed": 39807
   },
   {
     "file": "test/systems/tank/TankSystem.t.sol",
     "test": "testattachTank",
     "name": "Plug in tank",
-    "gasUsed": 105883
+    "gasUsed": 105931
   }
 ]

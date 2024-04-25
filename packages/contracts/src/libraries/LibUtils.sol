@@ -33,7 +33,7 @@ library LibUtils {
    * @param _upperBound upper bound
    * @return clamped value
    */
-  function clamp(uint32 _value, uint32 _upperBound) internal pure returns (uint32) {
+  function clamp(uint256 _value, uint256 _upperBound) internal pure returns (uint256) {
     if (_value > _upperBound) {
       return _upperBound;
     } else {
@@ -114,7 +114,7 @@ library LibUtils {
   /**
    * @dev Subtract without underflow
    */
-  function safeSubtract(uint32 a, uint32 b) internal pure returns (uint32) {
+  function safeSubtract(uint256 a, uint256 b) internal pure returns (uint256) {
     if (b > a) {
       // If b is greater than a, return 0 to prevent underflow
       return 0;

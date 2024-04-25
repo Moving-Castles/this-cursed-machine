@@ -17,7 +17,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials } from "../src/libraries/Libraries.sol";
-import { ONE_MINUTE, ONE_DAY, ONE_HOUR } from "../src/constants.sol";
+import { ONE_MINUTE, ONE_DAY, ONE_HOUR, ONE_UNIT } from "../src/constants.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -45,7 +45,7 @@ contract PostDeploy is Script {
     LibInitRecipes.init();
 
     // Create offer
-    LibOffer.create(PublicMaterials.BUG, 10000, 100); // 1:1 ratio : 100 $BUG => 10000 Bug (Shown as 100 Bugs with scale-down in UI)
+    LibOffer.create(PublicMaterials.BUG, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
 
     vm.stopBroadcast();
   }

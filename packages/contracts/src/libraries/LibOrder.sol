@@ -11,10 +11,10 @@ library LibOrder {
    * @param _creator Creator of the order
    * @param _title Title of the order
    * @param _materialId Material id to be produced
-   * @param _amount Amount of material to be produced
+   * @param _amount Amount of material to be produced in whole units
    * @param _isTutorial Is the order a tutorial order
    * @param _tutorialLevel Tutorial level of the order
-   * @param _reward Reward for completing the order
+   * @param _reward Reward for completing the order in whole units
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can complete the order
    */
@@ -23,7 +23,7 @@ library LibOrder {
     address _creator,
     string memory _title,
     MaterialId _materialId,
-    uint32 _amount,
+    uint256 _amount,
     bool _isTutorial,
     uint32 _tutorialLevel,
     uint256 _reward,

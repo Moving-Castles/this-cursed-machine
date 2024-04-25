@@ -23,7 +23,7 @@ struct OrderData {
   uint256 creationBlock;
   address creator;
   MaterialId materialId;
-  uint32 amount;
+  uint256 amount;
   uint256 expirationBlock;
   uint256 reward;
   uint32 maxPlayers;
@@ -35,12 +35,12 @@ library Order {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f726465720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x008a070120140e04202004000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x00a6070120140e20202004000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, address, bytes14, uint32, uint256, uint256, uint32, string)
-  Schema constant _valueSchema = Schema.wrap(0x008a07011f614d031f1f03c50000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, address, bytes14, uint256, uint256, uint256, uint32, string)
+  Schema constant _valueSchema = Schema.wrap(0x00a607011f614d1f1f1f03c50000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -210,29 +210,29 @@ library Order {
   /**
    * @notice Get amount.
    */
-  function getAmount(bytes32 key) internal view returns (uint32 amount) {
+  function getAmount(bytes32 key) internal view returns (uint256 amount) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get amount.
    */
-  function _getAmount(bytes32 key) internal view returns (uint32 amount) {
+  function _getAmount(bytes32 key) internal view returns (uint256 amount) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set amount.
    */
-  function setAmount(bytes32 key, uint32 amount) internal {
+  function setAmount(bytes32 key, uint256 amount) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -242,7 +242,7 @@ library Order {
   /**
    * @notice Set amount.
    */
-  function _setAmount(bytes32 key, uint32 amount) internal {
+  function _setAmount(bytes32 key, uint256 amount) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -575,7 +575,7 @@ library Order {
     uint256 creationBlock,
     address creator,
     MaterialId materialId,
-    uint32 amount,
+    uint256 amount,
     uint256 expirationBlock,
     uint256 reward,
     uint32 maxPlayers,
@@ -608,7 +608,7 @@ library Order {
     uint256 creationBlock,
     address creator,
     MaterialId materialId,
-    uint32 amount,
+    uint256 amount,
     uint256 expirationBlock,
     uint256 reward,
     uint32 maxPlayers,
@@ -691,7 +691,7 @@ library Order {
       uint256 creationBlock,
       address creator,
       MaterialId materialId,
-      uint32 amount,
+      uint256 amount,
       uint256 expirationBlock,
       uint256 reward,
       uint32 maxPlayers
@@ -703,13 +703,13 @@ library Order {
 
     materialId = MaterialId.wrap(Bytes.getBytes14(_blob, 52));
 
-    amount = (uint32(Bytes.getBytes4(_blob, 66)));
+    amount = (uint256(Bytes.getBytes32(_blob, 66)));
 
-    expirationBlock = (uint256(Bytes.getBytes32(_blob, 70)));
+    expirationBlock = (uint256(Bytes.getBytes32(_blob, 98)));
 
-    reward = (uint256(Bytes.getBytes32(_blob, 102)));
+    reward = (uint256(Bytes.getBytes32(_blob, 130)));
 
-    maxPlayers = (uint32(Bytes.getBytes4(_blob, 134)));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 162)));
   }
 
   /**
@@ -779,7 +779,7 @@ library Order {
     uint256 creationBlock,
     address creator,
     MaterialId materialId,
-    uint32 amount,
+    uint256 amount,
     uint256 expirationBlock,
     uint256 reward,
     uint32 maxPlayers
@@ -816,7 +816,7 @@ library Order {
     uint256 creationBlock,
     address creator,
     MaterialId materialId,
-    uint32 amount,
+    uint256 amount,
     uint256 expirationBlock,
     uint256 reward,
     uint32 maxPlayers,

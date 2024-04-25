@@ -11,7 +11,7 @@ import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.s
 import { _balancesTableId } from "@latticexyz/world-modules/src/modules/erc20-puppet/utils.sol";
 import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Balances.sol";
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
-import { ONE_TOKEN_UNIT } from "../../../src/constants.sol";
+import { ONE_UNIT } from "../../../src/constants.sol";
 
 contract DevSystemTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
@@ -24,7 +24,7 @@ contract DevSystemTest is BaseTest {
     vm.stopPrank();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
   }
 
   function testCharge() public {
@@ -34,12 +34,12 @@ contract DevSystemTest is BaseTest {
     world.reward();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
 
     world.charge();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100 * ONE_TOKEN_UNIT);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100 * ONE_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900 * ONE_UNIT);
 
     vm.stopPrank();
   }
@@ -51,7 +51,7 @@ contract DevSystemTest is BaseTest {
     world.graduate();
 
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000 * ONE_TOKEN_UNIT);
+    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000 * ONE_UNIT);
 
     vm.stopPrank();
   }

@@ -5,6 +5,7 @@ import type { SimulatedEntities } from "../simulated/types"
 import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { FLOW_RATE } from "@modules/state/simulated/constants"
 
 import {
   organizePatches,
@@ -13,8 +14,6 @@ import {
   createInletTankPatches,
   backtraceOutletConnection,
 } from "./patches"
-
-const FLOW_RATE = 1000
 
 /**
  * Processes the materials through the network of machines until all machines are resolved.
