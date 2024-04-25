@@ -94,7 +94,9 @@
   const close = () => dispatch("end", msg)
 
   onMount(() => {
-    playSound("tcm", "asisstantHit")
+    setTimeout(() => {
+      playSound("tcm", "asisstantHit")
+    }, 3000)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }
