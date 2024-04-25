@@ -55,19 +55,31 @@
 
   async function sendAccept() {
     $orderAcceptInProgress = key
-    playSound("tcm", "listPrint")
     const action = acceptOrder(key)
-    await waitForCompletion(action)
-    playSound("tcm", "TRX_yes")
+    const s = playSound("tcm", "acceptOrderLoading", true)
+    try {
+      await waitForCompletion(action)
+      s?.stop()
+      playSound("tcm", "acceptOrderSuccess")
+    } catch (error) {
+      s?.stop()
+      playSound("tcm", "acceptOrderFail")
+    }
     $orderAcceptInProgress = "0x0"
   }
 
   async function sendUnaccept() {
     $orderAcceptInProgress = key
-    playSound("tcm", "listPrint")
     const action = unacceptOrder()
-    await waitForCompletion(action)
-    playSound("tcm", "TRX_yes")
+    const s = playSound("tcm", "acceptOrderLoading", true)
+    try {
+      await waitForCompletion(action)
+      s?.stop()
+      playSound("tcm", "acceptOrderFail")
+    } catch (error) {
+      s?.stop()
+      playSound("tcm", "acceptOrderFail")
+    }
     $orderAcceptInProgress = "0x0"
   }
 

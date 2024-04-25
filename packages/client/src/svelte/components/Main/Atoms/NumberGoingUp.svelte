@@ -21,18 +21,18 @@
       previousValue = $goingUp
       $goingUp = Number(value)
       tweening = true
-      let interval = setInterval(() => playSound("tcm", "bugsUp"), 70)
+      // const s = playSound("tcm", "inputBugs", true)
+      // let interval = setInterval(() => playSound("tcm", "bugsUp"), 70)
 
       setTimeout(() => {
         if (previousValue > $goingUp) {
           emphasis = "emphasis-failure"
-          playSound("tcm", "bugs")
         } else {
           emphasis = "emphasis-success"
-          playSound("tcm", "bugs")
         }
 
-        clearInterval(interval)
+        // s?.stop()
+        // playSound("tcm", "bugs")
 
         setTimeout(() => {
           emphasis = ""

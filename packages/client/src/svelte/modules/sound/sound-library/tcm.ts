@@ -153,4 +153,26 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/tank_cable_attach-sfx_01.mp3",
     volume: 1,
   },
+  //
+  acceptOrderLoading: {
+    src: "./sounds/tcm/accept_order_loading-loop_01.mp3",
+    volume: 1,
+  },
+  acceptOrderFail: {
+    src: "./sounds/tcm/accept_order_fail-hit_01.mp3",
+    volume: 1,
+  },
+  acceptOrderSuccess: {
+    src: "./sounds/tcm/accept_order_success-hit_01.mp3",
+    volume: 1,
+  },
+  //
+  inputBugs: {
+    src: "./sounds/tcm/input_bugs-loop_01.mp3",
+    volume: 1,
+  },
+  pumpOut: {
+    src: "./sounds/tcm/pump_out-loop_01.mp3",
+    volume: 1,
+  },
 }
