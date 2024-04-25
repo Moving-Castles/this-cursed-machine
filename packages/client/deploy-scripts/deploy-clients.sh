@@ -19,7 +19,7 @@ cd ./dist
 # NETLIFY_SITE_ID=$RHODOLITE_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 
 # Deploy for Redstone test
-NETLIFY_SITE_ID=$REDSTONE_TEST_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
+# NETLIFY_SITE_ID=$REDSTONE_TEST_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN
 
 # Deploy for Garnet
 NETLIFY_SITE_ID=$GARNET_CLIENT_ID netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN

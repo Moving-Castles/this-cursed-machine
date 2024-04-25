@@ -28,6 +28,10 @@ export default defineWorld({
                 dataStruct: true
             }
         },
+        /*
+         * Information about all materials in the world
+         * Stores the address of the ERC20 token contract
+         */
         MaterialMetadata: {
             key: ["materialId"],
             schema: {
