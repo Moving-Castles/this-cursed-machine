@@ -2,12 +2,12 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { MachineType, LastResolved, MaterialType, OutgoingConnections, MachinesInPod, TankConnection, FixedEntities, FixedEntitiesData, BuildIndex } from "../codegen/index.sol";
-import { MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { MachineType, LastResolved, ContainedMaterial, OutgoingConnections, MachinesInPod, TankConnection, FixedEntities, FixedEntitiesData, BuildIndex } from "../codegen/index.sol";
+import { MACHINE_TYPE } from "../codegen/common.sol";
 import { LibPod } from "./LibPod.sol";
 import { LibMachine } from "./LibMachine.sol";
 import { LibTank } from "./LibTank.sol";
-import { LibUtils } from "./LibUtils.sol";
+import { LibMaterial, MaterialId } from "./LibMaterial.sol";
 import { FLOW_RATE } from "../constants.sol";
 import { Product } from "../structs.sol";
 
@@ -67,10 +67,10 @@ library LibNetwork {
         if (MachineType.get(node) == MACHINE_TYPE.INLET) {
           // Get material from tank
           uint tankIndex = BuildIndex.get(node) - 1;
-          MATERIAL_TYPE materialType = MaterialType.get(connectedTanks[tankIndex]);
+          MaterialId materialId = ContainedMaterial.get(connectedTanks[tankIndex]);
 
           // Mark as resolved and continue if inlet is empty
-          if (materialType == MATERIAL_TYPE.NONE) {
+          if (!materialId.isRegistered()) {
             resolvedNodes[counter.resolved] = node;
             counter.resolved++;
             continue;
@@ -82,7 +82,7 @@ library LibNetwork {
 
           inputs[counter.inputs] = Product({
             machineId: node,
-            materialType: materialType,
+            materialId: materialId,
             amount: FLOW_RATE,
             inletActive: newInletActive
           });
@@ -102,7 +102,7 @@ library LibNetwork {
         }
 
         // Skip if node has no input
-        if (currentInputsCount == 0 || currentInputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+        if (currentInputsCount == 0 || !currentInputs[0].materialId.isRegistered()) continue;
 
         // If this is a mixer and it has less than two inputs:
         // skip without marking as resolved to avoid missing the second input
@@ -118,7 +118,7 @@ library LibNetwork {
         // Handle outlet
         if (node == fixedEntities.outlet) {
           // Continue if no output
-          if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) continue;
+          if (!currentOutputs[0].materialId.isRegistered()) continue;
           // Write to tank
           LibTank.write(
             [connectedTanks[0], connectedTanks[1]],
@@ -143,10 +143,10 @@ library LibNetwork {
 
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {
-          if (currentOutputs[k].materialType != MATERIAL_TYPE.NONE) {
+          if (currentOutputs[k].materialId.isRegistered()) {
             Product memory newProduct = Product({
               machineId: outgoingConnectTargets[k],
-              materialType: currentOutputs[k].materialType,
+              materialId: currentOutputs[k].materialId,
               amount: currentOutputs[k].amount,
               inletActive: currentOutputs[k].inletActive
             });

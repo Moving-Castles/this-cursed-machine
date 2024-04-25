@@ -33,7 +33,7 @@ library LibUtils {
    * @param _upperBound upper bound
    * @return clamped value
    */
-  function clamp(uint32 _value, uint32 _upperBound) internal pure returns (uint32) {
+  function clamp(uint256 _value, uint256 _upperBound) internal pure returns (uint256) {
     if (_value > _upperBound) {
       return _upperBound;
     } else {
@@ -60,26 +60,6 @@ library LibUtils {
    */
   function addressToEntityKey(address _address) internal pure returns (bytes32 key) {
     return bytes32(uint256(uint160(_address)));
-  }
-
-  /**
-   * @notice Generate a unique identifier for a pair of `uint` values.
-   * @dev This function uses the Cantor pairing function to produce a unique
-   * identifier from two `uint` values. The order of input values does not affect
-   * the generated identifier, meaning that (a, b) will produce the same output
-   * as (b, a). Note that the input values should represent valid `MATERIAL_TYPE`
-   * enum values to ensure consistent behavior.
-   * @param a First `uint` value representing a `MATERIAL_TYPE`.
-   * @param b Second `uint` value representing a `MATERIAL_TYPE`.
-   * @return A unique identifier derived from the inputs (a, b).
-   */
-  function getUniqueIdentifier(uint256 a, uint256 b) internal pure returns (uint256) {
-    // Ensure a is always smaller than or equal to b
-    if (a > b) {
-      (a, b) = (b, a);
-    }
-
-    return ((a + b) * (a + b + 1)) / 2 + b;
   }
 
   /**
@@ -134,7 +114,7 @@ library LibUtils {
   /**
    * @dev Subtract without underflow
    */
-  function safeSubtract(uint32 a, uint32 b) internal pure returns (uint32) {
+  function safeSubtract(uint256 a, uint256 b) internal pure returns (uint256) {
     if (b > a) {
       // If b is greater than a, return 0 to prevent underflow
       return 0;
@@ -149,7 +129,7 @@ library LibUtils {
    * @param array The array to check
    * @param element The element to check for
    */
-  function arrayIncludes(uint8[] memory array, uint8 element) internal pure returns (bool) {
+  function arrayIncludes(bytes14[] memory array, bytes14 element) internal pure returns (bool) {
     for (uint256 i = 0; i < array.length; i++) {
       if (array[i] == element) {
         return true;

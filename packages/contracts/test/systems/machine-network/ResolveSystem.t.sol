@@ -4,8 +4,8 @@ import { console } from "forge-std/console.sol";
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
-import { FLOW_RATE } from "../../../src/constants.sol";
+import { MACHINE_TYPE, ENTITY_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
+import { FLOW_RATE, ONE_UNIT } from "../../../src/constants.sol";
 
 contract ResolveSystemTest is BaseTest {
   bytes32 playerEntity;
@@ -37,25 +37,25 @@ contract ResolveSystemTest is BaseTest {
   function checkProcessing(
     uint32 blocksToWait,
     uint32 divisor,
-    uint32 initialInletAmount,
-    MATERIAL_TYPE inletMaterialType,
-    MATERIAL_TYPE expectedOutputMaterialType
+    uint256 initialInletAmount,
+    MaterialId inletMaterialId,
+    MaterialId expectedOutputMaterialId
   ) internal {
     // Check inlet material type and amount
-    uint32 spentInletMaterial = blocksToWait * FLOW_RATE;
-    uint32 remainingInletMaterial = LibUtils.safeSubtract(initialInletAmount, spentInletMaterial);
+    uint256 spentInletMaterial = blocksToWait * FLOW_RATE;
+    uint256 remainingInletMaterial = LibUtils.safeSubtract(initialInletAmount, spentInletMaterial);
 
     // Material type is none if there is no remaining material
     assertEq(
-      uint32(MaterialType.get(tanksInPod[0])),
-      remainingInletMaterial == 0 ? uint32(MATERIAL_TYPE.NONE) : uint32(inletMaterialType)
+      ContainedMaterial.get(tanksInPod[0]).unwrap(),
+      remainingInletMaterial == 0 ? LibMaterial.NONE.unwrap() : inletMaterialId.unwrap()
     );
     assertEq(Amount.get(tanksInPod[0]), remainingInletMaterial);
 
     // Check outlet material type and amount
-    assertEq(uint32(MaterialType.get(tanksInPod[1])), uint32(expectedOutputMaterialType));
-    uint32 producedOutletMaterial = (blocksToWait * FLOW_RATE) / divisor;
-    uint32 cappedProducedOutletMaterial = LibUtils.clamp(producedOutletMaterial, (initialInletAmount / divisor));
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), expectedOutputMaterialId.unwrap());
+    uint256 producedOutletMaterial = (blocksToWait * FLOW_RATE) / divisor;
+    uint256 cappedProducedOutletMaterial = LibUtils.clamp(producedOutletMaterial, (initialInletAmount / divisor));
     assertEq(Amount.get(tanksInPod[1]), cappedProducedOutletMaterial);
   }
 
@@ -64,9 +64,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -95,7 +95,7 @@ contract ResolveSystemTest is BaseTest {
     // // Output
     // assertEq(Amount.get(tanksInPod[1]), 5000);
 
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.BUG);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.BUG);
   }
 
   function testResolveInlet2() public {
@@ -103,9 +103,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet 1
     world.plugTank(tanksInPod[0], inletEntities[1]);
@@ -132,7 +132,7 @@ contract ResolveSystemTest is BaseTest {
     // // Output
     // assertEq(Amount.get(tanksInPod[1]), 5000);
 
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.BUG);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.BUG);
   }
 
   function testMachineProcessingLoss() public {
@@ -140,9 +140,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -166,7 +166,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
   }
 
   function testDoubleMachineProcessingLoss() public {
@@ -174,9 +174,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -206,7 +206,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 4; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
   }
 
   function testCapByTankCapacity() public {
@@ -214,9 +214,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -240,7 +240,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
   }
 
   function testCapAtInletMaterialAmount() public {
@@ -248,9 +248,9 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
 
-    uint32 initialInletAmount = Amount.get(tanksInPod[0]);
+    uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -274,7 +274,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, MATERIAL_TYPE.BUG, MATERIAL_TYPE.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
   }
 
   function testLastResolveValueIsUpdated() public {
@@ -341,10 +341,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill tank 0 with 20000 MATERIAL_TYPE.BLOOD
-    world.fillTank(tanksInPod[0], 20000, MATERIAL_TYPE.BLOOD);
+    // Fill tank 0 with 20000 PublicMaterials.BLOOD
+    world.fillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
-    world.fillTank(tanksInPod[1], 10000, MATERIAL_TYPE.PISS);
+    world.fillTank(tanksInPod[1], 100, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -376,17 +376,17 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Tank 0 should have 11000 MATERIAL_TYPE.BLOOD
-    assertEq(uint32(MaterialType.get(tanksInPod[0])), uint32(MATERIAL_TYPE.BLOOD));
-    assertEq(Amount.get(tanksInPod[0]), 11000);
+    // Tank 0 should have 110 PublicMaterials.BLOOD
+    assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.BLOOD.unwrap());
+    assertEq(Amount.get(tanksInPod[0]), 110 * ONE_UNIT);
 
-    // Tank 1 should have 1000 MATERIAL_TYPE.PISS
-    assertEq(uint32(MaterialType.get(tanksInPod[1])), uint32(MATERIAL_TYPE.PISS));
-    assertEq(Amount.get(tanksInPod[1]), 1000);
+    // Tank 1 should have 10 PublicMaterials.PISS
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
+    assertEq(Amount.get(tanksInPod[1]), 10 * ONE_UNIT);
 
-    // Tank 2 should have 9000 MATERIAL_TYPE.HEMATURIC_FLUID
-    assertEq(uint32(MaterialType.get(tanksInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
-    assertEq(Amount.get(tanksInPod[2]), 9000);
+    // Tank 2 should have 90 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
+    assertEq(Amount.get(tanksInPod[2]), 90 * ONE_UNIT);
   }
 
   function testResolveSplitterMixer() public {
@@ -394,10 +394,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill tank 0 with 20000 MATERIAL_TYPE.BLOOD
-    world.fillTank(tanksInPod[0], 20000, MATERIAL_TYPE.BLOOD);
+    // Fill tank 0 with 20000 PublicMaterials.BLOOD
+    world.fillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
-    world.fillTank(tanksInPod[1], 10000, MATERIAL_TYPE.PISS);
+    world.fillTank(tanksInPod[1], 100, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -435,17 +435,17 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Tank 0 should have 11000 MATERIAL_TYPE.BLOOD
-    assertEq(uint32(MaterialType.get(tanksInPod[0])), uint32(MATERIAL_TYPE.BLOOD));
-    assertEq(Amount.get(tanksInPod[0]), 11000);
+    // Tank 0 should have 110 PublicMaterials.BLOOD
+    assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.BLOOD.unwrap());
+    assertEq(Amount.get(tanksInPod[0]), 110 * ONE_UNIT);
 
-    // Tank 1 should have 1000 MATERIAL_TYPE.PISS
-    assertEq(uint32(MaterialType.get(tanksInPod[1])), uint32(MATERIAL_TYPE.PISS));
-    assertEq(Amount.get(tanksInPod[1]), 1000);
+    // Tank 1 should have 10 PublicMaterials.PISS
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
+    assertEq(Amount.get(tanksInPod[1]), 10 * ONE_UNIT);
 
-    // Tank 2 should have 4500 MATERIAL_TYPE.HEMATURIC_FLUID
-    assertEq(uint32(MaterialType.get(tanksInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
-    assertEq(Amount.get(tanksInPod[2]), 4500);
+    // Tank 2 should have 45 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
+    assertEq(Amount.get(tanksInPod[2]), 45 * ONE_UNIT);
   }
 
   function testUnusedInlet() public {
@@ -453,10 +453,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill tank 0 with 20000 MATERIAL_TYPE.AMMONIA
-    world.fillTank(tanksInPod[0], 20000, MATERIAL_TYPE.AMMONIA);
+    // Fill tank 0 with 20000 PublicMaterials.UREA
+    world.fillTank(tanksInPod[0], 200, PublicMaterials.UREA);
     // Fill tank 1 with 10000 CONGEALED_FAT
-    world.fillTank(tanksInPod[1], 10000, MATERIAL_TYPE.CONGEALED_FAT);
+    world.fillTank(tanksInPod[1], 100, PublicMaterials.CONGEALED_FAT);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -479,17 +479,17 @@ contract ResolveSystemTest is BaseTest {
 
     vm.stopPrank();
 
-    // Tank 0 should have 20000 MATERIAL_TYPE.AMMONIA
-    assertEq(uint32(MaterialType.get(tanksInPod[0])), uint32(MATERIAL_TYPE.AMMONIA));
-    assertEq(Amount.get(tanksInPod[0]), 20000);
+    // Tank 0 should have 200 PublicMaterials.UREA
+    assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.UREA.unwrap());
+    assertEq(Amount.get(tanksInPod[0]), 200 * ONE_UNIT);
 
-    // Tank 1 should have 1000 MATERIAL_TYPE.CONGEALED_FAT
-    assertEq(uint32(MaterialType.get(tanksInPod[1])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
-    assertEq(Amount.get(tanksInPod[1]), 1000);
+    // Tank 1 should have 10 PublicMaterials.CONGEALED_FAT
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
+    assertEq(Amount.get(tanksInPod[1]), 10 * ONE_UNIT);
 
-    // Tank 2 should have 9000 MATERIAL_TYPE.CONGEALED_FAT
-    assertEq(uint32(MaterialType.get(tanksInPod[2])), uint32(MATERIAL_TYPE.CONGEALED_FAT));
-    assertEq(Amount.get(tanksInPod[2]), 9000);
+    // Tank 2 should have 90 PublicMaterials.CONGEALED_FAT
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
+    assertEq(Amount.get(tanksInPod[2]), 90 * ONE_UNIT);
   }
 
   function testOneMixerTwoInlets() public {
@@ -497,10 +497,10 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill tank 0 with 20000 MATERIAL_TYPE.BUG
-    world.fillTank(tanksInPod[0], 10000, MATERIAL_TYPE.BUG);
-    // Fill tank 1 with 10000 MATERIAL_TYPE.PISS
-    world.fillTank(tanksInPod[1], 20000, MATERIAL_TYPE.PISS);
+    // Fill tank 0 with 20000 PublicMaterials.BUG
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    // Fill tank 1 with 10000 PublicMaterials.PISS
+    world.fillTank(tanksInPod[1], 200, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -544,16 +544,16 @@ contract ResolveSystemTest is BaseTest {
      *
      */
 
-    // Tank 2 (outlet tank) should have 5000 MATERIAL_TYPE.HEMATURIC_FLUID
-    assertEq(uint32(MaterialType.get(tanksInPod[2])), uint32(MATERIAL_TYPE.HEMATURIC_FLUID));
-    assertEq(Amount.get(tanksInPod[2]), 5000);
+    // Tank 2 (outlet tank) should have 50 PublicMaterials.HEMATURIC_FLUID
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.HEMATURIC_FLUID.unwrap());
+    assertEq(Amount.get(tanksInPod[2]), 50 * ONE_UNIT);
 
-    // Tank 0 should have 0 MATERIAL_TYPE.NONE (exhausted)
-    assertEq(uint32(MaterialType.get(tanksInPod[0])), uint32(MATERIAL_TYPE.NONE));
+    // Tank 0 should have 0 PublicMaterials.NONE (exhausted)
+    assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), LibMaterial.NONE.unwrap());
     assertEq(Amount.get(tanksInPod[0]), 0);
 
-    // Tank 1 should have 10000 MATERIAL_TYPE.PISS
-    assertEq(uint32(MaterialType.get(tanksInPod[1])), uint32(MATERIAL_TYPE.PISS));
-    assertEq(Amount.get(tanksInPod[1]), 10000);
+    // Tank 1 should have 100 PublicMaterials.PISS
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
+    assertEq(Amount.get(tanksInPod[1]), 100 * ONE_UNIT);
   }
 }

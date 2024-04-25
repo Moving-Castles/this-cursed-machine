@@ -1,11 +1,10 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { player } from "@modules/state/base/stores"
+  import { materialMetadata} from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { blocksToReadableTime } from "@modules/utils"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { displayAmount } from "@modules/utils"
 </script>
 
 <div
@@ -20,8 +19,8 @@
       {#if !$playerOrder}
         NONE
       {:else}
-        {$playerOrder?.order.amount / UI_SCALE_FACTOR}
-        {MATERIAL_TYPE[$playerOrder?.order.materialType]}
+        {displayAmount($playerOrder?.order.amount)}
+        {$materialMetadata[$playerOrder?.order.materialId]?.name}
       {/if}
     </div>
 

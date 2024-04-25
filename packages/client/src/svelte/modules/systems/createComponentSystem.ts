@@ -15,7 +15,7 @@ export function createComponentSystem(componentKey: string) {
         : nextValue
 
     const entityID = update.entity
-    const propertyName = toCamelCase(componentKey)
+    const propertyName = componentKey === "ContainedMaterial" ? "materialId" : toCamelCase(componentKey)
 
     entities.update(value => {
       // Create an empty entity if it does not exist

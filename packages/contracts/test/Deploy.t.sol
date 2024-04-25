@@ -12,8 +12,6 @@ import { Balances } from "@latticexyz/world-modules/src/modules/tokens/tables/Ba
 import { Puppet } from "@latticexyz/world-modules/src/modules/puppet/Puppet.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
-import { MATERIAL_TYPE } from "../src/codegen/common.sol";
-
 contract DeployTest is BaseTest {
   using WorldResourceIdInstance for ResourceId;
 

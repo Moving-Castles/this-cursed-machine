@@ -2,50 +2,49 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, MaterialType, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOrder, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
+import { GameConfig, EntityType, CarriedBy, ContainedMaterial, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
+import { LibUtils, LibOrder, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_UNIT } from "../../constants.sol";
 
 contract OrderSystem is System {
   /**
    * @notice Create an order
    * @dev Free for admin, charges reward cost (_reward * _maxPlayers) for non-admin
    * @param _title Title of the order
-   * @param _materialType Material type to produce
-   * @param _amount Amount to produce
-   * @param _reward Reward for completing the order in whole token units (1 token = 1e18)
+   * @param _materialId Material id to produce
+   * @param _amount Amount to produce in whole units
+   * @param _reward Reward for completing the order in whole units
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
    */
   function createOrder(
     string memory _title,
-    MATERIAL_TYPE _materialType,
-    uint32 _amount,
-    uint32 _reward,
+    MaterialId _materialId,
+    uint256 _amount,
+    uint256 _reward,
     uint32 _duration,
     uint32 _maxPlayers
   ) public returns (bytes32 orderEntity) {
     require(_maxPlayers > 0, "max players must be greater than 0");
-    // @todo: limit title length
 
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
-      uint32 totalRewardCost = _reward * _maxPlayers;
-      require(LibToken.getTokenBalance(_msgSender()) >= totalRewardCost * ONE_TOKEN_UNIT, "insufficient funds");
-      LibToken.transferToken(_world(), totalRewardCost * ONE_TOKEN_UNIT);
+      uint256 totalRewardCost = (_reward * ONE_UNIT) * _maxPlayers;
+      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(
-      LibUtils.addressToEntityKey(_msgSender()),
+      _msgSender(),
       _title,
-      _materialType,
-      _amount,
+      _materialId,
+      _amount * ONE_UNIT,
       false, // Not tutorial
       0, // Not tutorial
-      _reward,
+      _reward * ONE_UNIT,
       _duration,
       _maxPlayers
     );

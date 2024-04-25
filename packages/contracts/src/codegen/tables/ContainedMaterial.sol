@@ -17,19 +17,19 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
-import { MATERIAL_TYPE } from "./../common.sol";
+import { MaterialId } from "./../../libraries/LibMaterial.sol";
 
-library MaterialType {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "MaterialType", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d6174657269616c5479706500000000);
+library ContainedMaterial {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "ContainedMateria", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x74620000000000000000000000000000436f6e7461696e65644d617465726961);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0001010001000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x000e01000e000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint8)
-  Schema constant _valueSchema = Schema.wrap(0x0001010000000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bytes14)
+  Schema constant _valueSchema = Schema.wrap(0x000e01004d000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -66,85 +66,85 @@ library MaterialType {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 id) internal view returns (MATERIAL_TYPE value) {
+  function getValue(bytes32 id) internal view returns (MaterialId value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 id) internal view returns (MATERIAL_TYPE value) {
+  function _getValue(bytes32 id) internal view returns (MaterialId value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 id) internal view returns (MATERIAL_TYPE value) {
+  function get(bytes32 id) internal view returns (MaterialId value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 id) internal view returns (MATERIAL_TYPE value) {
+  function _get(bytes32 id) internal view returns (MaterialId value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 id, MATERIAL_TYPE value) internal {
+  function setValue(bytes32 id, MaterialId value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(MaterialId.unwrap(value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 id, MATERIAL_TYPE value) internal {
+  function _setValue(bytes32 id, MaterialId value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(MaterialId.unwrap(value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function set(bytes32 id, MATERIAL_TYPE value) internal {
+  function set(bytes32 id, MaterialId value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(MaterialId.unwrap(value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _set(bytes32 id, MATERIAL_TYPE value) internal {
+  function _set(bytes32 id, MaterialId value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(MaterialId.unwrap(value)), _fieldLayout);
   }
 
   /**
@@ -171,7 +171,7 @@ library MaterialType {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(MATERIAL_TYPE value) internal pure returns (bytes memory) {
+  function encodeStatic(MaterialId value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -181,7 +181,7 @@ library MaterialType {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(MATERIAL_TYPE value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+  function encode(MaterialId value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
     EncodedLengths _encodedLengths;

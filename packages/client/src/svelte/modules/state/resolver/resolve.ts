@@ -1,9 +1,11 @@
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
+import { MACHINE_TYPE } from "../base/enums"
+import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
 import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { FLOW_RATE } from "@modules/state/simulated/constants"
 
 import {
   organizePatches,
@@ -12,8 +14,6 @@ import {
   createInletTankPatches,
   backtraceOutletConnection,
 } from "./patches"
-
-const FLOW_RATE = 1000
 
 /**
  * Processes the materials through the network of machines until all machines are resolved.
@@ -81,7 +81,7 @@ export function resolve(
         inputs.push({
           machineId: machineKey,
           sourceMachineId: null,
-          materialType: tanks[tank].materialType,
+          materialId: tanks[tank].materialId,
           amount: FLOW_RATE,
           inletActive: newInletActive,
         })
@@ -130,7 +130,7 @@ export function resolve(
       // Handle outlet
       if (machine.machineType === MACHINE_TYPE.OUTLET) {
         // Continue if no output
-        if (currentOutputs[0].materialType == MATERIAL_TYPE.NONE) return
+        if (currentOutputs[0].materialId == MaterialIdNone) return
 
         // We have reached the outlet, and it is connect to a tank, so circuit is closed
         if (
@@ -144,10 +144,10 @@ export function resolve(
       // Distribute the machine's outputs to the connected machines.
       for (let k = 0; k < machine?.outgoingConnections.length; k++) {
         // No connection
-        if (machine?.outgoingConnections?.[k] === "0") continue
+        if (machine?.outgoingConnections?.[k] === EMPTY_CONNECTION) continue
 
         // Fill output
-        if (currentOutputs[k]?.materialType !== MATERIAL_TYPE.NONE) {
+        if (currentOutputs[k]?.materialId !== MaterialIdNone) {
           const output = currentOutputs[k]
           if (output) {
             output.sourceMachineId = machineKey

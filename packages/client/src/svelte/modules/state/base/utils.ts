@@ -1,6 +1,7 @@
 import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 import { Entity } from "@latticexyz/recs"
 import { decodeEntity } from "@latticexyz/store-sync/recs"
+import { MaterialIdNone } from "./constants"
 
 export function filterByEntitytype(
   entities: Entities,
@@ -42,8 +43,8 @@ export function getRecipes(entities: Entities): Recipe[] {
       )
       return {
         machineType: parseInt(machineType, 16),
-        input: parseInt(input, 16),
-        outputs: recipe[1].recipe?.outputs ?? [0, 0],
+        input: input,
+        outputs: recipe[1].recipe?.outputs ?? [MaterialIdNone, MaterialIdNone],
       } as Recipe
     })
 
@@ -79,4 +80,22 @@ export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
       order.order ? order.order.expirationBlock <= blockNumber : false
     )
   )
+}
+
+export function getMaterialMetadata(entities: Entities): Record<MaterialId, MaterialMetadata> {
+  const materialMetadata: Record<MaterialId, MaterialMetadata> = {}
+  Object.entries(entities)
+    .filter(([_, entity]) => entity.hasOwnProperty("materialMetadata"))
+    .forEach(value => {
+      const { materialId } = decodeEntity(
+        { materialId: "bytes14" },
+        value[0] as Entity
+      )
+      materialMetadata[materialId] = {
+        materialId,
+        ...value[1].materialMetadata
+      } as MaterialMetadata
+    })
+
+  return materialMetadata
 }
