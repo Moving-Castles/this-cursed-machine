@@ -51,7 +51,7 @@
           {key}
           {order}
           active={$player.currentOrder === key}
-          completed={$player.completed?.includes(key) || false}
+          completed={$player.completedOrders?.includes(key) || false}
         />
       {/each}
     </div>

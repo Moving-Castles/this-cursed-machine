@@ -250,8 +250,8 @@ contract OrderSystemTest is BaseTest {
     endGasReport();
 
     assertEq(CurrentOrder.get(playerEntity), bytes32(0));
-    assertEq(Completed.get(orderEntity)[0], playerEntity);
-    assertEq(Completed.get(playerEntity)[0], orderEntity);
+    assertEq(CompletedPlayers.get(orderEntity), 1);
+    assertEq(CompletedOrders.get(playerEntity)[0], orderEntity);
     assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10100 * ONE_UNIT); // 10000 tokens given for graduating
     assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
 

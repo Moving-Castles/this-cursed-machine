@@ -45,7 +45,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testAcceptAndUnacceptOrder",
     "name": "Accept order",
-    "gasUsed": 54558
+    "gasUsed": 54706
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -69,13 +69,13 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Ship (user created order)",
-    "gasUsed": 433059
+    "gasUsed": 411863
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship (admin created order)",
-    "gasUsed": 291635
+    "gasUsed": 270439
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
