@@ -4,7 +4,7 @@ import { GameConfig, GameConfigData } from "../../codegen/index.sol";
 import { LibOrder } from "../LibOrder.sol";
 import { LibUtils } from "../LibUtils.sol";
 import { PublicMaterials } from "./PublicMaterials.sol";
-import { FLOW_RATE, TANK_CAPACITY, ONE_UNIT } from "../../constants.sol";
+import { FLOW_RATE, TANK_CAPACITY, ONE_UNIT, ONE_HOUR } from "../../constants.sol";
 
 library LibInit {
   /**
@@ -26,21 +26,34 @@ library LibInit {
                                  LEVEL 0
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(_adminAddress, "Urine test", PublicMaterials.PISS, 50 * ONE_UNIT, true, 0, 1000 * ONE_UNIT, 0, 0);
-    LibOrder.create(_adminAddress, "Blood test", PublicMaterials.BLOOD, 50 * ONE_UNIT, true, 0, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, true, 0, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, true, 0, 1000 * ONE_UNIT, 0, 0);
 
     /*//////////////////////////////////////////////////////////////
                                  LEVEL 1
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(_adminAddress, "", PublicMaterials.UREA, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
-    LibOrder.create(_adminAddress, "", PublicMaterials.BLOOD_CLOT, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.UREA, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD_CLOT, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
 
     /*//////////////////////////////////////////////////////////////
                                  LEVEL 2
     //////////////////////////////////////////////////////////////*/
 
-    LibOrder.create(_adminAddress, "", PublicMaterials.FERTILIZER, 50 * ONE_UNIT, true, 2, 1000 * ONE_UNIT, 0, 0);
-    LibOrder.create(_adminAddress, "", PublicMaterials.BLOOD_MEAL, 50 * ONE_UNIT, true, 2, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.FERTILIZER, 50 * ONE_UNIT, true, 2, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD_MEAL, 50 * ONE_UNIT, true, 2, 1000 * ONE_UNIT, 0, 0);
+
+    /*//////////////////////////////////////////////////////////////
+                                 TEST
+    //////////////////////////////////////////////////////////////*/
+
+    // 50 PISS => 500 points
+    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, ONE_HOUR, 1);
+
+    // 50 PISS => 200 points
+    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, ONE_HOUR, 20);
+
+    // 50 BLOOD => 200 points
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, ONE_HOUR, 20);
   }
 }

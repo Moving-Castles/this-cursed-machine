@@ -18,4 +18,6 @@ interface IDevSystem {
   function reward() external;
 
   function charge() external;
+
+  function createTestOrder() external;
 }

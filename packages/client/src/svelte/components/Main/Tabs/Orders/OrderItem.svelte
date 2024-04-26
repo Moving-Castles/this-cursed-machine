@@ -1,10 +1,18 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
-  import { materialMetadata, player } from "@modules/state/base/stores"
+  import {
+    materialMetadata,
+    player,
+    gameConfig,
+  } from "@modules/state/base/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
-  import { blocksToReadableTime } from "@modules/utils"
+  import {
+    blocksToReadableTime,
+    shortenAddress,
+    addressToId,
+  } from "@modules/utils"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { orderAcceptInProgress } from "@modules/ui/stores"
@@ -16,7 +24,9 @@
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
 
+  // ID of the order
   export let key: string
+  // The order object
   export let order: Order
   // The order is currently accepted
   export let active = false
@@ -30,6 +40,14 @@
   const name = $materialMetadata[order.order.materialId]?.name
   const spacedName = name?.replaceAll("_", " ")
 
+  const getCreator = (order: Order) => {
+    if (!order.order.creator) return "UNKNOWN"
+    if (order.order.creator === $gameConfig.adminAddress) return "TCM Corp."
+    if ($players[addressToId(order.order.creator)])
+      return $players[addressToId(order.order.creator)].name
+    return shortenAddress(order.order.creator)
+  }
+
   const PULSE_CONDITIONS = [5, 15, 25]
 
   // Get the order metadata from the database
@@ -38,7 +56,7 @@
     {}
   const imageURL =
     staticMaterial && staticMaterial.image
-      ? urlFor(staticMaterial.image).width(400).auto("format").url()
+      ? urlFor(staticMaterial.image).width(200).auto("format").url()
       : ""
 
   // Player is in the process of accepting the order
@@ -46,6 +64,10 @@
   // Player is in the process of accepting another order
   $: unavailable =
     $orderAcceptInProgress !== key && $orderAcceptInProgress !== "0x0"
+  // Maximum number of players has been reached
+  $: exhausted =
+    order.order.maxPlayers > 0 &&
+    (order.completed?.length ?? 0) >= order.order.maxPlayers
 
   async function sendAccept() {
     $orderAcceptInProgress = key
@@ -116,6 +138,20 @@
     {#if active}
       <div class="overlay" />
     {/if}
+
+    {#if completed}
+      <div class="blocking-overlay completed">
+        <div>COMPLETED</div>
+      </div>
+    {:else if exhausted}
+      <div class="blocking-overlay exhausted">
+        <div>EXHAUSTED</div>
+      </div>
+    {/if}
+
+    <!-- * * * * * * * * * * -->
+    <!-- IMAGE -->
+    <!-- * * * * * * * * * * -->
     <div class="material">
       {#if imageURL}
         <img
@@ -143,33 +179,52 @@
       {/if}
     </div>
 
+    <!-- * * * * * * * * * * -->
+    <!-- INNER -->
+    <!-- * * * * * * * * * * -->
     <div class="inner">
+      <!-- * * * * * * * * * * -->
+      <!-- TOP-->
+      <!-- * * * * * * * * * * -->
       <div class="top">
+        <!-- * * * * * * * * * * -->
+        <!-- FIRST COLUMN -->
+        <!-- * * * * * * * * * * -->
         <div class="col col-order">
-          <p class="header">
-            {#if working}
-              <Spinner />
-            {:else}
-              Order #{key.slice(-6)}
-            {/if}
-          </p>
+          <!-- * * * * * * * * * * -->
+          <!-- ORDER CREATOR -->
+          <!-- * * * * * * * * * * -->
+          <div class="header">
+            <span class="padded inverted">
+              Creator: {getCreator(order)}
+            </span>
+          </div>
           <div class="content">
+            <!-- * * * * * * * * * * * * * * * * -->
+            <!-- AMOUNT, MATERIAL AND CATEGORIES -->
+            <!-- * * * * * * * * * * * * * * * * -->
             <div class="center">
               {displayAmount(order.order.amount)}
               {spacedName}
+              <div class="subtitle">
+                {#if staticMaterial.category}
+                  {#each staticMaterial.category as category, i}
+                    <span class="padded inverted-low">{category}</span
+                    >{#if i < staticMaterial.category.length - 1},{/if}
+                  {/each}
+                {/if}
+              </div>
             </div>
-            <p class="subtitle">
-              {#if staticMaterial.category}
-                {#each staticMaterial.category as category, i}
-                  <span class="category">{category}</span
-                  >{#if i < staticMaterial.category.length - 1},{/if}
-                {/each}
-              {/if}
-            </p>
           </div>
         </div>
 
+        <!-- * * * * * * * * * * -->
+        <!-- SECOND COLUMN -->
+        <!-- * * * * * * * * * * -->
         <div class="col col-reward">
+          <!-- * * * * * * * * * * -->
+          <!-- REWARD -->
+          <!-- * * * * * * * * * * -->
           <p class="header">Reward</p>
           <div class="content">
             <div class="center">
@@ -179,14 +234,25 @@
           </div>
         </div>
 
+        <!-- * * * * * * * * * * -->
+        <!-- THIRD COLUMN -->
+        <!-- * * * * * * * * * * -->
         <div class="col col-actions">
+          <!-- * * * * * * * * * * -->
+          <!-- REMAINING TIME -->
+          <!-- * * * * * * * * * * -->
           <p class="header">
-            {#if !$player.tutorial && order.order.expirationBlock != 0}
-              {blocksToReadableTime(
-                Number(order.order.expirationBlock) - Number($blockNumber),
-              )}
-            {/if}
+            <span class="padded inverted">
+              {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
+                {blocksToReadableTime(
+                  Number(order.order.expirationBlock) - Number($blockNumber),
+                )}
+              {/if}
+            </span>
           </p>
+          <!-- * * * * * * * * * * -->
+          <!-- BUTTONS -->
+          <!-- * * * * * * * * * * -->
           <div class="content">
             <div class="center">
               {#if active}
@@ -207,7 +273,13 @@
         </div>
       </div>
 
+      <!-- * * * * * * * * * * -->
+      <!-- BOTTOM -->
+      <!-- * * * * * * * * * * -->
       <div class="bottom">
+        <!-- * * * * * * * * * * -->
+        <!-- PLAYERS WORKING -->
+        <!-- * * * * * * * * * * -->
         <p class="stumps" class:active={stumps.length > 0}>
           {#if working}
             <Spinner />
@@ -215,13 +287,17 @@
             {stumps.length} stump{stumps.length !== 1 ? "s" : ""} at work
           {/if}
         </p>
+        <!-- * * * * * * * * * * -->
+        <!-- PLAYERS COMPLETED -->
+        <!-- * * * * * * * * * * -->
         <p>
           {#if working}
             <Spinner />
           {:else if order.order.maxPlayers === 0}
             {order?.completed?.length || 0} stumps completed
           {:else}
-            {order.order.maxPlayers - (order?.completed?.length || 0)}/50
+            {order.order.maxPlayers - (order?.completed?.length || 0)}/{order
+              .order.maxPlayers}
             available
           {/if}
         </p>
@@ -252,7 +328,6 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      pointer-events: none;
       animation: 5s active ease infinite;
     }
 
@@ -260,8 +335,31 @@
       border: 1px solid var(--color-success);
     }
 
+    .blocking-overlay {
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: var(--z-10);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      background: rgba(0, 0, 0, 0.7);
+
+      &.exhausted {
+        color: var(--color-failure);
+      }
+
+      &.completed {
+        color: var(--color-success);
+      }
+    }
+
     &.completed {
-      opacity: 0.3;
+      pointer-events: none;
     }
 
     &.working {
@@ -321,7 +419,7 @@
         .col {
           display: flex;
           flex-flow: column nowrap;
-          justify-content: space-between;
+          // justify-content: space-between;
           height: 100%;
 
           &.col-order {
@@ -335,17 +433,14 @@
           .header {
             font-size: var(--font-size-small);
             margin-top: 0.2rem;
-            margin-bottom: 2rem;
+            height: 40%;
           }
 
           .content {
-            height: 100%;
-
+            height: 60%;
             .center {
-              margin-bottom: 1rem;
               font-size: var(--font-size-large);
               height: calc(var(--font-size-large) * 4);
-              // color: white;
             }
           }
 
@@ -355,6 +450,7 @@
 
           .bugs,
           .subtitle {
+            margin-top: 6px;
             font-size: var(--font-size-small);
           }
 
@@ -435,5 +531,19 @@
     50% {
       background-color: rgba(146, 250, 59, 0.2);
     }
+  }
+
+  .padded {
+    padding: 3px;
+  }
+
+  .inverted {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .inverted-low {
+    background: var(--color-grey-light);
+    color: var(--color-grey-dark);
   }
 </style>

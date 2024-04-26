@@ -62,8 +62,7 @@ export default defineWorld({
                 amount: "uint256",
                 expirationBlock: "uint256",
                 reward: "uint256",
-                maxPlayers: "uint32",
-                title: "string"
+                maxPlayers: "uint32"
             }
         },
         Offer: {

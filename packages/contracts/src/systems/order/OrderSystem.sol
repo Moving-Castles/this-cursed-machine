@@ -12,7 +12,6 @@ contract OrderSystem is System {
   /**
    * @notice Create an order
    * @dev Free for admin, charges reward cost (_reward * _maxPlayers) for non-admin
-   * @param _title Title of the order
    * @param _materialId Material id to produce
    * @param _amount Amount to produce in whole units
    * @param _reward Reward for completing the order in whole units
@@ -21,7 +20,6 @@ contract OrderSystem is System {
    * @return orderEntity Id of the offer entity
    */
   function createOrder(
-    string memory _title,
     MaterialId _materialId,
     uint256 _amount,
     uint256 _reward,
@@ -39,7 +37,6 @@ contract OrderSystem is System {
 
     orderEntity = LibOrder.create(
       _msgSender(),
-      _title,
       _materialId,
       _amount * ONE_UNIT,
       false, // Not tutorial
@@ -87,6 +84,12 @@ contract OrderSystem is System {
 
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
     require(!ArrayLib.includes(Completed.get(playerEntity), _orderEntity), "order already completed");
+
+    // maxPlayers == 0 means the order has no limit
+    require(
+      currentOrder.maxPlayers == 0 || Completed.length(_orderEntity) < currentOrder.maxPlayers,
+      "max players reached"
+    );
 
     CurrentOrder.set(playerEntity, _orderEntity);
   }

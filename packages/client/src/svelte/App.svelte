@@ -18,6 +18,9 @@
   import { playSound } from "@modules/sound"
   // import { mount } from "@latticexyz/dev-tools"
 
+  import { materialMetadata } from "@modules/state/base/stores"
+  $: console.log($materialMetadata)
+
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"

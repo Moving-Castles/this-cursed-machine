@@ -69,7 +69,7 @@ contract OrderSystemTest is BaseTest {
     prankAdmin();
     // Create order
     startGasReport("Create order as admin");
-    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
+    world.createOrder(PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     endGasReport();
 
     vm.stopPrank();
@@ -87,7 +87,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     startGasReport("Create order as user");
-    bytes32 testOrder = world.createOrder("Test order", PublicMaterials.PISS, 50, 50, ONE_HOUR, 1);
+    bytes32 testOrder = world.createOrder(PublicMaterials.PISS, 50, 50, ONE_HOUR, 1);
     endGasReport();
 
     OrderData memory orderData = Order.get(testOrder);
@@ -128,7 +128,9 @@ contract OrderSystemTest is BaseTest {
 
     // Unplug & Ship
     world.unplugTank(tanksInPod[1]);
+    startGasReport("Ship (user created order)");
     world.shipTank(tanksInPod[1]);
+    endGasReport();
 
     vm.stopPrank();
 
@@ -143,7 +145,7 @@ contract OrderSystemTest is BaseTest {
 
     // Create order
     vm.expectRevert("insufficient funds");
-    world.createOrder("", PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
+    world.createOrder(PublicMaterials.BLOOD_MEAL, 100000, 1000, ONE_HOUR, 10);
 
     vm.stopPrank();
   }
@@ -151,7 +153,7 @@ contract OrderSystemTest is BaseTest {
   function testRevertMaxPlayersReached() public {
     // Create order
     prankAdmin();
-    bytes32 order = world.createOrder("", PublicMaterials.BLOOD_MEAL, 0, 100, ONE_HOUR, 1);
+    bytes32 order = world.createOrder(PublicMaterials.BLOOD_MEAL, 0, 100, ONE_HOUR, 1);
     ContainedMaterial.set(tanksInPod[1], PublicMaterials.BLOOD_MEAL);
     vm.stopPrank();
 
@@ -163,21 +165,18 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(bob);
     // Spawn player
-    bytes32 bobEntity = world.spawn("alice");
+    world.spawn("bob");
     world.start();
-    bytes32 bobPodEntity = CarriedBy.get(bobEntity);
-    bytes32[] memory bobTanksInPod = TanksInPod.get(bobPodEntity);
     world.graduate();
-    world.acceptOrder(order);
     vm.expectRevert("max players reached");
-    world.shipTank(bobTanksInPod[1]);
+    world.acceptOrder(order);
     vm.stopPrank();
   }
 
   function testRevertPlayerInTutorial() public {
     prankAdmin();
     // Create order
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -191,7 +190,7 @@ contract OrderSystemTest is BaseTest {
   function testAcceptAndUnacceptOrder() public {
     // Create order
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -216,7 +215,7 @@ contract OrderSystemTest is BaseTest {
 
   function testShip() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BLOOD, 20, 100, ONE_HOUR, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD, 20, 100, ONE_HOUR, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -246,7 +245,7 @@ contract OrderSystemTest is BaseTest {
     // Detach tank and resolve
     world.unplugTank(fixedEntities.outlet);
 
-    startGasReport("Ship");
+    startGasReport("Ship (admin created order)");
     world.shipTank(tanksInPod[1]);
     endGasReport();
 
@@ -259,7 +258,7 @@ contract OrderSystemTest is BaseTest {
 
   function testRevertShipOrderExpired() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -279,7 +278,7 @@ contract OrderSystemTest is BaseTest {
 
   function testRevertAcceptOrderExpired() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -297,7 +296,7 @@ contract OrderSystemTest is BaseTest {
 
   function testRevertOrderAlreadyCompleted() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder("", PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);

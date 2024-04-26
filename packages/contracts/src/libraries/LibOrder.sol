@@ -9,7 +9,6 @@ library LibOrder {
   /**
    * @notice Create a new order
    * @param _creator Creator of the order
-   * @param _title Title of the order
    * @param _materialId Material id to be produced
    * @param _amount Amount of material to be produced in whole units
    * @param _isTutorial Is the order a tutorial order
@@ -21,7 +20,6 @@ library LibOrder {
 
   function create(
     address _creator,
-    string memory _title,
     MaterialId _materialId,
     uint256 _amount,
     bool _isTutorial,
@@ -39,11 +37,10 @@ library LibOrder {
       orderEntity,
       OrderData({
         creationBlock: block.number,
+        expirationBlock: _duration == 0 ? 0 : block.number + _duration, // 0 duration means no expiration
         creator: _creator,
-        title: _title,
         materialId: _materialId,
         amount: _amount,
-        expirationBlock: _duration == 0 ? 0 : block.number + _duration, // 0 duration means no expiration
         reward: _reward,
         maxPlayers: _maxPlayers
       })

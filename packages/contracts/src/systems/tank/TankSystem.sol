@@ -19,7 +19,6 @@ contract TankSystem is System {
 
     require(CarriedBy.get(_tankEntity) == podEntity, "not in pod");
     require(EntityType.get(_tankEntity) == ENTITY_TYPE.TANK, "not tank");
-
     require(TankConnection.get(_tankEntity) == bytes32(0), "tank already connected");
 
     // Tanks can only be connected to inlets or outlets
@@ -74,7 +73,7 @@ contract TankSystem is System {
   }
 
   /**
-   * @notice Ship a tank to fulfil an order
+   * @notice Ship a tank to fulfill an order
    * @dev Compares the tank to the current order goals and complete the order if goals are met
    * @param _tankEntity Id of the tank entity
    */
@@ -94,12 +93,6 @@ contract TankSystem is System {
     require(currentOrderId != bytes32(0), "no order");
 
     OrderData memory currentOrder = Order.get(currentOrderId);
-
-    // maxPlayers == 0 means the order has no limit
-    require(
-      currentOrder.maxPlayers == 0 || Completed.length(currentOrderId) < currentOrder.maxPlayers,
-      "max players reached"
-    );
 
     // expirationBlock == 0 means the order never expires
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");

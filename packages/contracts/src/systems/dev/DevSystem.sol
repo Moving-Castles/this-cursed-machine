@@ -2,8 +2,8 @@
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name } from "../../codegen/index.sol";
-import { LibUtils, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
-import { ONE_UNIT } from "../../constants.sol";
+import { LibUtils, PublicMaterials, MaterialId, LibOrder } from "../../libraries/Libraries.sol";
+import { ONE_UNIT, ONE_HOUR } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
@@ -51,5 +51,17 @@ contract DevSystem is System {
   function charge() public {
     require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
     PublicMaterials.BUG.transferToken(_world(), 100 * ONE_UNIT);
+  }
+
+  /**
+   * @notice Let user create
+   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
+   */
+  function createTestOrder() public {
+    uint256 totalRewardCost = (100 * ONE_UNIT) * 5;
+    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+    PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+
+    LibOrder.create(_msgSender(), PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, ONE_HOUR, 5);
   }
 }

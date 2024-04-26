@@ -15,7 +15,7 @@ export function toCamelCase(s: string): string {
 }
 
 export function shortenAddress(s: string) {
-  return s ? s.slice(0, 8) + "..." + s.slice(-8) : ""
+  return s ? s.slice(0, 4) + "..." + s.slice(-4) : ""
 }
 
 export function addressToColor(address: string): string {

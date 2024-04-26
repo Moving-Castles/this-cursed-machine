@@ -57,7 +57,8 @@ declare global {
   type OrderData = {
     creator: string
     title: string
-    expirationBlock: number
+    creationBlock: bigint
+    expirationBlock: bigint
     materialId: MaterialId
     amount: bigint
     reward: bigint
@@ -65,7 +66,7 @@ declare global {
   }
 
   type OfferData = {
-    creationBlock: number
+    creationBlock: bigint
     materialId: MaterialId
     amount: bigint
     cost: bigint

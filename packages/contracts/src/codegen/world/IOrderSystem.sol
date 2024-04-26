@@ -12,7 +12,6 @@ import { MaterialId } from "./../../libraries/Libraries.sol";
  */
 interface IOrderSystem {
   function createOrder(
-    string memory _title,
     MaterialId _materialId,
     uint256 _amount,
     uint256 _reward,

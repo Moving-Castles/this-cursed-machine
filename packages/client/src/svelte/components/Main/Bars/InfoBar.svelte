@@ -2,6 +2,12 @@
   import { player, playerTokenBalance } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import NumberGoingUp from "@components/Main/Atoms/NumberGoingUp.svelte"
+  import { createTestOrder } from "@svelte/modules/action"
+
+  function createOrder() {
+    console.log("Creating order...")
+    createTestOrder()
+  }
 </script>
 
 <div class:emphasis={$tutorialProgress === 7} class="info-bar">
@@ -20,6 +26,7 @@
       <div class="token-balance">
         <NumberGoingUp value={$playerTokenBalance} /> $BUGS
       </div>
+      <button on:click={createOrder}>TEST ORDER</button>
     </div>
   </div>
 </div>

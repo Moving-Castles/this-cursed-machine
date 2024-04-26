@@ -12,8 +12,8 @@ GARNET_WORLD_ADDRESS=0x2bb7caabb3926c0589e6cc3a96f480e647f0f1d7
 REDSTONE_RPC=xxxxx
 REDSTONE_WORLD_ADDRESS=0xf6cd89de2dfa17dcf699e8e848351b6ddf805df3
 
-RPC=$GARNET_RPC
-WORLD_ADDRESS=$GARNET_WORLD_ADDRESS
+RPC=$LOCAL_RPC
+WORLD_ADDRESS=$LOCAL_WORLD_ADDRESS
 
 echo "Create testing orders..."
-forge script ./CreateOrders.s.sol --sig run\(address\) $WORLD_ADDRESS --rpc-url $RPC --broadcast -vvv
+forge script ./CreateOrders.s.sol --sig run\(address\) $WORLD_ADDRESS --rpc-url $RPC --broadcast -vvv --slow
