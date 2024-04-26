@@ -32,11 +32,11 @@ export const redstoneGarnet = {
   rpcUrls: {
     default: {
       http: ["https://rpc.garnet.qry.live"],
-      webSocket: ["https://rpc.garnet.qry.live"],
+      webSocket: ["wss://rpc.garnet.qry.live"],
     },
     public: {
       http: ["https://rpc.garnet.qry.live"],
-      webSocket: ["https://rpc.garnet.qry.live"],
+      webSocket: ["wss://rpc.garnet.qry.live"],
     },
   },
   faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc/drip",

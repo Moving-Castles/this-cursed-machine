@@ -15,7 +15,7 @@ contract OrderSystem is System {
    * @param _materialId Material id to produce
    * @param _amount Amount to produce in whole units
    * @param _reward Reward for completing the order in whole units
-   * @param _duration Duration of the order
+   * @param _duration Duration of the order. 0 means no expiration
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
    */

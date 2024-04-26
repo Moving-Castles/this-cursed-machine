@@ -95,7 +95,7 @@
   onMount(() => {
     setTimeout(() => {
       playSound("tcm", "asisstantHit")
-    }, 3000)
+    }, 1000)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }

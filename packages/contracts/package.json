@@ -14,15 +14,12 @@
     "test": "mud test",
     "test-verbose": "mud test --forgeOptions=' -vvv'",
     "test-single": "mud test --forgeOptions='--match-test testOrderCreate'",
-    "----- OLD TESTNET -----": "---------------------------",
-    "deploy:testnet": "pnpm run build && mud deploy --profile=lattice-testnet --forgeScriptOptions='--batch-size 5'",
-    "faucet:testnet": "pnpm mud faucet --faucetUrl=https://faucet.testnet2-mud-services.linfra.xyz --address",
     "----- REDSTONE GARNET -----": "---------------------------",
-    "deploy:redstone-garnet": "DEBUG=mud:* mud deploy --profile=redstone-garnet --forgeScriptOptions='--batch-size 5'",
-    "----- REDSTONE RHODOLITE -----": "---------------------------",
-    "deploy:redstone-rhodolite": "---------------------------",
+    "deploy:redstone-garnet": "DEBUG=mud:* mud deploy --profile=redstone-garnet --forgeScriptOptions='--slow'",
     "----- REDSTONE MAINNET -----": "---------------------------",
-    "deploy:redstone-mainnet": "DEBUG=mud:* mud deploy --profile=redstone --forgeScriptOptions='--batch-size 5'"
+    "deploy:redstone-mainnet": "DEBUG=mud:* mud deploy --profile=redstone --forgeScriptOptions='--slow'",
+    "----- REDSTONE RHODOLITE -----": "---------------------------",
+    "deploy:redstone-rhodolite": "---------------------------"
   },
   "dependencies": {
     "@latticexyz/cli": "2.0.8-main-4b6ce813",
