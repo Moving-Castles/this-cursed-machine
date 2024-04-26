@@ -48,7 +48,8 @@
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
 
-  $: $progress = (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100
+  $: $progress =
+    (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100
 
   $: $amount = displayAmount(typedTank.amount)
 
@@ -184,7 +185,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--foreground) !important;
 
       .inner-container {
         display: flex;
