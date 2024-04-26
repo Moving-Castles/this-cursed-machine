@@ -12,7 +12,7 @@ import {
   getExpiredOrders,
 } from "./utils"
 import { writable, derived } from "svelte/store"
-import { blockNumber, network } from "@modules/network"
+import { blockNumber, walletNetwork } from "@modules/network"
 import { GAME_CONFIG_ID } from "@modules/state/base/constants"
 import { ONE_TOKEN_UNIT } from "@svelte/modules/ui/constants"
 
@@ -43,14 +43,14 @@ export const recipes = derived(entities, $entities => getRecipes($entities))
 
 // Address in padded format
 export const playerAddress = derived(
-  network,
-  $network => $network.walletClient?.account.address || ("0x0" as string)
+  walletNetwork,
+  $walletNetwork => $walletNetwork.walletClient?.account.address || ("0x0" as string)
 )
 
 // Non-padded address
 export const playerId = derived(
-  network,
-  $network => $network.playerEntity || ("0x0" as string)
+  walletNetwork,
+  $walletNetwork => $walletNetwork.playerEntity || ("0x0" as string)
 )
 
 export const player = derived(

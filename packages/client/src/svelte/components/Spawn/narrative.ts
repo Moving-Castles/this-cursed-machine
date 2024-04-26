@@ -16,8 +16,9 @@ import { playSound } from "@modules/sound";
 import { playerAddress } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
 import { store as accountKitStore } from "@latticexyz/account-kit/bundle";
-import type { AppAccountClient } from "@latticexyz/account-kit/common";
-import { network } from "@svelte/modules/network";
+import type { AppAccountClient } from "@latticexyz/account-kit/src/common";
+import { publicNetwork, walletNetwork } from "@modules/network";
+import { setupWalletNetwork } from "@mud/setupWalletNetwork";
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -124,6 +125,8 @@ export const narrative = [
 
     await writeNarrative("[Wallet connection started here]");
     const appAccountClient = await connect();
+    // TODO fallback to setupBurnerWalletNetwork on some condition
+    walletNetwork.set(setupWalletNetwork(get(publicNetwork), appAccountClient));
     console.log("appAccountClient", appAccountClient);
 
     await writeNarrative("Your account address is:");
