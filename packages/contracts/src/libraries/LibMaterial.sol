@@ -62,12 +62,24 @@ library LibMaterial {
 
   /**
    * @dev Mint token to address
+   * @param _materialId material id to mint
    * @param _to address to mint to
    * @param _value amount to mint
    */
   function mint(MaterialId _materialId, address _to, uint256 _value) internal {
     IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(_materialId));
     token.mint(_to, _value);
+  }
+
+  /**
+   * @dev Burn token from address
+   * @param _materialId material id to burn
+   * @param _to address to burn from
+   * @param _value amount to burn
+   */
+  function burn(MaterialId _materialId, address _to, uint256 _value) internal {
+    IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(_materialId));
+    token.burn(_to, _value);
   }
 
   /**

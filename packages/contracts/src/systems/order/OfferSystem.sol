@@ -93,8 +93,8 @@ contract OfferSystem is System {
       // Deduct from non-transferable balance
       NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
     } else {
-      // Deduct from real token balance
-      PublicMaterials.BUG.transferToken(_world(), offerData.cost);
+      // Burn real tokens
+      PublicMaterials.BUG.burn(_msgSender(), offerData.cost);
     }
   }
 }

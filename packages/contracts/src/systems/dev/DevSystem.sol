@@ -62,6 +62,6 @@ contract DevSystem is System {
     require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
     PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
 
-    LibOrder.create(_msgSender(), PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, ONE_HOUR, 5);
+    LibOrder.create(_msgSender(), PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, 0, 5);
   }
 }

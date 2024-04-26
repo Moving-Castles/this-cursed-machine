@@ -48,12 +48,12 @@ library LibInit {
     //////////////////////////////////////////////////////////////*/
 
     // 50 PISS => 500 points
-    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, ONE_HOUR, 1);
+    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 1);
 
     // 50 PISS => 200 points
-    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, ONE_HOUR, 20);
+    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
 
     // 50 BLOOD => 200 points
-    LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, ONE_HOUR, 20);
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
   }
 }
