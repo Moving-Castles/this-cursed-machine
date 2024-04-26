@@ -14,7 +14,6 @@
     "staticPath": "src/public"
   },
   "devDependencies": {
-    "@latticexyz/dev-tools": "2.0.8-main-4b6ce813",
     "@sveltejs/adapter-auto": "^3.2.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@tsconfig/svelte": "^5.0.4",
