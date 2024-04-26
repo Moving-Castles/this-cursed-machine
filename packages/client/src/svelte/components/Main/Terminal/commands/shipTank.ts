@@ -31,10 +31,12 @@ async function execute(tankEntity: string) {
 
     const canShip = $shippableTanks[tankEntity]
 
-    if (!canShip)
+    if (!canShip) {
       writeToTerminal(TERMINAL_OUTPUT_TYPE.ERROR, "Not ready to ship")
+      return
+    }
 
-    if (!tanks[tankEntity] || !canShip) return
+    if (!tanks[tankEntity]) return
 
     // If the tank is connected, detach it before shipping
     if (tanks[tankEntity].tankConnection !== EMPTY_CONNECTION) {
