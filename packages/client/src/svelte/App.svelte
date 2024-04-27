@@ -16,7 +16,9 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-  import { mount } from "@latticexyz/dev-tools"
+
+  import { materialMetadata } from "@modules/state/base/stores"
+  $: console.log($materialMetadata)
 
   import { playerAddress } from "@modules/state/base/stores"
   $: console.log($playerAddress)
@@ -54,6 +56,8 @@
     switch (window.location.hostname) {
       case "thiscursedmachine.fun":
         return ENVIRONMENT.REDSTONE
+      case "redstone-test.thiscursedmachine.fun":
+        return ENVIRONMENT.REDSTONE_TEST
       case "garnet-wallet.thiscursedmachine.fun":
         return ENVIRONMENT.GARNET_WALLET
       case "garnet.thiscursedmachine.fun":
@@ -108,23 +112,6 @@
 
     // Signal network
     initSignalNetwork()
-
-    // TODO mount devtools on walletNetwork change if it's not empty
-    // Devtools
-    /*
-    mount({
-      config: mudLayer.config,
-      publicClient: mudLayer.publicClient,
-      walletClient: mudLayer.walletClient,
-      latestBlock$: mudLayer.latestBlock$,
-      storedBlockLogs$: mudLayer.storedBlockLogs$,
-      worldAddress: mudLayer.worldAddress,
-      worldAbi: mudLayer.worldContract.abi,
-      write$: mudLayer.write$,
-      // if you're using recs
-      // recsWorld: ,
-    })
-    */
   })
 
   // Fade out intro sound when ready

@@ -100,7 +100,7 @@
   .inbox {
     padding-inline: var(--default-padding);
     margin-top: 4rem;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 200px);
     overflow-y: hidden;
   }
 </style>

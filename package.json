@@ -12,7 +12,6 @@
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
-    "orders": "cd packages/contracts/script/testing && ./runScriptsLocal.sh",
     "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
     "test": "pnpm recursive run test"
   },
@@ -23,7 +22,7 @@
     "@pimlicolabs/alto": "github:latticexyz/alto#3192a9a",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
-    "eslint": "9.0.0",
+    "eslint": "8.56.0",
     "mprocs": "^0.6.4",
     "rimraf": "^5.0.5",
     "typescript": "^5.4.5",

@@ -27,6 +27,7 @@ export enum WorldFunctions {
   Reward = "reward",
   Charge = "charge",
   Graduate = "graduate",
+  CreateTestOrder = "createTestOrder"
 }
 
 // --- API --------------------------------------------------------------
@@ -137,4 +138,8 @@ export function charge() {
 
 export function graduate() {
   return addToSequencer(WorldFunctions.Graduate, [])
+}
+
+export function createTestOrder() {
+  return addToSequencer(WorldFunctions.CreateTestOrder, [])
 }

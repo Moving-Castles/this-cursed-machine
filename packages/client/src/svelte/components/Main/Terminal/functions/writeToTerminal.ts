@@ -140,3 +140,61 @@ export async function loadingSpinner(index: number): Promise<void> {
     )
   }
 }
+
+/**
+ * Display a loading line with increasing character count.
+ * @param {number} index - The number of characters to display.
+ * @returns {Promise<void>} A promise that resolves when the loading line has been written to the terminal.
+ */
+export async function loadingLineMuted(index: number): Promise<void> {
+  // const CHARACTER = "░▒"
+  const CHARACTER = "▧"
+  if (index === 1) {
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.ALERT,
+      CHARACTER,
+      false,
+      SYMBOLS[2],
+      0
+    )
+  } else {
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.ALERT,
+      CHARACTER.repeat(index),
+      true,
+      SYMBOLS[2],
+      0
+    )
+  }
+}
+
+/**
+ * Display a spinner using cycling glyphs to indicate loading.
+ * @param {number} index - The linearly increasing index for the spinner animation.
+ * @returns {Promise<void>} A promise that resolves when the spinner glyph has been written to the terminal.
+ */
+export async function loadingSpinnerMuted(
+  index: number,
+  muted = false
+): Promise<void> {
+  const GLYPHS = ["/", "–", "\\", "|"]
+  // const GLYPHS = ["▓", "▓"]
+  const currentGlyph = GLYPHS[index % GLYPHS.length]
+  if (index === 1) {
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.ALERT,
+      currentGlyph,
+      false,
+      SYMBOLS[2],
+      0
+    )
+  } else {
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.ALERT,
+      currentGlyph,
+      true,
+      SYMBOLS[2],
+      0
+    )
+  }
+}

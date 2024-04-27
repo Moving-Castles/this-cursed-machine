@@ -120,5 +120,59 @@ export const tcm: SoundAssets = {
   bugs: {
     src: "./sounds/tcm/bugs.mp3",
     volume: 0.6,
-  }
+  },
+  //
+  asisstantHit: {
+    src: "./sounds/tcm/assistant-hit_01.mp3",
+    volume: 1,
+  },
+  //
+  bugsUp: {
+    src: "./sounds/tcm/bugs_up-hit_01.mp3",
+    volume: 0.6,
+  },
+  //
+  textLineHit: {
+    src: "./sounds/tcm/new_text_line-hit_01.mp3",
+    volume: 1,
+  },
+  loadingVariation: {
+    src: "./sounds/tcm/loading_variation-sfx_01.mp3",
+    volume: 1,
+  },
+  // Connections
+  pipeConnect: {
+    src: "./sounds/tcm/pipe_connect-hit_01.mp3",
+    volume: 1,
+  },
+  pipeDraw: {
+    src: "./sounds/tcm/pipe_draw-sfx_01.mp3",
+    volume: 1,
+  },
+  plugTank: {
+    src: "./sounds/tcm/tank_cable_attach-sfx_01.mp3",
+    volume: 1,
+  },
+  //
+  acceptOrderLoading: {
+    src: "./sounds/tcm/accept_order_loading-loop_01.mp3",
+    volume: 1,
+  },
+  acceptOrderFail: {
+    src: "./sounds/tcm/accept_order_fail-hit_01.mp3",
+    volume: 1,
+  },
+  acceptOrderSuccess: {
+    src: "./sounds/tcm/accept_order_success-hit_01.mp3",
+    volume: 1,
+  },
+  //
+  inputBugs: {
+    src: "./sounds/tcm/input_bugs-loop_01.mp3",
+    volume: 1,
+  },
+  pumpOut: {
+    src: "./sounds/tcm/pump_out-loop_01.mp3",
+    volume: 1,
+  },
 }

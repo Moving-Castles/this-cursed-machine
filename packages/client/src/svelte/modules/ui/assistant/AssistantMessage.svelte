@@ -3,6 +3,7 @@
   import type { AssistantMessage } from "."
   import { createEventDispatcher } from "svelte"
   import { playSound } from "@modules/sound"
+  import { activeTab } from "@modules/ui/stores"
   import {
     tutorialProgress,
     advanceConditions,
@@ -11,8 +12,7 @@
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
-  import { MATERIAL_TYPE } from "contracts/enums"
-  import { player } from "@modules/state/base/stores"
+  import { materialMetadata, player } from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
@@ -28,7 +28,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        MATERIAL_TYPE[$playerOrder?.order?.materialType],
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 
@@ -86,12 +86,16 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
+    $activeTab = 0
     clearTerminalOutput()
   }
 
   const close = () => dispatch("end", msg)
 
   onMount(() => {
+    setTimeout(() => {
+      playSound("tcm", "asisstantHit")
+    }, 1000)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }

@@ -12,7 +12,7 @@
 
 <div class="toast-pane">
   {#each $toasts as toast (toast.timestamp)}
-    <div animate:flip in:fade out:fade>
+    <div animate:flip in:fade={{ duration: 100 }} out:fade={{ duration: 300 }}>
       <ToastComponent {toast} on:end={onEnd} />
     </div>
   {/each}
@@ -21,12 +21,12 @@
 <style>
   .toast-pane {
     position: absolute;
-    z-index: var(--z-1);
-    bottom: 10px;
+    z-index: var(--z-10);
+    top: 10px;
     right: 10px;
     display: flex;
     flex-direction: column-reverse;
-    width: 400px;
+    width: 300px;
     text-align: center;
   }
 </style>

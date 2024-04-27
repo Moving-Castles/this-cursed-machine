@@ -5,6 +5,8 @@ import { setUp, createMachine } from "../resolve/setUp"
 import { outputPatches } from './outputPatches'
 import { ENTITY_TYPE, MACHINE_TYPE } from 'contracts/enums'
 import { EMPTY_CONNECTION } from '../../src/svelte/modules/utils/constants'
+import { MaterialIdNone } from '../../src/svelte/modules/state/base/constants'
+import { MaterialIds } from '../resolve'
 
 const playerPod = {
     entityType: ENTITY_TYPE.POD,
@@ -44,7 +46,7 @@ test("(1) resolutionSequence", () => {
     const expectedSimulatedTanksAfter10Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 1,
+            materialId: MaterialIds.BUG,
             amount: 10000,
             tankConnection: 'INLET_ONE',
             buildIndex: 1
@@ -52,7 +54,7 @@ test("(1) resolutionSequence", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 2,
+            materialId: MaterialIds.PISS,
             amount: 5000,
             buildIndex: 2
         },
@@ -72,7 +74,7 @@ test("(1) resolutionSequence", () => {
     const expectedSimulatedTanksAfter2000Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 0, // MATERIAL_TYPE.NONE because empty
+            materialId: MaterialIdNone, // MaterialIdNone because empty
             amount: 0,
             tankConnection: 'INLET_ONE',
             buildIndex: 1
@@ -80,7 +82,7 @@ test("(1) resolutionSequence", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 2,
+            materialId: MaterialIds.PISS,
             amount: 10000,
             buildIndex: 2
         },
@@ -137,7 +139,7 @@ test("(2) resolutionSequence (inlet 2)", () => {
     const expectedSimulatedTanksAfter10Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 1,
+            materialId: MaterialIds.BUG,
             amount: 10000,
             tankConnection: 'INLET_TWO',
             buildIndex: 1
@@ -145,7 +147,7 @@ test("(2) resolutionSequence (inlet 2)", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 2,
+            materialId: MaterialIds.PISS,
             amount: 5000,
             buildIndex: 2
         },
@@ -165,7 +167,7 @@ test("(2) resolutionSequence (inlet 2)", () => {
     const expectedSimulatedTanksAfter2000Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 0, // MATERIAL_TYPE.NONE because empty
+            materialId: MaterialIdNone, // MaterialIdNone because empty
             amount: 0,
             tankConnection: 'INLET_TWO',
             buildIndex: 1
@@ -173,7 +175,7 @@ test("(2) resolutionSequence (inlet 2)", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 2,
+            materialId: MaterialIds.PISS,
             amount: 10000,
             buildIndex: 2
         },
@@ -191,12 +193,12 @@ test("(2) resolutionSequence (inlet 2)", () => {
 test("(3) resolveSplitterMixer", () => {
     // const { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // // Fill tank 1 with 20000 MATERIAL_TYPE.AMMONIA
-    // tanks["TANK_ONE"].materialType = 7 // AMMONIA
+    // // Fill tank 1 with 20000 AMMONIA
+    // tanks["TANK_ONE"].materialId = MaterialIds.AMMONIA
     // tanks["TANK_ONE"].amount = 20000
 
-    // // Fill tank 2 with 10000 PURE_FAT
-    // tanks["TANK_TWO"].materialType = 9 // PURE_FAT
+    // // Fill tank 2 with 10000 CONGEALED_FAT
+    // tanks["TANK_TWO"].materialId = MaterialIds.CONGEALED_FAT
     // tanks["TANK_TWO"].amount = 10000
 
     // // Connect TANK 1 to INLET 1
@@ -244,7 +246,7 @@ test("(3) resolveSplitterMixer", () => {
     // const expectedSimulatedTanksAfter9Blocks = {
     //     TANK_ONE: {
     //         entityType: 5,
-    //         materialType: 7,
+    //         materialId: MaterialIds.AMMONIA,
     //         amount: 11000,
     //         tankConnection: 'INLET_ONE',
     //         buildIndex: 1
@@ -252,7 +254,7 @@ test("(3) resolveSplitterMixer", () => {
     //     TANK_TWO: {
     //         entityType: 5,
     //         tankConnection: 'INLET_TWO',
-    //         materialType: 9,
+    //         materialId: MaterialIds.CONGEALED_FAT,
     //         amount: 1000,
     //         buildIndex: 2
     //     },
@@ -274,7 +276,7 @@ test("(3) resolveSplitterMixer", () => {
     // const expectedSimulatedTanksAfter2000Blocks = {
     //     TANK_ONE: {
     //         entityType: 5,
-    //         materialType: 7,
+    //         materialId: MaterialIds.AMMONIA,
     //         amount: 10000,
     //         tankConnection: 'INLET_ONE',
     //         buildIndex: 1
@@ -282,7 +284,7 @@ test("(3) resolveSplitterMixer", () => {
     //     TANK_TWO: {
     //         entityType: 5,
     //         tankConnection: 'INLET_TWO',
-    //         materialType: 0,
+    //         materialId: MaterialIdNone,
     //         amount: 0,
     //         buildIndex: 2
     //     },
@@ -302,12 +304,12 @@ test("(3) resolveSplitterMixer", () => {
 test("(4) unusedPlayerAndUnusedMachine", () => {
     const { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
-    // Fill tank 1 with 20000 MATERIAL_TYPE.AMMONIA
-    tanks["TANK_ONE"].materialType = 7 // AMMONIA
+    // Fill tank 1 with 20000 AMMONIA
+    tanks["TANK_ONE"].materialId = MaterialIds.AMMONIA
     tanks["TANK_ONE"].amount = 20000
 
-    // Fill tank 2 with 10000 PURE_FAT
-    tanks["TANK_TWO"].materialType = 9 // PURE_FAT
+    // Fill tank 2 with 10000 CONGEALED_FAT
+    tanks["TANK_TWO"].materialId = MaterialIds.CONGEALED_FAT
     tanks["TANK_TWO"].amount = 10000
 
     // Connect TANK 1 to INLET 1
@@ -337,7 +339,7 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
     const expectedSimulatedTanksAfter9Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 7,
+            materialId: MaterialIds.AMMONIA,
             amount: 20000,
             tankConnection: 'INLET_ONE',
             buildIndex: 1
@@ -345,14 +347,14 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'INLET_TWO',
-            materialType: 9,
+            materialId: MaterialIds.CONGEALED_FAT,
             amount: 1000,
             buildIndex: 2
         },
         TANK_THREE: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 9,
+            materialId: MaterialIds.CONGEALED_FAT,
             amount: 9000,
             buildIndex: 3
         }
@@ -367,7 +369,7 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
     const expectedSimulatedTanksAfter2000Blocks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 7,
+            materialId: MaterialIds.AMMONIA,
             amount: 20000,
             tankConnection: 'INLET_ONE',
             buildIndex: 1
@@ -375,14 +377,14 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'INLET_TWO',
-            materialType: 0,
+            materialId: MaterialIdNone,
             amount: 0,
             buildIndex: 2
         },
         TANK_THREE: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialType: 9,
+            materialId: MaterialIds.CONGEALED_FAT,
             amount: 10000,
             buildIndex: 3
         }
@@ -396,8 +398,9 @@ test("(5) oneMixerTwoInlets", () => {
     const { tanks, machines, inlets, outlet, recipes, fixedEntities } = setUp()
 
     tanks["TANK_ONE"].amount = 10000
+    tanks["TANK_ONE"].materialId = MaterialIds.BUG
     tanks["TANK_TWO"].amount = 20000
-    tanks["TANK_TWO"].materialType = 2
+    tanks["TANK_TWO"].materialId = MaterialIds.PISS
 
     // Connect TANK 1 to INLET 1
     tanks["TANK_ONE"].tankConnection = "INLET_ONE"
@@ -437,7 +440,7 @@ test("(5) oneMixerTwoInlets", () => {
     const expectedTanks = {
         TANK_ONE: {
             entityType: 5,
-            materialType: 0,
+            materialId: MaterialIdNone,
             amount: 0,
             tankConnection: "INLET_ONE",
             buildIndex: 1
@@ -447,13 +450,13 @@ test("(5) oneMixerTwoInlets", () => {
             tankConnection: "INLET_TWO",
             buildIndex: 2,
             amount: 10000,
-            materialType: 2
+            materialId: MaterialIds.PISS
         },
         TANK_THREE: {
             entityType: 5,
             tankConnection: "OUTLET",
             buildIndex: 3,
-            materialType: 7,
+            materialId: MaterialIds.AMMONIA,
             amount: 5000
         }
     }

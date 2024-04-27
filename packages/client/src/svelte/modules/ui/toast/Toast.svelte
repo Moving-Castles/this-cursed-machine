@@ -10,7 +10,7 @@
   const close = () => dispatch("end", toast)
 
   onMount(() => {
-    // setTimeout(close, 3000)
+    setTimeout(close, 5000)
   })
 </script>
 
@@ -29,10 +29,12 @@
     display: flex;
     flex-flow: column nowrap;
     color: var(--foreground);
-    padding: 20px;
+    padding: 1rem 0.5rem;
     cursor: pointer;
     text-align: center;
-    background: var(--color-failure);
+    border: 1px solid var(--color-failure);
+    color: var(--color-failure);
+    background: var(--black);
     margin-top: 10px;
     font-size: var(--font-size-small);
     overflow: hidden;

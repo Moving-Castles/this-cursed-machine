@@ -1,3 +1,5 @@
+import { MaterialIds } from ".";
+
 export const outputPatches = {
     "test1": {},
     "test2": {},
@@ -8,7 +10,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -17,7 +19,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -28,7 +30,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -37,13 +39,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
         },
@@ -55,7 +57,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -64,7 +66,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -75,7 +77,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -84,13 +86,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
         },
@@ -103,7 +105,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "TANK_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -114,7 +116,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -123,7 +125,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -135,7 +137,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -144,13 +146,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
             productive: true
@@ -161,7 +163,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -170,7 +172,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -183,7 +185,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "TANK_TWO",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                     sourceMachineId: "OUTLET"
                 },
             ],
@@ -196,7 +198,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -205,7 +207,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -217,7 +219,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -226,13 +228,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
             productive: true
@@ -243,7 +245,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -252,7 +254,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -267,7 +269,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "TANK_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -278,7 +280,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null,
                 },
             ],
@@ -287,7 +289,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null,
                 },
             ],
@@ -299,7 +301,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "SPLITTER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE",
                 },
             ],
@@ -308,13 +310,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "SPLITTER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "SPLITTER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                 },
             ],
             productive: true
@@ -325,7 +327,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "SPLITTER"
                 },
             ],
@@ -334,13 +336,13 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
             productive: true
@@ -351,7 +353,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "DRYER_ONE",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -360,7 +362,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "DRYER_ONE",
-                    materialType: 7,
+                    materialId: MaterialIds.UREA,
                 },
             ],
             productive: true
@@ -371,7 +373,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "BOILER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "SPLITTER"
                 },
             ],
@@ -380,7 +382,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "BOILER",
-                    materialType: 10,
+                    materialId: MaterialIds.INDUSTRIAL_LUBRICANT,
                 },
             ],
             productive: true
@@ -391,7 +393,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "DRYER_TWO",
-                    materialType: 10,
+                    materialId: MaterialIds.INDUSTRIAL_LUBRICANT,
                     sourceMachineId: "BOILER"
                 },
             ],
@@ -400,7 +402,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "DRYER_TWO",
-                    materialType: 9,
+                    materialId: MaterialIds.CONGEALED_FAT,
                 },
             ],
             productive: true
@@ -411,14 +413,14 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "MIXER",
-                    materialType: 9,
+                    materialId: MaterialIds.CONGEALED_FAT,
                     sourceMachineId: "DRYER_TWO"
                 },
                 {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "MIXER",
-                    materialType: 7,
+                    materialId: MaterialIds.UREA,
                     sourceMachineId: "DRYER_ONE"
                 }
             ],
@@ -427,7 +429,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "MIXER",
-                    materialType: 8,
+                    materialId: MaterialIds.SOAP,
                 },
             ],
             productive: true
@@ -438,7 +440,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 8,
+                    materialId: MaterialIds.SOAP,
                     sourceMachineId: "MIXER"
                 },
             ],
@@ -447,7 +449,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 8,
+                    materialId: MaterialIds.SOAP,
                     sourceMachineId: "MIXER"
                 },
             ],
@@ -460,7 +462,7 @@ export const outputPatches = {
                     amount: 250,
                     inletActive: [true, false],
                     machineId: "TANK_TWO",
-                    materialType: 8,
+                    materialId: MaterialIds.SOAP,
                     sourceMachineId: "OUTLET"
                 },
             ],
@@ -474,7 +476,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "TANK_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -485,7 +487,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -494,7 +496,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -506,7 +508,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -515,13 +517,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
             productive: true
@@ -532,7 +534,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -541,7 +543,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -554,7 +556,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "TANK_TWO",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "OUTLET"
                 },
             ],
@@ -567,7 +569,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -576,7 +578,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "INLET_ONE",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: null
                 },
             ],
@@ -588,7 +590,7 @@ export const outputPatches = {
                     amount: 1000,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 1,
+                    materialId: MaterialIds.BUG,
                     sourceMachineId: "INLET_ONE"
                 },
             ],
@@ -597,13 +599,13 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 2,
+                    materialId: MaterialIds.PISS,
                 },
                 {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "PLAYER",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                 },
             ],
             productive: true
@@ -614,7 +616,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],
@@ -623,7 +625,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "OUTLET",
-                    materialType: 3,
+                    materialId: MaterialIds.BLOOD,
                     sourceMachineId: "PLAYER"
                 },
             ],

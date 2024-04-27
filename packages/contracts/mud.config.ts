@@ -1,35 +1,49 @@
 import { defineWorld } from "@latticexyz/world";
-import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, MATERIAL_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
+import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
 
 const enums = {
   ENTITY_TYPE: ENTITY_TYPE_ARRAY,
   MACHINE_TYPE: MACHINE_TYPE_ARRAY,
-  MATERIAL_TYPE: MATERIAL_TYPE_ARRAY,
-  PORT_INDEX: PORT_INDEX_ARRAY,
-};
+  PORT_INDEX: PORT_INDEX_ARRAY
+}
+
+const MATERIAL_ID_TYPE = "bytes14" as const
+const userTypes = {
+  MaterialId: { filePath: "./src/libraries/LibMaterial.sol", type: MATERIAL_ID_TYPE },
+} as const
 
 export default defineWorld({
   enums,
-  // excludeSystems: ["DevSystem"],
+  userTypes,
   tables: {
     GameConfig: {
       key: [],
       schema: {
         adminAddress: "address",
-        tokenAddress: "address",
-        globalSpawnIndex: "uint32", // Global index for all players
-        scaleDown: "uint32", // Used to scale down the amounts in the UI
-        flowRate: "uint32", // Amount flowing from the inlet
-        tankCapacity: "uint32", // Amount of material that can be stored in a tank
+        globalSpawnIndex: "uint32", // How many players have spawned since the beginning of the world?
+        flowRate: "uint256", // Amount flowing from the inlet
+        tankCapacity: "uint256", // Amount of material that can be stored in a tank
       },
       codegen: {
         dataStruct: true
       }
     },
+    /*
+     * Information about all materials in the world
+     * Stores the address of the ERC20 token contract
+     */
+    MaterialMetadata: {
+      key: ["materialId"],
+      schema: {
+        materialId: "MaterialId",
+        tokenAddress: "address",
+        name: "string",
+      }
+    },
     EntityType: "ENTITY_TYPE",
     MachineType: "MACHINE_TYPE",
-    MaterialType: "MATERIAL_TYPE",
-    Amount: "uint32",
+    ContainedMaterial: "MaterialId", // Type of material in tank
+    Amount: "uint256", // Amount of material in tank
     Name: "string", // Player name. Assigned after completed tutorial.
     CarriedBy: "bytes32", // ID of the pod that the entity is in, used for access control
     BuildIndex: "uint32", // Build index of a particular machine type in a particular pod
@@ -37,38 +51,38 @@ export default defineWorld({
     SpawnIndex: "uint32", // How many players have spawned?
     Tutorial: "bool",
     TutorialLevel: "uint32",
-    NonTransferableBalance: "uint32", // During tutorial we give players a non-transferable token substitute
+    NonTransferableBalance: "uint256", // During tutorial we give players a non-transferable token substitute
     Order: {
       key: ["key"],
       schema: {
         key: "bytes32",
         creationBlock: "uint256",
-        creator: "bytes32",
-        materialType: "MATERIAL_TYPE",
-        amount: "uint32",
+        creator: "address",
+        materialId: "MaterialId",
+        amount: "uint256",
         expirationBlock: "uint256",
-        reward: "uint32",
-        maxPlayers: "uint32",
-        title: "string"
+        reward: "uint256",
+        maxPlayers: "uint32"
       }
     },
     Offer: {
       key: ["key"],
       schema: {
         key: "bytes32",
-        materialType: "MATERIAL_TYPE",
-        amount: "uint32",
-        cost: "uint32",
+        materialId: "MaterialId", // Type of material offered
+        amount: "uint256", // Amount of material offered
+        cost: "uint256", // Cost of material in $BUGS
       }
     },
-    Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
-    ProducedMaterials: "uint8[]", // List of materials produced by player
+    CompletedOrders: "bytes32[]", // On player: list of completed order
+    CompletedPlayers: "uint32", // Number of players who have completed an order
+    ProducedMaterials: `${MATERIAL_ID_TYPE}[]`, // List of materials produced by player
     LastResolved: "uint256", // Used to keep track block past since last resolution of pod
-    IncomingConnections: "bytes32[]",
-    OutgoingConnections: "bytes32[]",
-    TankConnection: "bytes32",
-    MachinesInPod: "bytes32[]",
-    TanksInPod: "bytes32[]",
+    IncomingConnections: "bytes32[]", // Incoming connections on a machine
+    OutgoingConnections: "bytes32[]", // Outgoing connections on a machine
+    TankConnection: "bytes32", // Set on tanks and inlets/outlet to connect them
+    MachinesInPod: "bytes32[]", // IDs of machines in pod
+    TanksInPod: "bytes32[]", // IDs of tanks in pod
     FixedEntities: {
       key: ["key"],
       schema: {
@@ -77,13 +91,13 @@ export default defineWorld({
         inlets: "bytes32[]"
       }
     },
-    CurrentOrder: "bytes32",
+    CurrentOrder: "bytes32", // ID of the order the player has accepted
     Recipe: {
       key: ["machineType", "input"],
       schema: {
         machineType: "MACHINE_TYPE",
-        input: "uint256",
-        outputs: "uint8[2]"
+        input: "bytes32", // Material combination id
+        outputs: `${MATERIAL_ID_TYPE}[2]`
       }
     }
   },
@@ -92,11 +106,6 @@ export default defineWorld({
       name: "UniqueEntityModule",
       root: true,
       args: [],
-    },
-    {
-      name: "Unstable_CallWithSignatureModule",
-      root: true,
-      args: [],
-    },
+    }
   ],
 });

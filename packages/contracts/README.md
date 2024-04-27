@@ -10,8 +10,8 @@ THIS CURSED MACHINE is a sci-fi body horror fulfilment centre simulator. Reverse
 - **Player:** Known as _stump_ in the UI. The player's avatar in the game. A machine.
 - **Recipe:** Rule for how a machine transforms an input into an output.
 - **Tank:** Storage space for materials.
-- **Order:** Request for an amount of a material. Player is rewarded with $BUGS on fulfilment.  
-- **Offer:** A material that can be bought for $BUGS. Deposited in a tank.
+- **Order:** Request for an amount of a material. Player is rewarded with `$BUGS` on fulfilment.  
+- **Offer:** A material that can be bought for `$BUGS`. Deposited in a tank.
 
 ## Framework
 
@@ -31,8 +31,12 @@ A matching resolve function in the client runs every block to give an impression
 
 The player has to pass through a tutorial, completing a series of orders to unlock the full game. At the end of this they can name themselves and have access to the full game.
 
-## Token
+## Materials and tokens
 
-`$BUG` is an ERC20 token. It is given as reward for fulfilling orders. It can be "deposited" in a tank to be used as material of the type `MATERIAL_TYPE.BUG`.
+Materials are represented by `materialId` in the network and in tanks. These are connecteed to ERC20 contracts. `$BUGS` are minted to players on order fulfilment. For user created orders we mint the material to the creator of the order when a player ships it.
 
-During the tutorial the player is given a non-transferable $BUG-substitute, stored in the `NonTransferableBalance` table, that works identically in the UI. This is to avoid automation to extract tokens.
+## Units
+
+All tokens and material amounts have 18 decimals. In the UI we divide by `1e18` to show the amounts in a more human readable format. Arguments to `createOrder` and and `createOffer` are also in this format. 
+
+

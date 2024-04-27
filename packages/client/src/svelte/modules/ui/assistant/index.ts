@@ -172,15 +172,37 @@ export function initTutorial() {
 const markComplete = (lvl: number) => {
   const $advanceConditions = get(advanceConditions)
   const nextCondition = $advanceConditions[lvl + 1]
-  let value = get(tutorialCompleted)
+  const value = get(tutorialCompleted)
 
   if (value.includes(lvl)) return
 
-  value = [...value, lvl]
-  tutorialCompleted.set(value)
+  const newValue = [...value, lvl]
+  tutorialCompleted.set(newValue)
   tutorialProgress.set(lvl + 1)
   if (nextCondition) currentCondition.set(nextCondition)
   updateConditions()
+}
+
+/** Skip to the next order if user ships preemptively.
+ * We don't want to be rude now... It happens
+ */
+export function checkSkipNextOrder() {
+  // Find the next type index with order
+  const currentStepIndex = get(tutorialProgress)
+  const $advanceConditions = get(advanceConditions)
+
+  const currentStep = $advanceConditions[currentStepIndex - 1]
+
+  if (currentStep.value?.systemId !== "shipTank") {
+    for (let i = currentStepIndex; i < $advanceConditions.length; i++) {
+      if ($advanceConditions[i]?.value?.systemId === "shipTank") {
+        markComplete($advanceConditions[i]?.index)
+        return false
+      }
+    }
+  }
+
+  return false
 }
 
 /** Check input against the current condition */
@@ -191,8 +213,6 @@ export function advanceTutorial(
 ) {
   const $advanceConditions = get(advanceConditions)
   const currentStep = $advanceConditions[level]
-
-  console.log("ADVANCE ", type)
 
   if (currentStep) {
     let otherSteps = []
@@ -206,22 +226,10 @@ export function advanceTutorial(
     const allStepsToCheck = [currentStep, ...otherSteps]
 
     allStepsToCheck.forEach(step => {
-      console.log("Checking step ,", step)
       // Ready to ship ?
-      if (type === "order") {
+      if (step.type === "order" && type === "order") {
         if (Object.values(get(shippableTanks)).some(e => e === true)) {
-          if (step.type !== "order") {
-            // Find the next type index with order
-            const actualStep = get(tutorialProgress)
-            console.log(actualStep)
-
-            for (let i = actualStep; i < $advanceConditions.length; i++) {
-              if ($advanceConditions[i]?.type === "order") {
-                markComplete($advanceConditions[i]?.index)
-                return false
-              }
-            }
-          } else {
+          if (step.type === "order") {
             markComplete(step.index)
           }
         }
@@ -245,8 +253,6 @@ export function advanceTutorial(
       }
 
       if (step.type === "contract" && type === "contract") {
-        // console.log(step.value.systemId, input.systemId)
-        // Check the systemId
         if (step.value.systemId !== input.systemId) return
 
         // Check if all the params correspond to all the input params

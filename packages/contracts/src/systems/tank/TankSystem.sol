@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials } from "../../codegen/index.sol";
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibNetwork, LibToken } from "../../libraries/Libraries.sol";
-import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, CompletedOrders, CompletedPlayers, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
+import { LibUtils, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
+import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY } from "../../constants.sol";
 
 contract TankSystem is System {
   /**
@@ -19,7 +19,6 @@ contract TankSystem is System {
 
     require(CarriedBy.get(_tankEntity) == podEntity, "not in pod");
     require(EntityType.get(_tankEntity) == ENTITY_TYPE.TANK, "not tank");
-
     require(TankConnection.get(_tankEntity) == bytes32(0), "tank already connected");
 
     // Tanks can only be connected to inlets or outlets
@@ -69,12 +68,12 @@ contract TankSystem is System {
     require(TankConnection.get(_tankEntity) == bytes32(0), "tank connected");
 
     // Clear content of tank
-    MaterialType.set(_tankEntity, MATERIAL_TYPE.NONE);
+    ContainedMaterial.set(_tankEntity, LibMaterial.NONE);
     Amount.set(_tankEntity, 0);
   }
 
   /**
-   * @notice Ship a tank to fulfil an order
+   * @notice Ship a tank to fulfill an order
    * @dev Compares the tank to the current order goals and complete the order if goals are met
    * @param _tankEntity Id of the tank entity
    */
@@ -95,18 +94,12 @@ contract TankSystem is System {
 
     OrderData memory currentOrder = Order.get(currentOrderId);
 
-    // maxPlayers == 0 means the order has no limit
-    require(
-      currentOrder.maxPlayers == 0 || Completed.length(currentOrderId) < currentOrder.maxPlayers,
-      "max players reached"
-    );
-
     // expirationBlock == 0 means the order never expires
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
 
     // Check if order goals are met
     require(
-      MaterialType.get(_tankEntity) == currentOrder.materialType && Amount.get(_tankEntity) >= currentOrder.amount,
+      ContainedMaterial.get(_tankEntity) == currentOrder.materialId && Amount.get(_tankEntity) >= currentOrder.amount,
       "order not met"
     );
 
@@ -114,18 +107,18 @@ contract TankSystem is System {
     CurrentOrder.set(playerEntity, bytes32(0));
 
     // Deduct material amount from tank
-    uint32 newAmount = Amount.get(_tankEntity) - currentOrder.amount;
+    uint256 newAmount = Amount.get(_tankEntity) - currentOrder.amount;
     Amount.set(_tankEntity, newAmount);
-    MaterialType.set(_tankEntity, newAmount == 0 ? MATERIAL_TYPE.NONE : MaterialType.get(_tankEntity));
+    ContainedMaterial.set(_tankEntity, newAmount == 0 ? LibMaterial.NONE : ContainedMaterial.get(_tankEntity));
 
-    // On order: add player to completed list
-    Completed.push(currentOrderId, playerEntity);
     // On player: add order to completed list
-    Completed.push(playerEntity, currentOrderId);
+    CompletedOrders.push(playerEntity, currentOrderId);
+    // On order: increment completed players counter
+    CompletedPlayers.set(currentOrderId, CompletedPlayers.get(currentOrderId) + 1);
 
     // Add material to list of materials produced by player if it is not already there
-    if (!LibUtils.arrayIncludes(ProducedMaterials.get(playerEntity), uint8(currentOrder.materialType))) {
-      ProducedMaterials.push(playerEntity, uint8(currentOrder.materialType));
+    if (!LibUtils.arrayIncludes(ProducedMaterials.get(playerEntity), currentOrder.materialId.unwrap())) {
+      ProducedMaterials.push(playerEntity, currentOrder.materialId.unwrap());
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -143,7 +136,7 @@ contract TankSystem is System {
 
         // Fill the player's first tank with bugs to get them started
         bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
-        MaterialType.set(tanksInPod[0], MATERIAL_TYPE.BUG);
+        ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUG);
         Amount.set(tanksInPod[0], TANK_CAPACITY);
 
         return;
@@ -166,6 +159,11 @@ contract TankSystem is System {
     //////////////////////////////////////////////////////////////*/
 
     // Reward player in real tokens
-    LibToken.mint(_msgSender(), currentOrder.reward * ONE_TOKEN_UNIT);
+    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
+
+    // If the order was not created by admin, mint the material to the creator
+    if (currentOrder.creator != GameConfig.getAdminAddress()) {
+      LibMaterial.mint(currentOrder.materialId, currentOrder.creator, currentOrder.amount);
+    }
   }
 }

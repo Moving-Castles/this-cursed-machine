@@ -43,15 +43,15 @@
     return [
       {
         direction: DIRECTION.OUTGOING,
-        style: `top: ${CELL.WIDTH * 4}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
+        style: `top: ${CELL.HEIGHT * 4}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
       },
       {
         direction: DIRECTION.OUTGOING,
-        style: `top: ${CELL.WIDTH * 8}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
+        style: `top: ${CELL.HEIGHT * 8}px; left: ${CELL.WIDTH * (PLAYER.WIDTH - 1)}px;`,
       },
       {
         direction: DIRECTION.INCOMING,
-        style: `top: ${CELL.WIDTH * 6}px; left: 0px;`,
+        style: `top: ${CELL.HEIGHT * 6}px; left: 0px;`,
       },
     ]
   }
@@ -87,8 +87,10 @@
 
 <style lang="scss">
   .player {
-    width: calc(var(--cellWidth) * 13);
-    height: calc(var(--cellWidth) * 13);
+    --playerWidth: 12;
+    --playerHeight: 12;
+    width: calc(var(--cellWidth) * var(--playerWidth));
+    height: calc(var(--cellWidth) * var(--playerHeight));
     font-size: var(--font-size-small);
     display: flex;
     justify-content: center;

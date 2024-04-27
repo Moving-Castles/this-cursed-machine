@@ -1,16 +1,16 @@
 export const GRID = {
-  HEIGHT: 56,
-  WIDTH: 70,
+  HEIGHT: 52,
+  WIDTH: 76,
 }
 
 export const CELL = {
-  HEIGHT: 9,
-  WIDTH: 9,
+  HEIGHT: 10,
+  WIDTH: 10,
 }
 
 export const MACHINE = {
-  HEIGHT: 7,
-  WIDTH: 7,
+  HEIGHT: 8,
+  WIDTH: 8,
 }
 
 export const ORFICE = {
@@ -19,6 +19,8 @@ export const ORFICE = {
 }
 
 export const PLAYER = {
-  HEIGHT: 13,
-  WIDTH: 13,
+  HEIGHT: 12,
+  WIDTH: 12,
 }
+
+export const SPACE_BETWEEN = 4

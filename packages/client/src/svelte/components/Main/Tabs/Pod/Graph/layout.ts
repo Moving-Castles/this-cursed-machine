@@ -16,7 +16,7 @@ import {
   findPath,
   setCostAt,
 } from "./Pathfinding"
-import { GRID, PLAYER, ORFICE, MACHINE } from "./constants"
+import { GRID, PLAYER, ORFICE, MACHINE, SPACE_BETWEEN } from "./constants"
 import { PLACEMENT_GROUP } from "./enums"
 
 /*
@@ -49,15 +49,15 @@ function generateMachineCoordinates(): Coordinate[] {
   const DYNAMIC_POSITIONS: Coordinate[] = []
 
   // Calculate the starting x position for the first group of machines to be centered
-  const totalMachinesWidth = 5 * MACHINE.WIDTH + 4 * 3 // Width of all machines + space between them
+  const totalMachinesWidth = 5 * MACHINE.WIDTH + (SPACE_BETWEEN + 1) * 3 // Width of all machines + space between them
   const startX = Math.floor((GRID.WIDTH - totalMachinesWidth) / 2)
 
-  const offset = [5, 3, 1, 3, 5]
+  const offset = [6, 4, 2, 4, 6]
 
   // First group of machines, 2 units from the top
   for (let i = 0; i < 5; i++) {
     DYNAMIC_POSITIONS.push({
-      x: startX + i * (MACHINE.WIDTH + 3), // 3 units apart from each machine
+      x: startX + i * (MACHINE.WIDTH + SPACE_BETWEEN), // 3 units apart from each machine
       y: offset[i],
     })
   }
@@ -68,7 +68,7 @@ function generateMachineCoordinates(): Coordinate[] {
   // Second group of machines, 2 units from the bottom
   for (let i = 0; i < 5; i++) {
     DYNAMIC_POSITIONS.push({
-      x: startX + i * (MACHINE.WIDTH + 3), // 3 units apart from each machine
+      x: startX + i * (MACHINE.WIDTH + SPACE_BETWEEN - 1), // 3 units apart from each machine
       y: startY - offset[i],
     })
   }

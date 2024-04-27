@@ -18,11 +18,9 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 struct GameConfigData {
   address adminAddress;
-  address tokenAddress;
   uint32 globalSpawnIndex;
-  uint32 scaleDown;
-  uint32 flowRate;
-  uint32 tankCapacity;
+  uint256 flowRate;
+  uint256 tankCapacity;
 }
 
 library GameConfig {
@@ -30,12 +28,12 @@ library GameConfig {
   ResourceId constant _tableId = ResourceId.wrap(0x7462000000000000000000000000000047616d65436f6e666967000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0038060014140404040400000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0058040014042020000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of ()
   Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, address, uint32, uint32, uint32, uint32)
-  Schema constant _valueSchema = Schema.wrap(0x0038060061610303030300000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (address, uint32, uint256, uint256)
+  Schema constant _valueSchema = Schema.wrap(0x0058040061031f1f000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -50,13 +48,11 @@ library GameConfig {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](6);
+    fieldNames = new string[](4);
     fieldNames[0] = "adminAddress";
-    fieldNames[1] = "tokenAddress";
-    fieldNames[2] = "globalSpawnIndex";
-    fieldNames[3] = "scaleDown";
-    fieldNames[4] = "flowRate";
-    fieldNames[5] = "tankCapacity";
+    fieldNames[1] = "globalSpawnIndex";
+    fieldNames[2] = "flowRate";
+    fieldNames[3] = "tankCapacity";
   }
 
   /**
@@ -112,50 +108,12 @@ library GameConfig {
   }
 
   /**
-   * @notice Get tokenAddress.
-   */
-  function getTokenAddress() internal view returns (address tokenAddress) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (address(bytes20(_blob)));
-  }
-
-  /**
-   * @notice Get tokenAddress.
-   */
-  function _getTokenAddress() internal view returns (address tokenAddress) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (address(bytes20(_blob)));
-  }
-
-  /**
-   * @notice Set tokenAddress.
-   */
-  function setTokenAddress(address tokenAddress) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tokenAddress)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set tokenAddress.
-   */
-  function _setTokenAddress(address tokenAddress) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tokenAddress)), _fieldLayout);
-  }
-
-  /**
    * @notice Get globalSpawnIndex.
    */
   function getGlobalSpawnIndex() internal view returns (uint32 globalSpawnIndex) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -165,7 +123,7 @@ library GameConfig {
   function _getGlobalSpawnIndex() internal view returns (uint32 globalSpawnIndex) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
   }
 
@@ -175,7 +133,7 @@ library GameConfig {
   function setGlobalSpawnIndex(uint32 globalSpawnIndex) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((globalSpawnIndex)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((globalSpawnIndex)), _fieldLayout);
   }
 
   /**
@@ -184,121 +142,83 @@ library GameConfig {
   function _setGlobalSpawnIndex(uint32 globalSpawnIndex) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((globalSpawnIndex)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((globalSpawnIndex)), _fieldLayout);
   }
 
   /**
-   * @notice Get scaleDown.
+   * @notice Get flowRate.
    */
-  function getScaleDown() internal view returns (uint32 scaleDown) {
+  function getFlowRate() internal view returns (uint256 flowRate) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Get flowRate.
+   */
+  function _getFlowRate() internal view returns (uint256 flowRate) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Set flowRate.
+   */
+  function setFlowRate(uint256 flowRate) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((flowRate)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set flowRate.
+   */
+  function _setFlowRate(uint256 flowRate) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((flowRate)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get tankCapacity.
+   */
+  function getTankCapacity() internal view returns (uint256 tankCapacity) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Get scaleDown.
+   * @notice Get tankCapacity.
    */
-  function _getScaleDown() internal view returns (uint32 scaleDown) {
+  function _getTankCapacity() internal view returns (uint256 tankCapacity) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set scaleDown.
-   */
-  function setScaleDown(uint32 scaleDown) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((scaleDown)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set scaleDown.
-   */
-  function _setScaleDown(uint32 scaleDown) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((scaleDown)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get flowRate.
-   */
-  function getFlowRate() internal view returns (uint32 flowRate) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get flowRate.
-   */
-  function _getFlowRate() internal view returns (uint32 flowRate) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 4, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Set flowRate.
-   */
-  function setFlowRate(uint32 flowRate) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((flowRate)), _fieldLayout);
-  }
-
-  /**
-   * @notice Set flowRate.
-   */
-  function _setFlowRate(uint32 flowRate) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreCore.setStaticField(_tableId, _keyTuple, 4, abi.encodePacked((flowRate)), _fieldLayout);
-  }
-
-  /**
-   * @notice Get tankCapacity.
-   */
-  function getTankCapacity() internal view returns (uint32 tankCapacity) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
-  }
-
-  /**
-   * @notice Get tankCapacity.
-   */
-  function _getTankCapacity() internal view returns (uint32 tankCapacity) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set tankCapacity.
    */
-  function setTankCapacity(uint32 tankCapacity) internal {
+  function setTankCapacity(uint256 tankCapacity) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((tankCapacity)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((tankCapacity)), _fieldLayout);
   }
 
   /**
    * @notice Set tankCapacity.
    */
-  function _setTankCapacity(uint32 tankCapacity) internal {
+  function _setTankCapacity(uint256 tankCapacity) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 5, abi.encodePacked((tankCapacity)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 3, abi.encodePacked((tankCapacity)), _fieldLayout);
   }
 
   /**
@@ -332,22 +252,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(
-    address adminAddress,
-    address tokenAddress,
-    uint32 globalSpawnIndex,
-    uint32 scaleDown,
-    uint32 flowRate,
-    uint32 tankCapacity
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      adminAddress,
-      tokenAddress,
-      globalSpawnIndex,
-      scaleDown,
-      flowRate,
-      tankCapacity
-    );
+  function set(address adminAddress, uint32 globalSpawnIndex, uint256 flowRate, uint256 tankCapacity) internal {
+    bytes memory _staticData = encodeStatic(adminAddress, globalSpawnIndex, flowRate, tankCapacity);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -360,22 +266,8 @@ library GameConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(
-    address adminAddress,
-    address tokenAddress,
-    uint32 globalSpawnIndex,
-    uint32 scaleDown,
-    uint32 flowRate,
-    uint32 tankCapacity
-  ) internal {
-    bytes memory _staticData = encodeStatic(
-      adminAddress,
-      tokenAddress,
-      globalSpawnIndex,
-      scaleDown,
-      flowRate,
-      tankCapacity
-    );
+  function _set(address adminAddress, uint32 globalSpawnIndex, uint256 flowRate, uint256 tankCapacity) internal {
+    bytes memory _staticData = encodeStatic(adminAddress, globalSpawnIndex, flowRate, tankCapacity);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -391,9 +283,7 @@ library GameConfig {
   function set(GameConfigData memory _table) internal {
     bytes memory _staticData = encodeStatic(
       _table.adminAddress,
-      _table.tokenAddress,
       _table.globalSpawnIndex,
-      _table.scaleDown,
       _table.flowRate,
       _table.tankCapacity
     );
@@ -412,9 +302,7 @@ library GameConfig {
   function _set(GameConfigData memory _table) internal {
     bytes memory _staticData = encodeStatic(
       _table.adminAddress,
-      _table.tokenAddress,
       _table.globalSpawnIndex,
-      _table.scaleDown,
       _table.flowRate,
       _table.tankCapacity
     );
@@ -432,29 +320,14 @@ library GameConfig {
    */
   function decodeStatic(
     bytes memory _blob
-  )
-    internal
-    pure
-    returns (
-      address adminAddress,
-      address tokenAddress,
-      uint32 globalSpawnIndex,
-      uint32 scaleDown,
-      uint32 flowRate,
-      uint32 tankCapacity
-    )
-  {
+  ) internal pure returns (address adminAddress, uint32 globalSpawnIndex, uint256 flowRate, uint256 tankCapacity) {
     adminAddress = (address(Bytes.getBytes20(_blob, 0)));
 
-    tokenAddress = (address(Bytes.getBytes20(_blob, 20)));
+    globalSpawnIndex = (uint32(Bytes.getBytes4(_blob, 20)));
 
-    globalSpawnIndex = (uint32(Bytes.getBytes4(_blob, 40)));
+    flowRate = (uint256(Bytes.getBytes32(_blob, 24)));
 
-    scaleDown = (uint32(Bytes.getBytes4(_blob, 44)));
-
-    flowRate = (uint32(Bytes.getBytes4(_blob, 48)));
-
-    tankCapacity = (uint32(Bytes.getBytes4(_blob, 52)));
+    tankCapacity = (uint256(Bytes.getBytes32(_blob, 56)));
   }
 
   /**
@@ -468,14 +341,7 @@ library GameConfig {
     EncodedLengths,
     bytes memory
   ) internal pure returns (GameConfigData memory _table) {
-    (
-      _table.adminAddress,
-      _table.tokenAddress,
-      _table.globalSpawnIndex,
-      _table.scaleDown,
-      _table.flowRate,
-      _table.tankCapacity
-    ) = decodeStatic(_staticData);
+    (_table.adminAddress, _table.globalSpawnIndex, _table.flowRate, _table.tankCapacity) = decodeStatic(_staticData);
   }
 
   /**
@@ -502,13 +368,11 @@ library GameConfig {
    */
   function encodeStatic(
     address adminAddress,
-    address tokenAddress,
     uint32 globalSpawnIndex,
-    uint32 scaleDown,
-    uint32 flowRate,
-    uint32 tankCapacity
+    uint256 flowRate,
+    uint256 tankCapacity
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(adminAddress, tokenAddress, globalSpawnIndex, scaleDown, flowRate, tankCapacity);
+    return abi.encodePacked(adminAddress, globalSpawnIndex, flowRate, tankCapacity);
   }
 
   /**
@@ -519,20 +383,11 @@ library GameConfig {
    */
   function encode(
     address adminAddress,
-    address tokenAddress,
     uint32 globalSpawnIndex,
-    uint32 scaleDown,
-    uint32 flowRate,
-    uint32 tankCapacity
+    uint256 flowRate,
+    uint256 tankCapacity
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(
-      adminAddress,
-      tokenAddress,
-      globalSpawnIndex,
-      scaleDown,
-      flowRate,
-      tankCapacity
-    );
+    bytes memory _staticData = encodeStatic(adminAddress, globalSpawnIndex, flowRate, tankCapacity);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

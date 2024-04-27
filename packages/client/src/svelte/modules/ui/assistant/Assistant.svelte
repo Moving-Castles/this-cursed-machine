@@ -16,7 +16,7 @@
 
 <div class="toast-pane">
   {#each $assistantMessages as msg (msg.timestamp + $assistantMessages.length)}
-    <div animate:flip in:fly={{ y: 20, delay: 150 }}>
+    <div animate:flip in:fly={{ y: 20, delay: 3000 }}>
       <AssistantMessageComponent {msg} on:end={onEnd} />
     </div>
   {/each}

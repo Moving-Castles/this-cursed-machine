@@ -2,15 +2,16 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, CarriedBy, MaterialType, MachineType, Amount, TankConnection, BuildIndex } from "../codegen/index.sol";
-import { ENTITY_TYPE, MATERIAL_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
+import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, BuildIndex } from "../codegen/index.sol";
+import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { Product } from "../structs.sol";
 import { FLOW_RATE, TANK_CAPACITY } from "../constants.sol";
+import { LibMaterial } from "./LibMaterial.sol";
 
 library LibTank {
   struct InletTankAmount {
     uint32 index;
-    uint32 amount;
+    uint256 amount;
   }
 
   /**
@@ -22,7 +23,7 @@ library LibTank {
     tankEntity = getUniqueEntity();
     EntityType.set(tankEntity, ENTITY_TYPE.TANK);
     CarriedBy.set(tankEntity, _podEntity);
-    MaterialType.set(tankEntity, MATERIAL_TYPE.NONE);
+    ContainedMaterial.set(tankEntity, LibMaterial.NONE);
     Amount.set(tankEntity, 0);
     BuildIndex.set(tankEntity, _index + 1);
     TankConnection.set(tankEntity, bytes32(0));
@@ -61,34 +62,32 @@ library LibTank {
      * With a flow rate of FLOW_RATE per block,
      * how long does it take for the lowest input to be exhausted?
      */
-    uint32 inletExhaustionBlock = lowestInput.amount / FLOW_RATE;
+    uint256 inletExhaustionBlock = lowestInput.amount / FLOW_RATE;
 
     /*
      * When is the outlet tank full?
      * available capacity of the tank / flow rate of the outlet product
      */
-    uint32 outletFullBlock = (TANK_CAPACITY - Amount.get(_outletTankEntity)) / _output.amount;
+    uint256 outletFullBlock = (TANK_CAPACITY - Amount.get(_outletTankEntity)) / _output.amount;
 
     /*
      * Stop block is the lowest of the two limiting factors
      */
-    uint32 stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
+    uint256 stopBlock = inletExhaustionBlock > outletFullBlock ? outletFullBlock : inletExhaustionBlock;
 
-    uint32 cappedBlocks = stopBlock > uint32(_blocksSinceLastResolution)
-      ? uint32(_blocksSinceLastResolution)
-      : stopBlock;
+    uint256 cappedBlocks = stopBlock > _blocksSinceLastResolution ? _blocksSinceLastResolution : stopBlock;
 
     /*
      * Write to outlet tank
      * Add if material is same, otherwise replace
      */
 
-    uint32 cumulativeOutputAmount = _output.amount * cappedBlocks;
+    uint256 cumulativeOutputAmount = _output.amount * cappedBlocks;
 
-    if (MaterialType.get(_outletTankEntity) == _output.materialType) {
+    if (ContainedMaterial.get(_outletTankEntity) == _output.materialId) {
       Amount.set(_outletTankEntity, Amount.get(_outletTankEntity) + cumulativeOutputAmount);
     } else {
-      MaterialType.set(_outletTankEntity, _output.materialType);
+      ContainedMaterial.set(_outletTankEntity, _output.materialId);
       Amount.set(_outletTankEntity, cumulativeOutputAmount);
     }
 
@@ -97,14 +96,14 @@ library LibTank {
      * Empty tank if we exhausted it
      */
 
-    uint32 consumedInletAmount = cappedBlocks * FLOW_RATE;
+    uint256 consumedInletAmount = cappedBlocks * FLOW_RATE;
 
     for (uint i = 0; i < usedInletAmounts.length; i++) {
-      uint32 newAmount = usedInletAmounts[i].amount > consumedInletAmount
+      uint256 newAmount = usedInletAmounts[i].amount > consumedInletAmount
         ? usedInletAmounts[i].amount - consumedInletAmount
         : 0;
       if (newAmount == 0) {
-        MaterialType.set(_inletTankEntities[usedInletAmounts[i].index], MATERIAL_TYPE.NONE);
+        ContainedMaterial.set(_inletTankEntities[usedInletAmounts[i].index], LibMaterial.NONE);
       }
       Amount.set(_inletTankEntities[usedInletAmounts[i].index], newAmount);
     }

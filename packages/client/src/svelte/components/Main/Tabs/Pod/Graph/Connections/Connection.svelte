@@ -44,7 +44,10 @@
   const drawInStart = async () => {
     showLabel = false
     await new Promise(resolve => setTimeout(resolve, 300))
-    playSound("tcm", "selectionEnter")
+    playSound("tcm", "pipeDraw")
+    setTimeout(() => {
+      playSound("tcm", "pipeConnect")
+    }, 300)
     showLabel = true
   }
 

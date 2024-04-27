@@ -63,13 +63,13 @@
     $playerPod?.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    layout.graphMachines,
+    layout.graphMachines
   )
 
   // Play sound when network is running
   let networkRunningSound: Howl | undefined
   $: if ($networkIsRunning) {
-    networkRunningSound = playSound("tcm", "machineFlowing", true)
+    networkRunningSound = playSound("tcm", "pumpOut", true)
   } else {
     if (networkRunningSound) {
       networkRunningSound.stop()
@@ -114,8 +114,8 @@
     cursor: crosshair;
     overflow: hidden;
 
-    --cellHeight: 9px;
-    --cellWidth: 9px;
+    --cellHeight: 10px;
+    --cellWidth: 10px;
 
     .grid {
       position: relative;

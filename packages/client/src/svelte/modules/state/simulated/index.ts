@@ -1,5 +1,5 @@
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
-import { MACHINE_TYPE, MATERIAL_TYPE } from "../base/enums"
+import { MACHINE_TYPE } from "../base/enums"
 import { DIRECTION } from "@components/Main/Terminal/enums"
 import type { SimulatedMachine, SimulatedMachines } from "./types"
 
@@ -102,8 +102,4 @@ export function machineTypeToActionVerbs(
   if (map[name]) return map[name]
 
   return ""
-}
-
-export const materialTypeToLabel = (materialType: MATERIAL_TYPE) => {
-  return MATERIAL_TYPE[materialType]?.split("_")?.join(" ")
 }

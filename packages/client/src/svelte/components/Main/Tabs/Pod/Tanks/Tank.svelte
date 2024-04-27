@@ -2,38 +2,34 @@
   import type { SimulatedTank } from "@modules/state/simulated/types"
   import { fade } from "svelte/transition"
   import { tweened } from "svelte/motion"
-  import { playerPod } from "@modules/state/base/stores"
+  import { materialMetadata, playerPod } from "@modules/state/base/stores"
   import { bounceOut } from "svelte/easing"
   import { selectedOption } from "@modules/ui/stores"
+  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
   import {
     networkIsRunning,
     shippableTanks,
     simulatedMachines,
   } from "@modules/state/simulated/stores"
   import { waitingTransaction } from "@modules/action/actionSequencer"
-  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import { MATERIAL_TYPE } from "@modules/state/base/enums"
   import { EMPTY_CONNECTION } from "@modules/utils/constants"
   import { TANK_CAPACITY } from "@modules/state/simulated/constants"
-  import { UI_SCALE_FACTOR } from "@modules/ui/constants"
+  import { displayAmount } from "@modules/utils"
 
   export let tank: SimulatedTank
   export let address: string
   export let index: number
 
   const progress = tweened(
-    (Math.round(tank.amount / UI_SCALE_FACTOR) /
-      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
-      100,
-    { easing: bounceOut }
+    (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100,
+    { easing: bounceOut },
   )
 
-  const amount = tweened(Math.round(tank.amount / UI_SCALE_FACTOR))
+  const amount = tweened(displayAmount(tank.amount))
 
   // Narrow the type
   $: typedTank = tank as Tank
 
-  // Tutorial check
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
 
   // Tank is shippable
@@ -46,18 +42,16 @@
   $: connected = typedTank.tankConnection !== EMPTY_CONNECTION
 
   // Tanks is empty
-  $: empty = typedTank.amount === 0
+  $: empty = typedTank.amount === BigInt(0)
 
   // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
 
   $: $progress =
-    (Math.round(typedTank.amount / UI_SCALE_FACTOR) /
-      (TANK_CAPACITY / UI_SCALE_FACTOR)) *
-    100
+    (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100
 
-  $: $amount = typedTank.amount / UI_SCALE_FACTOR
+  $: $amount = displayAmount(typedTank.amount)
 
   $: connectedMachine = $simulatedMachines[tank.tankConnection]
 
@@ -75,6 +69,7 @@
   class:shippable={canShip}
   class:highlight
   class:disabled-highlight={disabledHighlight}
+  class:emphasis={index === 0 && $tutorialProgress === 7}
   class:running={$networkIsRunning && connectedMachine?.productive}
 >
   <div class="tank-progress" style:height="{$progress}%"></div>
@@ -93,12 +88,12 @@
     {#if empty}
       <div class="material-amount">
         <span class="portion-left">0</span> /
-        <span class="portion-right">{TANK_CAPACITY / UI_SCALE_FACTOR}</span>
+        <span class="portion-right">{displayAmount(TANK_CAPACITY)}</span>
       </div>
     {:else}
       <div class="inner-container">
         <div class="material-type">
-          {MATERIAL_TYPE[typedTank.materialType]}
+          {$materialMetadata[typedTank.materialId]?.name}
         </div>
         <div class="material-amount">
           <span class="portion-left">
@@ -106,7 +101,7 @@
           </span>
           /
           <span class="portion-right">
-            {TANK_CAPACITY / UI_SCALE_FACTOR}
+            {displayAmount(TANK_CAPACITY)}
           </span>
         </div>
       </div>
@@ -190,7 +185,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: var(--foreground) !important;
 
       .inner-container {
         display: flex;

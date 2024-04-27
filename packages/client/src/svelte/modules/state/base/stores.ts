@@ -10,11 +10,12 @@ import {
   getRecipes,
   getAvailableOrders,
   getExpiredOrders,
+  getMaterialMetadata,
 } from "./utils"
 import { writable, derived } from "svelte/store"
 import { blockNumber, walletNetwork } from "@modules/network"
 import { GAME_CONFIG_ID } from "@modules/state/base/constants"
-import { ONE_TOKEN_UNIT } from "@svelte/modules/ui/constants"
+import { displayAmount } from "@modules/utils"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
@@ -36,6 +37,8 @@ export const gameConfig = derived(
 )
 
 export const recipes = derived(entities, $entities => getRecipes($entities))
+
+export const materialMetadata = derived(entities, $entities => getMaterialMetadata($entities))
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES
@@ -66,10 +69,10 @@ export const playerPod = derived([entities, player], ([$entities, $player]) =>
 export const playerTokenBalance = derived([player], ([$player]) => {
   if ($player.tutorial) {
     // Make sure nonTransferableBalance is treated as BigInt
-    return BigInt($player.nonTransferableBalance ?? 0);
+    return displayAmount($player.nonTransferableBalance);
   } else {
-    // Ensure tokenBalances is multiplied correctly with ONE_TOKEN_UNIT
-    return BigInt($player.tokenBalances ?? 0) / ONE_TOKEN_UNIT;
+    // Ensure tokenBalances is multiplied correctly with ONE_UNIT
+    return displayAmount($player.tokenBalances);
   }
 })
 // * * * * * * * * * * * * * * * * *

@@ -106,7 +106,9 @@
 <!-- svelte-ignore a11y-interactive-supports-focus -->
 <div
   id="machine-{address}"
-  class="machine run-potential {MACHINE_TYPE[machine.machineType]} {$networkIsRunning && machine.productive
+  class="machine run-potential {MACHINE_TYPE[
+    machine.machineType
+  ]} {$networkIsRunning && machine.productive
     ? `running-${Math.floor(Math.random() * 3) + 1}`
     : ''}"
   class:active={machine.state === GRAPH_ENTITY_STATE.ACTIVE}
@@ -146,8 +148,10 @@
 
 <style lang="scss">
   .machine {
-    width: calc(var(--cellWidth) * 7);
-    height: calc(var(--cellWidth) * 7);
+    --machineWidth: 8;
+    --machineHeight: 8;
+    width: calc(var(--cellWidth) * 8);
+    height: calc(var(--cellWidth) * 8);
     font-size: var(--font-size-small);
     display: flex;
     justify-content: center;

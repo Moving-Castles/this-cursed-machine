@@ -6,7 +6,7 @@
 
 import type { Writable } from "svelte/store"
 import { writable, get } from "svelte/store"
-import { network, blockNumber } from "../../network"
+import { publicNetwork, blockNumber } from "../../network"
 import { toastMessage } from "../../ui/toast"
 import { parseError } from "@components/Main/Terminal/functions/errors"
 import { v4 as uuid } from "uuid"
@@ -109,7 +109,7 @@ async function execute() {
     // Add action to active list
     activeActions.update(activeActions => [action, ...activeActions])
     // Make the call
-    const tx = await get(network).worldContract.write[action.systemId]([
+    const tx = await get(publicNetwork).worldContract.write[action.systemId]([
       ...action.params,
     ])
     // Transaction sent. Add tx hash and timestamp to action.
@@ -120,7 +120,7 @@ async function execute() {
     })
 
     // Wait for transaction to be executed
-    let receipt = await get(network).publicClient.waitForTransactionReceipt({
+    let receipt = await get(publicNetwork).publicClient.waitForTransactionReceipt({
       hash: tx,
     })
 
@@ -153,7 +153,7 @@ function handleError(error: any, action: Action) {
   // Update action status
   action.error = error
   // Trigger toast
-  toastMessage(parseError(error), { type: "error" })
+  toastMessage(parseError(error), { type: "error", disappear: true })
   // Add action to failed list
   failedActions.update(failedActions => [action, ...failedActions])
   // Clear active list

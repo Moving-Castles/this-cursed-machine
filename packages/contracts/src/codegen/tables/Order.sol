@@ -17,17 +17,16 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
-import { MATERIAL_TYPE } from "./../common.sol";
+import { MaterialId } from "./../../libraries/LibMaterial.sol";
 
 struct OrderData {
   uint256 creationBlock;
-  bytes32 creator;
-  MATERIAL_TYPE materialType;
-  uint32 amount;
+  address creator;
+  MaterialId materialId;
+  uint256 amount;
   uint256 expirationBlock;
-  uint32 reward;
+  uint256 reward;
   uint32 maxPlayers;
-  string title;
 }
 
 library Order {
@@ -35,12 +34,12 @@ library Order {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004f726465720000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x006d070120200104200404000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x00a6070020140e20202004000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, bytes32, uint8, uint32, uint256, uint32, uint32, string)
-  Schema constant _valueSchema = Schema.wrap(0x006d07011f5f00031f0303c50000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256, address, bytes14, uint256, uint256, uint256, uint32)
+  Schema constant _valueSchema = Schema.wrap(0x00a607001f614d1f1f1f03000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -56,15 +55,14 @@ library Order {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](8);
+    fieldNames = new string[](7);
     fieldNames[0] = "creationBlock";
     fieldNames[1] = "creator";
-    fieldNames[2] = "materialType";
+    fieldNames[2] = "materialId";
     fieldNames[3] = "amount";
     fieldNames[4] = "expirationBlock";
     fieldNames[5] = "reward";
     fieldNames[6] = "maxPlayers";
-    fieldNames[7] = "title";
   }
 
   /**
@@ -126,29 +124,29 @@ library Order {
   /**
    * @notice Get creator.
    */
-  function getCreator(bytes32 key) internal view returns (bytes32 creator) {
+  function getCreator(bytes32 key) internal view returns (address creator) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Get creator.
    */
-  function _getCreator(bytes32 key) internal view returns (bytes32 creator) {
+  function _getCreator(bytes32 key) internal view returns (address creator) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (bytes32(_blob));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Set creator.
    */
-  function setCreator(bytes32 key, bytes32 creator) internal {
+  function setCreator(bytes32 key, address creator) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -158,7 +156,7 @@ library Order {
   /**
    * @notice Set creator.
    */
-  function _setCreator(bytes32 key, bytes32 creator) internal {
+  function _setCreator(bytes32 key, address creator) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -166,73 +164,73 @@ library Order {
   }
 
   /**
-   * @notice Get materialType.
+   * @notice Get materialId.
    */
-  function getMaterialType(bytes32 key) internal view returns (MATERIAL_TYPE materialType) {
+  function getMaterialId(bytes32 key) internal view returns (MaterialId materialId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
-   * @notice Get materialType.
+   * @notice Get materialId.
    */
-  function _getMaterialType(bytes32 key) internal view returns (MATERIAL_TYPE materialType) {
+  function _getMaterialId(bytes32 key) internal view returns (MaterialId materialId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
-    return MATERIAL_TYPE(uint8(bytes1(_blob)));
+    return MaterialId.wrap(bytes14(_blob));
   }
 
   /**
-   * @notice Set materialType.
+   * @notice Set materialId.
    */
-  function setMaterialType(bytes32 key, MATERIAL_TYPE materialType) internal {
+  function setMaterialId(bytes32 key, MaterialId materialId) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(materialType)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(MaterialId.unwrap(materialId)), _fieldLayout);
   }
 
   /**
-   * @notice Set materialType.
+   * @notice Set materialId.
    */
-  function _setMaterialType(bytes32 key, MATERIAL_TYPE materialType) internal {
+  function _setMaterialId(bytes32 key, MaterialId materialId) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(uint8(materialType)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked(MaterialId.unwrap(materialId)), _fieldLayout);
   }
 
   /**
    * @notice Get amount.
    */
-  function getAmount(bytes32 key) internal view returns (uint32 amount) {
+  function getAmount(bytes32 key) internal view returns (uint256 amount) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get amount.
    */
-  function _getAmount(bytes32 key) internal view returns (uint32 amount) {
+  function _getAmount(bytes32 key) internal view returns (uint256 amount) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 3, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set amount.
    */
-  function setAmount(bytes32 key, uint32 amount) internal {
+  function setAmount(bytes32 key, uint256 amount) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -242,7 +240,7 @@ library Order {
   /**
    * @notice Set amount.
    */
-  function _setAmount(bytes32 key, uint32 amount) internal {
+  function _setAmount(bytes32 key, uint256 amount) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -294,29 +292,29 @@ library Order {
   /**
    * @notice Get reward.
    */
-  function getReward(bytes32 key) internal view returns (uint32 reward) {
+  function getReward(bytes32 key) internal view returns (uint256 reward) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get reward.
    */
-  function _getReward(bytes32 key) internal view returns (uint32 reward) {
+  function _getReward(bytes32 key) internal view returns (uint256 reward) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 5, _fieldLayout);
-    return (uint32(bytes4(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set reward.
    */
-  function setReward(bytes32 key, uint32 reward) internal {
+  function setReward(bytes32 key, uint256 reward) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -326,7 +324,7 @@ library Order {
   /**
    * @notice Set reward.
    */
-  function _setReward(bytes32 key, uint32 reward) internal {
+  function _setReward(bytes32 key, uint256 reward) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
@@ -376,168 +374,6 @@ library Order {
   }
 
   /**
-   * @notice Get title.
-   */
-  function getTitle(bytes32 key) internal view returns (string memory title) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
-    return (string(_blob));
-  }
-
-  /**
-   * @notice Get title.
-   */
-  function _getTitle(bytes32 key) internal view returns (string memory title) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
-    return (string(_blob));
-  }
-
-  /**
-   * @notice Set title.
-   */
-  function setTitle(bytes32 key, string memory title) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((title)));
-  }
-
-  /**
-   * @notice Set title.
-   */
-  function _setTitle(bytes32 key, string memory title) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((title)));
-  }
-
-  /**
-   * @notice Get the length of title.
-   */
-  function lengthTitle(bytes32 key) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    unchecked {
-      return _byteLength / 1;
-    }
-  }
-
-  /**
-   * @notice Get the length of title.
-   */
-  function _lengthTitle(bytes32 key) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
-    unchecked {
-      return _byteLength / 1;
-    }
-  }
-
-  /**
-   * @notice Get an item of title.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function getItemTitle(bytes32 key, uint256 _index) internal view returns (string memory) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    unchecked {
-      bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (string(_blob));
-    }
-  }
-
-  /**
-   * @notice Get an item of title.
-   * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
-   */
-  function _getItemTitle(bytes32 key, uint256 _index) internal view returns (string memory) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    unchecked {
-      bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
-      return (string(_blob));
-    }
-  }
-
-  /**
-   * @notice Push a slice to title.
-   */
-  function pushTitle(bytes32 key, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /**
-   * @notice Push a slice to title.
-   */
-  function _pushTitle(bytes32 key, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /**
-   * @notice Pop a slice from title.
-   */
-  function popTitle(bytes32 key) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /**
-   * @notice Pop a slice from title.
-   */
-  function _popTitle(bytes32 key) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /**
-   * @notice Update a slice of title at `_index`.
-   */
-  function updateTitle(bytes32 key, uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    unchecked {
-      bytes memory _encoded = bytes((_slice));
-      StoreSwitch.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
-   * @notice Update a slice of title at `_index`.
-   */
-  function _updateTitle(bytes32 key, uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    unchecked {
-      bytes memory _encoded = bytes((_slice));
-      StoreCore.spliceDynamicData(_tableId, _keyTuple, 0, uint40(_index * 1), uint40(_encoded.length), _encoded);
-    }
-  }
-
-  /**
    * @notice Get the full data.
    */
   function get(bytes32 key) internal view returns (OrderData memory _table) {
@@ -573,26 +409,25 @@ library Order {
   function set(
     bytes32 key,
     uint256 creationBlock,
-    bytes32 creator,
-    MATERIAL_TYPE materialType,
-    uint32 amount,
+    address creator,
+    MaterialId materialId,
+    uint256 amount,
     uint256 expirationBlock,
-    uint32 reward,
-    uint32 maxPlayers,
-    string memory title
+    uint256 reward,
+    uint32 maxPlayers
   ) internal {
     bytes memory _staticData = encodeStatic(
       creationBlock,
       creator,
-      materialType,
+      materialId,
       amount,
       expirationBlock,
       reward,
       maxPlayers
     );
 
-    EncodedLengths _encodedLengths = encodeLengths(title);
-    bytes memory _dynamicData = encodeDynamic(title);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -606,26 +441,25 @@ library Order {
   function _set(
     bytes32 key,
     uint256 creationBlock,
-    bytes32 creator,
-    MATERIAL_TYPE materialType,
-    uint32 amount,
+    address creator,
+    MaterialId materialId,
+    uint256 amount,
     uint256 expirationBlock,
-    uint32 reward,
-    uint32 maxPlayers,
-    string memory title
+    uint256 reward,
+    uint32 maxPlayers
   ) internal {
     bytes memory _staticData = encodeStatic(
       creationBlock,
       creator,
-      materialType,
+      materialId,
       amount,
       expirationBlock,
       reward,
       maxPlayers
     );
 
-    EncodedLengths _encodedLengths = encodeLengths(title);
-    bytes memory _dynamicData = encodeDynamic(title);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -640,15 +474,15 @@ library Order {
     bytes memory _staticData = encodeStatic(
       _table.creationBlock,
       _table.creator,
-      _table.materialType,
+      _table.materialId,
       _table.amount,
       _table.expirationBlock,
       _table.reward,
       _table.maxPlayers
     );
 
-    EncodedLengths _encodedLengths = encodeLengths(_table.title);
-    bytes memory _dynamicData = encodeDynamic(_table.title);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -663,15 +497,15 @@ library Order {
     bytes memory _staticData = encodeStatic(
       _table.creationBlock,
       _table.creator,
-      _table.materialType,
+      _table.materialId,
       _table.amount,
       _table.expirationBlock,
       _table.reward,
       _table.maxPlayers
     );
 
-    EncodedLengths _encodedLengths = encodeLengths(_table.title);
-    bytes memory _dynamicData = encodeDynamic(_table.title);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -689,66 +523,49 @@ library Order {
     pure
     returns (
       uint256 creationBlock,
-      bytes32 creator,
-      MATERIAL_TYPE materialType,
-      uint32 amount,
+      address creator,
+      MaterialId materialId,
+      uint256 amount,
       uint256 expirationBlock,
-      uint32 reward,
+      uint256 reward,
       uint32 maxPlayers
     )
   {
     creationBlock = (uint256(Bytes.getBytes32(_blob, 0)));
 
-    creator = (Bytes.getBytes32(_blob, 32));
+    creator = (address(Bytes.getBytes20(_blob, 32)));
 
-    materialType = MATERIAL_TYPE(uint8(Bytes.getBytes1(_blob, 64)));
+    materialId = MaterialId.wrap(Bytes.getBytes14(_blob, 52));
 
-    amount = (uint32(Bytes.getBytes4(_blob, 65)));
+    amount = (uint256(Bytes.getBytes32(_blob, 66)));
 
-    expirationBlock = (uint256(Bytes.getBytes32(_blob, 69)));
+    expirationBlock = (uint256(Bytes.getBytes32(_blob, 98)));
 
-    reward = (uint32(Bytes.getBytes4(_blob, 101)));
+    reward = (uint256(Bytes.getBytes32(_blob, 130)));
 
-    maxPlayers = (uint32(Bytes.getBytes4(_blob, 105)));
-  }
-
-  /**
-   * @notice Decode the tightly packed blob of dynamic data using the encoded lengths.
-   */
-  function decodeDynamic(
-    EncodedLengths _encodedLengths,
-    bytes memory _blob
-  ) internal pure returns (string memory title) {
-    uint256 _start;
-    uint256 _end;
-    unchecked {
-      _end = _encodedLengths.atIndex(0);
-    }
-    title = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+    maxPlayers = (uint32(Bytes.getBytes4(_blob, 162)));
   }
 
   /**
    * @notice Decode the tightly packed blobs using this table's field layout.
    * @param _staticData Tightly packed static fields.
-   * @param _encodedLengths Encoded lengths of dynamic fields.
-   * @param _dynamicData Tightly packed dynamic fields.
+   *
+   *
    */
   function decode(
     bytes memory _staticData,
-    EncodedLengths _encodedLengths,
-    bytes memory _dynamicData
+    EncodedLengths,
+    bytes memory
   ) internal pure returns (OrderData memory _table) {
     (
       _table.creationBlock,
       _table.creator,
-      _table.materialType,
+      _table.materialId,
       _table.amount,
       _table.expirationBlock,
       _table.reward,
       _table.maxPlayers
     ) = decodeStatic(_staticData);
-
-    (_table.title) = decodeDynamic(_encodedLengths, _dynamicData);
   }
 
   /**
@@ -777,33 +594,14 @@ library Order {
    */
   function encodeStatic(
     uint256 creationBlock,
-    bytes32 creator,
-    MATERIAL_TYPE materialType,
-    uint32 amount,
+    address creator,
+    MaterialId materialId,
+    uint256 amount,
     uint256 expirationBlock,
-    uint32 reward,
+    uint256 reward,
     uint32 maxPlayers
   ) internal pure returns (bytes memory) {
-    return abi.encodePacked(creationBlock, creator, materialType, amount, expirationBlock, reward, maxPlayers);
-  }
-
-  /**
-   * @notice Tightly pack dynamic data lengths using this table's schema.
-   * @return _encodedLengths The lengths of the dynamic fields (packed into a single bytes32 value).
-   */
-  function encodeLengths(string memory title) internal pure returns (EncodedLengths _encodedLengths) {
-    // Lengths are effectively checked during copy by 2**40 bytes exceeding gas limits
-    unchecked {
-      _encodedLengths = EncodedLengthsLib.pack(bytes(title).length);
-    }
-  }
-
-  /**
-   * @notice Tightly pack dynamic (variable length) data using this table's schema.
-   * @return The dynamic data, encoded into a sequence of bytes.
-   */
-  function encodeDynamic(string memory title) internal pure returns (bytes memory) {
-    return abi.encodePacked(bytes((title)));
+    return abi.encodePacked(creationBlock, creator, materialId, amount, expirationBlock, reward, maxPlayers);
   }
 
   /**
@@ -814,26 +612,25 @@ library Order {
    */
   function encode(
     uint256 creationBlock,
-    bytes32 creator,
-    MATERIAL_TYPE materialType,
-    uint32 amount,
+    address creator,
+    MaterialId materialId,
+    uint256 amount,
     uint256 expirationBlock,
-    uint32 reward,
-    uint32 maxPlayers,
-    string memory title
+    uint256 reward,
+    uint32 maxPlayers
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(
       creationBlock,
       creator,
-      materialType,
+      materialId,
       amount,
       expirationBlock,
       reward,
       maxPlayers
     );
 
-    EncodedLengths _encodedLengths = encodeLengths(title);
-    bytes memory _dynamicData = encodeDynamic(title);
+    EncodedLengths _encodedLengths;
+    bytes memory _dynamicData;
 
     return (_staticData, _encodedLengths, _dynamicData);
   }

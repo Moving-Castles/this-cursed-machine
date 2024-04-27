@@ -6,7 +6,7 @@ import { playerPod } from '../base/stores'
  * Block on which the network was last resolved locally.
  * Used to check against the on-chain lastResolved value.
  */
-export const localResolved = writable(0)
+export const localResolved = writable(BigInt(0))
 
 /**
  * Current block number - lastResolved
@@ -14,6 +14,6 @@ export const localResolved = writable(0)
 export const blocksSinceLastResolution = derived(
     [blockNumber, playerPod],
     ([$blockNumber, $playerPod]) => {
-        return $blockNumber - Number($playerPod.lastResolved)
+        return $blockNumber - ($playerPod.lastResolved ?? BigInt(0))
     }
 )

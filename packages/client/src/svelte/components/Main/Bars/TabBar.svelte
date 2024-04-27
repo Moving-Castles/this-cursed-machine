@@ -54,8 +54,10 @@
         class="button-container"
         tabindex={key}
         on:click={() => {
-          activeTab.set(key)
-          playSound("tcm", "selectionEnter")
+          if ($tutorialProgress > HIDDEN_CONDITIONS[key]) {
+            activeTab.set(key)
+            playSound("tcm", "selectionEnter")
+          }
         }}
       >
         <div

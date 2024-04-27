@@ -1,6 +1,7 @@
 import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 import { Entity } from "@latticexyz/recs"
 import { decodeEntity } from "@latticexyz/store-sync/recs"
+import { MaterialIdNone } from "./constants"
 
 export function filterByEntitytype(
   entities: Entities,
@@ -42,8 +43,8 @@ export function getRecipes(entities: Entities): Recipe[] {
       )
       return {
         machineType: parseInt(machineType, 16),
-        input: parseInt(input, 16),
-        outputs: recipe[1].recipe?.outputs ?? [0, 0],
+        input: input,
+        outputs: recipe[1].recipe?.outputs ?? [MaterialIdNone, MaterialIdNone],
       } as Recipe
     })
 
@@ -52,25 +53,34 @@ export function getRecipes(entities: Entities): Recipe[] {
 
 export function getAvailableOrders(
   orders: Orders,
-  blockNumber: number,
+  blockNumber: bigint,
   playerInTutorial: boolean,
   tutorialLevel: number
 ): Orders {
-  // If not in tutorial, return all orders that are not expired
+  let filteredOrders: [string, Order][];
+
+  // Filter orders based on tutorial status and expiration
   if (!playerInTutorial) {
-    return Object.fromEntries(
-      Object.entries(orders).filter(([, order]) =>
-        order.order ? (!order.tutorial && order.order.expirationBlock == 0) || order.order.expirationBlock > blockNumber : false
-      )
-    )
+    filteredOrders = Object.entries(orders).filter(([, order]) =>
+      order.order ? (!order.tutorial && (order.order.expirationBlock === 0n || order.order.expirationBlock > blockNumber)) : false
+    );
+  } else {
+    filteredOrders = Object.entries(orders).filter(([, order]) =>
+      order.order ? order.tutorialLevel === tutorialLevel : false
+    );
   }
 
-  // If in tutorial, return only the orders that are in the tutorial level
-  return Object.fromEntries(
-    Object.entries(orders).filter(([, order]) =>
-      order.order ? order.tutorialLevel == tutorialLevel : false
-    )
-  )
+  // Sort the filtered orders by creationBlock in descending order using a bigint-safe comparator
+  const sortedOrders = filteredOrders.sort((a, b) => {
+    if (b[1].order && a[1].order) {
+      return (b[1].order.creationBlock > a[1].order.creationBlock) ? 1 :
+        (b[1].order.creationBlock < a[1].order.creationBlock) ? -1 : 0;
+    }
+    return 0;
+  });
+
+  // Convert array back to object and return
+  return Object.fromEntries(sortedOrders);
 }
 
 export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
@@ -79,4 +89,22 @@ export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
       order.order ? order.order.expirationBlock <= blockNumber : false
     )
   )
+}
+
+export function getMaterialMetadata(entities: Entities): Record<MaterialId, MaterialMetadata> {
+  const materialMetadata: Record<MaterialId, MaterialMetadata> = {}
+  Object.entries(entities)
+    .filter(([_, entity]) => entity.hasOwnProperty("materialMetadata"))
+    .forEach(value => {
+      const { materialId } = decodeEntity(
+        { materialId: "bytes14" },
+        value[0] as Entity
+      )
+      materialMetadata[materialId] = {
+        materialId,
+        ...value[1].materialMetadata
+      } as MaterialMetadata
+    })
+
+  return materialMetadata
 }

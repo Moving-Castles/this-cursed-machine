@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, CarriedBy, MaterialType, Offer, OfferData, Amount, TanksInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
-import { MACHINE_TYPE, ENTITY_TYPE, MATERIAL_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibOffer, LibToken, LibNetwork } from "../../libraries/Libraries.sol";
-import { TANK_CAPACITY, ONE_TOKEN_UNIT } from "../../constants.sol";
+import { GameConfig, CarriedBy, ContainedMaterial, Offer, OfferData, Amount, TanksInPod, Tutorial, NonTransferableBalance } from "../../codegen/index.sol";
+import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
+import { LibUtils, LibOffer, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
+import { TANK_CAPACITY, ONE_UNIT } from "../../constants.sol";
 
 contract OfferSystem is System {
   /**
    * @notice Create an offer
    * @dev Restricted to admin
-   * @param _materialType Material type of the offer
-   * @param _amount Amount of material
-   * @param _cost Cost of the offer in whole token units (1 token = 1e18)
+   * @param _materialId Material id of the offer
+   * @param _amount Amount of material in whole units
+   * @param _cost Cost of the offer in whole units
    * @return orderEntity Id of the offer entity
    */
-  function createOffer(MATERIAL_TYPE _materialType, uint32 _amount, uint32 _cost) public returns (bytes32 orderEntity) {
+  function createOffer(MaterialId _materialId, uint256 _amount, uint256 _cost) public returns (bytes32 orderEntity) {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
-    orderEntity = LibOffer.create(_materialType, _amount, _cost);
+    orderEntity = LibOffer.create(_materialId, _amount * ONE_UNIT, _cost * ONE_UNIT);
 
     return orderEntity;
   }
@@ -51,7 +51,7 @@ contract OfferSystem is System {
     if (Tutorial.get(playerEntity)) {
       require(NonTransferableBalance.get(playerEntity) >= offerData.cost, "insufficient balance");
     } else {
-      require(LibToken.getTokenBalance(_msgSender()) >= offerData.cost * ONE_TOKEN_UNIT, "insufficient balance");
+      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= offerData.cost, "insufficient balance");
     }
 
     // Resolution needs to be done before filling the tank to avoid instant conversion of materials.
@@ -64,13 +64,13 @@ contract OfferSystem is System {
     // Go through all tanks in the pod
     for (uint32 i = 0; i < tanksInPod.length; i++) {
       // If tank is empty: select it
-      if (MaterialType.get(tanksInPod[i]) == MATERIAL_TYPE.NONE) {
+      if (!ContainedMaterial.get(tanksInPod[i]).isRegistered()) {
         targetTank = tanksInPod[i];
         break;
       }
 
       // If tank has other material: skip
-      if (MaterialType.get(tanksInPod[i]) != offerData.materialType) {
+      if (ContainedMaterial.get(tanksInPod[i]) != offerData.materialId) {
         continue;
       }
 
@@ -86,15 +86,15 @@ contract OfferSystem is System {
     }
 
     // Add material to tank
-    MaterialType.set(targetTank, offerData.materialType);
+    ContainedMaterial.set(targetTank, offerData.materialId);
     Amount.set(targetTank, Amount.get(targetTank) + offerData.amount);
 
     if (Tutorial.get(playerEntity)) {
       // Deduct from non-transferable balance
       NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
     } else {
-      // Deduct from real token balance
-      LibToken.transferToken(_world(), offerData.cost * ONE_TOKEN_UNIT);
+      // Burn real tokens
+      PublicMaterials.BUG.burn(_msgSender(), offerData.cost);
     }
   }
 }
