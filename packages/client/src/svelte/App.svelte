@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { setup } from "@mud/setup"
+  import { setupPublicNetwork } from "@mud/setupPublicNetwork"
   import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
     createSyncProgressSystem,
   } from "@modules/systems"
-  import { network, initBlockListener } from "@modules/network"
+  import { publicNetwork, initBlockListener } from "@modules/network"
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
   import { initStaticContent } from "@modules/content"
@@ -81,8 +81,8 @@
     initStaticContent()
 
     // Write mud layer to svelte store
-    const mudLayer = await setup(environment)
-    network.set(mudLayer)
+    const mudLayer = await setupPublicNetwork(environment)
+    publicNetwork.set(mudLayer)
 
     // Modules responsible for sending transactions
     initActionSequencer()
@@ -109,7 +109,9 @@
     // Signal network
     initSignalNetwork()
 
+    // TODO mount devtools on walletNetwork change if it's not empty
     // Devtools
+    /*
     mount({
       config: mudLayer.config,
       publicClient: mudLayer.publicClient,
@@ -122,6 +124,7 @@
       // if you're using recs
       // recsWorld: ,
     })
+    */
   })
 
   // Fade out intro sound when ready
