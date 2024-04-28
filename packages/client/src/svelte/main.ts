@@ -57,12 +57,7 @@ mountAccountKit({
   wagmiConfig,
   accountKitConfig: {
     theme: "dark",
-    chain: networkConfig.chain,
     worldAddress: networkConfig.worldAddress,
-    // TODO: add gasTank to MUDChain contracts
-    // TODO: allow gasTankAddress to be undefined
-    // gasTankAddress: "0x932c23946aba851829553ddd5e22d68b57a81f0d",
-    gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
     erc4337: false,
     chainId: networkConfig.chainId,
     appInfo: {
