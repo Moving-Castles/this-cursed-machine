@@ -14,12 +14,10 @@
     "test": "mud test",
     "test-verbose": "mud test --forgeOptions=' -vvv'",
     "test-single": "mud test --forgeOptions='--match-test testOrderCreate'",
-    "----- REDSTONE GARNET -----": "---------------------------",
-    "deploy:redstone-garnet": "DEBUG=mud:* mud deploy --profile=redstone-garnet --forgeScriptOptions='--slow'",
-    "----- REDSTONE MAINNET -----": "---------------------------",
-    "deploy:redstone-mainnet": "DEBUG=mud:* mud deploy --profile=redstone --forgeScriptOptions='--slow'",
-    "----- REDSTONE RHODOLITE -----": "---------------------------",
-    "deploy:redstone-rhodolite": "---------------------------"
+    "----- GARNET -----": "---------------------------",
+    "deploy:garnet": "DEBUG=mud:* mud deploy --profile=garnet --forgeScriptOptions='--slow'",
+    "----- REDSTONE -----": "---------------------------",
+    "deploy:redstone": "DEBUG=mud:* mud deploy --profile=redstone --forgeScriptOptions='--slow'"
   },
   "dependencies": {
     "@latticexyz/cli": "2.0.8-account-kit-38709026",
