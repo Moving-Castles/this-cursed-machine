@@ -32,9 +32,8 @@ const getEnvironment = () => {
 
 const environment = getEnvironment();
 
-console.log(ENVIRONMENT[environment]);
+const networkConfig = getNetworkConfig(environment);
 
-const networkConfig = getNetworkConfig(ENVIRONMENT.DEVELOPMENT);
 const wagmiConfig = createConfig({
   // chains: [networkConfig.chain as Chain],
   chains: [...supportedChains, mainnet, holesky] as MUDChain[],
