@@ -8,6 +8,7 @@ import { supportedChains } from "@mud/supportedChains";
 import { MUDChain } from "@latticexyz/common/chains";
 import { transportObserver } from "@latticexyz/common";
 import { fallback, http, webSocket } from "viem";
+import { mainnet, holesky } from "viem/chains";
 
 const getEnvironment = () => {
   switch (window.location.hostname) {
@@ -36,13 +37,13 @@ console.log(ENVIRONMENT[environment]);
 const networkConfig = getNetworkConfig(ENVIRONMENT.DEVELOPMENT);
 const wagmiConfig = createConfig({
   // chains: [networkConfig.chain as Chain],
-  chains: supportedChains as [MUDChain, ...MUDChain[]],
+  chains: [...supportedChains, mainnet, holesky] as MUDChain[],
   pollingInterval: 1_000,
   // TODO: how to properly set up a transport config for all chains supported as bridge sources?
   transports: Object.fromEntries(
     supportedChains.map((chain) => {
       if (chain.rpcUrls.default.webSocket)
-        return [chain.id, transportObserver(webSocket(), fallback([http()]))];
+        return [chain.id, transportObserver(fallback([webSocket(), http()]))];
       return [chain.id, transportObserver(fallback([http()]))];
     })
   ),
