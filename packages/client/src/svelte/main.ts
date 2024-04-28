@@ -9,6 +9,30 @@ import { MUDChain } from "@latticexyz/common/chains";
 import { transportObserver } from "@latticexyz/common";
 import { fallback, http, webSocket } from "viem";
 
+const getEnvironment = () => {
+  switch (window.location.hostname) {
+    case "thiscursedmachine.fun":
+      return ENVIRONMENT.REDSTONE
+    case "redstone-test.thiscursedmachine.fun":
+      return ENVIRONMENT.REDSTONE_TEST
+    case "garnet.thiscursedmachine.fun":
+      return ENVIRONMENT.GARNET
+    case "garnet-account-kit.thiscursedmachine.fun":
+      return ENVIRONMENT.GARNET_ACCOUNT_KIT
+    default:
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('useAccountKit')) {
+        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+      } else {
+        return ENVIRONMENT.DEVELOPMENT
+      }
+  }
+}
+
+const environment = getEnvironment();
+
+console.log(ENVIRONMENT[environment]);
+
 const networkConfig = getNetworkConfig(ENVIRONMENT.DEVELOPMENT);
 const wagmiConfig = createConfig({
   // chains: [networkConfig.chain as Chain],
@@ -24,6 +48,19 @@ const wagmiConfig = createConfig({
   ),
 });
 
+console.log('networkConfig', networkConfig);
+
+const useErc4337 = [
+  ENVIRONMENT.REDSTONE,
+  ENVIRONMENT.REDSTONE_TEST,
+  ENVIRONMENT.GARNET_ACCOUNT_KIT,
+  ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+].includes(environment);
+
+console.log('useErc4337', useErc4337);
+
+console.log('networkConfig.chain.contracts?.gasTank?.address', networkConfig.chain.contracts?.gasTank?.address)
+
 mountAccountKit({
   wagmiConfig,
   accountKitConfig: {
@@ -32,10 +69,10 @@ mountAccountKit({
     worldAddress: networkConfig.worldAddress,
     // TODO: add gasTank to MUDChain contracts
     // TODO: allow gasTankAddress to be undefined
-    // gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
-    gasTankAddress: "0x932c23946aba851829553ddd5e22d68b57a81f0d",
-    erc4337: false,
-    chainId: 31337,
+    // gasTankAddress: "0x932c23946aba851829553ddd5e22d68b57a81f0d",
+    gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
+    erc4337: useErc4337,
+    chainId: networkConfig.chainId,
     appInfo: {
       name: "This Cursed Machine",
     },
@@ -63,6 +100,9 @@ mountAccountKit({
 
 const app = new App({
   target: document.getElementById("app"),
+  props: {
+    environment
+  }
 });
 
 export default app;

@@ -5,10 +5,8 @@
  */
 import {
   Hex,
-  parseEther,
   getContract,
   Client,
-  PublicClient,
   Transport,
   Chain,
   Account,
@@ -49,10 +47,6 @@ export function setupWalletNetwork(publicNetwork: SetupPublicNetworkResult, wall
     client: { public: publicNetwork.publicClient, wallet: walletClient },
   })
 
-  if (networkConfig.faucetServiceUrl) {
-    setupDrip(publicNetwork.publicClient, networkConfig.faucetServiceUrl, walletClient.account.address)
-  }
-
   return {
     playerEntity: encodeEntity(
       { address: "address" },
@@ -62,49 +56,4 @@ export function setupWalletNetwork(publicNetwork: SetupPublicNetworkResult, wall
     worldContract,
     write$: write$.asObservable().pipe(share()),
   }
-}
-
-async function setupDrip(publicClient: PublicClient, faucetServiceUrl: string, address: Hex) {
-  /*
-   * If there is a faucet, request (test) ETH if you have
-   * less than 0.01 ETH. Repeat every 20 seconds to ensure you don't
-   * run out.
-   */
-  console.info("[Dev Faucet]: Player address -> ", address)
-
-  const requestDrip = async () => {
-    const balance = await publicClient.getBalance({ address })
-    console.info(`[Dev Faucet]: Player balance -> ${balance}`)
-    const lowBalance = balance < parseEther("0.01")
-    if (faucetServiceUrl && lowBalance) {
-      console.info("[Dev Faucet]: Balance is low, dripping funds to player")
-      // Drip
-      await drip(faucetServiceUrl, address)
-    }
-  }
-
-  async function drip(url: string, address: string): Promise<void> {
-    const data = { address }
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      await response.json()
-    } catch (error) {
-      console.error("Error:", error)
-    }
-  }
-
-  requestDrip()
-  setInterval(requestDrip, 20000)
 }

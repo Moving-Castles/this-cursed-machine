@@ -10,6 +10,9 @@
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
   import { player } from "@modules/state/base/stores"
+  import { ENVIRONMENT } from "@mud/enums"
+
+  export let environment: ENVIRONMENT
 
   const dispatch = createEventDispatcher()
 
@@ -27,7 +30,7 @@
       narrativeIndex++
       // Write the next part of the story to the terminal
       if (narrativeIndex < narrative.length) {
-        await narrative[narrativeIndex]()
+        await narrative[narrativeIndex](environment)
       }
       // End of narrative reached
       if (narrativeIndex === narrative.length - 1) {
@@ -48,11 +51,11 @@
         "Welcome back...",
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("done")
     } else {
-      await narrative[0]()
+      await narrative[0](environment)
       if (terminalComponent) {
         terminalComponent.resetInput()
       }

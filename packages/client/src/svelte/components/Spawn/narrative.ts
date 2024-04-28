@@ -15,10 +15,12 @@ import {
 import { playSound } from "@modules/sound";
 import { playerAddress } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
-import { store as accountKitStore } from "@latticexyz/account-kit/bundle";
-import type { AppAccountClient } from "@latticexyz/account-kit/src/common";
 import { publicNetwork, walletNetwork } from "@modules/network";
 import { setupWalletNetwork } from "@mud/setupWalletNetwork";
+import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork";
+import { ENVIRONMENT } from "@mud/enums";
+import { connect } from "@components/Spawn/account-kit-connect";
+import { initSignalNetwork } from "@modules/signal"
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -71,11 +73,11 @@ async function typeWriteNarrativeSuccess(text: string) {
 }
 
 export const narrative = [
-  // async () => {
+  // async (_: ENVIRONMENT) => {
   //   await writeNarrative("welcome stump");
   //   await writeNarrativeAction("blink if you can hear me");
   // },
-  // async () => {
+  // async (_: ENVIRONMENT) => {
   //   await writeNarrative(
   //     "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
   //   );
@@ -85,55 +87,32 @@ export const narrative = [
   //   await writeNarrative("I will help you through the on-boarding process.");
   //   await writeNarrativeAction("blink to begin");
   // },
-  async () => {
+  async (_: ENVIRONMENT) => {
     await writeNarrative("the company needs to verify your identity.");
     await writeNarrativeAction("blink to start verification");
   },
-  async () => {
-    /* * * * * * * * * * * * * * * * *
-     * Trigger wallet connection modal
-     * * * * * * * * * * * * * * * * */
+  async (environment: ENVIRONMENT) => {
+    if ([
+      ENVIRONMENT.DEVELOPMENT,
+      ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
+    ].includes(environment)) {
+      // Burner
+      walletNetwork.set(setupBurnerWalletNetwork(get(publicNetwork)));
+    } else {
+      // Account kit
+      await writeNarrative("[Wallet connection started here]");
+      const appAccountClient = await connect();
+      walletNetwork.set(setupWalletNetwork(get(publicNetwork), appAccountClient));
+    }
 
-    // TODO: add some sort of timeout to keep this from spinning forever?
-    const openAccountModalPromise = new Promise<() => void>((resolve) => {
-      const { openAccountModal } = accountKitStore.getState();
-      if (openAccountModal) return resolve(openAccountModal);
-      const unsub = accountKitStore.subscribe((state) => {
-        if (state.openAccountModal) {
-          unsub();
-          resolve(state.openAccountModal);
-        }
-      });
-    });
-
-    const connect = () =>
-      openAccountModalPromise.then((openAccountModal) => {
-        openAccountModal();
-        return new Promise<AppAccountClient>((resolve, reject) => {
-          const unsub = accountKitStore.subscribe((state) => {
-            if (state.appAccountClient) {
-              unsub();
-              resolve(state.appAccountClient);
-            }
-            if (state.accountModalOpen === false) {
-              unsub();
-              reject(new Error("Account modal closed before connecting."));
-            }
-          });
-        });
-      });
-
-    await writeNarrative("[Wallet connection started here]");
-    const appAccountClient = await connect();
-    // TODO fallback to setupBurnerWalletNetwork on some condition
-    walletNetwork.set(setupWalletNetwork(get(publicNetwork), appAccountClient));
-    console.log("appAccountClient", appAccountClient);
+    // Websocket connection for off-chain messaging
+    initSignalNetwork()
 
     await writeNarrative("Your account address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
     await writeNarrativeAction("blink to continue");
   },
-  async () => {
+  async (_: ENVIRONMENT) => {
     await writeNarrative(
       "you can (mandatory) assign yourself a human-readable ID (name)"
     );
@@ -177,7 +156,7 @@ export const narrative = [
     await writeNarrativeInfo("brain-machine-interface calibrated");
     await writeNarrativeAction("blink when the anaesthesia has worn off");
   },
-  async () => {
+  async (_: ENVIRONMENT) => {
     await writeNarrative("from now on");
     await writeNarrative("only one thing matters");
     playSound("tcm", "bugs");
@@ -195,7 +174,7 @@ export const narrative = [
     await writeNarrative("Do not disappoint me.");
     await writeNarrativeAction("blink to enter the pod.");
   },
-  async () => {
+  async (_: ENVIRONMENT) => {
     playSound("tcm", "textLineHit")
     await writeNarrativeInfo("transferring stump to pod...");
     // Send spawn

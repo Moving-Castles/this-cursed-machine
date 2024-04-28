@@ -14,7 +14,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
   // Default to local development chain
   let chainId = 31337;
 
-  if ([ENVIRONMENT.GARNET, ENVIRONMENT.GARNET_WALLET].includes(environment)) {
+  if ([ENVIRONMENT.GARNET, ENVIRONMENT.GARNET_ACCOUNT_KIT].includes(environment)) {
     chainId = 17069
   } else if ([ENVIRONMENT.REDSTONE, ENVIRONMENT.REDSTONE_TEST].includes(environment)) {
     chainId = 690
