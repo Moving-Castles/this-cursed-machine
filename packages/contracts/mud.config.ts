@@ -15,6 +15,9 @@ const userTypes = {
 export default defineWorld({
     enums,
     userTypes,
+    deploy: {
+        upgradeableWorldImplementation: true,
+    },
     tables: {
         GameConfig: {
             key: [],
