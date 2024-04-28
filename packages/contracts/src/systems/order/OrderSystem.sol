@@ -32,7 +32,7 @@ contract OrderSystem is System {
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint256 totalRewardCost = (_reward * ONE_UNIT) * _maxPlayers;
       require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
-      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+      PublicMaterials.BUG.burn(_msgSender(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(

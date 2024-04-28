@@ -63,7 +63,7 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Create order as user",
-    "gasUsed": 282690
+    "gasUsed": 277722
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
