@@ -42,22 +42,13 @@ const wagmiConfig = createConfig({
   transports: Object.fromEntries(
     supportedChains.map((chain) => {
       if (chain.rpcUrls.default.webSocket)
-        return [chain.id, transportObserver(fallback([http(), webSocket()]))];
+        return [chain.id, transportObserver(webSocket(), fallback([http()]))];
       return [chain.id, transportObserver(fallback([http()]))];
     })
   ),
 });
 
 console.log('networkConfig', networkConfig);
-
-const useErc4337 = [
-  ENVIRONMENT.REDSTONE,
-  ENVIRONMENT.REDSTONE_TEST,
-  ENVIRONMENT.GARNET_ACCOUNT_KIT,
-  ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
-].includes(environment);
-
-console.log('useErc4337', useErc4337);
 
 console.log('networkConfig.chain.contracts?.gasTank?.address', networkConfig.chain.contracts?.gasTank?.address)
 
@@ -71,7 +62,7 @@ mountAccountKit({
     // TODO: allow gasTankAddress to be undefined
     // gasTankAddress: "0x932c23946aba851829553ddd5e22d68b57a81f0d",
     gasTankAddress: networkConfig.chain.contracts?.gasTank?.address as any,
-    erc4337: useErc4337,
+    erc4337: false,
     chainId: networkConfig.chainId,
     appInfo: {
       name: "This Cursed Machine",
