@@ -26,7 +26,7 @@ const tanks = {
         entityType: ENTITY_TYPE.TANK,
         carriedBy: "POD_ID",
         tankConnection: "INLET_TWO",
-        materialId: MaterialIds.CONGEALED_FAT,
+        materialId: MaterialIds.FAT,
         amount: 10000,
         buildIndex: 2,
     },
@@ -92,7 +92,7 @@ test("(1) testResolveMixer", () => {
             entityType: ENTITY_TYPE.TANK,
             carriedBy: "POD_ID",
             tankConnection: "INLET_TWO",
-            materialId: MaterialIds.CONGEALED_FAT,
+            materialId: MaterialIds.FAT,
             amount: 1000,
             buildIndex: 2
         },

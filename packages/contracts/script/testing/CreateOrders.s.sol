@@ -21,23 +21,23 @@ contract CreateOrder is Script {
 
     address admin = address(0);
 
-    // 80 INDUSTRIAL_LUBRICANT => 160 points
-    LibOrder.create(admin, PublicMaterials.INDUSTRIAL_LUBRICANT, 80 * ONE_UNIT, false, 0, 160 * ONE_UNIT, 0, 0);
+    // 80 LUBRICANT => 160 points
+    LibOrder.create(admin, PublicMaterials.LUBRICANT, 80 * ONE_UNIT, false, 0, 160 * ONE_UNIT, 0, 0);
 
     // 130 EVIAN => 210 points
     LibOrder.create(admin, PublicMaterials.EVIAN, 130 * ONE_UNIT, false, 0, 210 * ONE_UNIT, 0, 0);
 
-    // 50 LOW_GRADE_AMPHETAMINE => 500 points
-    LibOrder.create(admin, PublicMaterials.LOW_GRADE_AMPHETAMINE, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 0);
+    // 50 AMPHETAMINE => 500 points
+    LibOrder.create(admin, PublicMaterials.AMPHETAMINE, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 0);
 
-    // 90 CONGEALED_FAT => 140 points
-    LibOrder.create(admin, PublicMaterials.CONGEALED_FAT, 90 * ONE_UNIT, false, 0, 140 * ONE_UNIT, 0, 0);
+    // 90 FAT => 140 points
+    LibOrder.create(admin, PublicMaterials.FAT, 90 * ONE_UNIT, false, 0, 140 * ONE_UNIT, 0, 0);
 
     // 50 ORGANIC_WASTE => 100 points
     LibOrder.create(admin, PublicMaterials.ORGANIC_WASTE, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, 0, 0);
 
-    // 80 BLOOD_CLOT  => 300 points
-    LibOrder.create(admin, PublicMaterials.BLOOD_CLOT, 80 * ONE_UNIT, false, 0, 300 * ONE_UNIT, 0, 0);
+    // 80 BLOOD_CLOTS  => 300 points
+    LibOrder.create(admin, PublicMaterials.BLOOD_CLOTS, 80 * ONE_UNIT, false, 0, 300 * ONE_UNIT, 0, 0);
 
     // 50 HEMATURIC_FLUID => 200 points
     LibOrder.create(admin, PublicMaterials.HEMATURIC_FLUID, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 0);
@@ -48,8 +48,8 @@ contract CreateOrder is Script {
     // 50 PISS => 120 points
     LibOrder.create(admin, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, 0, 0);
 
-    // 90 INDUSTRIAL_LUBRICANT => 240 points
-    LibOrder.create(admin, PublicMaterials.INDUSTRIAL_LUBRICANT, 90 * ONE_UNIT, false, 0, 240 * ONE_UNIT, 0, 0);
+    // 90 LUBRICANT => 240 points
+    LibOrder.create(admin, PublicMaterials.LUBRICANT, 90 * ONE_UNIT, false, 0, 240 * ONE_UNIT, 0, 0);
 
     vm.stopBroadcast();
   }

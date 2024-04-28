@@ -21,7 +21,7 @@ contract DevSystem is System {
 
     Name.set(playerEntity, "MEATBAG66");
 
-    PublicMaterials.BUG.mint(_msgSender(), 10000 * ONE_UNIT);
+    PublicMaterials.BUGS.mint(_msgSender(), 10000 * ONE_UNIT);
   }
 
   /**
@@ -41,7 +41,7 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function reward() public {
-    PublicMaterials.BUG.mint(_msgSender(), 1000 * ONE_UNIT);
+    PublicMaterials.BUGS.mint(_msgSender(), 1000 * ONE_UNIT);
   }
 
   /**
@@ -49,8 +49,8 @@ contract DevSystem is System {
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
   function charge() public {
-    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
-    PublicMaterials.BUG.transferToken(_world(), 100 * ONE_UNIT);
+    require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
+    PublicMaterials.BUGS.transferToken(_world(), 100 * ONE_UNIT);
   }
 
   /**
@@ -59,8 +59,8 @@ contract DevSystem is System {
    */
   function createTestOrder() public {
     uint256 totalRewardCost = (100 * ONE_UNIT) * 5;
-    require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
-    PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+    require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+    PublicMaterials.BUGS.transferToken(_world(), totalRewardCost);
 
     LibOrder.create(_msgSender(), PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, 0, 5);
   }

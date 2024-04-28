@@ -136,7 +136,7 @@ contract TankSystem is System {
 
         // Fill the player's first tank with bugs to get them started
         bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
-        ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUG);
+        ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUGS);
         Amount.set(tanksInPod[0], TANK_CAPACITY);
 
         return;
@@ -159,7 +159,7 @@ contract TankSystem is System {
     //////////////////////////////////////////////////////////////*/
 
     // Reward player in real tokens
-    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
+    PublicMaterials.BUGS.mint(_msgSender(), currentOrder.reward);
 
     // If the order was not created by admin, mint the material to the creator
     if (currentOrder.creator != GameConfig.getAdminAddress()) {
