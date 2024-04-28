@@ -16,6 +16,8 @@ import { WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/s
 // Not using index.sol because of MaterialId circular import
 import { MaterialMetadata, MaterialMetadataData } from "../codegen/tables/MaterialMetadata.sol";
 
+import { MATERIAL_DIFFICULTY} from "../codegen/common.sol";
+
 type MaterialId is bytes14;
 
 using LibMaterial for MaterialId global;
@@ -38,7 +40,8 @@ library LibMaterial {
   function registerMaterial(
     MaterialId _materialId,
     string memory _name,
-    string memory _symbol
+    string memory _symbol,
+    MATERIAL_DIFFICULTY _difficulty
   ) internal {
     IBaseWorld world = IBaseWorld(WorldContextConsumerLib._world());
 
@@ -56,7 +59,7 @@ library LibMaterial {
     // Set other material metadata
     MaterialMetadata.set(
       _materialId,
-      MaterialMetadataData({ tokenAddress: address(token), name: _name })
+      MaterialMetadataData({ difficulty: _difficulty, tokenAddress: address(token), name: _name })
     );
   }
 

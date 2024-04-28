@@ -27,7 +27,7 @@
     "file": "test/systems/machine-network/ResolveSystem.t.sol",
     "test": "testResolve",
     "name": "Resolve",
-    "gasUsed": 148819
+    "gasUsed": 149624
   },
   {
     "file": "test/systems/machine-network/WipeSystem.t.sol",
@@ -57,25 +57,25 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 224516
+    "gasUsed": 224677
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Create order as user",
-    "gasUsed": 284190
+    "gasUsed": 284673
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Ship (user created order)",
-    "gasUsed": 422630
+    "gasUsed": 422952
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testShip",
     "name": "Ship (admin created order)",
-    "gasUsed": 276022
+    "gasUsed": 276183
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",

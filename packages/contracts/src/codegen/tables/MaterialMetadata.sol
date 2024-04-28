@@ -18,8 +18,10 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 // Import user types
 import { MaterialId } from "./../../libraries/LibMaterial.sol";
+import { MATERIAL_DIFFICULTY } from "./../common.sol";
 
 struct MaterialMetadataData {
+  MATERIAL_DIFFICULTY difficulty;
   address tokenAddress;
   string name;
 }
@@ -29,12 +31,12 @@ library MaterialMetadata {
   ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d6174657269616c4d65746164617461);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0014010114000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0015020101140000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes14)
   Schema constant _keySchema = Schema.wrap(0x000e01004d000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (address, string)
-  Schema constant _valueSchema = Schema.wrap(0x0014010161c50000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint8, address, string)
+  Schema constant _valueSchema = Schema.wrap(0x001502010061c500000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -50,9 +52,10 @@ library MaterialMetadata {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
-    fieldNames[0] = "tokenAddress";
-    fieldNames[1] = "name";
+    fieldNames = new string[](3);
+    fieldNames[0] = "difficulty";
+    fieldNames[1] = "tokenAddress";
+    fieldNames[2] = "name";
   }
 
   /**
@@ -70,13 +73,55 @@ library MaterialMetadata {
   }
 
   /**
+   * @notice Get difficulty.
+   */
+  function getDifficulty(MaterialId materialId) internal view returns (MATERIAL_DIFFICULTY difficulty) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return MATERIAL_DIFFICULTY(uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Get difficulty.
+   */
+  function _getDifficulty(MaterialId materialId) internal view returns (MATERIAL_DIFFICULTY difficulty) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    return MATERIAL_DIFFICULTY(uint8(bytes1(_blob)));
+  }
+
+  /**
+   * @notice Set difficulty.
+   */
+  function setDifficulty(MaterialId materialId, MATERIAL_DIFFICULTY difficulty) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(difficulty)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set difficulty.
+   */
+  function _setDifficulty(MaterialId materialId, MATERIAL_DIFFICULTY difficulty) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(difficulty)), _fieldLayout);
+  }
+
+  /**
    * @notice Get tokenAddress.
    */
   function getTokenAddress(MaterialId materialId) internal view returns (address tokenAddress) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (address(bytes20(_blob)));
   }
 
@@ -87,7 +132,7 @@ library MaterialMetadata {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (address(bytes20(_blob)));
   }
 
@@ -98,7 +143,7 @@ library MaterialMetadata {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((tokenAddress)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tokenAddress)), _fieldLayout);
   }
 
   /**
@@ -108,7 +153,7 @@ library MaterialMetadata {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(MaterialId.unwrap(materialId));
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((tokenAddress)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((tokenAddress)), _fieldLayout);
   }
 
   /**
@@ -306,8 +351,13 @@ library MaterialMetadata {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(MaterialId materialId, address tokenAddress, string memory name) internal {
-    bytes memory _staticData = encodeStatic(tokenAddress);
+  function set(
+    MaterialId materialId,
+    MATERIAL_DIFFICULTY difficulty,
+    address tokenAddress,
+    string memory name
+  ) internal {
+    bytes memory _staticData = encodeStatic(difficulty, tokenAddress);
 
     EncodedLengths _encodedLengths = encodeLengths(name);
     bytes memory _dynamicData = encodeDynamic(name);
@@ -321,8 +371,13 @@ library MaterialMetadata {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(MaterialId materialId, address tokenAddress, string memory name) internal {
-    bytes memory _staticData = encodeStatic(tokenAddress);
+  function _set(
+    MaterialId materialId,
+    MATERIAL_DIFFICULTY difficulty,
+    address tokenAddress,
+    string memory name
+  ) internal {
+    bytes memory _staticData = encodeStatic(difficulty, tokenAddress);
 
     EncodedLengths _encodedLengths = encodeLengths(name);
     bytes memory _dynamicData = encodeDynamic(name);
@@ -337,7 +392,7 @@ library MaterialMetadata {
    * @notice Set the full data using the data struct.
    */
   function set(MaterialId materialId, MaterialMetadataData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.tokenAddress);
+    bytes memory _staticData = encodeStatic(_table.difficulty, _table.tokenAddress);
 
     EncodedLengths _encodedLengths = encodeLengths(_table.name);
     bytes memory _dynamicData = encodeDynamic(_table.name);
@@ -352,7 +407,7 @@ library MaterialMetadata {
    * @notice Set the full data using the data struct.
    */
   function _set(MaterialId materialId, MaterialMetadataData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.tokenAddress);
+    bytes memory _staticData = encodeStatic(_table.difficulty, _table.tokenAddress);
 
     EncodedLengths _encodedLengths = encodeLengths(_table.name);
     bytes memory _dynamicData = encodeDynamic(_table.name);
@@ -366,8 +421,12 @@ library MaterialMetadata {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (address tokenAddress) {
-    tokenAddress = (address(Bytes.getBytes20(_blob, 0)));
+  function decodeStatic(
+    bytes memory _blob
+  ) internal pure returns (MATERIAL_DIFFICULTY difficulty, address tokenAddress) {
+    difficulty = MATERIAL_DIFFICULTY(uint8(Bytes.getBytes1(_blob, 0)));
+
+    tokenAddress = (address(Bytes.getBytes20(_blob, 1)));
   }
 
   /**
@@ -396,7 +455,7 @@ library MaterialMetadata {
     EncodedLengths _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (MaterialMetadataData memory _table) {
-    (_table.tokenAddress) = decodeStatic(_staticData);
+    (_table.difficulty, _table.tokenAddress) = decodeStatic(_staticData);
 
     (_table.name) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -425,8 +484,8 @@ library MaterialMetadata {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(address tokenAddress) internal pure returns (bytes memory) {
-    return abi.encodePacked(tokenAddress);
+  function encodeStatic(MATERIAL_DIFFICULTY difficulty, address tokenAddress) internal pure returns (bytes memory) {
+    return abi.encodePacked(difficulty, tokenAddress);
   }
 
   /**
@@ -455,10 +514,11 @@ library MaterialMetadata {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
+    MATERIAL_DIFFICULTY difficulty,
     address tokenAddress,
     string memory name
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(tokenAddress);
+    bytes memory _staticData = encodeStatic(difficulty, tokenAddress);
 
     EncodedLengths _encodedLengths = encodeLengths(name);
     bytes memory _dynamicData = encodeDynamic(name);

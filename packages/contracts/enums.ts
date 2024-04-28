@@ -27,6 +27,13 @@ enum PORT_INDEX {
     SECOND
 }
 
+enum MATERIAL_DIFFICULTY {
+    NOVICE,
+    INTERMEDIATE,
+    ADVANCED,
+    NIGHTMARE
+}
+
 function getEnumNames(enumObj: any): string[] {
     // Filter the keys to remove the numeric ones, leaving only the string keys
     return Object.keys(enumObj).filter(key => isNaN(Number(key)));
@@ -35,12 +42,15 @@ function getEnumNames(enumObj: any): string[] {
 const ENTITY_TYPE_ARRAY = getEnumNames(ENTITY_TYPE);
 const MACHINE_TYPE_ARRAY = getEnumNames(MACHINE_TYPE);
 const PORT_INDEX_ARRAY = getEnumNames(PORT_INDEX);
+const MATERIAL_DIFFICULTY_ARRAY = getEnumNames(MATERIAL_DIFFICULTY);
 
 export {
     ENTITY_TYPE,
     MACHINE_TYPE,
     PORT_INDEX,
+    MATERIAL_DIFFICULTY,
     ENTITY_TYPE_ARRAY,
     MACHINE_TYPE_ARRAY,
-    PORT_INDEX_ARRAY
+    PORT_INDEX_ARRAY,
+    MATERIAL_DIFFICULTY_ARRAY
 }

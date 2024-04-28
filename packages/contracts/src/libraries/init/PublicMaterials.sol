@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { MaterialId, LibMaterial } from "../LibMaterial.sol";
+import { MATERIAL_DIFFICULTY } from "../../codegen/common.sol";
 
 library PublicMaterials {
   MaterialId constant BUG = MaterialId.wrap("t_BUG");
@@ -22,23 +23,21 @@ library PublicMaterials {
   MaterialId constant EVIAN = MaterialId.wrap("t_EVIAN");
   MaterialId constant INDUSTRIAL_LUBRICANT = MaterialId.wrap("t_INDUSTRIAL_L");
 
+  // prettier-ignore
   function init() internal {
-    LibMaterial.registerMaterial(BUG, "BUG", "BUG");
-    LibMaterial.registerMaterial(PISS, "PISS", "PISS");
-    LibMaterial.registerMaterial(BLOOD, "BLOOD", "BLOOD");
-
-    LibMaterial.registerMaterial(HEMATURIC_FLUID, "HEMATURIC_FLUID", "HEMATURIC_FLUID");
-
-    LibMaterial.registerMaterial(DUST, "DUST", "DUST");
-    LibMaterial.registerMaterial(UREA, "UREA", "UREA");
-    LibMaterial.registerMaterial(FERTILIZER, "FERTILIZER", "FERTILIZER");
-    LibMaterial.registerMaterial(LOW_GRADE_AMPHETAMINE, "LOW_GRADE_AMPHETAMINE", "LOW_GRADE_AMPHETAMINE");
-    LibMaterial.registerMaterial(BLOOD_CLOT, "BLOOD_CLOT", "BLOOD_CLOT");
-    LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BLOOD_MEAL");
-    LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORGANIC_WASTE");
-    LibMaterial.registerMaterial(CONGEALED_FAT, "CONGEALED_FAT", "CONGEALED_FAT");
-
-    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN");
-    LibMaterial.registerMaterial(INDUSTRIAL_LUBRICANT, "INDUSTRIAL_LUBRICANT", "INDUSTRIAL_LUBRICANT");
+    LibMaterial.registerMaterial(BUG, "BUG", "BUG", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(PISS, "PISS", "PISS", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(BLOOD, "BLOOD", "BLOOD", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(HEMATURIC_FLUID, "HEMATURIC_FLUID", "HEMATURIC_FLUID", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(DUST, "DUST", "DUST", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(UREA, "UREA", "UREA", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(FERTILIZER, "FERTILIZER", "FERTILIZER", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(LOW_GRADE_AMPHETAMINE, "LOW_GRADE_AMPHETAMINE", "LOW_GRADE_AMPHETAMINE", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(BLOOD_CLOT, "BLOOD_CLOT", "BLOOD_CLOT", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BLOOD_MEAL", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORGANIC_WASTE", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(CONGEALED_FAT, "CONGEALED_FAT", "CONGEALED_FAT", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(INDUSTRIAL_LUBRICANT, "INDUSTRIAL_LUBRICANT", "INDUSTRIAL_LUBRICANT", MATERIAL_DIFFICULTY.NOVICE);
   }
 }
