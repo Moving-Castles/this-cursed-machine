@@ -16,9 +16,9 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/account-kit": "2.0.7-account-kit-7bb60d33",
-    "@latticexyz/cli": "2.0.7-account-kit-7bb60d33",
-    "@latticexyz/gas-tank": "2.0.7-account-kit-7bb60d33",
+    "@latticexyz/account-kit": "2.0.8-account-kit-38709026",
+    "@latticexyz/cli": "2.0.8-account-kit-38709026",
+    "@latticexyz/gas-tank": "2.0.8-account-kit-38709026",
     "@pimlicolabs/alto": "github:latticexyz/alto#3192a9a",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
