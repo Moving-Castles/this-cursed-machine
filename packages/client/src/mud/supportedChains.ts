@@ -7,8 +7,7 @@
  *   basefee set to zero to avoid transaction fees.
  *
  */
-import { MUDChain, mudFoundry, garnet } from "@latticexyz/common/chains"
-import { redstone } from "./redstoneChain";
+import { MUDChain, mudFoundry, garnet, redstone } from "@latticexyz/common/chains"
 
 type ExtendedChain = MUDChain & {
   indexerUrl?: string | undefined
