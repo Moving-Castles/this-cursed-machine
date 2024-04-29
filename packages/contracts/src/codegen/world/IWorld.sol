@@ -17,6 +17,7 @@ import { IOrderSystem } from "./IOrderSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { IStartSystem } from "./IStartSystem.sol";
 import { ITankSystem } from "./ITankSystem.sol";
+import { ITokenTankSystem } from "./ITokenTankSystem.sol";
 
 /**
  * @title IWorld
@@ -38,5 +39,6 @@ interface IWorld is
   IOrderSystem,
   ISpawnSystem,
   IStartSystem,
-  ITankSystem
+  ITankSystem,
+  ITokenTankSystem
 {}
