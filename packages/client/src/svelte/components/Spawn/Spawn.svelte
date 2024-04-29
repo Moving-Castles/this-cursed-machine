@@ -111,7 +111,7 @@
       }
       // Reset tutorial
       tutorialProgress.set(0)
-      discoveredMaterials.set(["BUGS"])
+      discoveredMaterials.set(["0x745f425547530000000000000000"])
     }
   })
 </script>

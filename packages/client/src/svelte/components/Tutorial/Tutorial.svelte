@@ -3,6 +3,7 @@
   // Messages are sent to the <Assistant /> component in App.svelte
   import { onMount } from "svelte"
   import { player } from "@modules/state/base/stores"
+  import { discoveredMaterials } from "@modules/state/simulated/stores"
   import {
     sendMessage,
     clearMessage,
@@ -59,6 +60,13 @@
       }}
     >
       Reset
+    </button>
+    <button
+      on:click={() => {
+        discoveredMaterials.set(["0x745f425547530000000000000000"])
+      }}
+    >
+      Reset discoveries ({$discoveredMaterials.length})
     </button>
 
     {$player.tutorialLevel}

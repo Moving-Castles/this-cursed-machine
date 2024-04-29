@@ -6,13 +6,7 @@
     createComponentSystem,
     createSyncProgressSystem,
   } from "@modules/systems"
-  import {
-    publicNetwork,
-    walletNetwork,
-    initBlockListener,
-  } from "@modules/network"
-  $: console.log("$walletNetwork", $walletNetwork)
-  $: console.log("$publicNetwork", $publicNetwork)
+  import { publicNetwork, initBlockListener } from "@modules/network"
 
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
@@ -22,7 +16,6 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-
   import {
     player,
     playerAddress,
