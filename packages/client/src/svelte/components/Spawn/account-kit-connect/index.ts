@@ -17,7 +17,6 @@ export const connect = () =>
         openAccountModal();
         return new Promise<AccountKitConnectReturn>((resolve, reject) => {
             const unsub = accountKitStore.subscribe((state) => {
-                console.log("state", state)
                 if (state.appAccountClient) {
                     unsub();
                     // Close the modal and resolve with appAccountClient

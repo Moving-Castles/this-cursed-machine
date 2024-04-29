@@ -14,6 +14,8 @@
   import { initSignalNetwork } from "@modules/signal"
   import { walletNetwork, publicNetwork } from "@modules/network"
   import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
+  import { setupWalletNetwork } from "@mud/setupWalletNetwork"
+  import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
 
   export let environment: ENVIRONMENT
 
@@ -47,17 +49,52 @@
   }
 
   onMount(async () => {
-    // Using burner/faucet on garnet for the time being
+    /*
+     * Check if the user is already connected
+     */
     if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
+      /*
+       * Burner environments
+       * We set up the burner wallet already here
+       * Either using a cached private key or generating a new one
+       */
       walletNetwork.set(setupBurnerWalletNetwork($publicNetwork))
-      // Set player address to returned burner
       playerAddress.set($walletNetwork.walletClient?.account.address)
-      // Websocket connection for off-chain messaging
-      initSignalNetwork()
+    } else {
+      /*
+       * Account Kit environments
+       * We get the account kit store state
+       * If appAccountClient and userAddress are set the user is connected
+       * We set up the wallet network using the appAccountClient
+       * and set playerAddress to the user address
+       */
+      const accountKitStoreState = accountKitStore.getState()
+      console.log("accountKitStoreState", accountKitStoreState)
+
+      if (
+        accountKitStoreState.appAccountClient &&
+        accountKitStoreState.userAddress
+      ) {
+        walletNetwork.set(
+          setupWalletNetwork(
+            $publicNetwork,
+            accountKitStoreState.appAccountClient,
+          ),
+        )
+        // Set player address to main wallet address
+        playerAddress.set(accountKitStoreState.userAddress)
+      }
     }
 
+    /*
+     * If playerAddress was set above
+     * and a corresponing entity has the carriedBy component set
+     * the player is spawned in the world
+     */
     if ($player?.carriedBy) {
-      // Player is already spawned
+      // Websocket connection for off-chain messaging
+      initSignalNetwork()
+
       await typeWriteToTerminal(
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Welcome back...",

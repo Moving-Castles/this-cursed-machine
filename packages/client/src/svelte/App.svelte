@@ -13,7 +13,6 @@
   } from "@modules/network"
   $: console.log("$walletNetwork", $walletNetwork)
   $: console.log("$publicNetwork", $publicNetwork)
-  $: console.log(window)
 
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
@@ -27,13 +26,11 @@
   import {
     player,
     playerAddress,
-    playerId,
     entities,
     players,
   } from "@modules/state/base/stores"
   $: console.log("$player", $player)
   $: console.log("$playerAddress", $playerAddress)
-  $: console.log("$playerId", $playerId)
   $: console.log("$entities", $entities)
   $: console.log("$players", $players)
 
