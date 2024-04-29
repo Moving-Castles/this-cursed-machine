@@ -135,7 +135,7 @@ export const tcm: SoundAssets = {
   },
   textLineHit: {
     src: "./sounds/tcm/new_text_line-hit_01.mp3",
-    volume: 1,
+    volume: 5,
   },
   loadingVariation: {
     src: "./sounds/tcm/loading_variation-sfx_01.mp3",

@@ -1,9 +1,6 @@
 {
   "editor.formatOnSave": true,
   "solidity.monoRepoSupport": true,
-  "eslint.validate": [
-    "javascript",
-    "svelte",
-    "typescript"
-  ]
+  "eslint.validate": ["javascript", "svelte", "typescript"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

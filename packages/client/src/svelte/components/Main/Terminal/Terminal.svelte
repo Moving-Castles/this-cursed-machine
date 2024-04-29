@@ -64,7 +64,6 @@
 
   const focusInput = async (e?: any) => {
     if (disabled) return
-    // inputActive = true
     await tick() // wait for input element if not there.
     if (inputElement) {
       inputElement?.focus()
