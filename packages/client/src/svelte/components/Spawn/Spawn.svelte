@@ -9,8 +9,10 @@
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
-  import { player } from "@modules/state/base/stores"
+  import { player, playerAddress } from "@modules/state/base/stores"
   import { ENVIRONMENT } from "@mud/enums"
+  import { walletNetwork, publicNetwork } from "@modules/network"
+  import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
 
   export let environment: ENVIRONMENT
 
@@ -44,6 +46,13 @@
   }
 
   onMount(async () => {
+    // Using burner/faucet on garnet for the time being
+    if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
+      walletNetwork.set(setupBurnerWalletNetwork($publicNetwork))
+      // Set player address to returned burner
+      playerAddress.set($walletNetwork.walletClient?.account.address)
+    }
+
     if ($player?.carriedBy) {
       // Player is already spawned
       await typeWriteToTerminal(

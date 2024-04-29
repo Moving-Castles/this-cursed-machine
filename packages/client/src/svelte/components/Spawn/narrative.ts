@@ -17,10 +17,9 @@ import { playerAddress } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
 import { publicNetwork, walletNetwork } from "@modules/network";
 import { setupWalletNetwork } from "@mud/setupWalletNetwork";
-import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork";
 import { ENVIRONMENT } from "@mud/enums";
-import { connect } from "@components/Spawn/account-kit-connect";
 import { initSignalNetwork } from "@modules/signal"
+import { connect } from "./account-kit-connect";
 import type { AccountKitConnectReturn } from "./account-kit-connect/types";
 
 async function writeNarrative(text: string) {
@@ -107,11 +106,8 @@ export const narrative = [
       ENVIRONMENT.DEVELOPMENT,
       ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
     ].includes(environment)) {
+      // Burner wallet already< initialized in Spawn component
       await writeNarrative("No verification required.");
-      // Burner
-      walletNetwork.set(setupBurnerWalletNetwork(get(publicNetwork)));
-      // Set player address to returned burner
-      playerAddress.set(get(walletNetwork).walletClient?.account.address)
     } else {
       // Account kit
       await writeNarrative("Starting verification process...");
