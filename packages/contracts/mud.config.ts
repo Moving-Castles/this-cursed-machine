@@ -106,6 +106,11 @@ export default defineWorld({
       name: "UniqueEntityModule",
       root: true,
       args: [],
+    },
+    {
+      name: "Unstable_CallWithSignatureModule",
+      root: true,
+      args: [],
     }
   ],
 });
