@@ -1,12 +1,12 @@
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
+import { get } from "svelte/store"
 import { MACHINE_TYPE } from "../base/enums"
 import { MaterialIdNone } from "../base/constants"
 import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { FLOW_RATE } from "@modules/state/simulated/constants"
-import { discoveredMaterials } from "@modules/state/simulated/stores"
 
 import {
   organizePatches,
@@ -54,8 +54,6 @@ export function resolve(
   const outletTanks = Object.values(outlets).map(
     outlet => outlet?.tankConnection ?? null
   )
-
-  const $discoveredMaterials = get(discoveredMaterials)
 
   // Abort early if neither inlets are connected to tank or if outlet is not connected to tank
   // if (inletTanks.every(tank => tank === null) || outletTanks.every(tank => tank === null)) return {} as SimulatedEntities
@@ -123,14 +121,6 @@ export function resolve(
       // Save to patchOutputs and check if we know this material
       for (let k = 0; k < currentOutputs.length; k++) {
         patchOutputs.push(deepClone(currentOutputs[k]))
-
-        // Discover the material if it's not already
-        if (!$discoveredMaterials.includes(currentOutputs[k]?.materialId)) {
-          discoveredMaterials.set([
-            ...$discoveredMaterials,
-            currentOutputs[k].materialId,
-          ])
-        }
       }
 
       // Mark the machine as resolved.
