@@ -1,5 +1,6 @@
 import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
+import { storableArray } from "@modules/utils/storable"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MaterialIdNone } from "@modules/state/base/constants"
 import { blockNumber } from "@modules/network"
@@ -510,4 +511,9 @@ export const tankAttachments = derived(
         .filter(([_, value]) => !!value)
     )
   }
+)
+
+export const discoveredMaterials = storableArray(
+  ["BUGS"],
+  "discoveredMaterials"
 )

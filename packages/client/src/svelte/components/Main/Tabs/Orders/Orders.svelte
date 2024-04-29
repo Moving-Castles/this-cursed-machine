@@ -14,10 +14,10 @@
     const options = Object.keys($availableOrders).length
     if (e.key === "ArrowDown") {
       selected = mod(selected + 1, options)
-      playSound("tcm", "selectionScroll")
+      playSound("tcm", "orderSelect")
     } else if (e.key === "ArrowUp") {
       selected = mod(selected - 1, options)
-      playSound("tcm", "selectionScroll")
+      playSound("tcm", "orderSelect")
     }
 
     if (element?.parentElement) {
@@ -27,7 +27,7 @@
 
   const goTo = (i: number) => {
     selected = i
-    playSound("tcm", "selectionScroll")
+    playSound("tcm", "orderSelect")
   }
 </script>
 
