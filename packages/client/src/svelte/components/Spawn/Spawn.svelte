@@ -11,6 +11,7 @@
   import { narrative } from "@components/Spawn/narrative"
   import { player, playerAddress } from "@modules/state/base/stores"
   import { ENVIRONMENT } from "@mud/enums"
+  import { initSignalNetwork } from "@modules/signal"
   import { walletNetwork, publicNetwork } from "@modules/network"
   import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
 
@@ -51,6 +52,8 @@
       walletNetwork.set(setupBurnerWalletNetwork($publicNetwork))
       // Set player address to returned burner
       playerAddress.set($walletNetwork.walletClient?.account.address)
+      // Websocket connection for off-chain messaging
+      initSignalNetwork()
     }
 
     if ($player?.carriedBy) {

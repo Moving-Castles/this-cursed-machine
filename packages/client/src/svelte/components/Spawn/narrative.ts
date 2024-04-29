@@ -106,8 +106,8 @@ export const narrative = [
       ENVIRONMENT.DEVELOPMENT,
       ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
     ].includes(environment)) {
-      // Burner wallet already< initialized in Spawn component
-      await writeNarrative("No verification required.");
+      // Burner wallet already initialized in Spawn component
+      await typeWriteNarrativeSuccess("No verification required.");
     } else {
       // Account kit
       await writeNarrative("Starting verification process...");
@@ -127,12 +127,12 @@ export const narrative = [
       walletNetwork.set(setupWalletNetwork(get(publicNetwork), accountKitConnectReturn.appAccountClient));
       // Set player address to main wallet address
       playerAddress.set(accountKitConnectReturn.userAddress)
+
+      // Websocket connection for off-chain messaging
+      initSignalNetwork()
     }
 
-    // Websocket connection for off-chain messaging
-    initSignalNetwork()
-
-    await writeNarrative("Your account address is:");
+    await writeNarrative("Your address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
     await writeNarrativeAction("blink to continue");
   },
