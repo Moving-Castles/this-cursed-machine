@@ -6,16 +6,36 @@
     createComponentSystem,
     createSyncProgressSystem,
   } from "@modules/systems"
-  import { publicNetwork, initBlockListener } from "@modules/network"
+  import {
+    publicNetwork,
+    walletNetwork,
+    initBlockListener,
+  } from "@modules/network"
+  $: console.log("$walletNetwork", $walletNetwork)
+  $: console.log("$publicNetwork", $publicNetwork)
+  $: console.log(window)
+
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
   import { initStaticContent } from "@modules/content"
   import { initSound } from "@modules/sound"
-  import { initSignalNetwork } from "./modules/signal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
+
+  import {
+    player,
+    playerAddress,
+    playerId,
+    entities,
+    players,
+  } from "@modules/state/base/stores"
+  $: console.log("$player", $player)
+  $: console.log("$playerAddress", $playerAddress)
+  $: console.log("$playerId", $playerId)
+  $: console.log("$entities", $entities)
+  $: console.log("$players", $players)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"

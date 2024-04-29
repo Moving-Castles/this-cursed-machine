@@ -21,6 +21,7 @@ import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork";
 import { ENVIRONMENT } from "@mud/enums";
 import { connect } from "@components/Spawn/account-kit-connect";
 import { initSignalNetwork } from "@modules/signal"
+import type { AppAccountClient } from "@latticexyz/account-kit/src/common";
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -72,21 +73,31 @@ async function typeWriteNarrativeSuccess(text: string) {
   );
 }
 
+async function writeFailure(text: string) {
+  await writeToTerminal(
+    TERMINAL_OUTPUT_TYPE.ERROR,
+    text,
+    false,
+    SYMBOLS[7],
+    800
+  );
+}
+
 export const narrative = [
-  // async (_: ENVIRONMENT) => {
-  //   await writeNarrative("welcome stump");
-  //   await writeNarrativeAction("blink if you can hear me");
-  // },
-  // async (_: ENVIRONMENT) => {
-  //   await writeNarrative(
-  //     "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
-  //   );
-  //   await writeNarrative(
-  //     "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
-  //   );
-  //   await writeNarrative("I will help you through the on-boarding process.");
-  //   await writeNarrativeAction("blink to begin");
-  // },
+  async (_: ENVIRONMENT) => {
+    await writeNarrative("welcome stump");
+    await writeNarrativeAction("blink if you can hear me");
+  },
+  async (_: ENVIRONMENT) => {
+    await writeNarrative(
+      "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
+    );
+    await writeNarrative(
+      "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
+    );
+    await writeNarrative("I will help you through the on-boarding process.");
+    await writeNarrativeAction("blink to begin");
+  },
   async (_: ENVIRONMENT) => {
     await writeNarrative("the company needs to verify your identity.");
     await writeNarrativeAction("blink to start verification");
@@ -96,12 +107,25 @@ export const narrative = [
       ENVIRONMENT.DEVELOPMENT,
       ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
     ].includes(environment)) {
+      await writeNarrative("No verification required.");
       // Burner
       walletNetwork.set(setupBurnerWalletNetwork(get(publicNetwork)));
     } else {
       // Account kit
-      await writeNarrative("[Wallet connection started here]");
-      const appAccountClient = await connect();
+      await writeNarrative("Starting verification process...");
+
+      let appAccountClient: AppAccountClient | null = null;
+
+      while (!appAccountClient) {
+        try {
+          appAccountClient = await connect();
+        } catch (e) {
+          console.log("Account kit error", e);
+          await writeFailure("Stump must complete the verification process to proceed.");
+        }
+      }
+
+      console.log("appAccountClient", appAccountClient);
       walletNetwork.set(setupWalletNetwork(get(publicNetwork), appAccountClient));
     }
 
