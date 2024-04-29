@@ -64,7 +64,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -95,7 +95,7 @@ contract ResolveSystemTest is BaseTest {
     // // Output
     // assertEq(Amount.get(tanksInPod[1]), 5000);
 
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.BUG);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.BUGS);
   }
 
   function testResolveInlet2() public {
@@ -103,7 +103,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -132,7 +132,7 @@ contract ResolveSystemTest is BaseTest {
     // // Output
     // assertEq(Amount.get(tanksInPod[1]), 5000);
 
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.BUG);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.BUGS);
   }
 
   function testMachineProcessingLoss() public {
@@ -140,7 +140,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -166,7 +166,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.PISS);
   }
 
   function testDoubleMachineProcessingLoss() public {
@@ -174,7 +174,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -206,7 +206,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 4; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.PISS);
   }
 
   function testCapByTankCapacity() public {
@@ -214,7 +214,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -240,7 +240,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.PISS);
   }
 
   function testCapAtInletMaterialAmount() public {
@@ -248,7 +248,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -274,7 +274,7 @@ contract ResolveSystemTest is BaseTest {
     vm.stopPrank();
 
     uint32 divisor = 2; // Material loss
-    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUG, PublicMaterials.PISS);
+    checkProcessing(blocksToWait, divisor, initialInletAmount, PublicMaterials.BUGS, PublicMaterials.PISS);
   }
 
   function testLastResolveValueIsUpdated() public {
@@ -455,8 +455,8 @@ contract ResolveSystemTest is BaseTest {
 
     // Fill tank 0 with 20000 PublicMaterials.UREA
     world.fillTank(tanksInPod[0], 200, PublicMaterials.UREA);
-    // Fill tank 1 with 10000 CONGEALED_FAT
-    world.fillTank(tanksInPod[1], 100, PublicMaterials.CONGEALED_FAT);
+    // Fill tank 1 with 10000 FAT
+    world.fillTank(tanksInPod[1], 100, PublicMaterials.FAT);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -483,12 +483,12 @@ contract ResolveSystemTest is BaseTest {
     assertEq(ContainedMaterial.get(tanksInPod[0]).unwrap(), PublicMaterials.UREA.unwrap());
     assertEq(Amount.get(tanksInPod[0]), 200 * ONE_UNIT);
 
-    // Tank 1 should have 10 PublicMaterials.CONGEALED_FAT
-    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
+    // Tank 1 should have 10 PublicMaterials.FAT
+    assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.FAT.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 10 * ONE_UNIT);
 
-    // Tank 2 should have 90 PublicMaterials.CONGEALED_FAT
-    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.CONGEALED_FAT.unwrap());
+    // Tank 2 should have 90 PublicMaterials.FAT
+    assertEq(ContainedMaterial.get(tanksInPod[2]).unwrap(), PublicMaterials.FAT.unwrap());
     assertEq(Amount.get(tanksInPod[2]), 90 * ONE_UNIT);
   }
 
@@ -497,8 +497,8 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    // Fill tank 0 with 20000 PublicMaterials.BUG
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    // Fill tank 0 with 20000 PublicMaterials.BUGS
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     // Fill tank 1 with 10000 PublicMaterials.PISS
     world.fillTank(tanksInPod[1], 200, PublicMaterials.PISS);
 

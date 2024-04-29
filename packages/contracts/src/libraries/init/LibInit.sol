@@ -34,7 +34,7 @@ library LibInit {
     //////////////////////////////////////////////////////////////*/
 
     LibOrder.create(_adminAddress, PublicMaterials.UREA, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
-    LibOrder.create(_adminAddress, PublicMaterials.BLOOD_CLOT, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
+    LibOrder.create(_adminAddress, PublicMaterials.BLOOD_CLOTS, 50 * ONE_UNIT, true, 1, 1000 * ONE_UNIT, 0, 0);
 
     /*//////////////////////////////////////////////////////////////
                                  LEVEL 2

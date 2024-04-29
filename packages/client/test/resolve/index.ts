@@ -3,12 +3,12 @@ import { getMaterialCombinationId } from "../../src/svelte/modules/utils";
 
 export const MaterialIds = {
     NONE: "0x",
-    BUG: stringToHex("t_BUG", { size: 14 }),
+    BUG: stringToHex("t_BUGS", { size: 14 }),
     PISS: stringToHex("t_PISS", { size: 14 }),
     BLOOD: stringToHex("t_BLOOD", { size: 14 }),
     UREA: stringToHex("t_UREA", { size: 14 }),
-    INDUSTRIAL_LUBRICANT: stringToHex("t_INDUSTRIAL_L", { size: 14 }),
-    CONGEALED_FAT: stringToHex("t_CONGEALED_FA", { size: 14 }),
+    INDUSTRIAL_LUBRICANT: stringToHex("t_LUBE", { size: 14 }),
+    FAT: stringToHex("t_FAT", { size: 14 }),
     AMMONIA: stringToHex("t_AMMONIA", { size: 14 }),
     SOAP: stringToHex("t_SOAP", { size: 14 }),
 }

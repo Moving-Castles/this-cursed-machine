@@ -31,8 +31,8 @@ contract OrderSystem is System {
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint256 totalRewardCost = (_reward * ONE_UNIT) * _maxPlayers;
-      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
-      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+      require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+      PublicMaterials.BUGS.burn(_msgSender(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(

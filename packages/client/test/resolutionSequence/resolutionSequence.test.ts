@@ -197,8 +197,8 @@ test("(3) resolveSplitterMixer", () => {
     // tanks["TANK_ONE"].materialId = MaterialIds.AMMONIA
     // tanks["TANK_ONE"].amount = 20000
 
-    // // Fill tank 2 with 10000 CONGEALED_FAT
-    // tanks["TANK_TWO"].materialId = MaterialIds.CONGEALED_FAT
+    // // Fill tank 2 with 10000 FAT
+    // tanks["TANK_TWO"].materialId = MaterialIds.FAT
     // tanks["TANK_TWO"].amount = 10000
 
     // // Connect TANK 1 to INLET 1
@@ -254,7 +254,7 @@ test("(3) resolveSplitterMixer", () => {
     //     TANK_TWO: {
     //         entityType: 5,
     //         tankConnection: 'INLET_TWO',
-    //         materialId: MaterialIds.CONGEALED_FAT,
+    //         materialId: MaterialIds.FAT,
     //         amount: 1000,
     //         buildIndex: 2
     //     },
@@ -308,8 +308,8 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
     tanks["TANK_ONE"].materialId = MaterialIds.AMMONIA
     tanks["TANK_ONE"].amount = 20000
 
-    // Fill tank 2 with 10000 CONGEALED_FAT
-    tanks["TANK_TWO"].materialId = MaterialIds.CONGEALED_FAT
+    // Fill tank 2 with 10000 FAT
+    tanks["TANK_TWO"].materialId = MaterialIds.FAT
     tanks["TANK_TWO"].amount = 10000
 
     // Connect TANK 1 to INLET 1
@@ -347,14 +347,14 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
         TANK_TWO: {
             entityType: 5,
             tankConnection: 'INLET_TWO',
-            materialId: MaterialIds.CONGEALED_FAT,
+            materialId: MaterialIds.FAT,
             amount: 1000,
             buildIndex: 2
         },
         TANK_THREE: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialId: MaterialIds.CONGEALED_FAT,
+            materialId: MaterialIds.FAT,
             amount: 9000,
             buildIndex: 3
         }
@@ -384,7 +384,7 @@ test("(4) unusedPlayerAndUnusedMachine", () => {
         TANK_THREE: {
             entityType: 5,
             tankConnection: 'OUTLET',
-            materialId: MaterialIds.CONGEALED_FAT,
+            materialId: MaterialIds.FAT,
             amount: 10000,
             buildIndex: 3
         }

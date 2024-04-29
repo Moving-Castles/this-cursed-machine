@@ -23,8 +23,8 @@ contract DevSystemTest is BaseTest {
     world.reward();
     vm.stopPrank();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 1000 * ONE_UNIT);
   }
 
   function testCharge() public {
@@ -33,13 +33,13 @@ contract DevSystemTest is BaseTest {
     vm.startPrank(alice);
     world.reward();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 1000 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 1000 * ONE_UNIT);
 
     world.charge();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 100 * ONE_UNIT);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 900 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(worldAddress), 100 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 900 * ONE_UNIT);
 
     vm.stopPrank();
   }
@@ -50,8 +50,8 @@ contract DevSystemTest is BaseTest {
     vm.startPrank(alice);
     world.graduate();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(worldAddress), 0);
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10000 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(worldAddress), 0);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 10000 * ONE_UNIT);
 
     vm.stopPrank();
   }

@@ -51,7 +51,7 @@ contract OfferSystem is System {
     if (Tutorial.get(playerEntity)) {
       require(NonTransferableBalance.get(playerEntity) >= offerData.cost, "insufficient balance");
     } else {
-      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= offerData.cost, "insufficient balance");
+      require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= offerData.cost, "insufficient balance");
     }
 
     // Resolution needs to be done before filling the tank to avoid instant conversion of materials.
@@ -94,7 +94,7 @@ contract OfferSystem is System {
       NonTransferableBalance.set(playerEntity, NonTransferableBalance.get(playerEntity) - offerData.cost);
     } else {
       // Burn real tokens
-      PublicMaterials.BUG.burn(_msgSender(), offerData.cost);
+      PublicMaterials.BUGS.burn(_msgSender(), offerData.cost);
     }
   }
 }

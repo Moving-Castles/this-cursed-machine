@@ -402,7 +402,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "DRYER_TWO",
-                    materialId: MaterialIds.CONGEALED_FAT,
+                    materialId: MaterialIds.FAT,
                 },
             ],
             productive: true
@@ -413,7 +413,7 @@ export const outputPatches = {
                     amount: 500,
                     inletActive: [true, false],
                     machineId: "MIXER",
-                    materialId: MaterialIds.CONGEALED_FAT,
+                    materialId: MaterialIds.FAT,
                     sourceMachineId: "DRYER_TWO"
                 },
                 {

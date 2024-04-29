@@ -87,13 +87,13 @@ contract OfferSystemTest is BaseTest {
 
     world.graduate();
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.buyOffer(offerEntity);
 
     vm.stopPrank();
 
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 9900 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 9900 * ONE_UNIT);
     assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.BLOOD.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 100 * ONE_UNIT);
   }
