@@ -13,7 +13,10 @@
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
   import { materialMetadata, player } from "@modules/state/base/stores"
-  import { playerOrder } from "@modules/state/simulated/stores"
+  import {
+    playerOrder,
+    discoveredMaterials,
+  } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
@@ -28,7 +31,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name,
+        $materialMetadata[$playerOrder?.order?.materialId]?.name
       )
     }
 
@@ -86,6 +89,7 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
+    discoveredMaterials.set(["BUGS"])
     $activeTab = 0
     clearTerminalOutput()
   }

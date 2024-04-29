@@ -5,6 +5,7 @@
     TERMINAL_OUTPUT_TYPE,
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
+  import { discoveredMaterials } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
@@ -110,6 +111,7 @@
       }
       // Reset tutorial
       tutorialProgress.set(0)
+      discoveredMaterials.set(["BUGS"])
     }
   })
 </script>
