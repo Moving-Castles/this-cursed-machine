@@ -1,10 +1,11 @@
 import { defineWorld } from "@latticexyz/world";
-import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, PORT_INDEX_ARRAY } from "./enums";
+import { ENTITY_TYPE_ARRAY, MACHINE_TYPE_ARRAY, MATERIAL_DIFFICULTY_ARRAY, PORT_INDEX_ARRAY } from "./enums";
 
 const enums = {
     ENTITY_TYPE: ENTITY_TYPE_ARRAY,
     MACHINE_TYPE: MACHINE_TYPE_ARRAY,
-    PORT_INDEX: PORT_INDEX_ARRAY
+    PORT_INDEX: PORT_INDEX_ARRAY,
+    MATERIAL_DIFFICULTY: MATERIAL_DIFFICULTY_ARRAY
 }
 
 const MATERIAL_ID_TYPE = "bytes14" as const
@@ -15,6 +16,9 @@ const userTypes = {
 export default defineWorld({
     enums,
     userTypes,
+    deploy: {
+        upgradeableWorldImplementation: true,
+    },
     tables: {
         GameConfig: {
             key: [],
@@ -35,9 +39,10 @@ export default defineWorld({
         MaterialMetadata: {
             key: ["materialId"],
             schema: {
+                difficulty: "MATERIAL_DIFFICULTY",
                 materialId: "MaterialId",
                 tokenAddress: "address",
-                name: "string",
+                name: "string"
             }
         },
         EntityType: "ENTITY_TYPE",
@@ -74,7 +79,8 @@ export default defineWorld({
                 cost: "uint256", // Cost of material in $BUGS
             }
         },
-        Completed: "bytes32[]", // On player: list of completed order, On order: list of players who completed
+        CompletedOrders: "bytes32[]", // On player: list of completed order
+        CompletedPlayers: "uint32", // Number of players who have completed an order
         ProducedMaterials: `${MATERIAL_ID_TYPE}[]`, // List of materials produced by player
         LastResolved: "uint256", // Used to keep track block past since last resolution of pod
         IncomingConnections: "bytes32[]", // Incoming connections on a machine

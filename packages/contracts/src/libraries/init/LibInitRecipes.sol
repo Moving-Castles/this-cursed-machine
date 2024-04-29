@@ -12,7 +12,7 @@ library LibInitRecipes {
                                  PLAYER
     //////////////////////////////////////////////////////////////*/
 
-    a.player(m.BUG, [m.PISS, m.BLOOD]);
+    a.player(m.BUGS, [m.PISS, m.BLOOD]);
 
     /*//////////////////////////////////////////////////////////////
                                  MIXER
@@ -24,13 +24,13 @@ library LibInitRecipes {
                                  DRYER
     //////////////////////////////////////////////////////////////*/
 
-    a.dryer(m.BUG, m.DUST);
+    a.dryer(m.BUGS, m.DUST);
     a.dryer(m.PISS, m.UREA);
     a.dryer(m.UREA, m.FERTILIZER);
-    a.dryer(m.EVIAN, m.LOW_GRADE_AMPHETAMINE);
-    a.dryer(m.BLOOD, m.BLOOD_CLOT);
-    a.dryer(m.BLOOD_CLOT, m.BLOOD_MEAL);
+    a.dryer(m.EVIAN, m.AMPHETAMINE);
+    a.dryer(m.BLOOD, m.BLOOD_CLOTS);
+    a.dryer(m.BLOOD_CLOTS, m.BLOOD_MEAL);
     a.dryer(m.DUST, m.ORGANIC_WASTE);
-    a.dryer(m.INDUSTRIAL_LUBRICANT, m.CONGEALED_FAT);
+    a.dryer(m.LUBRICANT, m.FAT);
   }
 }

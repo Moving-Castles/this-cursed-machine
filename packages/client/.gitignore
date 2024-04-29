@@ -5,7 +5,6 @@ dist
 .DS_Store
 coverage
 .env2
-src/mud/redstoneChain.ts
 
 # Sentry Config File
 .env.sentry-build-plugin

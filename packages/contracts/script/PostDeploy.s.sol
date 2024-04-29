@@ -45,7 +45,7 @@ contract PostDeploy is Script {
     LibInitRecipes.init();
 
     // Create offer
-    LibOffer.create(PublicMaterials.BUG, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
+    LibOffer.create(PublicMaterials.BUGS, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
 
     vm.stopBroadcast();
   }

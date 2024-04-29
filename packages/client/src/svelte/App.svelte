@@ -16,7 +16,6 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-  // import { mount } from "@latticexyz/dev-tools"
 
   import { materialMetadata } from "@modules/state/base/stores"
   $: console.log($materialMetadata)
@@ -110,22 +109,6 @@
 
     // Signal network
     initSignalNetwork()
-
-    // Devtools
-    if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
-      // mount({
-      //   config: mudLayer.config,
-      //   publicClient: mudLayer.publicClient,
-      //   walletClient: mudLayer.walletClient,
-      //   latestBlock$: mudLayer.latestBlock$,
-      //   storedBlockLogs$: mudLayer.storedBlockLogs$,
-      //   worldAddress: mudLayer.worldAddress,
-      //   worldAbi: mudLayer.worldContract.abi,
-      //   write$: mudLayer.write$,
-      //   // if you're using recs
-      //   // recsWorld: ,
-      // })
-    }
   })
 
   // Fade out intro sound when ready

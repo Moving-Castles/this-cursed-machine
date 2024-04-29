@@ -67,7 +67,7 @@
   // Maximum number of players has been reached
   $: exhausted =
     order.order.maxPlayers > 0 &&
-    (order.completed?.length ?? 0) >= order.order.maxPlayers
+    (order.completedPlayers ?? 0) >= order.order.maxPlayers
 
   async function sendAccept() {
     $orderAcceptInProgress = key
@@ -294,9 +294,9 @@
           {#if working}
             <Spinner />
           {:else if order.order.maxPlayers === 0}
-            {order?.completed?.length || 0} stumps completed
+            {order?.completedPlayers ?? 0} stumps completed
           {:else}
-            {order.order.maxPlayers - (order?.completed?.length || 0)}/{order
+            {order.order.maxPlayers - (order?.completedPlayers ?? 0)}/{order
               .order.maxPlayers}
             available
           {/if}

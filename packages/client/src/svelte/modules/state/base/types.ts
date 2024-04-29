@@ -29,7 +29,8 @@ declare global {
     nonTransferableBalance?: bigint
     order?: OrderData
     offer?: OfferData
-    completed?: string[]
+    completedOrders?: string[]
+    completedPlayers: number
     producedMaterials?: MaterialId[]
     lastResolved?: bigint
     outgoingConnections?: string[] // ["0", "0"] or ["0"] or ["0xaed..."]
@@ -106,7 +107,7 @@ declare global {
     nonTransferableBalance?: bigint // During tutorial we give players a non-transferable token substitute
     tokenBalances?: bigint
     tutorial: boolean,
-    completed?: string[] // Orders completed by player
+    completedOrders: string[] // Orders completed by player
     producedMaterials?: MaterialId[]
   }
 
@@ -134,7 +135,7 @@ declare global {
     order: OrderData
     tutorial?: boolean
     tutorialLevel?: number
-    completed: string[] // Players that have completed the order
+    completedPlayers: number //Number of players who have completed the order
   }
 
   type Offer = {

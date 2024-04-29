@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { GameConfig, EntityType, CarriedBy, ContainedMaterial, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, Completed, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
+import { GameConfig, EntityType, CarriedBy, ContainedMaterial, Order, OrderData, Amount, CurrentOrder, TankConnection, Tutorial, TutorialLevel, CompletedOrders, CompletedPlayers, OutgoingConnections, IncomingConnections } from "../../codegen/index.sol";
 import { MACHINE_TYPE, ENTITY_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibOrder, LibNetwork, PublicMaterials, MaterialId } from "../../libraries/Libraries.sol";
 import { ArrayLib } from "@latticexyz/world-modules/src/modules/utils/ArrayLib.sol";
@@ -15,7 +15,7 @@ contract OrderSystem is System {
    * @param _materialId Material id to produce
    * @param _amount Amount to produce in whole units
    * @param _reward Reward for completing the order in whole units
-   * @param _duration Duration of the order
+   * @param _duration Duration of the order. 0 means no expiration
    * @param _maxPlayers Maximum number of players that can accept the order
    * @return orderEntity Id of the offer entity
    */
@@ -31,8 +31,8 @@ contract OrderSystem is System {
     // If the caller is not admin, we charge for the reward cost
     if (_msgSender() != GameConfig.getAdminAddress()) {
       uint256 totalRewardCost = (_reward * ONE_UNIT) * _maxPlayers;
-      require(PublicMaterials.BUG.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
-      PublicMaterials.BUG.transferToken(_world(), totalRewardCost);
+      require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
+      PublicMaterials.BUGS.burn(_msgSender(), totalRewardCost);
     }
 
     orderEntity = LibOrder.create(
@@ -59,7 +59,7 @@ contract OrderSystem is System {
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
 
     Order.deleteRecord(_orderEntity);
-    Completed.deleteRecord(_orderEntity);
+    CompletedPlayers.deleteRecord(_orderEntity);
   }
 
   /**
@@ -83,11 +83,11 @@ contract OrderSystem is System {
     OrderData memory currentOrder = Order.get(_orderEntity);
 
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
-    require(!ArrayLib.includes(Completed.get(playerEntity), _orderEntity), "order already completed");
+    require(!ArrayLib.includes(CompletedOrders.get(playerEntity), _orderEntity), "order already completed");
 
     // maxPlayers == 0 means the order has no limit
     require(
-      currentOrder.maxPlayers == 0 || Completed.length(_orderEntity) < currentOrder.maxPlayers,
+      currentOrder.maxPlayers == 0 || CompletedPlayers.get(_orderEntity) < currentOrder.maxPlayers,
       "max players reached"
     );
 

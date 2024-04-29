@@ -108,7 +108,7 @@ contract OrderSystemTest is BaseTest {
     // Accept test order
     world.acceptOrder(testOrder);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -135,7 +135,7 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
 
     // Alice got 10000 BUG tokens for graduating + 50 BUG tokens for completing the order
-    assertEq(PublicMaterials.BUG.getTokenBalance(alice), 10050 * ONE_UNIT);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 10050 * ONE_UNIT);
     // Bob got 50 PISS tokens for creating the order
     assertEq(PublicMaterials.PISS.getTokenBalance(bob), 50 * ONE_UNIT);
   }
@@ -224,7 +224,7 @@ contract OrderSystemTest is BaseTest {
 
     world.acceptOrder(orderEntity);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -250,15 +250,17 @@ contract OrderSystemTest is BaseTest {
     endGasReport();
 
     assertEq(CurrentOrder.get(playerEntity), bytes32(0));
-    assertEq(Completed.get(orderEntity)[0], playerEntity);
-    assertEq(Completed.get(playerEntity)[0], orderEntity);
+    assertEq(CompletedPlayers.get(orderEntity), 1);
+    assertEq(CompletedOrders.get(playerEntity)[0], orderEntity);
+    assertEq(PublicMaterials.BUGS.getTokenBalance(alice), 10100 * ONE_UNIT); // 10000 tokens given for graduating
+    assertEq(PublicMaterials.BUGS.getTokenBalance(worldAddress), 0);
 
     vm.stopPrank();
   }
 
   function testRevertShipOrderExpired() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -278,7 +280,7 @@ contract OrderSystemTest is BaseTest {
 
   function testRevertAcceptOrderExpired() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -296,7 +298,7 @@ contract OrderSystemTest is BaseTest {
 
   function testRevertOrderAlreadyCompleted() public {
     prankAdmin();
-    bytes32 orderEntity = world.createOrder(PublicMaterials.BUG, 100, 100, ONE_MINUTE, 10);
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
     vm.stopPrank();
 
     vm.startPrank(alice);
@@ -304,7 +306,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.graduate();
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUG);
+    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.acceptOrder(orderEntity);
 

@@ -14,7 +14,6 @@
     "staticPath": "src/public"
   },
   "devDependencies": {
-    "@latticexyz/dev-tools": "2.0.8-main-4b6ce813",
     "@sveltejs/adapter-auto": "^3.2.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@tsconfig/svelte": "^5.0.4",
@@ -32,13 +31,13 @@
     "vitest": "^1.5.2"
   },
   "dependencies": {
-    "@latticexyz/common": "2.0.8-main-4b6ce813",
-    "@latticexyz/recs": "2.0.8-main-4b6ce813",
-    "@latticexyz/schema-type": "2.0.8-main-4b6ce813",
-    "@latticexyz/services": "2.0.8-main-4b6ce813",
-    "@latticexyz/store-sync": "2.0.8-main-4b6ce813",
-    "@latticexyz/utils": "2.0.8-main-4b6ce813",
-    "@latticexyz/world": "2.0.8-main-4b6ce813",
+    "@latticexyz/common": "2.0.8",
+    "@latticexyz/recs": "2.0.8",
+    "@latticexyz/schema-type": "2.0.8",
+    "@latticexyz/services": "2.0.8",
+    "@latticexyz/store-sync": "2.0.8",
+    "@latticexyz/utils": "2.0.8",
+    "@latticexyz/world": "2.0.8",
     "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/client": "^6.15.20",
     "@sanity/image-url": "^1.0.2",

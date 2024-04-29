@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, Completed, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
+import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, CompletedOrders, CompletedPlayers, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
 import { LibUtils, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY } from "../../constants.sol";
@@ -111,10 +111,10 @@ contract TankSystem is System {
     Amount.set(_tankEntity, newAmount);
     ContainedMaterial.set(_tankEntity, newAmount == 0 ? LibMaterial.NONE : ContainedMaterial.get(_tankEntity));
 
-    // On order: add player to completed list
-    Completed.push(currentOrderId, playerEntity);
     // On player: add order to completed list
-    Completed.push(playerEntity, currentOrderId);
+    CompletedOrders.push(playerEntity, currentOrderId);
+    // On order: increment completed players counter
+    CompletedPlayers.set(currentOrderId, CompletedPlayers.get(currentOrderId) + 1);
 
     // Add material to list of materials produced by player if it is not already there
     if (!LibUtils.arrayIncludes(ProducedMaterials.get(playerEntity), currentOrder.materialId.unwrap())) {
@@ -136,7 +136,7 @@ contract TankSystem is System {
 
         // Fill the player's first tank with bugs to get them started
         bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
-        ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUG);
+        ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUGS);
         Amount.set(tanksInPod[0], TANK_CAPACITY);
 
         return;
@@ -159,7 +159,7 @@ contract TankSystem is System {
     //////////////////////////////////////////////////////////////*/
 
     // Reward player in real tokens
-    PublicMaterials.BUG.mint(_msgSender(), currentOrder.reward);
+    PublicMaterials.BUGS.mint(_msgSender(), currentOrder.reward);
 
     // If the order was not created by admin, mint the material to the creator
     if (currentOrder.creator != GameConfig.getAdminAddress()) {

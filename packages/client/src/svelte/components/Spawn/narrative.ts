@@ -91,7 +91,6 @@ export const narrative = [
      * Ideally allowing to await the result
      * * * * * * * * * * * * * * * * * * * */
     // await writeNarrative("[Wallet connection started here]")
-    await new Promise(resolve => setTimeout(resolve, 1000))
     await writeNarrative("Your account address is:")
     await typeWriteNarrativeSuccess(get(playerAddress))
     await writeNarrativeAction("blink to continue")
@@ -117,6 +116,7 @@ export const narrative = [
     )
     playSound("tcm", "textLineHit")
     await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("Beginning devolutionary brain surgery...")
     // Send spawn
     const action = spawn(name)
@@ -124,9 +124,13 @@ export const narrative = [
     await waitForCompletion(action, loadingLine)
     playSound("tcm", "TRX_yes")
     // Spawn complete
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("all limbs removed")
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("hippocampus cauterised")
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("former self erased")
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("brain-machine-interface calibrated")
     await writeNarrativeAction("blink when the anaesthesia has worn off")
   },
@@ -136,7 +140,7 @@ export const narrative = [
     playSound("tcm", "bugs")
     await writeNarrativeSuccess("$BUGS")
     await writeNarrative("for them you will live in the pod")
-    await writeNarrative("for them you will fulfil your orders")
+    await writeNarrative("for them you will fulfill your orders")
     await writeNarrative("for them you will stomp on other stumps")
     playSound("tcm", "bugs")
     await writeNarrativeSuccess("$BUGS")
@@ -149,6 +153,7 @@ export const narrative = [
     await writeNarrativeAction("blink to enter the pod.")
   },
   async () => {
+    playSound("tcm", "textLineHit")
     await writeNarrativeInfo("transferring stump to pod...")
     // Send spawn
     const action = start()

@@ -407,13 +407,16 @@
   }
 
   const onSubmit = async () => {
+    // Abort if input is empty
+    if (!value) return
+
     // De-activate input-field
     inputActive = false
 
     // Write input to terminal
     await writeToTerminal(
       TERMINAL_OUTPUT_TYPE.COMMAND,
-      value.length == 0 ? "&nbsp;" : value,
+      value,
       false,
       SYMBOLS[0],
     )

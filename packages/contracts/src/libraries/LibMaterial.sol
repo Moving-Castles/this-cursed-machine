@@ -16,6 +16,8 @@ import { WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/s
 // Not using index.sol because of MaterialId circular import
 import { MaterialMetadata, MaterialMetadataData } from "../codegen/tables/MaterialMetadata.sol";
 
+import { MATERIAL_DIFFICULTY} from "../codegen/common.sol";
+
 type MaterialId is bytes14;
 
 using LibMaterial for MaterialId global;
@@ -38,7 +40,8 @@ library LibMaterial {
   function registerMaterial(
     MaterialId _materialId,
     string memory _name,
-    string memory _symbol
+    string memory _symbol,
+    MATERIAL_DIFFICULTY _difficulty
   ) internal {
     IBaseWorld world = IBaseWorld(WorldContextConsumerLib._world());
 
@@ -56,18 +59,30 @@ library LibMaterial {
     // Set other material metadata
     MaterialMetadata.set(
       _materialId,
-      MaterialMetadataData({ tokenAddress: address(token), name: _name })
+      MaterialMetadataData({ difficulty: _difficulty, tokenAddress: address(token), name: _name })
     );
   }
 
   /**
    * @dev Mint token to address
+   * @param _materialId material id to mint
    * @param _to address to mint to
    * @param _value amount to mint
    */
   function mint(MaterialId _materialId, address _to, uint256 _value) internal {
     IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(_materialId));
     token.mint(_to, _value);
+  }
+
+  /**
+   * @dev Burn token from address
+   * @param _materialId material id to burn
+   * @param _to address to burn from
+   * @param _value amount to burn
+   */
+  function burn(MaterialId _materialId, address _to, uint256 _value) internal {
+    IERC20Mintable token = IERC20Mintable(MaterialMetadata.getTokenAddress(_materialId));
+    token.burn(_to, _value);
   }
 
   /**
