@@ -13,9 +13,9 @@ import {
   getMaterialMetadata,
 } from "./utils"
 import { writable, derived } from "svelte/store"
-import { blockNumber, walletNetwork } from "@modules/network"
+import { blockNumber } from "@modules/network"
 import { GAME_CONFIG_ID } from "@modules/state/base/constants"
-import { displayAmount } from "@modules/utils"
+import { displayAmount, addressToId } from "@modules/utils"
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY TYPES
@@ -44,16 +44,12 @@ export const materialMetadata = derived(entities, $entities => getMaterialMetada
 // PLAYER STORES
 // * * * * * * * * * * * * * * * * *
 
-// Address in padded format
-export const playerAddress = derived(
-  walletNetwork,
-  $walletNetwork => $walletNetwork.walletClient?.account.address || ("0x0" as string)
-)
+export const playerAddress = writable("0x0" as string)
 
-// Non-padded address
+// Address in padded format
 export const playerId = derived(
-  walletNetwork,
-  $walletNetwork => $walletNetwork.playerEntity || ("0x0" as string)
+  playerAddress,
+  $playerAddress => addressToId($playerAddress)
 )
 
 export const player = derived(

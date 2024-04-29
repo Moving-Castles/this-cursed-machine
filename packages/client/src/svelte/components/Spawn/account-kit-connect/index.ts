@@ -1,5 +1,5 @@
 import { store as accountKitStore } from "@latticexyz/account-kit/bundle";
-import type { AppAccountClient } from "@latticexyz/account-kit/src/common";
+import type { AccountKitConnectReturn } from "./types";
 
 const openAccountModalPromise = new Promise<() => void>((resolve) => {
     const { openAccountModal } = accountKitStore.getState();
@@ -15,14 +15,14 @@ const openAccountModalPromise = new Promise<() => void>((resolve) => {
 export const connect = () =>
     openAccountModalPromise.then((openAccountModal) => {
         openAccountModal();
-        return new Promise<AppAccountClient>((resolve, reject) => {
+        return new Promise<AccountKitConnectReturn>((resolve, reject) => {
             const unsub = accountKitStore.subscribe((state) => {
                 console.log("state", state)
                 if (state.appAccountClient) {
                     unsub();
                     // Close the modal and resolve with appAccountClient
                     state.closeAccountModal ? state.closeAccountModal() : null;
-                    resolve(state.appAccountClient);
+                    resolve({ appAccountClient: state.appAccountClient, userAddress: state.userAddress });
                 }
                 if (state.accountModalOpen === false) {
                     unsub();

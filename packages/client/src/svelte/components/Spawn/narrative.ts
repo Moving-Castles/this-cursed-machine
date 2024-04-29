@@ -21,7 +21,7 @@ import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork";
 import { ENVIRONMENT } from "@mud/enums";
 import { connect } from "@components/Spawn/account-kit-connect";
 import { initSignalNetwork } from "@modules/signal"
-import type { AppAccountClient } from "@latticexyz/account-kit/src/common";
+import type { AccountKitConnectReturn } from "./account-kit-connect/types";
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -110,23 +110,27 @@ export const narrative = [
       await writeNarrative("No verification required.");
       // Burner
       walletNetwork.set(setupBurnerWalletNetwork(get(publicNetwork)));
+      // Set player address to returned burner
+      playerAddress.set(get(walletNetwork).walletClient?.account.address)
     } else {
       // Account kit
       await writeNarrative("Starting verification process...");
 
-      let appAccountClient: AppAccountClient | null = null;
+      let accountKitConnectReturn: AccountKitConnectReturn | null = null;
 
-      while (!appAccountClient) {
+      while (!accountKitConnectReturn) {
         try {
-          appAccountClient = await connect();
+          accountKitConnectReturn = await connect();
         } catch (e) {
           console.log("Account kit error", e);
           await writeFailure("Stump must complete the verification process to proceed.");
         }
       }
 
-      console.log("appAccountClient", appAccountClient);
-      walletNetwork.set(setupWalletNetwork(get(publicNetwork), appAccountClient));
+      console.log("accountKitConnectReturn", accountKitConnectReturn);
+      walletNetwork.set(setupWalletNetwork(get(publicNetwork), accountKitConnectReturn.appAccountClient));
+      // Set player address to main wallet address
+      playerAddress.set(accountKitConnectReturn.userAddress)
     }
 
     // Websocket connection for off-chain messaging
