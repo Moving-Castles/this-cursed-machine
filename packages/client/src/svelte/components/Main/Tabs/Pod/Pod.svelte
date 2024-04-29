@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import Graph from "@components/Main/Tabs/Pod/Graph/Graph.svelte"
+  import Discoveries from "@components/Main/Tabs/Pod/Discovery/Discoveries.svelte"
   import { tutorialProgress } from "@modules/ui/assistant"
 
   import TanksBox from "@components/Main/Tabs/Pod/Tanks/TanksBox.svelte"
@@ -16,6 +17,8 @@
   <div class="graph" in:fade={{ duration: 100 }}>
     <Graph on:resize />
   </div>
+
+  <Discoveries />
 </div>
 
 <!-- <Tooltips /> -->

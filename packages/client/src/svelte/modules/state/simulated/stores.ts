@@ -20,6 +20,7 @@ import {
   player,
   orders,
   availableOrders,
+  materialMetadata,
 } from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
@@ -513,7 +514,25 @@ export const tankAttachments = derived(
   }
 )
 
+/** Return the currently flowing outputs */
+export const podOutputs = derived(
+  [simulatedMachines, playerPod, materialMetadata],
+  ([$simulatedMachines, $playerPod, $materialMetadata]) => {
+    const flowingMaterials: MaterialMetadata[] = []
+
+    const m: [string, SimulatedMachine][] = Object.entries($simulatedMachines)
+
+    m.forEach(([_, machine]) => {
+      machine?.products?.forEach(product => {
+        flowingMaterials.push($materialMetadata[product.materialId])
+      })
+    })
+
+    return [...new Set(flowingMaterials)]
+  }
+)
+
 export const discoveredMaterials = storableArray(
-  ["BUGS"],
+  ["0x745f425547530000000000000000"], // Bugs are not new to us
   "discoveredMaterials"
 )

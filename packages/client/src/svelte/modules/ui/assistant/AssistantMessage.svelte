@@ -89,7 +89,7 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
-    discoveredMaterials.set(["BUGS"])
+    discoveredMaterials.set(["0x745f425547530000000000000000"])
     $activeTab = 0
     clearTerminalOutput()
   }
@@ -97,9 +97,9 @@
   const close = () => dispatch("end", msg)
 
   onMount(() => {
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       playSound("tcm", "asisstantHit")
-    }, 1000)
+    }, 3000)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }

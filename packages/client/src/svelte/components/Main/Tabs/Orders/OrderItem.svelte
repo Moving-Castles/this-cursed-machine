@@ -132,6 +132,11 @@
   class:active
   class:completed
   class:selected
+  on:click={() => {
+    if (!completed && !unavailable && !working && !active) {
+      sendAccept()
+    }
+  }}
   transition:fade
 >
   {#if order?.order}
@@ -245,7 +250,7 @@
             <span class="padded inverted">
               {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
               {/if}
             </span>

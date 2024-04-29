@@ -18,7 +18,6 @@
   import { playSound } from "@modules/sound"
 
   import { materialMetadata } from "@modules/state/base/stores"
-  $: console.log($materialMetadata)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"

@@ -41,7 +41,7 @@
         }
 
         if (direction < 0) {
-          playSound("tcm", "bugs", false, false, 0.5)
+          playSound("tcm", "bugs")
         } else {
           playSound("tcm", "bugs")
         }
