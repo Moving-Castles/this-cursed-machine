@@ -19,8 +19,6 @@ contract DevSystem is System {
     // Set current order
     CurrentOrder.set(playerEntity, bytes32(0));
 
-    Name.set(playerEntity, "MEATBAG66");
-
     PublicMaterials.BUGS.mint(_msgSender(), 10000 * ONE_UNIT);
   }
 

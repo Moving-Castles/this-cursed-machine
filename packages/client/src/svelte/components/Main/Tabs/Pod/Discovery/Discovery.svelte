@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Discovery } from "."
+  import { flicker } from "@modules/ui/transitions"
   import { staticContent } from "@modules/content"
   import { onMount } from "svelte"
   import { createEventDispatcher } from "svelte"
@@ -8,6 +9,8 @@
   const dispatch = createEventDispatcher<{ end: Discovery }>()
 
   export let discovery: Discovery
+
+  let show = false
 
   const close = () => dispatch("end", discovery)
 
@@ -18,31 +21,47 @@
       .startsWith(discovery.name.replaceAll(" ", "_").toLowerCase())
   })
 
+  const color = lore?.color?.hex || "var(--color-failure)"
+
   onMount(() => {
-    // setTimeout(close, 5000)
-    console.log(lore)
+    setTimeout(
+      () => {
+        show = true
+      },
+      Math.random() * 300 + 300
+    )
+    setTimeout(close, 15000)
   })
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="discovery absolute {discovery.name}" on:click={close}>
-  {#if lore}
-    <img
-      class="image"
-      src={urlFor(lore.image).width(200).auto("format").url()}
-      crossorigin="anonymous"
-      alt={discovery.name}
-    />
-  {/if}
+<div
+  style="--material-color: {color}"
+  class="discovery absolute {discovery.name}"
+  on:click={close}
+>
+  <div class="image">
+    {#if lore && show}
+      <img
+        in:flicker
+        class="image"
+        src={urlFor(lore.image).width(200).auto("format").url()}
+        crossorigin="anonymous"
+        alt={discovery.name}
+      />
+    {/if}
+  </div>
   <div class="content">
     <p>New material discovered</p>
-    <p>
+    <p class="material">
       {discovery.name.replace(/! $/, "")}
     </p>
     {#if lore}
       <p>
-        {lore.category}
+        {#if lore.category}
+          {lore.category}
+        {/if}
       </p>
     {/if}
   </div>
@@ -54,18 +73,29 @@
     width: 100%;
     display: flex;
     flex-flow: row nowrap;
-    gap: 1rem;
+    gap: 0.5rem;
     color: var(--foreground);
     padding: 0.5rem;
     cursor: pointer;
-    border: 5px double var(--color-success);
-    color: var(--color-success);
+    border: 5px double var(--material-color);
+    color: var(--material-color);
     background: var(--black);
     margin-top: 10px;
     font-size: var(--font-size-small);
     overflow: hidden;
     word-break: break-all;
 
+    .content {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      .material {
+        font-size: var(--font-size-normal);
+        color: var(--white);
+        margin-bottom: 1rem;
+      }
+    }
     .image {
       width: 60px;
     }

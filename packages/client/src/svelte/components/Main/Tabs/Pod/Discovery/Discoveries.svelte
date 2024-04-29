@@ -8,7 +8,7 @@
   } from "@modules/state/simulated/stores"
   import { discover, discoveries } from "."
   import DiscoveryComponent from "./Discovery.svelte"
-  import { fade } from "svelte/transition"
+  import { linear } from "svelte/easing"
   import { flip } from "svelte/animate"
 
   const onEnd = (e: CustomEvent<Discovery>) => {
@@ -32,7 +32,11 @@
 
 <div class="discovery-pane">
   {#each $discoveries as discovery (discovery.materialId + discovery.timestamp)}
-    <div animate:flip out:fade={{ duration: 300 }}>
+    <div
+      animate:flip={{ duration: 100, easing: linear }}
+      in:flicker
+      out:flicker={{ duration: 300 }}
+    >
       <DiscoveryComponent {discovery} on:end={onEnd} />
     </div>
   {/each}

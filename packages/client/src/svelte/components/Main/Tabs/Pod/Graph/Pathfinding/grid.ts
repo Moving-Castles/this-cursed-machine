@@ -49,7 +49,7 @@ export function getCostAt(grid: Grid, x: number, y: number): number | boolean {
 
 export function setCostAt(grid: Grid, x: number, y: number, cost: number): Grid {
     if (!isInside(grid, x, y)) {
-        console.warn("Trying to set cost for out of bounds grid")
+        // console.warn("Trying to set cost for out of bounds grid")
         return grid
     }
 

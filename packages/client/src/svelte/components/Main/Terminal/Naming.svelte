@@ -101,6 +101,7 @@
       border: none;
       padding: 0;
       position: relative; /* To position the pseudo-element */
+      text-transform: uppercase;
 
       &::placeholder {
         opacity: 1;

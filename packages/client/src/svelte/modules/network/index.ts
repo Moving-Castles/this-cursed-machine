@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
-import type { SetupResult } from "../../../mud/setup"
+import { SetupPublicNetworkResult } from "@mud/setupPublicNetwork";
+import { SetupWalletNetworkResult } from "@mud/setupWalletNetwork";
 
 // ----------------------------------------------------------------------------
 
@@ -7,7 +8,8 @@ export { initBlockListener } from "./blockListener";
 
 // --- STORES -----------------------------------------------------------------
 
-export const network = writable({} as SetupResult);
+export const publicNetwork = writable({} as SetupPublicNetworkResult);
+export const walletNetwork = writable({} as SetupWalletNetworkResult);
 export const blockNumber = writable(BigInt(0));
 export const ready = writable(false);
 export const loadingMessage = writable("Loading");

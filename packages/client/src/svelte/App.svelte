@@ -1,23 +1,31 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { setup } from "@mud/setup"
+  import { setupPublicNetwork } from "@mud/setupPublicNetwork"
   import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
     createSyncProgressSystem,
   } from "@modules/systems"
-  import { network, initBlockListener } from "@modules/network"
+  import {
+    publicNetwork,
+    walletNetwork,
+    initBlockListener,
+  } from "@modules/network"
+
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
   import { initStaticContent } from "@modules/content"
   import { initSound } from "@modules/sound"
-  import { initSignalNetwork } from "./modules/signal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-
-  import { materialMetadata } from "@modules/state/base/stores"
+  import {
+    player,
+    playerAddress,
+    entities,
+    players,
+  } from "@modules/state/base/stores"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -26,6 +34,8 @@
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
   import MobileWarning from "@components/Main/MobileWarning.svelte"
+
+  export let environment: ENVIRONMENT
 
   const onMouseMove = (e: MouseEvent) => {
     $mouseX = e.clientX
@@ -48,31 +58,9 @@
     UIState.set(UI.ESCAPED)
   }
 
-  const getEnvironment = () => {
-    switch (window.location.hostname) {
-      case "thiscursedmachine.fun":
-        return ENVIRONMENT.REDSTONE
-      case "redstone-test.thiscursedmachine.fun":
-        return ENVIRONMENT.REDSTONE_TEST
-      case "garnet-wallet.thiscursedmachine.fun":
-        return ENVIRONMENT.GARNET_WALLET
-      case "garnet.thiscursedmachine.fun":
-        return ENVIRONMENT.GARNET
-      case "rhodolite.thiscursedmachine.fun":
-        return ENVIRONMENT.RHODOLITE
-      case "old.thiscursedmachine.fun":
-        return ENVIRONMENT.OLD_TESTNET
-      default:
-        return ENVIRONMENT.DEVELOPMENT
-    }
-  }
-
   onMount(async () => {
     // Output console message
     // messageToStumps()
-
-    // Determine what chain we should connect to
-    const environment = getEnvironment()
 
     // Remove preloader
     document.querySelector(".preloader")?.remove()
@@ -81,8 +69,8 @@
     initStaticContent()
 
     // Write mud layer to svelte store
-    const mudLayer = await setup(environment)
-    network.set(mudLayer)
+    const mudLayer = await setupPublicNetwork(environment)
+    publicNetwork.set(mudLayer)
 
     // Modules responsible for sending transactions
     initActionSequencer()
@@ -105,9 +93,6 @@
     initSound()
 
     introSound = playSound("tcm", "introBg", true, true)
-
-    // Signal network
-    initSignalNetwork()
   })
 
   // Fade out intro sound when ready
@@ -129,7 +114,7 @@
   {/if}
 
   {#if $UIState === UI.SPAWNING}
-    <Spawn on:done={spawned} on:escaped={escaped} />
+    <Spawn {environment} on:done={spawned} on:escaped={escaped} />
   {/if}
 
   {#if $UIState === UI.READY}
