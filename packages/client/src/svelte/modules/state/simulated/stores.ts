@@ -534,10 +534,10 @@ export const podOutputs = derived(
 
 export const discoveredMaterials = storableArray(
   ["0x745f425547530000000000000000"], // Bugs are not new to us
-  "discoveredMaterials"
+  "tcm_discoveredMaterials"
 )
 
 export const discoveredMessages = storableArray(
   [], // Bugs are not new to us
-  "discoveredMessages"
+  "tcm_discoveredMessages"
 )

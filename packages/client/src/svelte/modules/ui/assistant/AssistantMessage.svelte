@@ -22,6 +22,7 @@
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
   export let msg: AssistantMessage
+  export let delay = 3000
 
   const parse = (str: string) => {
     if (!$player) return str
@@ -101,7 +102,7 @@
   onMount(() => {
     timeout = setTimeout(() => {
       playSound("tcm", "asisstantHit")
-    }, 3000)
+    }, delay)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }
@@ -178,6 +179,7 @@
       display: none;
 
       button {
+        text-transform: uppercase;
         background: var(--color-grey-dark);
         color: var(--foreground);
         padding: 7px;
