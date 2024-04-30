@@ -52,6 +52,7 @@
   export let disabled = false
   export let setBlink = false
   export let noOutput = false
+  export let skipBootMessage = false
 
   let inputElement: HTMLInputElement
   let value = ""
@@ -490,7 +491,9 @@
   onMount(async () => {
     if (terminalType === TERMINAL_TYPE.FULL) {
       if (!$terminalBooted) {
-        await terminalMessages.startUp()
+        if (!skipBootMessage) {
+          await terminalMessages.startUp()
+        }
         $terminalBooted = true
       }
       inputActive = true

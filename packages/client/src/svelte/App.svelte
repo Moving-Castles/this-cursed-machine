@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { setupPublicNetwork } from "@mud/setupPublicNetwork"
+  import { tutorialProgress } from "@modules/ui/assistant"
   import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
@@ -18,30 +19,19 @@
   import { playSound } from "@modules/sound"
   import {
     player,
-    playerAddress,
-    entities,
-    players,
+    // playerAddress,
+    // entities,
+    // players,
     recipes,
     materialMetadata,
     orders,
   } from "@modules/state/base/stores"
-  $: console.log("$player", $player)
-  // $: console.log("$playerAddress", $playerAddress)
-  // $: console.log("$entities", $entities)
-  // $: console.log("$players", $players)
-  $: console.log("$recipes", $recipes)
-  $: console.log("Object.keys($recipes).length", Object.keys($recipes).length)
-  $: console.log("$materialMetadata", $materialMetadata)
-  $: console.log(
-    "Object.keys($materialMetadata).length",
-    Object.keys($materialMetadata).length,
-  )
-  $: console.log("$orders", $orders)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"
   import Tutorial from "@components/Tutorial/Tutorial.svelte"
+  import TutorialCompleted from "@components/Tutorial/TutorialCompleted.svelte"
   import Toasts from "@modules/ui/toast/Toasts.svelte"
   import Assistant from "@modules/ui/assistant/Assistant.svelte"
   import MobileWarning from "@components/Main/MobileWarning.svelte"
@@ -129,8 +119,12 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    <Main on:escaped={escaped} />
-    <Tutorial />
+    {#if $tutorialProgress !== 30}
+      <Main on:escaped={escaped} />
+      <Tutorial />
+    {:else}
+      <TutorialCompleted />
+    {/if}
   {/if}
 </main>
 
