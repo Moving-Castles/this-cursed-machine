@@ -5,7 +5,12 @@
     materialMetadata,
     player,
     gameConfig,
+    players,
   } from "@modules/state/base/stores"
+  import {
+    playerOrder,
+    discoveredMessages,
+  } from "@modules/state/simulated/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import {
@@ -19,7 +24,6 @@
   import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
-  import { players } from "@modules/state/base/stores"
   import { displayAmount } from "@modules/utils"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
@@ -77,6 +81,26 @@
       await waitForCompletion(action)
       s?.stop()
       playSound("tcm", "acceptOrderSuccess")
+
+      const material = $materialMetadata[$playerOrder?.order.materialId]
+
+      // Now check the material of the order and
+      // if the material has static content
+      if (material) {
+        const lore = $staticContent.materials.find(mat => {
+          return mat.materialType
+            .replaceAll(" ", "_")
+            .toLowerCase()
+            .startsWith(material.name.replaceAll(" ", "_").toLowerCase())
+        })
+
+        // Unlock the message
+        if (lore) {
+          if (lore.hint) {
+            discoveredMessages.set([...$discoveredMessages, lore.hint._id])
+          }
+        }
+      }
     } catch (error) {
       s?.stop()
       playSound("tcm", "acceptOrderFail")
@@ -132,6 +156,11 @@
   class:active
   class:completed
   class:selected
+  on:click={() => {
+    if (!completed && !unavailable && !working && !active) {
+      sendAccept()
+    }
+  }}
   transition:fade
 >
   {#if order?.order}
@@ -245,7 +274,7 @@
             <span class="padded inverted">
               {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
               {/if}
             </span>

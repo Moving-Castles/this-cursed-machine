@@ -4,7 +4,7 @@
   import type { ChatMessage } from "@modules/signal/types"
   import { playerAddress } from "@modules/state/base/stores"
   import { v4 as uuid } from "uuid"
-  import { network } from "@modules/network"
+  import { walletNetwork } from "@modules/network"
   import { playSound } from "@modules/sound"
   import TerminalInput from "../../Terminal/TerminalInput.svelte"
 
@@ -20,7 +20,7 @@
     if (message === "") return
     const newMessage: ChatMessage = {
       id: uuid(),
-      world: $network.worldContract.address,
+      world: $walletNetwork.worldContract.address,
       message,
       timestamp: Date.now(),
       address: $playerAddress,

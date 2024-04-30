@@ -13,7 +13,11 @@
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
   import { materialMetadata, player } from "@modules/state/base/stores"
-  import { playerOrder } from "@modules/state/simulated/stores"
+  import {
+    playerOrder,
+    discoveredMaterials,
+    discoveredMessages,
+  } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
@@ -28,7 +32,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name,
+        $materialMetadata[$playerOrder?.order?.materialId]?.name
       )
     }
 
@@ -86,6 +90,8 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
+    discoveredMaterials.set(["0x745f425547530000000000000000"])
+    discoveredMessages.set([])
     $activeTab = 0
     clearTerminalOutput()
   }
@@ -93,9 +99,9 @@
   const close = () => dispatch("end", msg)
 
   onMount(() => {
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       playSound("tcm", "asisstantHit")
-    }, 1000)
+    }, 3000)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }

@@ -8,13 +8,13 @@ import { getBurnerPrivateKey } from "@latticexyz/common";
 import { getChain, getWorldFromChainId } from "./utils";
 import { ENVIRONMENT } from "./enums";
 
-export async function getNetworkConfig(environment: ENVIRONMENT) {
+export function getNetworkConfig(environment: ENVIRONMENT) {
   const params = new URLSearchParams(window.location.search);
 
   // Default to local development chain
   let chainId = 31337;
 
-  if ([ENVIRONMENT.GARNET, ENVIRONMENT.GARNET_WALLET].includes(environment)) {
+  if ([ENVIRONMENT.GARNET, ENVIRONMENT.GARNET_ACCOUNT_KIT].includes(environment)) {
     chainId = 17069
   } else if ([ENVIRONMENT.REDSTONE, ENVIRONMENT.REDSTONE_TEST].includes(environment)) {
     chainId = 690
@@ -31,7 +31,9 @@ export async function getNetworkConfig(environment: ENVIRONMENT) {
 
   const worldAddress = params.get("worldAddress") || world?.address;
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`);
+    throw new Error(
+      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`
+    );
   }
 
   /*

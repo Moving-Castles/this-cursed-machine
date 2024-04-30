@@ -1,12 +1,12 @@
 import { get } from "svelte/store"
-import { network, blockNumber } from "./index"
+import { publicNetwork, blockNumber } from "./index"
 import { toastMessage } from "../ui/toast"
 
 let blockTimeout: number
 const TIMEOUT = 10000
 
 export function initBlockListener() {
-  get(network).latestBlock$.subscribe(block => {
+  get(publicNetwork).latestBlock$.subscribe(block => {
     // Show a error message if we haven't received a block in a while
     clearTimeout(blockTimeout)
     blockTimeout = window.setTimeout(handleBlockTimeout, TIMEOUT)

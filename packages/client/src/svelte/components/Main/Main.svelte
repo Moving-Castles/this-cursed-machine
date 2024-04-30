@@ -12,6 +12,7 @@
   import { TABS } from "@modules/ui/enums"
   import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
+  import { podOutputs } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
@@ -58,6 +59,9 @@
   $: {
     currentTabComponent = tabList[$activeTab]?.component || null
   }
+  $: {
+    if ($tutorialProgress === 1) playSound("tcm", "mapPop")
+  }
 
   let terminalComponent: any
 
@@ -65,10 +69,6 @@
     if (terminalComponent) {
       terminalComponent.resetInput()
     }
-  }
-
-  $: {
-    if ($tutorialProgress === 1) playSound("tcm", "mapPop")
   }
 
   onMount(() => {

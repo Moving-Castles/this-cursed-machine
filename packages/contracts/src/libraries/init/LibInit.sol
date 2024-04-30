@@ -47,19 +47,19 @@ library LibInit {
                                  TEST
     //////////////////////////////////////////////////////////////*/
 
-    // 50 PISS => 500 points
-    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 1);
+    // // 50 PISS => 500 points
+    // LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 1);
 
-    // 50 PISS => 200 points
-    LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
+    // // 50 PISS => 200 points
+    // LibOrder.create(_adminAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
 
-    // 50 BLOOD => 200 points
-    LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
+    // // 50 BLOOD => 200 points
+    // LibOrder.create(_adminAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 200 * ONE_UNIT, 0, 20);
 
-    // 50 BLOOD_MEAL => 300 points
-    LibOrder.create(_adminAddress, PublicMaterials.BLOOD_MEAL, 50 * ONE_UNIT, false, 0, 300 * ONE_UNIT, 0, 20);
+    // // 50 BLOOD_MEAL => 300 points
+    // LibOrder.create(_adminAddress, PublicMaterials.BLOOD_MEAL, 50 * ONE_UNIT, false, 0, 300 * ONE_UNIT, 0, 20);
 
-    // 50 UREA => 500 points
-    LibOrder.create(_adminAddress, PublicMaterials.UREA, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 10);
+    // // 50 UREA => 500 points
+    // LibOrder.create(_adminAddress, PublicMaterials.UREA, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 10);
   }
 }
