@@ -28,9 +28,9 @@
       () => {
         show = true
       },
-      Math.random() * 300 + 300
+      Math.random() * 300 + 300,
     )
-    setTimeout(close, 15000)
+    setTimeout(close, 10000)
   })
 </script>
 
