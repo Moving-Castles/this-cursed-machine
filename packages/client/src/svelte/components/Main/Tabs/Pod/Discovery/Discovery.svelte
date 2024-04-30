@@ -46,7 +46,6 @@
       <img
         class="image"
         src={urlFor(lore.image).width(200).auto("format").url()}
-        crossorigin="anonymous"
         alt={discovery.name}
       />
     {/if}

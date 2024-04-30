@@ -153,6 +153,7 @@
 <svelte:window on:keypress={onKeyPress} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   on:mouseenter
   class="order-item"
@@ -195,7 +196,6 @@
         />
         <img
           class="material-image"
-          crossorigin="anonymous"
           src={imageURL}
           alt="{spacedName} SPECIMEN"
         />
@@ -283,7 +283,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber)
+                  Number(order.order.expirationBlock) - Number($blockNumber),
                 )}
               </span>
             {/if}

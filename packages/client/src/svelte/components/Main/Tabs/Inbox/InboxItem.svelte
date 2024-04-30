@@ -58,6 +58,8 @@
   })
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click tabindex="-1" class="message">
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -75,6 +77,7 @@
   </div>
 
   {#if open}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       bind:this={scroll}
       on:keydown={scrollContent}
@@ -91,7 +94,6 @@
         {#each message.attachments as attachment}
           <figure>
             <img
-              crossorigin="anonymous"
               src={urlFor(attachment.image).url()}
               alt={attachment.image.filename}
             />
