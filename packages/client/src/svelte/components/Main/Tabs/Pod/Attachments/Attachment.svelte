@@ -6,6 +6,7 @@
   import { MACHINE_TYPE } from "contracts/enums"
   import walkable from "@modules/utils/walkable"
   import { networkIsRunning } from "@modules/state/simulated/stores"
+  import { playSound } from "@modules/sound"
   import {
     simulatedMachines as machines,
     simulatedTanks as tanks,
@@ -32,6 +33,10 @@
     { x: 0, y: 0 },
     { x: 0, y: 0 },
   ] // throughCoord is a random point between two
+
+  const playPlugSound = () => {
+    playSound("tcm", "plugTank")
+  }
 
   const makeRandomPointInsideSafeZone = machineType => {
     const { top, left, bottom, right } = safezone?.getBoundingClientRect()
@@ -160,6 +165,7 @@
     : ''}"
 >
   <path
+    on:introstart={playPlugSound}
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}
     {d}

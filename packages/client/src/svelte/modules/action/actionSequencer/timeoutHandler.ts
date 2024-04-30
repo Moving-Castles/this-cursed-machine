@@ -7,7 +7,7 @@ export const clearActionTimer = () => {
 }
 
 export const startActionTimer = () => {
-  timeout = window.setTimeout(handleQueuedActionTimeout, 15000)
+  timeout = window.setTimeout(handleQueuedActionTimeout, 20000)
 }
 
 export function handleQueuedActionTimeout() {

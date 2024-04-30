@@ -34,7 +34,7 @@
   {#each $discoveries as discovery (discovery.materialId + discovery.timestamp)}
     <div
       animate:flip={{ duration: 100, easing: linear }}
-      in:flicker
+      in:flicker={{ duration: 100 }}
       out:flicker={{ duration: 300 }}
     >
       <DiscoveryComponent {discovery} on:end={onEnd} />

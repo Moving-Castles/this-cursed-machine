@@ -11,6 +11,7 @@
 
   let emphasis = ""
   let tweening = false
+  let direction = 0
 
   const goingUp = tweened(Number(value), { duration: DURATION, easing })
 
@@ -22,7 +23,7 @@
       $goingUp = Number(value)
       tweening = true
 
-      const direction = $goingUp - previousValue
+      direction = $goingUp - previousValue
 
       // const s = playSound("tcm", "inputBugs", true)
       let interval = setInterval(() => {
@@ -52,6 +53,7 @@
           emphasis = ""
           // console.log(emphasis)
           tweening = false
+          direction = 0
         }, 3000)
       }, DURATION)
     }
@@ -64,5 +66,5 @@
     ($goingUp % step === 0 && $goingUp < warn)}
   class:flash-fast-thrice={$goingUp >= goal}
 >
-  {Math.round($goingUp)}
+  {#if direction < 0}↓{:else if direction > 0}↑{/if}{Math.round($goingUp)}
 </span>

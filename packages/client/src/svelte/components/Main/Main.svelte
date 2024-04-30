@@ -12,7 +12,6 @@
   import { TABS } from "@modules/ui/enums"
   import { flicker } from "@modules/ui/transitions"
   import { activeTab } from "@modules/ui/stores"
-  import { podOutputs } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
 
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
@@ -60,7 +59,8 @@
     currentTabComponent = tabList[$activeTab]?.component || null
   }
   $: {
-    if ($tutorialProgress === 1) playSound("tcm", "mapPop")
+    if ($tutorialProgress === 1 || $tutorialProgress === 2)
+      playSound("tcm", "mapPop")
   }
 
   let terminalComponent: any
@@ -76,12 +76,12 @@
   })
 </script>
 
-{#if $player?.carriedBy}
+{#if $player?.carriedBy && $tutorialProgress > 0}
   <div class="dust" />
 
   <!-- <Debug/> -->
 
-  <div class="split-screen">
+  <div in:flicker class="split-screen">
     <div class="left-col">
       <div class="info-bar">
         {#if $tutorialProgress > 5}

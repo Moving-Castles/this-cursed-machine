@@ -13,7 +13,14 @@ export function discover(material: MaterialMetadata) {
     ...material,
     timestamp: performance.now(),
   }
-  discoveries.set([...get(discoveries), discovery])
-  // mark as discovered
-  discoveredMaterials.set([...get(discoveredMaterials), discovery.materialId])
+
+  const $discoveredMaterials = get(discoveredMaterials)
+
+  // If the discovery is not in there yet
+  if (!$discoveredMaterials.includes(discovery.materialId)) {
+    discoveries.set([...get(discoveries), discovery])
+
+    // mark as discovered
+    discoveredMaterials.set([...$discoveredMaterials, discovery.materialId])
+  }
 }

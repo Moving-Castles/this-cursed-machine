@@ -7,7 +7,7 @@ function formatNumber(num: string | number) {
 
 function formatArray(arr: any[] | string) {
   if (Array.isArray(arr)) return arr
-  return JSON.stringify(arr)
+  return JSON.parse(arr)
 }
 
 const makeStorable = (data: any, key: string, type: "number" | "array") => {
@@ -21,7 +21,6 @@ const makeStorable = (data: any, key: string, type: "number" | "array") => {
         set(formatNumber(localStorage.getItem(key)))
       }
       if (type === "array") {
-        // console.log(localStorage.getItem(key))
         set(localStorage.getItem(key))
       }
     }
@@ -63,7 +62,7 @@ const makeStorable = (data: any, key: string, type: "number" | "array") => {
         set(formatNumber(n))
       }
       if (type === "array") {
-        set(formatArray(n))
+        set(formatArray(JSON.stringify(n)))
       }
     },
     update: cb => {
@@ -75,7 +74,7 @@ const makeStorable = (data: any, key: string, type: "number" | "array") => {
         set(formatNumber(updatedStore))
       }
       if (type === "array") {
-        set(formatArray(updatedStore))
+        set(formatArray(JSON.stringify(updatedStore)))
       }
     },
   }

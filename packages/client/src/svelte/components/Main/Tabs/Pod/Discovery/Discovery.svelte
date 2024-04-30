@@ -42,9 +42,8 @@
   on:click={close}
 >
   <div class="image">
-    {#if lore && show}
+    {#if lore}
       <img
-        in:flicker
         class="image"
         src={urlFor(lore.image).width(200).auto("format").url()}
         crossorigin="anonymous"
@@ -77,7 +76,7 @@
     color: var(--foreground);
     padding: 0.5rem;
     cursor: pointer;
-    border: 5px double var(--material-color);
+    border: 2px solid var(--material-color);
     color: var(--material-color);
     background: var(--black);
     margin-top: 10px;

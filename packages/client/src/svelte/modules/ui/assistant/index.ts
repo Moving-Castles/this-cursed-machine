@@ -18,12 +18,12 @@ export type Step = {
   skip?: number
 }
 
-export const tutorialProgress = storableNumber(0, "tutorialProgress")
+export const tutorialProgress = storableNumber(0, "tcm_tutorialProgress")
 export const tutorialCompleted = writable([])
 export const currentCondition: Writable<Step | null> = writable(null)
 export const completedSteps: Writable<number[]> = storableArray(
   [],
-  "completedSteps"
+  "tcm_completedSteps"
 )
 
 export const advanceConditions: Writable<Step[]> = writable([])

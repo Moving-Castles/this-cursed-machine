@@ -7,6 +7,7 @@
     gameConfig,
     players,
   } from "@modules/state/base/stores"
+  import { MATERIAL_DIFFICULTY } from "contracts/enums"
   import {
     playerOrder,
     discoveredMessages,
@@ -42,6 +43,8 @@
   const dispatch = createEventDispatcher()
 
   const name = $materialMetadata[order.order.materialId]?.name
+  const difficulty =
+    MATERIAL_DIFFICULTY[$materialMetadata[order.order.materialId]?.difficulty]
   const spacedName = name?.replaceAll("_", " ")
 
   const getCreator = (order: Order) => {
@@ -72,6 +75,8 @@
   $: exhausted =
     order.order.maxPlayers > 0 &&
     (order.completedPlayers ?? 0) >= order.order.maxPlayers
+
+  $: console.log(difficulty)
 
   async function sendAccept() {
     $orderAcceptInProgress = key
@@ -254,7 +259,11 @@
           <!-- * * * * * * * * * * -->
           <!-- REWARD -->
           <!-- * * * * * * * * * * -->
-          <p class="header">Reward</p>
+          <p class="header">
+            <span class="padded inverted {difficulty}">
+              {difficulty}
+            </span>
+          </p>
           <div class="content">
             <div class="center">
               {displayAmount(order.order.reward)}<br />
@@ -271,13 +280,13 @@
           <!-- REMAINING TIME -->
           <!-- * * * * * * * * * * -->
           <p class="header">
-            <span class="padded inverted">
-              {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
+            {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
+              <span class="padded inverted">
                 {blocksToReadableTime(
                   Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
-              {/if}
-            </span>
+              </span>
+            {/if}
           </p>
           <!-- * * * * * * * * * * -->
           <!-- BUTTONS -->
@@ -286,7 +295,7 @@
             <div class="center">
               {#if active}
                 <button class="cancel" on:click={() => sendUnaccept()}
-                  >Cancel</button
+                  >CANCEL</button
                 >
               {:else}
                 <button
@@ -294,7 +303,7 @@
                   class="accept"
                   on:click={() => sendAccept()}
                 >
-                  Accept
+                  ACCEPT
                 </button>
               {/if}
             </div>
@@ -358,6 +367,7 @@
       inset: 0;
       z-index: 1;
       animation: 5s active ease infinite;
+      pointer-events: none;
     }
 
     &.selected {
@@ -569,6 +579,26 @@
   .inverted {
     background: var(--foreground);
     color: var(--background);
+
+    &.NOVICE {
+      background: var(--color-grey-mid);
+      color: var(--white);
+    }
+
+    &.INTERMEDIATE {
+      background: var(--color-success);
+      color: var(--color-grey-dark);
+    }
+
+    &.ADVANCED {
+      background: var(--color-tutorial);
+      color: var(--color-grey-dark);
+    }
+
+    &.NIGHTMARE {
+      background: var(--color-failure);
+      color: var(--color-grey-dark);
+    }
   }
 
   .inverted-low {
