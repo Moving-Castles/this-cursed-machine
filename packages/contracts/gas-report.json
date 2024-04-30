@@ -57,13 +57,13 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 224677
+    "gasUsed": 224712
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Create order as user",
-    "gasUsed": 284673
+    "gasUsed": 284708
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
@@ -76,6 +76,12 @@
     "test": "testShip",
     "name": "Ship (admin created order)",
     "gasUsed": 276183
+  },
+  {
+    "file": "test/systems/progression/GraduateSystem.t.sol",
+    "test": "testGraduate",
+    "name": "Graduate",
+    "gasUsed": 105169
   },
   {
     "file": "test/systems/progression/SpawnSystem.t.sol",
@@ -106,5 +112,11 @@
     "test": "testattachTank",
     "name": "Plug in tank",
     "gasUsed": 106333
+  },
+  {
+    "file": "test/systems/tank/TokenTankSystem.t.sol",
+    "test": "testFillTank",
+    "name": "Fill tank",
+    "gasUsed": 273752
   }
 ]

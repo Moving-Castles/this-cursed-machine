@@ -22,11 +22,9 @@ export enum WorldFunctions {
   UnacceptOrder = "unacceptOrder",
   // Offers
   BuyOffer = "buyOffer",
-  // Testing
-  Resolve = "resolve",
-  Reward = "reward",
-  Charge = "charge",
-  Graduate = "graduate"
+  // Convenience
+  Graduate = "graduate",
+  Resolve = "resolve"
 }
 
 // --- API --------------------------------------------------------------
@@ -120,19 +118,11 @@ export function buyOffer(offerEntity: string) {
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * *
- * Testing
+ * Convenience
  * * * * * * * * * * * * * * * * * * * * * * * */
 
 export function resolve() {
   return addToSequencer(WorldFunctions.Resolve, [])
-}
-
-export function reward() {
-  return addToSequencer(WorldFunctions.Reward, [])
-}
-
-export function charge() {
-  return addToSequencer(WorldFunctions.Charge, [])
 }
 
 export function graduate() {

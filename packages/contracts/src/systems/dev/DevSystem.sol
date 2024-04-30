@@ -10,7 +10,7 @@ contract DevSystem is System {
    * @notice Fast forward out of tutorial
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function graduate() public {
+  function devGraduate() public {
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     TutorialLevel.deleteRecord(playerEntity);
@@ -19,6 +19,7 @@ contract DevSystem is System {
     // Set current order
     CurrentOrder.set(playerEntity, bytes32(0));
 
+    // Some tests depend on the player being given bugs here
     PublicMaterials.BUGS.mint(_msgSender(), 10000 * ONE_UNIT);
   }
 
@@ -29,7 +30,7 @@ contract DevSystem is System {
    * @param _materialId Material id of the material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
+  function devFillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
     ContainedMaterial.set(_tankEntity, _materialId);
     Amount.set(_tankEntity, _amount * ONE_UNIT);
   }
@@ -40,26 +41,5 @@ contract DevSystem is System {
    */
   function reward() public {
     PublicMaterials.BUGS.mint(_msgSender(), 1000 * ONE_UNIT);
-  }
-
-  /**
-   * @notice Send 100 BUG tokens from the player to the world.
-   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
-   */
-  function charge() public {
-    require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= 100 * ONE_UNIT, "insufficient balance");
-    PublicMaterials.BUGS.transferToken(_world(), 100 * ONE_UNIT);
-  }
-
-  /**
-   * @notice Let user create
-   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
-   */
-  function createTestOrder() public {
-    uint256 totalRewardCost = (100 * ONE_UNIT) * 5;
-    require(PublicMaterials.BUGS.getTokenBalance(_msgSender()) >= totalRewardCost, "insufficient funds");
-    PublicMaterials.BUGS.transferToken(_world(), totalRewardCost);
-
-    LibOrder.create(_msgSender(), PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 100 * ONE_UNIT, 0, 5);
   }
 }

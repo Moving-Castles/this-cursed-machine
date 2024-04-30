@@ -85,9 +85,9 @@ contract OfferSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.graduate();
+    world.devGraduate();
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.buyOffer(offerEntity);
 

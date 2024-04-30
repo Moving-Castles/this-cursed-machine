@@ -6,14 +6,10 @@ pragma solidity >=0.8.24;
 import { MaterialId } from "./../../libraries/Libraries.sol";
 
 /**
- * @title IDevSystem
+ * @title ITokenTankSystem
  * @author MUD (https://mud.dev) by Lattice (https://lattice.xyz)
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface IDevSystem {
-  function devGraduate() external;
-
-  function devFillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) external;
-
-  function reward() external;
+interface ITokenTankSystem {
+  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) external;
 }
