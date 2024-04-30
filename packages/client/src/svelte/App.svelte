@@ -6,11 +6,7 @@
     createComponentSystem,
     createSyncProgressSystem,
   } from "@modules/systems"
-  import {
-    publicNetwork,
-    walletNetwork,
-    initBlockListener,
-  } from "@modules/network"
+  import { publicNetwork, initBlockListener } from "@modules/network"
 
   import { initActionSequencer } from "@modules/action/actionSequencer"
   import { initStateSimulator } from "@modules/state/resolver"
@@ -25,7 +21,22 @@
     playerAddress,
     entities,
     players,
+    recipes,
+    materialMetadata,
+    orders,
   } from "@modules/state/base/stores"
+  $: console.log("$player", $player)
+  // $: console.log("$playerAddress", $playerAddress)
+  // $: console.log("$entities", $entities)
+  // $: console.log("$players", $players)
+  $: console.log("$recipes", $recipes)
+  $: console.log("Object.keys($recipes).length", Object.keys($recipes).length)
+  $: console.log("$materialMetadata", $materialMetadata)
+  $: console.log(
+    "Object.keys($materialMetadata).length",
+    Object.keys($materialMetadata).length,
+  )
+  $: console.log("$orders", $orders)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
