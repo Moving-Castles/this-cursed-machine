@@ -1,9 +1,17 @@
 <script lang="ts">
   import type { AssistantMessage } from "."
   import { assistantMessages } from "."
+  import { tutorialProgress } from "@modules/ui/assistant"
   import AssistantMessageComponent from "./AssistantMessage.svelte"
   import { fly } from "svelte/transition"
   import { flip } from "svelte/animate"
+
+  const delays = {
+    1: 2000,
+    2: 1000,
+    3: 1000,
+    8: 2000,
+  }
 
   const onEnd = (e: CustomEvent<AssistantMessage>) => {
     assistantMessages.set(
@@ -12,12 +20,14 @@
       )
     )
   }
+
+  $: delay = delays?.[$tutorialProgress] || 500
 </script>
 
 <div class="toast-pane">
   {#each $assistantMessages as msg (msg.timestamp + $assistantMessages.length)}
-    <div animate:flip in:fly={{ y: 20, delay: 3000 }}>
-      <AssistantMessageComponent {msg} on:end={onEnd} />
+    <div animate:flip in:fly={{ y: 20, delay }}>
+      <AssistantMessageComponent {msg} on:end={onEnd} {delay} />
     </div>
   {/each}
 </div>

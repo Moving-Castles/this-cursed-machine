@@ -22,8 +22,9 @@
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
   export let msg: AssistantMessage
+  export let delay = 3000
 
-  const parse = (str: string) => {
+  export const parse = (str: string) => {
     if (!$player) return str
 
     str = str.replaceAll("%PLAYER%", $player.name)
@@ -101,7 +102,7 @@
   onMount(() => {
     timeout = setTimeout(() => {
       playSound("tcm", "asisstantHit")
-    }, 3000)
+    }, delay)
     if (msg.disappear) {
       timeout = setTimeout(close, 10000)
     }
@@ -112,26 +113,28 @@
   })
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="msg absolute">
-  <!-- <div class="image">
-    <img src="/images/eye3.gif" alt="bot" />
-  </div> -->
-  <div class="text">
-    {@html message}
-  </div>
-  {#if !working}
-    <div class="restart">
-      {#if !confirming}
-        <button on:click={startConfirm}>Restart employee training</button>
-      {:else}
-        <button on:click={sendStart}>I want to restart</button>
-        <button on:click={() => (confirming = false)}>x</button>
-      {/if}
+{#if $tutorialProgress !== $advanceConditions.length - 1}
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div class="msg absolute">
+    <!-- <div class="image">
+      <img src="/images/eye3.gif" alt="bot" />
+    </div> -->
+    <div class="text">
+      {@html message}
     </div>
-  {/if}
-</div>
+    {#if !working}
+      <div class="restart">
+        {#if !confirming}
+          <button on:click={startConfirm}>Restart employee training</button>
+        {:else}
+          <button on:click={sendStart}>I want to restart</button>
+          <button on:click={() => (confirming = false)}>x</button>
+        {/if}
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style lang="scss">
   .msg {
@@ -178,6 +181,7 @@
       display: none;
 
       button {
+        text-transform: uppercase;
         background: var(--color-grey-dark);
         color: var(--foreground);
         padding: 7px;

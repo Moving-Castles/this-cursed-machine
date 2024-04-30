@@ -3,6 +3,7 @@
   import { onMount, createEventDispatcher, tick, onDestroy } from "svelte"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
   import { playSound } from "@modules/sound"
+  import { activeTab } from "@modules/ui/stores"
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
   import { selectedOption, selectedParameters } from "@modules/ui/stores"
 
@@ -29,6 +30,11 @@
     if (v) {
       selectedOption.set(v)
     }
+  }
+
+  // Fixes problem where tabbing breaks the select
+  $: {
+    if ($activeTab !== 0) dispatch("requestDestroy")
   }
 
   function returnValue(value: string | MACHINE_TYPE | null) {

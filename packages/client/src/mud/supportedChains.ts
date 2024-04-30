@@ -7,22 +7,34 @@
  *   basefee set to zero to avoid transaction fees.
  *
  */
-import { MUDChain, mudFoundry, garnet, redstone } from "@latticexyz/common/chains"
+import {
+  MUDChain,
+  mudFoundry,
+  garnet,
+  redstone,
+} from "@latticexyz/common/chains";
+import { holesky, mainnet } from "viem/chains";
 
 type ExtendedChain = MUDChain & {
-  indexerUrl?: string | undefined
-}
+  indexerUrl?: string | undefined;
+};
 
-const extendedGarnet: ExtendedChain = garnet as ExtendedChain;
-extendedGarnet.faucetUrl = "https://17001-faucet.quarry.linfra.xyz/trpc/drip"
-extendedGarnet.indexerUrl = "https://indexer.mud.garnetchain.com/ "
+const extendedGarnet = {
+  ...garnet,
+  faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc/drip",
+  indexerUrl: "https://indexer.mud.garnetchain.com/",
+} as const satisfies ExtendedChain;
 
-const extendedRedstone: ExtendedChain = redstone as ExtendedChain;
-extendedRedstone.faucetUrl = "https://redstone-faucet.onrender.com/trpc/drip"
-extendedRedstone.indexerUrl = "https://indexer.mud.redstonechain.com/ "
+const extendedRedstone = {
+  ...redstone,
+  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
+  indexerUrl: "https://indexer.mud.redstonechain.com/",
+} as const satisfies ExtendedChain;
 
-export const supportedChains: ExtendedChain[] = [
+export const supportedChains = [
   mudFoundry,
   extendedGarnet,
-  extendedRedstone
-]
+  extendedRedstone,
+  holesky,
+  mainnet,
+] as const;

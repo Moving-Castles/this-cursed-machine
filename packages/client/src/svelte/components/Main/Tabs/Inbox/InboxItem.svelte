@@ -58,6 +58,8 @@
   })
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:click tabindex="-1" class="message">
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -66,7 +68,7 @@
     class="listing"
     class:selected
     class:open
-    class:pulse={$tutorialProgress === 19}
+    class:emphasis={$tutorialProgress === 27}
   >
     <div class="indicator" />
     <div class="sender">{clippedSender}</div>
@@ -75,6 +77,7 @@
   </div>
 
   {#if open}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       bind:this={scroll}
       on:keydown={scrollContent}
@@ -91,7 +94,6 @@
         {#each message.attachments as attachment}
           <figure>
             <img
-              crossorigin="anonymous"
               src={urlFor(attachment.image).url()}
               alt={attachment.image.filename}
             />
@@ -109,6 +111,7 @@
         </div>
       </div>
     </div>
+    <div class="shadow" />
   {/if}
 </div>
 
@@ -190,15 +193,29 @@
         }
       }
     }
+    .shadow {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: var(--z-1);
+      display: block;
+      width: 100%;
+      height: 3rem;
+      pointer-events: none;
+      // background: red;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+    }
 
     .content {
       margin: 1rem 0;
       padding: 1rem 1rem 3rem;
       inset: 0;
-      height: calc(100vh - 360px);
+      height: calc(100vh - 260px);
       overflow-y: scroll;
       scroll-behavior: auto;
-      border-bottom: 1px dashed var(--white);
+      border-bottom: 2px dashed var(--white);
+      position: relative;
 
       .message-body {
         padding: 1rem 1rem 3rem;

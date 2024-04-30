@@ -28,9 +28,9 @@
       () => {
         show = true
       },
-      Math.random() * 300 + 300
+      Math.random() * 300 + 300,
     )
-    setTimeout(close, 15000)
+    setTimeout(close, 10000)
   })
 </script>
 
@@ -42,12 +42,10 @@
   on:click={close}
 >
   <div class="image">
-    {#if lore && show}
+    {#if lore}
       <img
-        in:flicker
         class="image"
         src={urlFor(lore.image).width(200).auto("format").url()}
-        crossorigin="anonymous"
         alt={discovery.name}
       />
     {/if}
@@ -77,7 +75,7 @@
     color: var(--foreground);
     padding: 0.5rem;
     cursor: pointer;
-    border: 5px double var(--material-color);
+    border: 2px solid var(--material-color);
     color: var(--material-color);
     background: var(--black);
     margin-top: 10px;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-import { EntityType, Order, OrderData, Tutorial, TutorialLevel } from "../codegen/index.sol";
+import { EntityType, Order, OrderData, Tutorial, TutorialLevel, CompletedPlayers } from "../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../codegen/common.sol";
 import { MaterialId } from "./LibMaterial.sol";
 
@@ -17,7 +17,6 @@ library LibOrder {
    * @param _duration Duration of the order
    * @param _maxPlayers Maximum number of players that can complete the order
    */
-
   function create(
     address _creator,
     MaterialId _materialId,
@@ -53,5 +52,14 @@ library LibOrder {
     }
 
     return orderEntity;
+  }
+
+  /**
+   * @notice Cancel an order
+   * @param _orderEntity Order to remove
+   */
+  function cancel(bytes32 _orderEntity) internal {
+    Order.deleteRecord(_orderEntity);
+    CompletedPlayers.deleteRecord(_orderEntity);
   }
 }

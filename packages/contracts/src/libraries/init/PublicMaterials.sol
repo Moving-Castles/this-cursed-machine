@@ -33,7 +33,7 @@ library PublicMaterials {
     LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BML", MATERIAL_DIFFICULTY.NOVICE);
     LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORW", MATERIAL_DIFFICULTY.NOVICE);
     LibMaterial.registerMaterial(FAT, "FAT", "FAT", MATERIAL_DIFFICULTY.NOVICE);
-    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN", MATERIAL_DIFFICULTY.INTERMEDIATE);
     LibMaterial.registerMaterial(LUBRICANT, "LUBRICANT", "LUBE", MATERIAL_DIFFICULTY.NOVICE);
   }
 }
