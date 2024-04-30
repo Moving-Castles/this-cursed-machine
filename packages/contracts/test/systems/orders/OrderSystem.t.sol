@@ -80,10 +80,12 @@ contract OrderSystemTest is BaseTest {
                          BOB CREATES ORDER
     //////////////////////////////////////////////////////////////*/
     spawnBob();
-    vm.startPrank(bob);
 
-    // Get bug tokens
-    world.reward();
+    prankAdmin();
+    world.devReward(bob);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
 
     // Create order
     startGasReport("Create order as user");
@@ -101,14 +103,16 @@ contract OrderSystemTest is BaseTest {
     //////////////////////////////////////////////////////////////*/
 
     usePlayerEntity(alice);
-    vm.startPrank(alice);
 
-    world.devGraduate();
+    prankAdmin();
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Accept test order
     world.acceptOrder(testOrder);
-
-    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -155,10 +159,10 @@ contract OrderSystemTest is BaseTest {
     prankAdmin();
     bytes32 order = world.createOrder(PublicMaterials.BLOOD_MEAL, 0, 100, ONE_HOUR, 1);
     ContainedMaterial.set(tanksInPod[1], PublicMaterials.BLOOD_MEAL);
+    world.devGraduate(alice);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.devGraduate();
     world.acceptOrder(order);
     world.shipTank(tanksInPod[1]);
     vm.stopPrank();
@@ -167,7 +171,13 @@ contract OrderSystemTest is BaseTest {
     // Spawn player
     world.spawn("bob");
     world.start();
-    world.devGraduate();
+    vm.stopPrank();
+
+    prankAdmin();
+    world.devGraduate(bob);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
     vm.expectRevert("max players reached");
     world.acceptOrder(order);
     vm.stopPrank();
@@ -191,12 +201,10 @@ contract OrderSystemTest is BaseTest {
     // Create order
     prankAdmin();
     bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
+    world.devGraduate(alice);
     vm.stopPrank();
 
     vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.devGraduate();
 
     startGasReport("Accept order");
     world.acceptOrder(orderEntity);
@@ -216,15 +224,13 @@ contract OrderSystemTest is BaseTest {
   function testShip() public {
     prankAdmin();
     bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD, 20, 100, ONE_HOUR, 10);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     vm.stopPrank();
 
     vm.startPrank(alice);
 
-    world.devGraduate();
-
     world.acceptOrder(orderEntity);
-
-    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -261,12 +267,10 @@ contract OrderSystemTest is BaseTest {
   function testRevertShipOrderExpired() public {
     prankAdmin();
     bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    world.devGraduate(alice);
     vm.stopPrank();
 
     vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.devGraduate();
 
     world.acceptOrder(orderEntity);
 
@@ -281,12 +285,10 @@ contract OrderSystemTest is BaseTest {
   function testRevertAcceptOrderExpired() public {
     prankAdmin();
     bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    world.devGraduate(alice);
     vm.stopPrank();
 
     vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.devGraduate();
 
     vm.roll(block.number + ONE_MINUTE + 1);
 
@@ -299,14 +301,11 @@ contract OrderSystemTest is BaseTest {
   function testRevertOrderAlreadyCompleted() public {
     prankAdmin();
     bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     vm.stopPrank();
 
     vm.startPrank(alice);
-
-    // Fast forward out of tutorial
-    world.devGraduate();
-
-    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.acceptOrder(orderEntity);
 

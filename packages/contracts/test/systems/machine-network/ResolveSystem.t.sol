@@ -62,9 +62,11 @@ contract ResolveSystemTest is BaseTest {
   function testResolve() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -101,9 +103,11 @@ contract ResolveSystemTest is BaseTest {
   function testResolveInlet2() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -138,9 +142,11 @@ contract ResolveSystemTest is BaseTest {
   function testMachineProcessingLoss() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -172,9 +178,11 @@ contract ResolveSystemTest is BaseTest {
   function testDoubleMachineProcessingLoss() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -212,9 +220,11 @@ contract ResolveSystemTest is BaseTest {
   function testCapByTankCapacity() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -246,9 +256,11 @@ contract ResolveSystemTest is BaseTest {
   function testCapAtInletMaterialAmount() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -339,12 +351,14 @@ contract ResolveSystemTest is BaseTest {
   function testResolveMixer() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     // Fill tank 0 with 20000 PublicMaterials.BLOOD
     world.devFillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
     world.devFillTank(tanksInPod[1], 100, PublicMaterials.PISS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -392,12 +406,14 @@ contract ResolveSystemTest is BaseTest {
   function testResolveSplitterMixer() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     // Fill tank 0 with 20000 PublicMaterials.BLOOD
     world.devFillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
     world.devFillTank(tanksInPod[1], 100, PublicMaterials.PISS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -451,12 +467,14 @@ contract ResolveSystemTest is BaseTest {
   function testUnusedInlet() public {
     setUp();
 
-    vm.startPrank(alice);
-
-    // Fill tank 0 with 20000 PublicMaterials.UREA
+    prankAdmin();
+    // Fill tank 0 with 200 PublicMaterials.UREA
     world.devFillTank(tanksInPod[0], 200, PublicMaterials.UREA);
-    // Fill tank 1 with 10000 FAT
+    // Fill tank 1 with 100 PISS
     world.devFillTank(tanksInPod[1], 100, PublicMaterials.FAT);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -495,12 +513,14 @@ contract ResolveSystemTest is BaseTest {
   function testOneMixerTwoInlets() public {
     setUp();
 
-    vm.startPrank(alice);
-
+    prankAdmin();
     // Fill tank 0 with 20000 PublicMaterials.BUGS
     world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     // Fill tank 1 with 10000 PublicMaterials.PISS
     world.devFillTank(tanksInPod[1], 200, PublicMaterials.PISS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);

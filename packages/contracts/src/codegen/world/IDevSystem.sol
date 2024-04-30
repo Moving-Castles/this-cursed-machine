@@ -11,9 +11,9 @@ import { MaterialId } from "./../../libraries/Libraries.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IDevSystem {
-  function devGraduate() external;
+  function devGraduate(address _address) external;
 
   function devFillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) external;
 
-  function reward() external;
+  function devReward(address _address) external;
 }

@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
-import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name } from "../../codegen/index.sol";
+import { TutorialLevel, CurrentOrder, CarriedBy, Amount, ContainedMaterial, Tutorial, Name, GameConfig } from "../../codegen/index.sol";
 import { LibUtils, PublicMaterials, MaterialId, LibOrder } from "../../libraries/Libraries.sol";
 import { ONE_UNIT, ONE_HOUR } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
    * @notice Fast forward out of tutorial
-   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
+   * @dev ONLY USED FOR TESTING.
    */
-  function devGraduate() public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+  function devGraduate(address _address) public {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+
+    bytes32 playerEntity = LibUtils.addressToEntityKey(_address);
 
     TutorialLevel.deleteRecord(playerEntity);
     Tutorial.deleteRecord(playerEntity);
@@ -28,18 +30,20 @@ contract DevSystem is System {
    * @param _tankEntity Id of tank entity
    * @param _amount Amount of material in whole units
    * @param _materialId Material id of the material
-   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
+   * @dev ONLY USED FOR TESTING.
    */
   function devFillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
     ContainedMaterial.set(_tankEntity, _materialId);
     Amount.set(_tankEntity, _amount * ONE_UNIT);
   }
 
   /**
    * @notice Send 1000 BUG tokens from the world to the player.
-   * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
+   * @dev ONLY USED FOR TESTING.
    */
-  function reward() public {
-    PublicMaterials.BUGS.mint(_msgSender(), 1000 * ONE_UNIT);
+  function devReward(address _address) public {
+    require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
+    PublicMaterials.BUGS.mint(_address, 1000 * ONE_UNIT);
   }
 }
