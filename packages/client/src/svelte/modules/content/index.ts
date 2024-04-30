@@ -24,7 +24,7 @@ export const staticContent = writable({} as StaticContent)
 export async function initStaticContent() {
   const loading = await loadData("*[_type == 'loading'][0]", {})
   const machines = await loadData("*[_type == 'machine']", {})
-  const materials = await loadData("*[_type == 'material']", {})
+  const materials = await loadData("*[_type == 'material']{..., hint->}", {})
   const tutorial = await loadData("*[_type == 'tutorial'][0]", {})
   const messages = await loadData("*[_type == 'message']", {})
   staticContent.set({

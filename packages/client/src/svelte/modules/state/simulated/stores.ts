@@ -137,7 +137,7 @@ export function calculateSimulatedTanks(
   // Create deep copy to avoid accidentally mutating the original object.
   const initialTanksCopy = deepClone(tanks)
 
-  let simulatedTanks: SimulatedTanks = Object.fromEntries([
+  const simulatedTanks: SimulatedTanks = Object.fromEntries([
     ...Object.entries(initialTanksCopy),
   ])
 
@@ -535,4 +535,9 @@ export const podOutputs = derived(
 export const discoveredMaterials = storableArray(
   ["0x745f425547530000000000000000"], // Bugs are not new to us
   "discoveredMaterials"
+)
+
+export const discoveredMessages = storableArray(
+  [], // Bugs are not new to us
+  "discoveredMessages"
 )

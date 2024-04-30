@@ -16,6 +16,7 @@
   import {
     playerOrder,
     discoveredMaterials,
+    discoveredMessages,
   } from "@modules/state/simulated/stores"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
@@ -90,6 +91,7 @@
     tutorialProgress.set(0)
     tutorialCompleted.set([])
     discoveredMaterials.set(["0x745f425547530000000000000000"])
+    discoveredMessages.set([])
     $activeTab = 0
     clearTerminalOutput()
   }

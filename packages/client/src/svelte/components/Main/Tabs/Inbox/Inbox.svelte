@@ -5,6 +5,7 @@
   import { playSound } from "@modules/sound"
   import { mod } from "@modules/utils"
   import InboxItem from "./InboxItem.svelte"
+  import { discoveredMessages } from "@modules/state/simulated/stores"
 
   let selected = 0
   let openItem = -1
@@ -15,7 +16,7 @@
     if ($player.tutorial) {
       return $player.tutorial && msg.tutorial
     } else {
-      return msg
+      return msg.tutorial || $discoveredMessages.includes(msg._id)
     }
   })
 
