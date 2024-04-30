@@ -112,5 +112,11 @@
     "test": "testattachTank",
     "name": "Plug in tank",
     "gasUsed": 106333
+  },
+  {
+    "file": "test/systems/tank/TokenTankSystem.t.sol",
+    "test": "testFillTank",
+    "name": "Fill tank",
+    "gasUsed": 273752
   }
 ]

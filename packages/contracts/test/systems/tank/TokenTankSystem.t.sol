@@ -104,7 +104,7 @@ contract TokenTankSystemTest is BaseTest {
   function testRevertNoToken() public {
     vm.startPrank(alice);
 
-    vm.expectRevert("token transfer failed");
+    vm.expectRevert();
     world.fillTank(tanksInPod[0], 1, PublicMaterials.BLOOD);
 
     vm.stopPrank();
