@@ -30,7 +30,7 @@ contract DevSystem is System {
    * @param _materialId Material id of the material
    * @dev ONLY USED FOR TESTING. DISABLE IN PRODUCTION.
    */
-  function fillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
+  function devFillTank(bytes32 _tankEntity, uint256 _amount, MaterialId _materialId) public {
     ContainedMaterial.set(_tankEntity, _materialId);
     Amount.set(_tankEntity, _amount * ONE_UNIT);
   }

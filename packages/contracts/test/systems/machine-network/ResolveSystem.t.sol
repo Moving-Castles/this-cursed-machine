@@ -64,7 +64,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -103,7 +103,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -140,7 +140,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -174,7 +174,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -214,7 +214,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -248,7 +248,7 @@ contract ResolveSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     uint256 initialInletAmount = Amount.get(tanksInPod[0]);
 
@@ -342,9 +342,9 @@ contract ResolveSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fill tank 0 with 20000 PublicMaterials.BLOOD
-    world.fillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
+    world.devFillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
-    world.fillTank(tanksInPod[1], 100, PublicMaterials.PISS);
+    world.devFillTank(tanksInPod[1], 100, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -395,9 +395,9 @@ contract ResolveSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fill tank 0 with 20000 PublicMaterials.BLOOD
-    world.fillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
+    world.devFillTank(tanksInPod[0], 200, PublicMaterials.BLOOD);
     // Fill tank 1 with 10000 PISS
-    world.fillTank(tanksInPod[1], 100, PublicMaterials.PISS);
+    world.devFillTank(tanksInPod[1], 100, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -454,9 +454,9 @@ contract ResolveSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fill tank 0 with 20000 PublicMaterials.UREA
-    world.fillTank(tanksInPod[0], 200, PublicMaterials.UREA);
+    world.devFillTank(tanksInPod[0], 200, PublicMaterials.UREA);
     // Fill tank 1 with 10000 FAT
-    world.fillTank(tanksInPod[1], 100, PublicMaterials.FAT);
+    world.devFillTank(tanksInPod[1], 100, PublicMaterials.FAT);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);
@@ -498,9 +498,9 @@ contract ResolveSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fill tank 0 with 20000 PublicMaterials.BUGS
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     // Fill tank 1 with 10000 PublicMaterials.PISS
-    world.fillTank(tanksInPod[1], 200, PublicMaterials.PISS);
+    world.devFillTank(tanksInPod[1], 200, PublicMaterials.PISS);
 
     // Connect tank 0 to inlet 0
     world.plugTank(tanksInPod[0], inletEntities[0]);

@@ -18,6 +18,7 @@ import { IGraduateSystem } from "./IGraduateSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { IStartSystem } from "./IStartSystem.sol";
 import { ITankSystem } from "./ITankSystem.sol";
+import { ITokenTankSystem } from "./ITokenTankSystem.sol";
 
 /**
  * @title IWorld
@@ -40,5 +41,6 @@ interface IWorld is
   IGraduateSystem,
   ISpawnSystem,
   IStartSystem,
-  ITankSystem
+  ITankSystem,
+  ITokenTankSystem
 {}

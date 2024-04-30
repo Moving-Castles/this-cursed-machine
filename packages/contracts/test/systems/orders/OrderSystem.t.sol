@@ -108,7 +108,7 @@ contract OrderSystemTest is BaseTest {
     // Accept test order
     world.acceptOrder(testOrder);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -224,7 +224,7 @@ contract OrderSystemTest is BaseTest {
 
     world.acceptOrder(orderEntity);
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
@@ -306,7 +306,7 @@ contract OrderSystemTest is BaseTest {
     // Fast forward out of tutorial
     world.devGraduate();
 
-    world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.acceptOrder(orderEntity);
 
