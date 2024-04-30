@@ -28,9 +28,9 @@
       () => {
         show = true
       },
-      Math.random() * 300 + 300
+      Math.random() * 300 + 300,
     )
-    setTimeout(close, 15000)
+    setTimeout(close, 10000)
   })
 </script>
 
@@ -46,7 +46,6 @@
       <img
         class="image"
         src={urlFor(lore.image).width(200).auto("format").url()}
-        crossorigin="anonymous"
         alt={discovery.name}
       />
     {/if}

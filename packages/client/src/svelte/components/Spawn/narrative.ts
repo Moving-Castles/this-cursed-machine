@@ -127,10 +127,10 @@ export const narrative = [
       walletNetwork.set(setupWalletNetwork(get(publicNetwork), accountKitConnectReturn.appAccountClient));
       // Set player address to main wallet address
       playerAddress.set(accountKitConnectReturn.userAddress)
-
-      // Websocket connection for off-chain messaging
-      initSignalNetwork()
     }
+
+    // Websocket connection for off-chain messaging
+    initSignalNetwork()
 
     await writeNarrative("Your address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
