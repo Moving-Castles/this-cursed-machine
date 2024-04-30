@@ -71,7 +71,7 @@ function updateConditions() {
   // Sequential steps will have no skip value, and steps that can be done in another order will have the max skip step index defined. Skips are only looking forward
   const ADVANCE_CONDITIONS = [
     // IN SEQUENCE
-    { index: 0, type: "wait", value: 4000 },
+    { index: 0, type: "wait", value: 3000 },
     { index: 1, type: "command", value: ["blink", "."] },
     { index: 2, type: "command", value: ["blink", "."] },
     { index: 3, type: "tab", value: [1] },
