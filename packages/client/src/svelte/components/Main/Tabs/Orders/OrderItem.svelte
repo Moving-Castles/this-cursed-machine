@@ -76,8 +76,6 @@
     order.order.maxPlayers > 0 &&
     (order.completedPlayers ?? 0) >= order.order.maxPlayers
 
-  $: console.log(difficulty)
-
   async function sendAccept() {
     $orderAcceptInProgress = key
     const action = acceptOrder(key)
@@ -87,24 +85,14 @@
       s?.stop()
       playSound("tcm", "acceptOrderSuccess")
 
-      const material = $materialMetadata[$playerOrder?.order.materialId]
-
       // Now check the material of the order and
       // if the material has static content
-      if (material) {
-        const lore = $staticContent.materials.find(mat => {
-          return mat.materialType
-            .replaceAll(" ", "_")
-            .toLowerCase()
-            .startsWith(material.name.replaceAll(" ", "_").toLowerCase())
-        })
-
-        // Unlock the message
-        if (lore) {
-          if (lore.hint) {
-            discoveredMessages.set([...$discoveredMessages, lore.hint._id])
-          }
-        }
+      // Unlock the message
+      if (staticMaterial?.hint) {
+        discoveredMessages.set([
+          ...$discoveredMessages,
+          staticMaterial.hint._id,
+        ])
       }
     } catch (error) {
       s?.stop()
@@ -207,7 +195,7 @@
         />
         <span class="specimen">
           MISSING<br />
-          {spacedName}<br />
+          {staticMaterial?.title || spacedName}<br />
           SPECIMEN
         </span>
       {/if}
@@ -239,7 +227,7 @@
             <!-- * * * * * * * * * * * * * * * * -->
             <div class="center">
               {displayAmount(order.order.amount)}
-              {spacedName}
+              {staticMaterial?.title || spacedName}
               <div class="subtitle">
                 {#if staticMaterial.category}
                   {#each staticMaterial.category as category, i}
@@ -261,7 +249,7 @@
           <!-- * * * * * * * * * * -->
           <p class="header">
             <span class="padded inverted {difficulty}">
-              {difficulty}
+              DIFFICULTY: {difficulty}
             </span>
           </p>
           <div class="content">
@@ -283,7 +271,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
               </span>
             {/if}
