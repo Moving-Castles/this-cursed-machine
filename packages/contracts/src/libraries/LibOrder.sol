@@ -29,6 +29,7 @@ library LibOrder {
     uint32 _maxPlayers
   ) internal returns (bytes32) {
     require(_materialId.isRegistered(), "material does not exist");
+    require(_creator != address(0), "creator cannot be 0x0");
 
     bytes32 orderEntity = getUniqueEntity();
     EntityType.set(orderEntity, ENTITY_TYPE.ORDER);

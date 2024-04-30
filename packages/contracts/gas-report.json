@@ -57,13 +57,13 @@
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsAdmin",
     "name": "Create order as admin",
-    "gasUsed": 224677
+    "gasUsed": 224712
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
     "test": "testCreateOrderAsUser",
     "name": "Create order as user",
-    "gasUsed": 284673
+    "gasUsed": 284708
   },
   {
     "file": "test/systems/orders/OrderSystem.t.sol",
