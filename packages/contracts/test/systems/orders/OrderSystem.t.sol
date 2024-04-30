@@ -103,7 +103,7 @@ contract OrderSystemTest is BaseTest {
     usePlayerEntity(alice);
     vm.startPrank(alice);
 
-    world.graduate();
+    world.devGraduate();
 
     // Accept test order
     world.acceptOrder(testOrder);
@@ -158,7 +158,7 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.graduate();
+    world.devGraduate();
     world.acceptOrder(order);
     world.shipTank(tanksInPod[1]);
     vm.stopPrank();
@@ -167,7 +167,7 @@ contract OrderSystemTest is BaseTest {
     // Spawn player
     world.spawn("bob");
     world.start();
-    world.graduate();
+    world.devGraduate();
     vm.expectRevert("max players reached");
     world.acceptOrder(order);
     vm.stopPrank();
@@ -196,7 +196,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
-    world.graduate();
+    world.devGraduate();
 
     startGasReport("Accept order");
     world.acceptOrder(orderEntity);
@@ -220,7 +220,7 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    world.graduate();
+    world.devGraduate();
 
     world.acceptOrder(orderEntity);
 
@@ -266,7 +266,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
-    world.graduate();
+    world.devGraduate();
 
     world.acceptOrder(orderEntity);
 
@@ -286,7 +286,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
-    world.graduate();
+    world.devGraduate();
 
     vm.roll(block.number + ONE_MINUTE + 1);
 
@@ -304,7 +304,7 @@ contract OrderSystemTest is BaseTest {
     vm.startPrank(alice);
 
     // Fast forward out of tutorial
-    world.graduate();
+    world.devGraduate();
 
     world.fillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 

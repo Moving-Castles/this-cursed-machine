@@ -14,6 +14,7 @@ import { IResolveSystem } from "./IResolveSystem.sol";
 import { IWipeSystem } from "./IWipeSystem.sol";
 import { IOfferSystem } from "./IOfferSystem.sol";
 import { IOrderSystem } from "./IOrderSystem.sol";
+import { IGraduateSystem } from "./IGraduateSystem.sol";
 import { ISpawnSystem } from "./ISpawnSystem.sol";
 import { IStartSystem } from "./IStartSystem.sol";
 import { ITankSystem } from "./ITankSystem.sol";
@@ -36,6 +37,7 @@ interface IWorld is
   IWipeSystem,
   IOfferSystem,
   IOrderSystem,
+  IGraduateSystem,
   ISpawnSystem,
   IStartSystem,
   ITankSystem

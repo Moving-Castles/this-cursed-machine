@@ -78,6 +78,12 @@
     "gasUsed": 276183
   },
   {
+    "file": "test/systems/progression/GraduateSystem.t.sol",
+    "test": "testGraduate",
+    "name": "Graduate",
+    "gasUsed": 105169
+  },
+  {
     "file": "test/systems/progression/SpawnSystem.t.sol",
     "test": "testSpawn",
     "name": "Spawn",
