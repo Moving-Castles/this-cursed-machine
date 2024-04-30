@@ -1,59 +1,52 @@
-import "./app.css"
-import App from "./App.svelte"
-import { mount as mountAccountKit } from "@latticexyz/account-kit/bundle"
-import { createConfig } from "@wagmi/core"
-import { getNetworkConfig } from "@mud/getNetworkConfig"
-import { ENVIRONMENT } from "@mud/enums"
-import { supportedChains } from "@mud/supportedChains"
-import { MUDChain } from "@latticexyz/common/chains"
-import { transportObserver } from "@latticexyz/common"
-import { fallback, http, webSocket } from "viem"
-import { mainnet, holesky } from "viem/chains"
+import "./app.css";
+import App from "./App.svelte";
+import { mount as mountAccountKit } from "@latticexyz/account-kit/bundle";
+import { createConfig, http } from "@wagmi/core";
+import { getNetworkConfig } from "@mud/getNetworkConfig";
+import { ENVIRONMENT } from "@mud/enums";
+import { supportedChains } from "@mud/supportedChains";
+import { transportObserver } from "@latticexyz/common";
+import { fallback, webSocket } from "viem";
 
 const getEnvironment = () => {
   switch (window.location.hostname) {
     case "thiscursedmachine.fun":
-      return ENVIRONMENT.REDSTONE
+      return ENVIRONMENT.REDSTONE;
     case "redstone-test.thiscursedmachine.fun":
-      return ENVIRONMENT.REDSTONE_TEST
+      return ENVIRONMENT.REDSTONE_TEST;
     case "garnet.thiscursedmachine.fun":
-      return ENVIRONMENT.GARNET
+      return ENVIRONMENT.GARNET;
     case "garnet-account-kit.thiscursedmachine.fun":
-      return ENVIRONMENT.GARNET_ACCOUNT_KIT
+      return ENVIRONMENT.GARNET_ACCOUNT_KIT;
     default:
-      const urlParams = new URLSearchParams(window.location.search)
+      const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("useAccountKit")) {
-        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT;
       } else {
-        return ENVIRONMENT.DEVELOPMENT
+        return ENVIRONMENT.DEVELOPMENT;
       }
   }
-}
+};
 
-const environment = getEnvironment()
+const environment = getEnvironment();
 
-const networkConfig = getNetworkConfig(environment)
+const networkConfig = getNetworkConfig(environment);
 
 const wagmiConfig = createConfig({
   // chains: [networkConfig.chain as Chain],
-  chains: [...supportedChains, mainnet, holesky] as MUDChain[],
+  chains: supportedChains,
   pollingInterval: 1_000,
   // TODO: how to properly set up a transport config for all chains supported as bridge sources?
   transports: Object.fromEntries(
-    supportedChains.map(chain => {
+    supportedChains.map((chain) => {
       if (chain.rpcUrls.default.webSocket)
-        return [chain.id, transportObserver(fallback([webSocket(), http()]))]
-      return [chain.id, transportObserver(fallback([http()]))]
+        return [chain.id, transportObserver(fallback([webSocket(), http()]))];
+      return [chain.id, transportObserver(http())];
     })
   ),
-})
+});
 
-console.log("networkConfig", networkConfig)
-
-console.log(
-  "networkConfig.chain.contracts?.gasTank?.address",
-  networkConfig.chain.contracts?.gasTank?.address
-)
+console.log("networkConfig", networkConfig);
 
 mountAccountKit({
   wagmiConfig,
@@ -66,9 +59,9 @@ mountAccountKit({
       name: "This Cursed Machine",
     },
   },
-})
+});
 
-console.log(networkConfig.chainId)
+console.log(networkConfig.chainId);
 
 // import * as Sentry from "@sentry/svelte";
 
@@ -94,6 +87,6 @@ const app = new App({
   props: {
     environment,
   },
-})
+});
 
-export default app
+export default app;
