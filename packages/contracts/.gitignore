@@ -10,7 +10,7 @@ abi/
 types/
 broadcast/
 .DS_Store
-script/progression
+script/private
 docs/
 
 # Ignore all deploy artifacts
