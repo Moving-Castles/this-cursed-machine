@@ -22,7 +22,7 @@ contract DevSystem is System {
     CurrentOrder.set(playerEntity, bytes32(0));
 
     // Some tests depend on the player being given bugs here
-    PublicMaterials.BUGS.mint(_msgSender(), 10000 * ONE_UNIT);
+    PublicMaterials.BUGS.mint(_address, 10000 * ONE_UNIT);
   }
 
   /**
