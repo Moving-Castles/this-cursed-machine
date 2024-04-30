@@ -57,9 +57,7 @@ contract OrderSystem is System {
   function cancelOrder(bytes32 _orderEntity) public {
     //  Restrict to admin
     require(_msgSender() == GameConfig.getAdminAddress(), "not allowed");
-
-    Order.deleteRecord(_orderEntity);
-    CompletedPlayers.deleteRecord(_orderEntity);
+    LibOrder.cancel(_orderEntity);
   }
 
   /**
