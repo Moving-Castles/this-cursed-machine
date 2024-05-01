@@ -576,4 +576,38 @@ contract ResolveSystemTest is BaseTest {
     assertEq(ContainedMaterial.get(tanksInPod[1]).unwrap(), PublicMaterials.PISS.unwrap());
     assertEq(Amount.get(tanksInPod[1]), 100 * ONE_UNIT);
   }
+
+  function testCentrifugeIssue() public {
+    setUp();
+
+    prankAdmin();
+    // Fill tank 0 with 500 PublicMaterials.BUGS
+    world.devFillTank(tanksInPod[0], 500, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    // Plug tank 0 to inlet 0
+    world.plugTank(tanksInPod[0], inletEntities[0]);
+
+    // Build centrifuge
+    bytes32 centrifugeEntity = world.buildMachine(MACHINE_TYPE.CENTRIFUGE);
+
+    // Connect inlet 0 (bugs) to player
+    world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
+
+    // Connect player (piss) to mixer
+    world.connect(playerEntity, centrifugeEntity, PORT_INDEX.FIRST);
+
+    // Connect centrifuge (yeast) to outlet
+    world.connect(centrifugeEntity, outletEntity, PORT_INDEX.FIRST);
+
+    // Connect tank 2 to outlet
+    world.plugTank(tanksInPod[2], outletEntity);
+
+    // Resolve
+    world.resolve();
+
+    vm.stopPrank();
+  }
 }
