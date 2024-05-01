@@ -1,3 +1,4 @@
+import type { StaticContent } from "@modules/content"
 import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
 import { Entity } from "@latticexyz/recs"
 import { decodeEntity } from "@latticexyz/store-sync/recs"
@@ -57,30 +58,37 @@ export function getAvailableOrders(
   playerInTutorial: boolean,
   tutorialLevel: number
 ): Orders {
-  let filteredOrders: [string, Order][];
+  let filteredOrders: [string, Order][]
 
   // Filter orders based on tutorial status and expiration
   if (!playerInTutorial) {
     filteredOrders = Object.entries(orders).filter(([, order]) =>
-      order.order ? (!order.tutorial && (order.order.expirationBlock === 0n || order.order.expirationBlock > blockNumber)) : false
-    );
+      order.order
+        ? !order.tutorial &&
+          (order.order.expirationBlock === 0n ||
+            order.order.expirationBlock > blockNumber)
+        : false
+    )
   } else {
     filteredOrders = Object.entries(orders).filter(([, order]) =>
       order.order ? order.tutorialLevel === tutorialLevel : false
-    );
+    )
   }
 
   // Sort the filtered orders by creationBlock in descending order using a bigint-safe comparator
   const sortedOrders = filteredOrders.sort((a, b) => {
     if (b[1].order && a[1].order) {
-      return (b[1].order.creationBlock > a[1].order.creationBlock) ? 1 :
-        (b[1].order.creationBlock < a[1].order.creationBlock) ? -1 : 0;
+      return b[1].order.creationBlock > a[1].order.creationBlock
+        ? 1
+        : b[1].order.creationBlock < a[1].order.creationBlock
+          ? -1
+          : 0
     }
-    return 0;
-  });
+    return 0
+  })
 
   // Convert array back to object and return
-  return Object.fromEntries(sortedOrders);
+  return Object.fromEntries(sortedOrders)
 }
 
 export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
@@ -91,7 +99,10 @@ export function getExpiredOrders(orders: Orders, blockNumber: number): Orders {
   )
 }
 
-export function getMaterialMetadata(entities: Entities): Record<MaterialId, MaterialMetadata> {
+export function getMaterialMetadata(
+  entities: Entities,
+  staticContent: StaticContent | undefined
+): Record<MaterialId, MaterialMetadata> {
   const materialMetadata: Record<MaterialId, MaterialMetadata> = {}
   Object.entries(entities)
     .filter(([_, entity]) => entity.hasOwnProperty("materialMetadata"))
@@ -100,9 +111,20 @@ export function getMaterialMetadata(entities: Entities): Record<MaterialId, Mate
         { materialId: "bytes14" },
         value[0] as Entity
       )
+
+      let staticMaterial = {}
+
+      if (staticContent && staticContent?.materials) {
+        staticMaterial =
+          staticContent?.materials.find(
+            material => material.materialType === value[1].materialMetadata.name
+          ) ?? {}
+      }
+
       materialMetadata[materialId] = {
         materialId,
-        ...value[1].materialMetadata
+        ...value[1].materialMetadata,
+        ...staticMaterial,
       } as MaterialMetadata
     })
 

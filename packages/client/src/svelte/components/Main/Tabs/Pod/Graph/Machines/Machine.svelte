@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { GraphMachine } from "../types"
   import { fade } from "svelte/transition"
+  import { materialMetadata } from "@modules/state/base/stores"
   import { MACHINE_TYPE } from "@modules/state/base/enums"
   import { machineTypeToActionVerbs } from "@modules/state/simulated"
   import { CELL, MACHINE } from "../constants"
@@ -43,12 +44,34 @@
       }
     }
   }
+  $: verticalLabel1 =
+    machine.placementGroup === PLACEMENT_GROUP.TOP
+      ? `transform: translate(-50%, -100%) translateY(-4px)`
+      : `transform: translate(-50%, 100%) translateY(0px)`
+  $: verticalLabel2 =
+    machine.placementGroup === PLACEMENT_GROUP.TOP
+      ? `transform: translate(-50%, -200%) translateY(-8px)`
+      : `transform: translate(-50%, 200%) translateY(4px)`
 
   function makePorts(machine: GraphMachine) {
     const verticalPosition =
       machine.placementGroup === PLACEMENT_GROUP.TOP
         ? (MACHINE.HEIGHT - 1) * CELL.HEIGHT
         : 0
+
+    // Helper to fetch the correct material data
+    const getPortMaterial = (index: 0 | 1) => {
+      if (machine?.products && machine?.products.length > 0) {
+        const id = machine.products[index].materialId
+
+        return $materialMetadata[id]
+      }
+
+      return undefined
+    }
+
+    const mat0 = getPortMaterial(0) || undefined
+    const mat1 = getPortMaterial(1) || undefined
 
     if (
       machine.machineType === MACHINE_TYPE.SPLITTER ||
@@ -61,10 +84,14 @@
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 4}px;`,
+          label: mat0?.title || "",
+          labelStyle: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 4}px; ${verticalLabel1}; width: ${Math.min(mat0?.title?.length, 12)};`,
         },
         {
           direction: DIRECTION.OUTGOING,
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 6}px;`,
+          label: mat1?.title || "",
+          labelStyle: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 6}px; ${mat0 ? verticalLabel2 : verticalLabel1}; width: ${Math.min(mat1?.title?.length, 12)};`,
         },
         {
           direction: DIRECTION.INCOMING,
@@ -83,7 +110,9 @@
         },
         {
           direction: DIRECTION.OUTGOING,
+          label: mat0?.title || "",
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 5}px;`,
+          labelStyle: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 5}px; ${verticalLabel1}; width: ${Math.min(mat0?.title?.length, 12)};`,
         },
       ]
     } else {
@@ -94,13 +123,15 @@
         },
         {
           direction: DIRECTION.OUTGOING,
+          label: mat0?.title || "",
           style: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 5}px;`,
+          labelStyle: `top: ${verticalPosition}px; left: ${CELL.WIDTH * 5}px; ${verticalLabel1}; width: ${Math.min(mat0?.title?.length, 12)};`,
         },
       ]
     }
   }
 
-  const ports = makePorts(machine)
+  $: ports = makePorts(machine)
 </script>
 
 <!-- svelte-ignore a11y-interactive-supports-focus -->
@@ -135,6 +166,11 @@
       />
     </div>
     {#each ports as port, i}
+      {#if port.direction === DIRECTION.OUTGOING && port.label !== ""}
+        <div class="port-label" style={port.labelStyle}>
+          {port.label}
+        </div>
+      {/if}
       <div
         class:highlight={selectedPortIndex === i}
         class:disabled-highlight={selectedPortIndex === i &&
@@ -152,7 +188,7 @@
     --machineHeight: 8;
     width: calc(var(--cellWidth) * 8);
     height: calc(var(--cellWidth) * 8);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-label);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -192,12 +228,21 @@
         }
       }
 
+      .port-label {
+        position: absolute;
+        background: var(--color-grey-light);
+        color: var(--color-grey-dark);
+        opacity: 1;
+        display: block;
+        padding: 3px;
+        text-align: center;
+      }
       .port {
         position: absolute;
         width: var(--cellWidth);
         height: var(--cellHeight);
         background: var(--color-grey-dark);
-        opacity: 0.7;
+        opacity: 1;
       }
     }
   }

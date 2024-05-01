@@ -12,6 +12,7 @@ import {
   getExpiredOrders,
   getMaterialMetadata,
 } from "./utils"
+import { staticContent } from "@modules/content"
 import { writable, derived } from "svelte/store"
 import { blockNumber } from "@modules/network"
 import { GAME_CONFIG_ID } from "@modules/state/base/constants"
@@ -38,7 +39,11 @@ export const gameConfig = derived(
 
 export const recipes = derived(entities, $entities => getRecipes($entities))
 
-export const materialMetadata = derived(entities, $entities => getMaterialMetadata($entities))
+export const materialMetadata = derived(
+  [entities, staticContent],
+  ([$entities, $staticContent]) =>
+    getMaterialMetadata($entities, $staticContent)
+)
 
 // * * * * * * * * * * * * * * * * *
 // PLAYER STORES
@@ -47,9 +52,8 @@ export const materialMetadata = derived(entities, $entities => getMaterialMetada
 export const playerAddress = writable("0x0" as string)
 
 // Address in padded format
-export const playerId = derived(
-  playerAddress,
-  $playerAddress => addressToId($playerAddress)
+export const playerId = derived(playerAddress, $playerAddress =>
+  addressToId($playerAddress)
 )
 
 export const player = derived(
@@ -65,10 +69,10 @@ export const playerPod = derived([entities, player], ([$entities, $player]) =>
 export const playerTokenBalance = derived([player], ([$player]) => {
   if ($player.tutorial) {
     // Make sure nonTransferableBalance is treated as BigInt
-    return displayAmount($player.nonTransferableBalance);
+    return displayAmount($player.nonTransferableBalance)
   } else {
     // Ensure tokenBalances is multiplied correctly with ONE_UNIT
-    return displayAmount($player.tokenBalances);
+    return displayAmount($player.tokenBalances)
   }
 })
 // * * * * * * * * * * * * * * * * *

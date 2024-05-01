@@ -102,7 +102,7 @@
         white-space: nowrap;
         letter-spacing: -1px;
         padding: 2px;
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-label);
         top: 0;
         transform: translateX(-20px) translateY(-5px);
       }
