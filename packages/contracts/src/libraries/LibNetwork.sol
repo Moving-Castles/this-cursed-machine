@@ -143,6 +143,10 @@ library LibNetwork {
 
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {
+          if (k >= currentOutputs.length) {
+            // Stop if outputs for the remaining outgoing connections are absent
+            break;
+          }
           if (currentOutputs[k].materialId.isRegistered()) {
             Product memory newProduct = Product({
               machineId: outgoingConnectTargets[k],
