@@ -1,11 +1,11 @@
 import { get } from "svelte/store"
 import { entities } from "../state/base/stores"
-import { network } from "../network"
+import { publicNetwork } from "../network"
 import { toCamelCase } from "../utils"
 import { ComponentUpdate } from "@latticexyz/recs"
 
 export function createComponentSystem(componentKey: string) {
-  (get(network).components as any)[componentKey].update$.subscribe((update: ComponentUpdate) => {
+  (get(publicNetwork).components as any)[componentKey].update$.subscribe((update: ComponentUpdate) => {
     const [nextValue] = update.value
 
     // Single-value components have a "value" property, structs do not

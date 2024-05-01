@@ -38,7 +38,7 @@ contract TokenTankSystem is System {
     ContainedMaterial.set(_tankEntity, _materialId);
     Amount.set(_tankEntity, newValue);
 
-    // Send tokens to world
-    _materialId.transferToken(_world(), _amount * ONE_UNIT);
+    // Burn tokens
+    _materialId.burn(_msgSender(), _amount * ONE_UNIT);
   }
 }

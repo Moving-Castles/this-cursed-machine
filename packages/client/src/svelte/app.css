@@ -60,6 +60,9 @@
   /* font-variation-settings:
     "BLED" 0,
     "SCAN" 0; */
+}
+
+body {
   text-transform: uppercase;
   letter-spacing: 0px;
 }
@@ -102,12 +105,9 @@ pre {
   animation: run 0.1s ease infinite alternate;
 }
 
+.running-3,
 .running-2 {
   animation: run 0.3s ease infinite alternate;
-}
-
-.running-3 {
-  animation: run 0.5 ease infinite alternate;
 }
 
 @keyframes run {

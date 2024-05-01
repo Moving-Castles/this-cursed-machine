@@ -1,12 +1,12 @@
-import { Hex } from "viem";
-import { ENTITY_TYPE, MACHINE_TYPE } from "./enums"
+import { Hex } from "viem"
+import { ENTITY_TYPE, MACHINE_TYPE, MATERIAL_DIFFICULTY } from "./enums"
 
 declare global {
   // * * * * * * * * * * * * * * * * *
   // MATERIAL ID
   // * * * * * * * * * * * * * * * * *
 
-  type MaterialId = Hex;
+  type MaterialId = Hex
 
   // * * * * * * * * * * * * * * * * *
   // DEFAULT ENTITY TYPE
@@ -74,8 +74,8 @@ declare global {
   }
 
   type GameConfig = {
-    adminAddress: string,
-    globalSpawnIndex: number,
+    adminAddress: string
+    globalSpawnIndex: number
     flowRate: bigint
     tankCapacity: bigint
   }
@@ -106,7 +106,7 @@ declare global {
     tutorialLevel?: number
     nonTransferableBalance?: bigint // During tutorial we give players a non-transferable token substitute
     tokenBalances?: bigint
-    tutorial: boolean,
+    tutorial: boolean
     completedOrders: string[] // Orders completed by player
     producedMaterials?: MaterialId[]
   }
@@ -122,7 +122,7 @@ declare global {
   }
 
   type Tank = {
-    entityType: ENTITY_TYPE.TANK,
+    entityType: ENTITY_TYPE.TANK
     carriedBy: string
     amount: bigint
     materialId: MaterialId
@@ -153,6 +153,7 @@ declare global {
     materialId: MaterialId
     tokenAddress: string
     name: string
+    difficulty: MATERIAL_DIFFICULTY
   }
 
   // * * * * * * * * * * * * * * * * *

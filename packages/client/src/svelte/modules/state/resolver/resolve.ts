@@ -1,7 +1,8 @@
-import { MACHINE_TYPE } from "../base/enums"
-import { MaterialIdNone } from "../base/constants"
 import type { Product } from "./patches/types"
 import type { SimulatedEntities } from "../simulated/types"
+import { get } from "svelte/store"
+import { MACHINE_TYPE } from "../base/enums"
+import { MaterialIdNone } from "../base/constants"
 import { process } from "./machines"
 import { deepClone } from "@modules/utils"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
@@ -117,9 +118,7 @@ export function resolve(
         recipes
       )
 
-      // console.log('currentOutputs', currentOutputs)
-
-      // Save to patchOutputs
+      // Save to patchOutputs and check if we know this material
       for (let k = 0; k < currentOutputs.length; k++) {
         patchOutputs.push(deepClone(currentOutputs[k]))
       }

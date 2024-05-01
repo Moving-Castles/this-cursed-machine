@@ -1,5 +1,6 @@
 import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
+import { storableArray } from "@modules/utils/storable"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
 import { MaterialIdNone } from "@modules/state/base/constants"
 import { blockNumber } from "@modules/network"
@@ -19,6 +20,7 @@ import {
   player,
   orders,
   availableOrders,
+  materialMetadata,
 } from "@modules/state/base/stores"
 import { patches } from "@modules/state/resolver/patches/stores"
 import { blocksSinceLastResolution } from "@modules/state/resolver/stores"
@@ -135,7 +137,7 @@ export function calculateSimulatedTanks(
   // Create deep copy to avoid accidentally mutating the original object.
   const initialTanksCopy = deepClone(tanks)
 
-  let simulatedTanks: SimulatedTanks = Object.fromEntries([
+  const simulatedTanks: SimulatedTanks = Object.fromEntries([
     ...Object.entries(initialTanksCopy),
   ])
 
@@ -510,4 +512,32 @@ export const tankAttachments = derived(
         .filter(([_, value]) => !!value)
     )
   }
+)
+
+/** Return the currently flowing outputs */
+export const podOutputs = derived(
+  [simulatedMachines, playerPod, materialMetadata],
+  ([$simulatedMachines, $playerPod, $materialMetadata]) => {
+    const flowingMaterials: MaterialMetadata[] = []
+
+    const m: [string, SimulatedMachine][] = Object.entries($simulatedMachines)
+
+    m.forEach(([_, machine]) => {
+      machine?.products?.forEach(product => {
+        flowingMaterials.push($materialMetadata[product.materialId])
+      })
+    })
+
+    return [...new Set(flowingMaterials)]
+  }
+)
+
+export const discoveredMaterials = storableArray(
+  ["0x745f425547530000000000000000"], // Bugs are not new to us
+  "tcm_discoveredMaterials"
+)
+
+export const discoveredMessages = storableArray(
+  [], // Bugs are not new to us
+  "tcm_discoveredMessages"
 )

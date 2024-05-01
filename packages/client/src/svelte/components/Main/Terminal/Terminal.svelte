@@ -52,6 +52,7 @@
   export let disabled = false
   export let setBlink = false
   export let noOutput = false
+  export let skipBootMessage = false
 
   let inputElement: HTMLInputElement
   let value = ""
@@ -64,7 +65,6 @@
 
   const focusInput = async (e?: any) => {
     if (disabled) return
-    // inputActive = true
     await tick() // wait for input element if not there.
     if (inputElement) {
       inputElement?.focus()
@@ -233,14 +233,11 @@
     // Default, for all machines that only have one port
     let portIndex = PORT_INDEX.FIRST
 
-    // Handle splitter port selection
-    if (sourceMachineEntity.machineType === MACHINE_TYPE.SPLITTER) {
-      const ports = availablePorts(sourceMachineEntity, DIRECTION.OUTGOING)
-      // Use the first available
-      portIndex = ports[0].portIndex
-    } else if (
+    // Double output machines
+    if (
       [
         MACHINE_TYPE.PLAYER,
+        MACHINE_TYPE.SPLITTER,
         MACHINE_TYPE.CENTRIFUGE,
         MACHINE_TYPE.GRINDER,
         MACHINE_TYPE.RAT_CAGE,
@@ -377,10 +374,12 @@
 
     // Add unattached inlets to the options
     for (const inletEntity of inlets) {
+      const ent = machines?.[inletEntity]
+
       targetSelectOptions.push({
-        label: `Inlet #${machines[inletEntity].buildIndex}`,
+        label: `Inlet #${ent?.buildIndex}`,
         value: inletEntity,
-        available: machines[inletEntity].tankConnection === EMPTY_CONNECTION,
+        available: ent?.tankConnection === EMPTY_CONNECTION,
       })
     }
 
@@ -489,7 +488,9 @@
   onMount(async () => {
     if (terminalType === TERMINAL_TYPE.FULL) {
       if (!$terminalBooted) {
-        await terminalMessages.startUp()
+        if (!skipBootMessage) {
+          await terminalMessages.startUp()
+        }
         $terminalBooted = true
       }
       inputActive = true

@@ -2,12 +2,11 @@
   import { simulatedTanks } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import Tank from "./Tank.svelte"
+
+  console.log($simulatedTanks)
 </script>
 
-<div
-  class="tanks-box"
-  class:hidden={$tutorialProgress < 1}
->
+<div class="tanks-box" class:hidden={$tutorialProgress < 1}>
   <!-- <div class="">shipping</div> -->
   {#if $simulatedTanks}
     {#each Object.entries($simulatedTanks) as [address, tank], index}

@@ -16,8 +16,8 @@ library PublicMaterials {
   MaterialId constant BLOOD_MEAL = MaterialId.wrap("t_BML");
   MaterialId constant ORGANIC_WASTE = MaterialId.wrap("t_ORW");
   MaterialId constant FAT = MaterialId.wrap("t_FAT");
-  MaterialId constant EVIAN = MaterialId.wrap("t_EVIAN");
   MaterialId constant LUBRICANT = MaterialId.wrap("t_LUBE");
+  MaterialId constant WATER = MaterialId.wrap("t_H20");
 
   // prettier-ignore
   function init() internal {
@@ -33,7 +33,7 @@ library PublicMaterials {
     LibMaterial.registerMaterial(BLOOD_MEAL, "BLOOD_MEAL", "BML", MATERIAL_DIFFICULTY.NOVICE);
     LibMaterial.registerMaterial(ORGANIC_WASTE, "ORGANIC_WASTE", "ORW", MATERIAL_DIFFICULTY.NOVICE);
     LibMaterial.registerMaterial(FAT, "FAT", "FAT", MATERIAL_DIFFICULTY.NOVICE);
-    LibMaterial.registerMaterial(EVIAN, "EVIAN", "EVIAN", MATERIAL_DIFFICULTY.NOVICE);
+    LibMaterial.registerMaterial(WATER, "WATER", "H20", MATERIAL_DIFFICULTY.NOVICE);
     LibMaterial.registerMaterial(LUBRICANT, "LUBRICANT", "LUBE", MATERIAL_DIFFICULTY.NOVICE);
   }
 }

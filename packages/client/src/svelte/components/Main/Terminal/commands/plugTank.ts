@@ -22,7 +22,6 @@ async function execute(tankEntity: string, targetEntity: string) {
     // ...
     writeToTerminal(TERMINAL_OUTPUT_TYPE.NORMAL, "Plugging in...")
     await waitForCompletion(action, loadingLine)
-    playSound("tcm", "plugTank")
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Done")
     // ...
     return

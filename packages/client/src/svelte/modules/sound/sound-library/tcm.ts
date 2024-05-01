@@ -110,6 +110,10 @@ export const tcm: SoundAssets = {
     volume: 0.8,
   },
   playerLvlend: {
+    src: "./sounds/tcm/order_fulfilled-sfx_02.mp3",
+    volume: 1,
+  },
+  playerLvlendOld: {
     src: "./sounds/tcm/player_lvlend-sfx_02.mp3",
     volume: 1,
   },
@@ -121,26 +125,22 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/bugs.mp3",
     volume: 0.6,
   },
-  //
   asisstantHit: {
     src: "./sounds/tcm/assistant-hit_01.mp3",
     volume: 1,
   },
-  //
   bugsUp: {
     src: "./sounds/tcm/bugs_up-hit_01.mp3",
     volume: 0.6,
   },
-  //
   textLineHit: {
     src: "./sounds/tcm/new_text_line-hit_01.mp3",
-    volume: 1,
+    volume: 5,
   },
   loadingVariation: {
     src: "./sounds/tcm/loading_variation-sfx_01.mp3",
     volume: 1,
   },
-  // Connections
   pipeConnect: {
     src: "./sounds/tcm/pipe_connect-hit_01.mp3",
     volume: 1,
@@ -153,26 +153,32 @@ export const tcm: SoundAssets = {
     src: "./sounds/tcm/tank_cable_attach-sfx_01.mp3",
     volume: 1,
   },
-  //
   acceptOrderLoading: {
     src: "./sounds/tcm/accept_order_loading-loop_01.mp3",
     volume: 1,
   },
   acceptOrderFail: {
+    src: "./sounds/tcm/order_cancel-hit_01.mp3",
+    volume: 1,
+  },
+  acceptOrderFailOld: {
     src: "./sounds/tcm/accept_order_fail-hit_01.mp3",
     volume: 1,
   },
   acceptOrderSuccess: {
-    src: "./sounds/tcm/accept_order_success-hit_01.mp3",
+    src: "./sounds/tcm/accept_order-hit_01.mp3",
     volume: 1,
   },
-  //
   inputBugs: {
     src: "./sounds/tcm/input_bugs-loop_01.mp3",
     volume: 1,
   },
   pumpOut: {
     src: "./sounds/tcm/pump_out-loop_01.mp3",
+    volume: 1,
+  },
+  orderSelect: {
+    src: "./sounds/tcm/select-hit_01.mp3",
     volume: 1,
   },
 }

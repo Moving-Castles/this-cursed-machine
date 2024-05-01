@@ -81,13 +81,11 @@ contract OfferSystemTest is BaseTest {
 
     prankAdmin();
     bytes32 offerEntity = world.createOffer(PublicMaterials.BLOOD, 100, 100);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
     vm.stopPrank();
 
     vm.startPrank(alice);
-
-    world.graduate();
-
-    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
 
     world.buyOffer(offerEntity);
 

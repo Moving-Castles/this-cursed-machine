@@ -4,6 +4,10 @@
   import { onMount } from "svelte"
   import { player } from "@modules/state/base/stores"
   import {
+    discoveredMaterials,
+    discoveredMessages,
+  } from "@modules/state/simulated/stores"
+  import {
     sendMessage,
     clearMessage,
     tutorialProgress,
@@ -59,6 +63,14 @@
       }}
     >
       Reset
+    </button>
+    <button
+      on:click={() => {
+        discoveredMaterials.set(["0x745f425547530000000000000000"])
+        discoveredMessages.set([])
+      }}
+    >
+      Reset discoveries ({$discoveredMaterials.length})
     </button>
 
     {$player.tutorialLevel}

@@ -4,6 +4,8 @@
   import { scrollToEnd } from "@components/Main/Terminal/functions/helpers"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { playInputSound } from "@components/Main/Terminal/functions/sound"
+  import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+  import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
 
   type ReturnFunction = (value: string | null) => void
 
@@ -36,10 +38,22 @@
     playInputSound(e)
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // Validate name here
-    playSound("tcm", "selectionEnter")
-    returnValue(userInput)
+    if (isValidName(userInput)) {
+      playSound("tcm", "selectionEnter")
+      returnValue(userInput)
+    } else {
+      playSound("tcm", "TRX_no")
+      await writeToTerminal(
+        TERMINAL_OUTPUT_TYPE.ERROR,
+        "You are completely free to use any identifier "
+      )
+      await writeToTerminal(
+        TERMINAL_OUTPUT_TYPE.ERROR,
+        "of between 4 and 24 characters"
+      )
+    }
   }
 
   onMount(async () => {
@@ -101,6 +115,7 @@
       border: none;
       padding: 0;
       position: relative; /* To position the pseudo-element */
+      text-transform: uppercase;
 
       &::placeholder {
         opacity: 1;

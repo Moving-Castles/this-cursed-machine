@@ -27,7 +27,7 @@ library LibInitRecipes {
     a.dryer(m.BUGS, m.DUST);
     a.dryer(m.PISS, m.UREA);
     a.dryer(m.UREA, m.FERTILIZER);
-    a.dryer(m.EVIAN, m.AMPHETAMINE);
+    a.dryer(m.WATER, m.AMPHETAMINE);
     a.dryer(m.BLOOD, m.BLOOD_CLOTS);
     a.dryer(m.BLOOD_CLOTS, m.BLOOD_MEAL);
     a.dryer(m.DUST, m.ORGANIC_WASTE);

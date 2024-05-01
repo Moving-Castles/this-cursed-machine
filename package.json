@@ -8,7 +8,7 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
+    "dev": "mprocs",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' run dev",
@@ -16,7 +16,10 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.8",
+    "@latticexyz/account-kit": "2.0.9-account-kit-65df37f8",
+    "@latticexyz/cli": "2.0.9-account-kit-65df37f8",
+    "@latticexyz/gas-tank": "2.0.9-account-kit-65df37f8",
+    "@pimlicolabs/alto": "github:latticexyz/alto#3192a9a",
     "@typescript-eslint/eslint-plugin": "7.7.1",
     "@typescript-eslint/parser": "7.7.1",
     "eslint": "8.56.0",

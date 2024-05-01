@@ -1,0 +1,10 @@
+procs:
+  client:
+    cwd: packages/client
+    shell: pnpm run dev
+  contracts:
+    cwd: packages/contracts
+    shell: pnpm run dev
+  anvil:
+    cwd: packages/contracts
+    shell: anvil --block-time 2 --base-fee 0

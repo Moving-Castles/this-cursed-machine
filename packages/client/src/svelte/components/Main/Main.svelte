@@ -58,6 +58,10 @@
   $: {
     currentTabComponent = tabList[$activeTab]?.component || null
   }
+  $: {
+    if ($tutorialProgress === 1 || $tutorialProgress === 2)
+      playSound("tcm", "mapPop")
+  }
 
   let terminalComponent: any
 
@@ -67,21 +71,20 @@
     }
   }
 
-  $: {
-    if ($tutorialProgress === 1) playSound("tcm", "mapPop")
-  }
-
   onMount(() => {
     playSound("tcm", "podBg", true, false)
+    if ($player.tutorial === false) {
+      tutorialProgress.set(666)
+    }
   })
 </script>
 
-{#if $player?.carriedBy}
+{#if $player?.carriedBy && $tutorialProgress > 0}
   <div class="dust" />
 
   <!-- <Debug/> -->
 
-  <div class="split-screen">
+  <div in:flicker class="split-screen">
     <div class="left-col">
       <div class="info-bar">
         {#if $tutorialProgress > 5}

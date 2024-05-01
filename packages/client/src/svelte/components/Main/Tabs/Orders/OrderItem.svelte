@@ -5,7 +5,13 @@
     materialMetadata,
     player,
     gameConfig,
+    players,
   } from "@modules/state/base/stores"
+  import { MATERIAL_DIFFICULTY } from "contracts/enums"
+  import {
+    playerOrder,
+    discoveredMessages,
+  } from "@modules/state/simulated/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import {
@@ -19,7 +25,6 @@
   import { playSound } from "@modules/sound"
   import { staticContent } from "@modules/content"
   import { urlFor } from "@modules/content/sanity"
-  import { players } from "@modules/state/base/stores"
   import { displayAmount } from "@modules/utils"
 
   import Spinner from "@components/Main/Atoms/Spinner.svelte"
@@ -38,6 +43,8 @@
   const dispatch = createEventDispatcher()
 
   const name = $materialMetadata[order.order.materialId]?.name
+  const difficulty =
+    MATERIAL_DIFFICULTY[$materialMetadata[order.order.materialId]?.difficulty]
   const spacedName = name?.replaceAll("_", " ")
 
   const getCreator = (order: Order) => {
@@ -77,6 +84,16 @@
       await waitForCompletion(action)
       s?.stop()
       playSound("tcm", "acceptOrderSuccess")
+
+      // Now check the material of the order and
+      // if the material has static content
+      // Unlock the message
+      if (staticMaterial?.hint) {
+        discoveredMessages.set([
+          ...$discoveredMessages,
+          staticMaterial.hint._id,
+        ])
+      }
     } catch (error) {
       s?.stop()
       playSound("tcm", "acceptOrderFail")
@@ -124,6 +141,7 @@
 <svelte:window on:keypress={onKeyPress} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   on:mouseenter
   class="order-item"
@@ -132,6 +150,11 @@
   class:active
   class:completed
   class:selected
+  on:click={() => {
+    if (!completed && !unavailable && !working && !active) {
+      sendAccept()
+    }
+  }}
   transition:fade
 >
   {#if order?.order}
@@ -161,7 +184,6 @@
         />
         <img
           class="material-image"
-          crossorigin="anonymous"
           src={imageURL}
           alt="{spacedName} SPECIMEN"
         />
@@ -173,7 +195,7 @@
         />
         <span class="specimen">
           MISSING<br />
-          {spacedName}<br />
+          {staticMaterial?.title || spacedName}<br />
           SPECIMEN
         </span>
       {/if}
@@ -205,7 +227,7 @@
             <!-- * * * * * * * * * * * * * * * * -->
             <div class="center">
               {displayAmount(order.order.amount)}
-              {spacedName}
+              {staticMaterial?.title || spacedName}
               <div class="subtitle">
                 {#if staticMaterial.category}
                   {#each staticMaterial.category as category, i}
@@ -225,7 +247,11 @@
           <!-- * * * * * * * * * * -->
           <!-- REWARD -->
           <!-- * * * * * * * * * * -->
-          <p class="header">Reward</p>
+          <p class="header">
+            <span class="padded inverted {difficulty}">
+              DIFFICULTY: {difficulty}
+            </span>
+          </p>
           <div class="content">
             <div class="center">
               {displayAmount(order.order.reward)}<br />
@@ -242,13 +268,13 @@
           <!-- REMAINING TIME -->
           <!-- * * * * * * * * * * -->
           <p class="header">
-            <span class="padded inverted">
-              {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
+            {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
+              <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
-              {/if}
-            </span>
+              </span>
+            {/if}
           </p>
           <!-- * * * * * * * * * * -->
           <!-- BUTTONS -->
@@ -257,7 +283,7 @@
             <div class="center">
               {#if active}
                 <button class="cancel" on:click={() => sendUnaccept()}
-                  >Cancel</button
+                  >CANCEL</button
                 >
               {:else}
                 <button
@@ -265,7 +291,7 @@
                   class="accept"
                   on:click={() => sendAccept()}
                 >
-                  Accept
+                  ACCEPT
                 </button>
               {/if}
             </div>
@@ -329,6 +355,7 @@
       inset: 0;
       z-index: 1;
       animation: 5s active ease infinite;
+      pointer-events: none;
     }
 
     &.selected {
@@ -540,6 +567,26 @@
   .inverted {
     background: var(--foreground);
     color: var(--background);
+
+    &.NOVICE {
+      background: var(--color-grey-mid);
+      color: var(--white);
+    }
+
+    &.INTERMEDIATE {
+      background: var(--color-success);
+      color: var(--color-grey-dark);
+    }
+
+    &.ADVANCED {
+      background: var(--color-tutorial);
+      color: var(--color-grey-dark);
+    }
+
+    &.NIGHTMARE {
+      background: var(--color-failure);
+      color: var(--color-grey-dark);
+    }
   }
 
   .inverted-low {

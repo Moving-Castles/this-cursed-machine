@@ -22,11 +22,7 @@ export default defineConfig({
     port: 5173,
     fs: {
       strict: false,
-    },
-    headers: {
-      "Cross-Origin-Embedder-Policy": "require-corp",
-      "Cross-Origin-Opener-Policy": "same-origin",
-    },
+    }
   },
   optimizeDeps: {
     esbuildOptions: {

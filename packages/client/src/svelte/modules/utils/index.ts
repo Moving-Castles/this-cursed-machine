@@ -1,4 +1,4 @@
-import { concat, encodePacked, getAddress, keccak256 } from "viem"
+import { concat, keccak256 } from "viem"
 import { BLOCKTIME } from "./constants"
 import { ONE_UNIT } from "../ui/constants"
 
@@ -53,8 +53,7 @@ export function filterObjectByKey(
 
 // Unpadded to padded
 export function addressToId(address: string): string {
-  // Make sure the address is valid
-  getAddress(address)
+  if (!address) return "0x0"
   // remove '0x' prefix, pad the address with leading zeros up to 64 characters, then add '0x' prefix back
   return "0x" + address.slice(2).padStart(64, "0").toLowerCase()
 }
@@ -156,9 +155,9 @@ export function capAtZero(num: number): number {
 export function getMaterialCombinationId(a: MaterialId, b: MaterialId): string {
   // Always sort the ids in ascending order to make the combination order-agnostic
   if (a > b) {
-    return keccak256(concat([a, b]))
-  } else {
     return keccak256(concat([b, a]))
+  } else {
+    return keccak256(concat([a, b]))
   }
 }
 

@@ -4,6 +4,7 @@ import { spawn, start } from "@modules/action";
 import { loadingLine, loadingSpinner, writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal";
 import { waitForCompletion, waitForTransaction } from "@modules/action/actionSequencer/utils"
 import { playSound } from "@modules/sound";
+import { initSignalNetwork } from "@modules/signal";
 
 async function execute() {
     try {
@@ -22,6 +23,9 @@ async function execute() {
         await waitForCompletion(startAction, loadingLine);
         playSound("tcm", "TRX_yes")
         writeToTerminal(TERMINAL_OUTPUT_TYPE.SUCCESS, "Transfer done")
+
+        // Websocket connection for off-chain messaging
+        initSignalNetwork()
 
         return;
     } catch (error) {

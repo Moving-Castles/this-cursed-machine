@@ -5,11 +5,23 @@
     TERMINAL_OUTPUT_TYPE,
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
+  import {
+    discoveredMaterials,
+    discoveredMessages,
+  } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
-  import { player } from "@modules/state/base/stores"
+  import { player, playerAddress } from "@modules/state/base/stores"
+  import { ENVIRONMENT } from "@mud/enums"
+  import { initSignalNetwork } from "@modules/signal"
+  import { walletNetwork, publicNetwork } from "@modules/network"
+  import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
+  import { setupWalletNetwork } from "@mud/setupWalletNetwork"
+  import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
+
+  export let environment: ENVIRONMENT
 
   const dispatch = createEventDispatcher()
 
@@ -27,7 +39,7 @@
       narrativeIndex++
       // Write the next part of the story to the terminal
       if (narrativeIndex < narrative.length) {
-        await narrative[narrativeIndex]()
+        await narrative[narrativeIndex](environment)
       }
       // End of narrative reached
       if (narrativeIndex === narrative.length - 1) {
@@ -41,8 +53,52 @@
   }
 
   onMount(async () => {
+    /*
+     * Check if the user is already connected
+     */
+    if ([ENVIRONMENT.DEVELOPMENT, ENVIRONMENT.GARNET].includes(environment)) {
+      /*
+       * Burner environments
+       * We set up the burner wallet already here
+       * Either using a cached private key or generating a new one
+       */
+      walletNetwork.set(setupBurnerWalletNetwork($publicNetwork))
+      playerAddress.set($walletNetwork.walletClient?.account.address)
+    } else {
+      /*
+       * Account Kit environments
+       * We get the account kit store state
+       * If appAccountClient and userAddress are set the user is connected
+       * We set up the wallet network using the appAccountClient
+       * and set playerAddress to the user address
+       */
+      const accountKitStoreState = accountKitStore.getState()
+      console.log("accountKitStoreState", accountKitStoreState)
+
+      if (
+        accountKitStoreState.appAccountClient &&
+        accountKitStoreState.userAddress
+      ) {
+        walletNetwork.set(
+          setupWalletNetwork(
+            $publicNetwork,
+            accountKitStoreState.appAccountClient
+          )
+        )
+        // Set player address to main wallet address
+        playerAddress.set(accountKitStoreState.userAddress)
+      }
+    }
+
+    /*
+     * If playerAddress was set above
+     * and a corresponing entity has the carriedBy component set
+     * the player is spawned in the world
+     */
     if ($player?.carriedBy) {
-      // Player is already spawned
+      // Websocket connection for off-chain messaging
+      initSignalNetwork()
+
       await typeWriteToTerminal(
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "Welcome back...",
@@ -52,12 +108,14 @@
       )
       dispatch("done")
     } else {
-      await narrative[0]()
+      await narrative[0](environment)
       if (terminalComponent) {
         terminalComponent.resetInput()
       }
       // Reset tutorial
       tutorialProgress.set(0)
+      discoveredMaterials.set(["0x745f425547530000000000000000"])
+      discoveredMessages.set([])
     }
   })
 </script>
