@@ -271,7 +271,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber)
+                  Number(order.order.expirationBlock) - Number($blockNumber),
                 )}
               </span>
             {/if}
@@ -349,6 +349,7 @@
     background: var(--color-grey-dark);
     padding: 1rem;
     gap: 1rem;
+    user-select: none;
 
     > .overlay {
       position: absolute;
@@ -460,11 +461,11 @@
           .header {
             font-size: var(--font-size-small);
             margin-top: 0.2rem;
-            height: 40%;
+            height: 30%;
           }
 
           .content {
-            height: 60%;
+            height: 70%;
             .center {
               font-size: var(--font-size-large);
               height: calc(var(--font-size-large) * 4);
