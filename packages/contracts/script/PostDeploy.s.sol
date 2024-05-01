@@ -16,8 +16,9 @@ import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
-import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials } from "../src/libraries/Libraries.sol";
+import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials, MaterialId, LibAddRecipe } from "../src/libraries/Libraries.sol";
 import { ONE_MINUTE, ONE_DAY, ONE_HOUR, ONE_UNIT } from "../src/constants.sol";
+import { MATERIAL_DIFFICULTY } from "../src/codegen/common.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -46,6 +47,13 @@ contract PostDeploy is Script {
 
     // Create offer
     LibOffer.create(PublicMaterials.BUGS, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
+
+    // YEAST : YEA : NOVICE
+    LibMaterial.registerMaterial(MaterialId.wrap("t_YEA"), "YEAST", "YEA", MATERIAL_DIFFICULTY.NOVICE);
+    // BACTERIA : BAC : NOVICE
+    LibMaterial.registerMaterial(MaterialId.wrap("t_BAC"), "BACTERIA", "BAC", MATERIAL_DIFFICULTY.NOVICE);
+    // PISS => YEAST, BACTERIA
+    LibAddRecipe.centrifuge(PublicMaterials.PISS, [MaterialId.wrap("t_YEA"), MaterialId.wrap("t_BAC")]);
 
     vm.stopBroadcast();
   }
