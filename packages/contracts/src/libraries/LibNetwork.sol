@@ -118,7 +118,8 @@ library LibNetwork {
         // Handle outlet
         if (node == fixedEntities.outlet) {
           // Continue if no output
-          if (!currentOutputs[0].materialId.isRegistered()) continue;
+          if (currentOutputs.length == 0 || !currentOutputs[0].materialId.isRegistered()) continue;
+
           // Write to tank
           LibTank.write(
             [connectedTanks[0], connectedTanks[1]],
@@ -143,15 +144,17 @@ library LibNetwork {
 
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {
-          if (currentOutputs[k].materialId.isRegistered()) {
+          if (k < currentOutputs.length && currentOutputs[k].materialId.isRegistered()) {
             Product memory newProduct = Product({
               machineId: outgoingConnectTargets[k],
               materialId: currentOutputs[k].materialId,
               amount: currentOutputs[k].amount,
               inletActive: currentOutputs[k].inletActive
             });
-            inputs[counter.inputs] = newProduct;
-            counter.inputs++;
+            if (counter.inputs < inputs.length) {
+              inputs[counter.inputs] = newProduct;
+              counter.inputs++;
+            }
           }
         }
       }
