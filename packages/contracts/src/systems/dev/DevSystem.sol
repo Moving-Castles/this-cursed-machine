@@ -7,7 +7,8 @@ import { ONE_UNIT, ONE_HOUR } from "../../constants.sol";
 
 contract DevSystem is System {
   /**
-   * @notice Fast forward out of tutorial
+   * @notice Fast forward player out of tutorial, minting tokens to the player
+   * @param _address Address of the player
    * @dev ONLY USED FOR TESTING.
    */
   function devGraduate(address _address) public {
@@ -39,7 +40,8 @@ contract DevSystem is System {
   }
 
   /**
-   * @notice Send 1000 BUG tokens from the world to the player.
+   * @notice Mint 1000 BUG tokens to the address
+   * @param _address Address to mint to
    * @dev ONLY USED FOR TESTING.
    */
   function devReward(address _address) public {
