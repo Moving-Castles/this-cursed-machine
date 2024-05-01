@@ -589,16 +589,16 @@ contract ResolveSystemTest is BaseTest {
     // Connect tank 0 to inlet
     world.plugTank(tanksInPod[0], fixedEntities.inlets[0]);
 
-    // Build mixer
+    // Build centrifuge
     bytes32 centrifugeEntity = world.buildMachine(MACHINE_TYPE.CENTRIFUGE);
 
     // Connect inlet 0 (bugs) to player
     world.connect(inletEntities[0], playerEntity, PORT_INDEX.FIRST);
 
-    // Connect player (piss) to mixer
+    // Connect player (piss) to centrifuge
     world.connect(playerEntity, centrifugeEntity, PORT_INDEX.FIRST);
 
-    // Connect mixer to outlet
+    // Connect centrifuge to outlet
     world.connect(centrifugeEntity, outletEntity, PORT_INDEX.FIRST);
 
     // Connect tank 2 to outlet
