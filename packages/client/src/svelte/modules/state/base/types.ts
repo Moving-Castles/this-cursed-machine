@@ -154,6 +154,13 @@ declare global {
     tokenAddress: string
     name: string
     difficulty: MATERIAL_DIFFICULTY
+    // Optionally extended by the schema from Sanity
+    title?: string
+    _updatedAt?: string
+    _type?: string
+    _createdAt?: string
+    _rev?: string
+    _id?: string
   }
 
   // * * * * * * * * * * * * * * * * *

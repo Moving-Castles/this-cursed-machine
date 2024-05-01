@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { hexToString } from "viem"
   import { materialMetadata } from "@svelte/modules/state/base/stores"
   import type { GraphConnection } from "../types"
   // import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
@@ -73,8 +72,7 @@
 
 <style lang="scss">
   .label {
-    font-size: var(--font-size-small);
-    font-size: 10px;
+    font-size: 7px;
     font-family: var(--font-family);
     transform-box: fill-box;
     transform-origin: center;
@@ -109,7 +107,7 @@
   }
 
   .label-below {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-label);
     font-family: var(--font-family);
     transform-box: fill-box;
     transform: translate(0, 100%);

@@ -91,7 +91,7 @@
     --playerHeight: 12;
     width: calc(var(--cellWidth) * var(--playerWidth));
     height: calc(var(--cellWidth) * var(--playerHeight));
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-label);
     display: flex;
     justify-content: center;
     align-items: center;

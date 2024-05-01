@@ -26,6 +26,7 @@
 
   /* Fonts */
   --font-family: "SixtyfourLocal", "SixtyFour", monospace;
+  --font-size-label: 8px;
   --font-size-small: 9px;
   --font-size-normal: 14px;
   --font-size-large: 18px;
