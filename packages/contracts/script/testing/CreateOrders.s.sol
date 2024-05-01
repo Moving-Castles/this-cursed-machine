@@ -25,8 +25,8 @@ contract CreateTestingOrders is Script {
     // 80 LUBRICANT => 160 points
     LibOrder.create(deployerAddress, PublicMaterials.LUBRICANT, 80 * ONE_UNIT, false, 0, 160 * ONE_UNIT, 0, 0);
 
-    // 130 EVIAN => 210 points
-    LibOrder.create(deployerAddress, PublicMaterials.EVIAN, 130 * ONE_UNIT, false, 0, 210 * ONE_UNIT, 0, 0);
+    // 130 WATER => 210 points
+    LibOrder.create(deployerAddress, PublicMaterials.WATER, 130 * ONE_UNIT, false, 0, 210 * ONE_UNIT, 0, 0);
 
     // 50 AMPHETAMINE => 500 points
     LibOrder.create(deployerAddress, PublicMaterials.AMPHETAMINE, 50 * ONE_UNIT, false, 0, 500 * ONE_UNIT, 0, 0);
