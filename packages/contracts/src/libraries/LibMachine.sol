@@ -106,7 +106,14 @@ library LibMachine {
     MACHINE_TYPE _machineType,
     Product memory _input
   ) internal view returns (Product[] memory _outputs) {
+    console.log("in defaultMachine");
+    console.log(uint8(_machineType));
+
     bytes14[2] memory resultMaterials = Recipe.get(_machineType, _input.materialId.getMaterialCombinationId());
+
+    for (uint i = 0; i < resultMaterials.length; i++) {
+      console.logBytes14(resultMaterials[i]);
+    }
 
     if (!MaterialId.wrap(resultMaterials[1]).isRegistered()) {
       // One output
@@ -124,6 +131,8 @@ library LibMachine {
       return outputs;
     } else {
       // Two outputs
+
+      console.log("Two outputs");
 
       Product[] memory outputs = new Product[](2);
 

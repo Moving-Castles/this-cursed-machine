@@ -48,12 +48,12 @@ contract PostDeploy is Script {
     // Create offer
     LibOffer.create(PublicMaterials.BUGS, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
 
-    // YEAST : YEA : NOVICE
-    LibMaterial.registerMaterial(MaterialId.wrap("t_YEA"), "YEAST", "YEA", MATERIAL_DIFFICULTY.NOVICE);
-    // BACTERIA : BAC : NOVICE
-    LibMaterial.registerMaterial(MaterialId.wrap("t_BAC"), "BACTERIA", "BAC", MATERIAL_DIFFICULTY.NOVICE);
-    // PISS => YEAST, BACTERIA
-    LibAddRecipe.centrifuge(PublicMaterials.PISS, [MaterialId.wrap("t_YEA"), MaterialId.wrap("t_BAC")]);
+    // // YEAST : YEA : NOVICE
+    // LibMaterial.registerMaterial(MaterialId.wrap("t_YEA"), "YEAST", "YEA", MATERIAL_DIFFICULTY.NOVICE);
+    // // BACTERIA : BAC : NOVICE
+    // LibMaterial.registerMaterial(MaterialId.wrap("t_BAC"), "BACTERIA", "BAC", MATERIAL_DIFFICULTY.NOVICE);
+    // // PISS => YEAST, BACTERIA
+    // LibAddRecipe.centrifuge(PublicMaterials.PISS, [MaterialId.wrap("t_YEA"), MaterialId.wrap("t_BAC")]);
 
     vm.stopBroadcast();
   }

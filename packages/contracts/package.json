@@ -13,7 +13,7 @@
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
     "test": "mud test",
     "test-verbose": "mud test --forgeOptions=' -vvv'",
-    "test-single": "mud test --forgeOptions='--match-test testOrderCreate'",
+    "test-single": "mud test --forgeOptions='--match-test testCentrifugeIssue'",
     "----- GARNET -----": "---------------------------",
     "deploy:garnet": "DEBUG=mud:* mud deploy --profile=garnet",
     "----- REDSTONE -----": "---------------------------",

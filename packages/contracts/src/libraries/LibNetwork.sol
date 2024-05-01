@@ -141,6 +141,12 @@ library LibNetwork {
           continue;
         }
 
+        console.log("outgoingConnectTargets.length");
+        console.log(outgoingConnectTargets.length);
+
+        console.log("currentOutputs.length");
+        console.log(currentOutputs.length);
+
         // Distribute the machine's outputs to the connected machines.
         for (uint k; k < outgoingConnectTargets.length; k++) {
           if (currentOutputs[k].materialId.isRegistered()) {
