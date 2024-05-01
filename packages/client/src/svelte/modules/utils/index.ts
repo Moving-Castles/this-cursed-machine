@@ -1,4 +1,4 @@
-import { concat, encodePacked, getAddress, keccak256 } from "viem"
+import { concat, keccak256 } from "viem"
 import { BLOCKTIME } from "./constants"
 import { ONE_UNIT } from "../ui/constants"
 
@@ -155,9 +155,9 @@ export function capAtZero(num: number): number {
 export function getMaterialCombinationId(a: MaterialId, b: MaterialId): string {
   // Always sort the ids in ascending order to make the combination order-agnostic
   if (a > b) {
-    return keccak256(concat([a, b]))
-  } else {
     return keccak256(concat([b, a]))
+  } else {
+    return keccak256(concat([a, b]))
   }
 }
 
