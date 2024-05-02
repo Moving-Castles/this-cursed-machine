@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { formatEther } from "viem"
   import { walletNetwork, publicNetwork } from "@modules/network"
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
   import type { AccountKitConnectReturn } from "@components/Spawn/account-kit-connect/types"
 
-  let balance = BigInt(0)
+  let balance = "0"
 
   const openAccountModalPromise = new Promise<() => void>(resolve => {
     const { openAccountModal } = accountKitStore.getState()
@@ -44,8 +45,8 @@
   }
 
   const getBalance = async () => {
-    if (!$walletNetwork?.walletClient?.account?.address) return BigInt(0)
-    if (!$publicNetwork?.publicClient?.getBalance) return BigInt(0)
+    if (!$walletNetwork?.walletClient?.account?.address) return "0"
+    if (!$publicNetwork?.publicClient?.getBalance) return "0"
 
     console.log("$publicNetwork", $publicNetwork)
 
@@ -55,7 +56,7 @@
 
     console.log("b", b)
 
-    return b
+    return formatEther(b)
   }
 
   const setBalance = async () => {

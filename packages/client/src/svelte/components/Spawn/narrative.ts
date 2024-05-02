@@ -126,7 +126,6 @@ export const narrative = [
 
     await writeNarrative("Your address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
-    await writeNarrativeAction("blink to continue");
 
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
@@ -136,6 +135,8 @@ export const narrative = [
       await new Promise((resolve) => setTimeout(resolve, 800));
       return false;
     }
+
+    await writeNarrativeAction("blink to continue");
     return true;
   },
   async (_: ENVIRONMENT): Promise<boolean> => {
