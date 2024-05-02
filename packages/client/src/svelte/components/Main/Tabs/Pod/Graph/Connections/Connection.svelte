@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { GraphConnection } from "../types"
+  import { get } from "svelte/store"
+  import { tweened } from "svelte/motion"
   import { generators, generatePoints } from "./svg"
-  import { inspecting, selectedOption } from "@modules/ui/stores"
-  import { quadIn as easing } from "svelte/easing"
-  import { draw } from "svelte/transition"
+  import { inspecting, selectedOption, graphPulse } from "@modules/ui/stores"
+  import { quadIn as easing, expoIn } from "svelte/easing"
+  import { fade, draw } from "svelte/transition"
   import { CELL } from "../constants"
   import Label from "../Labels/Label.svelte"
   import { playSound } from "@modules/sound"
@@ -12,6 +14,7 @@
   export let connection: GraphConnection
 
   const DURATION = 400
+  const [STROKE, GAP] = [16, 50]
   const inDrawOptions = { duration: DURATION, easing }
   const outDrawOptions = { duration: DURATION, easing }
   const activeCurve = "catMullRom"
@@ -19,12 +22,16 @@
   let pathElement: SVGPathElement
   let hover = false
   let showLabel = true
+  let freeze = get(graphPulse) * GAP
+  const localPulse = tweened(freeze, { duration: 500, easing: expoIn })
 
   $: carrying = connection?.products ? connection.products.length > 0 : false
   $: highlight = $selectedOption
     ? $selectedOption.value === connection.id
     : false
   $: disabledHighlight = highlight && $selectedOption?.available === false
+  $: stroke = carrying ? "#f00" : "#fff"
+  $: $localPulse = connection.productive ? $graphPulse * GAP : freeze * GAP
 
   const onMouseEnter = () => {
     // if (!carrying) return
@@ -69,7 +76,9 @@
   on:mouseenter={onMouseEnter}
   on:mouseleave={onMouseLeave}
 >
+  <!-- Path for clicking -->
   <path {d} class="pseudo" />
+  <!-- Actual path -->
   <path
     {d}
     bind:this={pathElement}
@@ -81,6 +90,18 @@
     on:introstart={drawInStart}
     on:outrostart={drawOutStart}
     fill="none"
+  />
+  <!-- Path for dashes -->
+  <path
+    in:fade={{ duration: 200, delay: 500 }}
+    out:fade={{ duration: 100 }}
+    {d}
+    {stroke}
+    class="visible dash"
+    fill="none"
+    stroke-dasharray="{STROKE}, {GAP}"
+    stroke-dashoffset={$localPulse}
+    stroke-linecap="butt"
   />
   <Label
     {hover}
@@ -110,9 +131,12 @@
   }
 
   .visible {
-    stroke: var(--color-grey-light);
     stroke-width: 5;
     fill: none;
+
+    &:not(.carrying):not(.productive):not(.dash) {
+      stroke: var(--color-grey-light);
+    }
 
     &.carrying {
       stroke: var(--white);
