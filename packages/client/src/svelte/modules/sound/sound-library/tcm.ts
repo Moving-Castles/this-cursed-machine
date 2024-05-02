@@ -111,7 +111,7 @@ export const tcm: SoundAssets = {
   },
   playerLvlend: {
     src: "./sounds/tcm/order_fulfilled-sfx_02.mp3",
-    volume: 1,
+    volume: 0.7,
   },
   playerLvlendOld: {
     src: "./sounds/tcm/player_lvlend-sfx_02.mp3",

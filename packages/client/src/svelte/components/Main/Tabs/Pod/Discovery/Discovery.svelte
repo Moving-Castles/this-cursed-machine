@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Discovery } from "."
-  import { flicker } from "@modules/ui/transitions"
+  import { scale, fade } from "svelte/transition"
   import { staticContent } from "@modules/content"
   import { onMount } from "svelte"
   import { createEventDispatcher } from "svelte"
@@ -9,8 +9,6 @@
   const dispatch = createEventDispatcher<{ end: Discovery }>()
 
   export let discovery: Discovery
-
-  let show = false
 
   const close = () => dispatch("end", discovery)
 
@@ -24,13 +22,7 @@
   const color = lore?.color?.hex || "var(--color-failure)"
 
   onMount(() => {
-    setTimeout(
-      () => {
-        show = true
-      },
-      Math.random() * 300 + 300,
-    )
-    setTimeout(close, 10000)
+    setTimeout(close, 8000)
   })
 </script>
 
@@ -39,6 +31,8 @@
 <div
   style="--material-color: {color}"
   class="discovery absolute {discovery.name}"
+  in:scale={{ duration: 200 }}
+  out:fade={{ duration: 600 }}
   on:click={close}
 >
   <div class="image">

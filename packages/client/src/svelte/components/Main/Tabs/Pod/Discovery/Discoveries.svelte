@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Discovery } from "."
-  import { flicker } from "@modules/ui/transitions"
   import {
     podOutputs,
     discoveredMaterials,
@@ -12,7 +11,7 @@
 
   const onEnd = (e: CustomEvent<Discovery>) => {
     discoveries.set(
-      $discoveries.filter((t: Discovery) => t.timestamp !== e.detail.timestamp)
+      $discoveries.filter((t: Discovery) => t.timestamp !== e.detail.timestamp),
     )
   }
 
@@ -27,11 +26,7 @@
 
 <div class="discovery-pane">
   {#each $discoveries as discovery (discovery.materialId + discovery.timestamp)}
-    <div
-      animate:flip={{ duration: 100, easing: linear }}
-      in:flicker={{ duration: 100 }}
-      out:flicker={{ duration: 300 }}
-    >
+    <div animate:flip={{ duration: 100, easing: linear }}>
       <DiscoveryComponent {discovery} on:end={onEnd} />
     </div>
   {/each}

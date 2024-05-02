@@ -63,7 +63,7 @@
     $playerPod?.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    layout.graphMachines
+    layout.graphMachines,
   )
 
   // Play sound when network is running
@@ -111,8 +111,8 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    cursor: crosshair;
     overflow: hidden;
+    pointer-events: none;
 
     --cellHeight: 10px;
     --cellWidth: 10px;
