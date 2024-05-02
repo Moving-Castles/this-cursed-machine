@@ -7,14 +7,16 @@
   import { quadIn as easing, expoIn } from "svelte/easing"
   import { fade, draw } from "svelte/transition"
   import { CELL } from "../constants"
-  import Label from "../Labels/Label.svelte"
   import { playSound } from "@modules/sound"
+  import { blockNumber } from "@modules/network"
+  import { materialMetadata } from "@modules/state/base/stores"
   import { networkIsRunning } from "@modules/state/simulated/stores"
+  import Label from "../Labels/Label.svelte"
 
   export let connection: GraphConnection
 
   const DURATION = 400
-  const [STROKE, GAP] = [16, 50]
+  const [STROKE, GAP] = [20, 10]
   const inDrawOptions = { duration: DURATION, easing }
   const outDrawOptions = { duration: DURATION, easing }
   const activeCurve = "catMullRom"
@@ -24,14 +26,19 @@
   let showLabel = true
   let freeze = get(graphPulse) * GAP
   const localPulse = tweened(freeze, { duration: 500, easing: expoIn })
+  const localBlockNumber = get(blockNumber)
 
   $: carrying = connection?.products ? connection.products.length > 0 : false
   $: highlight = $selectedOption
     ? $selectedOption.value === connection.id
     : false
   $: disabledHighlight = highlight && $selectedOption?.available === false
-  $: stroke = carrying ? "#f00" : "#fff"
+  $: stroke = carrying ? materialColor : "#fff"
   $: $localPulse = connection.productive ? $graphPulse * GAP : freeze * GAP
+  $: materialColor = carrying
+    ? $materialMetadata[connection.products[0].materialId]?.color?.hex
+    : "inherit"
+  $: $graphPulse = (Number($blockNumber) - Number(localBlockNumber)) * -1
 
   const onMouseEnter = () => {
     // if (!carrying) return
@@ -109,6 +116,7 @@
     visible={showLabel}
     {pathElement}
     productive={connection.productive}
+    color={materialColor}
     {carrying}
   />
 </g>
@@ -135,14 +143,14 @@
     fill: none;
 
     &:not(.carrying):not(.productive):not(.dash) {
-      stroke: var(--color-grey-light);
+      stroke: var(--color-grey-dark);
     }
 
     &.carrying {
-      stroke: var(--white);
+      stroke: var(--color-grey-dark);
 
       &.productive {
-        stroke: var(--color-success);
+        // stroke: var(--color-success);
       }
     }
   }

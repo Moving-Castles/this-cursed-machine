@@ -6,12 +6,17 @@
   import { DIRECTION } from "@components/Main/Terminal/enums"
   import { GRAPH_ENTITY_STATE } from "@modules/state/simulated/enums"
   import { selectedOption } from "@modules/ui/stores"
+  import { materialMetadata } from "@modules/state/base/stores"
   import { networkIsRunning } from "@modules/state/simulated/stores"
 
   export let address: string
   export let machine: GraphMachine
 
-  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px;`
+  $: carrying = machine?.products ? machine.products.length > 0 : false
+  $: materialColor = carrying
+    ? $materialMetadata[machine.products[0].materialId]?.color?.hex
+    : "inherit"
+  $: style = `top: ${CELL.HEIGHT * machine.y}px; left: ${CELL.WIDTH * machine.x}px; background-color:${materialColor};`
   $: label = "→"
   $: outerLabel = `INLET ${machine.buildIndex ?? ""}`
   $: connected = machine.tankConnection !== EMPTY_CONNECTION
@@ -77,7 +82,7 @@
       color: var(--background);
 
       &.productive {
-        background: var(--color-success);
+        // background: var(--color-material);
         color: var(--background);
       }
     }

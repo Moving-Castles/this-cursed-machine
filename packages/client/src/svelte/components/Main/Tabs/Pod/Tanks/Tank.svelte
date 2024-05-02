@@ -22,38 +22,35 @@
 
   const progress = tweened(
     (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100,
-    { easing: bounceOut },
+    { easing: bounceOut }
   )
 
   const amount = tweened(displayAmount(tank.amount))
 
   // Narrow the type
   $: typedTank = tank as Tank
-
   $: if (canShip) advanceTutorial(null, $tutorialProgress, "order")
-
   // Tank is shippable
   $: canShip = $shippableTanks[address]
-
   // Tanks is shipping
   $: shipping = $waitingTransaction?.systemId === "ship" && canShip
-
   // Tanks is connected
   $: connected = typedTank.tankConnection !== EMPTY_CONNECTION
-
   // Tanks is empty
   $: empty = typedTank.amount === BigInt(0)
-
   // Tanks is highlighted
   $: highlight = $selectedOption?.value === address
   $: disabledHighlight = highlight && $selectedOption?.available === false
-
   $: $progress =
     (displayAmount(tank.amount) / displayAmount(TANK_CAPACITY)) * 100
-
   $: $amount = displayAmount(typedTank.amount)
-
   $: connectedMachine = $simulatedMachines[tank.tankConnection]
+  $: carrying = connectedMachine?.products
+    ? connectedMachine.products.length > 0
+    : false
+  $: materialColor = carrying
+    ? $materialMetadata[connectedMachine.products[0].materialId]?.color?.hex
+    : "inherit"
 
   const getConnectionName = (machineEntity: string) => {
     if (!$playerPod?.fixedEntities) return "none"
@@ -110,6 +107,7 @@
 
   <div
     class="connection"
+    style:background-color={materialColor}
     class:connected
     class:productive={connectedMachine?.productive}
     class:running={$networkIsRunning && connectedMachine?.productive}
@@ -167,7 +165,7 @@
     }
 
     &.shippable {
-      border: 1px solid var(--color-success);
+      // border: 1px solid var(--color-success);
     }
 
     .id {
@@ -214,7 +212,7 @@
         background: var(--foreground);
 
         &.productive {
-          background: var(--color-success);
+          // background: var(--color-success);
         }
       }
     }

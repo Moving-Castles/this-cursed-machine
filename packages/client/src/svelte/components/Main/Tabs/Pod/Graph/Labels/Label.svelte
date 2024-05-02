@@ -17,6 +17,7 @@
   // Putting the visibility toggle here because of this issue:
   // https://github.com/sveltejs/svelte/issues/6479
   export let visible: boolean
+  export let color: string
 
   let words = []
   // let frameId: number
@@ -64,6 +65,7 @@
   class:visible
   class="label"
   class:vertical={dir === 1 || dir === 3}
+  style:fill={carrying && color}
 >
   {#key material}
     {`${direction} ${material || "EMPTY"} ${direction}`}
@@ -93,7 +95,7 @@
       fill: var(--white);
 
       &.productive {
-        fill: var(--color-success);
+        // fill: var(--color-success);
       }
     }
 

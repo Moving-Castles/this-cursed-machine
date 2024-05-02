@@ -7,6 +7,7 @@
   import walkable from "@modules/utils/walkable"
   import { networkIsRunning } from "@modules/state/simulated/stores"
   import { playSound } from "@modules/sound"
+  import { materialMetadata } from "@modules/state/base/stores"
   import {
     simulatedMachines as machines,
     simulatedTanks as tanks,
@@ -14,6 +15,17 @@
   import { draw as drawTransition } from "svelte/transition"
 
   export let attachment: Attachment
+
+  $: d = generators.catMullRomDynamic($alpha)(points)
+  $: attachedMachine = $machines[attachment.machine]
+  $: productive = attachedMachine?.productive
+  $: carrying = attachedMachine?.products
+    ? attachedMachine.products.length > 0
+    : false
+  $: materialColor = carrying
+    ? $materialMetadata[attachedMachine.products[0].materialId]?.color?.hex
+    : "inherit"
+  $: console.log(materialColor, attachedMachine)
 
   const alpha = walkable()
   const OFFSET = 40
@@ -136,10 +148,6 @@
     d = generators.catMullRomDynamic($alpha)(points)
   }
 
-  $: d = generators.catMullRomDynamic($alpha)(points)
-  $: attachedMachine = $machines[attachment.machine]
-  $: productive = attachedMachine?.productive
-
   let points = makePoints()
 
   onMount(async () => {
@@ -169,7 +177,7 @@
     in:drawTransition={{ easing: easing.expoIn, duration: 200 }}
     out:drawTransition={{ easing: easing.expoOut, duration: 150 }}
     {d}
-    stroke={productive ? "var(--color-success)" : "var(--white)"}
+    stroke={productive ? materialColor : "var(--white)"}
     fill="none"
     stroke-width="10"
   />
