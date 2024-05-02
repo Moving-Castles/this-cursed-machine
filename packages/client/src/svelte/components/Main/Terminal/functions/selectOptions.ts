@@ -9,6 +9,7 @@ import {
   simulatedConnections,
   simulatedTanks,
   capacityForBugs,
+  machineCapacity,
 } from "@modules/state/simulated/stores"
 import {
   player,
@@ -82,7 +83,7 @@ function createSelectOptionsBuild(): SelectOption[] {
     selectOptions.push({
       label: MACHINE_TYPE[availableMachines[i]],
       value: availableMachines[i],
-      available: true,
+      available: get(machineCapacity) > 0,
     })
   }
 

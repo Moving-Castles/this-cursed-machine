@@ -26,7 +26,6 @@
         document.querySelectorAll("iframe").forEach(item => {
           const input = item.contentWindow.document.body.querySelector("input")
           if (input) {
-            console.log(input)
             input.focus()
           }
         })
@@ -52,7 +51,6 @@
     })
 
   const triggerConnect = async () => {
-    console.log("trigger connect")
     connect()
   }
 
@@ -60,13 +58,9 @@
     if (!$walletNetwork?.walletClient?.account?.address) return "0"
     if (!$publicNetwork?.publicClient?.getBalance) return "0"
 
-    console.log("$publicNetwork", $publicNetwork)
-
     const b = await $publicNetwork.publicClient.getBalance({
       address: $walletNetwork.walletClient.account.address,
     })
-
-    console.log("b", b)
 
     return formatGwei(b)
   }

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import type { Discovery } from "."
   import { flicker } from "@modules/ui/transitions"
   import {
@@ -24,10 +23,6 @@
       }
     })
   }
-
-  onMount(() => {
-    console.log($podOutputs)
-  })
 </script>
 
 <div class="discovery-pane">

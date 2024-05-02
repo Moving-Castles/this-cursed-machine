@@ -567,6 +567,13 @@ export const podOutputs = derived(
   }
 )
 
+export const machineCapacity = derived(
+  [simulatedMachines],
+  ([$simulatedMachines]) => {
+    return 14 - Object.values($simulatedMachines).length
+  }
+)
+
 export const discoveredMaterials = storableArray(
   [BUG_MATERIAL], // Bugs are not new to us
   "tcm_discoveredMaterials"
