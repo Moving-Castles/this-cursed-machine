@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import { setupPublicNetwork } from "@mud/setupPublicNetwork"
   import { tutorialProgress } from "@modules/ui/assistant"
+  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
   import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
@@ -124,7 +125,7 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    {#if $tutorialProgress !== 30}
+    {#if $tutorialProgress !== FINAL_TUTORIAL_LEVEL}
       <Main on:escaped={escaped} />
       <Tutorial />
     {:else}

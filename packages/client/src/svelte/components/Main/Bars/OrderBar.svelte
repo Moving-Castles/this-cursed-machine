@@ -68,7 +68,8 @@
 
       .time {
         padding: 2px;
-        background: var(--color-success);
+        font-size: var(--font-size-small);
+        background: var(--foreground);
         color: var(--background);
       }
     }

@@ -19,6 +19,7 @@ import {
   discoveredMaterials,
   discoveredMessages,
 } from "@modules/state/simulated/stores"
+import { BUG_MATERIAL } from "@modules/ui/constants"
 import { tutorialProgress } from "@modules/ui/assistant"
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming"
 import { publicNetwork, walletNetwork } from "@modules/network"
@@ -138,7 +139,7 @@ export const narrative = [
 
     // Reset stores for the UI
     tutorialProgress.set(0)
-    discoveredMaterials.set(["0x745f425547530000000000000000"])
+    discoveredMaterials.set([BUG_MATERIAL])
     discoveredMessages.set([])
 
     // Websocket connection for off-chain messaging
@@ -146,7 +147,6 @@ export const narrative = [
 
     await writeNarrative("Your address is:")
     await typeWriteNarrativeSuccess(get(playerAddress))
-    await writeNarrativeAction("blink to continue")
 
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
@@ -156,6 +156,8 @@ export const narrative = [
       await new Promise(resolve => setTimeout(resolve, 800))
       return false
     }
+
+    await writeNarrativeAction("blink to continue")
     return true
   },
   async (_: ENVIRONMENT): Promise<boolean> => {

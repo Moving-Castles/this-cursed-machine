@@ -35,7 +35,7 @@ export const FULL_COMMANDS = [
   COMMAND.EMPTY_TANK,
   COMMAND.FILL_TANK,
   COMMAND.SHIP_TANK,
-  COMMAND.GRADUATE,
+  // COMMAND.GRADUATE,
   COMMAND.RESOLVE,
   COMMAND.BLINK,
   COMMAND.HELP,
@@ -72,7 +72,7 @@ export const COMMANDS_BY_LEVEL: { [level: number]: COMMAND[] } = {
 }
 
 export const commandsByTutorialProgress = (level: number) => {
-  if (level > 28) {
+  if (level > 30) {
     return FULL_COMMANDS
   }
 

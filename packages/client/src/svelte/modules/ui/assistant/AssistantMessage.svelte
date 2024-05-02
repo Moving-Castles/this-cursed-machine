@@ -9,6 +9,7 @@
     advanceConditions,
     tutorialCompleted,
   } from "@modules/ui/assistant"
+  import { BUG_MATERIAL } from "@modules/ui/constants"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
@@ -91,7 +92,7 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
-    discoveredMaterials.set(["0x745f425547530000000000000000"])
+    discoveredMaterials.set([BUG_MATERIAL])
     discoveredMessages.set([])
     $activeTab = 0
     clearTerminalOutput()
