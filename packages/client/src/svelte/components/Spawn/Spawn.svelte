@@ -5,11 +5,6 @@
     TERMINAL_OUTPUT_TYPE,
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
-  import {
-    discoveredMaterials,
-    discoveredMessages,
-  } from "@modules/state/simulated/stores"
-  import { tutorialProgress } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
@@ -86,8 +81,8 @@
         walletNetwork.set(
           setupWalletNetwork(
             $publicNetwork,
-            accountKitStoreState.appAccountClient,
-          ),
+            accountKitStoreState.appAccountClient
+          )
         )
         // Set player address to main wallet address
         playerAddress.set(accountKitStoreState.userAddress)
@@ -110,7 +105,7 @@
         `Welcome back ${name}`,
         SYMBOLS[7],
         10,
-        1000,
+        1000
       )
       dispatch("done")
     } else {
@@ -118,10 +113,6 @@
       if (terminalComponent) {
         terminalComponent.resetInput()
       }
-      // Reset tutorial
-      tutorialProgress.set(0)
-      discoveredMaterials.set(["0x745f425547530000000000000000"])
-      discoveredMessages.set([])
     }
   })
 </script>
