@@ -8,6 +8,8 @@ import {
   simulatedMachines,
   simulatedConnections,
   simulatedTanks,
+  capacityForBugs,
+  machineCapacity,
 } from "@modules/state/simulated/stores"
 import {
   player,
@@ -81,7 +83,7 @@ function createSelectOptionsBuild(): SelectOption[] {
     selectOptions.push({
       label: MACHINE_TYPE[availableMachines[i]],
       value: availableMachines[i],
-      available: true,
+      available: get(machineCapacity) > 0,
     })
   }
 
@@ -213,7 +215,8 @@ function createSelectOptionsEmptyTank(): SelectOption[] {
   selectOptions = Object.entries(tanks).map(([address, tank]) => ({
     label: `Tank #${tank.buildIndex}`,
     value: address,
-    available: tank.tankConnection === EMPTY_CONNECTION && tank.amount !== BigInt(0),
+    available:
+      tank.tankConnection === EMPTY_CONNECTION && tank.amount !== BigInt(0),
   }))
 
   return selectOptions
@@ -228,7 +231,9 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   selectOptions = Object.entries(offers).map(([address, offer]) => ({
     label: `${displayAmount(offer.offer.amount)} ${get(materialMetadata)[offer.offer.materialId].name}`,
     value: address,
-    available: balance >= displayAmount(offer.offer.cost),
+    available:
+      balance >= displayAmount(offer.offer.cost) &&
+      get(capacityForBugs) >= displayAmount(offer.offer.cost),
   }))
 
   return selectOptions
