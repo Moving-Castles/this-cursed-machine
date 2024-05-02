@@ -62,6 +62,8 @@
     // Helper to fetch the correct material data
     const getPortMaterial = (index: 0 | 1) => {
       if (machine?.products && machine?.products.length > 0) {
+        if (!machine.products[index]) return undefined
+
         const id = machine.products[index].materialId
 
         return $materialMetadata[id]

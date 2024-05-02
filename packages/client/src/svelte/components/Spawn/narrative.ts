@@ -13,7 +13,7 @@ import {
   waitForTransaction,
 } from "@modules/action/actionSequencer/utils";
 import { playSound } from "@modules/sound";
-import { playerAddress } from "@svelte/modules/state/base/stores";
+import { playerAddress, player } from "@svelte/modules/state/base/stores";
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
 import { publicNetwork, walletNetwork } from "@modules/network";
 import { setupWalletNetwork } from "@mud/setupWalletNetwork";
@@ -83,25 +83,17 @@ async function writeFailure(text: string) {
 }
 
 export const narrative = [
-  async (_: ENVIRONMENT) => {
+  // async (_: ENVIRONMENT): Promise<boolean> => {
+  //   await writeNarrativeAction("blink if you can hear me");
+  //   return true;
+  // },
+  async (_: ENVIRONMENT): Promise<boolean> => {
     await writeNarrative("welcome stump");
-    await writeNarrativeAction("blink if you can hear me");
-  },
-  async (_: ENVIRONMENT) => {
-    await writeNarrative(
-      "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
-    );
-    await writeNarrative(
-      "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
-    );
-    await writeNarrative("I will help you through the on-boarding process.");
-    await writeNarrativeAction("blink to begin");
-  },
-  async (_: ENVIRONMENT) => {
     await writeNarrative("the company needs to verify your identity.");
     await writeNarrativeAction("blink to start verification");
+    return true;
   },
-  async (environment: ENVIRONMENT) => {
+  async (environment: ENVIRONMENT): Promise<boolean> => {
     if ([
       ENVIRONMENT.DEVELOPMENT,
       ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
@@ -135,8 +127,29 @@ export const narrative = [
     await writeNarrative("Your address is:");
     await typeWriteNarrativeSuccess(get(playerAddress));
     await writeNarrativeAction("blink to continue");
+
+    // If the player is spawned and started, return false to skip
+    if (get(player)?.carriedBy) {
+      const name = get(player)?.name ?? 'stump #' + get(player).spawnIndex
+      await writeNarrative(`Welcome back, ${name}`);
+      await writeNarrative("Transferring to pod...");
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      return false;
+    }
+    return true;
   },
-  async (_: ENVIRONMENT) => {
+  async (_: ENVIRONMENT): Promise<boolean> => {
+    await writeNarrative(
+      "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
+    );
+    await writeNarrative(
+      "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
+    );
+    await writeNarrative("I will help you through the on-boarding process.");
+    await writeNarrativeAction("blink to begin");
+    return true;
+  },
+  async (_: ENVIRONMENT): Promise<boolean> => {
     await writeNarrative(
       "you can (mandatory) assign yourself a human-readable ID (name)"
     );
@@ -179,8 +192,9 @@ export const narrative = [
     playSound("tcm", "textLineHit")
     await writeNarrativeInfo("brain-machine-interface calibrated");
     await writeNarrativeAction("blink when the anaesthesia has worn off");
+    return true;
   },
-  async (_: ENVIRONMENT) => {
+  async (_: ENVIRONMENT): Promise<boolean> => {
     await writeNarrative("from now on");
     await writeNarrative("only one thing matters");
     playSound("tcm", "bugs");
@@ -197,8 +211,9 @@ export const narrative = [
     await writeNarrative("life is a $bugs sucking slot machine on steroids");
     await writeNarrative("Do not disappoint me.");
     await writeNarrativeAction("blink to enter the pod.");
+    return true;
   },
-  async (_: ENVIRONMENT) => {
+  async (_: ENVIRONMENT): Promise<boolean> => {
     playSound("tcm", "textLineHit")
     await writeNarrativeInfo("transferring stump to pod...");
     // Send spawn
@@ -207,5 +222,6 @@ export const narrative = [
     await waitForCompletion(action, loadingLine);
     playSound("tcm", "enteredPod");
     await writeNarrativeSuccess("transfer complete");
+    return true;
   },
 ];

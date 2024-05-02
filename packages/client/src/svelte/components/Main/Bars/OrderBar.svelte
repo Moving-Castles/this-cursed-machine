@@ -1,10 +1,11 @@
 <script lang="ts">
   import { blockNumber } from "@modules/network"
-  import { materialMetadata} from "@modules/state/base/stores"
+  import { materialMetadata } from "@modules/state/base/stores"
   import { playerOrder } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { blocksToReadableTime } from "@modules/utils"
   import { displayAmount } from "@modules/utils"
+  import AccountKitBalance from "./account-kit-balance/AccountKitBalance.svelte"
 </script>
 
 <div
@@ -15,7 +16,7 @@
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">
-      <span class="inverted">ORDER:</span>
+      <span class="inverted" class:order={$playerOrder}>ORDER:</span>
       {#if !$playerOrder}
         NONE
       {:else}
@@ -32,6 +33,10 @@
       </div>
     {/if}
   </div>
+
+  <div>
+    <AccountKitBalance />
+  </div>
 </div>
 
 <style lang="scss">
@@ -39,6 +44,10 @@
     padding: 2px;
     background: var(--foreground);
     color: var(--background);
+
+    &.order {
+      background: var(--color-success);
+    }
   }
 
   .order-bar {

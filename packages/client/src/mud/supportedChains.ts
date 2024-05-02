@@ -15,21 +15,15 @@ import {
 } from "@latticexyz/common/chains";
 import { holesky, mainnet } from "viem/chains";
 
-type ExtendedChain = MUDChain & {
-  indexerUrl?: string | undefined;
-};
-
 const extendedGarnet = {
   ...garnet,
   faucetUrl: "https://17001-faucet.quarry.linfra.xyz/trpc/drip",
-  indexerUrl: "https://indexer.mud.garnetchain.com/",
-} as const satisfies ExtendedChain;
+} as const satisfies MUDChain;
 
 const extendedRedstone = {
   ...redstone,
-  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
-  indexerUrl: "https://indexer.mud.redstonechain.com/",
-} as const satisfies ExtendedChain;
+  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip"
+} as const satisfies MUDChain;
 
 export const supportedChains = [
   mudFoundry,

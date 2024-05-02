@@ -39,7 +39,11 @@
       narrativeIndex++
       // Write the next part of the story to the terminal
       if (narrativeIndex < narrative.length) {
-        await narrative[narrativeIndex](environment)
+        // If the narrative function retusn false we are done
+        let continueNarrative = await narrative[narrativeIndex](environment)
+        if (!continueNarrative) {
+          dispatch("done")
+        }
       }
       // End of narrative reached
       if (narrativeIndex === narrative.length - 1) {
@@ -82,8 +86,8 @@
         walletNetwork.set(
           setupWalletNetwork(
             $publicNetwork,
-            accountKitStoreState.appAccountClient
-          )
+            accountKitStoreState.appAccountClient,
+          ),
         )
         // Set player address to main wallet address
         playerAddress.set(accountKitStoreState.userAddress)
@@ -99,12 +103,14 @@
       // Websocket connection for off-chain messaging
       initSignalNetwork()
 
+      const name = $player.name ?? "stump"
+
       await typeWriteToTerminal(
         TERMINAL_OUTPUT_TYPE.NORMAL,
-        "Welcome back...",
+        `Welcome back ${name}`,
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
       dispatch("done")
     } else {
