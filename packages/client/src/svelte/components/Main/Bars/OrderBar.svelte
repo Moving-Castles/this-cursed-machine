@@ -21,7 +21,8 @@
         NONE
       {:else}
         {displayAmount($playerOrder?.order.amount)}
-        {$materialMetadata[$playerOrder?.order.materialId]?.name}
+        {$materialMetadata[$playerOrder?.order.materialId]?.name} →
+        {displayAmount($playerOrder?.order.reward)} $BUGS
       {/if}
     </div>
 
@@ -46,7 +47,18 @@
     color: var(--background);
 
     &.order {
+      animation: order-pulse 1s ease infinite alternate;
+    }
+  }
+
+  @keyframes order-pulse {
+    0% {
+      background: var(--foreground);
+      color: var(--background);
+    }
+    100% {
       background: var(--color-success);
+      color: var(--background);
     }
   }
 
@@ -68,9 +80,11 @@
 
       .time {
         padding: 2px;
+        padding-top: 3px;
         font-size: var(--font-size-small);
         background: var(--foreground);
         color: var(--background);
+        line-height: 1em;
       }
     }
 
