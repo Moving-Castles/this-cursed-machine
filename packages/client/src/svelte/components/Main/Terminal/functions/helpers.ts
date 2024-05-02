@@ -24,7 +24,7 @@ export async function scrollToEnd(): Promise<void> {
 }
 
 export function levelCommandFilter(level: number, commandId: COMMAND): boolean {
-  return commandsByTutorialProgress(level).includes(commandId) ? true : false
+  return commandsByTutorialProgress(level)?.includes(commandId) ? true : false
 }
 
 /**

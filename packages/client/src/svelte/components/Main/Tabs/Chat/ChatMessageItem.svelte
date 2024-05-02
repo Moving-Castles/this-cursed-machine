@@ -60,10 +60,6 @@
     }
   }
 
-  .verified {
-    margin-right: 5px;
-  }
-
   .message-timestamp {
     font-size: 0.8em;
     color: var(--color-grey-light);

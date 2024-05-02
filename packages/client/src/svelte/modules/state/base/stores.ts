@@ -75,6 +75,7 @@ export const playerTokenBalance = derived([player], ([$player]) => {
     return displayAmount($player.tokenBalances)
   }
 })
+
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITIES
 // * * * * * * * * * * * * * * * * *

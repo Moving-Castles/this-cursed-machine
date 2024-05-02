@@ -8,10 +8,7 @@
     players,
   } from "@modules/state/base/stores"
   import { MATERIAL_DIFFICULTY } from "contracts/enums"
-  import {
-    playerOrder,
-    discoveredMessages,
-  } from "@modules/state/simulated/stores"
+  import { discoveredMessages } from "@modules/state/simulated/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import {

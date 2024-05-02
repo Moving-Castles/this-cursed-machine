@@ -78,8 +78,6 @@
 {#if $player?.carriedBy && $tutorialProgress > 0}
   <div class="dust" />
 
-  <!-- <Debug/> -->
-
   <div in:flicker class="split-screen">
     <div class="left-col">
       <div class="info-bar">

@@ -55,12 +55,8 @@
   text-rendering: optimizeLegibility;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  /* user-select: none; */
   margin: 0;
   padding: 0;
-  /* font-variation-settings:
-    "BLED" 0,
-    "SCAN" 0; */
 }
 
 body {

@@ -1,11 +1,7 @@
 <script lang="ts">
   import { materialMetadata } from "@svelte/modules/state/base/stores"
   import type { GraphConnection } from "../types"
-  // import TweenedText from "@components/Main/Tabs/Pod/Graph/Labels/TweenedText.svelte"
   import { CELL } from "../constants"
-  // import { onDestroy } from "svelte"
-  // import { bounceInOut as easing } from "svelte/easing"
-  // import { tweened } from "svelte/motion"
   import { getLongestSection } from "../Connections/svg"
   import { displayAmount } from "@modules/utils"
 
@@ -104,13 +100,5 @@
     &.vertical {
       transform: translate(4px, 0) rotate(90deg);
     }
-  }
-
-  .label-below {
-    font-size: var(--font-size-label);
-    font-family: var(--font-family);
-    transform-box: fill-box;
-    transform: translate(0, 100%);
-    text-align: center;
   }
 </style>
