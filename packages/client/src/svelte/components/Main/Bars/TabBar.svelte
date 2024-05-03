@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { activeTab } from "@modules/ui/stores"
+  import type { TabDefinitions } from "../types"
+  import {
+    activeTab,
+    // notificationPermissions
+  } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
-  import type { TabDefinitions } from "../types"
   export let tabList: TabDefinitions
 
   const HIDDEN_CONDITIONS: {
@@ -27,6 +30,27 @@
     num => $tutorialProgress > num
   ).length
 
+  const onClick = (e: MouseEvent) => {
+    const key = Number(e?.currentTarget.getAttribute("tabindex"))
+    if ($tutorialProgress > HIDDEN_CONDITIONS[key]) {
+      activeTab.set(key)
+      playSound("tcm", "selectionEnter")
+
+      if (key === 3) {
+        if (!("Notification" in window)) {
+          console.log("This browser does not support notifications.")
+          return
+        }
+
+        // if ($notificationPermissions === "") {
+        //   Notification.requestPermission().then(result => {
+        //     notificationPermissions.set(result)
+        //   })
+        // }
+      }
+    }
+  }
+
   const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation()
     if (e.key.toLowerCase() === "tab") {
@@ -50,16 +74,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-      <div
-        class="button-container"
-        tabindex={key}
-        on:click={() => {
-          if ($tutorialProgress > HIDDEN_CONDITIONS[key]) {
-            activeTab.set(key)
-            playSound("tcm", "selectionEnter")
-          }
-        }}
-      >
+      <div class="button-container" tabindex={Number(key)} on:click={onClick}>
         <div
           class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}

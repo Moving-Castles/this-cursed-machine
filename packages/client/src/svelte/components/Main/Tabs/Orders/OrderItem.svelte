@@ -350,6 +350,7 @@
     padding: 1rem;
     gap: 1rem;
     user-select: none;
+    overflow: hidden;
 
     > .overlay {
       position: absolute;

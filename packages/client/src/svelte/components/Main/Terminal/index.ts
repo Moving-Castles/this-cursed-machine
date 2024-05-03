@@ -76,6 +76,10 @@ export const commandsByTutorialProgress = (level: number) => {
     return FULL_COMMANDS
   }
 
+  if (level > 29) {
+    return [COMMAND.BLINK]
+  }
+
   if (level > 18) {
     return [
       COMMAND.BLINK,

@@ -72,13 +72,15 @@
   $: if ($blockNumber) setBalance()
 </script>
 
-<div class="account-kit-balance">
-  <span>
-    {Math.round(balance)} gwei
-    <!-- <button on:click={setBalance}>Balance</button> -->
-    <button class="top-up" on:click={triggerConnect}> TOP UP </button>
-  </span>
-</div>
+{#if balance <= 1000}
+  <div class="account-kit-balance">
+    <span>
+      {Math.round(balance)} gwei
+      <!-- <button on:click={setBalance}>Balance</button> -->
+      <button class="top-up" on:click={triggerConnect}> TOP UP </button>
+    </span>
+  </div>
+{/if}
 
 <style lang="scss">
   .account-kit-balance {

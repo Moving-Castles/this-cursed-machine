@@ -73,7 +73,7 @@
 
   onMount(() => {
     playSound("tcm", "podBg", true, false)
-    if ($player.tutorial === false) {
+    if (!$player.tutorial) {
       tutorialProgress.set(666)
     }
   })

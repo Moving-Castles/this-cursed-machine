@@ -31,6 +31,7 @@ export const advanceConditions: Writable<Step[]> = writable([])
 export const currentMessage = derived(
   [tutorialProgress, staticContent],
   ([$tutorialProgress, $staticContent]) => {
+    if (!$staticContent?.tutorial) return undefined
     return $staticContent.tutorial.steps[$tutorialProgress]
   }
 )

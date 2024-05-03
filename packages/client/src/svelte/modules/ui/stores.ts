@@ -8,6 +8,9 @@ import {
   GraphMachine,
 } from "@components/Main/Tabs/Pod/Graph/types"
 
+const permissionsDefault =
+  Notification.permission === "granted" ? "granted" : ""
+
 export const UIState = writable(UI.LOADING)
 export const activeTab = writable(TABS.POD)
 
@@ -29,3 +32,4 @@ export const graphElement: Writable<SVGElement> = writable()
 export const thud = writable(false)
 export const orderAcceptInProgress = writable("0x0")
 export const terminalBooted = writable(false)
+export const notificationPermissions = writable(permissionsDefault) // block or granted

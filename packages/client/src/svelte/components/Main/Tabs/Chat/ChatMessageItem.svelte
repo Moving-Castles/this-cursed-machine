@@ -72,5 +72,6 @@
 
   .message-content {
     margin-top: 5px;
+    word-wrap: break-word;
   }
 </style>

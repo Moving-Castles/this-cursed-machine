@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { chatMessages, verifiedClients } from "@modules/signal/stores"
+  import { notificationPermissions } from "@modules/ui/stores"
   import ChatMessageItem from "./ChatMessageItem.svelte"
   import ChatInput from "./ChatInput.svelte"
   import { onMount } from "svelte"

@@ -2,9 +2,10 @@
   import { onMount, createEventDispatcher } from "svelte"
   import { sendChatMessage } from "@modules/signal"
   import type { ChatMessage } from "@modules/signal/types"
-  import { playerAddress } from "@modules/state/base/stores"
+  import { player, playerAddress } from "@modules/state/base/stores"
   import { v4 as uuid } from "uuid"
   import { walletNetwork } from "@modules/network"
+  import { notificationPermissions } from "@modules/ui/stores"
   import { playSound } from "@modules/sound"
   import TerminalInput from "../../Terminal/TerminalInput.svelte"
 
@@ -13,6 +14,14 @@
   const dispatch = createEventDispatcher()
 
   let message = ""
+
+  const sendNotification = msg => {
+    const notification = new Notification("New message", {
+      body: `${$player.name}: ${msg.message}`,
+      icon: "/images/tcm2.png",
+    })
+    console.log(notification)
+  }
 
   function sendMessage() {
     dispatch("send")
@@ -25,7 +34,10 @@
       timestamp: Date.now(),
       address: $playerAddress,
     }
-    sendChatMessage(newMessage)
+    if ($notificationPermissions === "granted") {
+      sendChatMessage(newMessage)
+    }
+    // sendNotification(newMessage)
     playSound("tcm", "TRX_yes")
     message = ""
   }

@@ -32,18 +32,33 @@
   }
 
   onMount(async () => {
-    const messages = $currentMessage.explanation
-      .split("\n")
-      .map(msg => msg.replaceAll("%PLAYER%", $player.name))
-      .filter(msg => msg !== "")
+    if ($currentMessage?.explanation) {
+      const messages = $currentMessage?.explanation
+        .split("\n")
+        .map(msg => msg.replaceAll("%PLAYER%", $player.name))
+        .filter(msg => msg !== "")
 
-    let i = 0
-    for (const message of messages) {
-      await typeWriteToTerminal(
-        i === 0 ? TERMINAL_OUTPUT_TYPE.SUCCESS : TERMINAL_OUTPUT_TYPE.NORMAL,
-        message
-      )
-      i++
+      let i = 0
+      for (const message of messages) {
+        // Find the first occurrence of a pattern between curly braces
+        let match = message.match(/{(.*?)}/)
+
+        // Extract the value between the curly braces
+        let value = match ? match[1] : null
+        let outputType = TERMINAL_OUTPUT_TYPE.NORMAL
+
+        if (value !== null) {
+          if (value in TERMINAL_OUTPUT_TYPE) {
+            outputType = TERMINAL_OUTPUT_TYPE[value]
+          }
+        }
+
+        // Remove the entire match from the string
+        let newMessage = message.replace(/{.*?}/, "")
+
+        await typeWriteToTerminal(outputType, newMessage)
+        i++
+      }
     }
   })
 </script>
