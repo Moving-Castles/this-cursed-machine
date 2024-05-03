@@ -2,8 +2,11 @@ import { derived } from "svelte/store"
 import { deepClone } from "@modules/utils/"
 import { storableArray } from "@modules/utils/storable"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { BUG_MATERIAL } from "@modules/ui/constants"
 import { MaterialIdNone } from "@modules/state/base/constants"
 import { blockNumber } from "@modules/network"
+import { ONE_UNIT } from "@modules/ui/constants"
+
 import type {
   SimulatedEntities,
   SimulatedTanks,
@@ -481,10 +484,41 @@ export const shippableTanks = derived(
   }
 )
 
+/** The amount of bugs tanks still can be filled with  */
+export const capacityForBugs = derived(
+  [simulatedTanks],
+  ([$simulatedTanks]) => {
+    const t = Object.values($simulatedTanks).filter(tank => {
+      return (
+        tank.materialId === BUG_MATERIAL || tank.materialId === MaterialIdNone
+      )
+    })
+
+    const total =
+      t
+        .map(tank => {
+          // if the tank material is bugs, or if the tank material is non existent
+          return tank.amount
+        })
+        .reduce((total, next) => (total += next)) / ONE_UNIT
+
+    return t?.length * 500 - Number(total)
+  }
+)
+
+/** Can fill? */
+export const usedCapacity = derived([simulatedTanks], ([$simulatedTanks]) => {
+  const usedCapacity =
+    Object.values($simulatedTanks)
+      .map(tank => tank.amount)
+      .reduce((total, current) => (total += current)) / ONE_UNIT
+
+  return usedCapacity
+})
+
 export const tankAttachments = derived(
   [simulatedTanks, playerPod],
   ([$simulatedTanks, $playerPod]) => {
-    const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
       if (!$playerPod?.fixedEntities) return "none"
@@ -532,8 +566,15 @@ export const podOutputs = derived(
   }
 )
 
+export const machineCapacity = derived(
+  [simulatedMachines],
+  ([$simulatedMachines]) => {
+    return 14 - Object.values($simulatedMachines).length
+  }
+)
+
 export const discoveredMaterials = storableArray(
-  ["0x745f425547530000000000000000"], // Bugs are not new to us
+  [BUG_MATERIAL], // Bugs are not new to us
   "tcm_discoveredMaterials"
 )
 

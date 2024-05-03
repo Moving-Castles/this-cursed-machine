@@ -66,5 +66,17 @@
     ($goingUp % step === 0 && $goingUp < warn)}
   class:flash-fast-thrice={$goingUp >= goal}
 >
-  {#if direction < 0}↓{:else if direction > 0}↑{/if}{Math.round($goingUp)}
+  <span class="arrow">
+    {#if direction < 0}↓{:else if direction > 0}↑{/if}
+  </span>
+  {Math.round($goingUp)}
 </span>
+
+<style lang="scss">
+  .arrow {
+    position: relative;
+    top: -2px;
+    left: 8px;
+    width: 0.5ch;
+  }
+</style>

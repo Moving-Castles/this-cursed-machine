@@ -2,12 +2,9 @@
   import { simulatedTanks } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import Tank from "./Tank.svelte"
-
-  console.log($simulatedTanks)
 </script>
 
 <div class="tanks-box" class:hidden={$tutorialProgress < 1}>
-  <!-- <div class="">shipping</div> -->
   {#if $simulatedTanks}
     {#each Object.entries($simulatedTanks) as [address, tank], index}
       <Tank {address} {tank} {index} />
@@ -17,7 +14,6 @@
 
 <style lang="scss">
   .tanks-box {
-    // padding: 20px;
     width: 100%;
     height: 100%;
     z-index: var(--z-1);
@@ -27,6 +23,7 @@
     justify-content: space-between;
     padding-left: 15px;
     padding-right: 15px;
+    pointer-events: none;
 
     &.highlight {
       animation: 1s ease-in-out infinite alternate highlight;

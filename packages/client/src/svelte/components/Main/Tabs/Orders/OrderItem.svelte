@@ -8,10 +8,7 @@
     players,
   } from "@modules/state/base/stores"
   import { MATERIAL_DIFFICULTY } from "contracts/enums"
-  import {
-    playerOrder,
-    discoveredMessages,
-  } from "@modules/state/simulated/stores"
+  import { discoveredMessages } from "@modules/state/simulated/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
   import {
@@ -119,7 +116,15 @@
   const onKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       // Abort if the order system is busy
-      if (working || unavailable || active || !selected || completed) return
+      if (
+        working ||
+        unavailable ||
+        exhausted ||
+        active ||
+        !selected ||
+        completed
+      )
+        return
       // Otherwise, accept the order
       sendAccept()
     }
@@ -150,6 +155,7 @@
   class:active
   class:completed
   class:selected
+  class:exhausted
   on:click={() => {
     if (!completed && !unavailable && !working && !active) {
       sendAccept()
@@ -391,6 +397,10 @@
     }
 
     &.working {
+      pointer-events: none;
+    }
+
+    &.exhausted {
       pointer-events: none;
     }
 

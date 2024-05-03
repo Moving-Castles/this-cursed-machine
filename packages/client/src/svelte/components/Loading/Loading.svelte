@@ -30,7 +30,7 @@
       loadingMessageElement,
       $staticContent.loading.content.content,
       1,
-      50
+      50,
     )
     await new Promise(res => setTimeout(res, 300))
     // Intro sequence done

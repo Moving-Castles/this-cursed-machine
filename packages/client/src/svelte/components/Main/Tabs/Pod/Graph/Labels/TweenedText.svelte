@@ -3,9 +3,7 @@
   import { derived } from "svelte/store"
   import { bounceIn } from "svelte/easing"
 
-  export let mouseover = false
-
-  export let words = []
+  export let words: string[] = []
   export let duration = 100 // default duration for each tween
   export let delay = 4000 // default delay between tweens
 
@@ -48,7 +46,7 @@
         const startCharCode = char.charCodeAt(0)
         const endCharCode = endWord[index].charCodeAt(0)
         const interpolatedCharCode = Math.round(
-          startCharCode + $progress * (endCharCode - startCharCode)
+          startCharCode + $progress * (endCharCode - startCharCode),
         )
         return String.fromCharCode(interpolatedCharCode)
       })

@@ -3,6 +3,7 @@
   // Messages are sent to the <Assistant /> component in App.svelte
   import { onMount } from "svelte"
   import { player } from "@modules/state/base/stores"
+  import { BUG_MATERIAL } from "@modules/ui/constants"
   import {
     discoveredMaterials,
     discoveredMessages,
@@ -66,7 +67,7 @@
     </button>
     <button
       on:click={() => {
-        discoveredMaterials.set(["0x745f425547530000000000000000"])
+        discoveredMaterials.set([BUG_MATERIAL])
         discoveredMessages.set([])
       }}
     >

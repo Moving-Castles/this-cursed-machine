@@ -35,14 +35,6 @@
       &[data-walkable="false"] {
         background: var(--color-grey-dark);
       }
-
-      // &[data-cost="5"] {
-      //   background: orange;
-      // }
-
-      // &[data-cost="10"] {
-      //   background: red;
-      // }
     }
   }
 </style>

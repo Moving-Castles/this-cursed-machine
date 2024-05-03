@@ -63,7 +63,7 @@
     $playerPod?.fixedEntities,
     $simulatedMachines,
     $simulatedConnections,
-    layout.graphMachines
+    layout.graphMachines,
   )
 
   // Play sound when network is running
@@ -85,7 +85,7 @@
   <div style:transform="scale({$graphScale})" class="grid" bind:this={child}>
     <div class="top">
       {#each Object.entries(layout.graphMachines) as [address, machine], i (address)}
-        <MachineSelector {i} {address} {machine} />
+        <MachineSelector {address} {machine} />
       {/each}
       <svg
         bind:this={$graphElement}
@@ -111,8 +111,8 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    cursor: crosshair;
     overflow: hidden;
+    pointer-events: none;
 
     --cellHeight: 10px;
     --cellWidth: 10px;

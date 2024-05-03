@@ -2,6 +2,7 @@
   import { onMount } from "svelte"
   import { setupPublicNetwork } from "@mud/setupPublicNetwork"
   import { tutorialProgress } from "@modules/ui/assistant"
+  import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
   import { ENVIRONMENT } from "@mud/enums"
   import {
     createComponentSystem,
@@ -17,20 +18,6 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
-  import {
-    player,
-    // playerAddress,
-    // entities,
-    // players,
-    recipes,
-    materialMetadata,
-    orders,
-  } from "@modules/state/base/stores"
-
-  $: console.log("$player", $player)
-  $: console.log("$materialMetadata", $materialMetadata)
-  $: console.log("$orders", $orders)
-  $: console.log("$recipes", $recipes)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -124,7 +111,7 @@
   {/if}
 
   {#if $UIState === UI.READY}
-    {#if $tutorialProgress !== 30}
+    {#if $tutorialProgress !== FINAL_TUTORIAL_LEVEL}
       <Main on:escaped={escaped} />
       <Tutorial />
     {:else}

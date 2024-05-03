@@ -5,11 +5,6 @@
     TERMINAL_OUTPUT_TYPE,
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
-  import {
-    discoveredMaterials,
-    discoveredMessages,
-  } from "@modules/state/simulated/stores"
-  import { tutorialProgress } from "@modules/ui/assistant"
   import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { narrative } from "@components/Spawn/narrative"
@@ -20,6 +15,7 @@
   import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
   import { setupWalletNetwork } from "@mud/setupWalletNetwork"
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   export let environment: ENVIRONMENT
 
@@ -77,7 +73,8 @@
        * and set playerAddress to the user address
        */
       const accountKitStoreState = accountKitStore.getState()
-      console.log("accountKitStoreState", accountKitStoreState)
+
+      // console.log("accountKitStoreState", accountKitStoreState)
 
       if (
         accountKitStoreState.appAccountClient &&
@@ -100,6 +97,12 @@
      * the player is spawned in the world
      */
     if ($player?.carriedBy) {
+      // Player is out of tutorial
+      // Make sure local progress is set accordingly
+      if (!$player?.tutorial) {
+        tutorialProgress.set(666)
+      }
+
       // Websocket connection for off-chain messaging
       initSignalNetwork()
 
@@ -112,16 +115,13 @@
         10,
         1000,
       )
+
       dispatch("done")
     } else {
       await narrative[0](environment)
       if (terminalComponent) {
         terminalComponent.resetInput()
       }
-      // Reset tutorial
-      tutorialProgress.set(0)
-      discoveredMaterials.set(["0x745f425547530000000000000000"])
-      discoveredMessages.set([])
     }
   })
 </script>

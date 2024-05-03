@@ -111,7 +111,7 @@ export const tcm: SoundAssets = {
   },
   playerLvlend: {
     src: "./sounds/tcm/order_fulfilled-sfx_02.mp3",
-    volume: 1,
+    volume: 0.7,
   },
   playerLvlendOld: {
     src: "./sounds/tcm/player_lvlend-sfx_02.mp3",
@@ -134,8 +134,8 @@ export const tcm: SoundAssets = {
     volume: 0.6,
   },
   textLineHit: {
-    src: "./sounds/tcm/new_text_line-hit_01.mp3",
-    volume: 5,
+    src: "./sounds/tcm/new_text_line-hit_02.mp3",
+    volume: 1,
   },
   loadingVariation: {
     src: "./sounds/tcm/loading_variation-sfx_01.mp3",

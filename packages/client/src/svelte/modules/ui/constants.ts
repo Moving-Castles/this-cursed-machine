@@ -1,2 +1,3 @@
-export const FINAL_TUTORIAL_LEVEL = 26
+export const FINAL_TUTORIAL_LEVEL = 30
 export const ONE_UNIT = BigInt(1e18)
+export const BUG_MATERIAL = "0x745f425547530000000000000000"

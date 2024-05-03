@@ -47,11 +47,11 @@
       playSound("tcm", "TRX_no")
       await writeToTerminal(
         TERMINAL_OUTPUT_TYPE.ERROR,
-        "You are completely free to use any identifier "
+        "You are completely free to use any identifier ",
       )
       await writeToTerminal(
         TERMINAL_OUTPUT_TYPE.ERROR,
-        "of between 4 and 24 characters"
+        "of between 4 and 24 characters",
       )
     }
   }

@@ -1,26 +1,33 @@
-import { get } from "svelte/store";
+import { get } from "svelte/store"
+import { tutorialProgress } from "@modules/ui/assistant"
 import {
   loadingLine,
   loadingSpinner,
   typeWriteToTerminal,
   writeToTerminal,
-} from "@components/Main/Terminal/functions/writeToTerminal";
-import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums";
-import { SYMBOLS } from "@components/Main/Terminal";
-import { spawn, start } from "@modules/action";
+} from "@components/Main/Terminal/functions/writeToTerminal"
+import { TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+import { SYMBOLS } from "@components/Main/Terminal"
+import { spawn, start } from "@modules/action"
 import {
   waitForCompletion,
   waitForTransaction,
-} from "@modules/action/actionSequencer/utils";
-import { playSound } from "@modules/sound";
-import { playerAddress, player } from "@svelte/modules/state/base/stores";
-import { renderNaming } from "@components/Main/Terminal/functions/renderNaming";
-import { publicNetwork, walletNetwork } from "@modules/network";
-import { setupWalletNetwork } from "@mud/setupWalletNetwork";
-import { ENVIRONMENT } from "@mud/enums";
+} from "@modules/action/actionSequencer/utils"
+import { playSound } from "@modules/sound"
+import { playerAddress, player } from "@svelte/modules/state/base/stores"
+import {
+  discoveredMaterials,
+  discoveredMessages,
+} from "@modules/state/simulated/stores"
+import { BUG_MATERIAL } from "@modules/ui/constants"
+import { tutorialProgress } from "@modules/ui/assistant"
+import { renderNaming } from "@components/Main/Terminal/functions/renderNaming"
+import { publicNetwork, walletNetwork } from "@modules/network"
+import { setupWalletNetwork } from "@mud/setupWalletNetwork"
+import { ENVIRONMENT } from "@mud/enums"
 import { initSignalNetwork } from "@modules/signal"
-import { connect } from "./account-kit-connect";
-import type { AccountKitConnectReturn } from "./account-kit-connect/types";
+import { connect } from "./account-kit-connect"
+import type { AccountKitConnectReturn } from "./account-kit-connect/types"
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -29,7 +36,7 @@ async function writeNarrative(text: string) {
     SYMBOLS[7],
     10,
     800
-  );
+  )
 }
 
 async function writeNarrativeAction(text: string) {
@@ -39,7 +46,7 @@ async function writeNarrativeAction(text: string) {
     SYMBOLS[7],
     10,
     800
-  );
+  )
 }
 
 async function writeNarrativeInfo(text: string) {
@@ -49,7 +56,7 @@ async function writeNarrativeInfo(text: string) {
     false,
     SYMBOLS[16],
     800
-  );
+  )
 }
 
 async function writeNarrativeSuccess(text: string) {
@@ -59,7 +66,7 @@ async function writeNarrativeSuccess(text: string) {
     false,
     SYMBOLS[10],
     800
-  );
+  )
 }
 
 async function typeWriteNarrativeSuccess(text: string) {
@@ -69,7 +76,7 @@ async function typeWriteNarrativeSuccess(text: string) {
     SYMBOLS[15],
     10,
     800
-  );
+  )
 }
 
 async function writeFailure(text: string) {
@@ -79,7 +86,7 @@ async function writeFailure(text: string) {
     false,
     SYMBOLS[7],
     800
-  );
+  )
 }
 
 export const narrative = [
@@ -88,35 +95,45 @@ export const narrative = [
   //   return true;
   // },
   async (_: ENVIRONMENT): Promise<boolean> => {
-    await writeNarrative("welcome stump");
-    await writeNarrative("the company needs to verify your identity.");
-    await writeNarrativeAction("blink to start verification");
-    return true;
+    await writeNarrative("welcome stump")
+    await writeNarrative("the company needs to verify your identity.")
+    await writeNarrativeAction("blink to start verification")
+    return true
   },
   async (environment: ENVIRONMENT): Promise<boolean> => {
-    if ([
-      ENVIRONMENT.DEVELOPMENT,
-      ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
-    ].includes(environment)) {
+    if (
+      [
+        ENVIRONMENT.DEVELOPMENT,
+        ENVIRONMENT.GARNET, // Using burner/faucet on garnet for the time being
+      ].includes(environment)
+    ) {
       // Burner wallet already initialized in Spawn component
-      await typeWriteNarrativeSuccess("No verification required.");
+      await typeWriteNarrativeSuccess("No verification required.")
     } else {
       // Account kit
-      await writeNarrative("Starting verification process...");
+      await writeNarrative("Starting verification process...")
 
-      let accountKitConnectReturn: AccountKitConnectReturn | null = null;
+      let accountKitConnectReturn: AccountKitConnectReturn | null = null
 
       while (!accountKitConnectReturn) {
         try {
-          accountKitConnectReturn = await connect();
+          accountKitConnectReturn = await connect()
         } catch (e) {
-          console.log("Account kit error", e);
-          await writeFailure("Stump must complete the verification process to proceed.");
+          console.log("Account kit error", e)
+          await writeFailure(
+            "Stump must complete the verification process to proceed."
+          )
         }
       }
 
-      console.log("accountKitConnectReturn", accountKitConnectReturn);
-      walletNetwork.set(setupWalletNetwork(get(publicNetwork), accountKitConnectReturn.appAccountClient));
+      // console.log("accountKitConnectReturn", accountKitConnectReturn)
+
+      walletNetwork.set(
+        setupWalletNetwork(
+          get(publicNetwork),
+          accountKitConnectReturn.appAccountClient
+        )
+      )
       // Set player address to main wallet address
       playerAddress.set(accountKitConnectReturn.userAddress)
     }
@@ -124,104 +141,118 @@ export const narrative = [
     // Websocket connection for off-chain messaging
     initSignalNetwork()
 
-    await writeNarrative("Your address is:");
-    await typeWriteNarrativeSuccess(get(playerAddress));
-    await writeNarrativeAction("blink to continue");
+    await writeNarrative("Your address is:")
+    await typeWriteNarrativeSuccess(get(playerAddress))
 
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
-      const name = get(player)?.name ?? 'stump #' + get(player).spawnIndex
-      await writeNarrative(`Welcome back, ${name}`);
-      await writeNarrative("Transferring to pod...");
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      return false;
+
+      // console.log('!get(player)?.tutorial', !get(player)?.tutorial)
+      // console.log('get(player)', get(player))
+
+      // Player is out of tutorial
+      // Make sure local progress is set accordingly
+      if (!get(player)?.tutorial) {
+        tutorialProgress.set(666)
+      }
+
+      const name = get(player)?.name ?? "stump #" + get(player).spawnIndex
+      await writeNarrative(`Welcome back, ${name}`)
+      await writeNarrative("Transferring to pod...")
+      await new Promise(resolve => setTimeout(resolve, 800))
+      return false
     }
-    return true;
+
+    // The player is not spawned
+    // We reset the tutorial progress and discovered materials
+    // in case the player has progressed in the tutorial before 
+    // with another wallet
+    tutorialProgress.set(0)
+    discoveredMaterials.set([BUG_MATERIAL])
+    discoveredMessages.set([])
+
+    await writeNarrativeAction("blink to continue")
+    return true
   },
   async (_: ENVIRONMENT): Promise<boolean> => {
     await writeNarrative(
       "congratulations on qualifying for a position at TCM’s newest fulfilment centre."
-    );
+    )
     await writeNarrative(
       "I am your company assigned Supply Chain Unit Manager (S.C.U.M)."
-    );
-    await writeNarrative("I will help you through the on-boarding process.");
-    await writeNarrativeAction("blink to begin");
-    return true;
+    )
+    await writeNarrative("I will help you through the on-boarding process.")
+    await writeNarrativeAction("blink to begin")
+    return true
   },
   async (_: ENVIRONMENT): Promise<boolean> => {
     await writeNarrative(
       "you can (mandatory) assign yourself a human-readable ID (name)"
-    );
+    )
     // Trigger naming input
-    let name: string | null = null;
+    let name: string | null = null
     while (!name) {
       name = await renderNaming(
         document.getElementById("custom-input-container") as HTMLDivElement
-      );
+      )
     }
-    await writeToTerminal(
-      TERMINAL_OUTPUT_TYPE.COMMAND,
-      name,
-      false,
-      SYMBOLS[1]
-    );
-    await writeNarrative(`${name}, your consent is important to us.`);
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.COMMAND, name, false, SYMBOLS[1])
+    await writeNarrative(`${name}, your consent is important to us.`)
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("Auto-signing contract (life-time term)");
+    await writeNarrativeInfo("Auto-signing contract (life-time term)")
     playSound("tcm", "textLineHit")
     await writeNarrativeInfo(
       "Auto-signing non liability agreement (extreme coverage)"
-    );
+    )
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("Auto-signing NDA (maximum penalty)");
+    await writeNarrativeInfo("Auto-signing NDA (maximum penalty)")
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("Beginning devolutionary brain surgery...");
+    await writeNarrativeInfo("Beginning devolutionary brain surgery...")
     // Send spawn
-    const action = spawn(name);
-    await waitForTransaction(action, loadingSpinner);
-    await waitForCompletion(action, loadingLine);
-    playSound("tcm", "TRX_yes");
+    const action = spawn(name)
+    await waitForTransaction(action, loadingSpinner)
+    await waitForCompletion(action, loadingLine)
+    playSound("tcm", "TRX_yes")
     // Spawn complete
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("all limbs removed");
+    await writeNarrativeInfo("all limbs removed")
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("hippocampus cauterised");
+    await writeNarrativeInfo("hippocampus cauterised")
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("former self erased");
+    await writeNarrativeInfo("former self erased")
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("brain-machine-interface calibrated");
-    await writeNarrativeAction("blink when the anaesthesia has worn off");
-    return true;
+    await writeNarrativeInfo("brain-machine-interface calibrated")
+    await writeNarrativeAction("blink when the anaesthesia has worn off")
+    return true
   },
   async (_: ENVIRONMENT): Promise<boolean> => {
-    await writeNarrative("from now on");
-    await writeNarrative("only one thing matters");
-    playSound("tcm", "bugs");
-    await writeNarrativeSuccess("$BUGS");
-    await writeNarrative("for them you will live in the pod");
-    await writeNarrative("for them you will fulfill your orders");
-    await writeNarrative("for them you will stomp on other stumps");
-    playSound("tcm", "bugs");
-    await writeNarrativeSuccess("$BUGS");
-    playSound("tcm", "bugs");
-    await writeNarrativeSuccess("$BUGS");
-    playSound("tcm", "bugs");
-    await writeNarrativeSuccess("$BUGS");
-    await writeNarrative("life is a $bugs sucking slot machine on steroids");
-    await writeNarrative("Do not disappoint me.");
-    await writeNarrativeAction("blink to enter the pod.");
-    return true;
+    await writeNarrative("from now on")
+    await writeNarrative("only one thing matters")
+    playSound("tcm", "bugs")
+    await writeNarrativeSuccess("$BUGS")
+    await writeNarrative("for them you will live in the pod")
+    await writeNarrative("for them you will fulfill your orders")
+    await writeNarrative("for them you will stomp on other stumps")
+    playSound("tcm", "bugs")
+    await writeNarrativeSuccess("$BUGS")
+    playSound("tcm", "bugs")
+    await writeNarrativeSuccess("$BUGS")
+    playSound("tcm", "bugs")
+    await writeNarrativeSuccess("$BUGS")
+    await writeNarrative("life is a $bugs sucking slot machine on steroids")
+    await writeNarrative("Do not disappoint me.")
+    await writeNarrativeAction("blink to enter the pod.")
+    return true
   },
   async (_: ENVIRONMENT): Promise<boolean> => {
     playSound("tcm", "textLineHit")
-    await writeNarrativeInfo("transferring stump to pod...");
+    await writeNarrativeInfo("transferring stump to pod...")
     // Send spawn
-    const action = start();
-    await waitForTransaction(action, loadingSpinner);
-    await waitForCompletion(action, loadingLine);
-    playSound("tcm", "enteredPod");
-    await writeNarrativeSuccess("transfer complete");
-    return true;
+    const action = start()
+    await waitForTransaction(action, loadingSpinner)
+    await waitForCompletion(action, loadingLine)
+    playSound("tcm", "enteredPod")
+    await writeNarrativeSuccess("transfer complete")
+    return true
   },
-];
+]

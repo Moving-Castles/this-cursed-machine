@@ -7,7 +7,6 @@
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
   import { currentMessage, tutorialProgress } from "@modules/ui/assistant"
-  // import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
 
@@ -41,7 +40,7 @@
     for (const message of messages) {
       await typeWriteToTerminal(
         i === 0 ? TERMINAL_OUTPUT_TYPE.SUCCESS : TERMINAL_OUTPUT_TYPE.NORMAL,
-        message
+        message,
       )
       i++
     }

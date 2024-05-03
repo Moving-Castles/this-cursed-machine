@@ -18,7 +18,6 @@
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
   import Chat from "@components/Main/Tabs/Chat/Chat.svelte"
-  // import Debug from "@components/Main/Atoms/Debug.svelte"
 
   let resized = 0
 
@@ -73,16 +72,11 @@
 
   onMount(() => {
     playSound("tcm", "podBg", true, false)
-    if ($player.tutorial === false) {
-      tutorialProgress.set(666)
-    }
   })
 </script>
 
 {#if $player?.carriedBy && $tutorialProgress > 0}
   <div class="dust" />
-
-  <!-- <Debug/> -->
 
   <div in:flicker class="split-screen">
     <div class="left-col">

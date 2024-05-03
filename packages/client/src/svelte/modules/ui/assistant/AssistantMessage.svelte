@@ -9,6 +9,7 @@
     advanceConditions,
     tutorialCompleted,
   } from "@modules/ui/assistant"
+  import { BUG_MATERIAL } from "@modules/ui/constants"
   import { waitForCompletion } from "@modules/action/actionSequencer/utils"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
@@ -33,7 +34,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 
@@ -91,7 +92,7 @@
     working = false
     tutorialProgress.set(0)
     tutorialCompleted.set([])
-    discoveredMaterials.set(["0x745f425547530000000000000000"])
+    discoveredMaterials.set([BUG_MATERIAL])
     discoveredMessages.set([])
     $activeTab = 0
     clearTerminalOutput()
@@ -156,17 +157,6 @@
     color: var(--color-tutorial);
     position: relative;
     user-select: none;
-
-    .image {
-      line-height: 0;
-      padding: 20px;
-      img {
-        width: 100px;
-        margin-left: auto;
-        margin-right: auto;
-        // border-radius: 50%;
-      }
-    }
 
     &:hover {
       .restart {

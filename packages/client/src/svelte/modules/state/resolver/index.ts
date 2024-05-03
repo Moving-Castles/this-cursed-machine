@@ -18,7 +18,6 @@ import { UI } from "@modules/ui/enums"
 import { tutorialProgress } from "@modules/ui/assistant"
 import { networkIsRunning } from "@modules/state/simulated/stores"
 import { resolve as sendResolve } from "@modules/action"
-import { simulatedTanks } from "@modules/state/simulated/stores"
 
 /**
  * Initializes the state simulator by subscribing to block number changes.
@@ -62,19 +61,12 @@ export async function initStateSimulator() {
       // Player is not spawned yet
       if (!get(player)?.carriedBy) return
 
-      console.log('%c ********************** ', "background: #effb04; color: #000")
-      console.log('%c **** NETWORK STOP **** ', "background: #effb04; color: #000")
-      console.log('%c ********************** ', "background: #effb04; color: #000")
+      console.log('%c ********************** ', "background: #00ffff; color: #000")
+      console.log('%c **** NETWORK STOP **** ', "background: #00ffff; color: #000")
+      console.log('%c ********************** ', "background: #00ffff; color: #000")
 
       // Force resolve on chain
       sendResolve()
-
-      // Resolve locally
-      // console.log(' get(simulatedTanks)', get(simulatedTanks))
-      // patches.set(resolve(get(machines), get(inlets), get(outlet), get(simulatedTanks), get(recipes)))
-
-      // Update localResolved
-      // localResolved.set(get(blockNumber))
     }
   })
 }
