@@ -9,14 +9,14 @@ importers:
   .:
     devDependencies:
       '@latticexyz/account-kit':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@latticexyz/gas-tank@2.0.10-account-kit-5e814684)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@latticexyz/gas-tank@2.0.10-account-kit-f48006dc)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/cli':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
       '@latticexyz/gas-tank':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5)
       '@pimlicolabs/alto':
         specifier: github:latticexyz/alto#3192a9a
         version: github.com/latticexyz/alto/3192a9a
@@ -45,32 +45,32 @@ importers:
   packages/client:
     dependencies:
       '@latticexyz/account-kit':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@latticexyz/gas-tank@2.0.10-account-kit-5e814684)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@latticexyz/gas-tank@2.0.10-account-kit-f48006dc)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/common':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/dev-tools':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@latticexyz/common@2.0.10-account-kit-5e814684)(@latticexyz/recs@2.0.10-account-kit-5e814684)(@latticexyz/store-sync@2.0.10-account-kit-5e814684)(@latticexyz/store@2.0.10-account-kit-5e814684)(@latticexyz/utils@2.0.10-account-kit-5e814684)(@latticexyz/world@2.0.10-account-kit-5e814684)(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@latticexyz/common@2.0.10-account-kit-f48006dc)(@latticexyz/recs@2.0.10-account-kit-f48006dc)(@latticexyz/store-sync@2.0.10-account-kit-f48006dc)(@latticexyz/store@2.0.10-account-kit-f48006dc)(@latticexyz/utils@2.0.10-account-kit-f48006dc)(@latticexyz/world@2.0.10-account-kit-f48006dc)(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/recs':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/schema-type':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/services':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(google-protobuf@3.21.2)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(google-protobuf@3.21.2)
       '@latticexyz/store-sync':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(react@18.2.0)(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(react@18.2.0)(typescript@5.4.5)
       '@latticexyz/utils':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc
       '@latticexyz/world':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@sanity/block-content-to-html':
         specifier: ^2.0.0
         version: 2.0.0
@@ -163,26 +163,26 @@ importers:
   packages/contracts:
     dependencies:
       '@latticexyz/cli':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
       '@latticexyz/config':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@latticexyz/gas-report':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc
       '@latticexyz/schema-type':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       '@latticexyz/store':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@latticexyz/world':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@latticexyz/world-modules':
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684(typescript@5.4.5)
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
@@ -202,11 +202,11 @@ importers:
         specifier: ^4.5.4
         version: 4.5.4(typescript@5.4.5)
       solhint-config-mud:
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc
       solhint-plugin-mud:
-        specifier: 2.0.10-account-kit-5e814684
-        version: 2.0.10-account-kit-5e814684
+        specifier: 2.0.10-account-kit-f48006dc
+        version: 2.0.10-account-kit-f48006dc
 
 packages:
 
@@ -3062,8 +3062,8 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@latticexyz/abi-ts@2.0.10-account-kit-5e814684:
-    resolution: {integrity: sha512-OA8eYLsDBzGlXTG19aS4VdQjx9frqdeDYxXJHIYiQU/VzIkWf7EW4uCb+MOt8Jg4cilhf7GYwmbcKWyYVV9IfQ==}
+  /@latticexyz/abi-ts@2.0.10-account-kit-f48006dc:
+    resolution: {integrity: sha512-IFwGjuQjy5MtF79hTi4a/ZCheSIeGf7oOQn+l9L4VOx5xBtK8xuk+kQ/P520Xg/noLTM1pCX1XFefICbqWFFvg==}
     hasBin: true
     dependencies:
       chalk: 5.3.0
@@ -3074,11 +3074,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@latticexyz/account-kit@2.0.10-account-kit-5e814684(@latticexyz/gas-tank@2.0.10-account-kit-5e814684)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-lJgnsE+HdPzGL+NpxIettwJ7dKD9GCA2ANYklx5yASnmikUQ/y0FVjJ7AWer5OGXjVrw+pKAVhUmSQYpqGz+6w==}
+  /@latticexyz/account-kit@2.0.10-account-kit-f48006dc(@latticexyz/gas-tank@2.0.10-account-kit-f48006dc)(react-native@0.74.0)(root@0.0.1)(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-YsGR+tGMcXaoGN2ew/KIduWGd6MFQJIppUteTI+dZ0dUjBoUEZ0nDqAPrb+AUn87td49KpGpzQaBaIW6wevbXQ==}
     hasBin: true
     peerDependencies:
-      '@latticexyz/gas-tank': 2.0.10-account-kit-5e814684
+      '@latticexyz/gas-tank': 2.0.10-account-kit-f48006dc
       '@pimlicolabs/alto': git+https://github.com/latticexyz/alto.git#3192a9a
     peerDependenciesMeta:
       '@latticexyz/gas-tank':
@@ -3087,13 +3087,13 @@ packages:
         optional: true
     dependencies:
       '@account-abstraction/contracts': 0.7.0
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/gas-tank': 2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world-modules': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/gas-tank': 2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world-modules': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@pimlicolabs/alto': github.com/latticexyz/alto/3192a9a
       '@radix-ui/react-dialog': 1.0.5(react-dom@18.3.1)(react@18.2.0)
       '@radix-ui/react-dropdown-menu': 2.0.6(react-dom@18.3.1)(react@18.2.0)
@@ -3147,10 +3147,10 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/block-logs-stream@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-7420yNw5bXreLuXuGbVZiXGw+2G6LC3DwpdTNEdO56lvoPLSpgMC+GSOYJMBFPJWIXB8sfplGjYQfXQk/WcOAg==}
+  /@latticexyz/block-logs-stream@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-RaZakYwHY1E7lVDtsK/eGkOTFyloQGG45cWuog1tzoZcDDACWb3+Oez8rDaiYe7ym+MFn0dQxKrxH1ZcKAr8+Q==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       abitype: 1.0.0(typescript@5.4.5)(zod@3.23.5)
       debug: 4.3.4
       rxjs: 7.5.5
@@ -3165,8 +3165,8 @@ packages:
       - zod
     dev: false
 
-  /@latticexyz/cli@2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2):
-    resolution: {integrity: sha512-PaQRHKcTFj1QhBfH+Q773kcrZzcr0+pvZrYEcgLk/hIlvy910qgswm5STbf6/V8L70qNvRE19i/VM9aByMku4w==}
+  /@latticexyz/cli@2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2):
+    resolution: {integrity: sha512-rHaqk4q1D9S6OXn94vblHXhIIt2Ye4P2fNddks59JkaWLrdUcMS5068IOATeXru5nDxBhiYiMExc6n52trO82Q==}
     hasBin: true
     dependencies:
       '@aws-sdk/client-kms': 3.565.0(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)
@@ -3174,23 +3174,22 @@ packages:
       '@ethersproject/providers': 5.7.2
       '@improbable-eng/grpc-web': 0.15.0(google-protobuf@3.21.2)
       '@improbable-eng/grpc-web-node-http-transport': 0.15.0(@improbable-eng/grpc-web@0.15.0)
-      '@latticexyz/abi-ts': 2.0.10-account-kit-5e814684
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/gas-report': 2.0.10-account-kit-5e814684
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/services': 2.0.10-account-kit-5e814684(google-protobuf@3.21.2)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/utils': 2.0.10-account-kit-5e814684
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/world-modules': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/abi-ts': 2.0.10-account-kit-f48006dc
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/gas-report': 2.0.10-account-kit-f48006dc
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/services': 2.0.10-account-kit-f48006dc(google-protobuf@3.21.2)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/utils': 2.0.10-account-kit-f48006dc
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/world-modules': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
       asn1.js: 5.4.1
       chalk: 5.3.0
       chokidar: 3.6.0
       debug: 4.3.4
       dotenv: 16.4.5
-      ejs: 3.1.10
       ethers: 5.7.2
       execa: 7.2.0
       glob: 8.1.0
@@ -3216,8 +3215,8 @@ packages:
       - supports-color
       - utf-8-validate
 
-  /@latticexyz/common@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5):
-    resolution: {integrity: sha512-8EwHJSY07TjRyPc23XNTy8pf6s1nUtxVG+Am+/NRpma9oLsivFv3toVIxswMDBd1nfVPx+9/DGAv2xZzXmj54g==}
+  /@latticexyz/common@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5):
+    resolution: {integrity: sha512-3xPwmaPUHvA8k14ejv+U7hsSTeJzGZWO0fZ6CgqYXdkxwhGRfICcsuMZUMQR2iSwP/KEJUILXXISsSO3Xs9Agg==}
     peerDependencies:
       '@aws-sdk/client-kms': 3.x
       asn1.js: 5.x
@@ -3228,7 +3227,7 @@ packages:
         optional: true
     dependencies:
       '@aws-sdk/client-kms': 3.565.0(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
       '@solidity-parser/parser': 0.16.2
       asn1.js: 5.4.1
       debug: 4.3.4
@@ -3245,8 +3244,8 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/common@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-8EwHJSY07TjRyPc23XNTy8pf6s1nUtxVG+Am+/NRpma9oLsivFv3toVIxswMDBd1nfVPx+9/DGAv2xZzXmj54g==}
+  /@latticexyz/common@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-3xPwmaPUHvA8k14ejv+U7hsSTeJzGZWO0fZ6CgqYXdkxwhGRfICcsuMZUMQR2iSwP/KEJUILXXISsSO3Xs9Agg==}
     peerDependencies:
       '@aws-sdk/client-kms': 3.x
       asn1.js: 5.x
@@ -3256,7 +3255,7 @@ packages:
       asn1.js:
         optional: true
     dependencies:
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       '@solidity-parser/parser': 0.16.2
       debug: 4.3.4
       execa: 7.2.0
@@ -3272,11 +3271,11 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/config@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
-    resolution: {integrity: sha512-q5h7ya3QCdPgh2BnUBNKi4GGEtObyHhG1c7Ow0O1Y/PJX70FdIFgdqdKX9sBh98qUtOLAk5QULJAdA2EMhejYA==}
+  /@latticexyz/config@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
+    resolution: {integrity: sha512-ENXqsQSbihUyAB1n7by29gIX5tJufnAmb8q0YfqwcCcRdVHu15rLxZl0NW9SpU4g7kcrUphDq0ya08ZN7SRP0A==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
       esbuild: 0.17.19
       find-up: 6.3.0
       viem: 2.9.20(typescript@5.4.2)(zod@3.23.5)
@@ -3290,11 +3289,11 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/config@2.0.10-account-kit-5e814684(typescript@5.4.5):
-    resolution: {integrity: sha512-q5h7ya3QCdPgh2BnUBNKi4GGEtObyHhG1c7Ow0O1Y/PJX70FdIFgdqdKX9sBh98qUtOLAk5QULJAdA2EMhejYA==}
+  /@latticexyz/config@2.0.10-account-kit-f48006dc(typescript@5.4.5):
+    resolution: {integrity: sha512-ENXqsQSbihUyAB1n7by29gIX5tJufnAmb8q0YfqwcCcRdVHu15rLxZl0NW9SpU4g7kcrUphDq0ya08ZN7SRP0A==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       esbuild: 0.17.19
       find-up: 6.3.0
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
@@ -3308,24 +3307,24 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/dev-tools@2.0.10-account-kit-5e814684(@latticexyz/common@2.0.10-account-kit-5e814684)(@latticexyz/recs@2.0.10-account-kit-5e814684)(@latticexyz/store-sync@2.0.10-account-kit-5e814684)(@latticexyz/store@2.0.10-account-kit-5e814684)(@latticexyz/utils@2.0.10-account-kit-5e814684)(@latticexyz/world@2.0.10-account-kit-5e814684)(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-gv4GjakPYs4zYDGySBVK3wEtHftTj6qLlvH1gT/nUKlzZDOVABkFPLEYLXWVp1/Ouba6U38RFtnVme5k9lVGPg==}
+  /@latticexyz/dev-tools@2.0.10-account-kit-f48006dc(@latticexyz/common@2.0.10-account-kit-f48006dc)(@latticexyz/recs@2.0.10-account-kit-f48006dc)(@latticexyz/store-sync@2.0.10-account-kit-f48006dc)(@latticexyz/store@2.0.10-account-kit-f48006dc)(@latticexyz/utils@2.0.10-account-kit-f48006dc)(@latticexyz/world@2.0.10-account-kit-f48006dc)(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-xlvhBHRBbf38HouD5LKgstdebHYxhMbXnjMULjMurJfqqK94dux7ObLQqZ5ESSN+ZzVbnDSA0eU0E7HEQLlMNQ==}
     peerDependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684
-      '@latticexyz/recs': 2.0.10-account-kit-5e814684
-      '@latticexyz/store': 2.0.10-account-kit-5e814684
-      '@latticexyz/store-sync': 2.0.10-account-kit-5e814684
-      '@latticexyz/utils': 2.0.10-account-kit-5e814684
-      '@latticexyz/world': 2.0.10-account-kit-5e814684
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc
+      '@latticexyz/recs': 2.0.10-account-kit-f48006dc
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc
+      '@latticexyz/store-sync': 2.0.10-account-kit-f48006dc
+      '@latticexyz/utils': 2.0.10-account-kit-f48006dc
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/react': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/recs': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/store-sync': 2.0.10-account-kit-5e814684(react@18.2.0)(typescript@5.4.5)
-      '@latticexyz/utils': 2.0.10-account-kit-5e814684
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/react': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/recs': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/store-sync': 2.0.10-account-kit-f48006dc(react@18.2.0)(typescript@5.4.5)
+      '@latticexyz/utils': 2.0.10-account-kit-f48006dc
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
       react-router-dom: 6.23.0(react-dom@18.3.1)(react@18.2.0)
@@ -3346,8 +3345,8 @@ packages:
       - zod
     dev: false
 
-  /@latticexyz/gas-report@2.0.10-account-kit-5e814684:
-    resolution: {integrity: sha512-CTDi4mmUFew8wO+PESwBkoze0J3EqiE33UXLWNgVsk/aKKmEpRSHW1v47GtzDrm1/rxlXqTebgHf3CPCV3fbmw==}
+  /@latticexyz/gas-report@2.0.10-account-kit-f48006dc:
+    resolution: {integrity: sha512-FR/cABJmAya5zsiLLa9IBOQN5Ewc86cQcp85PvffB25Kvetytsn2aVkeEPbisqdlPt1GOq3SzNOHTK/MypN5xA==}
     hasBin: true
     dependencies:
       chalk: 5.3.0
@@ -3358,14 +3357,14 @@ packages:
       table: 6.8.2
       yargs: 17.7.2
 
-  /@latticexyz/gas-tank@2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-Gz8mS7jQRP2beqZ97DyCvBIB/uiQqoM9L6JC/n9Q9C0rLFZvwThNnxRvj0ZjWUyeL7zZNyt8gAxmmkjw/+3ElQ==}
+  /@latticexyz/gas-tank@2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-zrFn54hJmfIkDC4LX0K18ovVx9Kn9MQk2Q+vrNfBdV5uz78yPHR6ockK2Zq8umK+uw7CnSFW++MMDw733ZPIhQ==}
     dependencies:
-      '@latticexyz/cli': 2.0.10-account-kit-5e814684(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world-modules': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/cli': 2.0.10-account-kit-f48006dc(@aws-sdk/client-sso-oidc@3.565.0)(@aws-sdk/client-sts@3.565.0)(google-protobuf@3.21.2)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world-modules': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
       - '@aws-sdk/client-sso-oidc'
@@ -3379,12 +3378,12 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/protocol-parser@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5):
-    resolution: {integrity: sha512-itxMTov8YAmYRRWLv23Vj7ykFA9yMc3VaUFkNpJA+bWtPSjmmwAwRgK5OeZZ1ofSsyUJ4tGuKUOu1zCBAVmw2Q==}
+  /@latticexyz/protocol-parser@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5):
+    resolution: {integrity: sha512-+6nBiTExJQPBgtCI1WmVJP+zW0Kl+lSk83o0k/1X5PY+koPlf1dsfq5/SrpTQvlY7PJs90wsGxy4/j8/5J3rFQ==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
       abitype: 1.0.0(typescript@5.4.2)(zod@3.23.5)
       viem: 2.9.20(typescript@5.4.2)(zod@3.23.5)
     transitivePeerDependencies:
@@ -3396,12 +3395,12 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/protocol-parser@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-itxMTov8YAmYRRWLv23Vj7ykFA9yMc3VaUFkNpJA+bWtPSjmmwAwRgK5OeZZ1ofSsyUJ4tGuKUOu1zCBAVmw2Q==}
+  /@latticexyz/protocol-parser@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-+6nBiTExJQPBgtCI1WmVJP+zW0Kl+lSk83o0k/1X5PY+koPlf1dsfq5/SrpTQvlY7PJs90wsGxy4/j8/5J3rFQ==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       abitype: 1.0.0(typescript@5.4.5)(zod@3.23.5)
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
     transitivePeerDependencies:
@@ -3413,13 +3412,13 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/query@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-kfTqWa28jw18BXDUUAU+YWbCa/x2G5jsayNuklTyRdfaTtF7JZfKGeE0aBUwvPM5EyPSuX42E+GCc2/Nv/kmsQ==}
+  /@latticexyz/query@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-Kz9QXvevzw/8IyQVU7iAGYyKpgPFi8K5+eKH6z5lGV/KflBefqTC0bII5iVL1ZcKcBy4n7nEqAxaTz5kZqpCcw==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
@@ -3431,11 +3430,11 @@ packages:
       - zod
     dev: false
 
-  /@latticexyz/react@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-sxz8vFShqDpnepg2Fu5AGJlRMqGfvKW/txR+QsDCi/s1vvYuWRqM2F08x+V9C3mhHpMAYeb973XZ6sRN/0BxNg==}
+  /@latticexyz/react@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-78xa1S7uOI44cAgLYSUZ+w8IgYSWeEVzItZm4RE4Dlu83y4U2bKriLEIIVbvTOJGjVPZteZ6PUdryEflpMvJpA==}
     dependencies:
-      '@latticexyz/recs': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/recs': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       fast-deep-equal: 3.1.3
       mobx: 6.12.3
       react: 18.2.0
@@ -3450,11 +3449,11 @@ packages:
       - zod
     dev: false
 
-  /@latticexyz/recs@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-kc9KrE/VPqviCRo60a/pSCT5nmr0wHamZ7E4yPEgnBATCHh2P5yW+cEy0qqtUNLsImqwhiylOLRI8Ec8Mvp0mA==}
+  /@latticexyz/recs@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-tCU4s37SGnjLuIRr8xTyy+vzJ/ULW9OFssO7G2pwc4Bj0sQ6ubhD/MwuzGw1Juf5aBwOyVUSQJHTR7VMoLXDGw==}
     dependencies:
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/utils': 2.0.10-account-kit-5e814684
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/utils': 2.0.10-account-kit-f48006dc
       mobx: 6.12.3
       rxjs: 7.5.5
     transitivePeerDependencies:
@@ -3464,8 +3463,8 @@ packages:
       - zod
     dev: false
 
-  /@latticexyz/schema-type@2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5):
-    resolution: {integrity: sha512-FgdP9JqsTOTyi6x33+deHA9qoFI8jnFInCTtvco9P3MNC6edc/D3LS+hCklb91aEkq418WX6MmRLFpXWLxgcDA==}
+  /@latticexyz/schema-type@2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5):
+    resolution: {integrity: sha512-ihgJzJdPiIocTXaa17npYqKPQlnm1d8qHF9U0dJGDhN4f3lQoD6qo3rOln2GdTS6Djy/zSdBD+xd7vtzo8tgNw==}
     dependencies:
       abitype: 1.0.0(typescript@5.4.2)(zod@3.23.5)
       viem: 2.9.20(typescript@5.4.2)(zod@3.23.5)
@@ -3475,8 +3474,8 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/schema-type@2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5):
-    resolution: {integrity: sha512-FgdP9JqsTOTyi6x33+deHA9qoFI8jnFInCTtvco9P3MNC6edc/D3LS+hCklb91aEkq418WX6MmRLFpXWLxgcDA==}
+  /@latticexyz/schema-type@2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5):
+    resolution: {integrity: sha512-ihgJzJdPiIocTXaa17npYqKPQlnm1d8qHF9U0dJGDhN4f3lQoD6qo3rOln2GdTS6Djy/zSdBD+xd7vtzo8tgNw==}
     dependencies:
       abitype: 1.0.0(typescript@5.4.5)(zod@3.23.5)
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
@@ -3486,8 +3485,8 @@ packages:
       - utf-8-validate
       - zod
 
-  /@latticexyz/services@2.0.10-account-kit-5e814684(google-protobuf@3.21.2):
-    resolution: {integrity: sha512-rlGuVoqOwZ+YUg4j8w3nOyX+qGyH4fde403GF2i6dctcBmajKx7q4cBKcDvbMdSSREcb1GzWPY++DCuhoWz4ug==}
+  /@latticexyz/services@2.0.10-account-kit-f48006dc(google-protobuf@3.21.2):
+    resolution: {integrity: sha512-hjZ+IQkwnKZMHlnbfmsBIGVvJgDaTn9TwzO6K1HTX5zhKqHChQwJ7bEtyvGqJTBV7uuaS8PbVw1P8T9SBXg+VA==}
     dependencies:
       long: 5.2.3
       nice-grpc-common: 2.0.2
@@ -3496,18 +3495,18 @@ packages:
     transitivePeerDependencies:
       - google-protobuf
 
-  /@latticexyz/store-sync@2.0.10-account-kit-5e814684(react@18.2.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-opuY4ymnINJxJTpnDX3JjeBw/00GGABPlG99oxn8lmRcwzlGszbJ7qThJ00uax4StViSaevLLJeuJfbL31D7ug==}
+  /@latticexyz/store-sync@2.0.10-account-kit-f48006dc(react@18.2.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-cMAjkUm4jn0jgV5/m74/QW5dzP1nUZguk+CsvQLi+T3bW/xyQcZBRzwROekfXXRIfyLuaHrxWUH18dIKmJWDrA==}
     dependencies:
-      '@latticexyz/block-logs-stream': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/query': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/recs': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/block-logs-stream': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/query': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/recs': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/server': 10.34.0
       change-case: 5.4.4
@@ -3550,14 +3549,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@latticexyz/store@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
-    resolution: {integrity: sha512-QfC+qjYZZWF305OIYF0McISFtO+WINCIZsLUD+CcIc3IUZEydbvH58u/16a1cZR+OLJY5zZMZkd8msnHQDT4kw==}
+  /@latticexyz/store@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
+    resolution: {integrity: sha512-cZS0l7WcJByh8zJqbabnF3fPTUAy9JAM8EgKfp9Wlzz+cQHdXIis4u3dwWI8FaUzViSojMb1u3feX3ngvG6tvg==}
     dependencies:
       '@arktype/util': 0.0.29
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
       abitype: 1.0.0(typescript@5.4.2)(zod@3.23.5)
       arktype: 1.0.29-alpha
       viem: 2.9.20(typescript@5.4.2)(zod@3.23.5)
@@ -3570,14 +3569,14 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/store@2.0.10-account-kit-5e814684(typescript@5.4.5):
-    resolution: {integrity: sha512-QfC+qjYZZWF305OIYF0McISFtO+WINCIZsLUD+CcIc3IUZEydbvH58u/16a1cZR+OLJY5zZMZkd8msnHQDT4kw==}
+  /@latticexyz/store@2.0.10-account-kit-f48006dc(typescript@5.4.5):
+    resolution: {integrity: sha512-cZS0l7WcJByh8zJqbabnF3fPTUAy9JAM8EgKfp9Wlzz+cQHdXIis4u3dwWI8FaUzViSojMb1u3feX3ngvG6tvg==}
     dependencies:
       '@arktype/util': 0.0.29
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
       abitype: 1.0.0(typescript@5.4.5)(zod@3.23.5)
       arktype: 1.0.29-alpha
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
@@ -3590,21 +3589,21 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/utils@2.0.10-account-kit-5e814684:
-    resolution: {integrity: sha512-S3LQySYJ267TeQX1cZTN4f4LTmoJ5Nn+R+GYp+mpEPSlXiITqQ69zadnLjtuR0VpqYtUhBpeZTjXs301OvFvqQ==}
+  /@latticexyz/utils@2.0.10-account-kit-f48006dc:
+    resolution: {integrity: sha512-QUAKXepGx8Jk/D6/KIQxtKWAnt2SaMlTj8RgLIu+EYgG1T+qbF4EEyQpz83oS1T2ZhZpZxz8CUiTQAC2xyj2yw==}
     dependencies:
       mobx: 6.12.3
       proxy-deep: 3.1.1
       rxjs: 7.5.5
 
-  /@latticexyz/world-modules@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
-    resolution: {integrity: sha512-/oheLIAEXPQuG5wwZJmwlLAR/UjcAiAOe/zSVmTAfFxJPOCTsY+VCLIGbKfuwzU5faR57UksgbzBHkq7CsgRPQ==}
+  /@latticexyz/world-modules@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
+    resolution: {integrity: sha512-PCmLlYzgqC4416DQp6A2xJT6fqEQfKY4Hwr7MQd2d8ToEjwcKPjQiw11LMhBGvt3PLS2CPJfocoGI4A2oDpUQg==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
       zod: 3.23.5
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
@@ -3614,14 +3613,14 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/world-modules@2.0.10-account-kit-5e814684(typescript@5.4.5):
-    resolution: {integrity: sha512-/oheLIAEXPQuG5wwZJmwlLAR/UjcAiAOe/zSVmTAfFxJPOCTsY+VCLIGbKfuwzU5faR57UksgbzBHkq7CsgRPQ==}
+  /@latticexyz/world-modules@2.0.10-account-kit-f48006dc(typescript@5.4.5):
+    resolution: {integrity: sha512-PCmLlYzgqC4416DQp6A2xJT6fqEQfKY4Hwr7MQd2d8ToEjwcKPjQiw11LMhBGvt3PLS2CPJfocoGI4A2oDpUQg==}
     dependencies:
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/world': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/world': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       zod: 3.23.5
     transitivePeerDependencies:
       - '@aws-sdk/client-kms'
@@ -3631,15 +3630,15 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/world@2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
-    resolution: {integrity: sha512-dvwLJXN/Wr9IR5FnivKqRimKyyO12p9bb8Z1bO1zNQEvT/8fD/oBYCuQk0y4bXhvWTbscdXNtN6mQ6PAWmDtrA==}
+  /@latticexyz/world@2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2):
+    resolution: {integrity: sha512-UjGA+8UunhQDAF5rS2MnDOtEtOMouekns3Uy+cSo0b2E+8CVuj19rLlnwEzcsEjtvDU3C+WyOZMzvxg7Djv3rA==}
     dependencies:
       '@arktype/util': 0.0.29
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.2)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.2)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(@aws-sdk/client-kms@3.565.0)(asn1.js@5.4.1)(typescript@5.4.2)
       abitype: 1.0.0(typescript@5.4.2)(zod@3.23.5)
       arktype: 1.0.29-alpha
       viem: 2.9.20(typescript@5.4.2)(zod@3.23.5)
@@ -3652,15 +3651,15 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@latticexyz/world@2.0.10-account-kit-5e814684(typescript@5.4.5):
-    resolution: {integrity: sha512-dvwLJXN/Wr9IR5FnivKqRimKyyO12p9bb8Z1bO1zNQEvT/8fD/oBYCuQk0y4bXhvWTbscdXNtN6mQ6PAWmDtrA==}
+  /@latticexyz/world@2.0.10-account-kit-f48006dc(typescript@5.4.5):
+    resolution: {integrity: sha512-UjGA+8UunhQDAF5rS2MnDOtEtOMouekns3Uy+cSo0b2E+8CVuj19rLlnwEzcsEjtvDU3C+WyOZMzvxg7Djv3rA==}
     dependencies:
       '@arktype/util': 0.0.29
-      '@latticexyz/common': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/config': 2.0.10-account-kit-5e814684(typescript@5.4.5)
-      '@latticexyz/protocol-parser': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/schema-type': 2.0.10-account-kit-5e814684(typescript@5.4.5)(zod@3.23.5)
-      '@latticexyz/store': 2.0.10-account-kit-5e814684(typescript@5.4.5)
+      '@latticexyz/common': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/config': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
+      '@latticexyz/protocol-parser': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/schema-type': 2.0.10-account-kit-f48006dc(typescript@5.4.5)(zod@3.23.5)
+      '@latticexyz/store': 2.0.10-account-kit-f48006dc(typescript@5.4.5)
       abitype: 1.0.0(typescript@5.4.5)(zod@3.23.5)
       arktype: 1.0.29-alpha
       viem: 2.9.20(typescript@5.4.5)(zod@3.23.5)
@@ -7147,9 +7146,6 @@ packages:
     dependencies:
       tslib: 2.6.2
 
-  /async@3.2.5:
-    resolution: {integrity: sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg==}
-
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
@@ -8037,13 +8033,6 @@ packages:
   /ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  /ejs@3.1.10:
-    resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
-    engines: {node: '>=0.10.0'}
-    hasBin: true
-    dependencies:
-      jake: 10.8.7
-
   /electron-to-chromium@1.4.747:
     resolution: {integrity: sha512-+FnSWZIAvFHbsNVmUxhEqWiaOiPMcfum1GQzlWCg/wLigVtshOsjXHyEFfmt6cFK6+HkS3QOJBv6/3OPumbBfw==}
 
@@ -8537,11 +8526,6 @@ packages:
     dependencies:
       flat-cache: 3.2.0
     dev: true
-
-  /filelist@1.0.4:
-    resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
-    dependencies:
-      minimatch: 5.1.6
 
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
@@ -9352,16 +9336,6 @@ packages:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
     dev: true
-
-  /jake@10.8.7:
-    resolution: {integrity: sha512-ZDi3aP+fG/LchyBzUM804VjddnwfSfsdeYkwt8NcbKRvo4rFkjhs456iLFn3k2ZUWvNe4i48WACDbza8fhq2+w==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      async: 3.2.5
-      chalk: 4.1.2
-      filelist: 1.0.4
-      minimatch: 3.1.2
 
   /jest-environment-node@29.7.0:
     resolution: {integrity: sha512-DOSwCRqXirTOyheM+4d5YZOrWcdu0LNZ87ewUoywbcb2XR4wKgqiG8vNeYwhjFMbEkfju7wx2GYH0P2gevGvFw==}
@@ -11602,12 +11576,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /solhint-config-mud@2.0.10-account-kit-5e814684:
-    resolution: {integrity: sha512-LU6DyVrgCZdZaWCBzSU3dEKaLrMP5aW6UODCF3ntg8xyyzeDS7ohxzNMhfJHjx/wSYDhJ0PIDnX3R3VhQMwQNQ==}
+  /solhint-config-mud@2.0.10-account-kit-f48006dc:
+    resolution: {integrity: sha512-BPdyWmLviW4o3dgakZbzQfkyDJNoKpwCSd+00s+m2DoUj2KkBT2KOT9ZrHGuGnvPFNrFw1hBo6E4D7rPdxXwGQ==}
     dev: false
 
-  /solhint-plugin-mud@2.0.10-account-kit-5e814684:
-    resolution: {integrity: sha512-2c4Iwbav929VKRvJdP/VDYN6zmPx+8MtsCi+n0LLV5WlNhQrYxQrhEApz0/m6scA/JqJeZb2QinOr/kYlI4qaQ==}
+  /solhint-plugin-mud@2.0.10-account-kit-f48006dc:
+    resolution: {integrity: sha512-x8hxesjSJ7YWynpoPFJwP+YUBj8GY8GnrGEqGZwXaI0jXKTvmtj0KGA9VUD0y+savWrRGExrVZzy+zDX8IElNA==}
     dependencies:
       '@solidity-parser/parser': 0.16.2
     dev: false
