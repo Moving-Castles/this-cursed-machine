@@ -16,7 +16,9 @@
     if ($player.tutorial) {
       return $player.tutorial && msg.tutorial
     } else {
-      return msg.tutorial || $discoveredMessages.includes(msg._id)
+      return (
+        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
+      )
     }
   })
 

@@ -3,6 +3,7 @@
   import { slide } from "svelte/transition"
   import { urlFor } from "@modules/content/sanity"
   import { tutorialProgress, advanceTutorial } from "@modules/ui/assistant"
+  import { inboxRead } from "@modules/ui/stores"
   import { stepsEasing } from "@modules/utils"
   import type { InboxMessage } from "./types"
 
@@ -23,7 +24,10 @@
   $: if (open) {
     dispatch("open")
     advanceTutorial(null, $tutorialProgress, "read")
+    inboxRead.set([...new Set([...$inboxRead, message._id])])
     scroll?.focus()
+
+    console.log($inboxRead)
   }
   $: {
     if ((selected || open) && message.sender.length > chars) {

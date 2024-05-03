@@ -14,6 +14,7 @@
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
   import { start } from "@modules/action"
   import { materialMetadata, player } from "@modules/state/base/stores"
+  import { inboxRead } from "@modules/ui/stores"
   import {
     playerOrder,
     discoveredMaterials,
@@ -34,7 +35,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name,
+        $materialMetadata[$playerOrder?.order?.materialId]?.name
       )
     }
 
@@ -90,6 +91,7 @@
     await waitForCompletion(action)
     playSound("tcm", "TRX_yes")
     working = false
+    inboxRead.set([])
     tutorialProgress.set(0)
     tutorialCompleted.set([])
     discoveredMaterials.set([BUG_MATERIAL])

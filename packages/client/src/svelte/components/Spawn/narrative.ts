@@ -19,6 +19,7 @@ import {
   discoveredMaterials,
   discoveredMessages,
 } from "@modules/state/simulated/stores"
+import { inboxRead } from "@modules/ui/stores"
 import { BUG_MATERIAL } from "@modules/ui/constants"
 import { tutorialProgress } from "@modules/ui/assistant"
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming"
@@ -146,7 +147,6 @@ export const narrative = [
 
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
-
       // console.log('!get(player)?.tutorial', !get(player)?.tutorial)
       // console.log('get(player)', get(player))
 
@@ -165,8 +165,9 @@ export const narrative = [
 
     // The player is not spawned
     // We reset the tutorial progress and discovered materials
-    // in case the player has progressed in the tutorial before 
+    // in case the player has progressed in the tutorial before
     // with another wallet
+    inboxRead.set([])
     tutorialProgress.set(0)
     discoveredMaterials.set([BUG_MATERIAL])
     discoveredMessages.set([])

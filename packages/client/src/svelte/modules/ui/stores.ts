@@ -3,6 +3,7 @@ import type { SelectOption } from "@components/Main/Terminal/types"
 import type { Writable } from "svelte/store"
 import { writable } from "svelte/store"
 import { UI, TABS } from "./enums"
+import { storableArray } from "@modules/utils/storable"
 import {
   GraphConnection,
   GraphMachine,
@@ -32,4 +33,5 @@ export const graphElement: Writable<SVGElement> = writable()
 export const thud = writable(false)
 export const orderAcceptInProgress = writable("0x0")
 export const terminalBooted = writable(false)
+export const inboxRead = storableArray([], "tcm_inboxRead")
 export const notificationPermissions = writable(permissionsDefault) // block or granted

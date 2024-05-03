@@ -2,10 +2,13 @@
   import type { TabDefinitions } from "../types"
   import {
     activeTab,
+    inboxRead,
     // notificationPermissions
   } from "@modules/ui/stores"
+  import { discoveredMessages } from "@modules/state/simulated/stores"
   import { playSound } from "@modules/sound"
-  import { advanceTutorial, tutorialProgress } from "@modules/ui/assistant"
+  import { staticContent } from "@modules/content"
+  import { tutorialProgress, advanceTutorial } from "@modules/ui/assistant"
   export let tabList: TabDefinitions
 
   const HIDDEN_CONDITIONS: {
@@ -23,6 +26,18 @@
     2: [26],
     3: [30],
   }
+
+  // Filter the messages down to discovered items and then check if they are read
+  $: unreadInboxItems = $staticContent.messages
+    .filter(
+      msg =>
+        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
+    )
+    .filter(msg => !$inboxRead.includes(msg._id))
+
+  $: console.log(unreadInboxItems)
+
+  $: notify = unreadInboxItems.length > 0 && $tutorialProgress > 30
 
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
@@ -78,7 +93,8 @@
         <div
           class="tab-button"
           disabled={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
-          class:pulse={PULSE_CONDITIONS[key].includes($tutorialProgress)}
+          class:pulse={PULSE_CONDITIONS[key].includes($tutorialProgress) ||
+            (notify && key == 2)}
           class:enabled={value.enabled}
           class:active={Number(key) === Number($activeTab)}
           class:hidden={$tutorialProgress <= HIDDEN_CONDITIONS[key]}
