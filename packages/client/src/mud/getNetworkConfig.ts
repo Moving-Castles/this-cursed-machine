@@ -48,6 +48,7 @@ export function getNetworkConfig(environment: ENVIRONMENT) {
     : world?.blockNumber ?? -1; // -1 will attempt to find the block number from RPC
 
   let indexerUrl = chain.indexerUrl;
+  if (params.has("indexer")) indexerUrl = params.get("indexer");
   if (params.has("disableIndexer")) indexerUrl = undefined;
 
   return {
