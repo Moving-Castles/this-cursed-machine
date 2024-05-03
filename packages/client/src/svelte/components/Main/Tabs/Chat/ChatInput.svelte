@@ -34,9 +34,9 @@
       timestamp: Date.now(),
       address: $playerAddress,
     }
-    if ($notificationPermissions === "granted") {
-      sendChatMessage(newMessage)
-    }
+    sendChatMessage(newMessage)
+    // if ($notificationPermissions === "granted") {
+    // }
     // sendNotification(newMessage)
     playSound("tcm", "TRX_yes")
     message = ""
