@@ -18,6 +18,9 @@
     runIntroSequence()
   }
 
+  $: console.log("$ready", $ready)
+  $: console.log("introDone", introDone)
+
   // Finished when intro is done and chain is ready
   $: if (introDone && $ready) {
     if (loadingInterval) clearInterval(loadingInterval)
@@ -30,7 +33,7 @@
       loadingMessageElement,
       $staticContent.loading.content.content,
       1,
-      50
+      50,
     )
     await new Promise(res => setTimeout(res, 300))
     // Intro sequence done

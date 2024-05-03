@@ -25,26 +25,26 @@
     "@vitest/coverage-v8": "^1.5.2",
     "d3-array": "^3.2.4",
     "d3-interpolate": "^3.0.1",
-    "sass": "^1.75.0",
+    "sass": "^1.76.0",
     "svelte": "^4.2.15",
-    "vite": "5.2.10",
-    "vitest": "^1.5.2"
+    "vite": "5.2.11",
+    "vitest": "^1.5.3"
   },
   "dependencies": {
-    "@latticexyz/account-kit": "2.0.10-account-kit-9719b909",
-    "@latticexyz/common": "2.0.10-account-kit-9719b909",
-    "@latticexyz/dev-tools": "2.0.10-account-kit-9719b909",
-    "@latticexyz/recs": "2.0.10-account-kit-9719b909",
-    "@latticexyz/schema-type": "2.0.10-account-kit-9719b909",
-    "@latticexyz/services": "2.0.10-account-kit-9719b909",
-    "@latticexyz/store-sync": "2.0.10-account-kit-9719b909",
-    "@latticexyz/utils": "2.0.10-account-kit-9719b909",
-    "@latticexyz/world": "2.0.10-account-kit-9719b909",
+    "@latticexyz/account-kit": "2.0.10-account-kit-85654219",
+    "@latticexyz/common": "2.0.10-account-kit-85654219",
+    "@latticexyz/dev-tools": "2.0.10-account-kit-85654219",
+    "@latticexyz/recs": "2.0.10-account-kit-85654219",
+    "@latticexyz/schema-type": "2.0.10-account-kit-85654219",
+    "@latticexyz/services": "2.0.10-account-kit-85654219",
+    "@latticexyz/store-sync": "2.0.10-account-kit-85654219",
+    "@latticexyz/utils": "2.0.10-account-kit-85654219",
+    "@latticexyz/world": "2.0.10-account-kit-85654219",
     "@sanity/block-content-to-html": "^2.0.0",
-    "@sanity/client": "^6.15.20",
+    "@sanity/client": "^6.17.0",
     "@sanity/image-url": "^1.0.2",
     "@wagmi/core": "2.8.0",
-    "@sentry/svelte": "^7.112.2",
+    "@sentry/svelte": "^7.113.0",
     "@sentry/vite-plugin": "^2.16.1",
     "contracts": "workspace:*",
     "d3-shape": "^3.2.0",
@@ -53,6 +53,6 @@
     "lodash": "^4.17.21",
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
-    "viem": "2.9.28"
+    "viem": "2.9.31"
   }
 }

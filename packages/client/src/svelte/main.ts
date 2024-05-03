@@ -23,7 +23,7 @@ const getEnvironment = () => {
     default:
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.has("useAccountKit")) {
-        return ENVIRONMENT.REDSTONE
+        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
       } else {
         return ENVIRONMENT.DEVELOPMENT
       }
