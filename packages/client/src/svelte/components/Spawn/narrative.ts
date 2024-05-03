@@ -126,7 +126,8 @@ export const narrative = [
         }
       }
 
-      console.log("accountKitConnectReturn", accountKitConnectReturn)
+      // console.log("accountKitConnectReturn", accountKitConnectReturn)
+
       walletNetwork.set(
         setupWalletNetwork(
           get(publicNetwork),
@@ -146,8 +147,8 @@ export const narrative = [
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
 
-      console.log('!get(player)?.tutorial', !get(player)?.tutorial)
-      console.log('get(player)', get(player))
+      // console.log('!get(player)?.tutorial', !get(player)?.tutorial)
+      // console.log('get(player)', get(player))
 
       // Player is out of tutorial
       // Make sure local progress is set accordingly

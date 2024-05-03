@@ -18,9 +18,6 @@
     runIntroSequence()
   }
 
-  $: console.log("$ready", $ready)
-  $: console.log("introDone", introDone)
-
   // Finished when intro is done and chain is ready
   $: if (introDone && $ready) {
     if (loadingInterval) clearInterval(loadingInterval)

@@ -73,7 +73,8 @@
        * and set playerAddress to the user address
        */
       const accountKitStoreState = accountKitStore.getState()
-      console.log("accountKitStoreState", accountKitStoreState)
+
+      // console.log("accountKitStoreState", accountKitStoreState)
 
       if (
         accountKitStoreState.appAccountClient &&

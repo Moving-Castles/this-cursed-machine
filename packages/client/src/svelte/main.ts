@@ -48,7 +48,7 @@ const wagmiConfig = createConfig({
   ),
 })
 
-console.log("networkConfig", networkConfig)
+// console.log("networkConfig", networkConfig)
 
 mountAccountKit({
   wagmiConfig,
