@@ -61,5 +61,6 @@ library LibOrder {
   function cancel(bytes32 _orderEntity) internal {
     Order.deleteRecord(_orderEntity);
     CompletedPlayers.deleteRecord(_orderEntity);
+    EntityType.deleteRecord(_orderEntity);
   }
 }
