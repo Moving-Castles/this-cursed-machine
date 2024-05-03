@@ -13,7 +13,18 @@ import {
   garnet,
   redstone,
 } from "@latticexyz/common/chains";
-import { holesky, mainnet } from "viem/chains";
+import {
+  arbitrum,
+  arbitrumNova,
+  arbitrumSepolia,
+  base,
+  baseSepolia,
+  holesky,
+  mainnet,
+  optimism,
+  optimismSepolia,
+  sepolia,
+} from "viem/chains";
 
 const extendedGarnet = {
   ...garnet,
@@ -27,8 +38,16 @@ const extendedRedstone = {
 
 export const supportedChains = [
   mudFoundry,
-  extendedGarnet,
+  mainnet,
   extendedRedstone,
   holesky,
-  mainnet,
+  extendedGarnet,
+  sepolia,
+  optimism,
+  optimismSepolia,
+  base,
+  baseSepolia,
+  arbitrum,
+  arbitrumNova,
+  arbitrumSepolia,
 ] as const;
