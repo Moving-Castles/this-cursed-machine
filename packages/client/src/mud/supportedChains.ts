@@ -22,7 +22,7 @@ const extendedGarnet = {
 
 const extendedRedstone = {
   ...redstone,
-  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip"
+  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
 } as const satisfies MUDChain;
 
 export const supportedChains = [
