@@ -6,7 +6,7 @@ import { getNetworkConfig } from "@mud/getNetworkConfig"
 import { ENVIRONMENT } from "@mud/enums"
 import { supportedChains } from "@mud/supportedChains"
 import { transportObserver } from "@latticexyz/common"
-import { fallback, webSocket } from "viem"
+import { Chain, fallback, webSocket } from "viem"
 
 const getEnvironment = () => {
   switch (window.location.hostname) {
@@ -23,7 +23,7 @@ const getEnvironment = () => {
     default:
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.has("useAccountKit")) {
-        return ENVIRONMENT.REDSTONE
+        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
       } else {
         return ENVIRONMENT.DEVELOPMENT
       }
@@ -34,19 +34,27 @@ const environment = getEnvironment()
 
 const networkConfig = getNetworkConfig(environment)
 
+// only include foundry chain in development
+const chains =
+  environment === ENVIRONMENT.DEVELOPMENT ||
+  environment === ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+    ? supportedChains
+    : supportedChains.filter(c => c.id !== 31337)
+
 const wagmiConfig = createConfig({
-  // chains: [networkConfig.chain as Chain],
-  chains: supportedChains,
+  chains: chains as readonly [Chain, ...Chain[]],
   pollingInterval: 1_000,
   // TODO: how to properly set up a transport config for all chains supported as bridge sources?
   transports: Object.fromEntries(
-    supportedChains.map(chain => {
+    chains.map(chain => {
       if (chain.rpcUrls.default.webSocket)
         return [chain.id, transportObserver(fallback([webSocket(), http()]))]
       return [chain.id, transportObserver(http())]
     })
   ),
 })
+
+// console.log("networkConfig", networkConfig)
 
 mountAccountKit({
   wagmiConfig,

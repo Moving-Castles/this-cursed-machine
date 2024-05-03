@@ -16,7 +16,7 @@
   let speed = 100
   let chars = 14
 
-  let scroll: HTMLDIVElement
+  let scroll: HTMLDivElement
   let i = 0
   let clippedSender = message?.sender.slice(i, i + chars).padEnd(chars, " ")
 
@@ -243,6 +243,7 @@
       text-align: center;
       margin-bottom: 3rem;
       padding: 0 1rem;
+      line-height: 1.2em;
 
       em {
         font-style: normal;

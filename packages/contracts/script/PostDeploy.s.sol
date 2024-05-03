@@ -48,11 +48,11 @@ contract PostDeploy is Script {
     LibOffer.create(PublicMaterials.BUGS, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
     // LibOffer.create(PublicMaterials.UREA, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $UREA => 100 Bug in depot
 
-    // // Local deployer
-    // address deployerAddress = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    // Local deployer
+    address deployerAddress = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
-    // LibOrder.create(deployerAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, 0, 0);
-    // LibOrder.create(deployerAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, ONE_DAY, 0);
+    LibOrder.create(deployerAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, 0, 1);
+    LibOrder.create(deployerAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, ONE_DAY, 0);
 
     vm.stopBroadcast();
   }

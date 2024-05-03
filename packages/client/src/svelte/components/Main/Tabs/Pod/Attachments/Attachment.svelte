@@ -25,7 +25,7 @@
     HTMLElement | null,
     HTMLElement | null,
     HTMLElement | null,
-  ] = [null, null, null]
+  ] = [null, null, null, null]
 
   let [fromCoord, toCoord, throughCoord, throughCoord2] = [
     { x: 0, y: 0 },
@@ -73,7 +73,7 @@
     safezone = document.getElementById(
       attachedMachine?.machineType === MACHINE_TYPE.INLET
         ? "safezone-1"
-        : "safezone-2"
+        : "safezone-2",
     )
 
     const from = tankElement?.getBoundingClientRect()
@@ -94,7 +94,7 @@
       // throughCoord = { x: fromCoord.x, y: fromCoord.y + 40 }
 
       throughCoord2 = makeRandomPointInsideSafeZone(
-        attachedMachine?.machineType
+        attachedMachine?.machineType,
       )
 
       const points = throughCoord

@@ -6,7 +6,6 @@ import { playSound } from "@modules/sound"
 async function execute(_: TERMINAL_TYPE) {
   playSound("tcm", "blink")
   await flashEffect()
-  console.log("done")
   return
 }
 

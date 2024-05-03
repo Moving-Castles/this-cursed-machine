@@ -34,7 +34,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 
@@ -157,17 +157,6 @@
     color: var(--color-tutorial);
     position: relative;
     user-select: none;
-
-    .image {
-      line-height: 0;
-      padding: 20px;
-      img {
-        width: 100px;
-        margin-left: auto;
-        margin-right: auto;
-        // border-radius: 50%;
-      }
-    }
 
     &:hover {
       .restart {

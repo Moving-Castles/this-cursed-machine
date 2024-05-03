@@ -16,7 +16,7 @@
   <!-- ORDER INFORMATION -->
   <div class="order-information">
     <div class="goal">
-      <span class="inverted" class:order={$playerOrder}>ORDER:</span>
+      <span class="inverted" class:order={$playerOrder}>ORDER</span>:
       {#if !$playerOrder}
         NONE
       {:else}
@@ -86,11 +86,6 @@
         color: var(--background);
         line-height: 1em;
       }
-    }
-
-    .completed-orders {
-      // height: 100%;
-      // border-left: 4px double var(--color-grey-dark);
     }
   }
 </style>

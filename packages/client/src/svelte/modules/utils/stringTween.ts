@@ -2,17 +2,17 @@ import { tweened } from "svelte/motion"
 import { readable } from "svelte/store"
 
 // Utility to pad strings to a common length
-const padStringToLength = (str, length) => str.padEnd(length, " ")
+const padStringToLength = (str: string, length: number) => str.padEnd(length, " ")
 
 // Initializes a store for each character in the string
-const initCharStores = (str, duration = 500) =>
+const initCharStores = (str: string, duration = 500) =>
   str.split("").map(char => tweened(char.charCodeAt(0), { duration }))
 
 export const createTweenStore = duration => {
   let charStores = []
   let maxLen = 0
 
-  const updateStores = newStr => {
+  const updateStores = (newStr: string) => {
     const paddedStr = padStringToLength(newStr, maxLen)
     paddedStr.split("").forEach((char, i) => {
       if (charStores[i]) {

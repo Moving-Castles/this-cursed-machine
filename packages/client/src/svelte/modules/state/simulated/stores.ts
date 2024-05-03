@@ -519,7 +519,6 @@ export const usedCapacity = derived([simulatedTanks], ([$simulatedTanks]) => {
 export const tankAttachments = derived(
   [simulatedTanks, playerPod],
   ([$simulatedTanks, $playerPod]) => {
-    const results: Attachment[] = []
 
     const getConnectionName = (machineEntity: string) => {
       if (!$playerPod?.fixedEntities) return "none"

@@ -218,12 +218,5 @@
         }
       }
     }
-
-    button {
-      font-size: var(--font-size-small);
-      padding: 5px;
-      border: 1px solid var(--foreground);
-      margin: 1px;
-    }
   }
 </style>

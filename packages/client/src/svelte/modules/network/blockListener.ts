@@ -3,7 +3,7 @@ import { publicNetwork, blockNumber } from "./index"
 import { toastMessage } from "../ui/toast"
 
 let blockTimeout: number
-const TIMEOUT = 10000
+const TIMEOUT = 60000
 
 export function initBlockListener() {
   get(publicNetwork).latestBlock$.subscribe(block => {

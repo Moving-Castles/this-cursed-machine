@@ -7,7 +7,6 @@
     TERMINAL_TYPE,
   } from "@components/Main/Terminal/enums"
   import { currentMessage, tutorialProgress } from "@modules/ui/assistant"
-  // import { SYMBOLS } from "@components/Main/Terminal"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
 
@@ -38,14 +37,13 @@
         .map(msg => msg.replaceAll("%PLAYER%", $player.name))
         .filter(msg => msg !== "")
 
-      let i = 0
       for (const message of messages) {
         // Find the first occurrence of a pattern between curly braces
         let match = message.match(/{(.*?)}/)
 
         // Extract the value between the curly braces
         let value = match ? match[1] : null
-        let outputType = TERMINAL_OUTPUT_TYPE.NORMAL
+        let outputType: string = TERMINAL_OUTPUT_TYPE.NORMAL
 
         if (value !== null) {
           if (value in TERMINAL_OUTPUT_TYPE) {
@@ -57,7 +55,6 @@
         let newMessage = message.replace(/{.*?}/, "")
 
         await typeWriteToTerminal(outputType, newMessage)
-        i++
       }
     }
   })

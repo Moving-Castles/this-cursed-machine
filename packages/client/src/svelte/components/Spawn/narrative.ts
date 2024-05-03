@@ -126,7 +126,8 @@ export const narrative = [
         }
       }
 
-      console.log("accountKitConnectReturn", accountKitConnectReturn)
+      // console.log("accountKitConnectReturn", accountKitConnectReturn)
+
       walletNetwork.set(
         setupWalletNetwork(
           get(publicNetwork),
@@ -137,11 +138,6 @@ export const narrative = [
       playerAddress.set(accountKitConnectReturn.userAddress)
     }
 
-    // Reset stores for the UI
-    tutorialProgress.set(0)
-    discoveredMaterials.set([BUG_MATERIAL])
-    discoveredMessages.set([])
-
     // Websocket connection for off-chain messaging
     initSignalNetwork()
 
@@ -150,12 +146,30 @@ export const narrative = [
 
     // If the player is spawned and started, return false to skip
     if (get(player)?.carriedBy) {
+
+      // console.log('!get(player)?.tutorial', !get(player)?.tutorial)
+      // console.log('get(player)', get(player))
+
+      // Player is out of tutorial
+      // Make sure local progress is set accordingly
+      if (!get(player)?.tutorial) {
+        tutorialProgress.set(666)
+      }
+
       const name = get(player)?.name ?? "stump #" + get(player).spawnIndex
       await writeNarrative(`Welcome back, ${name}`)
       await writeNarrative("Transferring to pod...")
       await new Promise(resolve => setTimeout(resolve, 800))
       return false
     }
+
+    // The player is not spawned
+    // We reset the tutorial progress and discovered materials
+    // in case the player has progressed in the tutorial before 
+    // with another wallet
+    tutorialProgress.set(0)
+    discoveredMaterials.set([BUG_MATERIAL])
+    discoveredMessages.set([])
 
     await writeNarrativeAction("blink to continue")
     return true

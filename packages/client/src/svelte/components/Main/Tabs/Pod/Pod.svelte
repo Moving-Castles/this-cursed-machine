@@ -5,7 +5,6 @@
   import { tutorialProgress } from "@modules/ui/assistant"
 
   import TanksBox from "@components/Main/Tabs/Pod/Tanks/TanksBox.svelte"
-  import Tooltips from "@components/Main/Tabs/Pod/Tooltip/Tooltips.svelte"
 </script>
 
 <div class="pod">
@@ -20,8 +19,6 @@
 
   <Discoveries />
 </div>
-
-<!-- <Tooltips /> -->
 
 <style lang="scss">
   .stats {

@@ -13,7 +13,18 @@ import {
   garnet,
   redstone,
 } from "@latticexyz/common/chains";
-import { holesky, mainnet } from "viem/chains";
+import {
+  arbitrum,
+  arbitrumNova,
+  arbitrumSepolia,
+  base,
+  baseSepolia,
+  holesky,
+  mainnet,
+  optimism,
+  optimismSepolia,
+  sepolia,
+} from "viem/chains";
 
 const extendedGarnet = {
   ...garnet,
@@ -22,13 +33,21 @@ const extendedGarnet = {
 
 const extendedRedstone = {
   ...redstone,
-  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip"
+  faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
 } as const satisfies MUDChain;
 
 export const supportedChains = [
   mudFoundry,
-  extendedGarnet,
+  mainnet,
   extendedRedstone,
   holesky,
-  mainnet,
+  extendedGarnet,
+  sepolia,
+  optimism,
+  optimismSepolia,
+  base,
+  baseSepolia,
+  arbitrum,
+  arbitrumNova,
+  arbitrumSepolia,
 ] as const;

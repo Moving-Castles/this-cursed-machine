@@ -173,10 +173,7 @@ export async function loadingLineMuted(index: number): Promise<void> {
  * @param {number} index - The linearly increasing index for the spinner animation.
  * @returns {Promise<void>} A promise that resolves when the spinner glyph has been written to the terminal.
  */
-export async function loadingSpinnerMuted(
-  index: number,
-  muted = false
-): Promise<void> {
+export async function loadingSpinnerMuted(index: number): Promise<void> {
   const GLYPHS = ["/", "–", "\\", "|"]
   // const GLYPHS = ["▓", "▓"]
   const currentGlyph = GLYPHS[index % GLYPHS.length]

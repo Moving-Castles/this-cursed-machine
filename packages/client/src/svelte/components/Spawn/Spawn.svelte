@@ -15,6 +15,7 @@
   import { setupBurnerWalletNetwork } from "@mud/setupBurnerWalletNetwork"
   import { setupWalletNetwork } from "@mud/setupWalletNetwork"
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
+  import { tutorialProgress } from "@modules/ui/assistant"
 
   export let environment: ENVIRONMENT
 
@@ -72,7 +73,8 @@
        * and set playerAddress to the user address
        */
       const accountKitStoreState = accountKitStore.getState()
-      console.log("accountKitStoreState", accountKitStoreState)
+
+      // console.log("accountKitStoreState", accountKitStoreState)
 
       if (
         accountKitStoreState.appAccountClient &&
@@ -81,8 +83,8 @@
         walletNetwork.set(
           setupWalletNetwork(
             $publicNetwork,
-            accountKitStoreState.appAccountClient
-          )
+            accountKitStoreState.appAccountClient,
+          ),
         )
         // Set player address to main wallet address
         playerAddress.set(accountKitStoreState.userAddress)
@@ -95,6 +97,12 @@
      * the player is spawned in the world
      */
     if ($player?.carriedBy) {
+      // Player is out of tutorial
+      // Make sure local progress is set accordingly
+      if (!$player?.tutorial) {
+        tutorialProgress.set(666)
+      }
+
       // Websocket connection for off-chain messaging
       initSignalNetwork()
 
@@ -105,8 +113,9 @@
         `Welcome back ${name}`,
         SYMBOLS[7],
         10,
-        1000
+        1000,
       )
+
       dispatch("done")
     } else {
       await narrative[0](environment)

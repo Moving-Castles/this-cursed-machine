@@ -1,8 +1,5 @@
 <script lang="ts">
-  import {
-    simulatedTanks,
-    capacityForBugs,
-  } from "@modules/state/simulated/stores"
+  import { simulatedTanks } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import Tank from "./Tank.svelte"
 </script>
@@ -17,7 +14,6 @@
 
 <style lang="scss">
   .tanks-box {
-    // padding: 20px;
     width: 100%;
     height: 100%;
     z-index: var(--z-1);
@@ -27,6 +23,7 @@
     justify-content: space-between;
     padding-left: 15px;
     padding-right: 15px;
+    pointer-events: none;
 
     &.highlight {
       animation: 1s ease-in-out infinite alternate highlight;
