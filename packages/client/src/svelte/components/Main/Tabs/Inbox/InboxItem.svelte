@@ -26,8 +26,6 @@
     advanceTutorial(null, $tutorialProgress, "read")
     inboxRead.set([...new Set([...$inboxRead, message._id])])
     scroll?.focus()
-
-    console.log($inboxRead)
   }
   $: {
     if ((selected || open) && message.sender.length > chars) {

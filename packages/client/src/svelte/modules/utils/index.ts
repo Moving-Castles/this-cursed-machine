@@ -51,6 +51,16 @@ export function filterObjectByKey(
   return filteredObj
 }
 
+export function removePrivateKeys(obj: Record<string, any>): Record<string, any> {
+  let newObj: Record<string, any> = {};
+  for (const key in obj) {
+    if (!key.startsWith("__")) {
+      newObj[key] = obj[key];
+    }
+  }
+  return newObj;
+}
+
 // Unpadded to padded
 export function addressToId(address: string): string {
   if (!address) return "0x0"

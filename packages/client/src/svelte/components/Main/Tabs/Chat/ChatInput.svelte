@@ -20,7 +20,6 @@
       body: `${$player.name}: ${msg.message}`,
       icon: "/images/tcm2.png",
     })
-    console.log(notification)
   }
 
   function sendMessage() {
