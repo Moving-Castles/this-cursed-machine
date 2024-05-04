@@ -4,21 +4,38 @@ import { SyncFilter } from "@latticexyz/store-sync";
 import mudConfig from "contracts/mud.config";
 // import { Hex } from "viem";
 
-const tables = Object.values(mudConfig.tables).map((table) => {
+// const GLOBAL_TABLES = ["Order", "Offer", "Recipe", "GameConfig", "MaterialMetadata", "EntityType"]
+
+// const filteredTables = Object.values(mudConfig.tables).filter((table) => GLOBAL_TABLES.includes(table.name));
+
+// console.log('mudConfig.namespace', mudConfig.namespace)
+
+// const syncTables = filteredTables.map((table) => {
+//     console.log("table", table)
+//     const tableId = resourceToHex({
+//         type: "table",
+//         namespace: mudConfig.namespace,
+//         name: table.name,
+//     });
+//     console.log('table.name', table.name)
+//     console.log("tableId", tableId)
+//     console.log('table.tableId', table.tableId)
+//     return { tableId: tableId };
+// });
+
+// console.log("syncTables", syncTables)
+
+const allTables = Object.values(mudConfig.tables).map((table) => {
+    console.log("table", table)
     const tableId = resourceToHex({
-        type: table.offchainOnly ? "offchainTable" : "table",
-        // TODO: update once this multiple namespaces is supported (https://github.com/latticexyz/mud/issues/994)
+        type: "table",
         namespace: mudConfig.namespace,
         name: table.name,
     });
     return { tableId: tableId };
 });
 
-// const matchSpecificTables = tables.filter((table) => {
-//   const keyNames = Object.keys(table.keySchema);
-//   return keyNames[0] === "matchEntity" && keyNames[1] === "entity";
-// });
 
 export function createSyncFilters(podEntity: Entity | null): SyncFilter[] {
-    return tables;
+    return allTables;
 }

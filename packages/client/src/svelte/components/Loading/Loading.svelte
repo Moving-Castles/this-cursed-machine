@@ -3,6 +3,10 @@
   import { staticContent } from "@modules/content"
   import { animateContent, typeWriter } from "@components/Loading/typewriter"
   import { ready, loadingMessage } from "@modules/network"
+  import { initNetwork } from "@svelte/initNetwork"
+  import { ENVIRONMENT } from "@mud/enums"
+
+  export let environment: ENVIRONMENT
 
   const dispatch = createEventDispatcher()
 
@@ -10,6 +14,8 @@
   let introStarted = false
   let loadingMessageElement: HTMLDivElement
   let loadingInterval: number
+
+  $: console.log("$ready", $ready)
 
   const done = () => dispatch("done")
 
@@ -38,14 +44,22 @@
     // Return early if chain is already ready
     if ($ready) return
     // Otherwise wait for chain to load
-    await typeWriter(loadingMessageElement, "Syncing network", 10)
-    await new Promise(res => window.setTimeout(res, 300))
-    loadingInterval = window.setInterval(() => {
-      if (!loadingMessageElement) return
-      loadingMessageElement.innerHTML += "  *"
-      // Scroll to bottom
-      loadingMessageElement.scrollTop = loadingMessageElement.scrollHeight
-    }, 100)
+    await typeWriter(
+      loadingMessageElement,
+      "Syncing network (this might take a minute)",
+      10,
+    )
+
+    // Set up public network
+    initNetwork(environment)
+
+    // await new Promise(res => window.setTimeout(res, 300))
+    // loadingInterval = window.setInterval(() => {
+    //   if (!loadingMessageElement) return
+    //   loadingMessageElement.innerHTML += "  *"
+    //   // Scroll to bottom
+    //   loadingMessageElement.scrollTop = loadingMessageElement.scrollHeight
+    // }, 100)
   }
 
   const onClick = () => {
