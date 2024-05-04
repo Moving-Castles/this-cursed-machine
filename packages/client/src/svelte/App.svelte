@@ -12,7 +12,7 @@
   import { playSound } from "@modules/sound"
 
   import { entities } from "@modules/state/base/stores"
-  $: console.log("$entities", $entities)
+  $: console.log("Object.keys($entities).length", Object.keys($entities).length)
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
