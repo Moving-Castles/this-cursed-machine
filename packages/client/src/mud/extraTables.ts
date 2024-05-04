@@ -10,7 +10,6 @@ export const syncFilters: SyncFilter[] = [
     },
 ];
 
-
 export const tables = {
     Token_Balances: {
         namespace: "t_BUGS",

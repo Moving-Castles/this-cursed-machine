@@ -3,8 +3,12 @@
   import { staticContent } from "@modules/content"
   import { animateContent, typeWriter } from "@components/Loading/typewriter"
   import { ready, loadingMessage } from "@modules/network"
+  import { initNetwork } from "@svelte/init"
+  import { ENVIRONMENT } from "@mud/enums"
 
   const dispatch = createEventDispatcher()
+
+  export let environment: ENVIRONMENT
 
   let introDone = false
   let introStarted = false
@@ -40,6 +44,7 @@
     // Otherwise wait for chain to load
     await typeWriter(loadingMessageElement, "Syncing network", 10)
     await new Promise(res => window.setTimeout(res, 300))
+    initNetwork(environment)
     loadingInterval = window.setInterval(() => {
       if (!loadingMessageElement) return
       loadingMessageElement.innerHTML += "  *"

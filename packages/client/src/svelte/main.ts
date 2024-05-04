@@ -23,9 +23,9 @@ const getEnvironment = () => {
     default:
       const urlParams = new URLSearchParams(window.location.search)
       if (urlParams.has("useAccountKit")) {
-        return ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+        return ENVIRONMENT.REDSTONE
       } else {
-        return ENVIRONMENT.DEVELOPMENT
+        return ENVIRONMENT.REDSTONE
       }
   }
 }
@@ -37,7 +37,7 @@ const networkConfig = getNetworkConfig(environment)
 // only include foundry chain in development
 const chains =
   environment === ENVIRONMENT.DEVELOPMENT ||
-  environment === ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
+    environment === ENVIRONMENT.DEVELOPMENT_ACCOUNT_KIT
     ? supportedChains
     : supportedChains.filter(c => c.id !== 31337)
 
