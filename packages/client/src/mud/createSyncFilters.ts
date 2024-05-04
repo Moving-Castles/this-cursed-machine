@@ -26,7 +26,6 @@ import mudConfig from "contracts/mud.config";
 // console.log("syncTables", syncTables)
 
 const allTables = Object.values(mudConfig.tables).map((table) => {
-    console.log("table", table)
     const tableId = resourceToHex({
         type: "table",
         namespace: mudConfig.namespace,

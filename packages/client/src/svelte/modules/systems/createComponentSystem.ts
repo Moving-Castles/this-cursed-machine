@@ -8,6 +8,8 @@ export function createComponentSystem(componentKey: string) {
   (get(publicNetwork).components as any)[componentKey].update$.subscribe((update: ComponentUpdate) => {
     const [nextValue] = update.value
 
+    console.log("createComponentSystem", componentKey, update, nextValue)
+
     // Single-value components have a "value" property, structs do not
     const newValue =
       nextValue && Object.prototype.hasOwnProperty.call(nextValue, "value")
