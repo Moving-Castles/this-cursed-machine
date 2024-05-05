@@ -11,7 +11,16 @@ export function createComponentSystem(componentKey: string) {
 
     // If the values are the same we assume 
     // this is directly after hydration
+    // Abort
     if (deepEqual(nextValue, prevValue)) return
+
+    const entityID = update.entity
+    const propertyName = componentKey === "ContainedMaterial" ? "materialId" : toCamelCase(componentKey)
+
+    // TODO: filter updates
+    // - Update to component comes in
+    // - is the component on a type of entity that we might want to filter?
+    // - is the update relevant to the player?
 
     // Single-value components have a "value" property, structs do not
     const newValue =
@@ -19,8 +28,6 @@ export function createComponentSystem(componentKey: string) {
         ? nextValue.value
         : nextValue
 
-    const entityID = update.entity
-    const propertyName = componentKey === "ContainedMaterial" ? "materialId" : toCamelCase(componentKey)
 
     entities.update(value => {
       // Create an empty entity if it does not exist

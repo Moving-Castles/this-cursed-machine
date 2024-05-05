@@ -21,7 +21,6 @@ import {
 } from "@modules/state/simulated/stores"
 import { inboxRead } from "@modules/ui/stores"
 import { BUG_MATERIAL } from "@modules/ui/constants"
-import { tutorialProgress } from "@modules/ui/assistant"
 import { renderNaming } from "@components/Main/Terminal/functions/renderNaming"
 import { publicNetwork, walletNetwork } from "@modules/network"
 import { setupWalletNetwork } from "@mud/setupWalletNetwork"
@@ -29,6 +28,8 @@ import { ENVIRONMENT } from "@mud/enums"
 import { initSignalNetwork } from "@modules/signal"
 import { connect } from "./account-kit-connect"
 import type { AccountKitConnectReturn } from "./account-kit-connect/types"
+import { initEntities } from "@modules/systems/initEntities"
+
 
 async function writeNarrative(text: string) {
   await typeWriteToTerminal(
@@ -110,6 +111,10 @@ export const narrative = [
     ) {
       // Burner wallet already initialized in Spawn component
       await typeWriteNarrativeSuccess("No verification required.")
+
+      // Set initial local state
+      initEntities()
+
     } else {
       // Account kit
       await writeNarrative("Starting verification process...")
@@ -137,6 +142,9 @@ export const narrative = [
       )
       // Set player address to main wallet address
       playerAddress.set(accountKitConnectReturn.userAddress)
+
+      // Set initial local state
+      initEntities()
     }
 
     // Websocket connection for off-chain messaging

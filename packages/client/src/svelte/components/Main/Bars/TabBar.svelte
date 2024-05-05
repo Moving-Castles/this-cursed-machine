@@ -31,18 +31,16 @@
   $: unreadInboxItems = $staticContent.messages
     .filter(
       msg =>
-        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
+        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id),
     )
     .filter(msg => !$inboxRead.includes(msg._id))
-
-  $: console.log(unreadInboxItems)
 
   $: notify = unreadInboxItems.length > 0 && $tutorialProgress > 30
 
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num
+    num => $tutorialProgress > num,
   ).length
 
   const onClick = (e: MouseEvent) => {

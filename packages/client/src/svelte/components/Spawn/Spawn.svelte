@@ -16,6 +16,7 @@
   import { setupWalletNetwork } from "@mud/setupWalletNetwork"
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
   import { tutorialProgress } from "@modules/ui/assistant"
+  import { initEntities } from "@modules/systems/initEntities"
 
   export let environment: ENVIRONMENT
 
@@ -88,6 +89,9 @@
         )
         // Set player address to main wallet address
         playerAddress.set(accountKitStoreState.userAddress)
+
+        // Set initial local state
+        initEntities()
       }
     }
 
