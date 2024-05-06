@@ -88,7 +88,10 @@
       // Now check the material of the order and
       // if the material has static content
       // Unlock the message
-      if (staticMaterial?.hint) {
+      if (
+        staticMaterial?.hint &&
+        order.order.creator === $gameConfig.adminAddress
+      ) {
         discoveredMessages.set([
           ...$discoveredMessages,
           staticMaterial.hint._id,
