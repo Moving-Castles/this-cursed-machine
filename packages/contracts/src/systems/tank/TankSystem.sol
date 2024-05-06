@@ -140,10 +140,17 @@ contract TankSystem is System {
         TutorialLevel.deleteRecord(playerEntity);
         NonTransferableBalance.deleteRecord(playerEntity);
 
-        // Fill the player's first tank with bugs to get them started
         bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
+
+        // Fill first tank with bugs
         ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUGS);
         Amount.set(tanksInPod[0], TANK_CAPACITY);
+
+        // Empty the rest of the tanks
+        for (uint32 i = 1; i < tanksInPod.length; i++) {
+          ContainedMaterial.set(tanksInPod[i], LibMaterial.NONE);
+          Amount.set(tanksInPod[i], 0);
+        }
 
         return;
       }
