@@ -316,4 +316,67 @@ contract OrderSystemTest is BaseTest {
 
     vm.stopPrank();
   }
+
+  function testRevertAcceptExhaustedOrder() public {
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 1);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.acceptOrder(orderEntity);
+    world.shipTank(tanksInPod[0]);
+    vm.stopPrank();
+
+    spawnBob();
+
+    prankAdmin();
+    world.devGraduate(bob);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(bob);
+    vm.expectRevert("max players reached");
+    world.acceptOrder(orderEntity);
+    vm.stopPrank();
+  }
+
+  function testRevertShipExhaustedOrder() public {
+    prankAdmin();
+    bytes32 orderEntity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 1);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    // Alice accepts order
+    vm.startPrank(alice);
+    world.acceptOrder(orderEntity);
+    vm.stopPrank();
+
+    spawnBob();
+
+    prankAdmin();
+    world.devGraduate(bob);
+    world.devFillTank(tanksInPod[0], 100, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    // Bob accepts order
+    vm.startPrank(bob);
+    world.acceptOrder(orderEntity);
+    vm.stopPrank();
+
+    // Alice ships order
+    usePlayerEntity(alice);
+    vm.startPrank(alice);
+    world.shipTank(tanksInPod[0]);
+    vm.stopPrank();
+
+    // Bob ships order, which should be exhasted at this point
+    usePlayerEntity(bob);
+    vm.startPrank(bob);
+    vm.expectRevert("max players reached");
+    world.shipTank(tanksInPod[0]);
+    vm.stopPrank();
+  }
 }
