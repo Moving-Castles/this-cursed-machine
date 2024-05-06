@@ -3,11 +3,10 @@
   import {
     activeTab,
     inboxRead,
+    inboxMessages,
     // notificationPermissions
   } from "@modules/ui/stores"
-  import { discoveredMessages } from "@modules/state/simulated/stores"
   import { playSound } from "@modules/sound"
-  import { staticContent } from "@modules/content"
   import { tutorialProgress, advanceTutorial } from "@modules/ui/assistant"
   export let tabList: TabDefinitions
 
@@ -28,12 +27,9 @@
   }
 
   // Filter the messages down to discovered items and then check if they are read
-  $: unreadInboxItems = $staticContent.messages
-    .filter(
-      msg =>
-        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
-    )
-    .filter(msg => !$inboxRead.includes(msg._id))
+  $: unreadInboxItems = $inboxMessages.filter(
+    msg => !$inboxRead.includes(msg._id)
+  )
 
   $: notify = unreadInboxItems.length > 0 && $tutorialProgress > 30
 

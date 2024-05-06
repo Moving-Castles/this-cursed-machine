@@ -17,6 +17,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOw
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 import { LibOrder, LibInitRecipes, LibInit, LibOffer, LibMaterial, PublicMaterials } from "../src/libraries/Libraries.sol";
+import { PostDeployMaterials } from "./private/materials/PostDeployMaterials.s.sol";
 import { ONE_MINUTE, ONE_DAY, ONE_HOUR, ONE_UNIT } from "../src/constants.sol";
 
 contract PostDeploy is Script {
@@ -36,6 +37,7 @@ contract PostDeploy is Script {
 
     // Register public materials
     PublicMaterials.init();
+    PostDeployMaterials.init();
 
     // Initialize gameConfig and tutorial levels
     // Root namespace owner is admin
@@ -46,12 +48,15 @@ contract PostDeploy is Script {
 
     // Create offer
     LibOffer.create(PublicMaterials.BUGS, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
+    LibOffer.create(PostDeployMaterials.CORN, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $BUGS => 100 Bug in depot
+
     // LibOffer.create(PublicMaterials.UREA, 100 * ONE_UNIT, 100 * ONE_UNIT); // 100 $UREA => 100 Bug in depot
 
     // Local deployer
     address deployerAddress = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
     LibOrder.create(deployerAddress, PublicMaterials.PISS, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, 0, 1);
+    LibOrder.create(deployerAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, ONE_DAY, 0);
     LibOrder.create(deployerAddress, PublicMaterials.BLOOD, 50 * ONE_UNIT, false, 0, 120 * ONE_UNIT, ONE_DAY, 0);
 
     vm.stopBroadcast();

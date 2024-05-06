@@ -1,26 +1,14 @@
 <script lang="ts">
-  import { staticContent } from "@modules/content"
-  import { player } from "@modules/state/base/stores"
+  import { inboxMessages } from "@modules/ui/stores"
   import { fade } from "svelte/transition"
   import { playSound } from "@modules/sound"
   import { mod } from "@modules/utils"
   import InboxItem from "./InboxItem.svelte"
-  import { discoveredMessages } from "@modules/state/simulated/stores"
 
   let selected = 0
   let openItem = -1
 
   let element: HTMLDivElement
-
-  $: messages = $staticContent.messages.filter(msg => {
-    if ($player.tutorial) {
-      return $player.tutorial && msg.tutorial
-    } else {
-      return (
-        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
-      )
-    }
-  })
 
   const cycle = (e: KeyboardEvent) => {
     if (openItem < 0) {
@@ -51,14 +39,14 @@
 <svelte:window on:keydown|stopPropagation={cycle} />
 
 <div class="head">
-  <div>{messages?.length ?? 0} messages</div>
+  <div>{$inboxMessages?.length ?? 0} messages</div>
   <span class="warn">
     Violations of the TCM Titanium Grade NDA™ will be punished
   </span>
 </div>
 
 <div class="inbox" in:fade bind:this={element}>
-  {#each messages as message, i}
+  {#each $inboxMessages as message, i}
     <InboxItem
       on:click={() => (openItem = openItem === i ? -1 : i)}
       on:close={() => (openItem = -1)}

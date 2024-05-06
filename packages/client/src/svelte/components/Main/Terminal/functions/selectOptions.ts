@@ -4,6 +4,7 @@ import { SelectOption } from "@components/Main/Terminal/types"
 import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
 import { MaterialIdNone } from "@modules/state/base/constants"
+import { inboxMessages } from "@modules/ui/stores"
 import {
   simulatedMachines,
   simulatedConnections,
@@ -79,11 +80,24 @@ function createSelectOptionsBuild(): SelectOption[] {
   let availableMachines: MACHINE_TYPE[] =
     MACHINES_BY_LEVEL[get(player)?.tutorialLevel ?? 3]
 
+  const $inboxMessages = get(inboxMessages)
+
+  const isMachineUnlocked = (machineType: MACHINE_TYPE) => {
+    console.log(machineType, MACHINE_TYPE.MEALWORM_VAT)
+    if (machineType === MACHINE_TYPE.MEALWORM_VAT) {
+      console.log($inboxMessages)
+      return $inboxMessages.filter(msg => msg.unlocksMealwormVat).length > 0
+    } else if (machineType === MACHINE_TYPE.RAT_CAGE) {
+      console.log($inboxMessages)
+      return $inboxMessages.filter(msg => msg.unlocksRatCage).length > 0
+    } else return true
+  }
+
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
-      label: MACHINE_TYPE[availableMachines[i]],
+      label: MACHINE_TYPE[availableMachines[i]].replaceAll("_", " "),
       value: availableMachines[i],
-      available: get(machineCapacity) > 0,
+      available: isMachineUnlocked(availableMachines[i]),
     })
   }
 
@@ -227,14 +241,25 @@ function createSelectOptionsRefillTank(): SelectOption[] {
 
   const offers = get(offersStore)
   const balance = get(playerTokenBalance)
+  const materials = get(materialMetadata)
 
-  selectOptions = Object.entries(offers).map(([address, offer]) => ({
-    label: `${displayAmount(offer.offer.amount)} ${get(materialMetadata)[offer.offer.materialId].name}`,
-    value: address,
-    available:
-      balance >= displayAmount(offer.offer.cost) &&
-      get(capacityForBugs) >= displayAmount(offer.offer.cost),
-  }))
+  console.log(Object.keys(materials).length)
+
+  console.log(
+    offers,
+    Object.values(materials).find(mat => mat.name === "CORN")
+  )
+
+  selectOptions = Object.entries(offers).map(([address, offer]) => {
+    const material = get(materialMetadata)?.[offer.offer.materialId]
+    return {
+      label: `${displayAmount(offer.offer.amount)} ${material?.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
+      value: address,
+      available:
+        balance >= displayAmount(offer.offer.cost) &&
+        get(capacityForBugs) >= displayAmount(offer.offer.cost),
+    }
+  })
 
   return selectOptions
 }

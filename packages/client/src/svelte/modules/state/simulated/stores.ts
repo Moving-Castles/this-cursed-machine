@@ -472,15 +472,9 @@ export const shippableTanks = derived(
     if (!$blockNumber) return {}
     return Object.fromEntries(
       Object.entries($simulatedTanks).map(([_, tank]) => {
-        console.log($playerOrder)
-        const exhausted =
-          $playerOrder?.order?.maxPlayers > 0 &&
-          ($playerOrder?.completedPlayers ?? 0) >=
-            $playerOrder?.order.maxPlayers
         if (
           tank.materialId === $playerOrder?.order.materialId &&
-          tank.amount >= $playerOrder?.order.amount &&
-          !exhausted
+          tank.amount >= $playerOrder?.order.amount
         ) {
           return [_, true]
         }
@@ -500,15 +494,19 @@ export const capacityForBugs = derived(
       )
     })
 
-    const total =
-      t
-        .map(tank => {
-          // if the tank material is bugs, or if the tank material is non existent
-          return tank.amount
-        })
-        .reduce((total, next) => (total += next)) / ONE_UNIT
+    if (t?.length > 0) {
+      const total =
+        t
+          .map(tank => {
+            // if the tank material is bugs, or if the tank material is non existent
+            return tank.amount
+          })
+          .reduce((total, next) => (total += next)) / ONE_UNIT
 
-    return t?.length * 500 - Number(total)
+      return t?.length * 500 - Number(total)
+    }
+
+    return 0
   }
 )
 

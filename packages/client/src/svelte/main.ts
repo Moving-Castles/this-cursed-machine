@@ -21,12 +21,12 @@ const getEnvironment = () => {
     case "garnet-account-kit.thiscursedmachine.fun":
       return ENVIRONMENT.GARNET_ACCOUNT_KIT
     default:
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.has("useAccountKit")) {
-        return ENVIRONMENT.REDSTONE
-      } else {
-        return ENVIRONMENT.REDSTONE
-      }
+      return ENVIRONMENT.DEVELOPMENT
+    // const urlParams = new URLSearchParams(window.location.search)
+    // if (urlParams.has("useAccountKit")) {
+    // } else {
+    //   return ENVIRONMENT.REDSTONE
+    // }
   }
 }
 
