@@ -9,24 +9,30 @@ contract GraduateSystem is System {
   /**
    * @notice Fast forward out of tutorial
    */
-  function graduate() public {
-    bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
+  function graduate() public pure {
+    require(false, "not allowed");
+    // bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
-    require(Tutorial.get(playerEntity), "not in tutorial");
+    // require(Tutorial.get(playerEntity), "not in tutorial");
 
-    bytes32 podEntity = CarriedBy.get(playerEntity);
+    // bytes32 podEntity = CarriedBy.get(playerEntity);
 
-    TutorialLevel.deleteRecord(playerEntity);
-    Tutorial.deleteRecord(playerEntity);
+    // TutorialLevel.deleteRecord(playerEntity);
+    // Tutorial.deleteRecord(playerEntity);
 
-    // Clear current order
-    CurrentOrder.set(playerEntity, bytes32(0));
+    // // Clear current order
+    // CurrentOrder.set(playerEntity, bytes32(0));
 
-    // Empty all tanks
-    bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
-    for (uint32 i = 0; i < tanksInPod.length; i++) {
-      ContainedMaterial.set(tanksInPod[i], LibMaterial.NONE);
-      Amount.set(tanksInPod[i], 0);
-    }
+    // bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
+
+    // // Fill first tank with bugs
+    // ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUGS);
+    // Amount.set(tanksInPod[0], TANK_CAPACITY);
+
+    // // Empty the rest of the tanks
+    // for (uint32 i = 1; i < tanksInPod.length; i++) {
+    //   ContainedMaterial.set(tanksInPod[i], LibMaterial.NONE);
+    //   Amount.set(tanksInPod[i], 0);
+    // }
   }
 }

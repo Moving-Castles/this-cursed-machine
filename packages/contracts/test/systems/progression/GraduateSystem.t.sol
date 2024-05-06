@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
+import { TANK_CAPACITY } from "../../../src/constants.sol";
 
 contract GraduateSystemTest is BaseTest {
   bytes32 playerEntity;
@@ -38,31 +39,36 @@ contract GraduateSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    startGasReport("Graduate");
+    // startGasReport("Graduate");
+    vm.expectRevert("not allowed");
     world.graduate();
-    endGasReport();
+    // endGasReport();
 
     vm.stopPrank();
 
-    assertEq(Tutorial.get(playerEntity), false);
+    // // Check that first tank contains TANK_CAPACITY bugs
+    // assertEq(Tutorial.get(playerEntity), false);
+    // // No matching declaration found after argument-dependent lookup.solidity(9322)
+    // // assertEq(ContainedMaterial.get(tanksInPod[0]), PublicMaterials.BUGS);
+    // assertEq(Amount.get(tanksInPod[0]), TANK_CAPACITY);
 
-    // Check that tanks are empty
-    for (uint32 i = 0; i < tanksInPod.length; i++) {
-      // No matching declaration found after argument-dependent lookup.solidity(9322)
-      // assertEq(ContainedMaterial.get(tanksInPod[i]), LibMaterial.NONE);
-      assertEq(Amount.get(tanksInPod[i]), 0);
-    }
+    // // Check that tanks are empty
+    // for (uint32 i = 1; i < tanksInPod.length; i++) {
+    //   // No matching declaration found after argument-dependent lookup.solidity(9322)
+    //   // assertEq(ContainedMaterial.get(tanksInPod[i]), LibMaterial.NONE);
+    //   assertEq(Amount.get(tanksInPod[i]), 0);
+    // }
   }
 
-  function testRevertDoubleGraduate() public {
-    setUp();
+  // function testRevertDoubleGraduate() public {
+  //   setUp();
 
-    vm.startPrank(alice);
+  //   vm.startPrank(alice);
 
-    world.graduate();
-    vm.expectRevert("not in tutorial");
-    world.graduate();
+  //   world.graduate();
+  //   vm.expectRevert("not in tutorial");
+  //   world.graduate();
 
-    vm.stopPrank();
-  }
+  //   vm.stopPrank();
+  // }
 }
