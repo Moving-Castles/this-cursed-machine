@@ -5,6 +5,7 @@ export function flicker(
   { delay = 0, duration = 1000, easing = sineInOut } = {}
 ) {
   const originalOpacity = +getComputedStyle(node).opacity
+  const originalWidth = +getComputedStyle(node).width
   // Descriptive variables for the flicker effect
   const baseFrequency = 1 // Base frequency for the primary sine wave
   const frequencyVariance = 15 // Additional random variance added to the base frequency
@@ -30,7 +31,7 @@ export function flicker(
           Math.max(t + flickerEffect * (Math.random() + flickerVariability), 0),
           1
         ) * originalOpacity
-      return `opacity: ${opacity}`
+      return `opacity: ${opacity}; width: ${originalWidth}px`
     },
   }
 }

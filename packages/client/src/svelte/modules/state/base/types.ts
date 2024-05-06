@@ -153,12 +153,18 @@ declare global {
     outputs: MaterialId[]
   }
 
+  type Asset = {
+    _type: string
+    _ref: string
+  }
+
   type MaterialMetadata = {
     materialId: MaterialId
     tokenAddress: string
     name: string
     difficulty: MATERIAL_DIFFICULTY
     // Optionally extended by the schema from Sanity
+    image?: Asset
     title?: string
     _updatedAt?: string
     _type?: string

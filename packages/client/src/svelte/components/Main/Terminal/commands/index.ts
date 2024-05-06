@@ -16,6 +16,7 @@ import { wipePod } from "@components/Main/Terminal/commands/wipePod"
 // Misc.
 import { blink } from "@components/Main/Terminal/commands/blink"
 import { help } from "@components/Main/Terminal/commands/help"
+import { materials } from "@components/Main/Terminal/commands/materials"
 // Hidden
 import { skip } from "@components/Main/Terminal/commands/skip"
 import { graduate } from "@components/Main/Terminal/commands/graduate"
@@ -37,6 +38,7 @@ export const commands: Command[] = [
   wipePod,
   // Misc.
   help,
+  materials,
   blink,
   // Testing
   resolve,

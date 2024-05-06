@@ -1,5 +1,6 @@
 import { get } from "svelte/store"
 import { EMPTY_CONNECTION } from "@modules/utils/constants"
+import { BUG_MATERIAL } from "@modules/ui/constants"
 import { SelectOption } from "@components/Main/Terminal/types"
 import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
@@ -70,6 +71,15 @@ function createSelectOptionsWipe(): SelectOption[] {
   return [{ label: "CONFIRM", value: "true", available: true }]
 }
 
+const isMachineUnlocked = (machineType: MACHINE_TYPE) => {
+  const $inboxMessages = get(inboxMessages)
+  if (machineType === MACHINE_TYPE.MEALWORM_VAT) {
+    return $inboxMessages.filter(msg => msg.unlocksMealwormVat).length > 0
+  } else if (machineType === MACHINE_TYPE.RAT_CAGE) {
+    return $inboxMessages.filter(msg => msg.unlocksRatCage).length > 0
+  } else return true
+}
+
 /**
  * Generates select options for building machine types.
  * This function returns select options for all machine types except player, inlet, and outlet.
@@ -79,19 +89,6 @@ function createSelectOptionsBuild(): SelectOption[] {
   let selectOptions: SelectOption[] = []
   let availableMachines: MACHINE_TYPE[] =
     MACHINES_BY_LEVEL[get(player)?.tutorialLevel ?? 3]
-
-  const $inboxMessages = get(inboxMessages)
-
-  const isMachineUnlocked = (machineType: MACHINE_TYPE) => {
-    console.log(machineType, MACHINE_TYPE.MEALWORM_VAT)
-    if (machineType === MACHINE_TYPE.MEALWORM_VAT) {
-      console.log($inboxMessages)
-      return $inboxMessages.filter(msg => msg.unlocksMealwormVat).length > 0
-    } else if (machineType === MACHINE_TYPE.RAT_CAGE) {
-      console.log($inboxMessages)
-      return $inboxMessages.filter(msg => msg.unlocksRatCage).length > 0
-    } else return true
-  }
 
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
@@ -243,21 +240,22 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   const balance = get(playerTokenBalance)
   const materials = get(materialMetadata)
 
-  console.log(Object.keys(materials).length)
+  const ratCageUnlocked = isMachineUnlocked(MACHINE_TYPE.RAT_CAGE)
+  const mealwormVatUnlocked = isMachineUnlocked(MACHINE_TYPE.MEALWORM_VAT)
 
-  console.log(
-    offers,
-    Object.values(materials).find(mat => mat.name === "CORN")
-  )
+  const solvent =
+    balance >= displayAmount(offer.offer.cost) &&
+    get(capacityForBugs) >= displayAmount(offer.offer.cost)
 
   selectOptions = Object.entries(offers).map(([address, offer]) => {
-    const material = get(materialMetadata)?.[offer.offer.materialId]
+    const material = materials?.[offer.offer.materialId]
     return {
       label: `${displayAmount(offer.offer.amount)} ${material?.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
       value: address,
       available:
-        balance >= displayAmount(offer.offer.cost) &&
-        get(capacityForBugs) >= displayAmount(offer.offer.cost),
+        offer.offer.materialId === BUG_MATERIAL
+          ? solvent
+          : solvent && (ratCageUnlocked || mealwormVatUnlocked),
     }
   })
 

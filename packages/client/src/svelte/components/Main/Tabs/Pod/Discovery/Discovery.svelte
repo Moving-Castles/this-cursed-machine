@@ -1,28 +1,27 @@
 <script lang="ts">
   import type { Discovery } from "."
   import { scale, fade } from "svelte/transition"
-  import { staticContent } from "@modules/content"
+  import { materialMetadata } from "@modules/state/base/stores"
   import { onMount } from "svelte"
   import { createEventDispatcher } from "svelte"
   import { urlFor } from "@modules/content/sanity"
 
+  export let discovery: Discovery
+  export let displayOnly = false
+
   const dispatch = createEventDispatcher<{ end: Discovery }>()
 
-  export let discovery: Discovery
+  const close = () => {
+    if (!displayOnly) dispatch("end", discovery)
+  }
 
-  const close = () => dispatch("end", discovery)
-
-  const lore = $staticContent.materials.find(mat => {
-    return mat.materialType
-      .replaceAll(" ", "_")
-      .toLowerCase()
-      .startsWith(discovery.name.replaceAll(" ", "_").toLowerCase())
-  })
-
+  const lore = $materialMetadata?.[discovery.materialId]
   const color = lore?.color?.hex || "var(--color-failure)"
 
   onMount(() => {
-    setTimeout(close, 8000)
+    if (!displayOnly) {
+      setTimeout(close, 8000)
+    }
   })
 </script>
 
@@ -31,6 +30,8 @@
 <div
   style="--material-color: {color}"
   class="discovery absolute {discovery.name}"
+  class:displayOnly
+  on:click
   in:scale={{ duration: 200 }}
   out:fade={{ duration: 600 }}
   on:click={close}
@@ -40,14 +41,16 @@
       <img
         class="image"
         src={urlFor(lore.image).width(200).auto("format").url()}
-        alt={discovery.name}
+        alt={discovery.title}
       />
     {/if}
   </div>
   <div class="content">
-    <p>New material discovered</p>
+    {#if !displayOnly}
+      <p>New material discovered</p>
+    {/if}
     <p class="material">
-      {discovery.name.replace(/! $/, "")}
+      {discovery.title}
     </p>
     {#if lore}
       <p>
@@ -72,7 +75,6 @@
     border: 2px solid var(--material-color);
     color: var(--material-color);
     background: var(--black);
-    margin-top: 10px;
     font-size: var(--font-size-small);
     overflow: hidden;
     word-break: break-all;
@@ -90,6 +92,12 @@
     }
     .image {
       width: 60px;
+    }
+
+    &.displayOnly {
+      .image {
+        width: 90px;
+      }
     }
   }
 

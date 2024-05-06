@@ -14,7 +14,7 @@ export enum TERMINAL_OUTPUT_TYPE {
   INFO,
   ALERT,
   SUCCESS,
-  ERROR
+  ERROR,
 }
 
 export enum COMMAND {
@@ -34,8 +34,9 @@ export enum COMMAND {
   // Misc.
   BLINK,
   HELP,
+  MATERIALS,
   // Hidden
   SKIP,
   GRADUATE,
-  RESOLVE
+  RESOLVE,
 }
