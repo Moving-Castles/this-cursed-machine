@@ -90,6 +90,22 @@ function createSelectOptionsBuild(): SelectOption[] {
   let availableMachines: MACHINE_TYPE[] =
     MACHINES_BY_LEVEL[get(player)?.tutorialLevel ?? 3]
 
+<<<<<<< HEAD
+=======
+  const $inboxMessages = get(inboxMessages)
+
+  const isMachineUnlocked = (machineType: MACHINE_TYPE) => {
+    // console.log(machineType, MACHINE_TYPE.MEALWORM_VAT)
+    if (machineType === MACHINE_TYPE.MEALWORM_VAT) {
+      // console.log($inboxMessages)
+      return $inboxMessages.filter(msg => msg.unlocksMealwormVat).length > 0
+    } else if (machineType === MACHINE_TYPE.RAT_CAGE) {
+      // console.log($inboxMessages)
+      return $inboxMessages.filter(msg => msg.unlocksRatCage).length > 0
+    } else return true
+  }
+
+>>>>>>> bb5b2bff2f51ba20fd4769e2121a0f52e728aa8e
   for (let i = 0; i < availableMachines.length; i++) {
     selectOptions.push({
       label: MACHINE_TYPE[availableMachines[i]].replaceAll("_", " "),
