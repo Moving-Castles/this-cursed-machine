@@ -83,12 +83,12 @@ function createSelectOptionsBuild(): SelectOption[] {
   const $inboxMessages = get(inboxMessages)
 
   const isMachineUnlocked = (machineType: MACHINE_TYPE) => {
-    console.log(machineType, MACHINE_TYPE.MEALWORM_VAT)
+    // console.log(machineType, MACHINE_TYPE.MEALWORM_VAT)
     if (machineType === MACHINE_TYPE.MEALWORM_VAT) {
-      console.log($inboxMessages)
+      // console.log($inboxMessages)
       return $inboxMessages.filter(msg => msg.unlocksMealwormVat).length > 0
     } else if (machineType === MACHINE_TYPE.RAT_CAGE) {
-      console.log($inboxMessages)
+      // console.log($inboxMessages)
       return $inboxMessages.filter(msg => msg.unlocksRatCage).length > 0
     } else return true
   }
@@ -243,12 +243,12 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   const balance = get(playerTokenBalance)
   const materials = get(materialMetadata)
 
-  console.log(Object.keys(materials).length)
+  // console.log(Object.keys(materials).length)
 
-  console.log(
-    offers,
-    Object.values(materials).find(mat => mat.name === "CORN")
-  )
+  // console.log(
+  //   offers,
+  //   Object.values(materials).find(mat => mat.name === "CORN")
+  // )
 
   selectOptions = Object.entries(offers).map(([address, offer]) => {
     const material = get(materialMetadata)?.[offer.offer.materialId]
