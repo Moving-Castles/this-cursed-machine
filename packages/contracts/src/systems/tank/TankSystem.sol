@@ -94,6 +94,12 @@ contract TankSystem is System {
 
     OrderData memory currentOrder = Order.get(currentOrderId);
 
+    // maxPlayers == 0 means the order has no limit
+    require(
+      currentOrder.maxPlayers == 0 || CompletedPlayers.get(currentOrderId) < currentOrder.maxPlayers,
+      "max players reached"
+    );
+
     // expirationBlock == 0 means the order never expires
     require(currentOrder.expirationBlock == 0 || block.number < currentOrder.expirationBlock, "order expired");
 
