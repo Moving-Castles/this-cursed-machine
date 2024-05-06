@@ -31,7 +31,7 @@
   $: unreadInboxItems = $staticContent.messages
     .filter(
       msg =>
-        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id),
+        msg.tutorial || msg.graduation || $discoveredMessages.includes(msg._id)
     )
     .filter(msg => !$inboxRead.includes(msg._id))
 
@@ -40,7 +40,7 @@
   $: advanceTutorial($activeTab, $tutorialProgress, "tab")
 
   $: availableTabsLength = Object.values(HIDDEN_CONDITIONS).filter(
-    num => $tutorialProgress > num,
+    num => $tutorialProgress > num
   ).length
 
   const onClick = (e: MouseEvent) => {
@@ -51,7 +51,7 @@
 
       if (key === 3) {
         if (!("Notification" in window)) {
-          console.log("This browser does not support notifications.")
+          // console.log("This browser does not support notifications.")
           return
         }
 

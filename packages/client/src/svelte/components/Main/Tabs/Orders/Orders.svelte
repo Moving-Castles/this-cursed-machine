@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { player } from "@modules/state/base/stores"
+  import { player, playerNames } from "@modules/state/base/stores"
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"

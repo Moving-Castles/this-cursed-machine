@@ -8,6 +8,7 @@
     players,
   } from "@modules/state/base/stores"
   import { MATERIAL_DIFFICULTY } from "contracts/enums"
+  import { playerNames } from "@modules/state/base/stores"
   import { discoveredMessages } from "@modules/state/simulated/stores"
   import { blockNumber } from "@modules/network"
   import { acceptOrder, unacceptOrder } from "@modules/action"
@@ -47,8 +48,10 @@
   const getCreator = (order: Order) => {
     if (!order.order.creator) return "UNKNOWN"
     if (order.order.creator === $gameConfig.adminAddress) return "TCM Corp."
-    if ($players[addressToId(order.order.creator)])
-      return $players[addressToId(order.order.creator)].name
+    if ($playerNames[addressToId(order.order.creator)]) {
+      return $playerNames[addressToId(order.order.creator)]
+    }
+
     return shortenAddress(order.order.creator)
   }
 
@@ -277,7 +280,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
               </span>
             {/if}

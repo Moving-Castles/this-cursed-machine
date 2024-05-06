@@ -11,9 +11,6 @@
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
 
-  import { entities } from "@modules/state/base/stores"
-  $: console.log("Object.keys($entities).length", Object.keys($entities).length)
-
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
   import Main from "@components/Main/Main.svelte"

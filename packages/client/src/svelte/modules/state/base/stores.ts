@@ -76,6 +76,8 @@ export const playerTokenBalance = derived([player], ([$player]) => {
   }
 })
 
+export const playerNames = writable({} as PlayerNames)
+
 // * * * * * * * * * * * * * * * * *
 // GAME PLAY ENTITIES
 // * * * * * * * * * * * * * * * * *

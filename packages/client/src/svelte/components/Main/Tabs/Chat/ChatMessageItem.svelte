@@ -1,11 +1,19 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { players, playerAddress } from "@svelte/modules/state/base/stores"
+  import {
+    players,
+    playerAddress,
+    playerNames,
+  } from "@svelte/modules/state/base/stores"
   import { addressToId, timeSince } from "@modules/utils"
   import type { ChatMessage } from "@modules/signal/types"
   export let message: ChatMessage
 
   let warning = false
+
+  const getPlayerName = address => {
+    return $playerNames[addressToId(message.address)] || "unknown"
+  }
 
   if (
     message.message ===
@@ -19,7 +27,7 @@
   <div class="message-header">
     <div class="message-author">
       <span class="author-name" class:self={message.address === $playerAddress}>
-        {$players[addressToId(message.address)]?.name || "unknown"}
+        {getPlayerName(message.address)}
       </span>
     </div>
     <div class="message-timestamp">{timeSince(message.timestamp)}</div>

@@ -111,6 +111,10 @@ declare global {
     producedMaterials?: MaterialId[]
   }
 
+  type PlayerNames = {
+    [index: string]: string
+  }
+
   type Machine = {
     entityType: ENTITY_TYPE.MACHINE
     machineType: MACHINE_TYPE
