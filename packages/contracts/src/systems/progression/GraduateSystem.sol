@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { CarriedBy, CurrentOrder, Tutorial, TutorialLevel, TanksInPod, ContainedMaterial, Amount } from "../../codegen/index.sol";
-import { LibUtils, PublicMaterials } from "../../libraries/Libraries.sol";
+import { LibUtils, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
 import { TANK_CAPACITY } from "../../constants.sol";
 
 contract GraduateSystem is System {
@@ -22,9 +22,11 @@ contract GraduateSystem is System {
     // Clear current order
     CurrentOrder.set(playerEntity, bytes32(0));
 
-    // Fill the player's first tank with bugs to get them started
+    // Empty all tanks
     bytes32[] memory tanksInPod = TanksInPod.get(podEntity);
-    ContainedMaterial.set(tanksInPod[0], PublicMaterials.BUGS);
-    Amount.set(tanksInPod[0], TANK_CAPACITY);
+    for (uint32 i = 0; i < tanksInPod.length; i++) {
+      ContainedMaterial.set(tanksInPod[i], LibMaterial.NONE);
+      Amount.set(tanksInPod[i], 0);
+    }
   }
 }
