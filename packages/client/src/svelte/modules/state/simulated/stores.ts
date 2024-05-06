@@ -472,9 +472,15 @@ export const shippableTanks = derived(
     if (!$blockNumber) return {}
     return Object.fromEntries(
       Object.entries($simulatedTanks).map(([_, tank]) => {
+        console.log($playerOrder)
+        const exhausted =
+          $playerOrder?.order?.maxPlayers > 0 &&
+          ($playerOrder?.completedPlayers ?? 0) >=
+            $playerOrder?.order.maxPlayers
         if (
           tank.materialId === $playerOrder?.order.materialId &&
-          tank.amount >= $playerOrder?.order.amount
+          tank.amount >= $playerOrder?.order.amount &&
+          !exhausted
         ) {
           return [_, true]
         }
@@ -519,7 +525,6 @@ export const usedCapacity = derived([simulatedTanks], ([$simulatedTanks]) => {
 export const tankAttachments = derived(
   [simulatedTanks, playerPod],
   ([$simulatedTanks, $playerPod]) => {
-
     const getConnectionName = (machineEntity: string) => {
       if (!$playerPod?.fixedEntities) return "none"
       if ($playerPod?.fixedEntities.inlets.includes(machineEntity)) return "I"
