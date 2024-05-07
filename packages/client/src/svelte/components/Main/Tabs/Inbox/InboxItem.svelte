@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount, onDestroy } from "svelte"
   import { slide } from "svelte/transition"
-  import { urlFor } from "@modules/content/sanity"
+  import { urlFor, renderBlockText } from "@modules/content/sanity"
   import { tutorialProgress, advanceTutorial } from "@modules/ui/assistant"
   import { inboxRead } from "@modules/ui/stores"
   import { stepsEasing } from "@modules/utils"
@@ -71,8 +71,9 @@
     class:selected
     class:open
     class:emphasis={$tutorialProgress === 27}
+    class:read={$inboxRead.includes(message._id)}
   >
-    <div class="indicator" />
+    <div class="indicator" class:read={$inboxRead.includes(message._id)} />
     <div class="sender">{clippedSender}</div>
     <div class="title">{message.title}</div>
     <div class="time">{message._updatedAt}</div>
@@ -88,11 +89,13 @@
       transition:slide={{ duration: 100, easing: stepsEasing }}
     >
       <div class="content-track">
-        {#if message.description}
-          <p class="message-body">
+        <p class="message-body">
+          {#if message?.richDescription}
+            {@html renderBlockText(message.richDescription)}
+          {:else if message.description}
             {message.description}
-          </p>
-        {/if}
+          {/if}
+        </p>
         {#each message.attachments as attachment}
           <figure>
             <img
@@ -129,13 +132,23 @@
       user-select: none;
       white-space: nowrap;
 
+      &.read {
+        // background: red;
+      }
+
       .indicator {
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
         background: var(--color-success);
         margin-right: 20px;
-        animation: 0.7s steps(5) 0s infinite alternate pulse;
+        &:not(.read) {
+          animation: 0.7s steps(5) 0s infinite alternate pulse;
+        }
+
+        &.read {
+          background: var(--white);
+        }
       }
 
       @keyframes pulse {
@@ -220,7 +233,7 @@
       position: relative;
 
       .message-body {
-        padding: 1rem 1rem 3rem;
+        padding: 1rem 0 3rem;
       }
 
       figure {

@@ -78,6 +78,10 @@ pre {
   font-family: var(--font-family);
 }
 
+a {
+  color: var(--color-failure);
+}
+
 *::-webkit-scrollbar {
   display: none;
 }

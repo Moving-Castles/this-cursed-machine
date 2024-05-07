@@ -44,11 +44,13 @@ export const inboxMessages = derived(
     if (!$staticContent) return []
     return $staticContent.messages.filter(msg => {
       if ($player.tutorial) {
+        console.log("player is still in tutorial")
         return $player.tutorial && msg.tutorial
       } else {
         return (
           msg.tutorial ||
           msg.graduation ||
+          msg.all ||
           $discoveredMessages.includes(msg._id)
         )
       }
