@@ -1,6 +1,7 @@
 <script lang="ts">
   import { formatGwei } from "viem"
   import { walletNetwork, publicNetwork } from "@modules/network"
+  import { accountKitModalOpen } from "@modules/ui/stores"
   import { store as accountKitStore } from "@latticexyz/account-kit/bundle"
   import { blockNumber } from "@modules/network"
   import type { AccountKitConnectReturn } from "@components/Spawn/account-kit-connect/types"
@@ -20,6 +21,7 @@
 
   export const connect = () =>
     openAccountModalPromise.then(openAccountModal => {
+      accountKitModalOpen.set(true)
       openAccountModal()
 
       setTimeout(() => {
@@ -44,6 +46,7 @@
 
           if (state.accountModalOpen === false) {
             unsub()
+            accountKitModalOpen.set(false)
             reject(new Error("Account modal closed before connecting."))
           }
         })

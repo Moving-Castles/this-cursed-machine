@@ -38,6 +38,7 @@ export const orderAcceptInProgress = writable("0x0")
 export const terminalBooted = writable(false)
 export const inboxRead = storableArray([], "tcm_inboxRead")
 export const notificationPermissions = writable(permissionsDefault) // block or granted
+export const accountKitModalOpen = writable(false)
 export const inboxMessages = derived(
   [player, staticContent, discoveredMessages],
   ([$player, $staticContent, $discoveredMessages]) => {
