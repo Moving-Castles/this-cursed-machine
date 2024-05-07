@@ -283,7 +283,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber)
+                  Number(order.order.expirationBlock) - Number($blockNumber),
                 )}
               </span>
             {/if}
@@ -322,7 +322,7 @@
           {#if working}
             <Spinner />
           {:else}
-            {stumps.length} stump{stumps.length !== 1 ? "s" : ""} at work
+            ███ stumps at work
           {/if}
         </p>
         <!-- * * * * * * * * * * -->
