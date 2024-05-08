@@ -183,7 +183,7 @@ contract OrderSystemTest is BaseTest {
     vm.stopPrank();
   }
 
-  function testRevertPlayerInTutorial() public {
+  function testRevertTutorialModeMismatch() public {
     prankAdmin();
     // Create order
     bytes32 orderEntity = world.createOrder(PublicMaterials.BLOOD_MEAL, 100, 100, ONE_HOUR, 10);
@@ -191,7 +191,24 @@ contract OrderSystemTest is BaseTest {
 
     vm.startPrank(alice);
 
-    vm.expectRevert("not tutorial order");
+    // Player is in tutorial and tries to accept a non-tutorial order
+    vm.expectRevert("tutorial mode mismatch");
+    world.acceptOrder(orderEntity);
+
+    vm.stopPrank();
+  }
+
+  function testRevertTutorialModeMismatchGraduated() public {
+    prankAdmin();
+    // Create tutorial order
+    bytes32 orderEntity = LibOrder.create(bob, PublicMaterials.PISS, 100, true, 0, 100, ONE_HOUR, 10);
+    world.devGraduate(alice);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    // Player is graduated and tries to accept a tutorial order
+    vm.expectRevert("tutorial mode mismatch");
     world.acceptOrder(orderEntity);
 
     vm.stopPrank();

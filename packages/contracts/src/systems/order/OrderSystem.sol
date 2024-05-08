@@ -70,12 +70,15 @@ contract OrderSystem is System {
 
     require(EntityType.get(_orderEntity) == ENTITY_TYPE.ORDER, "not order");
 
-    if (Tutorial.get(playerEntity)) {
-      // A player in tutorial mode cannot accept a non-tutorial order
-      require(Tutorial.get(_orderEntity), "not tutorial order");
+    // Tutorial player can not accept non-tutorial order
+    // Non-tutorial player can not accept tutorial order
+    bool isPlayerInTutorial = Tutorial.get(playerEntity);
+    bool isOrderInTutorial = Tutorial.get(_orderEntity);
+    require(isPlayerInTutorial == isOrderInTutorial, "tutorial mode mismatch");
 
-      uint32 playerTutorialLevel = TutorialLevel.get(playerEntity);
-      require(playerTutorialLevel == TutorialLevel.get(_orderEntity), "wrong tutorial level");
+    if (isPlayerInTutorial) {
+      // Tutorial level for player and order must match
+      require(TutorialLevel.get(playerEntity) == TutorialLevel.get(_orderEntity), "wrong tutorial level");
     }
 
     OrderData memory currentOrder = Order.get(_orderEntity);
