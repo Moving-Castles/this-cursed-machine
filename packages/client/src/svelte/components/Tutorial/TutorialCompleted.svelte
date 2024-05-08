@@ -9,6 +9,7 @@
   import { currentMessage, tutorialProgress } from "@modules/ui/assistant"
   import { typeWriteToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
   import { clearTerminalOutput } from "@components/Main/Terminal/functions/helpers"
+  import { marked } from "marked"
 
   import Terminal from "@components/Main/Terminal/Terminal.svelte"
 
@@ -28,6 +29,25 @@
     if (terminalComponent) {
       terminalComponent.resetInput()
     }
+  }
+
+  const replaceLine = (line: string) => {
+    line = line.replaceAll("<a", "<a target='_blank' ")
+    const elements = document.querySelectorAll(".output-content")
+    const lastElement = elements[elements.length - 1]
+    if (lastElement) {
+      // Get the first elements. These are the symbols
+      const symbols = (lastElement.textContent || lastElement.innerText).slice(
+        0,
+        2
+      )
+
+      lastElement.innerHTML = symbols + line
+
+      // Remove empty <p></p> tags
+      lastElement.innerHTML = lastElement.innerHTML.replace(/<p><\/p>/g, "")
+    }
+    // console.log(terminalComponent)
   }
 
   onMount(async () => {
@@ -54,7 +74,19 @@
         // Remove the entire match from the string
         let newMessage = message.replace(/{.*?}/, "")
 
-        await typeWriteToTerminal(outputType, newMessage)
+        function extractContents(s: string) {
+          const span = document.createElement("span")
+          span.innerHTML = s
+          return span.textContent || span.innerText
+        }
+
+        let line = marked(newMessage)
+        line = line.replace(/^<p>|<\/p>$/g, "")
+        const cleanedMessage = extractContents(line)
+        await typeWriteToTerminal(outputType, cleanedMessage)
+
+        // Now replace the message with the html version of it
+        await replaceLine(line)
       }
     }
   })
@@ -71,7 +103,7 @@
   />
 </div>
 
-<style>
+<style lang="scss">
   .completed {
     position: fixed;
     inset: 0;
@@ -84,9 +116,17 @@
     justify-items: center;
     user-select: none;
     cursor: pointer;
+
+    :global(a) {
+      color: var(--color-success) !important;
+    }
   }
 
   :global(p.normal) {
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
+  }
+
+  p:not(.output-content) {
+    display: inline;
   }
 </style>
