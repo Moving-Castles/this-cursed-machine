@@ -79,7 +79,13 @@ pre {
 }
 
 a {
-  color: var(--color-failure);
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 *::-webkit-scrollbar {

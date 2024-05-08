@@ -20,6 +20,7 @@
     discoveredMaterials,
     discoveredMessages,
   } from "@modules/state/simulated/stores"
+  import { marked } from "marked"
 
   const dispatch = createEventDispatcher<{ end: AssistantMessage }>()
 
@@ -35,7 +36,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 
@@ -124,7 +125,7 @@
       <img src="/images/eye3.gif" alt="bot" />
     </div> -->
     <div class="text">
-      {@html message}
+      {@html marked(message)}
     </div>
     {#if !working}
       <div class="restart">
