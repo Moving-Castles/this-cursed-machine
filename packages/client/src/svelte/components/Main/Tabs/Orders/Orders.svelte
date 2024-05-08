@@ -1,5 +1,6 @@
 <script lang="ts">
   import { player, playerNames } from "@modules/state/base/stores"
+  import { gameConfig } from "@modules/state/base/stores"
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
@@ -9,6 +10,19 @@
   let element: HTMLDivElement
 
   let selected = -1
+  let certified = true
+
+  const orderFilter = (entry: [string, Order]) => {
+    const order = entry[1]
+    console.log(certified, order.order.creator)
+    if (certified) {
+      return order.order.creator === $gameConfig.adminAddress
+    } else {
+      return order.order.creator !== $gameConfig.adminAddress
+    }
+  }
+
+  $: currentOrders = Object.entries($availableOrders).filter(orderFilter)
 
   const cycle = (e: KeyboardEvent) => {
     const options = Object.keys($availableOrders).length
@@ -20,7 +34,15 @@
       playSound("tcm", "orderSelect")
     }
 
+    if (e.key === "ArrowRight") {
+      certified = false
+    }
+    if (e.key === "ArrowLeft") {
+      certified = true
+    }
+
     if (element?.parentElement) {
+      element.parentElement.scrollTop = 0
       element.parentElement.scrollTop = selected * 250
     }
   }
@@ -41,25 +63,46 @@
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 
+  <div class="tabs">
+    <div
+      role="button"
+      on:click={() => (certified = true)}
+      class="tab"
+      class:active={certified}
+    >
+      TCM CERTIFIED ORDERS
+    </div>
+    <div
+      role="button"
+      on:click={() => (certified = false)}
+      class="tab"
+      class:active={!certified}
+    >
+      BLACK MARKET
+    </div>
+  </div>
+
   <div bind:this={element} class="container">
     <div class="order-list">
-      {#if Object.keys($availableOrders).length > 0}
-        {#each Object.entries($availableOrders) as [key, order], i (key)}
-          <OrderItem
-            on:scroll={() => goTo(i)}
-            on:mouseenter={() => goTo(i)}
-            selected={selected === i}
-            {key}
-            {order}
-            active={$player.currentOrder === key}
-            completed={$player.completedOrders?.includes(key) || false}
-          />
-        {/each}
-      {:else}
-        <div class="orders-exhausted">
-          <div class="warn blink">ALL ORDERS EXHAUSTED</div>
-        </div>
-      {/if}
+      {#key certified}
+        {#if currentOrders.length > 0}
+          {#each currentOrders as [key, order], i (key)}
+            <OrderItem
+              on:scroll={() => goTo(i)}
+              on:mouseenter={() => goTo(i)}
+              selected={selected === i}
+              {key}
+              {order}
+              active={$player.currentOrder === key}
+              completed={$player.completedOrders?.includes(key) || false}
+            />
+          {/each}
+        {:else}
+          <div class="orders-exhausted">
+            <div class="warn blink">ALL ORDERS EXHAUSTED</div>
+          </div>
+        {/if}
+      {/key}
     </div>
   </div>
 {/if}
@@ -96,6 +139,10 @@
 
   .head {
     padding: var(--default-padding);
+  }
+
+  .tabs,
+  .head {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -108,9 +155,6 @@
     z-index: var(--z-1);
     top: 0;
     left: 0;
-    padding: 2em;
-    padding-inline: var(--default-padding);
-    padding-bottom: 1em;
     font-size: var(--font-size-small);
     border-bottom: 1px solid var(--color-grey-dark);
 
@@ -118,6 +162,27 @@
       text-align: right;
       font-size: var(--font-size-small);
       color: var(--color-failure);
+    }
+
+    .tab {
+      background: var(--color-grey-mid);
+      font-family: var(--font-family);
+      font-size: var(--font-size-small);
+      border: none;
+      opacity: 0.3;
+      user-select: none;
+      text-align: center;
+      padding: var(--default-padding);
+      width: 50%;
+      white-space: nowrap;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid var(--color-grey-mid);
+
+      &.active {
+        opacity: 1;
+        border: 1px solid var(--color-success);
+      }
     }
   }
 </style>

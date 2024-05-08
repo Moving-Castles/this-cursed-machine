@@ -167,7 +167,6 @@
       sendAccept()
     }
   }}
-  transition:fade
 >
   {#if order?.order}
     {#if active}
@@ -283,7 +282,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber),
+                  Number(order.order.expirationBlock) - Number($blockNumber)
                 )}
               </span>
             {/if}

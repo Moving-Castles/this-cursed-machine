@@ -56,17 +56,17 @@ export const toPlainText = (blocks = []) => {
 }
 
 export function extractTexts(editor: any): string[] {
-  const texts: string[] = [];
+  const texts: string[] = []
 
   for (let block of editor.content) {
     for (let child of block.children) {
       if (child.text) {
-        texts.push(child.text);
+        texts.push(child.text)
       }
     }
   }
 
-  return texts;
+  return texts
 }
 
 const builder = imageUrlBuilder(client)
@@ -75,6 +75,12 @@ export const urlFor = (source: any) => builder.image(source)
 
 const serializers = {
   marks: {
+    link: props =>
+      h(
+        "a",
+        { target: "_blank", rel: "noreferrer", href: props.mark.href },
+        props.children
+      ),
     norm: (props: any) => {
       return h("span", { className: "norm" }, props.children)
     },
@@ -97,8 +103,12 @@ const serializers = {
   types: {
     block: (props: any) => {
       const style = props.node.style || "normal"
+      console.log(props.children)
       return h("p", { className: style }, props.children)
     },
+    // link: (props: any) => {
+    //   return h("a", { href: props.node.href, target: "_blank" }, props.children)
+    // },
     image: (props: any) => {
       return h("figure", { className: "image" }, [
         h("img", {

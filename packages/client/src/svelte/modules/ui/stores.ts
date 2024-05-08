@@ -38,17 +38,20 @@ export const orderAcceptInProgress = writable("0x0")
 export const terminalBooted = writable(false)
 export const inboxRead = storableArray([], "tcm_inboxRead")
 export const notificationPermissions = writable(permissionsDefault) // block or granted
+export const accountKitModalOpen = writable(false)
 export const inboxMessages = derived(
   [player, staticContent, discoveredMessages],
   ([$player, $staticContent, $discoveredMessages]) => {
     if (!$staticContent) return []
     return $staticContent.messages.filter(msg => {
       if ($player.tutorial) {
+        console.log("player is still in tutorial")
         return $player.tutorial && msg.tutorial
       } else {
         return (
           msg.tutorial ||
           msg.graduation ||
+          msg.all ||
           $discoveredMessages.includes(msg._id)
         )
       }

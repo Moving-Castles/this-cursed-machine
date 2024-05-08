@@ -5,6 +5,7 @@ import { COMMAND, DIRECTION } from "@components/Main/Terminal/enums"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
 import { MaterialIdNone } from "@modules/state/base/constants"
 import { inboxMessages } from "@modules/ui/stores"
+import { BUG_MATERIAL } from "@modules/ui/constants"
 import {
   simulatedMachines,
   simulatedConnections,
@@ -252,8 +253,9 @@ function createSelectOptionsRefillTank(): SelectOption[] {
 
   selectOptions = Object.entries(offers).map(([address, offer]) => {
     const material = get(materialMetadata)?.[offer.offer.materialId]
+    console.log(material.materialId, BUG_MATERIAL)
     return {
-      label: `${displayAmount(offer.offer.amount)} ${material?.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
+      label: `${displayAmount(offer.offer.amount)} ${material.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
       value: address,
       available:
         balance >= displayAmount(offer.offer.cost) &&
