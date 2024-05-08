@@ -35,7 +35,7 @@
     if ($playerOrder) {
       str = str.replaceAll(
         "%MATERIAL%",
-        $materialMetadata[$playerOrder?.order?.materialId]?.name
+        $materialMetadata[$playerOrder?.order?.materialId]?.name,
       )
     }
 
