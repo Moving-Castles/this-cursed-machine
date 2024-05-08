@@ -39,11 +39,11 @@ async function execute(tankEntity: string, amount: number, materialId: MaterialI
     }
 }
 
-export const depositTank: Command<[tankEntity: string, amount: number, materialId: MaterialId]> = {
-    id: COMMAND.DEPOSIT_TANK,
+export const depositTokens: Command<[tankEntity: string, amount: number, materialId: MaterialId]> = {
+    id: COMMAND.DEPOSIT_TOKENS,
     public: true,
     name: "deposit",
-    alias: "t",
-    objectTerm: "tank",
+    alias: "+",
+    objectTerm: "tokens",
     fn: execute,
 }

@@ -28,10 +28,11 @@ export enum COMMAND {
   UNPLUG_TANK,
   EMPTY_TANK,
   FILL_TANK,
-  DEPOSIT_TANK,
   SHIP_TANK,
   // Pod
   WIPE_POD,
+  // Tokens
+  DEPOSIT_TOKENS,
   // Misc.
   BLINK,
   HELP,

@@ -30,6 +30,6 @@ export const resolve: Command<[]> = {
     id: COMMAND.RESOLVE,
     public: false,
     name: "resolve",
-    alias: "+",
+    alias: "^",
     fn: execute,
 }

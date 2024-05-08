@@ -428,7 +428,7 @@
     }
   }
 
-  const getDepositTankParameters = async (): Promise<any[] | false> => {
+  const getDepositTokensParameters = async (): Promise<any[] | false> => {
     // const FIXED_AMOUNT = BigInt("50000000000000000000")
     const materials = get(materialMetadata)
 
@@ -587,10 +587,9 @@
     } else if (command.id === COMMAND.PLUG_TANK) {
       playSound("tcm", "selectionEnter")
       parameters = await getAttachTankParameters()
-    } else if (command.id === COMMAND.DEPOSIT_TANK) {
+    } else if (command.id === COMMAND.DEPOSIT_TOKENS) {
       playSound("tcm", "selectionEnter")
-      console.log("DEPOSIT_TANK")
-      parameters = await getDepositTankParameters()
+      parameters = await getDepositTokensParameters()
     }
 
     // Something went wrong in the parameter selection

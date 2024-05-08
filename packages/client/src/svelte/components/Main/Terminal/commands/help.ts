@@ -24,6 +24,7 @@ async function execute(_: TERMINAL_TYPE) {
     { objectTerm: "machine", commands: commandList.filter(command => command.objectTerm === "machine") },
     { objectTerm: "tank", commands: commandList.filter(command => command.objectTerm === "tank") },
     { objectTerm: "pod", commands: commandList.filter(command => command.objectTerm === "pod") },
+    { objectTerm: "tokens", commands: commandList.filter(command => command.objectTerm === "tokens") },
     { objectTerm: "misc", commands: commandList.filter(command => !command.objectTerm) }
   ]
 
