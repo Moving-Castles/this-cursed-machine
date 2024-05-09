@@ -103,7 +103,7 @@
       {currentOrders.length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
     </div>
     {#if !$player.tutorial}
-      <Countdown endTime={tomorrow} />
+      <!-- <Countdown endTime={tomorrow} /> -->
     {/if}
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
