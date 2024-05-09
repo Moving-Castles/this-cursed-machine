@@ -15,6 +15,9 @@ export async function renderSelect(
     selectOptions: SelectOption[]
 ): Promise<string | MACHINE_TYPE | PORT_INDEX | null> {
     return new Promise(resolve => {
+
+        if (!selectContainerElement) resolve(null)
+
         const component = new Select({
             target: selectContainerElement,
             props: {
@@ -24,6 +27,7 @@ export async function renderSelect(
                 },
             },
         })
+
         // Listen to the custom event we're dispatching
         component.$on("requestDestroy", () => {
             component.$destroy() // Actually destroy the component

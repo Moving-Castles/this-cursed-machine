@@ -48,6 +48,7 @@
 
   import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
   import TerminalInput from "@components/Main/Terminal/TerminalInput.svelte"
+  import { ONE_UNIT } from "@modules/ui/constants"
 
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
@@ -429,34 +430,22 @@
   }
 
   const getDepositTokensParameters = async (): Promise<any[] | false> => {
-    // const FIXED_AMOUNT = BigInt("50000000000000000000")
-    const materials = get(materialMetadata)
-
     // %%%%%%%%%%%%%%%%%
     // %% Start token %%
     // %%%%%%%%%%%%%%%%%
 
-    // await writeToTerminal(
-    //   TERMINAL_OUTPUT_TYPE.NORMAL,
-    //   "Getting material tokens...",
-    // )
-
+    // Get tokens in wallet via explorer API
     const tokens = await fetchERC20Tokens($playerAddress)
 
-    // console.log("tokens", tokens)
-    // console.log("materials", materials)
-
+    // Filter material metadata by tokens in wallet
+    const materials = get(materialMetadata)
     const tokenAddresses = tokens.map((item: any) => item.token.address)
-
-    // console.log("tokenAddresses", tokenAddresses)
-
     const tcmTokensInWallet = Object.values(materials).filter(material =>
       tokenAddresses.includes(material.tokenAddress),
     )
 
-    // console.log("tcmTokensInWallet", tcmTokensInWallet)
-
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Material token:")
+    // Let player select the token to deposit
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Material to deposit:")
 
     const tokenSelectOptions: SelectOption[] = tcmTokensInWallet.map(t => ({
       label: t.name,
@@ -464,28 +453,47 @@
       available: true,
     }))
 
-    const materialId = await renderSelect(
+    const selectedMaterialId = await renderSelect(
       customInputContainerElement,
       Select,
       tokenSelectOptions,
     )
 
-    // console.log("materialId", materialId)
-
     // Abort if nothing selected
-    if (!materialId) {
+    if (!selectedMaterialId) {
       handleInvalid("No token selected")
       return false
     }
 
-    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Token amount:")
+    // Get balances
+    const balances: Record<string, number> = {}
+    Object.values(tcmTokensInWallet).forEach(t => {
+      const token = tokens.find(
+        (item: any) => item.token.address === t.tokenAddress,
+      )
+      if (token) {
+        balances[t.materialId] = Number(BigInt(token?.value) / ONE_UNIT)
+      }
+    })
+
+    const materialName =
+      tcmTokensInWallet.find(t => t.materialId === selectedMaterialId)?.name ??
+      "Unknown"
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.SUCCESS,
+      `${materialName} balance => ${balances[selectedMaterialId]}`,
+    )
+
+    // Let player select the amount to deposit
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Amount to deposit:")
 
     const amountOptions = [10, 50, 100, 200, 300, 400, 500]
 
+    // Show amount as unavailable it higher than the player's balance
     const amountSelectOptions: SelectOption[] = amountOptions.map(amount => ({
       label: String(amount),
       value: amount,
-      available: true,
+      available: balances[selectedMaterialId] >= amount,
     }))
 
     const amount = await renderSelect(
@@ -493,8 +501,6 @@
       Select,
       amountSelectOptions,
     )
-
-    console.log("amount", amount)
 
     // Abort if nothing selected
     if (!amount) {
@@ -511,14 +517,14 @@
     // %%%%%%%%%%%%%%%%
 
     // Get tanks
-    let sourceSelectOptions = createSelectOptions(COMMAND.PLUG_TANK)
+    let tankSelectOptions = createSelectOptions(COMMAND.PLUG_TANK)
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Tank:")
 
     const tankEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions,
+      tankSelectOptions,
     )
 
     // Abort if nothing selected
@@ -531,7 +537,7 @@
     // %% End tank %%
     // %%%%%%%%%%%%%%
 
-    return [tankEntity, amount, materialId]
+    return [tankEntity, amount, selectedMaterialId]
   }
 
   const onSubmit = async () => {
