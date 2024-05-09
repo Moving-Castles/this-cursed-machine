@@ -4,7 +4,7 @@
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
-  // import { mod } from "@modules/utils"
+  import { mod } from "@modules/utils"
   import OrderItem from "./OrderItem.svelte"
   import Countdown from "./Countdown.svelte"
 
@@ -62,10 +62,10 @@
     const options = Object.keys($availableOrders).length
     if (e.key === "ArrowDown") {
       selected = mod(selected + 1, options)
-      playSound("tcm", "orderSelect")
+      playSound("tcm", "listPrint")
     } else if (e.key === "ArrowUp") {
       selected = mod(selected - 1, options)
-      playSound("tcm", "orderSelect")
+      playSound("tcm", "listPrint")
     }
 
     if (e.key === "ArrowRight") {
@@ -91,7 +91,12 @@
 
   const goTo = (i: number) => {
     selected = i
-    playSound("tcm", "orderSelect")
+    playSound("tcm", "listPrint")
+  }
+
+  const toggleCertified = () => {
+    certified = !certified
+    playSound("tcm", "selectionEnter")
   }
 </script>
 
@@ -114,7 +119,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         role="button"
-        on:click={() => (certified = true)}
+        on:click={toggleCertified}
         class="tab"
         class:active={certified}
       >
@@ -124,7 +129,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         role="button"
-        on:click={() => (certified = false)}
+        on:click={toggleCertified}
         class="tab rogue"
         class:active={!certified}
       >
@@ -218,7 +223,6 @@
     }
 
     .tab {
-      background: var(--color-grey-mid);
       font-family: var(--font-family);
       font-size: var(--font-size-small);
       border: none;
@@ -230,20 +234,22 @@
       cursor: pointer;
       overflow: hidden;
       border: 1px solid var(--color-grey-mid);
-
-      &.rogue {
-        background: var(--color-grey-dark);
-        // color: var(--color-failure);
-      }
+      background: var(--color-grey-dark);
 
       &.active {
-        opacity: 1;
+        background: var(--color-grey-mid);
+
         border: 1px solid var(--color-success);
+      }
+
+      &:hover {
+        background: var(--color-grey-mid);
       }
     }
   }
 
   .warning {
-    color: var(--color-failure);
+    background: var(--color-failure);
+    color: var(--background);
   }
 </style>
