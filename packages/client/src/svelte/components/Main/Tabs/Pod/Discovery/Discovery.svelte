@@ -39,7 +39,9 @@
     {#if lore}
       <img
         class="image"
-        src={urlFor(lore.image).width(200).auto("format").url()}
+        src={lore.image
+          ? urlFor(lore.image).width(200).auto("format").url()
+          : ""}
         alt={discovery.name}
       />
     {/if}
