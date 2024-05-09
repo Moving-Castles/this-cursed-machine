@@ -70,7 +70,7 @@ export const tcm: SoundAssets = {
     volume: 1,
   },
   introBg: {
-    src: "./sounds/tcm/intro_bg-loop_01.mp3",
+    src: "./sounds/tcm/intro_bg-loop_01_fixed.mp3",
     volume: 0.7,
   },
   enteredPod: {
