@@ -86,7 +86,7 @@
     now.getFullYear(),
     now.getMonth(),
     now.getDate() + 1,
-    16
+    16,
   ) // Subtract 2 to convert from CEST (UTC+2) to UTC
 
   const goTo = (i: number) => {
@@ -108,6 +108,8 @@
 
   <div class="tabs">
     {#if !$player.tutorial}
+      <!-- svelte-ignore a11y-interactive-supports-focus -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         role="button"
         on:click={() => (certified = true)}
@@ -116,13 +118,16 @@
       >
         TCM APPROVED ORDERS
       </div>
+      <!-- svelte-ignore a11y-interactive-supports-focus -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         role="button"
         on:click={() => (certified = false)}
         class="tab rogue"
         class:active={!certified}
       >
-        XXX ROGUE XXX ORDERS XXX
+        <span class="warning">XXX</span> ROGUE ORDERS
+        <span class="warning">XXX</span>
       </div>
     {/if}
   </div>
@@ -215,7 +220,6 @@
       font-family: var(--font-family);
       font-size: var(--font-size-small);
       border: none;
-      opacity: 0.5;
       user-select: none;
       text-align: center;
       padding: var(--default-padding);
@@ -226,12 +230,8 @@
       border: 1px solid var(--color-grey-mid);
 
       &.rogue {
-        color: var(--color-grey-dark);
-
-        &.active {
-          background: var(--color-tutorial);
-          border: 1px solid var(--color-tutorial);
-        }
+        background: var(--color-grey-dark);
+        // color: var(--color-failure);
       }
 
       &.active {
@@ -239,5 +239,9 @@
         border: 1px solid var(--color-success);
       }
     }
+  }
+
+  .warning {
+    color: var(--color-failure);
   }
 </style>
