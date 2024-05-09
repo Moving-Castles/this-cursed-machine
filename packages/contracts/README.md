@@ -2,6 +2,11 @@
 
 THIS CURSED MACHINE is a sci-fi body horror fulfilment centre simulator. Reverse engineer complex recipes and use your own body as a large scale production circuit. Build strange machines and connect them in intricate supply chains to fulfil orders more quickly than the other workers.
 
+## Redstone deploy
+
+- [World address](https://github.com/Moving-Castles/this-cursed-machine/blob/main/packages/contracts/redstone-deploy-info/world.json)
+- [Token addresses](https://github.com/Moving-Castles/this-cursed-machine/blob/main/packages/contracts/redstone-deploy-info/tokens.json)
+
 ## Concepts
 
 - **Pod:** Container for a player's game. Holds machines, tanks, etc...
