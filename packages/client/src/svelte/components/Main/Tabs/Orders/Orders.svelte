@@ -4,25 +4,59 @@
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import { playSound } from "@modules/sound"
-  import { mod } from "@modules/utils"
+  // import { mod } from "@modules/utils"
   import OrderItem from "./OrderItem.svelte"
+  import Countdown from "./Countdown.svelte"
 
   let element: HTMLDivElement
 
   let selected = -1
   let certified = true
 
+  const localOrders = Object.entries($availableOrders)
+
   const orderFilter = (entry: [string, Order]) => {
     const order = entry[1]
-    console.log(certified, order.order.creator)
     if (certified) {
       return order.order.creator === $gameConfig.adminAddress
     } else {
-      return order.order.creator !== $gameConfig.adminAddress
+      return order.order.creator !== $gameConfig.adminAddress // add auto expiry after 6hr
     }
   }
 
-  $: currentOrders = Object.entries($availableOrders).filter(orderFilter)
+  const orderSort = (a, b) => {
+    // Convert the dates to Date objects for comparison
+    const dateA = Number(a[1].order.creationBlock)
+    const dateB = Number(b[1].order.creationBlock)
+
+    // Compare the dates
+    if (dateA < dateB) return -1
+    if (dateA > dateB) return 1
+
+    const hasCompleted = (address: string) =>
+      $player.completedOrders?.includes(address) || false
+    const isExhausted = (order: Order) =>
+      order.order.maxPlayers > 0 &&
+      (order.completedPlayers ?? 0) >= order.order.maxPlayers
+
+    const getStatus = (entry: [string, Order]) => {
+      if (isExhausted(entry[1])) return 2
+      if (hasCompleted(entry[0])) return 1
+      return 0
+    }
+
+    return getStatus(a) - getStatus(b)
+  }
+
+  let currentOrders = [...localOrders].filter(orderFilter).sort(orderSort)
+
+  $: {
+    if (certified) {
+      currentOrders = [...localOrders].filter(orderFilter).sort(orderSort)
+    } else {
+      currentOrders = [...localOrders].filter(orderFilter).sort(orderSort)
+    }
+  }
 
   const cycle = (e: KeyboardEvent) => {
     const options = Object.keys($availableOrders).length
@@ -47,6 +81,14 @@
     }
   }
 
+  const now = new Date()
+  const tomorrow = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    16
+  ) // Subtract 2 to convert from CEST (UTC+2) to UTC
+
   const goTo = (i: number) => {
     selected = i
     playSound("tcm", "orderSelect")
@@ -58,28 +100,31 @@
 {#if $tutorialProgress > 4}
   <div class="head">
     <div class="order-count">
-      {Object.keys($availableOrders).length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
+      {currentOrders.length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
     </div>
+    <Countdown endTime={tomorrow} />
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 
   <div class="tabs">
-    <div
-      role="button"
-      on:click={() => (certified = true)}
-      class="tab"
-      class:active={certified}
-    >
-      TCM CERTIFIED ORDERS
-    </div>
-    <div
-      role="button"
-      on:click={() => (certified = false)}
-      class="tab"
-      class:active={!certified}
-    >
-      BLACK MARKET
-    </div>
+    {#if !$player.tutorial}
+      <div
+        role="button"
+        on:click={() => (certified = true)}
+        class="tab"
+        class:active={certified}
+      >
+        TCM APPROVED ORDERS
+      </div>
+      <div
+        role="button"
+        on:click={() => (certified = false)}
+        class="tab rogue"
+        class:active={!certified}
+      >
+        XXX ROGUE XXX ORDERS XXX
+      </div>
+    {/if}
   </div>
 
   <div bind:this={element} class="container">
@@ -95,6 +140,7 @@
               {order}
               active={$player.currentOrder === key}
               completed={$player.completedOrders?.includes(key) || false}
+              rogue={!certified}
             />
           {/each}
         {:else}
@@ -169,7 +215,7 @@
       font-family: var(--font-family);
       font-size: var(--font-size-small);
       border: none;
-      opacity: 0.3;
+      opacity: 0.5;
       user-select: none;
       text-align: center;
       padding: var(--default-padding);
@@ -178,6 +224,15 @@
       cursor: pointer;
       overflow: hidden;
       border: 1px solid var(--color-grey-mid);
+
+      &.rogue {
+        color: var(--color-grey-dark);
+
+        &.active {
+          background: var(--color-tutorial);
+          border: 1px solid var(--color-tutorial);
+        }
+      }
 
       &.active {
         opacity: 1;
