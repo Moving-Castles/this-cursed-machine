@@ -103,10 +103,10 @@ declare global {
     currentOrder: string
     incomingConnections: string[]
     outgoingConnections: string[]
+    tutorial: boolean
     tutorialLevel?: number
     nonTransferableBalance?: bigint // During tutorial we give players a non-transferable token substitute
     tokenBalances?: bigint
-    tutorial: boolean
     completedOrders: string[] // Orders completed by player
     producedMaterials?: MaterialId[]
   }
