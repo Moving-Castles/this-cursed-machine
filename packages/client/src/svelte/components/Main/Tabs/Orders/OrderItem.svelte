@@ -37,6 +37,8 @@
   export let completed: boolean
   // Player has selected the order in the UI
   export let selected: boolean
+  // Is not TCM approved
+  export let rogue = false
 
   const dispatch = createEventDispatcher()
 
@@ -187,6 +189,9 @@
     <!-- IMAGE -->
     <!-- * * * * * * * * * * -->
     <div class="material">
+      {#if rogue}
+        <span class="rogue"> XXX ROGUE ORDER XXX </span>
+      {/if}
       {#if imageURL}
         <img
           class="overlay"
@@ -362,6 +367,7 @@
     gap: 1rem;
     user-select: none;
     overflow: hidden;
+    word-wrap: break-word;
 
     > .overlay {
       position: absolute;
@@ -437,6 +443,7 @@
       }
       // transform: rotate(-45deg);
 
+      .rogue,
       .specimen {
         position: absolute;
         width: 100%;
@@ -446,6 +453,13 @@
         transform: translate(-50%, -50%) rotate(45deg);
         z-index: 0;
         color: var(--color-failure);
+      }
+
+      .rogue {
+        z-index: 1;
+        background: var(--black);
+        padding: 3px;
+        color: var(--color-tutorial);
       }
     }
 

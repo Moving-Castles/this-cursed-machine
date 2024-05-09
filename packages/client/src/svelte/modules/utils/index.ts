@@ -51,14 +51,16 @@ export function filterObjectByKey(
   return filteredObj
 }
 
-export function removePrivateKeys(obj: Record<string, any>): Record<string, any> {
-  let newObj: Record<string, any> = {};
+export function removePrivateKeys(
+  obj: Record<string, any>
+): Record<string, any> {
+  let newObj: Record<string, any> = {}
   for (const key in obj) {
     if (!key.startsWith("__")) {
-      newObj[key] = obj[key];
+      newObj[key] = obj[key]
     }
   }
-  return newObj;
+  return newObj
 }
 
 // Unpadded to padded
@@ -260,4 +262,33 @@ export function displayAmount(amount: bigint | undefined) {
   if (amount === undefined) return 0
   if (amount === BigInt(0)) return 0
   return Number(amount / ONE_UNIT)
+}
+// Limitation: not usable with timezones
+export const parseISODateTime = (datestring: string) => {
+  var dt = datestring.split(/[: T-]/).map(parseFloat)
+  const localDate = new Date(
+    dt[0],
+    dt[1] - 1,
+    dt[2],
+    dt[3] || 0,
+    dt[4] || 0,
+    dt[5] || 0,
+    0
+  )
+
+  return localDate
+}
+export const padWithZero = (value: number) => {
+  return value.toString().padStart(2, "0")
+}
+
+export function formatDate(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-based in JavaScript
+  const day = String(date.getDate()).padStart(2, "0")
+  const hours = String(date.getHours()).padStart(2, "0")
+  const minutes = String(date.getMinutes()).padStart(2, "0")
+  const seconds = String(date.getSeconds()).padStart(2, "0")
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
