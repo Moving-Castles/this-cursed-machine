@@ -83,11 +83,14 @@
 
   const now = new Date()
   const tomorrow = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 1,
-    16,
-  ) // Subtract 2 to convert from CEST (UTC+2) to UTC
+    Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() + 1,
+      16 - 1 // Subtract 1 to convert from CET (UTC+1) to UTC
+    )
+  )
+  const endTime = new Date(tomorrow.toISOString())
 
   const goTo = (i: number) => {
     selected = i
@@ -107,9 +110,8 @@
     <div class="order-count">
       {currentOrders.length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
     </div>
-    {#if !$player.tutorial}
-      <!-- <Countdown endTime={tomorrow} /> -->
-    {/if}
+    {#if !$player.tutorial || import.meta.env.DEV}{/if}
+    <Countdown {endTime} />
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 

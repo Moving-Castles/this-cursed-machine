@@ -1,69 +1,61 @@
-<script lang="ts">
-  import { padWithZero, parseISODateTime, formatDate } from "@modules/utils"
-  export let endTime: Date | string
+<script>
+  import { onMount } from "svelte"
 
-  endTime = formatDate(endTime)
+  let countdown = ""
 
-  // This is the offset for CEST in minutes
-  const CEST_OFFSET = 0
+  function getTimeRemaining() {
+    const cetTimeZone = "Europe/Berlin"
+    const now = new Date().toLocaleString("en-US", { timeZone: cetTimeZone })
+    const nowCET = new Date(now)
+    const targetCET = new Date(now)
 
-  let timeLeft = {
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
+    targetCET.setHours(16, 0, 0, 0) // Set target CET time to 16:00
+
+    const difference = targetCET - nowCET
+
+    if (difference < 0) {
+      // If the difference is negative, it means the target time has passed today in CET
+      // so we set the target for the same time on the next day
+      targetCET.setDate(targetCET.getDate() + 1)
+      return targetCET - nowCET
+    }
+    return difference
   }
 
-  const calculateTimeLeft = () => {
-    const now = new Date()
-    const targetTimeInUTC = parseISODateTime(endTime).getTime()
-    const targetDate = new Date(targetTimeInUTC)
+  function formatTime(difference) {
+    const seconds = Math.floor((difference / 1000) % 60)
+    const minutes = Math.floor((difference / 1000 / 60) % 60)
+    const hours = Math.floor(difference / (1000 * 60 * 60))
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+  }
 
-    const diff = targetDate - now
+  function initializeClock() {
+    const updateClock = () => {
+      const total = getTimeRemaining()
+      countdown = formatTime(total)
 
-    if (diff <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
+      if (total <= 0) {
+        clearInterval(timeinterval)
+        countdown = "00:00:00"
       }
     }
 
-    return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: padWithZero(Math.floor((diff / (1000 * 60 * 60)) % 24)),
-      minutes: padWithZero(Math.floor((diff / (1000 * 60)) % 60)),
-      seconds: padWithZero(Math.floor((diff / 1000) % 60)),
-    }
+    updateClock() // Run function once at first to avoid delay
+    const timeinterval = setInterval(updateClock, 1000)
   }
 
-  // Update the countdown every second
-  const interval = setInterval(() => {
-    timeLeft = calculateTimeLeft()
-
-    if (
-      timeLeft.days === 0 &&
-      timeLeft.hours === 0 &&
-      timeLeft.minutes === 0 &&
-      timeLeft.seconds === 0
-    ) {
-      clearInterval(interval)
-    }
-  }, 1000)
+  onMount(() => {
+    initializeClock()
+  })
 </script>
 
-{#if timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0}
-  <!-- Started -->
-{:else}
-  <div class="success">
-    <!-- {#if timeLeft.days > 0}
-      {timeLeft.days}
-      {timeLeft.days > 1 ? "days" : "day"} and
-      <br />{/if} -->
-    new TCM orders in {timeLeft.hours}:{timeLeft.minutes}:{timeLeft.seconds}
-  </div>
-{/if}
+<div class="success">
+  <!-- {#if timeLeft.days > 0}
+    {timeLeft.days}
+    {timeLeft.days > 1 ? "days" : "day"} and
+    <br />{/if} -->
+  new TCM orders in {countdown}
+</div>
 
 <style>
   .success {
