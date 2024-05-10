@@ -25,7 +25,7 @@ const getEnvironment = () => {
       if (urlParams.has("useAccountKit")) {
         return ENVIRONMENT.REDSTONE
       } else {
-        return ENVIRONMENT.DEVELOPMENT
+        return ENVIRONMENT.REDSTONE
       }
   }
 }

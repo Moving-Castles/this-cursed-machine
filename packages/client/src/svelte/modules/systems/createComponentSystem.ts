@@ -60,10 +60,11 @@ export function createComponentSystem(componentKey: string) {
           ? "materialId"
           : toCamelCase(componentKey)
 
-      // console.log('propertyName', propertyName)
-      // console.log('entityId', entityID)
-      // console.log("playerId", playerId)
-      // console.log("player pod", player.carriedBy)
+      // Single-value components have a "value" property, structs do not
+      const newValue =
+        nextValue && Object.prototype.hasOwnProperty.call(nextValue, "value")
+          ? nextValue.value
+          : nextValue
 
       // * * * * * * * * * * *
       // Ongoing work on filtering down the updates to only those 
@@ -72,38 +73,35 @@ export function createComponentSystem(componentKey: string) {
       // Goal is to have as few updates to the entities store as possible
       // * * * * * * * * * * *
 
-      // We generally ignore other player but want to keep a record of their names
+      // Keep separate record of all player's names
       if (propertyName === "name") {
         playerNames.update(value => {
           value[entityID] = newValue as any
           return value
         })
-        // Abort
-        return
       }
 
       // Abort if property is player-specific and entityId is not the player
       if (PLAYER_PROPERTIES.includes(propertyName) && entityID !== playerId) return
 
-      // Abort if property is pod-specific and entityId is not the player's pod
-      if (POD_PROPERTIES.includes(propertyName) && entityID !== player.carriedBy) return
+      // Make sure player is in pod before ignoring these properties
+      if (player?.carriedBy && playerPod?.tanksInPod && playerPod.fixedEntities) {
 
-      // Abort if property is tank-specific and tank is not in the player's pod
-      if (TANK_PROPERTIES.includes(propertyName) && !playerPod.tanksInPod.includes(entityID)) return
+        // Abort if property is pod-specific and entityId is not the player's pod
+        if (POD_PROPERTIES.includes(propertyName) && entityID !== player.carriedBy) return
 
-      // Abort if the tankConnection is not for an inlet, outlet or tank in the player's pod
-      if (propertyName === 'tankConnection' && ![
-        playerPod.fixedEntities.outlet,
-        ...playerPod.fixedEntities.inlets,
-        ...playerPod.tanksInPod].includes(entityID)) return
+        // Abort if property is tank-specific and tank is not in the player's pod
+        if (TANK_PROPERTIES.includes(propertyName) && !playerPod.tanksInPod.includes(entityID)) return
+
+        // Abort if the tankConnection is not for an inlet, outlet or tank in the player's pod
+        if (propertyName === 'tankConnection' && ![
+          playerPod.fixedEntities.outlet,
+          ...playerPod.fixedEntities.inlets,
+          ...playerPod.tanksInPod].includes(entityID)) return
+      }
+
 
       // * * * * * * * * * * *
-
-      // Single-value components have a "value" property, structs do not
-      const newValue =
-        nextValue && Object.prototype.hasOwnProperty.call(nextValue, "value")
-          ? nextValue.value
-          : nextValue
 
       entities.update(value => {
         // Create an empty entity if it does not exist
