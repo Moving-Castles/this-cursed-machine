@@ -14,6 +14,7 @@ export enum WorldFunctions {
   PlugTank = "plugTank",
   UnplugTank = "unplugTank",
   EmptyTank = "emptyTank",
+  FillTank = "fillTank",
   ShipTank = "shipTank",
   // Pod
   WipePod = "wipePod",
@@ -87,6 +88,10 @@ export function emptyTank(tankEntity: string) {
 
 export function shipTank(tankEntity: string) {
   return addToSequencer(WorldFunctions.ShipTank, [tankEntity])
+}
+
+export function fillTank(tankEntity: string, amount: number, materialId: MaterialId) {
+  return addToSequencer(WorldFunctions.FillTank, [tankEntity, amount, materialId])
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * *

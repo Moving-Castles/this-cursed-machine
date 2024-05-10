@@ -31,6 +31,8 @@ export enum COMMAND {
   SHIP_TANK,
   // Pod
   WIPE_POD,
+  // Tokens
+  DEPOSIT_TOKENS,
   // Misc.
   BLINK,
   HELP,

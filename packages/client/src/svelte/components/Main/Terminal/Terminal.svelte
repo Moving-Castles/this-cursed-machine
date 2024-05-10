@@ -38,6 +38,7 @@
   import { renderSelect } from "@components/Main/Terminal/functions/renderSelect"
   import { machineTypeToLabel, availablePorts } from "@modules/state/simulated"
   import {
+    playerAddress,
     playerPod,
     machines as machinesStore,
     materialMetadata,
@@ -47,6 +48,7 @@
 
   import TerminalOutput from "@components/Main/Terminal/TerminalOutput.svelte"
   import TerminalInput from "@components/Main/Terminal/TerminalInput.svelte"
+  import { ONE_UNIT } from "@modules/ui/constants"
 
   export let terminalType: TERMINAL_TYPE = TERMINAL_TYPE.FULL
   export let placeholder = "HELP"
@@ -87,7 +89,7 @@
       TERMINAL_OUTPUT_TYPE.ERROR,
       message,
       false,
-      SYMBOLS[5]
+      SYMBOLS[5],
     )
     resetInput()
   }
@@ -112,7 +114,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -125,7 +127,7 @@
   }
 
   const getSingleInputCommandParameters = async (
-    command: Command
+    command: Command,
   ): Promise<any[] | false> => {
     const selectOptions = createSelectOptions(command.id)
 
@@ -138,7 +140,7 @@
     const value = await renderSelect(
       customInputContainerElement,
       Select,
-      selectOptions
+      selectOptions,
     )
 
     // Abort if nothing selected
@@ -162,7 +164,7 @@
     const connectionId = await renderSelect(
       customInputContainerElement,
       Select,
-      disconnectOptions
+      disconnectOptions,
     )
 
     // Abort if nothing selected
@@ -189,7 +191,7 @@
     // Get machines with available outgoing connection slots
     let sourceSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.OUTGOING
+      DIRECTION.OUTGOING,
     )
 
     await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "From:")
@@ -197,7 +199,7 @@
     const sourceMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
     selectedParameters.set([sourceMachineKey])
 
@@ -220,7 +222,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       sourceMachineLabel,
       true,
-      SYMBOLS[11]
+      SYMBOLS[11],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -270,7 +272,7 @@
       const sourcePort = (await renderSelect(
         customInputContainerElement,
         Select,
-        sourcePortOptions
+        sourcePortOptions,
       )) as PORT_INDEX
 
       // Abort if nothing selected
@@ -283,7 +285,7 @@
         TERMINAL_OUTPUT_TYPE.NORMAL,
         "OUTPUT: #" + (sourcePort + 1),
         true,
-        SYMBOLS[14]
+        SYMBOLS[14],
       )
 
       portIndex = sourcePort
@@ -299,11 +301,15 @@
     // %%%%%%%%%%%%%%%%%%%%%%%%%%
 
     // Get machines with available incoming connection slots
-    // Remove the source machine from the list
     let targetSelectOptions = createSelectOptions(
       COMMAND.CONNECT,
-      DIRECTION.INCOMING
-    ).filter(option => option.value !== sourceMachineKey)
+      DIRECTION.INCOMING,
+    )
+
+    // Remove the source machine from the list
+    targetSelectOptions = targetSelectOptions.filter(
+      option => option.value !== sourceMachineKey,
+    )
 
     // Abort if no available targets
     if (targetSelectOptions.length === 0) {
@@ -316,7 +322,7 @@
     let targetMachineKey = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -338,7 +344,7 @@
       TERMINAL_OUTPUT_TYPE.INFO,
       targetMachineLabel,
       true,
-      SYMBOLS[14]
+      SYMBOLS[14],
     )
 
     // %%%%%%%%%%%%%%%%%%%%%%%%
@@ -358,7 +364,7 @@
     const tankEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      sourceSelectOptions
+      sourceSelectOptions,
     )
 
     // Abort if nothing selected
@@ -394,7 +400,7 @@
     const targetEntity = await renderSelect(
       customInputContainerElement,
       Select,
-      targetSelectOptions
+      targetSelectOptions,
     )
 
     // Abort if nothing selected
@@ -404,6 +410,134 @@
     }
 
     return [tankEntity, targetEntity]
+  }
+
+  // Define the async function to fetch ERC-20 token data for a given address
+  async function fetchERC20Tokens(address: string): Promise<any> {
+    const url = `https://explorer.redstone.xyz/api/v2/addresses/${address}/tokens?type=ERC-20`
+
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data.items
+    } catch (error) {
+      console.error("Error fetching ERC-20 token data:", error)
+      return null
+    }
+  }
+
+  const getDepositTokensParameters = async (): Promise<any[] | false> => {
+    // %%%%%%%%%%%%%%%%%
+    // %% Start token %%
+    // %%%%%%%%%%%%%%%%%
+
+    // Get tokens in wallet via explorer API
+    const tokens = await fetchERC20Tokens($playerAddress)
+
+    // Filter material metadata by tokens in wallet
+    const materials = get(materialMetadata)
+    const tokenAddresses = tokens.map((item: any) => item.token.address)
+    const tcmTokensInWallet = Object.values(materials).filter(material =>
+      tokenAddresses.includes(material.tokenAddress),
+    )
+
+    // Let player select the token to deposit
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Material to deposit:")
+
+    const tokenSelectOptions: SelectOption[] = tcmTokensInWallet.map(t => ({
+      label: t.name,
+      value: t.materialId,
+      available: true,
+    }))
+
+    const selectedMaterialId = await renderSelect(
+      customInputContainerElement,
+      Select,
+      tokenSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!selectedMaterialId) {
+      handleInvalid("No token selected")
+      return false
+    }
+
+    // Get balances
+    const balances: Record<string, number> = {}
+    Object.values(tcmTokensInWallet).forEach(t => {
+      const token = tokens.find(
+        (item: any) => item.token.address === t.tokenAddress,
+      )
+      if (token) {
+        balances[t.materialId] = Number(BigInt(token?.value) / ONE_UNIT)
+      }
+    })
+
+    const materialName =
+      tcmTokensInWallet.find(t => t.materialId === selectedMaterialId)?.name ??
+      "Unknown"
+    await writeToTerminal(
+      TERMINAL_OUTPUT_TYPE.SUCCESS,
+      `${materialName} balance => ${balances[selectedMaterialId]}`,
+    )
+
+    // Let player select the amount to deposit
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Amount to deposit:")
+
+    const amountOptions = [10, 50, 100, 200, 300, 400, 500]
+
+    // Show amount as unavailable it higher than the player's balance
+    const amountSelectOptions: SelectOption[] = amountOptions.map(amount => ({
+      label: String(amount),
+      value: amount,
+      available: balances[selectedMaterialId] >= amount,
+    }))
+
+    const amount = await renderSelect(
+      customInputContainerElement,
+      Select,
+      amountSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!amount) {
+      handleInvalid("No token selected")
+      return false
+    }
+
+    // %%%%%%%%%%%%%%%%%
+    // %% End token %%
+    // %%%%%%%%%%%%%%%%%
+
+    // %%%%%%%%%%%%%%%%
+    // %% Start tank %%
+    // %%%%%%%%%%%%%%%%
+
+    // Get tanks
+    let tankSelectOptions = createSelectOptions(COMMAND.PLUG_TANK)
+
+    await writeToTerminal(TERMINAL_OUTPUT_TYPE.INFO, "Tank:")
+
+    const tankEntity = await renderSelect(
+      customInputContainerElement,
+      Select,
+      tankSelectOptions,
+    )
+
+    // Abort if nothing selected
+    if (!tankEntity) {
+      handleInvalid("No tank selected")
+      return false
+    }
+
+    // %%%%%%%%%%%%%%
+    // %% End tank %%
+    // %%%%%%%%%%%%%%
+
+    return [tankEntity, amount, selectedMaterialId]
   }
 
   const onSubmit = async () => {
@@ -418,7 +552,7 @@
       TERMINAL_OUTPUT_TYPE.COMMAND,
       value,
       false,
-      SYMBOLS[0]
+      SYMBOLS[0],
     )
 
     // Unset store values
@@ -459,6 +593,9 @@
     } else if (command.id === COMMAND.PLUG_TANK) {
       playSound("tcm", "selectionEnter")
       parameters = await getAttachTankParameters()
+    } else if (command.id === COMMAND.DEPOSIT_TOKENS) {
+      playSound("tcm", "selectionEnter")
+      parameters = await getDepositTokensParameters()
     }
 
     // Something went wrong in the parameter selection

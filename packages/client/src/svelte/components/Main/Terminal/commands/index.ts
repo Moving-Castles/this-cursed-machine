@@ -10,6 +10,7 @@ import { plugTank } from "@components/Main/Terminal/commands/plugTank"
 import { unplugTank } from "@components/Main/Terminal/commands/unplugTank"
 import { emptyTank } from "@components/Main/Terminal/commands/emptyTank"
 import { fillTank } from "@components/Main/Terminal/commands/fillTank"
+import { depositTokens } from "@components/Main/Terminal/commands/depositTokens"
 import { shipTank } from "@components/Main/Terminal/commands/shipTank"
 // Pod
 import { wipePod } from "@components/Main/Terminal/commands/wipePod"
@@ -35,6 +36,8 @@ export const commands: Command[] = [
   shipTank,
   // Pod
   wipePod,
+  // Tokens
+  depositTokens,
   // Misc.
   help,
   blink,

@@ -44,9 +44,6 @@
   }
 
   onMount(async () => {
-    // Output console message
-    // messageToStumps()
-
     // Remove preloader
     document.querySelector(".preloader")?.remove()
 
