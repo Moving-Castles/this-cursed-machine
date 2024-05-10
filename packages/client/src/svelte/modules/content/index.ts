@@ -22,6 +22,7 @@ export const staticContent = writable({} as StaticContent)
 // --- API --------------------------------------------------------------
 
 export async function initStaticContent() {
+  console.time("fetch")
   const loading = await loadData("*[_type == 'loading'][0]", {})
   const machines = await loadData("*[_type == 'machine']", {})
   const materials = await loadData("*[_type == 'material']{..., hint->}", {})
@@ -34,4 +35,5 @@ export async function initStaticContent() {
     tutorial,
     messages,
   })
+  console.timeEnd("fetch")
 }

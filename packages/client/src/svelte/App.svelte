@@ -69,6 +69,8 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 
+<svelte:document on:visibilitychange={initStaticContent} />
+
 <main>
   {#if $UIState === UI.LOADING}
     <Loading {environment} on:done={loaded} />
