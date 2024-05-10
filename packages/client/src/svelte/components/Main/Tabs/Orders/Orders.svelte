@@ -30,8 +30,8 @@
     const dateB = Number(b[1].order.creationBlock)
 
     // Compare the dates
-    if (dateA < dateB) return -1
-    if (dateA > dateB) return 1
+    if (dateA > dateB) return -1
+    if (dateA < dateB) return 1
 
     const hasCompleted = (address: string) =>
       $player.completedOrders?.includes(address) || false
