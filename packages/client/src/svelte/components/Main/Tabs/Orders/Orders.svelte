@@ -116,7 +116,7 @@
   </div>
 
   <div class="tabs">
-    {#if !$player.tutorial}
+    {#if !$player.tutorial || import.meta.env.DEV}
       <!-- svelte-ignore a11y-interactive-supports-focus -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div

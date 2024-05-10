@@ -99,6 +99,12 @@
           staticMaterial.hint._id,
         ])
       }
+
+      if (staticMaterial?.hintMulti) {
+        staticMaterial?.hintMulti.forEach(hint => {
+          discoveredMessages.set([...$discoveredMessages, hint._id])
+        })
+      }
     } catch (error) {
       s?.stop()
       playSound("tcm", "acceptOrderFail")

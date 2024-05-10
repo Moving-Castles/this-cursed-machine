@@ -25,7 +25,10 @@ export async function initStaticContent() {
   console.time("fetch")
   const loading = await loadData("*[_type == 'loading'][0]", {})
   const machines = await loadData("*[_type == 'machine']", {})
-  const materials = await loadData("*[_type == 'material']{..., hint->}", {})
+  const materials = await loadData(
+    "*[_type == 'material']{..., hint->, 'hintMulti': hintMulti[]->{...}}",
+    {}
+  )
   const tutorial = await loadData("*[_type == 'tutorial'][0]", {})
   const messages = await loadData("*[_type == 'message']", {})
   staticContent.set({
@@ -35,5 +38,4 @@ export async function initStaticContent() {
     tutorial,
     messages,
   })
-  console.timeEnd("fetch")
 }
