@@ -9,8 +9,12 @@ export const mute = [
   "order expired",
   "not completed",
   "no tank available",
-  "tank contains different material."
+  "tank contains different material.",
 ]
+
+export const change: Record<string, string> = {
+  "max players reached": "Unable to ship. Order exhausted",
+}
 
 export interface Toast {
   type: ToastType
@@ -29,6 +33,11 @@ export function toastMessage(
     console.warn("This message was muted", message)
     return
   }
+
+  if (change[message]) {
+    message = message.replace(message, change[message])
+  }
+
   const toast: Toast = {
     message,
     type: toastOptions?.type || "warning",
