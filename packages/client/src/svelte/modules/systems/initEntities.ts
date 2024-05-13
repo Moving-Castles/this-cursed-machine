@@ -33,7 +33,7 @@ export function initEntities() {
       component.values.value.forEach((value: any, key: Symbol) => {
         const entityKey = key.description as string
         // Create empty object if key is not present
-        if (!syncEntities[entityKey]) syncEntities[entityKey] = {}
+        if (!syncEntities[entityKey]) syncEntities[entityKey] = {} as Entity
         // If it's the name, populate player names store
         if (propertyName === "name") {
           playerNames.update(v => {
@@ -56,7 +56,7 @@ export function initEntities() {
         value.forEach((structPropertyValue: any, key: Symbol) => {
           const entityKey = key.description as string
           // Create empty object if key is not present
-          if (!syncEntities[entityKey]) syncEntities[entityKey] = {}
+          if (!syncEntities[entityKey]) syncEntities[entityKey] = {} as Entity
           if (!syncEntities[entityKey][propertyName])
             syncEntities[entityKey][propertyName] = {}
           // Set property
