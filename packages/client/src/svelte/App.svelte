@@ -3,6 +3,7 @@
   import { tutorialProgress } from "@modules/ui/assistant"
   import { FINAL_TUTORIAL_LEVEL } from "@modules/ui/constants"
   import { ENVIRONMENT } from "@mud/enums"
+  import { FullStory, init as initFullstory } from "@fullstory/browser"
 
   import { initStaticContent } from "@modules/content"
   import { initSound } from "@modules/sound"
@@ -10,6 +11,7 @@
   import { UIState, mouseX, mouseY } from "@modules/ui/stores"
   import { UI } from "@modules/ui/enums"
   import { playSound } from "@modules/sound"
+  import { player, playerAddress } from "@modules/state/base/stores"
 
   import Loading from "@components/Loading/Loading.svelte"
   import Spawn from "@components/Spawn/Spawn.svelte"
@@ -36,6 +38,16 @@
   const spawned = () => {
     clearTerminalOutput()
 
+    console.log($playerAddress, $player.name)
+
+    // Register the user in fullstory
+    FullStory("setIdentity", {
+      uid: $playerAddress,
+      properties: {
+        displayName: $player.name,
+      },
+    })
+
     UIState.set(UI.READY)
   }
 
@@ -54,6 +66,21 @@
     initSound()
 
     introSound = playSound("tcm", "introBg", true, true)
+
+    // Fullstory analytics
+    initFullstory({
+      orgId: "o-1RP0ZA-na1",
+      debug: true,
+    })
+
+    if ($UIState === UI.READY) {
+      FullStory("setIdentity", {
+        uid: $playerAddress,
+        properties: {
+          displayName: $player.name,
+        },
+      })
+    }
   })
 
   // Fade out intro sound when ready
