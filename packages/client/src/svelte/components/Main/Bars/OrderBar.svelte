@@ -23,13 +23,24 @@
         {displayAmount($playerOrder?.order.amount)}
         {$materialMetadata[$playerOrder?.order.materialId]?.name} →
         {displayAmount($playerOrder?.order.reward)} $BUGS
+
+        {#if $playerOrder?.completedPlayers === $playerOrder.order.maxPlayers}
+          <span class="exhausted"> exhausted </span>
+        {:else}
+          <span class="inverted">
+            {$playerOrder?.order.maxPlayers -
+              ($playerOrder?.completedPlayers ?? 0)}/{$playerOrder?.order
+              .maxPlayers}
+            available
+          </span>
+        {/if}
       {/if}
     </div>
 
     {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number($playerOrder.order.expirationBlock) - Number($blockNumber),
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
         )}
       </div>
     {/if}
@@ -76,6 +87,18 @@
 
       .goal {
         margin-right: 20px;
+      }
+
+      .exhausted {
+        padding: 2px;
+        background: var(--color-failure);
+        color: var(--black);
+      }
+
+      .available {
+        padding: 2px;
+        background: var(--color-success);
+        color: var(--black);
       }
 
       .time {
