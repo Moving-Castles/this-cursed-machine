@@ -181,6 +181,9 @@
       <div class="overlay" />
     {/if}
 
+    <!-- * * * * * * * * * * -->
+    <!-- ORDER STATUS OVERLAY -->
+    <!-- * * * * * * * * * * -->
     {#if completed}
       <div class="blocking-overlay completed">
         <div>COMPLETED</div>
@@ -293,7 +296,7 @@
             {#if !$player.tutorial && order.order.expirationBlock != BigInt(0)}
               <span class="padded inverted">
                 {blocksToReadableTime(
-                  Number(order.order.expirationBlock) - Number($blockNumber)
+                  Number(order.order.expirationBlock) - Number($blockNumber),
                 )}
               </span>
             {/if}
@@ -516,6 +519,11 @@
           .subtitle {
             margin-top: 6px;
             font-size: var(--font-size-small);
+
+            span {
+              display: inline-block;
+              margin-top: 2px;
+            }
           }
 
           .bugs {
