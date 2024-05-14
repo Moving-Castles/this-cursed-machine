@@ -22,9 +22,13 @@ export const SYMBOLS = [
   "√",
 ]
 
-export const FULL_COMMANDS = [
+export const SPAWN_COMMANDS = [
   COMMAND.SKIP,
+  COMMAND.BLINK,
+  COMMAND.HELP,
+]
 
+export const FULL_COMMANDS = [
   COMMAND.BUILD_MACHINE,
   COMMAND.REMOVE_MACHINE,
   COMMAND.WIPE_POD,
@@ -149,6 +153,9 @@ export const commandsByTutorialProgress = (level: number) => {
   if (level > -1) {
     return [COMMAND.BLINK, COMMAND.HELP, COMMAND.SKIP, COMMAND.GRADUATE]
   }
+
+  return []; // Handle the case where level is <= -1
+
 }
 
 export const FULL_MACHINES = [

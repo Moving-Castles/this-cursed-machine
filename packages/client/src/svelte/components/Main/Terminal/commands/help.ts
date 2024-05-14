@@ -7,16 +7,18 @@ import {
   TERMINAL_TYPE,
   COMMAND,
 } from "@components/Main/Terminal/enums"
-import { levelCommandFilter } from "@components/Main/Terminal/functions/helpers"
+import { commandFilter } from "@components/Main/Terminal/functions/helpers"
 import { tutorialProgress } from "@modules/ui/assistant"
 import { get } from "svelte/store"
 import { playSound } from "@modules/sound"
 
-async function execute(_: TERMINAL_TYPE) {
+async function execute(terminalType: TERMINAL_TYPE) {
+  console.log("help command")
+  console.log('terminalType', terminalType)
   // Get subset if not full terminal
   const commandList = commands.filter(
     command =>
-      levelCommandFilter(get(tutorialProgress) ?? 28, command.id) &&
+      commandFilter(terminalType, get(tutorialProgress) ?? 28, command.id) &&
       command.public
   )
 
@@ -29,7 +31,6 @@ async function execute(_: TERMINAL_TYPE) {
   ]
 
   // List all available commands
-
   for (let i = 0; i < categorisedCommands.length; i++) {
 
     if (categorisedCommands[i].commands.length === 0) continue

@@ -559,7 +559,7 @@
     selectedParameters.set([])
 
     // Evaluate input
-    const command = evaluate(value)
+    const command = evaluate(terminalType, value)
 
     // Handle invalid command
     if (!command) {
@@ -573,10 +573,17 @@
     // First, simply execute the command if it has no parameters
     if (NO_INPUT_COMMANDS.includes(command.id)) {
       // We add a select for commands that need to be confirmed
-      if (command.id === COMMAND.WIPE) {
-        parameters = await getConfirmation(command)
-        if (!parameters) return
+      // if (command.id === COMMAND.WIPE) {
+      //   parameters = await getConfirmation(command)
+      //   if (!parameters) return
+      // }
+
+      if (command.id === COMMAND.HELP) {
+        parameters = [terminalType]
+        await executeCommand(command, parameters)
+        return
       }
+
       await executeCommand(command, [])
       return
     }

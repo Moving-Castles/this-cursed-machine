@@ -1,8 +1,7 @@
 import { tick } from "svelte"
-import { writeToTerminal } from "@components/Main/Terminal/functions/writeToTerminal"
-import { COMMAND, TERMINAL_OUTPUT_TYPE } from "@components/Main/Terminal/enums"
+import { COMMAND, TERMINAL_TYPE } from "@components/Main/Terminal/enums"
 import { SelectOption } from "@components/Main/Terminal/types"
-import { commandsByTutorialProgress } from "@components/Main/Terminal/"
+import { commandsByTutorialProgress, SPAWN_COMMANDS } from "@components/Main/Terminal/"
 import { terminalOutput } from "@components/Main/Terminal/stores"
 import { machineTypeToLabel } from "@modules/state/simulated"
 import { MACHINE_TYPE } from "@modules/state/base/enums"
@@ -23,7 +22,10 @@ export async function scrollToEnd(): Promise<void> {
   }
 }
 
-export function levelCommandFilter(level: number, commandId: COMMAND): boolean {
+export function commandFilter(terminalType: TERMINAL_TYPE, level: number, commandId: COMMAND): boolean {
+  if (terminalType === TERMINAL_TYPE.SPAWN) {
+    return SPAWN_COMMANDS.includes(commandId) ? true : false
+  }
   return commandsByTutorialProgress(level)?.includes(commandId) ? true : false
 }
 
