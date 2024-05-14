@@ -16,8 +16,12 @@ import {
   findPath,
   setCostAt,
 } from "./Pathfinding"
+import type { Grid } from "./Pathfinding/types"
 import { GRID, PLAYER, ORFICE, MACHINE, SPACE_BETWEEN } from "./constants"
 import { PLACEMENT_GROUP } from "./enums"
+
+// Calculate the grid once and store here
+export let grid: Grid | null = null
 
 /*
  * Inlets are aligned to the left, centered vertically with one orfice height between them
@@ -262,7 +266,10 @@ export function createLayout(
   simulatedConnections: Connection[],
   previousGraphMachines: GraphMachines
 ) {
-  let grid = createGrid()
+
+  if (grid === null) {
+    grid = createGrid()
+  }
   /*
    * Place Machines
    */
@@ -284,7 +291,7 @@ export function createLayout(
 
     if (notPlaced(x, y)) {
       // Place dynamic, new machine
-      ;({ x, y, placementGroup } = getFreePosition(graphMachines))
+      ; ({ x, y, placementGroup } = getFreePosition(graphMachines))
     }
 
     graphMachines[machineId].x = x
@@ -325,7 +332,6 @@ export function createLayout(
     graphConnections[i].path = path
   }
 
-  // console.timeEnd("createLayout")
   return { graphMachines, graphConnections, grid }
 }
 
