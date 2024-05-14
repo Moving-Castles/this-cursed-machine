@@ -15,6 +15,7 @@
 >
   <!-- ORDER INFORMATION -->
   <div class="order-information">
+    <!-- GOAL -->
     <div class="goal">
       <span class="inverted" class:order={$playerOrder}>ORDER</span>:
       {#if !$playerOrder}
@@ -23,29 +24,36 @@
         {displayAmount($playerOrder?.order.amount)}
         {$materialMetadata[$playerOrder?.order.materialId]?.name} →
         {displayAmount($playerOrder?.order.reward)} $BUGS
-
-        {#if $playerOrder?.completedPlayers === $playerOrder.order.maxPlayers}
-          <span class="exhausted"> exhausted </span>
-        {:else}
-          <span class="inverted">
-            {$playerOrder?.order.maxPlayers -
-              ($playerOrder?.completedPlayers ?? 0)}/{$playerOrder?.order
-              .maxPlayers}
-            available
-          </span>
-        {/if}
       {/if}
     </div>
 
+    <!-- ORDER AVAILABILITY -->
+    <!-- Don't show if maxPlayers is 0, meaning infinite players -->
+    {#if $playerOrder?.order.maxPlayers ?? 0 !== 0}
+      {#if $playerOrder?.completedPlayers === $playerOrder?.order.maxPlayers}
+        <div class="exhausted">exhausted</div>
+      {:else}
+        <div class="inverted available">
+          {$playerOrder?.order.maxPlayers -
+            ($playerOrder?.completedPlayers ?? 0)}/
+          {$playerOrder?.order.maxPlayers}
+          available
+        </div>
+      {/if}
+    {/if}
+
+    <!-- TIME REMAINING -->
+    <!-- Don't show if expirationBlock is 0, meaning no exipration -->
     {#if $playerOrder && $playerOrder.order.expirationBlock > 0}
       <div class="time">
         {blocksToReadableTime(
-          Number($playerOrder.order.expirationBlock) - Number($blockNumber)
+          Number($playerOrder.order.expirationBlock) - Number($blockNumber),
         )}
       </div>
     {/if}
   </div>
 
+  <!-- SIGNER WALLET MODAL -->
   <div>
     <AccountKitBalance />
   </div>
@@ -87,18 +95,33 @@
 
       .goal {
         margin-right: 20px;
+        text-wrap: none;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .exhausted {
         padding: 2px;
+        padding-top: 3px;
         background: var(--color-failure);
-        color: var(--black);
+        color: var(--background);
+        line-height: 1em;
+        font-size: var(--font-size-small);
+        margin-right: 20px;
       }
 
       .available {
         padding: 2px;
+        padding-top: 3px;
         background: var(--color-success);
-        color: var(--black);
+        color: var(--background);
+        font-size: var(--font-size-small);
+        line-height: 1em;
+        margin-right: 20px;
+
+        @media screen and (max-width: 1250px) {
+          display: none;
+        }
       }
 
       .time {
@@ -108,6 +131,10 @@
         background: var(--foreground);
         color: var(--background);
         line-height: 1em;
+
+        @media screen and (max-width: 1330px) {
+          display: none;
+        }
       }
     }
   }
