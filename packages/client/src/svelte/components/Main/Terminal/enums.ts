@@ -38,6 +38,5 @@ export enum COMMAND {
   HELP,
   // Hidden
   SKIP,
-  GRADUATE,
   RESOLVE
 }

@@ -103,7 +103,6 @@ const serializers = {
   types: {
     block: (props: any) => {
       const style = props.node.style || "normal"
-      console.log(props.children)
       return h("p", { className: style }, props.children)
     },
     // link: (props: any) => {

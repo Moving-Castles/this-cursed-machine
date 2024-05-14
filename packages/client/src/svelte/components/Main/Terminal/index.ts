@@ -50,7 +50,6 @@ export const NO_INPUT_COMMANDS = [
   COMMAND.HELP,
   COMMAND.RESOLVE,
   COMMAND.SKIP,
-  COMMAND.GRADUATE,
   COMMAND.WIPE_POD,
 ]
 
@@ -98,8 +97,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.SHIP_TANK,
       COMMAND.EMPTY_TANK,
       COMMAND.WIPE_POD,
-      COMMAND.HELP,
-      COMMAND.GRADUATE,
+      COMMAND.HELP
     ]
   }
 
@@ -114,8 +112,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.SHIP_TANK,
       COMMAND.EMPTY_TANK,
       COMMAND.WIPE_POD,
-      COMMAND.HELP,
-      COMMAND.GRADUATE,
+      COMMAND.HELP
     ]
   }
 
@@ -130,8 +127,7 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.EMPTY_TANK,
       COMMAND.SHIP_TANK,
       COMMAND.WIPE_POD,
-      COMMAND.HELP,
-      COMMAND.GRADUATE,
+      COMMAND.HELP
     ]
   }
 
@@ -141,17 +137,16 @@ export const commandsByTutorialProgress = (level: number) => {
       COMMAND.FILL_TANK,
       COMMAND.PLUG_TANK,
       COMMAND.UNPLUG_TANK,
-      COMMAND.HELP,
-      COMMAND.GRADUATE,
+      COMMAND.HELP
     ]
   }
 
   if (level > 6) {
-    return [COMMAND.BLINK, COMMAND.FILL_TANK, COMMAND.HELP, COMMAND.GRADUATE]
+    return [COMMAND.BLINK, COMMAND.FILL_TANK, COMMAND.HELP]
   }
 
   if (level > -1) {
-    return [COMMAND.BLINK, COMMAND.HELP, COMMAND.SKIP, COMMAND.GRADUATE]
+    return [COMMAND.BLINK, COMMAND.HELP, COMMAND.SKIP]
   }
 
   return []; // Handle the case where level is <= -1

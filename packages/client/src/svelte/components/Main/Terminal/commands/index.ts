@@ -19,7 +19,6 @@ import { blink } from "@components/Main/Terminal/commands/blink"
 import { help } from "@components/Main/Terminal/commands/help"
 // Hidden
 import { skip } from "@components/Main/Terminal/commands/skip"
-import { graduate } from "@components/Main/Terminal/commands/graduate"
 import { resolve } from "@components/Main/Terminal/commands/resolve"
 
 export const commands: Command[] = [
@@ -41,8 +40,7 @@ export const commands: Command[] = [
   // Misc.
   help,
   blink,
-  // Testing
+  // Convenience
   resolve,
-  skip,
-  graduate,
+  skip
 ]

@@ -24,7 +24,6 @@ export enum WorldFunctions {
   // Offers
   BuyOffer = "buyOffer",
   // Convenience
-  Graduate = "graduate",
   Resolve = "resolve"
 }
 
@@ -128,8 +127,4 @@ export function buyOffer(offerEntity: string) {
 
 export function resolve() {
   return addToSequencer(WorldFunctions.Resolve, [])
-}
-
-export function graduate() {
-  return addToSequencer(WorldFunctions.Graduate, [])
 }

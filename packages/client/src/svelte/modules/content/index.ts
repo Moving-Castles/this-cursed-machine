@@ -29,7 +29,7 @@ export async function initStaticContent() {
     "*[_type == 'material']{..., hint->, 'hintMulti': hintMulti[]->{...}}",
     {}
   )
-  console.log(materials.map(m => m.materialType))
+
   const tutorial = await loadData("*[_type == 'tutorial'][0]", {})
   const messages = await loadData("*[_type == 'message']", {})
   staticContent.set({

@@ -38,8 +38,6 @@
   const spawned = () => {
     clearTerminalOutput()
 
-    console.log($playerAddress, $player.name)
-
     // Register the user in fullstory
     FullStory("setIdentity", {
       uid: $playerAddress,

@@ -13,8 +13,6 @@ import { get } from "svelte/store"
 import { playSound } from "@modules/sound"
 
 async function execute(terminalType: TERMINAL_TYPE) {
-  console.log("help command")
-  console.log('terminalType', terminalType)
   // Get subset if not full terminal
   const commandList = commands.filter(
     command =>
