@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { player, playerNames } from "@modules/state/base/stores"
+  import { player } from "@modules/state/base/stores"
+  import { blockNumber } from "@modules/network"
   import { gameConfig } from "@modules/state/base/stores"
   import { availableOrders } from "@modules/state/base/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
@@ -15,16 +16,38 @@
 
   const localOrders = Object.entries($availableOrders)
 
+  const USER_ORDERS_FILTER_PERIOD = BigInt(1800) // Number of blocks in one hour at 2 second blocktime
+
+  const hasCompleted = (address: string) =>
+    $player.completedOrders?.includes(address) || false
+
+  const isExhausted = (order: Order) =>
+    order.order.maxPlayers > 0 &&
+    (order.completedPlayers ?? 0) >= order.order.maxPlayers
+
   const orderFilter = (entry: [string, Order]) => {
+    const key = entry[0]
     const order = entry[1]
     if (certified) {
       return order.order.creator === $gameConfig.adminAddress
     } else {
-      return order.order.creator !== $gameConfig.adminAddress // add auto expiry after 6hr
+      // Filter out certified orders
+      if (order.order.creator === $gameConfig.adminAddress) return false
+
+      // Filter out orders that are exhausted or completed and more than 1 hour old
+      if (
+        (isExhausted(order) || hasCompleted(key)) &&
+        $blockNumber > order.order.creationBlock + USER_ORDERS_FILTER_PERIOD
+      ) {
+        return false
+      }
+
+      // Otherwise include the order
+      return true
     }
   }
 
-  const orderSort = (a, b) => {
+  const orderSort = (a: [string, Order], b: [string, Order]) => {
     // Convert the dates to Date objects for comparison
     const dateA = Number(a[1].order.creationBlock)
     const dateB = Number(b[1].order.creationBlock)
@@ -32,12 +55,6 @@
     // Compare the dates
     if (dateA > dateB) return -1
     if (dateA < dateB) return 1
-
-    const hasCompleted = (address: string) =>
-      $player.completedOrders?.includes(address) || false
-    const isExhausted = (order: Order) =>
-      order.order.maxPlayers > 0 &&
-      (order.completedPlayers ?? 0) >= order.order.maxPlayers
 
     const getStatus = (entry: [string, Order]) => {
       if (isExhausted(entry[1])) return 2
@@ -81,17 +98,6 @@
     }
   }
 
-  const now = new Date()
-  const tomorrow = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() + 1,
-      16 - 1 // Subtract 1 to convert from CET (UTC+1) to UTC
-    )
-  )
-  const endTime = new Date(tomorrow.toISOString())
-
   const goTo = (i: number) => {
     selected = i
     playSound("tcm", "listPrint")
@@ -110,8 +116,7 @@
     <div class="order-count">
       {currentOrders.length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
     </div>
-    {#if !$player.tutorial || import.meta.env.DEV}{/if}
-    <Countdown {endTime} />
+    <Countdown />
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 
