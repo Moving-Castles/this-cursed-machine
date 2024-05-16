@@ -16,3 +16,5 @@ uint32 constant NUMBER_OF_TANKS = 3;
 /// @dev The base rate of material pushed trough the network per block
 uint256 constant FLOW_RATE = 10 * ONE_UNIT;
 uint256 constant TANK_CAPACITY = 500 * ONE_UNIT;
+
+uint256 constant ORDER_TIMELOCK = 10 minutes;
