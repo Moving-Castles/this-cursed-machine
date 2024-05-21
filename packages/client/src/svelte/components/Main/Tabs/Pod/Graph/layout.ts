@@ -16,12 +16,12 @@ import {
   findPath,
   setCostAt,
 } from "./Pathfinding"
-import type { Grid } from "./Pathfinding/types"
+// import type { Grid } from "./Pathfinding/types"
 import { GRID, PLAYER, ORFICE, MACHINE, SPACE_BETWEEN } from "./constants"
 import { PLACEMENT_GROUP } from "./enums"
 
 // Calculate the grid once and store here
-export let grid: Grid | null = null
+// export let grid: Grid | null = null
 
 /*
  * Inlets are aligned to the left, centered vertically with one orfice height between them
@@ -267,9 +267,10 @@ export function createLayout(
   previousGraphMachines: GraphMachines
 ) {
 
-  if (grid === null) {
-    grid = createGrid()
-  }
+  // if (grid === null) {
+  let grid = createGrid()
+  // }
+
   /*
    * Place Machines
    */
