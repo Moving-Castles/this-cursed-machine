@@ -2,12 +2,24 @@
   import { simulatedTanks } from "@modules/state/simulated/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
   import Tank from "./Tank.svelte"
+
+  function sortObjectByBuildIndex<T extends { buildIndex: number }>(obj: {
+    [key: string]: T
+  }): { [key: string]: T } {
+    const entries = Object.entries(obj)
+
+    const sortedEntries = entries.sort(
+      ([, a], [, b]) => a.buildIndex - b.buildIndex,
+    )
+
+    return Object.fromEntries(sortedEntries)
+  }
 </script>
 
 <div class="tanks-box" class:hidden={$tutorialProgress < 1}>
   {#if $simulatedTanks}
-    {#each Object.entries($simulatedTanks) as [address, tank], index}
-      <Tank {address} {tank} {index} />
+    {#each Object.entries(sortObjectByBuildIndex($simulatedTanks)) as [address, tank]}
+      <Tank {address} {tank} />
     {/each}
   {/if}
 </div>

@@ -190,6 +190,13 @@ function createSelectOptionsAttachTank(): SelectOption[] {
     available: tank.tankConnection === EMPTY_CONNECTION,
   }))
 
+  // Sort the options by buildIndex in ascending order
+  selectOptions.sort((a, b) => {
+    const buildIndexA = parseInt(a.label.split('#')[1], 10)
+    const buildIndexB = parseInt(b.label.split('#')[1], 10)
+    return buildIndexA - buildIndexB
+  })
+
   return selectOptions
 }
 
@@ -204,6 +211,13 @@ function createSelectOptionsDetachTank(): SelectOption[] {
     value: address,
     available: tank.tankConnection !== EMPTY_CONNECTION,
   }))
+
+  // Sort the options by buildIndex in ascending order
+  selectOptions.sort((a, b) => {
+    const buildIndexA = parseInt(a.label.split('#')[1], 10)
+    const buildIndexB = parseInt(b.label.split('#')[1], 10)
+    return buildIndexA - buildIndexB
+  })
 
   return selectOptions
 }
@@ -220,6 +234,13 @@ function createSelectOptionsEmptyTank(): SelectOption[] {
     available:
       tank.tankConnection === EMPTY_CONNECTION && tank.amount !== BigInt(0),
   }))
+
+  // Sort the options by buildIndex in ascending order
+  selectOptions.sort((a, b) => {
+    const buildIndexA = parseInt(a.label.split('#')[1], 10)
+    const buildIndexB = parseInt(b.label.split('#')[1], 10)
+    return buildIndexA - buildIndexB
+  })
 
   return selectOptions
 }
@@ -270,6 +291,13 @@ function createSelectOptionsShip(): SelectOption[] {
       value: address,
       available: tank.materialId !== MaterialIdNone,
     }
+  })
+
+  // Sort the options by buildIndex in ascending order
+  selectOptions.sort((a, b) => {
+    const buildIndexA = parseInt(a.label.split('#')[1], 10)
+    const buildIndexB = parseInt(b.label.split('#')[1], 10)
+    return buildIndexA - buildIndexB
   })
 
   return selectOptions
