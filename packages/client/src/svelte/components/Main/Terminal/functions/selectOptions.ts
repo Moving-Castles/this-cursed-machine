@@ -236,12 +236,13 @@ function createSelectOptionsRefillTank(): SelectOption[] {
   selectOptions = Object.entries(offers)
     .filter(([_, offer]) => {
       if (!inTutorial) return true
+      if (!offer?.offer) return false
       return offer.offer.materialId === BUG_MATERIAL
     })
     .map(([address, offer]) => {
       const material = get(materialMetadata)?.[offer.offer.materialId]
       return {
-        label: `${displayAmount(offer.offer.amount)} ${material.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
+        label: `${displayAmount(offer.offer.amount)} ${material?.name} (${displayAmount(offer.offer.cost)} $BUGS)`,
         value: address,
         available:
           balance >= displayAmount(offer.offer.cost) &&
