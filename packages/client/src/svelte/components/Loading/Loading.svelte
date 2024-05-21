@@ -90,7 +90,7 @@
     top: 0;
     right: 0;
     height: 2em;
-    width: 80px;
+    padding-inline: 10px;
     background: var(--color-alert);
     color: var(--background);
     z-index: var(--z-10);
