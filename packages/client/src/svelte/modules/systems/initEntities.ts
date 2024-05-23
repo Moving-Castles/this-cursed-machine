@@ -67,6 +67,20 @@ export function initEntities() {
     }
   }
 
+  const filterByCarriedBy = (entities, carriedByValue) => {
+    return Object.fromEntries(
+      Object.entries(entities).filter(([key, value]) => value.carriedBy === carriedByValue)
+    );
+  };
+
+  const carriedByValue = '0x0000000000000000000000000000000000000000000000000000000000001ba5';
+  const fEnts = filterByCarriedBy(syncEntities, carriedByValue);
+
+  console.log('maths pod', syncEntities[carriedByValue])
+  console.log('fEnts', fEnts)
+
+  console.log('test', syncEntities["0x00000000000000000000000000000000000000000000000000000000000136f2"])
+
   const filteredEntities = filterEntities(syncEntities)
 
   // Single write to store

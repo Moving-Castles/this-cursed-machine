@@ -14,6 +14,38 @@
   import { activeTab } from "@modules/ui/stores"
   import { tutorialProgress } from "@modules/ui/assistant"
 
+  function filterByCreator(obj, targetCreator) {
+    let result = {}
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (
+          obj[key] &&
+          obj[key].order &&
+          obj[key].order.creator === targetCreator
+        ) {
+          result[key] = obj[key]
+        }
+      }
+    }
+    return result
+  }
+
+  import { orders, availableOrders } from "@modules/state/base/stores"
+  // import { machines } from "@modules/state/base/stores"
+  // $: console.log("__ player pod", $playerPod)
+  // $: console.log("__ machines in pod", $machines)
+  $: console.log(
+    "$orders",
+    filterByCreator($orders, "0x940848Cd73d384442aebd6b321ee254F8A93e1d0"),
+  )
+  $: console.log(
+    "$availableOrders",
+    filterByCreator(
+      $availableOrders,
+      "0x940848Cd73d384442aebd6b321ee254F8A93e1d0",
+    ),
+  )
+
   import Pod from "@components/Main/Tabs/Pod/Pod.svelte"
   import Orders from "@components/Main/Tabs/Orders/Orders.svelte"
   import Inbox from "@components/Main/Tabs/Inbox/Inbox.svelte"
