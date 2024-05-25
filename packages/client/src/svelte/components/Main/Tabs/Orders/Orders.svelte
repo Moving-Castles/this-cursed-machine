@@ -116,7 +116,6 @@
     <div class="order-count">
       {currentOrders.length} Order{#if Object.keys($availableOrders).length !== 1}s{/if}
     </div>
-    <Countdown />
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 
