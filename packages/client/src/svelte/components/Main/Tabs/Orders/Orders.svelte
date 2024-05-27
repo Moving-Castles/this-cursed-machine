@@ -7,12 +7,12 @@
   import { playSound } from "@modules/sound"
   import { mod } from "@modules/utils"
   import OrderItem from "./OrderItem.svelte"
-  import Countdown from "./Countdown.svelte"
+  // import Countdown from "./Countdown.svelte"
 
   let element: HTMLDivElement
 
   let selected = -1
-  let certified = true
+  let certified = false
 
   const localOrders = Object.entries($availableOrders)
 
@@ -126,21 +126,21 @@
       <div
         role="button"
         on:click={toggleCertified}
-        class="tab"
-        class:active={certified}
+        class="tab rogue"
+        class:active={!certified}
       >
-        TCM APPROVED ORDERS
+        <span class="warning">XXX</span> ROGUE ORDERS
+        <span class="warning">XXX</span>
       </div>
       <!-- svelte-ignore a11y-interactive-supports-focus -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         role="button"
         on:click={toggleCertified}
-        class="tab rogue"
-        class:active={!certified}
+        class="tab"
+        class:active={certified}
       >
-        <span class="warning">XXX</span> ROGUE ORDERS
-        <span class="warning">XXX</span>
+        TCM APPROVED ORDERS
       </div>
     {/if}
   </div>
@@ -163,7 +163,13 @@
           {/each}
         {:else}
           <div class="orders-exhausted">
-            <div class="warn blink">ALL ORDERS EXHAUSTED</div>
+            {#if certified}
+              <div class="warn blink">
+                Q1 FINISHED. TCM CERTIFIED ORDERS SUSPENDED.
+              </div>
+            {:else}
+              <div class="warn blink">ALL ORDERS EXHAUSTED</div>
+            {/if}
           </div>
         {/if}
       {/key}
