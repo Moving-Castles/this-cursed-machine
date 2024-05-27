@@ -73,13 +73,13 @@ export function initEntities() {
     );
   };
 
-  const carriedByValue = '0x0000000000000000000000000000000000000000000000000000000000001ba5';
+  const carriedByValue = '0x00000000000000000000000000000000000000000000000000000000000000e3';
   const fEnts = filterByCarriedBy(syncEntities, carriedByValue);
 
-  console.log('maths pod', syncEntities[carriedByValue])
-  console.log('fEnts', fEnts)
+  console.log('proofofjake', syncEntities["0x000000000000000000000000d0f46a5d48596409264d4efc1f3b229878fff743"])
 
-  console.log('test', syncEntities["0x00000000000000000000000000000000000000000000000000000000000136f2"])
+  console.log('proofofjake pod', syncEntities[carriedByValue])
+  console.log('fEnts', fEnts)
 
   const filteredEntities = filterEntities(syncEntities)
 

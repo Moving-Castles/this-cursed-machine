@@ -12,6 +12,8 @@ const getEnvironment = () => {
   switch (window.location.hostname) {
     case "thiscursedmachine.fun":
       return ENVIRONMENT.REDSTONE
+    case "old-indexer.thiscursedmachine.fun":
+      return ENVIRONMENT.REDSTONE
     case "redstone-preview.thiscursedmachine.fun":
       return ENVIRONMENT.REDSTONE
     case "redstone-test.thiscursedmachine.fun":
