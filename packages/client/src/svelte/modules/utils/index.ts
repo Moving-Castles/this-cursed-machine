@@ -70,6 +70,13 @@ export function addressToId(address: string): string {
   return "0x" + address.slice(2).padStart(64, "0").toLowerCase()
 }
 
+// Padded to unpadded
+export function idToAddress(paddedAddress: string): string {
+  if (!paddedAddress) return "0x0"
+  // remove '0x' prefix, remove leading zeros, then add '0x' prefix back
+  return "0x" + paddedAddress.slice(2).replace(/^0+/, '');
+}
+
 export function getRandomElement<T>(array: T[]): T {
   const randomIndex = Math.floor(Math.random() * array.length)
   return array[randomIndex]
