@@ -12,7 +12,7 @@
   let element: HTMLDivElement
 
   let selected = -1
-  let certified = false
+  $: certified = $player.tutorial ? true : false
 
   const localOrders = Object.entries($availableOrders)
 
@@ -119,8 +119,8 @@
     <span class="warn">“Accept, ship, repeat”</span>
   </div>
 
-  <div class="tabs">
-    {#if !$player.tutorial || import.meta.env.DEV}
+  {#if !$player.tutorial}
+    <div class="tabs">
       <!-- svelte-ignore a11y-interactive-supports-focus -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
@@ -142,8 +142,8 @@
       >
         TCM APPROVED ORDERS
       </div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 
   <div bind:this={element} class="container">
     <div class="order-list">
