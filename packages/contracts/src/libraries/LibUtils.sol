@@ -137,4 +137,13 @@ library LibUtils {
     }
     return false;
   }
+
+  /**
+   * @dev Only meant as a temporary measure:
+   * can be circumvented (although it's harder if the check is used across 2+ txs),
+   * and doesn't combine well with account abstraction
+   */
+  function isMaybeEOA(address target) internal view returns (bool) {
+    return target.code.length == 0;
+  }
 }
