@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { EntityType, CarriedBy, ContainedMaterial, MachineType, Amount, TankConnection, CurrentOrder, Order, OrderData, CompletedOrders, CompletedPlayers, Tutorial, TutorialLevel, NonTransferableBalance, TanksInPod, ProducedMaterials, GameConfig } from "../../codegen/index.sol";
 import { ENTITY_TYPE, MACHINE_TYPE } from "../../codegen/common.sol";
-import { LibUtils, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
+import { LibUtils, LibOrderTimelock, LibNetwork, LibMaterial, PublicMaterials } from "../../libraries/Libraries.sol";
 import { NUMBER_OF_TUTORIAL_LEVELS, TANK_CAPACITY } from "../../constants.sol";
 
 contract TankSystem is System {
@@ -165,6 +165,10 @@ contract TankSystem is System {
     /*//////////////////////////////////////////////////////////////
                            IN MAIN GAME
     //////////////////////////////////////////////////////////////*/
+
+    // Prevent batching order shipments
+    LibOrderTimelock.checkLock(playerEntity);
+    LibOrderTimelock.updateLock(playerEntity);
 
     // Reward player in real tokens
     PublicMaterials.BUGS.mint(_msgSender(), currentOrder.reward);

@@ -29,5 +29,6 @@ import { TankConnection } from "./tables/TankConnection.sol";
 import { MachinesInPod } from "./tables/MachinesInPod.sol";
 import { TanksInPod } from "./tables/TanksInPod.sol";
 import { FixedEntities, FixedEntitiesData } from "./tables/FixedEntities.sol";
+import { LastFulfilled } from "./tables/LastFulfilled.sol";
 import { CurrentOrder } from "./tables/CurrentOrder.sol";
 import { Recipe } from "./tables/Recipe.sol";

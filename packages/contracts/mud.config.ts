@@ -96,6 +96,7 @@ export default defineWorld({
         inlets: "bytes32[]"
       }
     },
+    LastFulfilled: "uint256", // Used to track time since last order fulfillment
     CurrentOrder: "bytes32", // ID of the order the player has accepted
     Recipe: {
       key: ["machineType", "input"],
