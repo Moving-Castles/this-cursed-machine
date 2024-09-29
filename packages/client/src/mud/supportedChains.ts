@@ -34,7 +34,7 @@ const extendedGarnet = {
 const extendedRedstone = {
   ...redstone,
   faucetUrl: "https://redstone-faucet.onrender.com/trpc/drip",
-  indexerUrl: "https://next-indexer.mud.redstonechain.com",
+  indexerUrl: "https://indexer.mud.redstonechain.com",
 } as const satisfies MUDChain;
 
 export const supportedChains = [
