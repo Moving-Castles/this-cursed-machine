@@ -13,6 +13,8 @@ contract StartSystem is System {
    * @return podEntity Id of pod entity
    */
   function start() public returns (bytes32 podEntity) {
+    require(LibUtils.isMaybeEOA(_msgSender()), "sender not EOA");
+
     bytes32 playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
     // todo: check that player is spawned

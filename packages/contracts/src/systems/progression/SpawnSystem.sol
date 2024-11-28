@@ -12,6 +12,7 @@ contract SpawnSystem is System {
    */
   function spawn(string memory _name) public returns (bytes32 playerEntity) {
     require(!LibUtils.stringEq(_name, ""), "name empty");
+    require(LibUtils.isMaybeEOA(_msgSender()), "sender not EOA");
 
     playerEntity = LibUtils.addressToEntityKey(_msgSender());
 
