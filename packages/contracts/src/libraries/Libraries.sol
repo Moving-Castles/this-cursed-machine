@@ -8,6 +8,7 @@ import { LibNetwork } from "./LibNetwork.sol";
 import { LibMachine } from "./LibMachine.sol";
 import { LibTank } from "./LibTank.sol";
 import { LibOrder } from "./LibOrder.sol";
+import { LibOrderTimelock } from "./LibOrderTimelock.sol";
 import { LibWipe } from "./LibWipe.sol";
 import { LibOffer } from "./LibOffer.sol";
 import { LibMaterial, MaterialId } from "./LibMaterial.sol";

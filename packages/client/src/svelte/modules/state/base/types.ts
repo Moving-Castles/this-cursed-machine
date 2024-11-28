@@ -39,6 +39,7 @@ declare global {
     machinesInPod?: string[]
     tanksInPod?: string[]
     fixedEntities?: FixedEntities
+    lastFulfilled?: bigint
     currentOrder?: string
     tokenBalances?: bigint
     recipe?: {
@@ -100,6 +101,7 @@ declare global {
     spawnIndex: number
     name?: string
     carriedBy: string
+    lastFulfilled: bigint
     currentOrder: string
     incomingConnections: string[]
     outgoingConnections: string[]

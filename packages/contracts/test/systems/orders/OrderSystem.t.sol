@@ -5,7 +5,7 @@ import { BaseTest } from "../../BaseTest.sol";
 import "../../../src/codegen/index.sol";
 import "../../../src/libraries/Libraries.sol";
 import { MACHINE_TYPE, PORT_INDEX } from "../../../src/codegen/common.sol";
-import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_UNIT } from "../../../src/constants.sol";
+import { FLOW_RATE, ONE_MINUTE, ONE_HOUR, ONE_UNIT, ORDER_TIMELOCK } from "../../../src/constants.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -330,6 +330,51 @@ contract OrderSystemTest is BaseTest {
 
     vm.expectRevert("order already completed");
     world.acceptOrder(orderEntity);
+
+    vm.stopPrank();
+  }
+
+  function testShipAfterTimelock() public {
+    prankAdmin();
+    bytes32 order1Entity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    bytes32 order2Entity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 200, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    world.acceptOrder(order1Entity);
+
+    world.shipTank(tanksInPod[0]);
+
+    world.acceptOrder(order2Entity);
+
+    vm.warp(block.timestamp + ORDER_TIMELOCK);
+
+    world.shipTank(tanksInPod[0]);
+
+    vm.stopPrank();
+  }
+
+  function testRevertOrderTimelocked() public {
+    prankAdmin();
+    bytes32 order1Entity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    bytes32 order2Entity = world.createOrder(PublicMaterials.BUGS, 100, 100, ONE_MINUTE, 10);
+    world.devGraduate(alice);
+    world.devFillTank(tanksInPod[0], 200, PublicMaterials.BUGS);
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+
+    world.acceptOrder(order1Entity);
+
+    world.shipTank(tanksInPod[0]);
+
+    world.acceptOrder(order2Entity);
+
+    vm.expectRevert("order fulfillment timelocked");
+    world.shipTank(tanksInPod[0]);
 
     vm.stopPrank();
   }
